@@ -51,6 +51,7 @@ public class Statics {
     public static ArrayList LiveSendCommand = new ArrayList();
     public static PrintWriter OutFile;
     public static boolean LogCreated=false; //used by log class
+    public static String PreStatus="";
     /*
      *Form data for Heimdall One-Click View 
      */
@@ -59,7 +60,7 @@ public class Statics {
     public static String PreProgress="";
     
     public static String Slash=System.getProperty("file.separator");
-    
+    public static String PackageResourceFolder="/CASUAL/SCRIPT";
     
     
 
