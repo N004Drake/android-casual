@@ -16,7 +16,8 @@ public class CASUALApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        show(new CASUALView(this));
+        CasualJFrame CasualJFrame=new CasualJFrame();
+        show(CasualJFrame);
     }
 
     /**
