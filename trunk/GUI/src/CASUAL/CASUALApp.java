@@ -1,5 +1,5 @@
 /*
- *  NARSApp.java
+ * NARSApp.java
  */
 
 package CASUAL;
@@ -7,10 +7,11 @@ package CASUAL;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
+
 /**
  * The main class of the application.
  */
-public class CASUALApp extends SingleFrameApplication {
+public class CASUALApp extends  SingleFrameApplication {
 
     /**
      * At startup create and show the main frame of the application.
