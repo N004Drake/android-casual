@@ -76,6 +76,9 @@ public class Shell implements Runnable{
             } catch (InterruptedException ex) {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
+        while ((line = STDERR.readLine()) != null) {
+                AllText=AllText+"\n"+line;
+        }   
         while ((line = STDOUT.readLine()) != null) {
             AllText=AllText+"\n"+line;
             while ((line = STDERR.readLine()) != null) {
