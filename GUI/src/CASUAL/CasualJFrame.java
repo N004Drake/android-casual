@@ -3,7 +3,6 @@ package CASUAL;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,16 +19,20 @@ import java.util.zip.ZipInputStream;
  */
 public class CasualJFrame extends javax.swing.JPanel {
     Log Log=new Log();
+    FileOperations FileOperations=new FileOperations();
     /**
      * Creates new form CasualJFrame
      */
     public CasualJFrame() {
         initComponents();
+
+
         Statics.ProgressArea = this.jTextArea1;
-        Log.level0("Searching for scripts");
+        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+"Overview.Instructions.txt"));
+
+        Log.level3("Searching for scripts");
         prepareScripts();
-        FileOperations FileOperations=new FileOperations();
-        FileOperations.readTextFromResource("/CASUAL/SCRIPT/Overview.Instructions.txt");
+        System.out.println(Statics.GUI);
         
     }
 
@@ -56,6 +59,12 @@ public class CasualJFrame extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
         jLabel1.setText("NARZ or picture of some sort");
+
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Do It!");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -94,22 +103,29 @@ public class CasualJFrame extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ScriptParser ScriptParser=new ScriptParser();
         ScriptParser.executeSelectedScript(jComboBox1.getSelectedItem()+".scr");
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+jComboBox1.getSelectedItem().toString()+".txt"));
+
+    }//GEN-LAST:event_jComboBox1ActionPerformed
     
     private void prepareScripts(){
         try {
-            List Scripts=listScripts();
+            listScripts();
         } catch (IOException ex) {
             Log.level0("ListScripts() could not find any entries");
             Logger.getLogger(CasualJFrame.class.getName()).log(Level.SEVERE, null, ex);
+           
         }
         
         
         
     }
-    private List listScripts() throws IOException {
+    private void listScripts() throws IOException {
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
-        List<String> List = new ArrayList<String>();
         int Count=0;
 
         if (Src != null) {
@@ -119,24 +135,27 @@ public class CasualJFrame extends javax.swing.JPanel {
             while ((ZEntry = Zip.getNextEntry()) != null) {
                 String EntryName = ZEntry.getName();
                 if (EntryName.endsWith(".scr")) {
-                    List.add(EntryName);
                     Log.level3("Found: "+EntryName.replace(".scr", ""));
                     jComboBox1.addItem(EntryName.replace(".scr", ""));
                     Count++;
                 }
             }
             if (Count == 0 ){
-                List.add("CASUAL/SCRIPT/Test Script.scr");
                 Log.level0("No Scripts found. Using Test Script.");
                 jComboBox1.addItem("Test Script");
             }
 
         }
-        return List;
-       
-
-
+      
+   
     }
+    public void enableControls(boolean status){
+        jButton1.setEnabled(status);
+        jComboBox1.setEnabled(status);
+        Log.level3("Controls Enabled status: " + status);
+    }
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;

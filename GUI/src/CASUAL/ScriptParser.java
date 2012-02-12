@@ -21,10 +21,11 @@ public class ScriptParser {
     
     
     public void executeSelectedScript(String Script){
-        Log.level1("Selected "+ Script + " " );
+        Statics.GUI.enableControls(false);
+        Log.level2("Selected "+ Script + " " );
         //TODO open as datastream and pass to DoRead
+        Statics.GUI.enableControls(true);
     }
-    
     
     private static void DoRead(DataInputStream dataIn) {
         try {

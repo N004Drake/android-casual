@@ -329,11 +329,12 @@ public class FileOperations {
                 char C = Character.valueOf((char)read);
                 text.append(C);       
             }
-            
+        } catch (NullPointerException ex) {
+            Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Log.level2(text.toString());
+        Log.level3(text.toString());
         return text.toString();
     }
     
