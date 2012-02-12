@@ -98,15 +98,16 @@ public class Statics {
     /*
      * Cross-Platform data storage
      */    
+    public static String AdbDeployed;
     public static String DeploymentBinaries[];
     public static String OSName=System.getProperty("os.name");
     public static String  OSType=""; //used for logging
     public static String  Arch="";
     public static String WinElevatorInTempFolder;
     final  public static String CASUALSCRIPT="/CASUAL/SCRIPT/";
-    final public static String WinADB="/CASUAL/adb.exe";
-    final public static String LinuxADB="/CASUAL/adblinux.exe";
-    final public static String MacADB="/CASUAL/adbmac.exe";
+    final public static String WinADB="/CASUAL/resources/ADB/adb.exe";
+    final public static String LinuxADB="/CASUAL/resources/ADB/adblinux";
+    final public static String MacADB="/CASUAL/resources/adbmac";
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource="/CASUAL/resources/Elevate.exe";
     
