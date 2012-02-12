@@ -181,7 +181,7 @@ public class CasualJFrame extends javax.swing.JPanel {
             Log.level0("Your system is not supported");
         }
         
-        String[] cmd={Statics.AdbDeployed, "devices"};
+        String[] cmd={Statics.AdbDeployed};
         Log.level0(new Shell().sendShellCommand(cmd));
 
     }
