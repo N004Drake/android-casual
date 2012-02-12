@@ -123,7 +123,7 @@ public class Log{
             debugOut(data);
         }
         private void debugOut(String data) {
-            
+/*            
                 FileWriter WriteFile = null;
                      try {
                      WriteFile = new FileWriter(Statics.TempFolder+"log.txt", true);
@@ -134,7 +134,7 @@ public class Log{
                  if (Statics.OutFile != null){Statics.LogCreated=true;}
                  out.print(data);
                  out.close();
-            
+  */          
         }
        
         public void progress(String data) {
