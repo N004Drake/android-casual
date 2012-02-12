@@ -54,8 +54,9 @@
         <Component class="javax.swing.JTextArea" name="jTextArea1">
           <Properties>
             <Property name="columns" type="int" value="20"/>
+            <Property name="lineWrap" type="boolean" value="true"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="ISOs                                         y29735-factoryfs.rfs&#xa;j24826-cache.rfs                             Z24826-param.lfs&#xa;j29735-firmware.xml                          Z29735-factoryfs.rfs&#xa;J29735-zImage-1                              Z31253-factoryfs.rfs&#xa;j31253-zImage&#xa;adam@Adam-Desktop:~$ woot&#xa;No command &apos;woot&apos; found, did you mean:&#xa; Command &apos;woof&apos; from package &apos;woof&apos; (universe)&#xa;woot: command not found&#xa;adam@Adam-Desktop:~$ omg&#xa;No command &apos;omg&apos; found, did you mean:&#xa; Command &apos;mog&apos; from package &apos;mazeofgalious&apos; (universe)&#xa; Command &apos;mmg&apos; from package &apos;mkvtoolnix-gui&apos; (universe)&#xa; Command &apos;om&apos; from package &apos;omhacks&apos; (universe)&#xa; Command &apos;mg&apos; from package &apos;mg&apos; (universe)&#xa; Command &apos;zomg&apos; from package &apos;zomg&apos; (universe)&#xa;omg: command not found&#xa;adam@Adam-Desktop:~$ &#xa;"/>
+            <Property name="wrapStyleWord" type="boolean" value="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -71,12 +72,7 @@
     <Component class="javax.swing.JComboBox" name="jComboBox1">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
-          </StringArray>
+          <StringArray count="0"/>
         </Property>
       </Properties>
     </Component>
