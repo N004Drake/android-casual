@@ -3,7 +3,6 @@ package CASUAL;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -25,11 +24,12 @@ public class CasualJFrame extends javax.swing.JPanel {
      */
     public CasualJFrame() {
         initComponents();
-
-
         Statics.ProgressArea = this.jTextArea1;
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+"Overview.Instructions.txt"));
-
+         
+        Log.level2("Deploying ADB");
+        deployADB();
+        
         Log.level3("Searching for scripts");
         prepareScripts();
         System.out.println(Statics.GUI);
@@ -163,4 +163,26 @@ public class CasualJFrame extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
+
+    private void deployADB() {
+        if (Statics.isLinux()){
+            Statics.AdbDeployed=Statics.TempFolder+"adb";
+            FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
+            FileOperations.setExecutableBit(Statics.AdbDeployed);
+        } else if (Statics.isMac()){
+            Statics.AdbDeployed=Statics.TempFolder+"adb";
+            FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
+            FileOperations.setExecutableBit(Statics.AdbDeployed);
+        } else if (Statics.isWindows()){
+            Statics.AdbDeployed=Statics.TempFolder+"adb.exe";
+            FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
+            FileOperations.setExecutableBit(Statics.AdbDeployed);
+        } else {
+            Log.level0("Your system is not supported");
+        }
+        
+        String[] cmd={Statics.AdbDeployed};
+        Log.level0(new Shell().sendShellCommand(cmd));
+
+    }
 }
