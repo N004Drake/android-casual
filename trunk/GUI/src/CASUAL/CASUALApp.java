@@ -17,6 +17,7 @@ public class CASUALApp extends SingleFrameApplication {
     @Override
     protected void startup() {
         FileOperations FileOperations= new FileOperations();
+        
         FileOperations.makeFolder(Statics.TempFolder);
         
         Statics.GUI = new CasualJFrame();

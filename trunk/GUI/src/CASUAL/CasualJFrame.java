@@ -177,10 +177,12 @@ public class CasualJFrame extends javax.swing.JPanel {
             Statics.AdbDeployed=Statics.TempFolder+"adb.exe";
             FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
+            FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder+"AdbWinApi.dll");
+            FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder+"AdbWinUsbApi.dll");
         } else {
             Log.level0("Your system is not supported");
         }
-        
+        FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder+"adb_usb.ini");
         String[] cmd={Statics.AdbDeployed};
         Log.level0(new Shell().sendShellCommand(cmd));
 

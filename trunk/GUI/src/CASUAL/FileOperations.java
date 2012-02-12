@@ -158,7 +158,7 @@ public class FileOperations {
     if (folder.exists()){
         return false;
     } else{
-        CreatedFolder=folder.mkdir();
+        CreatedFolder=folder.mkdirs();
     }
     if ( CreatedFolder ){
         Log.level2("System temp folder created sucessfully in: "+Folder);   

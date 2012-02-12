@@ -35,6 +35,7 @@ import javax.swing.JTextArea;
  * everywhere in the program.
  */
 public class Statics {
+    
     public Statics(){
     }    
 
@@ -104,13 +105,15 @@ public class Statics {
     public static String  OSType=""; //used for logging
     public static String  Arch="";
     public static String WinElevatorInTempFolder;
-    final  public static String CASUALSCRIPT="/CASUAL/SCRIPT/";
+    final public static String CASUALSCRIPT="/CASUAL/SCRIPT/";
     final public static String WinADB="/CASUAL/resources/ADB/adb.exe";
     final public static String LinuxADB="/CASUAL/resources/ADB/adblinux";
-    final public static String MacADB="/CASUAL/resources/adbmac";
+    final public static String MacADB="/CASUAL/resources/ADB/adbmac";
+    final public static String WinADB2="/CASUAL/resources/ADB/AdbWinApi.dll";
+    final public static String WinADB3="/CASUAL/resources/ADB/AdbWinUsbApi.dll";
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource="/CASUAL/resources/Elevate.exe";
-    
+    final public static String ADBini="/casual/SCRIPT/adb_usb.ini";
     
    
 
