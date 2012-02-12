@@ -41,23 +41,24 @@ public class Statics {
     /*increase or decrease the logging level*/
     public static int ConsoleLevel=4; //userdata is output to console
     /*increase or decrease the logging level*/
-    public static int LogLevel=2; //all logs are output to file
-       
+    public static int LogLevel=4; //all logs are output to file
+    
     /*
      * miscellanious variables
      */ 
-    static Shell shellCommand = new Shell();
+    static Shell shellCommand;
     static Log Log = new Log();    
-    public static ArrayList LiveSendCommand = new ArrayList();
+    public static ArrayList LiveSendCommand;
     public static PrintWriter OutFile;
     public static boolean LogCreated=false; //used by log class
     public static String PreStatus="";
     /*
      *Form data for Heimdall One-Click View 
      */
-
+    public static String ScriptLocation="/CASUAL/SCRIPT/";
+    public static CasualJFrame GUI=new CasualJFrame();
     public static JTextArea ProgressArea; //used by log to update Progress
-    public static String PreProgress="";
+    public static String PreProgress;
     
     public static String Slash=System.getProperty("file.separator");
     public static String PackageResourceFolder="/CASUAL/SCRIPT";
