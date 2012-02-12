@@ -1,22 +1,36 @@
 package CASUAL;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.io.IOException;
+import java.net.URL;
+import java.security.CodeSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+/*
+ * To change this template, choose Tools | Templates and open the template in
+ * the editor.
+ */
 /**
  *
  * @author adam
  */
 public class CasualJFrame extends javax.swing.JPanel {
-
+    Log Log=new Log();
     /**
      * Creates new form CasualJFrame
      */
     public CasualJFrame() {
         initComponents();
-        Statics.ProgressArea=this.jTextArea1;
+        Statics.ProgressArea = this.jTextArea1;
+        Log.level0("Searching for scripts");
+        prepareScripts();
+        FileOperations FileOperations=new FileOperations();
+        FileOperations.readTextFromResource("/CASUAL/SCRIPT/Overview.Instructions.txt");
+        
     }
 
     /**
@@ -35,14 +49,13 @@ public class CasualJFrame extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
-        jTextArea1.setText("ISOs                                         y29735-factoryfs.rfs\nj24826-cache.rfs                             Z24826-param.lfs\nj29735-firmware.xml                          Z29735-factoryfs.rfs\nJ29735-zImage-1                              Z31253-factoryfs.rfs\nj31253-zImage\nadam@Adam-Desktop:~$ woot\nNo command 'woot' found, did you mean:\n Command 'woof' from package 'woof' (universe)\nwoot: command not found\nadam@Adam-Desktop:~$ omg\nNo command 'omg' found, did you mean:\n Command 'mog' from package 'mazeofgalious' (universe)\n Command 'mmg' from package 'mkvtoolnix-gui' (universe)\n Command 'om' from package 'omhacks' (universe)\n Command 'mg' from package 'mg' (universe)\n Command 'zomg' from package 'zomg' (universe)\nomg: command not found\nadam@Adam-Desktop:~$ \n");
+        jTextArea1.setWrapStyleWord(true);
         jScrollPane1.setViewportView(jTextArea1);
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
         jLabel1.setText("NARZ or picture of some sort");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText("Do It!");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -79,12 +92,51 @@ public class CasualJFrame extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Shell Shell=new Shell();
-        String cmd[]={"ls","-l"};
-        Log Log=new Log();
-        Log.level0(Shell.sendShellCommand(cmd));        // TODO add your handling code here:
+        ScriptParser ScriptParser=new ScriptParser();
+        ScriptParser.executeSelectedScript(jComboBox1.getSelectedItem()+".scr");
     }//GEN-LAST:event_jButton1ActionPerformed
+    
+    private void prepareScripts(){
+        try {
+            List Scripts=listScripts();
+        } catch (IOException ex) {
+            Log.level0("ListScripts() could not find any entries");
+            Logger.getLogger(CasualJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+    }
+    private List listScripts() throws IOException {
+        CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
+        List<String> List = new ArrayList<String>();
+        int Count=0;
 
+        if (Src != null) {
+            URL jar = Src.getLocation();
+            ZipInputStream Zip = new ZipInputStream(jar.openStream());
+            ZipEntry ZEntry;
+            while ((ZEntry = Zip.getNextEntry()) != null) {
+                String EntryName = ZEntry.getName();
+                if (EntryName.endsWith(".scr")) {
+                    List.add(EntryName);
+                    Log.level3("Found: "+EntryName.replace(".scr", ""));
+                    jComboBox1.addItem(EntryName.replace(".scr", ""));
+                    Count++;
+                }
+            }
+            if (Count == 0 ){
+                List.add("CASUAL/SCRIPT/Test Script.scr");
+                Log.level0("No Scripts found. Using Test Script.");
+                jComboBox1.addItem("Test Script");
+            }
+
+        }
+        return List;
+       
+
+
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
