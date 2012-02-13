@@ -88,14 +88,13 @@ public class Shell implements Runnable {
             String[] MacCommand={ScriptFile};
             Result = sendShellCommand(MacCommand);
         }else if (!Statics.OSName.equals("Windows XP")) {
-            
-                    for (int i = 0; i < cmd.length; i++) {
-            Command = Command + cmd[i] + " ";
-        }
-            newCmd = new String[3];
+            newCmd = new String[cmd.length + 2];
             newCmd[0] = Statics.WinElevatorInTempFolder;
-            newCmd[1] = "-wait";
-            newCmd[2] = Command;
+            newCmd[1] = "-wait";            
+            for (int i = 2; i < cmd.length+2; i++) {
+                newCmd[i]=cmd[i-2] + " ";
+            }
+           
             Result = sendShellCommand(newCmd);
 
         }

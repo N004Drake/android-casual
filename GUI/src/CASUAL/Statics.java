@@ -112,7 +112,7 @@ public class Statics {
     final public static String WinADB2="/CASUAL/resources/ADB/AdbWinApi.dll";
     final public static String WinADB3="/CASUAL/resources/ADB/AdbWinUsbApi.dll";
     //Windows permissions elevator
-    final public static String WinPermissionElevatorResource="/CASUAL/resources/Elevate.exe";
+    final public static String WinPermissionElevatorResource="/CASUAL/resources/ADB/Elevate.exe";
     final public static String ADBini=CASUALSCRIPT+"adb_usb.ini";
     
    
