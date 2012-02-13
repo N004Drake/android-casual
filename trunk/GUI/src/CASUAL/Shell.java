@@ -69,7 +69,7 @@ public class Shell implements Runnable {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
-            String[] SendCommand={"gksudo",ScriptFile};
+            String[] SendCommand={"gksudo","-k",ScriptFile};
             Result=Shell.sendShellCommand(SendCommand);
         }else if (Statics.isMac()) {
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
