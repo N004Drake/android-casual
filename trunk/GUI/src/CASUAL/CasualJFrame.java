@@ -176,6 +176,7 @@ public class CasualJFrame extends javax.swing.JPanel {
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isWindows()){
+            FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.AdbDeployed=Statics.TempFolder+"adb.exe";
             FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
