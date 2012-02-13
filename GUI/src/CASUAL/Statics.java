@@ -57,7 +57,7 @@ public class Statics {
      *Form data for Heimdall One-Click View 
      */
     public static String ScriptLocation="/CASUAL/SCRIPT/";
-    public static CasualJFrame GUI=new CasualJFrame();
+    public static CasualJFrame GUI;
     public static JTextArea ProgressArea; //used by log to update Progress
     public static String PreProgress;
     
@@ -113,7 +113,7 @@ public class Statics {
     final public static String WinADB3="/CASUAL/resources/ADB/AdbWinUsbApi.dll";
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource="/CASUAL/resources/Elevate.exe";
-    final public static String ADBini="/casual/SCRIPT/adb_usb.ini";
+    final public static String ADBini=CASUALSCRIPT+"adb_usb.ini";
     
    
 

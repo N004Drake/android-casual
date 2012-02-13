@@ -19,185 +19,216 @@
  * SOFTWARE.
  */
 package CASUAL;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
- * @author adam 
+ * @author adam
  */
 //define <output and input> to this abstract class
-public class Shell implements Runnable{
-    
+public class Shell implements Runnable {
+
     //for internal access
-    public Shell() {}
-    
+    public Shell() {
+    }
     //for external access
-        Log log = new Log();
-      //Send a command to the shell
+    Log log = new Log();
+    //Send a command to the shell
 
-           
- public String elevateSimpleCommand(String[] cmd){
-      String[] newCmd;
-      
-      if (!Statics.OSName.equals("Windows XP")){
-           newCmd=new String[3];
-           newCmd[0]=Statics.WinElevatorInTempFolder;
-           newCmd[1]="-wait";
-           newCmd[2]=cmd[0];
-           
-     } else {
-          
-          //TODO check permissions here
-         newCmd = cmd;
-     }
-     log.level3("Executing elevate simple:" + this.arrayToString(newCmd));
-     String Result=sendShellCommand(newCmd);
-     return Result;
- }
+    public String elevateSimpleCommand(String[] cmd) {
+        String NewCmd="";
+        FileOperations FileOperations = new FileOperations();
+        Shell Shell=new Shell();
+        String Result="";
+        
+        
+        String Command = "";
+        for (int i = 0; i < cmd.length; i++) {
+            Command = Command + cmd[i] + " ";
+        }
 
+        String[] newCmd;
+        if (Statics.isLinux()) {
+            String[] TestGKSudo={"which", "gksudo"};
+            String TestReturn=Shell.sendShellCommand(TestGKSudo);
+            if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))){
+                TimeOutOptionPane TO = new TimeOutOptionPane();
+                TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", TO.OK_OPTION, TO.ERROR_MESSAGE, null, null);
+            }
+            
+            
+            String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
+            try {
+                FileOperations.writeToFile(Command,ScriptFile);
+            } catch (IOException ex) {
+                Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            FileOperations.setExecutableBit(ScriptFile);
+            String[] SendCommand={"gksudo",ScriptFile};
+            Result=Shell.sendShellCommand(SendCommand);
+        }else if (Statics.isMac()) {
+            String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
+            try {
+                FileOperations.writeToFile(""
+                        + "#!/bin/sh \n"
+                        + "export bar=\"" + Command + "\"\n"
+                        + "for i in \"$@\"; do export bar=\"$bar '${i}'\";done"
+                        + "osascript -e \"do shell script \"$bar\" with administrator privileges\""
+                        + "", ScriptFile);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            FileOperations.setExecutableBit(ScriptFile);
+            String[] MacCommand={ScriptFile};
+            Result = sendShellCommand(MacCommand);
+        }else if (!Statics.OSName.equals("Windows XP")) {
+            newCmd = new String[3];
+            newCmd[0] = Statics.WinElevatorInTempFolder;
+            newCmd[1] = "-wait";
+            newCmd[2] = cmd[0];
+            Result = sendShellCommand(newCmd);
 
-  
-  
- public String sendShellCommand(String[] cmd){
-     log.level3("\n###executing: "+ cmd[0]+ "###");
-     String AllText="";   
-     try {
-        String line;
-        Process process = new ProcessBuilder(cmd).start();
-        BufferedReader STDOUT = new BufferedReader( new InputStreamReader(process.getInputStream()));
-        BufferedReader STDERR = new BufferedReader( new InputStreamReader(process.getErrorStream()));
+        }
+        
+        return Result;
+    }
+
+    public String sendShellCommand(String[] cmd) {
+        log.level3("\n###executing: " + cmd[0] + "###");
+        String AllText = "";
+        try {
+            String line;
+            Process process = new ProcessBuilder(cmd).start();
+            BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             try {
                 process.waitFor();
             } catch (InterruptedException ex) {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
-        while ((line = STDERR.readLine()) != null) {
-                AllText=AllText+"\n"+line;
-        }   
-        while ((line = STDOUT.readLine()) != null) {
-            AllText=AllText+"\n"+line;
             while ((line = STDERR.readLine()) != null) {
-                AllText=AllText+"\n"+line;
-            }   
+                AllText = AllText + "\n" + line;
+            }
+            while ((line = STDOUT.readLine()) != null) {
+                AllText = AllText + "\n" + line;
+                while ((line = STDERR.readLine()) != null) {
+                    AllText = AllText + "\n" + line;
+                }
+            }
+            //log.level0(cmd[0]+"\":"+AllText);
+            return AllText;
+        } catch (IOException ex) {
+            log.level2("Problem while executing" + arrayToString(cmd)
+                    + " in Shell.sendShellCommand() Received " + AllText);
+            return "CritERROR!!!";
         }
-        //log.level0(cmd[0]+"\":"+AllText);
-        return AllText;
-    } catch (IOException ex) {
-              log.level2("Problem while executing"+ arrayToString(cmd)+
-                " in Shell.sendShellCommand() Received " +AllText);
-        return "CritERROR!!!";
+
     }
 
-  }
- 
- public String silentShellCommand(String[] cmd){
-     
-     String AllText="";   
-     try {
-        String line;
-        Process process = new ProcessBuilder(cmd).start();
-        BufferedReader STDOUT = new BufferedReader( new InputStreamReader(process.getInputStream()));
-        while ((line = STDOUT.readLine()) != null) {
-            AllText=AllText+"\n"+line;
+    public String silentShellCommand(String[] cmd) {
 
+        String AllText = "";
+        try {
+            String line;
+            Process process = new ProcessBuilder(cmd).start();
+            BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            while ((line = STDOUT.readLine()) != null) {
+                AllText = AllText + "\n" + line;
+
+            }
+            return AllText;
+        } catch (IOException ex) {
+            return "error";
         }
-        return AllText;
-    } catch (IOException ex) {
-        return "error";
+
     }
-   
-  }
- 
- 
- 
-    public String arrayToString(String[] stringarray){
+
+    public String arrayToString(String[] stringarray) {
         String str = " ";
         for (int i = 0; i < stringarray.length; i++) {
-         str = str + " " + stringarray[i];
+            str = str + " " + stringarray[i];
         }
         log.level3("arrayToString " + stringarray + " expanded to: " + str);
         return str;
     }
 
- private boolean testForException(Process process){
-     
-     if ( process.exitValue() >= 0 ){
-         
-       return false;
-     } else {
-       return true;
-     }
-     
-     
- }
+    private boolean testForException(Process process) {
 
- public void liveShellCommand(){
+        if (process.exitValue() >= 0) {
 
-
- Runnable r = new Runnable(){
-     public void run(){
-        boolean LinkLaunched = false;
-        try {  
-            String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);  
-            Process process = new ProcessBuilder(params).start();
-            BufferedReader STDOUT = new BufferedReader( new InputStreamReader(process.getInputStream()));
-            BufferedReader STDERR = new BufferedReader( new InputStreamReader(process.getErrorStream()));
-            String LineRead =null;   
-            String CharRead = null;
-            boolean ResetLine=false;
-            int c;
-            while( (c = STDOUT.read()) >-1) {   
-                if (ResetLine){
-                    log.beginLine();
-                    ResetLine=!ResetLine;
-                }
-                CharRead=Character.toString((char)c);
-                LineRead=LineRead+CharRead;
-                log.progress(CharRead);
-                if ((! LinkLaunched)&&(LineRead.contains("Modified SBL Injection Completed Download Mode Activated"))){
-                    LinkLaunched=true;
-                    TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
-                    int DResult= timeOutOptionPane.showTimeoutDialog(
-                         7, //timeout
-                         null, //parentComponent
-                         "Don't forget to use the donate button.\n"+
-                         "Donations help developers justify time spent on projects "
-                            + "to their wives :).", 
-                         "Succes!s",//DisplayTitle
-                         TimeOutOptionPane.OK_OPTION, // Options buttons
-                         TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
-                         new String[]{"OK"}, // option buttons
-                         "No"); //Default{
-                    if ( DResult == 0 ){
-                    }
-                }
-            }
-            while ((LineRead=STDERR.readLine()) != null){
-                log.progress(LineRead);
-            }
-
-        } catch (IOException ex) {
-                    String[] ArrayList =(String[])Statics.LiveSendCommand.toArray();
-                    log.level2("Problem while executing"+ ArrayList + 
-                            " in Shell.liveShellCommand()");
-            Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } else {
+            return true;
         }
-     }
-   };
-   Thread t = new Thread(r);
-   t.start();
- }
- public void run() {
-     throw new UnsupportedOperationException("Not supported yet.");
- }
- 
-   
-   
-   
- 
+
+
+    }
+
+    public void liveShellCommand() {
+
+
+        Runnable r = new Runnable() {
+
+            public void run() {
+                boolean LinkLaunched = false;
+                try {
+                    String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);
+                    Process process = new ProcessBuilder(params).start();
+                    BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    String LineRead = null;
+                    String CharRead = null;
+                    boolean ResetLine = false;
+                    int c;
+                    while ((c = STDOUT.read()) > -1) {
+                        if (ResetLine) {
+                            log.beginLine();
+                            ResetLine = !ResetLine;
+                        }
+                        CharRead = Character.toString((char) c);
+                        LineRead = LineRead + CharRead;
+                        log.progress(CharRead);
+                        if ((!LinkLaunched) && (LineRead.contains("Modified SBL Injection Completed Download Mode Activated"))) {
+                            LinkLaunched = true;
+                            TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
+                            int DResult = timeOutOptionPane.showTimeoutDialog(
+                                    7, //timeout
+                                    null, //parentComponent
+                                    "Don't forget to use the donate button.\n"
+                                    + "Donations help developers justify time spent on projects "
+                                    + "to their wives :).",
+                                    "Succes!s",//DisplayTitle
+                                    TimeOutOptionPane.OK_OPTION, // Options buttons
+                                    TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
+                                    new String[]{"OK"}, // option buttons
+                                    "No"); //Default{
+                            if (DResult == 0) {
+                            }
+                        }
+                    }
+                    while ((LineRead = STDERR.readLine()) != null) {
+                        log.progress(LineRead);
+                    }
+
+                } catch (IOException ex) {
+                    String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();
+                    log.level2("Problem while executing" + ArrayList
+                            + " in Shell.liveShellCommand()");
+                    Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        Thread t = new Thread(r);
+        t.start();
+    }
+
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

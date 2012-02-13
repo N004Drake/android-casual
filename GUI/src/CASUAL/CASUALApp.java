@@ -17,6 +17,7 @@ public class CASUALApp extends SingleFrameApplication {
     @Override
     protected void startup() {
         FileOperations FileOperations= new FileOperations();
+        Statics Statics=new Statics();
         
         FileOperations.makeFolder(Statics.TempFolder);
         
