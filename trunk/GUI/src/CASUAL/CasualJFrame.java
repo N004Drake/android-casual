@@ -167,6 +167,7 @@ public class CasualJFrame extends javax.swing.JPanel {
     private void deployADB() {
         if (Statics.isLinux()){
             Statics.AdbDeployed=Statics.TempFolder+"adb";
+            Log.level0(Statics.TempFolder);
             FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isMac()){
@@ -183,8 +184,11 @@ public class CasualJFrame extends javax.swing.JPanel {
             Log.level0("Your system is not supported");
         }
         FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder+"adb_usb.ini");
-        String[] cmd={Statics.AdbDeployed};
+        
+        String[] cmd={Statics.AdbDeployed,"kill-server"};
         Log.level0(new Shell().sendShellCommand(cmd));
+        String[] cmd2= {Statics.AdbDeployed, "devices"};
+        Log.level0(new Shell().elevateSimpleCommand(cmd2));
 
     }
 }
