@@ -102,8 +102,8 @@ public class CasualJFrame extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ScriptParser ScriptParser=new ScriptParser();
-        ScriptParser.executeSelectedScript(jComboBox1.getSelectedItem()+".scr");
-        ScriptParser.executeSelectedScript(Statics.AdbDeployed);
+        ScriptParser.executeSelectedScript(jComboBox1.getSelectedItem().toString());
+
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
