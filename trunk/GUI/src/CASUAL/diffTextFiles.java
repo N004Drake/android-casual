@@ -13,44 +13,42 @@ import java.io.IOException;
  * @author LogansALIEN
  */
 public class diffTextFiles {
-    public diffTextFiles(String file1,String file2)
-    {
-        try{
-            BufferedReader reader1 = new BufferedReader(new FileReader(file1));
-            try {
-               String line = null;
-               while ((line=reader1.readLine())!=null){
-                   string1.append(line);
-                   string1.append(System.getProperty("line.separator"));
-               }
-            }
-            finally{
-            reader1.close();
-            }
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        
-        try{
-            BufferedReader reader2 = new BufferedReader(new FileReader(file1));
-            try {
-               String line = null;
-               while ((line=reader2.readLine())!=null){
-                   string2.append(line);
-                   string2.append(System.getProperty("line.separator"));
-               }
-            }
-            finally{
-            reader2.close();
-            }
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
 
+
+   public String diffTextFiles(String File1, String File2) {
+                   String DifferenceFromFile1 = "";
+       try {
+            BufferedReader Reader1 = new BufferedReader(new FileReader(File1));
+            try {
+
+                String Line;
+                String Line2;
+
+
+                while ((Line = Reader1.readLine()) != null) {
+                    boolean LineExists = false;
+                    BufferedReader Reader2 = new BufferedReader(new FileReader(File1));
+                    try {
+
+                        while ((Line2 = Reader2.readLine()) != null) {
+                            if (Line2.equals(Line)) {
+                                LineExists = true;
+                            }
+                        }
+                        if (!LineExists) {
+                            DifferenceFromFile1 = DifferenceFromFile1 + "\n" + Line;
+                        }
+                    } finally {
+                        Reader2.close();
+                    }
+                }
+        } finally {
+            Reader1.close();
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
     }
-    private StringBuilder string1,string2;
-    
-    
+       return DifferenceFromFile1;
+}
+private StringBuilder string1, string2;
 }
