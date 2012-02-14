@@ -4,9 +4,9 @@
  */
 package CASUAL;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,15 +21,26 @@ public class ScriptParser {
         Statics.GUI.enableControls(false);
         Log.level2("Selected "+ Script + " " );
         //TODO open as datastream and pass to DoRead
+        FileInputStream fis = null; 
+        InputStreamReader in = null;
+        String TextFile="";
+        InputStream resourceAsStream = getClass().getResourceAsStream("/CASUAL/SCRIPT/"+Script+".scr");
+        DataInputStream DIN = new DataInputStream(resourceAsStream);
+        Log.level3("Reading "+"/CASUAL/SCRIPT/"+Script+".scr");
+        doRead(DIN);
+       
+
+        
+        //doRead(Script);
         Statics.GUI.enableControls(true);
     }
     
-    private static void DoRead(DataInputStream dataIn) {
+    private void doRead(DataInputStream dataIn) {
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
             String strLine;
             while ((strLine = bReader.readLine()) != null) {
-                parseScript();
+                parseScript(strLine);
             }
             //Close the input stream
             dataIn.close();
@@ -38,8 +49,8 @@ public class ScriptParser {
         }
         
     }
-    private static void parseScript() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void parseScript(String Line) {
+        Log.level3(Line);
     }
     
 }
