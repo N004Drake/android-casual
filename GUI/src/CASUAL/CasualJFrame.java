@@ -109,7 +109,8 @@ public class CasualJFrame extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+jComboBox1.getSelectedItem().toString()+".txt"));
+        Log.level1("Description for " + jComboBox1.getSelectedItem().toString()); 
+        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+jComboBox1.getSelectedItem().toString()+".txt"));
 
     }//GEN-LAST:event_jComboBox1ActionPerformed
     
@@ -187,10 +188,27 @@ public class CasualJFrame extends javax.swing.JPanel {
         }
         FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder+"adb_usb.ini");
         
+        Shell Shell = new Shell();
+        //todo remove for test
         String[] cmd={Statics.AdbDeployed,"kill-server"};
-        Log.level0(new Shell().sendShellCommand(cmd));
+        Log.level2("Killing Server"+Shell.sendShellCommand(cmd));
+        
         String[] cmd2= {Statics.AdbDeployed, "devices"};
-        Log.level0(new Shell().elevateSimpleCommand(cmd2));
-
+        String DeviceList=Shell.sendShellCommand(cmd2);
+        Log.level1("Device List:"+DeviceList);
+        if (DeviceList.contains("????????????")){
+            Log.level1("killing server and requesting elevated permissions");
+            Shell.sendShellCommand(cmd);
+            DeviceList=Shell.elevateSimpleCommand(cmd2);
+            if (! DeviceList.contains("????????????")){
+                Log.level1(DeviceList);
+            } else {
+                Log.level0("Unrecognized device detected");
+                
+            }
+            
+            
+        }
+                
     }
 }
