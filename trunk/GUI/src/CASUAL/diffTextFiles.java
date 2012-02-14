@@ -4,9 +4,9 @@
  */
 package CASUAL;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -50,5 +50,36 @@ public class diffTextFiles {
     }
        return DifferenceFromFile1;
 }
+   //Takes in the Diff from the constructor and writes it to the file that is 
+   //iniFile.
+   private void writeDiffToIni(String diff){
+   InputStream ResourceAsStream = getClass().getResourceAsStream(Statics.ADBini);
+   try{
+   BufferedReader d =new BufferedReader(new InputStreamReader(ResourceAsStream));
+        try {
+            while((currentString = d.readLine()) != null)
+            {
+            FileOutputStream fout = new FileOutputStream(Statics.ADBini + "_new"); 
+            new PrintStream(fout).println(currentString);
+            }
+            new PrintStream(fout).println(diff);
+        } 
+        finally{
+            fout.close();
+            d.close();
+            File file = new File(Statics.ADBini);
+            file.delete();
+            file = new File(Statics.ADBini + "_new");
+            file.renameTo(new File(Statics.ADBini).getAbsoluteFile());
+        }
+   }
+        catch (IOException ex) {
+            Logger.getLogger(diffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+   
 private StringBuilder string1, string2;
+private String currentString;
+private BufferedReader d;
+private FileOutputStream fout;
 }
