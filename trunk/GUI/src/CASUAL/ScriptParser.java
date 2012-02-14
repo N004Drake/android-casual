@@ -14,9 +14,6 @@ import java.io.InputStreamReader;
  */
 public class ScriptParser {
 
-    private static void parseScript() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
     Log Log=new Log();
     
     
@@ -39,7 +36,10 @@ public class ScriptParser {
         } catch (Exception e) {//Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
+        
     }
-    
+    private static void parseScript() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
     
 }
