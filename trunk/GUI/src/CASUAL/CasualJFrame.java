@@ -207,6 +207,13 @@ public class CasualJFrame extends javax.swing.JPanel {
         if (DeviceList.contains("????????????")){
             Log.level1("killing server and requesting elevated permissions");
             Shell.sendShellCommand(cmd);
+            TimeOutOptionPane TimeOutOptionPane=new TimeOutOptionPane();
+            String[] ok={"ok"};
+            TimeOutOptionPane.showTimeoutDialog(60,null, "It would appear that this computer\n"
+                    + "is not set up properly to communicate\n"
+                    + "with the device.  As a work-around we\n"
+                    + "will attempt to elevate permissions \n"
+                    + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, WIDTH, ok,0);
             DeviceList=Shell.elevateSimpleCommand(cmd2);
             if (! DeviceList.contains("????????????")){
                 Log.level1(DeviceList);
