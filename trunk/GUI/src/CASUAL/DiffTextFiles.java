@@ -36,22 +36,20 @@ public class DiffTextFiles {
 
     }
 
-    public String diffTextFiles(String File1, String File2) {
+    public String diffTextFiles(String Original, String TestForDiff) {
         String DifferenceFromFile1 = "";
         try {
-            BufferedReader Reader1 = new BufferedReader(new FileReader(File1));
+            BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff));
             try {
 
                 String Line;
                 String Line2;
-
-
-                while ((Line = Reader1.readLine()) != null) {
-                    boolean LineExists = false;
-                    BufferedReader Reader2 = new BufferedReader(new FileReader(File1));
+                while ((Line = BRTestDiff.readLine()) != null) {
+                    ;
+                    BufferedReader BROriginal = new BufferedReader(new FileReader(Original));
                     try {
-
-                        while ((Line2 = Reader2.readLine()) != null) {
+                        boolean LineExists = false;
+                        while ((Line2 = BROriginal.readLine()) != null) {
                             if (Line2.equals(Line)) {
                                 LineExists = true;
                             }
@@ -59,12 +57,13 @@ public class DiffTextFiles {
                         if (!LineExists) {
                             DifferenceFromFile1 = DifferenceFromFile1 + "\n" + Line;
                         }
+                        
                     } finally {
-                        Reader2.close();
+                        BROriginal.close();
                     }
-                }
+                                   }
             } finally {
-                Reader1.close();
+                BRTestDiff.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
