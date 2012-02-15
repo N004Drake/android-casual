@@ -14,13 +14,13 @@ import java.util.logging.Logger;
  */
 public class DiffTextFiles {
 
-    public String diffResourceVersusFile(String TestIStream, String OriginalFile)  {
-        
+    public String diffResourceVersusFile(String TestIStream, String OriginalFile) {
+
         String Difference = "";
         InputStream ResourceAsStream = getClass().getResourceAsStream(TestIStream);
         BufferedReader TestStream = new BufferedReader(new InputStreamReader(ResourceAsStream));
         File Original = new File(OriginalFile);
-        String TestStreamLine;
+        String TestStreamLine = "";
         String OriginalFileLine;
         try {
             while ((TestStreamLine = TestStream.readLine()) != null) {
@@ -29,17 +29,27 @@ public class DiffTextFiles {
                 while ((OriginalFileLine = OriginalReader.readLine()) != null) {
                     if (OriginalFileLine.equals(TestStreamLine)) {
                         LineExists = true;
-                    } 
+                    }
                 }
                 if (!LineExists) {
-                    Difference = Difference  + "\n" + TestStreamLine;
+                    Difference = Difference + "\n" + TestStreamLine;
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+
+            Difference = TestStreamLine + "\n";
+            try {
+                while ((TestStreamLine = TestStream.readLine()) != null) {
+                    Difference = Difference + TestStreamLine + "\n";
+                }
+            } catch (IOException ex1) {
+                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+
+
         }
-        if (Difference.startsWith("\n")){
-            Difference=Difference.replaceFirst("\n","");
+        if (Difference.startsWith("\n")) {
+            Difference = Difference.replaceFirst("\n", "");
         }
         return Difference;
 
@@ -66,11 +76,11 @@ public class DiffTextFiles {
                         if (!LineExists) {
                             DifferenceFromFile1 = DifferenceFromFile1 + "\n" + Line;
                         }
-                        
+
                     } finally {
                         BROriginal.close();
                     }
-                                   }
+                }
             } finally {
                 BRTestDiff.close();
             }
@@ -85,28 +95,43 @@ public class DiffTextFiles {
     public void appendDiffToFile(String NameOfFileToBeModified, String Diff) {
         String currentString;
         FileOutputStream FileOut = null;
-        File FileToModify=new File(NameOfFileToBeModified);
-        try {
-            FileReader FR=new FileReader(FileToModify);
-            BufferedReader OriginalFileBuffer = new BufferedReader(FR);
+        File FileToModify = new File(NameOfFileToBeModified);
+        if (!FileToModify.exists()) {
             try {
-                FileOut = new FileOutputStream(NameOfFileToBeModified + "_new");
-                while ((currentString = OriginalFileBuffer.readLine()) != null) {
-                    new PrintStream(FileOut).println(currentString);
-                }
-                new PrintStream(FileOut).println(Diff);
-            } finally {
-                FileOut.close();
+                FileToModify.mkdirs();
+                FileToModify.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        FileReader FR;
+        try {
+            FR = new FileReader(FileToModify);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
+        BufferedReader OriginalFileBuffer = new BufferedReader(FR);
+        try {
+            FileOut = new FileOutputStream(NameOfFileToBeModified + "_new");
+            while ((currentString = OriginalFileBuffer.readLine()) != null) {
+                new PrintStream(FileOut).println(currentString);
+            }
+            new PrintStream(FileOut).println(Diff);
+        } catch (IOException ex) {
+            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+
+        } finally {
+            try {
                 OriginalFileBuffer.close();
                 File OutputFile = FileToModify;
                 OutputFile.delete();
                 OutputFile = new File(NameOfFileToBeModified + "_new");
                 OutputFile.renameTo(new File(NameOfFileToBeModified).getAbsoluteFile());
+            } catch (IOException ex) {
+                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
 
+    }
 }
