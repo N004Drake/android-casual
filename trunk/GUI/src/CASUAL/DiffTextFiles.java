@@ -14,23 +14,29 @@ import java.util.logging.Logger;
  */
 public class DiffTextFiles {
 
-    public String diffInputStreamVersusFile(InputStream TestIStream, String OriginalFile) throws IOException {
+    public String diffResourceVersusFile(String TestIStream, String OriginalFile)  {
+        
         String Difference = "";
-        BufferedReader TestStream = new BufferedReader(new InputStreamReader(TestIStream));
+        InputStream ResourceAsStream = getClass().getResourceAsStream(TestIStream);
+        BufferedReader TestStream = new BufferedReader(new InputStreamReader(ResourceAsStream));
         File Original = new File(OriginalFile);
         String TestStreamLine;
         String OriginalFileLine;
-        while ((TestStreamLine = TestStream.readLine()) != null) {
-            boolean LineExists = false;
-            BufferedReader OriginalReader = new BufferedReader(new FileReader(Original));
-            while ((OriginalFileLine = OriginalReader.readLine()) != null) {
-                if (OriginalFileLine.equals(TestStreamLine)) {
-                    LineExists = true;
+        try {
+            while ((TestStreamLine = TestStream.readLine()) != null) {
+                boolean LineExists = false;
+                BufferedReader OriginalReader = new BufferedReader(new FileReader(Original));
+                while ((OriginalFileLine = OriginalReader.readLine()) != null) {
+                    if (OriginalFileLine.equals(TestStreamLine)) {
+                        LineExists = true;
+                    } 
+                }
+                if (!LineExists) {
+                    Difference = Difference + "\n" + TestStreamLine;
                 }
             }
-            if (!LineExists) {
-                Difference = Difference + "\n" + TestStreamLine;
-            }
+        } catch (IOException ex) {
+            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Difference;
 
