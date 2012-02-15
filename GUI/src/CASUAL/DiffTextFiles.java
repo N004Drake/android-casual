@@ -32,11 +32,14 @@ public class DiffTextFiles {
                     } 
                 }
                 if (!LineExists) {
-                    Difference = Difference + "\n" + TestStreamLine;
+                    Difference = Difference  + "\n" + TestStreamLine;
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (Difference.startsWith("\n")){
+            Difference=Difference.replaceFirst("\n","");
         }
         return Difference;
 
