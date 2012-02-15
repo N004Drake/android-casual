@@ -167,16 +167,25 @@ public class CasualJFrame extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void deployADB() {
+        DiffTextFiles DTF=new DiffTextFiles();
+        
+        
         if (Statics.isLinux()){
+            //add our lines to the current adbini
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac,DTF.diffResourceVersusFile(Statics.ADBini,Statics.FilesystemAdbIniLocationLinuxMac));
             Statics.AdbDeployed=Statics.TempFolder+"adb";
             Log.level0(Statics.TempFolder);
             FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isMac()){
+            //add our lines to the current adbini
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac,DTF.diffResourceVersusFile(Statics.ADBini,Statics.FilesystemAdbIniLocationLinuxMac));
             Statics.AdbDeployed=Statics.TempFolder+"adb";
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isWindows()){
+            //add our lines to the current adbini
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows,DTF.diffResourceVersusFile(Statics.ADBini,Statics.FilesystemAdbIniLocationWindows));
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.AdbDeployed=Statics.TempFolder+"adb.exe";
             FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
