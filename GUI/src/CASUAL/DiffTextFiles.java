@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  *
  * @author LogansALIEN
  */
-public class diffTextFiles {
+public class DiffTextFiles {
 
     public String diffInputStreamVersusFile(InputStream TestIStream, String OriginalFile) throws IOException {
         String Difference = "";
@@ -74,30 +74,31 @@ public class diffTextFiles {
     //Takes in the Diff from the constructor and writes it to the file that is 
     //iniFile.
 
-    private void writeDiffToIni(String diff) {
-        InputStream ResourceAsStream = getClass().getResourceAsStream(Statics.ADBini);
+    public void appendDiffToFile(String NameOfFileToBeModified, String Diff) {
+        String currentString;
+        FileOutputStream FileOut = null;
+        File FileToModify=new File(NameOfFileToBeModified);
         try {
-            BufferedReader d = new BufferedReader(new InputStreamReader(ResourceAsStream));
+            FileReader FR=new FileReader(FileToModify);
+            BufferedReader OriginalFileBuffer = new BufferedReader(FR);
             try {
-                while ((currentString = d.readLine()) != null) {
-                    FileOutputStream fout = new FileOutputStream(Statics.ADBini + "_new");
-                    new PrintStream(fout).println(currentString);
+                FileOut = new FileOutputStream(NameOfFileToBeModified + "_new");
+                while ((currentString = OriginalFileBuffer.readLine()) != null) {
+                    new PrintStream(FileOut).println(currentString);
                 }
-                new PrintStream(fout).println(diff);
+                new PrintStream(FileOut).println(Diff);
             } finally {
-                fout.close();
-                d.close();
-                File file = new File(Statics.ADBini);
-                file.delete();
-                file = new File(Statics.ADBini + "_new");
-                file.renameTo(new File(Statics.ADBini).getAbsoluteFile());
+                FileOut.close();
+                OriginalFileBuffer.close();
+                File OutputFile = FileToModify;
+                OutputFile.delete();
+                OutputFile = new File(NameOfFileToBeModified + "_new");
+                OutputFile.renameTo(new File(NameOfFileToBeModified).getAbsoluteFile());
             }
         } catch (IOException ex) {
-            Logger.getLogger(diffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private StringBuilder string1, string2;
-    private String currentString;
-    private BufferedReader d;
-    private FileOutputStream fout;
+    
+
 }
