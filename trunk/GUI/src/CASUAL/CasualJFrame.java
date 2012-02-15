@@ -189,7 +189,6 @@ public class CasualJFrame extends javax.swing.JPanel {
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.AdbDeployed=Statics.TempFolder+"adb.exe";
             FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
-            FileOperations.setExecutableBit(Statics.AdbDeployed);
             FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder+"AdbWinApi.dll");
             FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder+"AdbWinUsbApi.dll");
         } else {
