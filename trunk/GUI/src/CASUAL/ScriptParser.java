@@ -24,9 +24,9 @@ public class ScriptParser {
         FileInputStream fis = null; 
         InputStreamReader in = null;
         String TextFile="";
-        InputStream resourceAsStream = getClass().getResourceAsStream("/CASUAL/SCRIPT/"+Script+".scr");
+        InputStream resourceAsStream = getClass().getResourceAsStream(Statics.ScriptLocation+Script+".scr");
         DataInputStream DIN = new DataInputStream(resourceAsStream);
-        Log.level3("Reading "+"/CASUAL/SCRIPT/"+Script+".scr");
+        Log.level3("Reading "+ Statics.ScriptLocation+Script+".scr");
         doRead(DIN);
        
 
