@@ -99,6 +99,9 @@ public class DiffTextFiles {
         if (!FileToModify.exists()) {
             try {
                 FileToModify.mkdirs();
+                if (FileToModify.isDirectory()){
+                    FileToModify.delete();
+                }
                 FileToModify.createNewFile();
             } catch (IOException ex) {
                 Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);

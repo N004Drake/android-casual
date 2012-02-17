@@ -104,6 +104,7 @@ public class Statics {
     public static String OSName=System.getProperty("os.name");
     public static String  OSType=""; //used for logging
     public static String  Arch="";
+    public static String SelectedScriptFolder;
     public static String WinElevatorInTempFolder=TempFolder+"Elevate.exe";
     final public static String CASUALSCRIPT="/SCRIPTS/";
     final public static String WinADB="/CASUAL/resources/ADB/adb.exe";
@@ -141,7 +142,7 @@ public class Statics {
     
   
     /*
-     * sets system information, including heimdall presence, operating system and archetecture
+     * sets system information, including binary presence, operating system and archetecture
      */
     public void setSystemInfo(){
 
