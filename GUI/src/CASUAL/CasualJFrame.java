@@ -111,6 +111,7 @@ public class CasualJFrame extends javax.swing.JPanel {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         Log.level1("Description for " + jComboBox1.getSelectedItem().toString()); 
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+jComboBox1.getSelectedItem().toString()+".txt"));
+        Statics.SelectedScriptFolder=Statics.TempFolder+jComboBox1.getSelectedItem().toString();
 
     }//GEN-LAST:event_jComboBox1ActionPerformed
     
@@ -199,6 +200,11 @@ public class CasualJFrame extends javax.swing.JPanel {
         Shell Shell = new Shell();
         //todo remove for test
         String[] cmd={Statics.AdbDeployed,"kill-server"};
+        //todo if this returns "ELFCLASS64"  && "wrong ELF" recommend
+        //todo installation of ia32-libs
+        // eg.. sudo apt-get install ia32-libs 
+        // eg..  sudo package manager install ia32-libs
+        // this should be a linux only error and the message will only work on Linux
         Log.level2("Killing Server"+Shell.sendShellCommand(cmd));
         
         String[] cmd2= {Statics.AdbDeployed, "devices"};

@@ -50,7 +50,25 @@ public class ScriptParser {
         
     }
     private void parseScript(String Line) {
-        Log.level3(Line);
+        //Log original line at a high level to be ignored for production 
+        Log.level3("Original:"+Line);
+        //Remove leading spaces
+        Line=removeLeadingSpaces(Line);
+        //Disregard commented lines
+        if (Line.startsWith("#")){
+            Log.level3("Ignoring commented line");
+        }
+        
+        
+        
+    }
+    
+    private String removeLeadingSpaces(String Line){
+        while (Line.startsWith(" ")){
+            Log.level3("Removing leading space.");
+            Line=Line.replaceFirst(" ", "");
+        }
+        return Line;
     }
     
 }
