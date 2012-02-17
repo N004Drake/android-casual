@@ -56,13 +56,13 @@ public class Statics {
     /*
      *Form data for Heimdall One-Click View 
      */
-    public static String ScriptLocation="/CASUAL/SCRIPT/";
+    public static String ScriptLocation="/SCRIPTS/";
     public static CasualJFrame GUI;
     public static JTextArea ProgressArea; //used by log to update Progress
     public static String PreProgress;
     
     public static String Slash=System.getProperty("file.separator");
-    public static String PackageResourceFolder="/CASUAL/SCRIPT";
+
     
     
 
@@ -105,7 +105,7 @@ public class Statics {
     public static String  OSType=""; //used for logging
     public static String  Arch="";
     public static String WinElevatorInTempFolder=TempFolder+"Elevate.exe";
-    final public static String CASUALSCRIPT="/CASUAL/SCRIPT/";
+    final public static String CASUALSCRIPT="/SCRIPTS/";
     final public static String WinADB="/CASUAL/resources/ADB/adb.exe";
     final public static String LinuxADB="/CASUAL/resources/ADB/adblinux";
     final public static String MacADB="/CASUAL/resources/ADB/adbmac";

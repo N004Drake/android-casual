@@ -313,7 +313,7 @@ public class FileOperations {
     
         
     private String setRes(String FileName ){
-        return Statics.PackageResourceFolder + FileName;
+        return Statics.ScriptLocation + FileName;
     }
     
     public String readTextFromResource(String Resource){
