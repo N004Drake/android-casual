@@ -55,7 +55,10 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        MenuItemOpenScript = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        MenuItemShowDeveloperPane = new javax.swing.JMenuItem();
+        MenuItemShowAboutBox = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,9 +85,38 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
         });
 
         jMenu1.setText("File");
+
+        MenuItemOpenScript.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.SHIFT_MASK));
+        MenuItemOpenScript.setText("Open CASUAL script");
+        MenuItemOpenScript.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemOpenScriptActionPerformed(evt);
+            }
+        });
+        jMenu1.add(MenuItemOpenScript);
+
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("About");
+
+        MenuItemShowDeveloperPane.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemShowDeveloperPane.setText("Developing A Script");
+        MenuItemShowDeveloperPane.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemShowDeveloperPaneActionPerformed(evt);
+            }
+        });
+        jMenu2.add(MenuItemShowDeveloperPane);
+
+        MenuItemShowAboutBox.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemShowAboutBox.setText("About");
+        MenuItemShowAboutBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemShowAboutBoxActionPerformed(evt);
+            }
+        });
+        jMenu2.add(MenuItemShowAboutBox);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -131,11 +163,28 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void MenuItemShowDeveloperPaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowDeveloperPaneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MenuItemShowDeveloperPaneActionPerformed
+
+    private void MenuItemOpenScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenScriptActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MenuItemOpenScriptActionPerformed
+
+    private void MenuItemShowAboutBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowAboutBoxActionPerformed
+        CASUALAboutBox CAB=new CASUALAboutBox();
+        
+        CAB.setVisible(true);
+    }//GEN-LAST:event_MenuItemShowAboutBoxActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem MenuItemOpenScript;
+    private javax.swing.JMenuItem MenuItemShowAboutBox;
+    private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -216,7 +265,7 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
             listScripts();
         } catch (IOException ex) {
             Log.level0("ListScripts() could not find any entries");
-            Logger.getLogger(CasualJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CASUALJFrame2.class.getName()).log(Level.SEVERE, null, ex);
            
         }
                 
