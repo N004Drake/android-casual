@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package CASUAL;
 
 import java.io.IOException;
@@ -7,25 +11,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.swing.JFrame;
 
-
-/*
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
- */
 /**
  *
  * @author adam
  */
-public class CasualJFrame extends JFrame {
-    Log Log=new Log();
+public class CASUALJFrame2 extends javax.swing.JFrame {
+            Log Log=new Log();
     FileOperations FileOperations=new FileOperations();
+
     /**
-     * Creates new form CasualJFrame
+     * Creates new form CASUALJFrame2
      */
-    public CasualJFrame() {
+    public CASUALJFrame2() {
         initComponents();
+
         Statics.ProgressArea = this.jTextArea1;
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+"Overview.Instructions.txt"));
          
@@ -35,6 +35,7 @@ public class CasualJFrame extends JFrame {
         Log.level3("Searching for scripts");
         prepareScripts();
         System.out.println(Statics.GUI);
+        
         
     }
 
@@ -55,6 +56,8 @@ public class CasualJFrame extends JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
@@ -96,13 +99,13 @@ public class CasualJFrame extends JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -111,67 +114,27 @@ public class CasualJFrame extends JFrame {
                 .addComponent(jButton1)
                 .addGap(8, 8, 8))
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ScriptParser ScriptParser=new ScriptParser();
-        ScriptParser.executeSelectedScript(jComboBox1.getSelectedItem().toString());
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        Log.level1("Description for " + jComboBox1.getSelectedItem().toString());
+        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
+        Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ScriptParser ScriptParser = new ScriptParser();
+        ScriptParser.executeSelectedScript(jComboBox1.getSelectedItem().toString());
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        Log.level1("Description for " + jComboBox1.getSelectedItem().toString()); 
-        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+jComboBox1.getSelectedItem().toString()+".txt"));
-        Statics.SelectedScriptFolder=Statics.TempFolder+jComboBox1.getSelectedItem().toString();
+    /**
+     * @param args the command line arguments
+     */
 
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-    
-    private void prepareScripts(){
-        try {
-            listScripts();
-        } catch (IOException ex) {
-            Log.level0("ListScripts() could not find any entries");
-            Logger.getLogger(CasualJFrame.class.getName()).log(Level.SEVERE, null, ex);
-           
-        }
-        
-        
-        
-    }
-    private void listScripts() throws IOException {
-        CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
-        int Count=0;
-
-        if (Src != null) {
-            URL jar = Src.getLocation();
-            ZipInputStream Zip = new ZipInputStream(jar.openStream());
-            ZipEntry ZEntry;
-            while ((ZEntry = Zip.getNextEntry()) != null) {
-                String EntryName = ZEntry.getName();
-                if (EntryName.endsWith(".scr")) {
-                    Log.level3("Found: "+EntryName.replace(".scr", ""));
-                    jComboBox1.addItem(EntryName.replace(".scr", ""));
-                    Count++;
-                }
-            }
-            if (Count == 0 ){
-                Log.level0("No Scripts found. Using Test Script.");
-                jComboBox1.addItem("Test Script");
-            }
-
-        }
-      
-   
-    }
-    public void enableControls(boolean status){
-        jButton1.setEnabled(status);
-        jComboBox1.setEnabled(status);
-        Log.level3("Controls Enabled status: " + status);
-    }
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
@@ -183,7 +146,7 @@ public class CasualJFrame extends JFrame {
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
-    private void deployADB() {
+ private void deployADB() {
         DiffTextFiles DTF=new DiffTextFiles();
         
         
@@ -248,4 +211,46 @@ public class CasualJFrame extends JFrame {
         }
                 
     }
+    private void prepareScripts(){
+        try {
+            listScripts();
+        } catch (IOException ex) {
+            Log.level0("ListScripts() could not find any entries");
+            Logger.getLogger(CasualJFrame.class.getName()).log(Level.SEVERE, null, ex);
+           
+        }
+                
+        
+    }
+    private void listScripts() throws IOException {
+        CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
+        int Count=0;
+
+        if (Src != null) {
+            URL jar = Src.getLocation();
+            ZipInputStream Zip = new ZipInputStream(jar.openStream());
+            ZipEntry ZEntry;
+            while ((ZEntry = Zip.getNextEntry()) != null) {
+                String EntryName = ZEntry.getName();
+                if (EntryName.endsWith(".scr")) {
+                    Log.level3("Found: "+EntryName.replace(".scr", ""));
+                    jComboBox1.addItem(EntryName.replace(".scr", ""));
+                    Count++;
+                }
+            }
+            if (Count == 0 ){
+                Log.level0("No Scripts found. Using Test Script.");
+                jComboBox1.addItem("Test Script");
+            }
+
+        }
+      
+   
+    }
+    public void enableControls(boolean status){
+        jButton1.setEnabled(status);
+        jComboBox1.setEnabled(status);
+        Log.level3("Controls Enabled status: " + status);
+    }
+
 }

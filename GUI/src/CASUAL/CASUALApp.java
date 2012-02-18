@@ -16,14 +16,19 @@ public class CASUALApp extends SingleFrameApplication {
      */
     @Override
     protected void startup() {
+        
         FileOperations FileOperations= new FileOperations();
         Statics Statics=new Statics();
         
         FileOperations.makeFolder(Statics.TempFolder);
         
-        Statics.GUI = new CasualJFrame();
+        //Statics.GUI = new CasualJFrame();
+        Statics.GUI= new CASUALJFrame2();
         System.out.println(Statics.GUI.toString());
-        show(Statics.GUI);
+        Statics.GUI.setVisible(true);
+        show(Statics.GUI); 
+        Statics.GUI.setVisible(true);
+        System.out.println(Statics.GUI.toString());
     }
 
     /**
