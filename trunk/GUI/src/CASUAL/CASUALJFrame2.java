@@ -164,7 +164,8 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void MenuItemShowDeveloperPaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowDeveloperPaneActionPerformed
-        // TODO add your handling code here:
+        CASUALDeveloperInstructions CDI=new CASUALDeveloperInstructions();
+        CDI.setVisible(true);
     }//GEN-LAST:event_MenuItemShowDeveloperPaneActionPerformed
 
     private void MenuItemOpenScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenScriptActionPerformed
