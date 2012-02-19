@@ -144,8 +144,8 @@
         <Container class="javax.swing.JPanel" name="jPanel2">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Overview.prop">
-                <Property name="tabTitle" type="java.lang.String" value="Overview.prop"/>
+              <JTabbedPaneConstraints tabName="build.properties">
+                <Property name="tabTitle" type="java.lang.String" value="build.properties"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -193,7 +193,10 @@
                 <Component class="javax.swing.JTextArea" name="jTextArea12">
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
+                    <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
+                    <Property name="text" type="java.lang.String" value="The build.properties file will set various project properties such as the title and banner.  When the Window.UsePictureForBanner is set to &quot;true&quot;, Window.BannerPic will be used for the main banner. Developer.* properties are used to give credit to the developer who created the CASUAL scripts and donation purposes."/>
+                    <Property name="wrapStyleWord" type="boolean" value="true"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="null"/>
                     </Property>
@@ -219,6 +222,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
+                    <Property name="text" type="java.lang.String" value="Developer.Name=Adam Oulter&#xa;Developer.DonateLink= http://woot.com&#xa;Developer.DonateButtonText= AdamOutler&#xa;Window.Title=woot&#xa;Window.UsePictureForBanner=false&#xa;Window.BannerText=&quot;Testtest&quot;&#xa;Window.BannerPic="/>
                   </Properties>
                 </Component>
               </SubComponents>

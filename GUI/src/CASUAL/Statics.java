@@ -121,7 +121,11 @@ public class Statics {
     final public static String FilesystemAdbIniLocationWindows=System.getProperty("user.home")+".android\\adb_usb.ini";
    
 
-
+    /*Project properties*/
+    public static String DeveloperName;
+    public static String DeveloperDonateLink;
+    public static String DonateButtonText;
+    
  
     /*
      * Determines if Linux, Mac or Windows
