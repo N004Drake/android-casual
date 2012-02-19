@@ -4,6 +4,8 @@
  */
 package CASUAL;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -11,19 +13,29 @@ import java.security.CodeSource;
 import java.util.Enumeration;
 import java.util.MissingResourceException;
 import java.util.Properties;
+import java.util.logging.Filter;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.Timer;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.TaskMonitor;
 
 /**
  *
  * @author adam
  */
 public class CASUALJFrame extends javax.swing.JFrame {
-
+    private final Timer busyIconTimer;
+    private final Icon idleIcon;
+    private final Icon[] busyIcons = new Icon[15];
+    private int busyIconIndex = 0;
     String NonResourceFileName;
     Log Log = new Log();
     FileOperations FileOperations = new FileOperations();
@@ -33,7 +45,59 @@ public class CASUALJFrame extends javax.swing.JFrame {
      */
     public CASUALJFrame() {
         initComponents();
+       org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(CASUAL.CASUALApp.class).getContext().getResourceMap(CASUALJFrame.class);
+
         populateFields();
+        resourceMap = Application.getInstance().getContext().getResourceMap(CASUALJFrame.class);
+       
+
+
+        int busyAnimationRate = resourceMap.getInteger("StatusBar.busyAnimationRate");
+        for (int count = 0; count < busyIcons.length; count++) {
+              busyIcons[count] = resourceMap.getIcon("StatusBar.busyIcons[" + count + "]"); 
+        }
+        busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
+                StatusAnimationLabel.setIcon(busyIcons[busyIconIndex]);
+            }
+        });
+
+        idleIcon = resourceMap.getIcon("/"+"StatusBar.idleIcon");
+        StatusAnimationLabel.setIcon(idleIcon);
+
+
+        // connecting action tasks to status bar via TaskMonitor
+        TaskMonitor taskMonitor = new TaskMonitor(Application.getInstance().getContext());
+        taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        
+             public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                 String propertyName = evt.getPropertyName();
+                 if ("started".equals(propertyName)) {
+                     if (!busyIconTimer.isRunning()) {
+                         StatusAnimationLabel.setIcon(busyIcons[0]);
+                         busyIconIndex = 0;
+                         busyIconTimer.start();
+                     }
+                     ProgressBar.setVisible(true);
+                     ProgressBar.setIndeterminate(true);
+                 } else if ("done".equals(propertyName)) {
+                     busyIconTimer.stop();
+                     StatusAnimationLabel.setIcon(idleIcon);
+                     ProgressBar.setVisible(false);
+                     ProgressBar.setValue(0);
+                 } else if ("message".equals(propertyName)) {
+                     String text = (String) (evt.getNewValue());
+                     StatusMessageLabel.setText((text == null) ? "" : text);
+
+                 } else if ("progress".equals(propertyName)) {
+                     int value = (Integer) (evt.getNewValue());
+                     ProgressBar.setVisible(true);
+                     ProgressBar.setIndeterminate(false);
+                     ProgressBar.setValue(value);
+                 }
+             }
+        });
         
 
 //TODO remove this crap        
@@ -73,6 +137,11 @@ while (keys.hasMoreElements()) {
         jComboBox1 = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        ProgressBar = new javax.swing.JProgressBar();
+        StatusAnimationLabel = new javax.swing.JLabel();
+        StatusMessageLabel = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemOpenScript = new javax.swing.JMenuItem();
@@ -129,6 +198,36 @@ while (keys.hasMoreElements()) {
             }
         });
 
+        StatusAnimationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASUAL/resources/icons/idle-icon.png"))); // NOI18N
+
+        StatusMessageLabel.setText("Ready");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(StatusMessageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addComponent(StatusAnimationLabel)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(StatusMessageLabel)
+                    .addComponent(StatusAnimationLabel)
+                    .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
+        );
+
         jMenu1.setText("File");
 
         MenuItemOpenScript.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.SHIFT_MASK));
@@ -179,15 +278,16 @@ while (keys.hasMoreElements()) {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2)))
                 .addContainerGap())
         );
@@ -196,14 +296,15 @@ while (keys.hasMoreElements()) {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -313,6 +414,9 @@ while (keys.hasMoreElements()) {
     private javax.swing.JMenuItem MenuItemOpenScript;
     private javax.swing.JMenuItem MenuItemShowAboutBox;
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
+    private javax.swing.JProgressBar ProgressBar;
+    private javax.swing.JLabel StatusAnimationLabel;
+    private javax.swing.JLabel StatusMessageLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
@@ -321,7 +425,9 @@ while (keys.hasMoreElements()) {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
@@ -472,6 +578,5 @@ while (keys.hasMoreElements()) {
             Log.level0("Could not find build.prop");
             System.out.print(ex);
         }
-        
     }
 }
