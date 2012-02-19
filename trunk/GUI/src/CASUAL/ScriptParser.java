@@ -26,7 +26,7 @@ public class ScriptParser {
     public void executeSelectedScriptFile(String Script){
         try {
             Log.level3("Selected file"+Script);
-            FileInputStream ResourceAsStream=new FileInputStream(Script);
+            FileInputStream ResourceAsStream=new FileInputStream(Script+".scr");
             DataInputStream DIS=new DataInputStream(ResourceAsStream);
             executeSelectedScript(DIS);
             
