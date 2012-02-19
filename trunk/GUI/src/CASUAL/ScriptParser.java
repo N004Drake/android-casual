@@ -16,22 +16,29 @@ public class ScriptParser {
 
     Log Log=new Log();
     
+    public void executeSelectedScriptResource(String Script){
+         Log.level3("Selected resource"+Script);
+         InputStream ResourceAsStream = getClass().getResourceAsStream(Statics.ScriptLocation+Script+".scr");
+         DataInputStream DIS=new DataInputStream(ResourceAsStream);
+         executeSelectedScript(DIS);
+    }
     
-    public void executeSelectedScript(String Script){
-        Statics.GUI.enableControls(false);
-        Log.level2("Selected "+ Script + " " );
-        //TODO open as datastream and pass to DoRead
-        FileInputStream fis = null; 
-        InputStreamReader in = null;
-        String TextFile="";
-        InputStream resourceAsStream = getClass().getResourceAsStream(Statics.ScriptLocation+Script+".scr");
-        DataInputStream DIN = new DataInputStream(resourceAsStream);
-        Log.level3("Reading "+ Statics.ScriptLocation+Script+".scr");
-        doRead(DIN);
-       
-
+    public void executeSelectedScriptFile(String Script){
+        try {
+            Log.level3("Selected file"+Script);
+            FileInputStream ResourceAsStream=new FileInputStream(Script);
+            DataInputStream DIS=new DataInputStream(ResourceAsStream);
+            executeSelectedScript(DIS);
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        //doRead(Script);
+    }
+    private void executeSelectedScript(DataInputStream DIS){
+        Log.level3("Reading datastream" + DIS);
+        Statics.GUI.enableControls(false);
+        doRead(DIS);
         Statics.GUI.enableControls(true);
     }
     

@@ -4,6 +4,7 @@
  */
 package CASUAL;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
@@ -11,32 +12,34 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import javax.swing.JFileChooser;
 
 /**
  *
  * @author adam
  */
-public class CASUALJFrame2 extends javax.swing.JFrame {
-            Log Log=new Log();
-    FileOperations FileOperations=new FileOperations();
+public class CASUALJFrame extends javax.swing.JFrame {
+
+    Log Log = new Log();
+    FileOperations FileOperations = new FileOperations();
 
     /**
      * Creates new form CASUALJFrame2
      */
-    public CASUALJFrame2() {
+    public CASUALJFrame() {
         initComponents();
 
         Statics.ProgressArea = this.jTextArea1;
-        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+"Overview.Instructions.txt"));
-         
+        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + "Overview.txt"));
+
         Log.level2("Deploying ADB");
         deployADB();
-        
+
         Log.level3("Searching for scripts");
         prepareScripts();
         System.out.println(Statics.GUI);
-        
-        
+
+
     }
 
     /**
@@ -48,6 +51,7 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        FileChooser1 = new javax.swing.JFileChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
@@ -59,6 +63,13 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         MenuItemShowDeveloperPane = new javax.swing.JMenuItem();
         MenuItemShowAboutBox = new javax.swing.JMenuItem();
+
+        FileChooser1.setDialogTitle("Select a CASUAL \"scr\" file");
+        FileChooser1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FileChooser1ActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -158,31 +169,47 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ScriptParser ScriptParser = new ScriptParser();
-        ScriptParser.executeSelectedScript(jComboBox1.getSelectedItem().toString());
+        ScriptParser.executeSelectedScriptResource(jComboBox1.getSelectedItem().toString());
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void MenuItemShowDeveloperPaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowDeveloperPaneActionPerformed
-        CASUALDeveloperInstructions CDI=new CASUALDeveloperInstructions();
+        CASUALDeveloperInstructions CDI = new CASUALDeveloperInstructions();
         CDI.setVisible(true);
     }//GEN-LAST:event_MenuItemShowDeveloperPaneActionPerformed
 
     private void MenuItemOpenScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenScriptActionPerformed
-        // TODO add your handling code here:
+        String FileName;
+        int returnVal = FileChooser1.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                FileName=FileChooser1.getSelectedFile().getCanonicalPath();
+                ScriptParser ScriptParser = new ScriptParser();
+                ScriptParser.executeSelectedScriptFile(FileName);
+            } catch (IOException ex) {
+                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
     }//GEN-LAST:event_MenuItemOpenScriptActionPerformed
 
     private void MenuItemShowAboutBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowAboutBoxActionPerformed
-        CASUALAboutBox CAB=new CASUALAboutBox();
-        
+        CASUALAboutBox CAB = new CASUALAboutBox();
+
         CAB.setVisible(true);
     }//GEN-LAST:event_MenuItemShowAboutBoxActionPerformed
 
+    private void FileChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileChooser1ActionPerformed
+
+    }//GEN-LAST:event_FileChooser1ActionPerformed
     /**
      * @param args the command line arguments
      */
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFileChooser FileChooser1;
     private javax.swing.JMenuItem MenuItemOpenScript;
     private javax.swing.JMenuItem MenuItemShowAboutBox;
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
@@ -196,85 +223,87 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
- private void deployADB() {
-        DiffTextFiles DTF=new DiffTextFiles();
-        
-        
-        if (Statics.isLinux()){
+    private void deployADB() {
+        DiffTextFiles DTF = new DiffTextFiles();
+
+
+        if (Statics.isLinux()) {
             //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac,DTF.diffResourceVersusFile(Statics.ADBini,Statics.FilesystemAdbIniLocationLinuxMac));
-            Statics.AdbDeployed=Statics.TempFolder+"adb";
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
+            Statics.AdbDeployed = Statics.TempFolder + "adb";
             Log.level0(Statics.TempFolder);
             FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
-        } else if (Statics.isMac()){
+        } else if (Statics.isMac()) {
             //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac,DTF.diffResourceVersusFile(Statics.ADBini,Statics.FilesystemAdbIniLocationLinuxMac));
-            Statics.AdbDeployed=Statics.TempFolder+"adb";
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
+            Statics.AdbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
-        } else if (Statics.isWindows()){
+        } else if (Statics.isWindows()) {
             //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows,DTF.diffResourceVersusFile(Statics.ADBini,Statics.FilesystemAdbIniLocationWindows));
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationWindows));
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
-            Statics.AdbDeployed=Statics.TempFolder+"adb.exe";
+            Statics.AdbDeployed = Statics.TempFolder + "adb.exe";
             FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
-            FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder+"AdbWinApi.dll");
-            FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder+"AdbWinUsbApi.dll");
+            FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
+            FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
         } else {
             Log.level0("Your system is not supported");
         }
-        FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder+"adb_usb.ini");
-        
+        FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
+
         Shell Shell = new Shell();
         //todo remove for test
-        String[] cmd={Statics.AdbDeployed,"kill-server"};
+        String[] cmd = {Statics.AdbDeployed, "kill-server"};
         //todo if this returns "ELFCLASS64"  && "wrong ELF" recommend
         //todo installation of ia32-libs
         // eg.. sudo apt-get install ia32-libs 
         // eg..  sudo package manager install ia32-libs
         // this should be a linux only error and the message will only work on Linux
-        Log.level2("Killing Server"+Shell.sendShellCommand(cmd));
-        
-        String[] cmd2= {Statics.AdbDeployed, "devices"};
-        String DeviceList=Shell.sendShellCommand(cmd2);
-        Log.level1("Device List:"+DeviceList);
-        if (DeviceList.contains("????????????")){
+        Log.level2("Killing Server" + Shell.sendShellCommand(cmd));
+
+        String[] cmd2 = {Statics.AdbDeployed, "devices"};
+        String DeviceList = Shell.sendShellCommand(cmd2);
+        Log.level1("Device List:" + DeviceList);
+        if (DeviceList.contains("????????????")) {
             Log.level1("killing server and requesting elevated permissions");
             Shell.sendShellCommand(cmd);
-            TimeOutOptionPane TimeOutOptionPane=new TimeOutOptionPane();
-            String[] ok={"ok"};
-            TimeOutOptionPane.showTimeoutDialog(60,null, "It would appear that this computer\n"
+            TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
+            String[] ok = {"ok"};
+            TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
                     + "is not set up properly to communicate\n"
                     + "with the device.  As a work-around we\n"
                     + "will attempt to elevate permissions \n"
-                    + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, WIDTH, ok,0);
-            DeviceList=Shell.elevateSimpleCommand(cmd2);
-            if (! DeviceList.contains("????????????")){
+                    + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, WIDTH, ok, 0);
+            DeviceList = Shell.elevateSimpleCommand(cmd2);
+            if (!DeviceList.contains("????????????")) {
                 Log.level1(DeviceList);
             } else {
                 Log.level0("Unrecognized device detected");
-                
+
             }
-            
-            
+
+
         }
-                
+
     }
-    private void prepareScripts(){
+
+    private void prepareScripts() {
         try {
             listScripts();
         } catch (IOException ex) {
             Log.level0("ListScripts() could not find any entries");
-            Logger.getLogger(CASUALJFrame2.class.getName()).log(Level.SEVERE, null, ex);
-           
+            Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+
         }
-                
-        
+
+
     }
+
     private void listScripts() throws IOException {
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
-        int Count=0;
+        int Count = 0;
 
         if (Src != null) {
             URL jar = Src.getLocation();
@@ -283,24 +312,24 @@ public class CASUALJFrame2 extends javax.swing.JFrame {
             while ((ZEntry = Zip.getNextEntry()) != null) {
                 String EntryName = ZEntry.getName();
                 if (EntryName.endsWith(".scr")) {
-                    Log.level3("Found: "+EntryName.replace(".scr", ""));
+                    Log.level3("Found: " + EntryName.replace(".scr", ""));
                     jComboBox1.addItem(EntryName.replace(".scr", ""));
                     Count++;
                 }
             }
-            if (Count == 0 ){
+            if (Count == 0) {
                 Log.level0("No Scripts found. Using Test Script.");
                 jComboBox1.addItem("Test Script");
             }
 
         }
-      
-   
+
+
     }
-    public void enableControls(boolean status){
+
+    public void enableControls(boolean status) {
         jButton1.setEnabled(status);
         jComboBox1.setEnabled(status);
         Log.level3("Controls Enabled status: " + status);
     }
-
 }
