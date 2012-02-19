@@ -57,6 +57,7 @@ public class Statics {
      *Form data for Heimdall One-Click View 
      */
     public static String ScriptLocation="/SCRIPTS/";
+    public static boolean TargetScriptIsResource=false;
     public static CASUALJFrame GUI;
     public static JTextArea ProgressArea; //used by log to update Progress
     public static String PreProgress;
@@ -117,7 +118,7 @@ public class Statics {
     final public static String ADBini=CASUALSCRIPT+"adb_usb.ini";
     final public static String FilesystemAdbIniLocationLinuxMac=System.getProperty("user.home")+Slash+".android/adb_usb.ini";
     //TODO: this does not expand
-    final public static String FilesystemAdbIniLocationWindows="%USERPROFILE%\\.android\\adb_usb.ini";
+    final public static String FilesystemAdbIniLocationWindows=System.getProperty("user.home")+".android\\adb_usb.ini";
    
 
 
