@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
+import java.util.Enumeration;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -30,6 +32,14 @@ public class CASUALJFrame extends javax.swing.JFrame {
     public CASUALJFrame() {
         initComponents();
 
+        
+Properties p = System.getProperties();
+Enumeration keys = p.keys();
+while (keys.hasMoreElements()) {
+  String key = (String)keys.nextElement();
+  String value = (String)p.get(key);
+  System.out.println(key + ": " + value);
+}
         Statics.ProgressArea = this.jTextArea1;
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + "Overview.txt"));
 
@@ -61,6 +71,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemOpenScript = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         MenuItemShowDeveloperPane = new javax.swing.JMenuItem();
         MenuItemShowAboutBox = new javax.swing.JMenuItem();
@@ -73,6 +84,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
         });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") +java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber"));
 
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
@@ -115,6 +127,15 @@ public class CASUALJFrame extends javax.swing.JFrame {
             }
         });
         jMenu1.add(MenuItemOpenScript);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Exit");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
 
@@ -237,6 +258,10 @@ public class CASUALJFrame extends javax.swing.JFrame {
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
         Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -251,6 +276,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables

@@ -72,7 +72,7 @@
     nbproject/build-impl.xml file. 
 
     -->
-       <propertyfile file="src/CASUAL/CASUALApp.properties">
+       <propertyfile file="src/CASUAL/resources/CASUALApp.properties">
             <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
         </propertyfile>
 
