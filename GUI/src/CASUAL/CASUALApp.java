@@ -23,7 +23,7 @@ public class CASUALApp extends SingleFrameApplication {
         FileOperations.makeFolder(Statics.TempFolder);
         
         //Statics.GUI = new CasualJFrame();
-        Statics.GUI= new CASUALJFrame2();
+        Statics.GUI= new CASUALJFrame();
         System.out.println(Statics.GUI.toString());
         Statics.GUI.setVisible(true);
         show(Statics.GUI); 

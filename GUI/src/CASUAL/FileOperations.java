@@ -21,16 +21,7 @@
 
 package CASUAL;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -334,7 +325,7 @@ public class FileOperations {
         } catch (IOException ex) {
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Log.level3(text.toString());
+        //Log.level3(text.toString());
         return text.toString();
     }
     
@@ -349,6 +340,26 @@ public class FileOperations {
             bw.close(); 
         
     }
+
+    String readFile(String FileOnDisk) {
+        String EntireFile="";
+        try {
+            String Line;
+            BufferedReader BROriginal = new BufferedReader(new FileReader(FileOnDisk));
+            while ((Line = BROriginal.readLine()) != null) {
+               Log.level3(Line);  
+               EntireFile=EntireFile+"\n"+Line;
+            }
+        } catch (FileNotFoundException ex) {
+            Log.level0("File Not Found Error: "+FileOnDisk);
+            
+        } catch (IOException ex) {
+            Log.level0("Permission Error: "+FileOnDisk);
+        }
+        EntireFile=EntireFile.replaceFirst("\n", "");
+        return EntireFile;
+    }
+    
 }    
 
   

@@ -57,7 +57,7 @@ public class Statics {
      *Form data for Heimdall One-Click View 
      */
     public static String ScriptLocation="/SCRIPTS/";
-    public static CASUALJFrame2 GUI;
+    public static CASUALJFrame GUI;
     public static JTextArea ProgressArea; //used by log to update Progress
     public static String PreProgress;
     

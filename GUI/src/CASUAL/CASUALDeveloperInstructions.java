@@ -286,7 +286,6 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         jLabel1.setText("Building your own CASUAL application");
 
-        jTextArea1.setBackground(javax.swing.UIManager.getDefaults().getColor("window"));
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
