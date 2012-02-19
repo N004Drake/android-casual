@@ -22,6 +22,7 @@ package CASUAL;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 
 
@@ -60,7 +61,7 @@ public class Statics {
     public static CASUALJFrame GUI;
     public static JTextArea ProgressArea; //used by log to update Progress
     public static String PreProgress="";
-    
+    public static JProgressBar ProgressBar;
     public static String Slash=System.getProperty("file.separator");
 
     
