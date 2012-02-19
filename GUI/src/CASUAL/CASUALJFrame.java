@@ -41,6 +41,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
     public CASUALJFrame() {
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(CASUAL.CASUALApp.class).getContext().getResourceMap(CASUALJFrame.class);
         initComponents();
+        Statics.ProgressBar=this.ProgressBar;
         ProgressArea.setText(Statics.PreProgress);
         Statics.ProgressArea = this.ProgressArea;
         populateFields();
