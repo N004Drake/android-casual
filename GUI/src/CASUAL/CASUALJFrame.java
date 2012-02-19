@@ -285,12 +285,12 @@ while (keys.hasMoreElements()) {
             int DResult= timeOutOptionPane.showTimeoutDialog(
                  60, //timeout
                  null, //parentComponent
-                 "Would you like to make a donation?\n"
+                 "This application was developed by "+ Statics.DeveloperName+ " using CASUAL framework.\n"
                  + "Donations give developers a tangeble reason to continue quality software development\n",
                  "Donate to the developers",  //DisplayTitle
                  TimeOutOptionPane.OK_OPTION, // Options buttons
                  TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
-                 new String[]{"Donate To CASUAL", "Donate To "+Statics.DeveloperName}, // option buttons
+                 new String[]{"Donate To CASUAL", "Donate To "+Statics.DonateButtonText}, // option buttons
                  "No"); //Default{
             if ( DResult == 0 ){
                 launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
