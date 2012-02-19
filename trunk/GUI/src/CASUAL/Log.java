@@ -56,13 +56,9 @@ public class Log{
                         Statics.ProgressArea.setCaretPosition(
                                 Statics.ProgressArea.getDocument()
                                 .getLength());
-                        /*
-                        Statics.ProgressArea.append("\n"+data);
-                        Statics.ProgressArea.setCaretPosition(
-                                Statics.ProgressArea.getDocument()
-                                .getLength());*/
+
                     }catch (NullPointerException e){
-                        Statics.PreStatus=Statics.PreStatus+data;
+                        Statics.PreProgress=Statics.PreProgress+data;
                     }
 
                 }
