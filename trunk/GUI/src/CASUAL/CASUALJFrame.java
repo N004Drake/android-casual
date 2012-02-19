@@ -19,7 +19,7 @@ import javax.swing.JFileChooser;
  * @author adam
  */
 public class CASUALJFrame extends javax.swing.JFrame {
-    boolean FromResource=true;
+
     String NonResourceFileName;
     Log Log = new Log();
     FileOperations FileOperations = new FileOperations();
@@ -172,7 +172,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (FromResource){
+        if (Statics.TargetScriptIsResource){
             ScriptParser ScriptParser = new ScriptParser();
             ScriptParser.executeSelectedScriptResource(jComboBox1.getSelectedItem().toString());
         } else{
@@ -188,7 +188,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemShowDeveloperPaneActionPerformed
 
     private void MenuItemOpenScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenScriptActionPerformed
-        FromResource=false;
+        Statics.TargetScriptIsResource=false;
         String FileName;
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -211,7 +211,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemOpenScriptActionPerformed
 
     private void MenuItemShowAboutBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowAboutBoxActionPerformed
-        FromResource=false;
+        Statics.TargetScriptIsResource=false;
         CASUALAboutBox CAB = new CASUALAboutBox();
         CAB.setVisible(true);
     }//GEN-LAST:event_MenuItemShowAboutBoxActionPerformed
@@ -225,14 +225,14 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_FileChooser1ActionPerformed
 
     private void jComboBox1PopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jComboBox1PopupMenuWillBecomeInvisible
-        FromResource=true;
+        Statics.TargetScriptIsResource=true;
         Log.level1("Description for " + jComboBox1.getSelectedItem().toString());
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
         Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1PopupMenuWillBecomeInvisible
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        FromResource = true;
+        Statics.TargetScriptIsResource = true;
         Log.level1("Description for " + jComboBox1.getSelectedItem().toString());
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
         Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();
