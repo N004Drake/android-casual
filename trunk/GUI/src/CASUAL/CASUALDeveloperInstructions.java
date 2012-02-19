@@ -103,7 +103,10 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
         jScrollPane12.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 
         jTextArea12.setColumns(20);
+        jTextArea12.setLineWrap(true);
         jTextArea12.setRows(5);
+        jTextArea12.setText("The build.properties file will set various project properties such as the title and banner.  When the Window.UsePictureForBanner is set to \"true\", Window.BannerPic will be used for the main banner. Developer.* properties are used to give credit to the developer who created the CASUAL scripts and donation purposes.");
+        jTextArea12.setWrapStyleWord(true);
         jTextArea12.setBorder(null);
         jScrollPane12.setViewportView(jTextArea12);
 
@@ -111,6 +114,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea16.setColumns(20);
         jTextArea16.setRows(5);
+        jTextArea16.setText("Developer.Name=Adam Oulter\nDeveloper.DonateLink= http://woot.com\nDeveloper.DonateButtonText= AdamOutler\nWindow.Title=woot\nWindow.UsePictureForBanner=false\nWindow.BannerText=\"Testtest\"\nWindow.BannerPic=");
         jScrollPane16.setViewportView(jTextArea16);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -134,7 +138,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Overview.prop", jPanel2);
+        jTabbedPane1.addTab("build.properties", jPanel2);
 
         jScrollPane4.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 

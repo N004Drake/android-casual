@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.Enumeration;
+import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
 /**
@@ -31,8 +33,10 @@ public class CASUALJFrame extends javax.swing.JFrame {
      */
     public CASUALJFrame() {
         initComponents();
-
+        populateFields();
         
+
+//TODO remove this crap        
 Properties p = System.getProperties();
 Enumeration keys = p.keys();
 while (keys.hasMoreElements()) {
@@ -68,6 +72,7 @@ while (keys.hasMoreElements()) {
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemOpenScript = new javax.swing.JMenuItem();
@@ -114,6 +119,13 @@ while (keys.hasMoreElements()) {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Donate");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -172,21 +184,26 @@ while (keys.hasMoreElements()) {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addGap(8, 8, 8))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap())
         );
 
         pack();
@@ -262,6 +279,32 @@ while (keys.hasMoreElements()) {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+                TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
+            int DResult= timeOutOptionPane.showTimeoutDialog(
+                 60, //timeout
+                 null, //parentComponent
+                 "Would you like to make a donation?\n"
+                 + "Donations give developers a tangeble reason to continue quality software development\n",
+                 "Donate to the developers",  //DisplayTitle
+                 TimeOutOptionPane.OK_OPTION, // Options buttons
+                 TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
+                 new String[]{"Donate To CASUAL", "Donate To "+Statics.DeveloperName}, // option buttons
+                 "No"); //Default{
+            if ( DResult == 0 ){
+                launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
+            } else if (DResult == 1){
+                launchLink(Statics.DeveloperDonateLink);
+            
+            }
+           
+    }//GEN-LAST:event_jButton2ActionPerformed
+    private static void launchLink(String Link){
+        LinkLauncher LinkLauncher =new LinkLauncher();
+        LinkLauncher.launchLink(Link);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -271,6 +314,7 @@ while (keys.hasMoreElements()) {
     private javax.swing.JMenuItem MenuItemShowAboutBox;
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
@@ -398,5 +442,36 @@ while (keys.hasMoreElements()) {
         jButton1.setEnabled(status);
         jComboBox1.setEnabled(status);
         Log.level3("Controls Enabled status: " + status);
+    }
+    protected ImageIcon createImageIcon(String path, String description) {
+        java.net.URL imgURL = getClass().getResource(path);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL, description);
+        } else {
+            System.err.println("Couldn't find file: " + path);
+            return null;
+        }
+    }
+    private void populateFields() {
+        
+        try { 
+        this.jButton1.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+        this.setTitle(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.Title") + " - "+ this.getTitle());
+        if (java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.UsePictureForBanner").equals("true")){
+            jLabel1.setText(""); 
+            jLabel1.setIcon(createImageIcon("/SCRIPTS/"+java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerPic"),java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText")));
+            
+         
+        } else {
+            this.jLabel1.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText"));
+        }
+        Statics.DeveloperName=java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.Name");
+        Statics.DonateButtonText=java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateToButtonText");
+        Statics.DeveloperDonateLink=java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateLink");
+        } catch (MissingResourceException ex){
+            Log.level0("Could not find build.prop");
+            System.out.print(ex);
+        }
+        
     }
 }
