@@ -71,19 +71,7 @@
     nbproject/build-impl.xml file. 
 
     -->
-       <propertyfile file="src/CASUAL/CASUALApp.properties">
-            <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
-        </propertyfile>
 
-        <target name="-post-jar">
 
-        <jar jarfile="dist/CASUALzzzzzzz.jar">
-            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-            <zipfileset src="dist/lib/bsaf-1.9.1.jar" excludes="META-INF/*" />
-                       
-            <manifest>
-                <attribute name="Main-Class" value="CASUAL.CASUALApp"/>
-            </manifest>
-        </jar>
     </target>
 </project>

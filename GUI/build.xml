@@ -72,13 +72,32 @@
     nbproject/build-impl.xml file. 
 
     -->
-       <propertyfile file="src/CASUAL/resources/CASUALApp.properties">
-            <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
+    <target name="-post-init" description="Sets the buildversion for the current build">
+        <exec outputproperty="svna.version" executable="svnversion">
+            <arg value="-c" />
+            <redirector>
+                <outputfilterchain>
+                    <tokenfilter>
+                        <replaceregex pattern="^[0-9]*:?" replace="" flags="g"/>
+                        <replaceregex pattern="M" replace="" flags="g"/>
+                    </tokenfilter>
+                </outputfilterchain>
+            </redirector>
+        </exec>
+        <propertyfile file="src/CASUAL/resources/CASUALApp.properties">
+            <entry key="Application.revision" value="${svna.version}" type="int" operation="="/>
         </propertyfile>
+        <echo>Revision found from SVN: ${svna.version}</echo>
+    </target>
+    <propertyfile file="src/CASUAL/resources/CASUALApp.properties">
+    
+        <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
 
-        <target name="-post-jar">
+    </propertyfile>
 
-        <jar jarfile="dist/CASUALzzzzzzz.jar">
+    <target name="-post-jar">
+
+        <jar jarfile="dist/CASUAL${Application.buildnumber}.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="dist/lib/bsaf-1.9.1.jar" excludes="META-INF/*" />
                        
