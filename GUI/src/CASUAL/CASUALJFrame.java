@@ -19,7 +19,8 @@ import javax.swing.JFileChooser;
  * @author adam
  */
 public class CASUALJFrame extends javax.swing.JFrame {
-
+    boolean FromResource=true;
+    String NonResourceFileName;
     Log Log = new Log();
     FileOperations FileOperations = new FileOperations();
 
@@ -82,6 +83,15 @@ public class CASUALJFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
         jLabel1.setText("NARZ or picture of some sort");
 
+        jComboBox1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                jComboBox1PopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -161,16 +171,14 @@ public class CASUALJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        Log.level1("Description for " + jComboBox1.getSelectedItem().toString());
-        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
-        Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ScriptParser ScriptParser = new ScriptParser();
-        ScriptParser.executeSelectedScriptResource(jComboBox1.getSelectedItem().toString());
-
+        if (FromResource){
+            ScriptParser ScriptParser = new ScriptParser();
+            ScriptParser.executeSelectedScriptResource(jComboBox1.getSelectedItem().toString());
+        } else{
+            ScriptParser ScriptParser = new ScriptParser();
+            ScriptParser.executeSelectedScriptFile(NonResourceFileName);
+        }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -180,13 +188,18 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemShowDeveloperPaneActionPerformed
 
     private void MenuItemOpenScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenScriptActionPerformed
+        FromResource=false;
         String FileName;
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 FileName=FileChooser1.getSelectedFile().getCanonicalPath();
-                ScriptParser ScriptParser = new ScriptParser();
-                ScriptParser.executeSelectedScriptFile(FileName);
+                NonResourceFileName=this.getFilenameWithoutExtension(FileName);
+                Log.level1("Description for " + NonResourceFileName); 
+                Log.level1(FileOperations.readFile(NonResourceFileName+".txt"));
+                this.jComboBox1.setSelectedItem("woot");
+                Statics.SelectedScriptFolder=Statics.TempFolder+ new File(NonResourceFileName).getName();
+                Log.level0("Delete this debug line in MenuItemOpenScriptActionPerformed()");
             } catch (IOException ex) {
                 Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -194,17 +207,36 @@ public class CASUALJFrame extends javax.swing.JFrame {
         } else {
             System.out.println("File access cancelled by user.");
         }
+        
     }//GEN-LAST:event_MenuItemOpenScriptActionPerformed
 
     private void MenuItemShowAboutBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowAboutBoxActionPerformed
+        FromResource=false;
         CASUALAboutBox CAB = new CASUALAboutBox();
-
         CAB.setVisible(true);
     }//GEN-LAST:event_MenuItemShowAboutBoxActionPerformed
 
     private void FileChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileChooser1ActionPerformed
-
+    /*
+        Log.level1("Description for " + jComboBox1.getSelectedItem().toString()); 
+        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+jComboBox1.getSelectedItem().toString()+".txt"));
+        Statics.SelectedScriptFolder=Statics.TempFolder+jComboBox1.getSelectedItem().toString();
+*/
     }//GEN-LAST:event_FileChooser1ActionPerformed
+
+    private void jComboBox1PopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jComboBox1PopupMenuWillBecomeInvisible
+        FromResource=true;
+        Log.level1("Description for " + jComboBox1.getSelectedItem().toString());
+        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
+        Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1PopupMenuWillBecomeInvisible
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        FromResource = true;
+        Log.level1("Description for " + jComboBox1.getSelectedItem().toString());
+        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
+        Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();
+    }//GEN-LAST:event_jComboBox1ActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -299,6 +331,15 @@ public class CASUALJFrame extends javax.swing.JFrame {
         }
 
 
+    }
+    
+    private String getFilenameWithoutExtension(String FileName){
+        
+        if (FileName.endsWith(".scr")) {
+            FileName=FileName.replace(".scr", "");
+        }
+        return FileName;
+        
     }
 
     private void listScripts() throws IOException {
