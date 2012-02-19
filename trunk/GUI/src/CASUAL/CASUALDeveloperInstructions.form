@@ -222,7 +222,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="Developer.Name=Adam Outler&#xa;Developer.DonateLink= http://xda-developers.com&#xa;Developer.DonateToButtonText= AdamOutler&#xa;Window.Title=My App!&#xa;Window.UsePictureForBanner=tru&#xa;Window.BannerPic=logo.png&#xa;Window.BannerText=Banner Text&#xa;Window.ExecuteButtonText=Execute Button Text"/>
+                    <Property name="text" type="java.lang.String" value="Developer.Name=Adam Outler&#xa;Developer.DonateLink= http://forum.xda-developers.com/donations.php&#xa;Developer.DonateToButtonText= XDA-Developers&#xa;Window.Title=Your Application Title!&#xa;Window.UsePictureForBanner=true&#xa;Window.BannerPic=logo.png&#xa;Window.BannerText=Banner Text&#xa;Window.ExecuteButtonText=Execute Button Text&#xa;"/>
                   </Properties>
                 </Component>
               </SubComponents>

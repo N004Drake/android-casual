@@ -114,7 +114,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea16.setColumns(20);
         jTextArea16.setRows(5);
-        jTextArea16.setText("Developer.Name=Adam Outler\nDeveloper.DonateLink= http://xda-developers.com\nDeveloper.DonateToButtonText= AdamOutler\nWindow.Title=My App!\nWindow.UsePictureForBanner=tru\nWindow.BannerPic=logo.png\nWindow.BannerText=Banner Text\nWindow.ExecuteButtonText=Execute Button Text");
+        jTextArea16.setText("Developer.Name=Adam Outler\nDeveloper.DonateLink= http://forum.xda-developers.com/donations.php\nDeveloper.DonateToButtonText= XDA-Developers\nWindow.Title=Your Application Title!\nWindow.UsePictureForBanner=true\nWindow.BannerPic=logo.png\nWindow.BannerText=Banner Text\nWindow.ExecuteButtonText=Execute Button Text\n");
         jScrollPane16.setViewportView(jTextArea16);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
