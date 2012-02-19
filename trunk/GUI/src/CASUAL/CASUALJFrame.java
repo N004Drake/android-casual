@@ -39,7 +39,6 @@ public class CASUALJFrame extends javax.swing.JFrame {
      * Creates new form CASUALJFrame2
      */
     public CASUALJFrame() {
-        Log.level0("woot");
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(CASUAL.CASUALApp.class).getContext().getResourceMap(CASUALJFrame.class);
         initComponents();
         ProgressArea.setText(Statics.PreProgress);
@@ -405,7 +404,6 @@ public class CASUALJFrame extends javax.swing.JFrame {
             //add our lines to the current adbini
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
             Statics.AdbDeployed = Statics.TempFolder + "adb";
-            Log.level0(Statics.TempFolder);
             FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isMac()) {

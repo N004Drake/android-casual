@@ -59,7 +59,7 @@ public class Statics {
     public static boolean TargetScriptIsResource=false;
     public static CASUALJFrame GUI;
     public static JTextArea ProgressArea; //used by log to update Progress
-    public static String PreProgress;
+    public static String PreProgress="";
     
     public static String Slash=System.getProperty("file.separator");
 

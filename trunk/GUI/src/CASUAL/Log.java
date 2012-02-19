@@ -58,7 +58,11 @@ public class Log{
                                 .getLength());
 
                     }catch (NullPointerException e){
-                        Statics.PreProgress=Statics.PreProgress+data;
+
+                        Statics.PreProgress=Statics.PreProgress+"\n"+data;
+                        if (Statics.PreProgress.startsWith("\n")){
+                            Statics.PreProgress=Statics.PreProgress.replaceFirst("\n", "");
+                        }
                     }
 
                 }
