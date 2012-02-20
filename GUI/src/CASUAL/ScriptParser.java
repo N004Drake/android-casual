@@ -17,102 +17,85 @@ public class ScriptParser {
     Log Log = new Log();
     int LinesInScript = 0;
     int CurrentLine;
-
+    String ScriptTempFolder="";
+    
+    /*
+     * Executes a selected script as a resource reports to Log class.
+     */
     public void executeSelectedScriptResource(String Script) {
         Log.level3("Selected resource" + Script);
-        LinesInScript = countResourceLines(Script);
+        CountLines CountLines = new CountLines();
+        LinesInScript = CountLines.countResourceLines(Script);
         Log.level3("Lines in Script " + LinesInScript);
+        ScriptTempFolder=Statics.TempFolder+Script+Statics.Slash;
 
         InputStream ResourceAsStream = getClass().getResourceAsStream(Statics.ScriptLocation + Script + ".scr");
         DataInputStream DIS = new DataInputStream(ResourceAsStream);
         executeSelectedScript(DIS);
     }
 
-    public int countFileLines(String Filename) {
-        InputStream IS = null;
-        int Lines = 0;
-        try {
-            IS = new BufferedInputStream(new FileInputStream(Filename));
-
-            Lines = countISLines(IS);
-
-
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                IS.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-        return Lines;
-
-    }
-
-    public int countResourceLines(String ResourceName) {
-        InputStream IS = getClass().getResourceAsStream(Statics.ScriptLocation + ResourceName + ".scr");
-        int Lines = 0;
-        try {
-            Lines = countISLines(IS);
-        } catch (IOException ex) {
-            Logger.getLogger(ScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                IS.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return Lines;
-    }
-
-    private int countISLines(InputStream IS) throws IOException {
-        int count = 0;
-        try {
-            byte[] c = new byte[1024];
-            int ReadChars = 0;
-            while ((ReadChars = IS.read(c)) != -1) {
-                for (int i = 0; i < ReadChars; ++i) {
-                    if (c[i] == '\n') {
-                        ++count;
-                    }
-                }
-            }
-        } finally {
-            IS.close();
-        }
-
-        return count + 1;
-
-    }
-
+    /*
+     * executes a CASUAL script from a file Reports to Log
+     *
+     */
     public void executeSelectedScriptFile(String Script) {
-
+        Log.level3("Selected file" + Script);
+        CountLines CountLines = new CountLines();
+        
+        ScriptTempFolder=Statics.TempFolder+(new File(Script).getName())+Statics.Slash;
+        LinesInScript = CountLines.countFileLines(Script + ".scr");
+        Log.level3("Lines in SCript " + LinesInScript);
+        DataInputStream DIS;
         try {
-            Log.level3("Selected file" + Script);
-            LinesInScript = countFileLines(Script + ".scr");
-            Log.level3("Lines in SCript " + LinesInScript);
-            FileInputStream ResourceAsStream = new FileInputStream(Script + ".scr");
-            DataInputStream DIS = new DataInputStream(ResourceAsStream);
+            FileInputStream FileAsStream;
+            FileAsStream = new FileInputStream(Script + ".scr");
+            DIS = new DataInputStream(FileAsStream);
             executeSelectedScript(DIS);
-
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
+    private void commandHandler(String Line) {
+        //Log original line at a high level to be ignored for production 
+
+        //Remove leading spaces
+        Line = removeLeadingSpaces(Line);
+        //Disregard blank lines
+        if (Line.equals("")) return;
+        
+        //Disregard commented lines
+        if (Line.startsWith("#")){
+            Log.level3("Ignoring commented line"+Line);
+            return;
+        }
+        if (Line.contains("$SLASH")){
+            Line=Line.replace("$SLASH", Statics.Slash);
+        }
+        if (Line.contains("$ZIPFILE")){
+            Line=Line.replace("$ZIPFILE", ScriptTempFolder);
+        }
+        if (Line.startsWith("$ECHO ")){
+            Line=Line.replace("$ECHO ","");
+            Log.level1(Line);
+            return;
+        }
+        if (Line.startsWith("$ECHO")){
+            Line=Line.replace("$ECHO","");
+            Log.level1(Line);
+            return;
+        }
+        Log.level3("Final:"+Line);
+    }
+    
+
+
+    
     private void executeSelectedScript(DataInputStream DIS) {
-        CurrentLine=0;
+        CurrentLine = 0;
         Statics.ProgressBar.setMaximum(LinesInScript);
         Log.level3("Reading datastream" + DIS);
-        Statics.GUI.enableControls(false);
         doRead(DIS);
-        Statics.GUI.enableControls(true);
     }
 
     private void doRead(DataInputStream dataIn) {
@@ -123,29 +106,15 @@ public class ScriptParser {
             while ((strLine = bReader.readLine()) != null) {
                 CurrentLine++;
                 Statics.ProgressBar.setValue(CurrentLine);
-                
-                
-                parseScript(strLine);
+
+
+                commandHandler(strLine);
             }
             //Close the input stream
             dataIn.close();
         } catch (Exception e) {//Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
-
-    }
-
-    private void parseScript(String Line) {
-        //Log original line at a high level to be ignored for production 
-        Log.level3("Original:" + Line);
-        //Remove leading spaces
-        Line = removeLeadingSpaces(Line);
-        //Disregard commented lines
-        if (Line.startsWith("#")) {
-            Log.level3("Ignoring commented line");
-        }
-
-
 
     }
 

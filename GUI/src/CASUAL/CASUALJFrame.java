@@ -39,13 +39,12 @@ public class CASUALJFrame extends javax.swing.JFrame {
      * Creates new form CASUALJFrame2
      */
     public CASUALJFrame() {
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(CASUAL.CASUALApp.class).getContext().getResourceMap(CASUALJFrame.class);
-        initComponents();
+        initComponents();        
+        Statics.ProgressArea = this.ProgressArea;
         Statics.ProgressBar=this.ProgressBar;
         ProgressArea.setText(Statics.PreProgress);
-        Statics.ProgressArea = this.ProgressArea;
         populateFields();
-        resourceMap = Application.getInstance().getContext().getResourceMap(CASUALJFrame.class);
+        org.jdesktop.application.ResourceMap resourceMap = Application.getInstance().getContext().getResourceMap(CASUALJFrame.class);
 
 
         int busyAnimationRate = resourceMap.getInteger("StatusBar.busyAnimationRate");
@@ -276,6 +275,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.busyIconTimer.start();
+        enableControls(false);
         if (Statics.TargetScriptIsResource) {
             ScriptParser ScriptParser = new ScriptParser();
             ScriptParser.executeSelectedScriptResource(jComboBox1.getSelectedItem().toString());
@@ -284,7 +284,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
             ScriptParser.executeSelectedScriptFile(NonResourceFileName);
         }
         this.busyIconTimer.stop();
-
+        enableControls(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void MenuItemShowDeveloperPaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowDeveloperPaneActionPerformed
