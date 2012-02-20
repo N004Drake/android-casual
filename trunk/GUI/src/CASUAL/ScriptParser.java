@@ -7,23 +7,25 @@ package CASUAL;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author adam
  */
 public class ScriptParser {
-
+    boolean ScriptContinue=true;
     Log Log = new Log();
     int LinesInScript = 0;
     int CurrentLine;
     String ScriptTempFolder="";
-    
+    String ScriptName="";
     /*
      * Executes a selected script as a resource reports to Log class.
      */
     public void executeSelectedScriptResource(String Script) {
         Log.level3("Selected resource" + Script);
+        ScriptName=Script;
         CountLines CountLines = new CountLines();
         LinesInScript = CountLines.countResourceLines(Script);
         Log.level3("Lines in Script " + LinesInScript);
@@ -41,7 +43,7 @@ public class ScriptParser {
     public void executeSelectedScriptFile(String Script) {
         Log.level3("Selected file" + Script);
         CountLines CountLines = new CountLines();
-        
+        ScriptName=Script;
         ScriptTempFolder=Statics.TempFolder+(new File(Script).getName())+Statics.Slash;
         LinesInScript = CountLines.countFileLines(Script + ".scr");
         Log.level3("Lines in SCript " + LinesInScript);
@@ -56,35 +58,101 @@ public class ScriptParser {
         }
     }
 
+    /*
+     * Script Handler contains all script commands and
+     * will execute commands
+     */
     private void commandHandler(String Line) {
-        //Log original line at a high level to be ignored for production 
 
         //Remove leading spaces
         Line = removeLeadingSpaces(Line);
-        //Disregard blank lines
-        if (Line.equals("")) return;
+        
         
         //Disregard commented lines
         if (Line.startsWith("#")){
             Log.level3("Ignoring commented line"+Line);
             return;
         }
+        
+        //Disregard blank lines
+        if (Line.equals("")) return;
+        
+
+        
+        //replace $SLASH with "\" for windows or "/" for linux and mac
         if (Line.contains("$SLASH")){
             Line=Line.replace("$SLASH", Statics.Slash);
         }
+        
+        //reference to the Script's .zip file
         if (Line.contains("$ZIPFILE")){
             Line=Line.replace("$ZIPFILE", ScriptTempFolder);
         }
-        if (Line.startsWith("$ECHO ")){
-            Line=Line.replace("$ECHO ","");
-            Log.level1(Line);
+        
+        
+        //Disregard commented lines
+        if (Line.startsWith("#")){
+            Log.level3("Ignoring commented line"+Line);
             return;
         }
+        //$ECHO command will display text in the main window
         if (Line.startsWith("$ECHO")){
             Line=Line.replace("$ECHO","");
+            Line=removeLeadingSpaces(Line);
             Log.level1(Line);
             return;
         }
+        // $USERNOTIFICATION will launch a textbox and stop all commands
+        if (Line.startsWith("$USERNOTIFICATION")){
+            Line=Line.replace("$USERNOTIFICATION","");
+            Line=removeLeadingSpaces(Line);
+            if (Line.contains(",")){
+                String[] Message=Line.split(",");
+                JOptionPane.showMessageDialog(Statics.GUI,
+                     Message[1],
+                     Message[0],
+                     JOptionPane.INFORMATION_MESSAGE);                
+            } else {
+                JOptionPane.showMessageDialog(Statics.GUI,
+                     Line,
+                    "Information",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+            
+            //TODO: this
+          if (Line.startsWith("$USERCANCELOPTION")){
+                Line=Line.replace("$USERCANCELOPTION","");
+                if (Line.contains(",")){
+                    String[] Message=Line.split(",");
+                    int n = JOptionPane.showConfirmDialog(
+                        Statics.GUI,
+                        Message[1],
+                        Message[0],
+                        JOptionPane.YES_NO_OPTION);  
+                    if (n==JOptionPane.NO_OPTION) {
+                        Log.level0(ScriptName+ " canceled at user request");
+                        ScriptContinue=false;
+                        return;
+                    }
+                } else {
+                    int n = JOptionPane.showConfirmDialog(
+                        Statics.GUI,
+                        Line,
+                        "Do you wish to continue?",
+                        JOptionPane.YES_NO_OPTION);
+                    if (n==JOptionPane.NO_OPTION) {
+                        Log.level0(ScriptName+ " canceled at user request");
+                        ScriptContinue=false;
+                        return;
+                    }
+                }
+           }
+
+     
+        
+        
+        //final line output for debugging purposes
         Log.level3("Final:"+Line);
     }
     
@@ -103,7 +171,7 @@ public class ScriptParser {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
             String strLine;
 
-            while ((strLine = bReader.readLine()) != null) {
+            while (((strLine = bReader.readLine()) != null)&&(ScriptContinue)) {
                 CurrentLine++;
                 Statics.ProgressBar.setValue(CurrentLine);
 
