@@ -1,5 +1,13 @@
 devices
 ls /
+$ECHO I'm testing the echo command 
+This folder, $ZIPFILE is my temp folder
+#This is a commented line
+    #This is a commmented line with spaces
+$USERNOTIFICATION This is a notification
+$USERCANCELOPTION This is the option to cancel
+
+The above line is blank
 test 
 test
 test
