@@ -15,10 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.Timer;
+import javax.swing.*;
 import org.jdesktop.application.Application;
 
 /**
@@ -398,68 +395,8 @@ public class CASUALJFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void deployADB() {
-        DiffTextFiles DTF = new DiffTextFiles();
-
-
-        if (Statics.isLinux()) {
-            //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
-            Statics.AdbDeployed = Statics.TempFolder + "adb";
-            FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
-            FileOperations.setExecutableBit(Statics.AdbDeployed);
-        } else if (Statics.isMac()) {
-            //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
-            Statics.AdbDeployed = Statics.TempFolder + "adb";
-            FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
-            FileOperations.setExecutableBit(Statics.AdbDeployed);
-        } else if (Statics.isWindows()) {
-            //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationWindows));
-            FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
-            Statics.AdbDeployed = Statics.TempFolder + "adb.exe";
-            FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
-            FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
-            FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
-        } else {
-            Log.level0("Your system is not supported");
-        }
-        FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
-
-        Shell Shell = new Shell();
-        //todo remove for test
-        String[] cmd = {Statics.AdbDeployed, "kill-server"};
-        //todo if this returns "ELFCLASS64"  && "wrong ELF" recommend
-        //todo installation of ia32-libs
-        // eg.. sudo apt-get install ia32-libs 
-        // eg..  sudo package manager install ia32-libs
-        // this should be a linux only error and the message will only work on Linux
-        Log.level2("Killing Server" + Shell.sendShellCommand(cmd));
-
-        String[] cmd2 = {Statics.AdbDeployed, "devices"};
-        String DeviceList = Shell.sendShellCommand(cmd2);
-        Log.level1("Device List:" + DeviceList);
-        if (DeviceList.contains("????????????")) {
-            Log.level1("killing server and requesting elevated permissions");
-            Shell.sendShellCommand(cmd);
-            TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
-            String[] ok = {"ok"};
-            TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
-                    + "is not set up properly to communicate\n"
-                    + "with the device.  As a work-around we\n"
-                    + "will attempt to elevate permissions \n"
-                    + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, WIDTH, ok, 0);
-            DeviceList = Shell.elevateSimpleCommand(cmd2);
-            if (!DeviceList.contains("????????????")) {
-                Log.level1(DeviceList);
-            } else {
-                Log.level0("Unrecognized device detected");
-
-            }
-
-
-        }
-
+       RunableDeployADB RunableDeployADB = new RunableDeployADB();
+       RunableDeployADB.run();
     }
 
     private void prepareScripts() {
@@ -546,4 +483,89 @@ public class CASUALJFrame extends javax.swing.JFrame {
             System.out.print(ex);
         }
     }
+}
+
+class RunableDeployADB implements Runnable{
+    static public final String newline = "\n";
+    FileOperations FileOperations=new FileOperations();
+    Log Log=new Log();    
+    public static void runAction(String Action) {
+        (new Thread(new RunableDeployADB())).start();
+    }   
+    public void run() {
+        DiffTextFiles DTF = new DiffTextFiles();
+
+
+        if (Statics.isLinux()) {
+            Log.level3("Found Linux Computer");
+            //add our lines to the current adbini
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
+            Statics.AdbDeployed = Statics.TempFolder + "adb";
+            FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
+            FileOperations.setExecutableBit(Statics.AdbDeployed);
+        } else if (Statics.isMac()) {
+            Log.level3("Found Mac Computer");
+            //add our lines to the current adbini
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
+            Statics.AdbDeployed = Statics.TempFolder + "adb";
+            FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
+            FileOperations.setExecutableBit(Statics.AdbDeployed);
+        } else if (Statics.isWindows()) {
+            Log.level3("Found Windows Computer");
+            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationWindows));
+            FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
+            Statics.AdbDeployed = Statics.TempFolder + "adb.exe";
+            FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
+            FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
+            FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
+        } else {
+            Log.level0("Your system is not supported");
+        }
+        FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
+
+        Shell Shell = new Shell();
+        //todo remove for test
+        String[] cmd = {Statics.AdbDeployed, "kill-server"};
+        
+        Log.level2("Killing Server");
+        String KillShellResult=Shell.sendShellCommand(cmd);
+        if (KillShellResult.contains("ELFCLASS64")&& KillShellResult.contains("wrong ELF")){
+                JOptionPane.showMessageDialog(Statics.GUI,
+                     "Could not execute ADB. 'Wrong ELF class' error\n"
+                        + "This can be resolved by installation of ia32-libs"
+                        + "eg.. sudo apt-get install ia32-libs\n"
+                        + "ie.. sudo YourPackageManger install ia32-libs"
+                        ,"ELFCLASS64 error!",
+                     JOptionPane.INFORMATION_MESSAGE);   
+        }
+
+        String[] cmd2 = {Statics.AdbDeployed, "devices"};
+        String DeviceList = Shell.sendShellCommand(cmd2);
+        Log.level1("Device List:" + DeviceList);
+        if (DeviceList.contains("????????????")) {
+            Log.level1("killing server and requesting elevated permissions");
+            Shell.sendShellCommand(cmd);
+            TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
+            String[] ok = {"ok"};
+            TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
+                    + "is not set up properly to communicate\n"
+                    + "with the device.  As a work-around we\n"
+                    + "will attempt to elevate permissions \n"
+                    + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
+            DeviceList = Shell.elevateSimpleCommand(cmd2);
+            if (!DeviceList.contains("????????????")) {
+                Log.level1(DeviceList);
+            } else {
+                Log.level0("Unrecognized device detected");
+
+            }
+
+
+        }
+
+    }
+
+    
+    
+    
 }
