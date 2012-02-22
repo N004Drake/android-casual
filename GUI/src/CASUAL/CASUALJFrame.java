@@ -1,6 +1,22 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2012 Adam Outler
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights 
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+ * copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package CASUAL;
 
@@ -37,6 +53,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
      */
     public CASUALJFrame() {
         initComponents();        
+        Statics.GUI=this;
         Statics.ProgressArea = this.ProgressArea;
         Statics.ProgressBar=this.ProgressBar;
         ProgressArea.setText(Statics.PreProgress);
@@ -78,6 +95,39 @@ public class CASUALJFrame extends javax.swing.JFrame {
 
     }
 
+    /*
+     * Timer for adb devices
+     */
+    Shell Shell=new Shell();
+    public final static int ONE_SECOND = 2000;
+    Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            String DeviceCommand[]={Statics.AdbDeployed,"devices"};
+            String DeviceList=Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n","");
+            if (DeviceList.contains("????????????")) {
+                String cmd[]={Statics.AdbDeployed,"kill-server"};
+                Log.level1("killing server and requesting elevated permissions");
+                Shell.sendShellCommand(cmd);
+                TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
+                String[] ok = {"ok"};
+                TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
+                        + "is not set up properly to communicate\n"
+                        + "with the device.  As a work-around we\n"
+                        + "will attempt to elevate permissions \n"
+                        + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
+                DeviceList = Shell.elevateSimpleCommand(DeviceCommand);
+                if (!DeviceList.contains("????????????")) {
+                    Log.level1(DeviceList);
+                } else {
+                    Log.level0("Unrecognized device detected");
+                }
+
+            }    
+            Statics.GUI.setStatusMessageLabel(DeviceList);
+        }    
+    });
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -157,6 +207,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
 
         StatusAnimationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASUAL/resources/icons/idle-icon.png"))); // NOI18N
 
+        StatusMessageLabel.setFont(new java.awt.Font("Ubuntu", 0, 20)); // NOI18N
         StatusMessageLabel.setText("Ready");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -164,28 +215,27 @@ public class CASUALJFrame extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(StatusMessageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(StatusAnimationLabel))
-                    .addComponent(jSeparator1))
+                .addComponent(jSeparator1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(StatusMessageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(StatusAnimationLabel)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jSeparator1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(StatusMessageLabel)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(StatusAnimationLabel)))
-                .addGap(22, 22, 22))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(StatusMessageLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jSeparator1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(StatusAnimationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(24, 24, 24))
         );
 
         jMenu1.setText("File");
@@ -419,7 +469,17 @@ public class CASUALJFrame extends javax.swing.JFrame {
         return FileName;
 
     }
-
+    private boolean DeviceTimerState=false;
+    public void startStopTimer(boolean StateCommanded){
+        if (StateCommanded && !DeviceTimerState){
+            DeviceCheck.start();
+        } else if (!StateCommanded && DeviceTimerState){
+            DeviceCheck.stop();
+        }
+    }
+    public void setStatusMessageLabel(String text){
+        this.StatusMessageLabel.setText(text);
+    }
     private void listScripts() throws IOException {
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
@@ -524,12 +584,11 @@ class RunableDeployADB implements Runnable{
         FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
 
         Shell Shell = new Shell();
-        //todo remove for test
-        String[] cmd = {Statics.AdbDeployed, "kill-server"};
         
-        Log.level2("Killing Server");
-        String KillShellResult=Shell.sendShellCommand(cmd);
-        if (KillShellResult.contains("ELFCLASS64")&& KillShellResult.contains("wrong ELF")){
+        String[] cmd = {Statics.AdbDeployed, "kill-server"};
+        String[] cmd2 = {Statics.AdbDeployed, "devices"};
+        String DeviceList = Shell.sendShellCommand(cmd2);
+        if (DeviceList.contains("ELFCLASS64")&& DeviceList.contains("wrong ELF")){
                 JOptionPane.showMessageDialog(Statics.GUI,
                      "Could not execute ADB. 'Wrong ELF class' error\n"
                         + "This can be resolved by installation of ia32-libs"
@@ -539,8 +598,7 @@ class RunableDeployADB implements Runnable{
                      JOptionPane.INFORMATION_MESSAGE);   
         }
 
-        String[] cmd2 = {Statics.AdbDeployed, "devices"};
-        String DeviceList = Shell.sendShellCommand(cmd2);
+
         Log.level1("Device List:" + DeviceList);
         if (DeviceList.contains("????????????")) {
             Log.level1("killing server and requesting elevated permissions");
@@ -562,6 +620,8 @@ class RunableDeployADB implements Runnable{
 
 
         }
+        
+        Statics.GUI.startStopTimer(true);
 
     }
 
