@@ -74,9 +74,13 @@ public class Unzip {
             while ((ze = zin.getNextEntry()) != null) {
                 System.out.println("Unzipping " + ze.getName());
                 File EntryFile =new File(OutputFolder+System.getProperty("file.separator")+ze.getName());
+                if (ze.isDirectory()){
+                    EntryFile.mkdirs();
+                    continue;
+                } 
                 File EntryFolder=new File(EntryFile.getParent());
                 if (!EntryFolder.exists()){
-                    EntryFile.mkdirs();
+                    EntryFolder.mkdirs();
               
                 }
                 FileOutputStream fout = new FileOutputStream(OutputFolder+System.getProperty("file.separator")+ze.getName());
