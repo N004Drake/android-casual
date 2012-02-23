@@ -99,11 +99,19 @@ public class CASUALJFrame extends javax.swing.JFrame {
      * Timer for adb devices
      */
     Shell Shell=new Shell();
-    public final static int ONE_SECOND = 2000;
+    public final static int ONE_SECOND = 500;
     Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
             String DeviceCommand[]={Statics.AdbDeployed,"devices"};
-            String DeviceList=Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n","");
+            String DeviceList=Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n","").replace("\n","");
+            Statics.DeviceTracker=DeviceList.split("device");
+            
+            //TODO: Remove for test
+            for (int i=0; i < Statics.DeviceTracker.length; i++){
+                Statics.DeviceTracker[i]=Statics.DeviceTracker[i].replace("\n","").replace("	device","");
+                Log.level0("Device"+i+" "+Statics.DeviceTracker[i]);
+                
+            }
             if (DeviceList.contains("????????????")) {
                 String cmd[]={Statics.AdbDeployed,"kill-server"};
                 Log.level1("killing server and requesting elevated permissions");
@@ -499,6 +507,8 @@ public class CASUALJFrame extends javax.swing.JFrame {
             if (Count == 0) {
                 Log.level0("No Scripts found. Using Test Script.");
                 jComboBox1.addItem("Test Script");
+                Unzip Unzip=new Unzip();
+                Unzip.UnZipResource("/SCRIPTS/Test Script.zip",Statics.TempFolder);
             }
 
         }
