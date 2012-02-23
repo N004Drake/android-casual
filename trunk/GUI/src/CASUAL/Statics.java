@@ -53,6 +53,7 @@ public class Statics {
     public static ArrayList LiveSendCommand;
     public static PrintWriter OutFile;
     public static boolean LogCreated=false; //used by log class
+    public static String[] DeviceTracker;
     /*
      *Form data for Heimdall One-Click View 
      */
