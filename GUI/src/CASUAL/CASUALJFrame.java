@@ -23,6 +23,7 @@ package CASUAL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
@@ -39,7 +40,7 @@ import org.jdesktop.application.Application;
  * @author adam
  */
 public class CASUALJFrame extends javax.swing.JFrame {
-
+    
     private final Timer busyIconTimer;
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
@@ -91,6 +92,8 @@ public class CASUALJFrame extends javax.swing.JFrame {
         Log.level3("Searching for scripts");
         prepareScripts();
         System.out.println(Statics.GUI);
+        
+        
 
 
     }
@@ -98,42 +101,8 @@ public class CASUALJFrame extends javax.swing.JFrame {
     /*
      * Timer for adb devices
      */
-    Shell Shell=new Shell();
-    public final static int ONE_SECOND = 500;
-    Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-            String DeviceCommand[]={Statics.AdbDeployed,"devices"};
-            String DeviceList=Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n","").replace("\n","");
-            Statics.DeviceTracker=DeviceList.split("device");
-            
-            //TODO: Remove for test
-            for (int i=0; i < Statics.DeviceTracker.length; i++){
-                Statics.DeviceTracker[i]=Statics.DeviceTracker[i].replace("\n","").replace("	device","");
-                Log.level0("Device"+i+" "+Statics.DeviceTracker[i]);
-                
-            }
-            if (DeviceList.contains("????????????")) {
-                String cmd[]={Statics.AdbDeployed,"kill-server"};
-                Log.level1("killing server and requesting elevated permissions");
-                Shell.sendShellCommand(cmd);
-                TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
-                String[] ok = {"ok"};
-                TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
-                        + "is not set up properly to communicate\n"
-                        + "with the device.  As a work-around we\n"
-                        + "will attempt to elevate permissions \n"
-                        + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
-                DeviceList = Shell.elevateSimpleCommand(DeviceCommand);
-                if (!DeviceList.contains("????????????")) {
-                    Log.level1(DeviceList);
-                } else {
-                    Log.level0("Unrecognized device detected");
-                }
 
-            }    
-            Statics.GUI.setStatusMessageLabel(DeviceList);
-        }    
-    });
+   
     
     
     /**
@@ -148,19 +117,19 @@ public class CASUALJFrame extends javax.swing.JFrame {
         FileChooser1 = new javax.swing.JFileChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         ProgressArea = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        WindowBanner = new javax.swing.JLabel();
+        ComboBoxScriptSelector = new javax.swing.JComboBox();
+        StartButton = new javax.swing.JButton();
+        DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         ProgressBar = new javax.swing.JProgressBar();
         StatusAnimationLabel = new javax.swing.JLabel();
-        StatusMessageLabel = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
+        StatusLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemOpenScript = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        MenuItemExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         MenuItemShowDeveloperPane = new javax.swing.JMenuItem();
         MenuItemShowAboutBox = new javax.swing.JMenuItem();
@@ -175,75 +144,83 @@ public class CASUALJFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") +java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
 
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("Important Information"));
+
         ProgressArea.setColumns(20);
         ProgressArea.setLineWrap(true);
         ProgressArea.setRows(5);
         ProgressArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(ProgressArea);
 
-        jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
-        jLabel1.setText("NARZ or picture of some sort");
+        WindowBanner.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
+        WindowBanner.setText("NARZ or picture of some sort");
 
-        jComboBox1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+        ComboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
-                jComboBox1PopupMenuWillBecomeInvisible(evt);
+                ComboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
         });
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        ComboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                ComboBoxScriptSelectorActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Do It!");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        StartButton.setText("Do It!");
+        StartButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                StartButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Donate");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        DonateButton.setText("Donate");
+        DonateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                DonateButtonActionPerformed(evt);
             }
         });
 
         StatusAnimationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASUAL/resources/icons/idle-icon.png"))); // NOI18N
 
-        StatusMessageLabel.setFont(new java.awt.Font("Ubuntu", 0, 20)); // NOI18N
-        StatusMessageLabel.setText("Ready");
+        StatusLabel.setFont(new java.awt.Font("Ubuntu", 0, 20)); // NOI18N
+        StatusLabel.setText("Ready");
+
+        jLabel1.setText("jLabel1");
+        jLabel1.setMaximumSize(new java.awt.Dimension(60, 20));
+        jLabel1.setMinimumSize(new java.awt.Dimension(60, 20));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jSeparator1)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(StatusMessageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addComponent(StatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(StatusAnimationLabel)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(StatusMessageLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSeparator1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(StatusAnimationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(24, 24, 24))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(StatusAnimationLabel))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(StatusLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jMenu1.setText("File");
@@ -257,14 +234,14 @@ public class CASUALJFrame extends javax.swing.JFrame {
         });
         jMenu1.add(MenuItemOpenScript);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Exit");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        MenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        MenuItemExit.setText("Exit");
+        MenuItemExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                MenuItemExitActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(MenuItemExit);
 
         jMenuBar1.add(jMenu1);
 
@@ -296,51 +273,57 @@ public class CASUALJFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                        .addComponent(jButton2)))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(WindowBanner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ComboBoxScriptSelector, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(StartButton, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                                .addComponent(DonateButton)))
+                        .addContainerGap())
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(WindowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ComboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(StartButton)
+                    .addComponent(DonateButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+    private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
         this.busyIconTimer.start();
+        Statics.DeviceMonitor.DeviceCheck.stop();
         enableControls(false);
         if (Statics.TargetScriptIsResource) {
             ScriptParser ScriptParser = new ScriptParser();
-            ScriptParser.executeSelectedScriptResource(jComboBox1.getSelectedItem().toString());
+            ScriptParser.executeSelectedScriptResource(ComboBoxScriptSelector.getSelectedItem().toString());
         } else {
             ScriptParser ScriptParser = new ScriptParser();
             ScriptParser.executeSelectedScriptFile(NonResourceFileName);
         }
         this.busyIconTimer.stop();
         enableControls(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+        Statics.DeviceMonitor.DeviceCheck.start();
+    }//GEN-LAST:event_StartButtonActionPerformed
 
     private void MenuItemShowDeveloperPaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowDeveloperPaneActionPerformed
         CASUALDeveloperInstructions CDI = new CASUALDeveloperInstructions();
@@ -357,17 +340,17 @@ public class CASUALJFrame extends javax.swing.JFrame {
                 NonResourceFileName = this.getFilenameWithoutExtension(FileName);
                 Log.level1("Description for " + NonResourceFileName);
                 Log.level1(FileOperations.readFile(NonResourceFileName + ".txt"));
-                this.jComboBox1.setSelectedItem("woot");
+                this.ComboBoxScriptSelector.setSelectedItem(NonResourceFileName);
                 Statics.SelectedScriptFolder = Statics.TempFolder + new File(NonResourceFileName).getName();
                 Log.level0("Delete this debug line in MenuItemOpenScriptActionPerformed()");
+                //TODO: Do this in the background
+                Unzip Unzip=new Unzip();
+                Unzip.unzipFile(NonResourceFileName.toString()+".zip",Statics.SelectedScriptFolder);
             } catch (IOException ex) {
                 Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } else {
-            System.out.println("File access cancelled by user.");
+   
         }
-
     }//GEN-LAST:event_MenuItemOpenScriptActionPerformed
 
     private void MenuItemShowAboutBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowAboutBoxActionPerformed
@@ -385,25 +368,11 @@ public class CASUALJFrame extends javax.swing.JFrame {
          */
     }//GEN-LAST:event_FileChooser1ActionPerformed
 
-    private void jComboBox1PopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jComboBox1PopupMenuWillBecomeInvisible
-        Statics.TargetScriptIsResource = true;
-        Log.level1("Description for " + jComboBox1.getSelectedItem().toString());
-        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
-        Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1PopupMenuWillBecomeInvisible
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        Statics.TargetScriptIsResource = true;
-        Log.level1("Description for " + jComboBox1.getSelectedItem().toString());
-        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + jComboBox1.getSelectedItem().toString() + ".txt"));
-        Statics.SelectedScriptFolder = Statics.TempFolder + jComboBox1.getSelectedItem().toString();
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void MenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemExitActionPerformed
         System.exit(0);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_MenuItemExitActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
         TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
         int DResult = timeOutOptionPane.showTimeoutDialog(
                 60, //timeout
@@ -422,7 +391,39 @@ public class CASUALJFrame extends javax.swing.JFrame {
 
         }
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_DonateButtonActionPerformed
+
+    private void ComboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorActionPerformed
+        Statics.TargetScriptIsResource = true;
+        comboBoxUpdate();
+    }//GEN-LAST:event_ComboBoxScriptSelectorActionPerformed
+
+    private void ComboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorPopupMenuWillBecomeInvisible
+        Statics.TargetScriptIsResource = true;
+        comboBoxUpdate();
+    }//GEN-LAST:event_ComboBoxScriptSelectorPopupMenuWillBecomeInvisible
+    private void comboBoxUpdate(){
+        
+        Log.level3("Description for " + ComboBoxScriptSelector.getSelectedItem().toString());
+        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt"));
+        Statics.SelectedScriptFolder = Statics.TempFolder + ComboBoxScriptSelector.getSelectedItem().toString();
+        String ZipResource="/SCRIPTS/"+ComboBoxScriptSelector.getSelectedItem().toString()+".zip";
+        //TODO: do in background unzip
+        if (getClass().getResource(ZipResource)!=null){
+            Log.level3("Extracting archive....");
+
+            Unzip Unzip = new Unzip();
+            try {
+                Unzip.UnZipResource(ZipResource.toString(),Statics.SelectedScriptFolder);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        Log.level3("Exiting comboBoxUpdate()");
+    }
+    
     private static void launchLink(String Link) {
         LinkLauncher LinkLauncher = new LinkLauncher();
         LinkLauncher.launchLink(Link);
@@ -431,25 +432,25 @@ public class CASUALJFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox ComboBoxScriptSelector;
+    private javax.swing.JButton DonateButton;
     private javax.swing.JFileChooser FileChooser1;
+    private javax.swing.JMenuItem MenuItemExit;
     private javax.swing.JMenuItem MenuItemOpenScript;
     private javax.swing.JMenuItem MenuItemShowAboutBox;
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     private javax.swing.JTextArea ProgressArea;
     private javax.swing.JProgressBar ProgressBar;
+    private javax.swing.JButton StartButton;
     private javax.swing.JLabel StatusAnimationLabel;
-    private javax.swing.JLabel StatusMessageLabel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel StatusLabel;
+    private javax.swing.JLabel WindowBanner;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
 
     private void deployADB() {
@@ -480,13 +481,13 @@ public class CASUALJFrame extends javax.swing.JFrame {
     private boolean DeviceTimerState=false;
     public void startStopTimer(boolean StateCommanded){
         if (StateCommanded && !DeviceTimerState){
-            DeviceCheck.start();
+            Statics.DeviceMonitor.DeviceCheck.start();
         } else if (!StateCommanded && DeviceTimerState){
-            DeviceCheck.stop();
+            Statics.DeviceMonitor.DeviceCheck.start();
         }
     }
     public void setStatusMessageLabel(String text){
-        this.StatusMessageLabel.setText(text);
+        this.StatusLabel.setText(text);
     }
     private void listScripts() throws IOException {
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
@@ -500,15 +501,13 @@ public class CASUALJFrame extends javax.swing.JFrame {
                 String EntryName = ZEntry.getName();
                 if (EntryName.endsWith(".scr")) {
                     Log.level3("Found: " + EntryName.replace(".scr", ""));
-                    jComboBox1.addItem(EntryName.replace(".scr", ""));
+                    ComboBoxScriptSelector.addItem(EntryName.replace(".scr", ""));
                     Count++;
                 }
             }
             if (Count == 0) {
                 Log.level0("No Scripts found. Using Test Script.");
-                jComboBox1.addItem("Test Script");
-                Unzip Unzip=new Unzip();
-                Unzip.UnZipResource("/SCRIPTS/Test Script.zip",Statics.TempFolder);
+                ComboBoxScriptSelector.addItem("Test Script");
             }
 
         }
@@ -517,8 +516,8 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }
 
     public void enableControls(boolean status) {
-        jButton1.setEnabled(status);
-        jComboBox1.setEnabled(status);
+        StartButton.setEnabled(status);
+        ComboBoxScriptSelector.setEnabled(status);
         Log.level3("Controls Enabled status: " + status);
     }
 
@@ -535,15 +534,15 @@ public class CASUALJFrame extends javax.swing.JFrame {
     private void populateFields() {
 
         try {
-            this.jButton1.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+            this.StartButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
             this.setTitle(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.Title") + " - " + this.getTitle());
             if (java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.UsePictureForBanner").equals("true")) {
-                jLabel1.setText("");
-                jLabel1.setIcon(createImageIcon("/SCRIPTS/" + java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerPic"), java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText")));
+                WindowBanner.setText("");
+                WindowBanner.setIcon(createImageIcon("/SCRIPTS/" + java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerPic"), java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText")));
 
 
             } else {
-                this.jLabel1.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText"));
+                this.WindowBanner.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText"));
             }
             Statics.DeveloperName = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.Name");
             Statics.DonateButtonText = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateToButtonText");
