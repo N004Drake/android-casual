@@ -19,12 +19,12 @@ public class Unzip {
     public void unzipFiles() {
     }
 
-    public void unzip(String zipFile) throws ZipException, IOException {
+    public void unzipFile(String zipFile, String OutputFolder) throws ZipException, IOException {
         System.out.println(zipFile);
         int BUFFER = 2048;
         File file = new File(zipFile);
         ZipFile zip = new ZipFile(file);
-        String newPath = zipFile.substring(0, zipFile.length() - 4) + "/";
+        String newPath = OutputFolder+System.getProperty("file.separator")+zipFile.substring(0, zipFile.length() - 4) + "/";
         new File(newPath).mkdir();
         Enumeration zipFileEntries = zip.entries();
         // Process each entry
@@ -33,7 +33,7 @@ public class Unzip {
             ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
             String currentEntry = entry.getName();
             File destFile = new File(newPath, currentEntry);
-            destFile = new File(newPath, destFile.getName());
+            //destFile = new File(newPath, destFile.getName());
             File destinationParent = destFile.getParentFile();
             // create the parent directory structure if needed
             destinationParent.mkdirs();
@@ -61,7 +61,7 @@ public class Unzip {
             }
             if (currentEntry.endsWith(".zip")) {
                 // found a zip file, try to open
-                unzip(destFile.getAbsolutePath());
+                unzipFile(destFile.getAbsolutePath(),OutputFolder+System.getProperty("file.separator")+destFile.getAbsolutePath()+System.getProperty("file.separator"));
             }
         }
     }

@@ -64,6 +64,7 @@ public class Statics {
     public static String PreProgress="";
     public static JProgressBar ProgressBar;
     public static String Slash=System.getProperty("file.separator");
+    public static CASUALConnectionStatusMonitor DeviceMonitor=new CASUALConnectionStatusMonitor();
 
     
     

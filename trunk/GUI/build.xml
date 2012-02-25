@@ -96,7 +96,7 @@
 
     <target name="-post-jar">
 
-        <jar jarfile="dist/CASUAL-Revision${svna.version}.jar">
+        <jar jarfile="dist/CASUAL-Revision${svna.version}a.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="dist/lib/bsaf-1.9.1.jar" excludes="META-INF/*" />
                        
