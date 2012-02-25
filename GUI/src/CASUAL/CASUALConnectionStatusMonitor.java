@@ -6,8 +6,11 @@ package CASUAL;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.Timer;
-
+import sun.audio.*;
 /**
  *
  * @author Adam Outler adamoutler@gmail.com
@@ -15,7 +18,8 @@ import javax.swing.Timer;
 
 
 public class CASUALConnectionStatusMonitor {
-     Log Log=new Log();
+    private static int LastState=0;
+    Log Log=new Log();
       Shell Shell=new Shell();
      public final static int ONE_SECOND = 1000;
      Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
@@ -28,11 +32,13 @@ public class CASUALConnectionStatusMonitor {
 
             if (Statics.DeviceTracker.length>1){
                 Log.level0("Multiple devices detected");
-                Statics.GUI.setStatusMessageLabel("Multiple Devices");
+                stateSwitcher(2);
             } else if ( Statics.DeviceTracker[0].isEmpty()){
-                Statics.GUI.setStatusMessageLabel("Device Not Detected");
+                stateSwitcher(0);
             } else if (! Statics.DeviceTracker[0].isEmpty()){
+                stateSwitcher(1);
                 Statics.GUI.setStatusMessageLabel("Target Acquired");
+
 
 
             }
@@ -45,6 +51,7 @@ public class CASUALConnectionStatusMonitor {
                 Shell.sendShellCommand(cmd);
                 TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
                 String[] ok = {"ok"};
+                playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
                         + "is not set up properly to communicate\n"
                         + "with the device.  As a work-around we\n"
@@ -60,4 +67,42 @@ public class CASUALConnectionStatusMonitor {
             }    
         }    
     });
+     
+private static synchronized void playSound(final String url) {
+    new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
+      public void run() {
+        try {
+          Clip clip = AudioSystem.getClip();
+          AudioStream AS = new AudioStream( getClass().getResourceAsStream(url));
+          AudioPlayer.player.start(AS);
+          
+        } catch (Exception e) {
+          System.err.println(e.getMessage());
+        }
+      }
+    }).start();
+  }
+
+private static void stateSwitcher(int State){
+    if (LastState!=State){
+        switch (State){
+            case 0:
+                Statics.GUI.setStatusMessageLabel("Device Not Detected");
+                break;
+            case 1:
+                Statics.GUI.setStatusMessageLabel("Target Acquired");
+                playSound ("/CASUAL/resources/sounds/Connected-SystemReady.wav");
+                break;
+            case 2:
+                Statics.GUI.setStatusMessageLabel("Multiple Devices");
+                break;
+            case 3:
+                Statics.GUI.setStatusMessageLabel("WTF did you do???");
+        }
+        LastState=State;
+    }
 }
+    
+
+}
+
