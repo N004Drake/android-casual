@@ -77,6 +77,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Developer Instructions");
 
         jScrollPane14.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 

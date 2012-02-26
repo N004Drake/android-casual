@@ -53,6 +53,7 @@ public class CASUALAboutBox extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("About CASUAL");
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("LEGAL "));
 

@@ -42,7 +42,7 @@ public class Statics {
     }    
 
     /*increase or decrease the logging level*/
-    public static int ConsoleLevel=4; //userdata is output to console
+    public static int ConsoleLevel=1; //userdata is output to console
     /*increase or decrease the logging level*/
     public static int LogLevel=4; //all logs are output to file
     /*
@@ -58,7 +58,7 @@ public class Statics {
      *Form data for Heimdall One-Click View 
      */
     public static String ScriptLocation="/SCRIPTS/";
-    public static boolean TargetScriptIsResource=false;
+    public static boolean TargetScriptIsResource=true;
     public static CASUALJFrame GUI;
     public static JTextArea ProgressArea; //used by log to update Progress
     public static String PreProgress="";

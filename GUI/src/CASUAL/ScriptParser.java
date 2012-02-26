@@ -120,6 +120,10 @@ public class ScriptParser {
         }
         // $USERNOTIFICATION will launch a textbox and stop all commands
         if (Line.startsWith("$USERNOTIFICATION")){
+            if (Statics.UseSound.contains("true")){
+                //CASUALAudioSystem CAS = new CASUALAudioSystem();
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
+            }
             Line=Line.replace("$USERNOTIFICATION","");
             Line=removeLeadingSpaces(Line);
             if (Line.contains(",")){
@@ -138,7 +142,11 @@ public class ScriptParser {
             
             //TODO: this
           if (Line.startsWith("$USERCANCELOPTION")){
-                Line=Line.replace("$USERCANCELOPTION","");
+            if (Statics.UseSound.contains("true")){
+                //CASUALAudioSystem CAS = new CASUALAudioSystem();
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
+            }
+              Line=Line.replace("$USERCANCELOPTION","");
                 if (Line.contains(",")){
                     String[] Message=Line.split(",");
                     int n = JOptionPane.showConfirmDialog(
@@ -169,14 +177,14 @@ public class ScriptParser {
         
         
         //final line output for debugging purposes
-        Log.level3("Final:"+Line);
+        Log.level3("COMMAND TEST"+Statics.AdbDeployed+" "+Line);
     }
     
 
 
     
     private void executeSelectedScript(DataInputStream DIS) {
-        CurrentLine = 0;
+        CurrentLine = 1;
         Statics.ProgressBar.setMaximum(LinesInScript);
         Log.level3("Reading datastream" + DIS);
         doRead(DIS);
