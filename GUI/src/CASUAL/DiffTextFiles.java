@@ -109,6 +109,9 @@ public class DiffTextFiles {
     //iniFile.
 
     public void appendDiffToFile(String NameOfFileToBeModified, String Diff) {
+        if (Diff.equals("")){
+            return;
+        }
         String currentString;
         FileOutputStream FileOut = null;
         File FileToModify = new File(NameOfFileToBeModified);
