@@ -41,11 +41,9 @@ public class CASUALApp extends SingleFrameApplication {
         
         //Statics.GUI = new CasualJFrame();
         Statics.GUI= new CASUALJFrame();
-        System.out.println(Statics.GUI.toString());
         Statics.GUI.setVisible(true);
         show(Statics.GUI); 
         Statics.GUI.setVisible(true);
-        System.out.println(Statics.GUI.toString());
     }
 
     /**

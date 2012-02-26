@@ -347,7 +347,7 @@ public class FileOperations {
             String Line;
             BufferedReader BROriginal = new BufferedReader(new FileReader(FileOnDisk));
             while ((Line = BROriginal.readLine()) != null) {
-               Log.level3(Line);  
+               //Log.level3(Line);  
                EntireFile=EntireFile+"\n"+Line;
             }
         } catch (FileNotFoundException ex) {

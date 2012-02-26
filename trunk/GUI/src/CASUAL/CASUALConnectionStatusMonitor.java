@@ -85,14 +85,14 @@ private void stateSwitcher(int State){
         switch (State){
             case 0:
                 Statics.GUI.setStatusMessageLabel("Device Not Detected");
-                CAS.playSound("/CASUAL/resources/sounds/disconnected.wav");
+                CAS.playSound("/CASUAL/resources/sounds/Disconnected.wav");
                 break;
             case 1:
                 Statics.GUI.setStatusMessageLabel("Target Acquired");
                 CAS.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
                 break;
             default:
-                String[] URLs = {"/CASUAL/resources/sounds/"+String.valueOf(State)+".wav","/CASUAL/resources/sounds/devicesdetected.wav"};
+                String[] URLs = {"/CASUAL/resources/sounds/"+String.valueOf(State)+".wav","/CASUAL/resources/sounds/DevicesDetected.wav"};
                 CAS.playMultipleInputStreams(URLs);
 
                 Statics.GUI.setStatusMessageLabel("Multiple Devices");
