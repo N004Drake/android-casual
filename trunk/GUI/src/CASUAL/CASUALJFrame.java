@@ -546,6 +546,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
             }
             Statics.DeveloperName = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.Name");
             Statics.DonateButtonText = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateToButtonText");
+            Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Audio.Enabled");
             Statics.DeveloperDonateLink = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateLink");
         } catch (MissingResourceException ex) {
             Log.level0("Could not find build.prop");

@@ -37,6 +37,7 @@ import javax.swing.JTextArea;
  */
 public class Statics {
     
+    
     public Statics(){
     }    
 
@@ -44,7 +45,6 @@ public class Statics {
     public static int ConsoleLevel=4; //userdata is output to console
     /*increase or decrease the logging level*/
     public static int LogLevel=4; //all logs are output to file
-    
     /*
      * miscellanious variables
      */ 
@@ -65,6 +65,7 @@ public class Statics {
     public static JProgressBar ProgressBar;
     public static String Slash=System.getProperty("file.separator");
     public static CASUALConnectionStatusMonitor DeviceMonitor=new CASUALConnectionStatusMonitor();
+    public static String UseSound;
 
     
     
