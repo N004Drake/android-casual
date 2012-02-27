@@ -187,7 +187,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
         StatusAnimationLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASUAL/resources/icons/idle-icon.png"))); // NOI18N
 
         StatusLabel.setFont(new java.awt.Font("Ubuntu", 0, 20)); // NOI18N
-        StatusLabel.setText("Ready");
+        StatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASUAL/resources/icons/DeviceDisconnected.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -195,9 +195,9 @@ public class CASUALJFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(StatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(StatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(StatusAnimationLabel)
                 .addGap(6, 6, 6))
@@ -468,7 +468,18 @@ public class CASUALJFrame extends javax.swing.JFrame {
        RunableDeployADB RunableDeployADB = new RunableDeployADB();
        RunableDeployADB.run();
     }
-
+    public void setStatusLabelIcon(String Icon, String Text){
+        StatusLabel.setIcon(createImageIcon(Icon, Text));
+    }
+        protected ImageIcon createImageIcon(String path, String description) {
+        java.net.URL imgURL = getClass().getResource(path);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL, description);
+        } else {
+            System.err.println("Couldn't find file: " + path);
+            return null;
+        }
+    }
     private void prepareScripts() {
         try {
             listScripts();
@@ -533,15 +544,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
         Log.level3("Controls Enabled status: " + status);
     }
 
-    protected ImageIcon createImageIcon(String path, String description) {
-        java.net.URL imgURL = getClass().getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL, description);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    }
+
 
     private void populateFields() {
 
@@ -565,6 +568,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
             System.out.print(ex);
         }
     }
+    
 }
 
 class RunableDeployADB implements Runnable{

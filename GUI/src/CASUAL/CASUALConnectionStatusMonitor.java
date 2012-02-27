@@ -6,11 +6,7 @@ package CASUAL;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.Timer;
-import sun.audio.*;
 /**
  *
  * @author Adam Outler adamoutler@gmail.com
@@ -38,13 +34,10 @@ public class CASUALConnectionStatusMonitor {
             //No devices detected
             } else if ( Statics.DeviceTracker[0].isEmpty()){
                 stateSwitcher(0);
+                
             //One device detected
             } else if (! Statics.DeviceTracker[0].isEmpty()){
                 stateSwitcher(1);
-                Statics.GUI.setStatusMessageLabel("Target Acquired");
-
-
-
             }
 
             //Check and handle abnormalities
@@ -57,7 +50,7 @@ public class CASUALConnectionStatusMonitor {
                 //notify user that permissions will be requested and what they are used for
                 TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
                 String[] ok = {"ok"};
-                CAS.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
                         + "is not set up properly to communicate\n"
                         + "with the device.  As a work-around we\n"
@@ -84,19 +77,18 @@ private void stateSwitcher(int State){
     if (LastState!=State){
         switch (State){
             case 0:
-                Statics.GUI.setStatusMessageLabel("Device Not Detected");
-                CAS.playSound("/CASUAL/resources/sounds/Disconnected.wav");
+                Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Disconnected.wav");
                 break;
             case 1:
+                Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
                 Statics.GUI.setStatusMessageLabel("Target Acquired");
-                CAS.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
                 break;
             default:
+                Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/TooManyDevices.png", "Target Acquired");
                 String[] URLs = {"/CASUAL/resources/sounds/"+String.valueOf(State)+".wav","/CASUAL/resources/sounds/DevicesDetected.wav"};
-                CAS.playMultipleInputStreams(URLs);
-
-                Statics.GUI.setStatusMessageLabel("Multiple Devices");
-                
+                CASUALAudioSystem.playMultipleInputStreams(URLs);
                 break;
             
         }
