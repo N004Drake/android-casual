@@ -20,6 +20,10 @@
  */
 package CASUAL;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.ZipException;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -42,6 +46,10 @@ public class CASUALApp extends SingleFrameApplication {
         //Statics.GUI = new CasualJFrame();
         Statics.GUI= new CASUALJFrame();
         Statics.GUI.setVisible(true);
+        
+
+        
+        
         show(Statics.GUI); 
         Statics.GUI.setVisible(true);
     }

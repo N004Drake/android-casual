@@ -48,7 +48,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
     String NonResourceFileName;
     Log Log = new Log();
     FileOperations FileOperations = new FileOperations();
-
+    private String ComboBoxValue="";
     /**
      * Creates new form CASUALJFrame2
      */
@@ -350,6 +350,11 @@ public class CASUALJFrame extends javax.swing.JFrame {
                 //TODO: Do this in the background
                 Unzip Unzip=new Unzip();
                 Unzip.unzipFile(NonResourceFileName.toString()+".zip",Statics.SelectedScriptFolder);
+                ComboBoxScriptSelector.setEditable(true);
+                ComboBoxValue=getFilenameWithoutExtension(FileName);
+                ComboBoxScriptSelector.setSelectedItem(ComboBoxValue);
+                ComboBoxScriptSelector.setEditable(false);
+                
             } catch (IOException ex) {
                 Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -399,11 +404,20 @@ public class CASUALJFrame extends javax.swing.JFrame {
 
     private void ComboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorActionPerformed
         //Statics.TargetScriptIsResource = true;
+        if (! ComboBoxValue.equals(ComboBoxScriptSelector.getSelectedItem()) && (!Statics.TargetScriptIsResource)){
+            Statics.TargetScriptIsResource=true;
+        }
         comboBoxUpdate();
     }//GEN-LAST:event_ComboBoxScriptSelectorActionPerformed
 
     private void ComboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorPopupMenuWillBecomeInvisible
-        Statics.TargetScriptIsResource = true;
+        System.out.println(evt);
+        if (ComboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)){
+            Statics.TargetScriptIsResource = false;
+        } else {
+            Statics.TargetScriptIsResource=true;
+            
+        }
         comboBoxUpdate();
     }//GEN-LAST:event_ComboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
@@ -413,9 +427,14 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
     private void comboBoxUpdate(){
         Log.level2("From Resource: " + Statics.TargetScriptIsResource);
-        Log.level1("Description for " + Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt");
-       
-        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt"));
+        Log.level1("--"+Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
+        if (Statics.TargetScriptIsResource){
+            Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt"));
+            Statics.SelectedScriptFolder = Statics.TempFolder + ComboBoxScriptSelector.getSelectedItem().toString();
+        } else {
+            Log.level1(FileOperations.readFile( ComboBoxScriptSelector.getSelectedItem().toString() + ".txt"));
+        }
+
         Statics.SelectedScriptFolder = Statics.TempFolder + ComboBoxScriptSelector.getSelectedItem().toString();
         String ZipResource=ComboBoxScriptSelector.getSelectedItem().toString()+".zip";
         //TODO: do in background unzip
