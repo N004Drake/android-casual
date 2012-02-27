@@ -2,9 +2,6 @@ package CASUAL;
 
 import java.io.*;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -24,7 +21,8 @@ public class Unzip {
         int BUFFER = 2048;
         File file = new File(zipFile);
         ZipFile zip = new ZipFile(file);
-        String newPath = OutputFolder+System.getProperty("file.separator")+zipFile.substring(0, zipFile.length() - 4) + "/";
+        
+        String newPath = OutputFolder+System.getProperty("file.separator");
         new File(newPath).mkdir();
         Enumeration zipFileEntries = zip.entries();
         // Process each entry
