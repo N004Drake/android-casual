@@ -53,8 +53,9 @@ public class CASUALJFrame extends javax.swing.JFrame {
      * Creates new form CASUALJFrame2
      */
     public CASUALJFrame() {
-        initComponents();        
-        Statics.GUI=this;
+        initComponents();      
+        //Statics.GUI=this;
+        enableControls(false);
         Statics.ProgressArea = this.ProgressArea;
         Statics.ProgressBar=this.ProgressBar;
         ProgressArea.setText(Statics.PreProgress);
@@ -666,7 +667,7 @@ class RunableDeployADB implements Runnable{
 
         }
         
-        Statics.GUI.startStopTimer(true);
+        
 
     }
 

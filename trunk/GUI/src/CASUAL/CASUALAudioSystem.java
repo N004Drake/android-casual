@@ -5,6 +5,8 @@
 package CASUAL;
 
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import javax.sound.sampled.*;
 
 /**
@@ -24,7 +26,7 @@ public class CASUALAudioSystem {
                 if (Statics.UseSound.contains("true")||Statics.UseSound.contains("True")){
                 try {
                     byte[] buffer = new byte[4096];
-                    AudioInputStream IS = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URL));
+                    AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
                     AudioFormat Format = IS.getFormat();
                     SourceDataLine Line = AudioSystem.getSourceDataLine(Format);
                     Line.open(Format);
@@ -53,7 +55,7 @@ public class CASUALAudioSystem {
                 byte[] buffer = new byte[4096];
                 for (String URL : URLs) {
                     try {
-                        AudioInputStream IS = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URL));
+                        AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
                         AudioFormat Format = IS.getFormat();
                         SourceDataLine Line = AudioSystem.getSourceDataLine(Format);
                         Line.open(Format);
@@ -63,7 +65,7 @@ public class CASUALAudioSystem {
                             int Len = IS.read(buffer);
                             Line.write(buffer, 0, Len);
                         }
-                        //Line.drain(); //**[DEIT]** wait for the buffer to empty before closing the line
+                        Line.drain(); // wait for the buffer to empty before closing the line
                         Line.close();
                     } catch (Exception e) {
                         e.printStackTrace();

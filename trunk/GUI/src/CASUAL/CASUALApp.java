@@ -20,10 +20,7 @@
  */
 package CASUAL;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.ZipException;
+
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -43,7 +40,6 @@ public class CASUALApp extends SingleFrameApplication {
         
         FileOperations.makeFolder(Statics.TempFolder);
         
-        //Statics.GUI = new CasualJFrame();
         Statics.GUI= new CASUALJFrame();
         Statics.GUI.setVisible(true);
         
@@ -51,6 +47,7 @@ public class CASUALApp extends SingleFrameApplication {
         
         
         show(Statics.GUI); 
+        Statics.GUI.startStopTimer(true);
         Statics.GUI.setVisible(true);
     }
 
@@ -76,6 +73,7 @@ public class CASUALApp extends SingleFrameApplication {
      * Main method launching the application.
      */
     public static void main(String[] args) {
-        launch(CASUALApp.class, args);
+         
+         launch(CASUALApp.class, args);
     }
 }
