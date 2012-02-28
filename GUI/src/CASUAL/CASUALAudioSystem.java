@@ -69,6 +69,8 @@ public class CASUALAudioSystem {
             public void run() {
                 if (Statics.UseSound.contains("true")||Statics.UseSound.contains("True")){
                 byte[] buffer = new byte[4096];
+                int URLEndPosition=URLs.length - 1;
+                int CurrentURL=0;
                 for (String URL : URLs) {
                     try {
                         AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
@@ -81,11 +83,12 @@ public class CASUALAudioSystem {
                             int Len = IS.read(buffer);
                             Line.write(buffer, 0, Len);
                         }
-                        Line.drain(); // wait for the buffer to empty before closing the line
+                        if (CurrentURL==URLEndPosition) Line.drain(); // wait for the buffer to empty before closing the line
                         Line.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                  CurrentURL=CurrentURL++;  
                 }
 
             }
