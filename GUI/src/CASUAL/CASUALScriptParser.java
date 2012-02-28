@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
  *
  * @author adam
  */
-public class ScriptParser {
+public class CASUALScriptParser {
     boolean ScriptContinue=true;
     Log Log = new Log();
     int LinesInScript = 0;
@@ -70,7 +70,7 @@ public class ScriptParser {
             DIS = new DataInputStream(FileAsStream);
             executeSelectedScript(DIS);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

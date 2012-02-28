@@ -319,10 +319,10 @@ public class CASUALJFrame extends javax.swing.JFrame {
         Statics.DeviceMonitor.DeviceCheck.stop();
         enableControls(false);
         if (Statics.TargetScriptIsResource) {
-            ScriptParser ScriptParser = new ScriptParser();
+            CASUALScriptParser ScriptParser = new CASUALScriptParser();
             ScriptParser.executeSelectedScriptResource(ComboBoxScriptSelector.getSelectedItem().toString());
         } else {
-            ScriptParser ScriptParser = new ScriptParser();
+            CASUALScriptParser ScriptParser = new CASUALScriptParser();
             ScriptParser.executeSelectedScriptFile(NonResourceFileName);
         }
         this.busyIconTimer.stop();
@@ -423,7 +423,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ComboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       CASUALLogJFrame CASUALLogJFrame=new CASUALLogJFrame();
+       CASUALLog CASUALLogJFrame=new CASUALLog();
        CASUALLogJFrame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
     private void comboBoxUpdate(){
@@ -612,7 +612,9 @@ class RunableDeployADB implements Runnable{
         } else if (Statics.isMac()) {
             Log.level3("Found Mac Computer");
             //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
+            
+            //TODO: figure out why this crashes adb on Mac.
+            //DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
             Statics.AdbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
