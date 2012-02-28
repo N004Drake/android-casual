@@ -1,17 +1,7 @@
-devices
-ls /
 $ECHO I'm testing the echo command 
-This folder, $ZIPFILE is my temp folder
 #This is a commented line
-    #This is a commmented line with spaces
-$USERNOTIFICATION This is a notification
+#This is a commmented line with spaces
 $USERNOTIFICATION Notification Title testing, This is a Notification  with a filename $ZIPFILE
-$USERCANCELOPTION This is the option to cancel
-
-The above line is blank
+$USERCANCELOPTION This is the option to cancel, do you wish to cancel?
+$ECHO This folder, $ZIPFILE is my temp folder
 $ECHO here is a line of slashes using the $ SLASH command $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH
-test 
-test
-test
-push $ZIPFILEzergRush /sdcard/zergRush
-shell "if ((ls /d 2>&1 > /dev/null)); then echo 'found data folder in /d/ pushing out updates. '; mkdir /d/temp; cat /sdcard/zergRush /d/temp/zergRush; chmod 777 /dtemp/zergRush; /d/temp/zergRush; else echo 'Trying the next option';fi"
