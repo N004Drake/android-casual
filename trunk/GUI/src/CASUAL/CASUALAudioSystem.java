@@ -51,6 +51,7 @@ public class CASUALAudioSystem {
                         int Len = IS.read(buffer);
                         Line.write(buffer, 0, Len);
                     }
+                    Line.drain();
                     Line.close();
                 } catch (Exception e) {
                     System.err.println(e);
