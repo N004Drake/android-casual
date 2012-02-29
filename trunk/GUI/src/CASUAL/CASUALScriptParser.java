@@ -24,7 +24,7 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
+import java.util.ArrayList;
 /**
  *
  * @author adam
@@ -117,9 +117,7 @@ public class CASUALScriptParser {
             Line=removeLeadingSpaces(Line);
             Log.level1(Line);
             return;
-        }
-        // $USERNOTIFICATION will launch a textbox and stop all commands
-        if (Line.startsWith("$USERNOTIFICATION")){
+        }else if (Line.startsWith("$USERNOTIFICATION")){
             if (Statics.UseSound.contains("true")){
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
@@ -138,10 +136,7 @@ public class CASUALScriptParser {
                     "Information",
                     JOptionPane.INFORMATION_MESSAGE);
             }
-        }
-            
-            //TODO: this
-          if (Line.startsWith("$USERCANCELOPTION")){
+        } else if (Line.startsWith("$USERCANCELOPTION")){
             if (Statics.UseSound.contains("true")){
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
@@ -149,12 +144,18 @@ public class CASUALScriptParser {
               Line=Line.replace("$USERCANCELOPTION","");
                 if (Line.contains(",")){
                     String[] Message=Line.split(",");
-                    int n = JOptionPane.showConfirmDialog(
+                    Object[] Options = {"Stop",
+                        "Continue"};
+                    int n = JOptionPane.showOptionDialog(
                         Statics.GUI,
                         Message[1],
                         Message[0],
-                        JOptionPane.YES_NO_OPTION);  
-                    if (n==JOptionPane.NO_OPTION) {
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        Options,
+                        Options[1]);  
+                    if (n==JOptionPane.YES_OPTION) {
                         Log.level0(ScriptName+ " canceled at user request");
                         ScriptContinue=false;
                         return;
@@ -171,25 +172,24 @@ public class CASUALScriptParser {
                         return;
                     }
                 }
-           }
-
-     
-        
-        
+           } else {
+           Shell Shell = new Shell();
+           Statics.LiveSendCommand=new ArrayList();
+           String[] ShellCommand=Line.split(" ", 2);
+           Statics.LiveSendCommand.add(Statics.AdbDeployed);
+           Statics.LiveSendCommand.add(ShellCommand[0]);
+           if (ShellCommand.length>1)Statics.LiveSendCommand.add(ShellCommand[1]);
+           Shell.liveShellCommand();
+        }
         //final line output for debugging purposes
         Log.level3("COMMAND TEST"+Statics.AdbDeployed+" "+Line);
     }
-    
-
-
-    
     private void executeSelectedScript(DataInputStream DIS) {
         CurrentLine = 1;
         Statics.ProgressBar.setMaximum(LinesInScript);
         Log.level3("Reading datastream" + DIS);
         doRead(DIS);
     }
-
     private void doRead(DataInputStream dataIn) {
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));

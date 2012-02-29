@@ -22,7 +22,6 @@ package CASUAL;
 
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import javax.sound.sampled.*;
 
 /**
@@ -72,25 +71,27 @@ public class CASUALAudioSystem {
                 byte[] buffer = new byte[4096];
                 int URLEndPosition=URLs.length - 1;
                 int CurrentURL=0;
+                SourceDataLine Line=null;
                 for (String URL : URLs) {
                     try {
                         AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
                         AudioFormat Format = IS.getFormat();
-                        SourceDataLine Line = AudioSystem.getSourceDataLine(Format);
+                        Line= AudioSystem.getSourceDataLine(Format);
+                        
                         Line.open(Format);
                         Line.start();
                         Line.drain();
                         while (IS.available() > 0) {
                             int Len = IS.read(buffer);
                             Line.write(buffer, 0, Len);
-                        }
+                        };
                         if (CurrentURL==URLEndPosition) Line.drain(); // wait for the buffer to empty before closing the line
-                        Line.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                   CurrentURL=CurrentURL++;  
                 }
+                Line.close();
 
             }
             }
