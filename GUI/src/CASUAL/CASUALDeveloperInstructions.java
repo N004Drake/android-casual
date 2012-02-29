@@ -91,7 +91,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea15.setColumns(20);
         jTextArea15.setRows(5);
-        jTextArea15.setText("_,.-~=*^`Welcome To CASUAL`^*=~-.,_\nThis script is the default script  This text comes from a file called  Overview.Instructions.txt in the CASUAL/SCRIPT folder.  This file can be used for instructions on setting the device into ADB mode and giving a general overview of the scripts provided.");
+        jTextArea15.setText("_,.-~=*^`Welcome To CASUAL`^*=~-.,_\nThis script is the default welcome message.\nThis text comes from a file called  Overview.Instructions.txt in the CASUAL/SCRIPT folder.  This file can be used for instructions on setting the device into ADB mode and giving a general overview of the scripts provided.");
         jScrollPane15.setViewportView(jTextArea15);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -131,7 +131,8 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea16.setColumns(20);
         jTextArea16.setRows(5);
-        jTextArea16.setText("Developer.Name=Adam Outler\nDeveloper.DonateLink= http://forum.xda-developers.com/donations.php\nDeveloper.DonateToButtonText= XDA-Developers\nWindow.Title=Your Application Title!\nWindow.UsePictureForBanner=true\nWindow.BannerPic=logo.png\nWindow.BannerText=Banner Text\nWindow.ExecuteButtonText=Execute Button Text\n");
+        jTextArea16.setText("#Developer Name\nDeveloper.Name=Adam Outler\n#Donation link button title\nDeveloper.DonateToButtonText= XDA-Developers\n#Link for donate button\nDeveloper.DonateLink= http://forum.xda-developers.com/donations.php\n#This is the window title\nWindow.Title=Your Application Title!\n#If true, BannerPic will be used for the main window banner decoration\nWindow.UsePictureForBanner=true\n#The main window banner\nWindow.BannerPic=logo.png\n#If UsePictureForBanner is false this text will be displayed in large format\nWindow.BannerText=Banner Text\n#text for main button\nWindow.ExecuteButtonText=Execute Button Text\n#\"true\" or \"True\" to enable\nAudio.Enabled=true \n");
+        jTextArea16.setCaretPosition(0);
         jScrollPane16.setViewportView(jTextArea16);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -142,7 +143,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
-                    .addComponent(jScrollPane16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -161,7 +162,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea4.setColumns(20);
         jTextArea4.setRows(5);
-        jTextArea4.setText("The adb_usb.ini file contains instructions  for ADB to look at \nnon-standard  device  types.  Generally this will not be needed. \nIf you're using a  normally  unsupported  device, you will\nneed to specify the USB  manufacturer code.");
+        jTextArea4.setText("The adb_usb.ini file contains instructions  for ADB to look at  non-standard  device \n types.  Generally this will not be needed.  If you're using a  normally  unsupported  \ndevice, you will  need to specify the USB  manufacturer code. Be careful  when\nmodifying this file.  it can cause problems on Mac if not modified properly.");
         jTextArea4.setBorder(null);
         jScrollPane4.setViewportView(jTextArea4);
 
@@ -199,6 +200,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea6.setColumns(20);
         jTextArea6.setRows(5);
+        jTextArea6.setText("A Script.scr may be named any name and include spaces.  This will be the name the user\nsees.  The Script.scr is the master file.  Script.txt supports it with a description and \nScript.zip   supports it with files.  The Script.scr controls how the selected program\noperates. Below you will find an example containing all Script.scr commands.");
         jTextArea6.setBorder(null);
         jScrollPane6.setViewportView(jTextArea6);
 
@@ -206,6 +208,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea18.setColumns(20);
         jTextArea18.setRows(5);
+        jTextArea18.setText("$USERNOTIFICATION Notification Title testing, This is a Notification  with a filename $ZIPFILE\n$USERCANCELOPTION This is the option to cancel, do you wish to cancel?\n$ECHO This folder, $ZIPFILE is my temp folder $SLASH is the system file separator\n$ECHO here is a line of slashes using the $ SLASH command $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH\n#This is a commented line.  The next line, because it is not prefixed, will use adb as its execution environment\n$ECHO I will now execute \"adb devices\".\ndevices\n$ECHO Pushing a file over to your device\npush $ZIPFILEMyFile.txt /sdcard\n$ECHO I will now execute \"adb shell ls /data\"\nshell ls /data");
         jScrollPane18.setViewportView(jTextArea18);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -215,17 +218,17 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                    .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(24, 24, 24))
         );
 
         jTabbedPane1.addTab("Script.scr", jPanel4);
@@ -242,6 +245,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea19.setColumns(20);
         jTextArea19.setRows(5);
+        jTextArea19.setText("This option does what I say it does and nothing more. It will install various things to \nvarious degrees.  Ensure you are rooted or this will fail.");
         jScrollPane19.setViewportView(jTextArea19);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -271,6 +275,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea10.setColumns(20);
         jTextArea10.setRows(5);
+        jTextArea10.setText("The Script.zip should be used to store files to be pushed to a device for Script.scr.  A \nScript.zip may be referenced by the Script.scr with the command $ZIPFILE.  \nEG.  $ZIPFILE  refers to the root of the zip file. \nEG.  $ZIPFILE$SLASHMyFolder$SLASH refers to the folder called \"MyFolder\" in the zipfile. ");
         jTextArea10.setBorder(null);
         jScrollPane10.setViewportView(jTextArea10);
 

@@ -50,7 +50,7 @@ public class Statics {
      */ 
     static Shell shellCommand;
     static Log Log = new Log();    
-    public static ArrayList LiveSendCommand;
+    public static ArrayList LiveSendCommand=new ArrayList();
     public static PrintWriter OutFile;
     public static boolean LogCreated=false; //used by log class
     public static String[] DeviceTracker;

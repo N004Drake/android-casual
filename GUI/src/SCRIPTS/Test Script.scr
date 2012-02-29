@@ -5,3 +5,8 @@ $USERNOTIFICATION Notification Title testing, This is a Notification  with a fil
 $USERCANCELOPTION This is the option to cancel, do you wish to cancel?
 $ECHO This folder, $ZIPFILE is my temp folder
 $ECHO here is a line of slashes using the $ SLASH command $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH
+$ECHO executing devices
+devices
+$ECHO executing ls
+shell ls /data;whoami;pwd;echo "woot"
+shell ls /sdcard/
