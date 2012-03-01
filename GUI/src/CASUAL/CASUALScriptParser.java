@@ -25,27 +25,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
+
 /**
  *
  * @author adam
  */
 public class CASUALScriptParser {
-    boolean ScriptContinue=true;
+
+    boolean ScriptContinue = true;
     Log Log = new Log();
     int LinesInScript = 0;
     int CurrentLine;
-    String ScriptTempFolder="";
-    String ScriptName="";
+    String ScriptTempFolder = "";
+    String ScriptName = "";
     /*
      * Executes a selected script as a resource reports to Log class.
      */
+
     public void executeSelectedScriptResource(String Script) {
         Log.level3("Selected resource" + Script);
-        ScriptName=Script;
+        ScriptName = Script;
         CountLines CountLines = new CountLines();
         LinesInScript = CountLines.countResourceLines(Script);
         Log.level3("Lines in Script " + LinesInScript);
-        ScriptTempFolder=Statics.TempFolder+Script+Statics.Slash;
+        ScriptTempFolder = Statics.TempFolder + Script + Statics.Slash;
 
         InputStream ResourceAsStream = getClass().getResourceAsStream(Statics.ScriptLocation + Script + ".scr");
         DataInputStream DIS = new DataInputStream(ResourceAsStream);
@@ -59,8 +62,8 @@ public class CASUALScriptParser {
     public void executeSelectedScriptFile(String Script) {
         Log.level3("Selected file" + Script);
         CountLines CountLines = new CountLines();
-        ScriptName=Script;
-        ScriptTempFolder=Statics.TempFolder+(new File(Script).getName())+Statics.Slash;
+        ScriptName = Script;
+        ScriptTempFolder = Statics.TempFolder + (new File(Script).getName()) + Statics.Slash;
         LinesInScript = CountLines.countFileLines(Script + ".scr");
         Log.level3("Lines in SCript " + LinesInScript);
         DataInputStream DIS;
@@ -75,78 +78,79 @@ public class CASUALScriptParser {
     }
 
     /*
-     * Script Handler contains all script commands and
-     * will execute commands
+     * Script Handler contains all script commands and will execute commands
      */
     private void commandHandler(String Line) {
 
         //Remove leading spaces
         Line = removeLeadingSpaces(Line);
-        
-        
+
+
         //Disregard commented lines
-        if (Line.startsWith("#")){
-            Log.level3("Ignoring commented line"+Line);
+        if (Line.startsWith("#")) {
+            Log.level3("Ignoring commented line" + Line);
             return;
         }
-        
-        //Disregard blank lines
-        if (Line.equals("")) return;
-        
 
-        
+        //Disregard blank lines
+        if (Line.equals("")) {
+            return;
+        }
+
+
+
         //replace $SLASH with "\" for windows or "/" for linux and mac
-        if (Line.contains("$SLASH")){
-            Line=Line.replace("$SLASH", Statics.Slash);
+        if (Line.contains("$SLASH")) {
+            Line = Line.replace("$SLASH", Statics.Slash);
         }
-        
+
         //reference to the Script's .zip file
-        if (Line.contains("$ZIPFILE")){
-            Line=Line.replace("$ZIPFILE", ScriptTempFolder);
+        if (Line.contains("$ZIPFILE")) {
+            Line = Line.replace("$ZIPFILE", ScriptTempFolder);
         }
-        
-        
+
+
         //Disregard commented lines
-        if (Line.startsWith("#")){
-            Log.level3("Ignoring commented line"+Line);
+        if (Line.startsWith("#")) {
+            Log.level3("Ignoring commented line" + Line);
             return;
         }
         //$ECHO command will display text in the main window
-        if (Line.startsWith("$ECHO")){
-            Line=Line.replace("$ECHO","");
-            Line=removeLeadingSpaces(Line);
+        if (Line.startsWith("$ECHO")) {
+            Line = Line.replace("$ECHO", "");
+            Line = removeLeadingSpaces(Line);
             Log.level1(Line);
             return;
-        }else if (Line.startsWith("$USERNOTIFICATION")){
-            if (Statics.UseSound.contains("true")){
+        } else if (Line.startsWith("$USERNOTIFICATION")) {
+            if (Statics.UseSound.contains("true")) {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
-            Line=Line.replace("$USERNOTIFICATION","");
-            Line=removeLeadingSpaces(Line);
-            if (Line.contains(",")){
-                String[] Message=Line.split(",");
+            Line = Line.replace("$USERNOTIFICATION", "");
+            Line = removeLeadingSpaces(Line);
+            if (Line.contains(",")) {
+                String[] Message = Line.split(",");
                 JOptionPane.showMessageDialog(Statics.GUI,
-                     Message[1],
-                     Message[0],
-                     JOptionPane.INFORMATION_MESSAGE);                
+                        Message[1],
+                        Message[0],
+                        JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(Statics.GUI,
-                     Line,
-                    "Information",
-                    JOptionPane.INFORMATION_MESSAGE);
+                        Line,
+                        "Information",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
-        } else if (Line.startsWith("$USERCANCELOPTION")){
-            if (Statics.UseSound.contains("true")){
+        } else if (Line.startsWith("$USERCANCELOPTION")) {
+            if (Statics.UseSound.contains("true")) {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             }
-              Line=Line.replace("$USERCANCELOPTION","");
-                if (Line.contains(",")){
-                    String[] Message=Line.split(",");
-                    Object[] Options = {"Stop",
-                        "Continue"};
-                    int n = JOptionPane.showOptionDialog(
+            Line = Line.replace("$USERCANCELOPTION", "");
+            if (Line.contains(",")) {
+                String[] Message = Line.split(",");
+                Object[] Options = {"Stop",
+                    "Continue"};
+                int n = JOptionPane.showOptionDialog(
                         Statics.GUI,
                         Message[1],
                         Message[0],
@@ -154,48 +158,53 @@ public class CASUALScriptParser {
                         JOptionPane.QUESTION_MESSAGE,
                         null,
                         Options,
-                        Options[1]);  
-                    if (n==JOptionPane.YES_OPTION) {
-                        Log.level0(ScriptName+ " canceled at user request");
-                        ScriptContinue=false;
-                        return;
-                    }
-                } else {
-                    int n = JOptionPane.showConfirmDialog(
+                        Options[1]);
+                if (n == JOptionPane.YES_OPTION) {
+                    Log.level0(ScriptName + " canceled at user request");
+                    ScriptContinue = false;
+                    return;
+                }
+            } else {
+                int n = JOptionPane.showConfirmDialog(
                         Statics.GUI,
                         Line,
                         "Do you wish to continue?",
                         JOptionPane.YES_NO_OPTION);
-                    if (n==JOptionPane.NO_OPTION) {
-                        Log.level0(ScriptName+ " canceled at user request");
-                        ScriptContinue=false;
-                        return;
-                    }
+                if (n == JOptionPane.NO_OPTION) {
+                    Log.level0(ScriptName + " canceled at user request");
+                    ScriptContinue = false;
+                    return;
                 }
-           } else {
-           Shell Shell = new Shell();
-           Statics.LiveSendCommand=new ArrayList();
-           String[] ShellCommand=Line.split(" ", 2);
-           Statics.LiveSendCommand.add(Statics.AdbDeployed);
-           Statics.LiveSendCommand.add(ShellCommand[0]);
-           if (ShellCommand.length>1)Statics.LiveSendCommand.add(ShellCommand[1]);
-           Shell.liveShellCommand();
+            }
+        } else {
+            Shell Shell = new Shell();
+            Statics.LiveSendCommand = new ArrayList();
+            String[] ShellCommand = Line.split(" ", 2);
+            Statics.LiveSendCommand.add(Statics.AdbDeployed);
+            Statics.LiveSendCommand.add(ShellCommand[0]);
+            ArrayList AL=this.parseCommandLine(Line);
+            if (ShellCommand.length > 1) {
+                Statics.LiveSendCommand.add(ShellCommand[1]);
+            }
+            Shell.liveShellCommand();
         }
         //final line output for debugging purposes
-        Log.level3("COMMAND TEST"+Statics.AdbDeployed+" "+Line);
+        Log.level3("COMMAND TEST" + Statics.AdbDeployed + " " + Line);
     }
+
     private void executeSelectedScript(DataInputStream DIS) {
         CurrentLine = 1;
         Statics.ProgressBar.setMaximum(LinesInScript);
         Log.level3("Reading datastream" + DIS);
         doRead(DIS);
     }
+
     private void doRead(DataInputStream dataIn) {
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
             String strLine;
 
-            while (((strLine = bReader.readLine()) != null)&&(ScriptContinue)) {
+            while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
                 CurrentLine++;
                 Statics.ProgressBar.setValue(CurrentLine);
 
@@ -216,5 +225,57 @@ public class CASUALScriptParser {
             Line = Line.replaceFirst(" ", "");
         }
         return Line;
+    }
+
+    private ArrayList parseCommandLine(String Line) {
+        ArrayList List = new ArrayList();
+        Boolean SingleQuoteOn = false;
+        Boolean DoubleQuoteOn = false;
+        String Word ="";
+        char LastChar=0;
+        char[] TestChars = {
+            "\'".toCharArray()[0], //'
+            "\"".toCharArray()[0], //"
+            " ".toCharArray()[0],  // 
+            "\\".toCharArray()[0], //\
+            
+        };
+        char[] CharLine = Line.toCharArray();
+        for (int I = 0; I < CharLine.length; I++) {
+            //If we are not double quoted, act on singe quotes
+            if (!DoubleQuoteOn && CharLine[I] == TestChars[0]&& LastChar != TestChars[3]) {
+                //If we are single quoted and we see the last ' character;
+                if (SingleQuoteOn){
+                    SingleQuoteOn=false;  
+                //start single quote
+                } else if (! SingleQuoteOn){
+                    SingleQuoteOn=true;
+                } 
+            //if we are not single quoted, act on double quotes
+            } else if (!SingleQuoteOn && CharLine[I] == TestChars[1]&& LastChar != TestChars[3]) {
+                //if we are doulbe quoted already and see the last character;
+                if (DoubleQuoteOn) {
+                    //turn doublequote off
+                    DoubleQuoteOn=false;
+                //start doublequote
+                } else {
+                    DoubleQuoteOn=true;
+                }
+            //if space is detected and not single or double quoted
+            }else if (!SingleQuoteOn && !DoubleQuoteOn && CharLine[I] == TestChars[2] && LastChar != TestChars[3]) {
+                List.add(Word);
+                Word="";
+            //Otherwise add it to the string
+            } else {
+                Word=Word + String.valueOf(CharLine[I]);
+            }
+            //Annotate last char for literal character checks "\".
+            LastChar=CharLine[I];
+        }
+        //add the last word to the list if it's not blank.
+        if (!Word.equals("")){ 
+            List.add(Word);
+        }
+        return List;
     }
 }
