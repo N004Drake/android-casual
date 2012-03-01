@@ -1,3 +1,4 @@
+push /home/adam/testfile /sdcard
 $ECHO I'm testing the echo command 
 #This is a commented line
 #This is a commmented line with spaces
@@ -8,5 +9,7 @@ $ECHO here is a line of slashes using the $ SLASH command $SLASH$SLASH$SLASH$SLA
 $ECHO executing devices
 devices
 $ECHO executing ls
+
 shell ls /data;whoami;pwd;echo "woot"
 shell ls /sdcard/
+shell ls \"/folder/with/quotes\" "'single quotes inside double quotes'" '"double quotes inside single quotes"' "testing slash\" there "  "making sure slashes \\\\ aren't removed " 
