@@ -178,15 +178,11 @@ public class CASUALScriptParser {
             }
         } else {
             Shell Shell = new Shell();
-            Statics.LiveSendCommand = new ArrayList();
-            String[] ShellCommand = Line.split(" ", 2);
-            Statics.LiveSendCommand.add(Statics.AdbDeployed);
-            Statics.LiveSendCommand.add(ShellCommand[0]);
-            ArrayList AL=this.parseCommandLine(Line);
-            if (ShellCommand.length > 1) {
-                Statics.LiveSendCommand.add(ShellCommand[1]);
-            }
-            Shell.liveShellCommand();
+            ArrayList ShellCommand=new ArrayList();
+            ShellCommand.add(Statics.AdbDeployed);
+            ShellCommand.addAll(this.parseCommandLine(Line));
+            String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
+            Shell.liveShellCommand(StringCommand);
         }
         //final line output for debugging purposes
         Log.level3("COMMAND TEST" + Statics.AdbDeployed + " " + Line);
@@ -197,6 +193,14 @@ public class CASUALScriptParser {
         Statics.ProgressBar.setMaximum(LinesInScript);
         Log.level3("Reading datastream" + DIS);
         doRead(DIS);
+    }
+    
+    private String[] convertArrayListToStringArray(ArrayList List){
+        String[] StringArray=new String[List.size()] ;
+        for (int i=0; i <= List.size()-1; i++){
+            StringArray[i] = List.get(i).toString();
+        }
+        return StringArray;
     }
 
     private void doRead(DataInputStream dataIn) {

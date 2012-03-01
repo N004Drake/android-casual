@@ -23,6 +23,7 @@ package CASUAL;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,12 +42,12 @@ public class Shell implements Runnable {
     //Send a command to the shell
 
     public String elevateSimpleCommand(String[] cmd) {
-        String NewCmd="";
+        String NewCmd = "";
         FileOperations FileOperations = new FileOperations();
-        Shell Shell=new Shell();
-        String Result="";
-        
-        
+        Shell Shell = new Shell();
+        String Result = "";
+
+
         String Command = "";
         for (int i = 0; i < cmd.length; i++) {
             Command = Command + cmd[i] + " ";
@@ -54,24 +55,24 @@ public class Shell implements Runnable {
 
         String[] newCmd;
         if (Statics.isLinux()) {
-            String[] TestGKSudo={"which", "gksudo"};
-            String TestReturn=Shell.sendShellCommand(TestGKSudo);
-            if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))){
+            String[] TestGKSudo = {"which", "gksudo"};
+            String TestReturn = Shell.sendShellCommand(TestGKSudo);
+            if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))) {
                 TimeOutOptionPane TO = new TimeOutOptionPane();
                 TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", TO.OK_OPTION, TO.ERROR_MESSAGE, null, null);
             }
-            
-            
+
+
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
             try {
-                FileOperations.writeToFile(Command,ScriptFile);
+                FileOperations.writeToFile(Command, ScriptFile);
             } catch (IOException ex) {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
-            String[] SendCommand={"gksudo","-k",ScriptFile};
-            Result=Shell.sendShellCommand(SendCommand);
-        }else if (Statics.isMac()) {
+            String[] SendCommand = {"gksudo", "-k", ScriptFile};
+            Result = Shell.sendShellCommand(SendCommand);
+        } else if (Statics.isMac()) {
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
             try {
                 FileOperations.writeToFile(""
@@ -80,25 +81,25 @@ public class Shell implements Runnable {
                         + "for i in \"$@\"; do export bar=\"$bar '${i}'\";done"
                         + "osascript -e \"do shell script \"$bar\" with administrator privileges\""
                         + "", ScriptFile);
-                
+
             } catch (IOException ex) {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
-            String[] MacCommand={ScriptFile};
+            String[] MacCommand = {ScriptFile};
             Result = sendShellCommand(MacCommand);
-        }else if (!Statics.OSName.equals("Windows XP")) {
+        } else if (!Statics.OSName.equals("Windows XP")) {
             newCmd = new String[cmd.length + 2];
             newCmd[0] = Statics.WinElevatorInTempFolder;
-            newCmd[1] = "-wait";            
-            for (int i = 2; i < cmd.length+2; i++) {
-                newCmd[i]=cmd[i-2] + " ";
+            newCmd[1] = "-wait";
+            for (int i = 2; i < cmd.length + 2; i++) {
+                newCmd[i] = cmd[i - 2] + " ";
             }
-           
+
             Result = sendShellCommand(newCmd);
 
         }
-        
+
         return Result;
     }
 
@@ -173,7 +174,56 @@ public class Shell implements Runnable {
 
     }
 
-    public void liveShellCommand() {
+    public void liveShellCommand(String[] params) {
+
+        boolean LinkLaunched = false;
+        try {
+            Process process = new ProcessBuilder(params).start();
+            BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String LineRead = null;
+            String CharRead = null;
+            boolean ResetLine = false;
+            int c;
+            while ((c = STDOUT.read()) > -1) {
+                if (ResetLine) {
+                    log.beginLine();
+                    ResetLine = !ResetLine;
+                }
+                CharRead = Character.toString((char) c);
+                LineRead = LineRead + CharRead;
+                log.progress(CharRead);
+                if ((!LinkLaunched) && (LineRead.contains("Modified SBL Injection Completed Download Mode Activated"))) {
+                    LinkLaunched = true;
+                    TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
+                    int DResult = timeOutOptionPane.showTimeoutDialog(
+                            7, //timeout
+                            null, //parentComponent
+                            "Don't forget to use the donate button.\n"
+                            + "Donations help developers justify time spent on projects "
+                            + "to their wives :).",
+                            "Succes!s",//DisplayTitle
+                            TimeOutOptionPane.OK_OPTION, // Options buttons
+                            TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
+                            new String[]{"OK"}, // option buttons
+                            "No"); //Default{
+                    if (DResult == 0) {
+                    }
+                }
+            }
+            while ((LineRead = STDERR.readLine()) != null) {
+                log.progress(LineRead);
+            }
+
+        } catch (IOException ex) {
+            String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();
+            log.level2("Problem while executing" + ArrayList
+                    + " in Shell.liveShellCommand()");
+            Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void liveBackgroundShellCommand() {
 
 
         Runnable r = new Runnable() {
