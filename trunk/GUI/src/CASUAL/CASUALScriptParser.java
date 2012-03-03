@@ -108,7 +108,11 @@ public class CASUALScriptParser {
         if (Line.contains("$ZIPFILE")) {
             Line = Line.replace("$ZIPFILE", ScriptTempFolder);
         }
-
+        
+        if (Line.contains("\\n")){
+            Line=Line.replace("\\n", "\n");
+        }
+            
 
         //Disregard commented lines
         if (Line.startsWith("#")) {
