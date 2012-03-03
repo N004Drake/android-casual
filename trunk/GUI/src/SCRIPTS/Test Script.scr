@@ -1,15 +1,15 @@
 push /home/adam/testfile /sdcard
 $ECHO I'm testing the echo command 
 #This is a commented line
-#This is a commmented line with spaces
-$USERNOTIFICATION Notification Title testing, This is a Notification \n with a filename $ZIPFILE
+shell "cat /sdcard/myfile"
+$USERINPUTBOX This is an inputbox title, this is an inputbox message, shell "echo $USERINPUT>/sdcard/myfile"
+$ECHO above this should be a userinput
+shell "echo woot; cat /sdcard/myfile; echo woot"
+$USERNOTIFICATION Notification Title testing, This is a Notification with a filename \n $ZIPFILE \n\n\n ...and several new lines.
 $USERCANCELOPTION This is the option to cancel, do you wish to \n cancel?
 $ECHO This folder, $ZIPFILE is my temp folder
 $ECHO here is a line of slashes using the $ SLASH command $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH
-$ECHO executing devices
-devices
-$ECHO executing ls
 
+devices
+$ECHO executing arbitrary commands
 shell ls /data;whoami;pwd;echo "woot"
-shell ls /sdcard/
-shell ls \"/folder/with/quotes\" "'single quotes inside double quotes'" '"double quotes inside single quotes"' "testing slash\" there "  "making sure slashes \\\\ aren't removed " 
