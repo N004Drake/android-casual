@@ -125,9 +125,10 @@ public class CASUALScriptParser {
             Line = removeLeadingSpaces(Line);
             Log.level1(Line);
             return;
+        //$USERNOTIFICATION will stop processing and force the user to 
+        // press OK to continueNotification 
         } else if (Line.startsWith("$USERNOTIFICATION")) {
             if (Statics.UseSound.contains("true")) {
-                //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
             Line = Line.replace("$USERNOTIFICATION", "");
@@ -180,13 +181,16 @@ public class CASUALScriptParser {
                     return;
                 }
             }
+        //$USERINPUTBOX will stop processing and accept a String to be injected
+        //into ADB.
+        } else if (Line.startsWith("$USERINPUTBOX")){
+            String[] Message=Line.split(",");
+            String InputBoxText=JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
+            Line=Message[2].replace("$USERINPUT", InputBoxText);
+            doShellCommand(Line);
+        // if no prefix, then send command directly to ADB.
         } else {
-            Shell Shell = new Shell();
-            ArrayList ShellCommand=new ArrayList();
-            ShellCommand.add(Statics.AdbDeployed);
-            ShellCommand.addAll(this.parseCommandLine(Line));
-            String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
-            Shell.liveShellCommand(StringCommand);
+            doShellCommand(Line);
         }
         //final line output for debugging purposes
         Log.level3("COMMAND TEST" + Statics.AdbDeployed + " " + Line);
@@ -285,5 +289,16 @@ public class CASUALScriptParser {
             List.add(Word);
         }
         return List;
+    }
+
+    private void doShellCommand(String Line) {
+            Line=this.removeLeadingSpaces(Line);
+        
+            Shell Shell = new Shell();
+            ArrayList ShellCommand=new ArrayList();
+            ShellCommand.add(Statics.AdbDeployed);
+            ShellCommand.addAll(this.parseCommandLine(Line));
+            String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
+            Shell.liveShellCommand(StringCommand);
     }
 }
