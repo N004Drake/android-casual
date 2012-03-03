@@ -109,7 +109,7 @@ public class CASUALScriptParser {
             Line = Line.replace("$ZIPFILE", ScriptTempFolder);
         }
         
-        if (Line.contains("\\n")){
+        if ((Line.contains("\\n")) && ((Line.startsWith("$USERNOTIFICATION") || Line.startsWith("$USERNOTIFICATION")) || Line.startsWith("$USERCANCELOPTION"))){
             Line=Line.replace("\\n", "\n");
         }
             

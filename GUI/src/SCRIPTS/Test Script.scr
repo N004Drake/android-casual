@@ -2,8 +2,8 @@ push /home/adam/testfile /sdcard
 $ECHO I'm testing the echo command 
 #This is a commented line
 #This is a commmented line with spaces
-$USERNOTIFICATION Notification Title testing, This is a Notification  with a filename $ZIPFILE
-$USERCANCELOPTION This is the option to cancel, do you wish to cancel?
+$USERNOTIFICATION Notification Title testing, This is a Notification \n with a filename $ZIPFILE
+$USERCANCELOPTION This is the option to cancel, do you wish to \n cancel?
 $ECHO This folder, $ZIPFILE is my temp folder
 $ECHO here is a line of slashes using the $ SLASH command $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH
 $ECHO executing devices
