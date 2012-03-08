@@ -1,1 +1,1 @@
-When you click the button below, Test Script will execute, showing devices and then perform a ls command.
+This CASUAL test script will ask you for an input, echo that off the device, then ask for confirmation to put your device into recovery mode.
