@@ -532,10 +532,12 @@ public class CASUALJFrame extends javax.swing.JFrame {
         this.StatusLabel.setText(text);
     }
     private void listScripts() throws IOException {
+        
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
 
         if (Src != null) {
+            Statics.setMasterLock(true);
             URL jar = Src.getLocation();
             ZipInputStream Zip = new ZipInputStream(jar.openStream());
             ZipEntry ZEntry;
@@ -552,6 +554,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
                 Log.level0("No Scripts found. Using Test Script.");
                 ComboBoxScriptSelector.addItem("Test Script");
             }
+            Statics.MasterLock=false;
 
         }
 
@@ -559,9 +562,13 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }
 
     public void enableControls(boolean status) {
-        StartButton.setEnabled(status);
-        ComboBoxScriptSelector.setEnabled(status);
-        Log.level3("Controls Enabled status: " + status);
+        if (! Statics.MasterLock){
+            StartButton.setEnabled(status);
+            ComboBoxScriptSelector.setEnabled(status);
+            Log.level3("Controls Enabled status: " + status);
+        } else{
+            Log.level3("Control Change requested but Statics.MasterLock is set.");
+        }
     }
 
 

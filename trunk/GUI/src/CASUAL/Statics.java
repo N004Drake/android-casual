@@ -128,7 +128,16 @@ public class Statics {
     public static String DeveloperName;
     public static String DeveloperDonateLink;
     public static String DonateButtonText;
-    
+    public static boolean MasterLock=true;
+    public static void setMasterLock(boolean status){
+        MasterLock=status;
+        try {
+            GUI.enableControls(MasterLock);
+        } catch (NullPointerException e) {
+            Log.level3(e.toString());
+        }
+    }
+
  
     /*
      * Determines if Linux, Mac or Windows
