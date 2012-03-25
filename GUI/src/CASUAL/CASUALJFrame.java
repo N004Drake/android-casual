@@ -150,6 +150,7 @@ public class CASUALJFrame extends javax.swing.JFrame {
         ProgressArea.setColumns(20);
         ProgressArea.setLineWrap(true);
         ProgressArea.setRows(5);
+        ProgressArea.setText("<html>\n");
         ProgressArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(ProgressArea);
 
@@ -315,6 +316,9 @@ public class CASUALJFrame extends javax.swing.JFrame {
 
 
     private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
+        Log.level0("");
+        Log.level3("Script Activated");
+        Log.level3("Script known as "+ this.ComboBoxScriptSelector.getSelectedItem().toString() + " is running");
         this.busyIconTimer.start();
         Statics.DeviceMonitor.DeviceCheck.stop();
         enableControls(false);
@@ -428,12 +432,12 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
     private void comboBoxUpdate(){
         Log.level2("From Resource: " + Statics.TargetScriptIsResource);
-        Log.level1("--"+Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
+        Log.level1("\n--" + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
         if (Statics.TargetScriptIsResource){
-            Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt"));
+            Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
             Statics.SelectedScriptFolder = Statics.TempFolder + ComboBoxScriptSelector.getSelectedItem().toString();
         } else {
-            Log.level1(FileOperations.readFile( ComboBoxScriptSelector.getSelectedItem().toString() + ".txt"));
+            Log.level1(FileOperations.readFile( ComboBoxScriptSelector.getSelectedItem().toString() + ".txt")+ "\n");
         }
 
         Statics.SelectedScriptFolder = Statics.TempFolder + ComboBoxScriptSelector.getSelectedItem().toString();
@@ -626,6 +630,9 @@ class RunableDeployADB implements Runnable{
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isWindows()) {
+            //TODO: add \ after home.android folder
+            //java.io.FileNotFoundException: C:\Users\adam.android\adb_usb.ini (The system can
+            //not find the path specified)
             Log.level3("Found Windows Computer");
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationWindows));
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
@@ -654,7 +661,7 @@ class RunableDeployADB implements Runnable{
         }
 
 
-        Log.level1("Device List:" + DeviceList);
+        Log.level3("Device List:" + DeviceList);
         if (DeviceList.contains("????????????")) {
             Log.level1("killing server and requesting elevated permissions");
             Shell.sendShellCommand(cmd);
