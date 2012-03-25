@@ -168,6 +168,7 @@ public class FileOperations {
       try {
           DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 	  int c;
+          //TODO: write in bulk using an array
           if (is.available() > 0 ){
               while((c = is.read()) != -1) {
                   out.writeByte(c);
@@ -182,11 +183,14 @@ public class FileOperations {
       }	catch(IOException e) {
           System.err.print(e);
           System.err.println("Error Writing/Reading Streams.");
-                  return false;
+          return false;
       }
       if ((file.exists()) && (file.length() >= 4)){
+          Log.level3("File verified.");
           return true;
       } else { 
+          Log.level0(file.getAbsolutePath()+" Was a failed attempt to write- does not exist.");
+          Log.level1("false");
           return false;
       }
      
@@ -314,13 +318,14 @@ public class FileOperations {
         InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
         StringBuilder text = new StringBuilder();
         try {
-            in = new InputStreamReader(resourceAsStream, "UTF-8");
+            in = new InputStreamReader(resourceAsStream,  "UTF-8");
             int read;
             while ((read = in.read())!= -1 ){
                 char C = Character.valueOf((char)read);
                 text.append(C);       
             }
         } catch (NullPointerException ex) {
+            Log.level0("Could not find resource named:" + Resource);
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
@@ -338,7 +343,7 @@ public class FileOperations {
             bw = new BufferedWriter(new FileWriter(File,true));
             bw.write(Text);
             bw.close(); 
-        
+            Log.level3("Write Finished");
     }
 
     String readFile(String FileOnDisk) {
