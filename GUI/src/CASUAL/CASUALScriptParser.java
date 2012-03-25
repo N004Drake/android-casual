@@ -85,7 +85,6 @@ public class CASUALScriptParser {
         //Remove leading spaces
         Line = removeLeadingSpaces(Line);
 
-
         //Disregard commented lines
         if (Line.startsWith("#")) {
             Log.level3("Ignoring commented line" + Line);
@@ -96,8 +95,6 @@ public class CASUALScriptParser {
         if (Line.equals("")) {
             return;
         }
-
-
 
         //replace $SLASH with "\" for windows or "/" for linux and mac
         if (Line.contains("$SLASH")) {
@@ -145,6 +142,7 @@ public class CASUALScriptParser {
                         "Information",
                         JOptionPane.INFORMATION_MESSAGE);
             }
+            return;
         } else if (Line.startsWith("$USERCANCELOPTION")) {
             if (Statics.UseSound.contains("true")) {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
@@ -175,7 +173,7 @@ public class CASUALScriptParser {
                         Line,
                         "Do you wish to continue?",
                         JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.NO_OPTION) {
+                if (n == JOptionPane.YES_OPTION) {
                     Log.level0(ScriptName + " canceled at user request");
                     ScriptContinue = false;
                     return;
@@ -184,18 +182,25 @@ public class CASUALScriptParser {
         //$USERINPUTBOX will stop processing and accept a String to be injected
         //into ADB.
         } else if (Line.startsWith("$USERINPUTBOX")){
-            String[] Message=Line.split(",");
+            Line.replace("\\n", "\n");
+            String[] Message=Line.replace("$USERINPUTBOX", "").split(",");
             String InputBoxText=JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
-            Line=Message[2].replace("$USERINPUT", InputBoxText);
-            doShellCommand(Line);
+            InputBoxText=returnSafeCharacters(InputBoxText);
+            
+            
+            Log.level3(InputBoxText);
+            
+            doShellCommand(Message[2], "$USERINPUT", InputBoxText);
+            return;
         // if no prefix, then send command directly to ADB.
         } else {
-            doShellCommand(Line);
+            doShellCommand(Line, null, null);
         }
         //final line output for debugging purposes
         Log.level3("COMMAND TEST" + Statics.AdbDeployed + " " + Line);
     }
 
+    //TODO: do in background, not foreground
     private void executeSelectedScript(DataInputStream DIS) {
         CurrentLine = 1;
         Statics.ProgressBar.setMaximum(LinesInScript);
@@ -291,7 +296,12 @@ public class CASUALScriptParser {
         return List;
     }
 
-    private void doShellCommand(String Line) {
+    /*
+     * doShellCommand is the point where the shell is activated
+     * ReplaceThis WithThis allows for a last-minute insertion of commands
+     * by default ReplaceThis should be null.
+     */
+    private void doShellCommand(String Line, String ReplaceThis, String WithThis) {
             Line=this.removeLeadingSpaces(Line);
         
             Shell Shell = new Shell();
@@ -299,6 +309,19 @@ public class CASUALScriptParser {
             ShellCommand.add(Statics.AdbDeployed);
             ShellCommand.addAll(this.parseCommandLine(Line));
             String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
+            if (ReplaceThis != null){
+                for ( int i=0; i<StringCommand.length; i++){
+                StringCommand[i]=StringCommand[i].replace(ReplaceThis, WithThis);
+                }
+            }
             Shell.liveShellCommand(StringCommand);
+    }
+
+    private String returnSafeCharacters(String Str) {
+        Str=Str.replace("\\", "\\\\");
+        Str=Str.replace("\"", "\\\"");
+        Str=Str.replace("\'", "\\\'");
+
+        return Str;
     }
 }
