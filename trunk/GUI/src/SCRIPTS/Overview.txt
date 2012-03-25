@@ -1,2 +1,2 @@
-_,.-~=*^`Welcome To CASUAL`^*=~-.,_
-This script is the default script  This text comes from a file called  Overview.Instructions.txt in the CASUAL/SCRIPT folder.  This file can be used for instructions on setting the device into ADB mode and giving a general overview of the scripts provided.
+Welcome To CASUAL
+This application will allow you to reboot into Recovery Mode.

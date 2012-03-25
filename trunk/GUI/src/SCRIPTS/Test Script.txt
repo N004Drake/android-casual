@@ -1,1 +1,1 @@
-This CASUAL test script will ask you for an input, echo that off the device, then ask for confirmation to put your device into recovery mode.
+This CASUAL test script will ask for confirmation to put your device into recovery mode.

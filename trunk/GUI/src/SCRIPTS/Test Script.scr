@@ -1,3 +1,2 @@
-$USERINPUTBOX This is an inputbox title, this is an inputbox message, shell "echo "Shell returned: $USERINPUT"
 $USERCANCELOPTION Recovery Mode, Would you like to reboot into recovery mode?
 reboot recovery
