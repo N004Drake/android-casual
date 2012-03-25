@@ -120,7 +120,6 @@ public class Statics {
     final public static String WinPermissionElevatorResource="/CASUAL/resources/ADB/Elevate.exe";
     final public static String ADBini=CASUALSCRIPT+"adb_usb.ini";
     final public static String FilesystemAdbIniLocationLinuxMac=System.getProperty("user.home")+Slash+".android/adb_usb.ini";
-    //TODO: this does not expand
     final public static String FilesystemAdbIniLocationWindows=System.getProperty("user.home")+".android\\adb_usb.ini";
    
 
