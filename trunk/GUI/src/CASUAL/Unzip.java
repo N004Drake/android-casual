@@ -32,13 +32,13 @@ import java.util.zip.ZipInputStream;
  * @author adam 
  */
 public class Unzip {
-
+        int BUFFER = 4096;
     public void unzipFiles() {
     }
 
     public void unzipFile(String zipFile, String OutputFolder) throws ZipException, IOException {
         System.out.println(zipFile);
-        int BUFFER = 2048;
+
         File file = new File(zipFile);
         ZipFile zip = new ZipFile(file);
         
@@ -101,13 +101,24 @@ public class Unzip {
                     EntryFolder.mkdirs();
               
                 }
-                FileOutputStream fout = new FileOutputStream(OutputFolder+System.getProperty("file.separator")+ze.getName());
-                for (int c = zin.read(); c != -1; c = zin.read()) {
-                    fout.write(c);
+                int currentByte;
+                // establish buffer for writing file
+                byte data[] = new byte[BUFFER];
+                String currentEntry = ze.getName();
+                File destFile = new File(OutputFolder+System.getProperty("file.separator"), currentEntry);
+                FileOutputStream fout = new FileOutputStream(destFile);
+                
+                BufferedOutputStream dest=new BufferedOutputStream(fout);
+                BufferedInputStream is=new BufferedInputStream(zin);
+                
+                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+                    dest.write(data, 0, currentByte);
                 }
-                zin.closeEntry();
-                fout.close();
+                dest.flush();
+                dest.close();
+                
             }
+    
             zin.close();
     }
 }
