@@ -552,7 +552,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
             ZipEntry ZEntry;
             Log.level3("Picking Jar File:" + jar.getFile());
             while ((ZEntry = Zip.getNextEntry()) != null) {
-                Log.level0("Picking Zip file:" + Zip.getNextEntry().getName());
+                
                 String EntryName = ZEntry.getName();
                 if (EntryName.endsWith(".scr")) {
                     EntryName=EntryName.replaceFirst("SCRIPTS/", "");
