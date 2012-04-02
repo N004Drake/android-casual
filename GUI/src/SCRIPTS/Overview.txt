@@ -1,2 +1,3 @@
 Welcome To CASUAL
-This application will allow you to reboot into Recovery Mode.
+
+This CASUAL Framework application is designed to contain a bunch of test scripts for CASUAL debugging.

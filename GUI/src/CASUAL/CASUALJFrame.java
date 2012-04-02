@@ -39,7 +39,7 @@ import org.jdesktop.application.Application;
  *
  * @author adam
  */
-public class CASUALJFrame extends javax.swing.JFrame {
+public class CASUALJFrame extends javax.swing.JFrame  {
     
     private final Timer busyIconTimer;
     private final Icon idleIcon;
@@ -92,8 +92,8 @@ public class CASUALJFrame extends javax.swing.JFrame {
 
         Log.level3("Searching for scripts");
         prepareScripts();
-        
-        
+        //TODO: Uncompress zip if needed
+      
 
 
     }
@@ -435,14 +435,17 @@ public class CASUALJFrame extends javax.swing.JFrame {
         Log.level1("\n--" + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
         if (Statics.TargetScriptIsResource){
             Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
-            Statics.SelectedScriptFolder = Statics.TempFolder + ComboBoxScriptSelector.getSelectedItem().toString();
         } else {
             Log.level1(FileOperations.readFile( ComboBoxScriptSelector.getSelectedItem().toString() + ".txt")+ "\n");
         }
-
+        String ZipResource="";
         Statics.SelectedScriptFolder = Statics.TempFolder + ComboBoxScriptSelector.getSelectedItem().toString();
-        String ZipResource=ComboBoxScriptSelector.getSelectedItem().toString()+".zip";
-        //TODO: do in background unzip
+        if (Statics.TargetScriptIsResource){
+            ZipResource=Statics.ScriptLocation+ComboBoxScriptSelector.getSelectedItem().toString()+".zip";    
+        } else{
+            ZipResource=ComboBoxScriptSelector.getSelectedItem().toString()+".zip";    
+        }
+        
         if (getClass().getResource(ZipResource)!=null){
             Log.level3("Extracting archive....");
 
@@ -506,7 +509,9 @@ public class CASUALJFrame extends javax.swing.JFrame {
     }
     private void prepareScripts() {
         try {
+            Statics.MasterLock=true;
             listScripts();
+            Statics.MasterLock=false;
         } catch (IOException ex) {
             Log.level0("ListScripts() could not find any entries");
             Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -545,7 +550,9 @@ public class CASUALJFrame extends javax.swing.JFrame {
             URL jar = Src.getLocation();
             ZipInputStream Zip = new ZipInputStream(jar.openStream());
             ZipEntry ZEntry;
+            Log.level3("Picking Jar File:" + jar.getFile());
             while ((ZEntry = Zip.getNextEntry()) != null) {
+                Log.level0("Picking Zip file:" + Zip.getNextEntry().getName());
                 String EntryName = ZEntry.getName();
                 if (EntryName.endsWith(".scr")) {
                     EntryName=EntryName.replaceFirst("SCRIPTS/", "");

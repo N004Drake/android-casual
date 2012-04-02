@@ -68,6 +68,7 @@ public class CASUALScriptParser {
         Log.level3("Lines in SCript " + LinesInScript);
         DataInputStream DIS;
         try {
+
             FileInputStream FileAsStream;
             FileAsStream = new FileInputStream(Script + ".scr");
             DIS = new DataInputStream(FileAsStream);
@@ -75,6 +76,7 @@ public class CASUALScriptParser {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /*
@@ -201,11 +203,21 @@ public class CASUALScriptParser {
     }
 
     //TODO: do in background, not foreground
+    DataInputStream DATAIN;
     private void executeSelectedScript(DataInputStream DIS) {
-        CurrentLine = 1;
-        Statics.ProgressBar.setMaximum(LinesInScript);
-        Log.level3("Reading datastream" + DIS);
-        doRead(DIS);
+        DATAIN=DIS;
+        Log.level3("Executing Scripted Datastream" + DIS.toString());
+        Runnable r = new Runnable() {
+            public void run() {
+                System.out.println("In Runnable Thread");
+                CurrentLine = 1;
+                Statics.ProgressBar.setMaximum(LinesInScript);
+                Log.level3("Reading datastream" + DATAIN);
+                doRead(DATAIN);
+            }
+        };
+        Thread ExecuteScript = new Thread(r);
+        ExecuteScript.start();
     }
     
     private String[] convertArrayListToStringArray(ArrayList List){
