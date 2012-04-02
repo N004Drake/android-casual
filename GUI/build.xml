@@ -78,7 +78,7 @@
             <redirector>
                 <outputfilterchain>
                     <tokenfilter>
-                        <replaceregex pattern="^-[0-9]*:?" replace="" flags="g"/>
+                        <replaceregex pattern="^[0-9]*:?" replace="" flags="g"/>
                         <replaceregex pattern="M" replace="" flags="g"/>
                     </tokenfilter>
                 </outputfilterchain>
@@ -91,7 +91,6 @@
         <propertyfile file="src/CASUAL/resources/CASUALApp.properties">
             <entry key="Application.revision" value="${svna.version}" type="int" operation="="/>
             <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
-
         </propertyfile>       
 
     <target name="-post-jar">
