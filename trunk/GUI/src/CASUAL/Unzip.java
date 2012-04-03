@@ -87,12 +87,12 @@ public class Unzip {
 
     public void UnZipResource(String ZipResource, String OutputFolder) throws FileNotFoundException, IOException {
             InputStream ZStream=getClass().getResourceAsStream(ZipResource);
-            ZipInputStream zin = new ZipInputStream(ZStream);
-            ZipEntry ze = null;
-            while ((ze = zin.getNextEntry()) != null) {
-                System.out.println("Unzipping " + ze.getName());
-                File EntryFile =new File(OutputFolder+System.getProperty("file.separator")+ze.getName());
-                if (ze.isDirectory()){
+            ZipInputStream ZipInput = new ZipInputStream(ZStream);
+            ZipEntry ZipEntryInstance = null;
+            while ((ZipEntryInstance = ZipInput.getNextEntry()) != null) {
+                System.out.println("Unzipping " + ZipEntryInstance.getName());
+                File EntryFile =new File(OutputFolder+System.getProperty("file.separator")+ZipEntryInstance.getName());
+                if (ZipEntryInstance.isDirectory()){
                     EntryFile.mkdirs();
                     continue;
                 } 
@@ -104,21 +104,21 @@ public class Unzip {
                 int currentByte;
                 // establish buffer for writing file
                 byte data[] = new byte[BUFFER];
-                String currentEntry = ze.getName();
-                File destFile = new File(OutputFolder+System.getProperty("file.separator"), currentEntry);
-                FileOutputStream fout = new FileOutputStream(destFile);
+                String currentEntry = ZipEntryInstance.getName();
+                File DestFile = new File(OutputFolder+System.getProperty("file.separator"), currentEntry);
+                FileOutputStream FileOut = new FileOutputStream(DestFile);
+                BufferedInputStream BufferedInputStream=new BufferedInputStream(ZipInput);
+                BufferedOutputStream Destination=new BufferedOutputStream(FileOut);
                 
-                BufferedOutputStream dest=new BufferedOutputStream(fout);
-                BufferedInputStream is=new BufferedInputStream(zin);
-                
-                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-                    dest.write(data, 0, currentByte);
+                while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
+                    Destination.write(data, 0, currentByte);
                 }
-                dest.flush();
-                dest.close();
+                
+                Destination.flush();
+                Destination.close();
                 
             }
     
-            zin.close();
+            ZipInput.close();
     }
 }
