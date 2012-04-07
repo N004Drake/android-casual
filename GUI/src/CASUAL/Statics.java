@@ -104,16 +104,15 @@ public class Statics {
      * Cross-Platform data storage
      */    
     public static String AdbDeployed;
-    public static String DeploymentBinaries[];
+    //public static String DeploymentBinaries[];
     public static String OSName=System.getProperty("os.name");
-    public static String  OSType=""; //used for logging
-    public static String  Arch="";
+    public static String Arch="";
     public static String SelectedScriptFolder;
     public static String WinElevatorInTempFolder=TempFolder+"Elevate.exe";
     final public static String CASUALSCRIPT="/SCRIPTS/";
-    final public static String WinADB="/CASUAL/resources/ADB/adb.exe";
     final public static String LinuxADB="/CASUAL/resources/ADB/adblinux";
     final public static String MacADB="/CASUAL/resources/ADB/adbmac";
+    final public static String WinADB="/CASUAL/resources/ADB/adb.exe";
     final public static String WinADB2="/CASUAL/resources/ADB/AdbWinApi.dll";
     final public static String WinADB3="/CASUAL/resources/ADB/AdbWinUsbApi.dll";
     //Windows permissions elevator
@@ -133,7 +132,7 @@ public class Statics {
         try {
             GUI.enableControls(MasterLock);
         } catch (NullPointerException e) {
-            Log.level3(e.toString());
+            Log.level3(e.getMessage());
         }
     }
 
@@ -163,17 +162,11 @@ public class Statics {
     public void setSystemInfo(){
 
         if(isWindows()){
-            Statics.DeploymentBinaries[0]=WinADB;
-            Statics.OSType="Windows";
             Statics.Slash="\\";
         } else if (isMac()) {
-            OSType="Mac";
-            Statics.DeploymentBinaries[0]=MacADB;
             Statics.Slash="/";
         }else if(isLinux()){
-            OSType="Linux";
             Statics.Slash="/";
-            Statics.DeploymentBinaries[0]=LinuxADB;
         }
     }
 }

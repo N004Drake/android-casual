@@ -84,6 +84,7 @@ public class CASUALScriptParser {
      */
     private void commandHandler(String Line) {
 
+
         //Remove leading spaces
         Line = removeLeadingSpaces(Line);
 
@@ -97,15 +98,17 @@ public class CASUALScriptParser {
         if (Line.equals("")) {
             return;
         }
-
+        Log.level3("SCRIPT COMMAND:" + Line);
         //replace $SLASH with "\" for windows or "/" for linux and mac
         if (Line.contains("$SLASH")) {
             Line = Line.replace("$SLASH", Statics.Slash);
+            Log.level3("Expanded $SLASH: " + Line);
         }
 
         //reference to the Script's .zip file
         if (Line.contains("$ZIPFILE")) {
             Line = Line.replace("$ZIPFILE", ScriptTempFolder);
+            Log.level3("Expanded $ZIPFILE: " + Line);
         }
         
         if ((Line.contains("\\n")) && ((Line.startsWith("$USERNOTIFICATION") || Line.startsWith("$USERNOTIFICATION")) || Line.startsWith("$USERCANCELOPTION"))){
@@ -120,6 +123,7 @@ public class CASUALScriptParser {
         }
         //$ECHO command will display text in the main window
         if (Line.startsWith("$ECHO")) {
+            Log.level3("Received ECHO command" + Line);
             Line = Line.replace("$ECHO", "");
             Line = removeLeadingSpaces(Line);
             Log.level1(Line);
