@@ -412,7 +412,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         if (! ComboBoxValue.equals(ComboBoxScriptSelector.getSelectedItem()) && (!Statics.TargetScriptIsResource)){
             Statics.TargetScriptIsResource=true;
         }
-        comboBoxUpdate();
+
     }//GEN-LAST:event_ComboBoxScriptSelectorActionPerformed
 
     private void ComboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorPopupMenuWillBecomeInvisible
