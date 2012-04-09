@@ -92,6 +92,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
 
         Log.level3("Searching for scripts");
         prepareScripts();
+        comboBoxUpdate();
         //TODO: Uncompress zip if needed
       
 
@@ -144,6 +145,14 @@ public class CASUALJFrame extends javax.swing.JFrame  {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") +java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                stopADB(evt);
+            }
+        });
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("Important Information"));
 
@@ -199,7 +208,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
                 .addContainerGap()
                 .addComponent(StatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(StatusAnimationLabel)
                 .addGap(6, 6, 6))
@@ -408,10 +417,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_DonateButtonActionPerformed
 
     private void ComboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorActionPerformed
-        //Statics.TargetScriptIsResource = true;
-        if (! ComboBoxValue.equals(ComboBoxScriptSelector.getSelectedItem()) && (!Statics.TargetScriptIsResource)){
-            Statics.TargetScriptIsResource=true;
-        }
+
 
     }//GEN-LAST:event_ComboBoxScriptSelectorActionPerformed
 
@@ -430,6 +436,17 @@ public class CASUALJFrame extends javax.swing.JFrame  {
        CASUALLog CASUALLogJFrame=new CASUALLog();
        CASUALLogJFrame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void stopADB(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_stopADB
+        this.startStopTimer(false);
+        
+    }//GEN-LAST:event_stopADB
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+         this.startStopTimer(false);
+         new Shell().sendShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
+
+    }//GEN-LAST:event_formWindowClosing
     private void comboBoxUpdate(){
         Log.level2("From Resource: " + Statics.TargetScriptIsResource);
         Log.level1("\n--" + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
@@ -529,7 +546,9 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         return FileName;
 
     }
+    
     private boolean DeviceTimerState=false;
+    
     public void startStopTimer(boolean StateCommanded){
         if (StateCommanded && !DeviceTimerState){
             Statics.DeviceMonitor.DeviceCheck.start();
@@ -537,9 +556,11 @@ public class CASUALJFrame extends javax.swing.JFrame  {
             Statics.DeviceMonitor.DeviceCheck.start();
         }
     }
+
     public void setStatusMessageLabel(String text){
         this.StatusLabel.setText(text);
     }
+
     private void listScripts() throws IOException {
         
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
@@ -603,7 +624,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
             Statics.DeveloperDonateLink = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateLink");
         } catch (MissingResourceException ex) {
             Log.level0("Could not find build.prop");
-            System.out.print(ex);
+            Log.level0(ex.toString());
         }
     }
     
@@ -654,9 +675,9 @@ class RunableDeployADB implements Runnable{
 
         Shell Shell = new Shell();
         
-        String[] cmd = {Statics.AdbDeployed, "kill-server"};
-        String[] cmd2 = {Statics.AdbDeployed, "devices"};
-        String DeviceList = Shell.sendShellCommand(cmd2);
+        String[] killCmd = {Statics.AdbDeployed, "kill-server"};
+        String[] devicesCmd = {Statics.AdbDeployed, "devices"};
+        String DeviceList = Shell.sendShellCommand(devicesCmd);
         if (DeviceList.contains("ELFCLASS64")&& DeviceList.contains("wrong ELF")){
                 JOptionPane.showMessageDialog(Statics.GUI,
                      "Could not execute ADB. 'Wrong ELF class' error\n"
@@ -671,7 +692,7 @@ class RunableDeployADB implements Runnable{
         Log.level3("Device List:" + DeviceList);
         if (DeviceList.contains("????????????")) {
             Log.level1("killing server and requesting elevated permissions");
-            Shell.sendShellCommand(cmd);
+            Shell.sendShellCommand(killCmd);
             TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
             String[] ok = {"ok"};
             TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
@@ -679,7 +700,7 @@ class RunableDeployADB implements Runnable{
                     + "with the device.  As a work-around we\n"
                     + "will attempt to elevate permissions \n"
                     + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
-            DeviceList = Shell.elevateSimpleCommand(cmd2);
+            DeviceList = Shell.elevateSimpleCommand(devicesCmd);
             if (!DeviceList.contains("????????????")) {
                 Log.level1(DeviceList);
             } else {

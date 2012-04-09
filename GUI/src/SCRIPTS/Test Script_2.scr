@@ -1,15 +1,9 @@
 push /home/adam/testfile /sdcard
-$ECHO I'm testing the echo command 
+$ECHO Echo echos commands to the window only
 #This is a commented line
-shell "cat /sdcard/myfile"
+shell "echo this sends commands to the device shell; cat /sdcard/myfile;"
 $USERINPUTBOX This is an inputbox title, this is an inputbox message, shell "echo $USERINPUT>/sdcard/myfile"
-$ECHO above this should be a userinput
-shell "echo woot; cat /sdcard/myfile; echo woot"
 $USERNOTIFICATION Notification Title testing, This is a Notification with a filename \n $ZIPFILE \n\n\n ...and several new lines.
 $USERCANCELOPTION This is the option to cancel, do you wish to \n cancel?
-$ECHO This folder, $ZIPFILE is my temp folder
-$ECHO here is a line of slashes using the $ SLASH command $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH
-
-devices
-$ECHO executing arbitrary commands
+$ECHO here is a line of slashes and the ZIPFILE folder $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH $ZIPFILE
 shell ls /data;whoami;pwd;echo "woot"

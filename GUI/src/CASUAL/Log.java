@@ -148,8 +148,9 @@ public class Log{
             try {
                 Statics.ProgressArea.append(data);
                 Statics.ProgressArea.setCaretPosition(Statics.ProgressArea.getDocument().getLength());
+                
             } catch (NullPointerException e){
-                System.out.print(data);
+                level0(data + e.toString());
             }
 
         }

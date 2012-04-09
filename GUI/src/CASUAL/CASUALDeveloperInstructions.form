@@ -135,7 +135,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="_,.-~=*^`Welcome To CASUAL`^*=~-.,_&#xa;This script is the default welcome message.&#xa;This text comes from a file called  Overview.Instructions.txt in the CASUAL/SCRIPT folder.  This file can be used for instructions on setting the device into ADB mode and giving a general overview of the scripts provided."/>
+                    <Property name="text" type="java.lang.String" value="This application is intended for the &#xa;Sony Ericsson Hero Incredible X S G1 Z 4G+ &#xa;Put your device into develompent mode Settings&gt;Applications&gt;Developer Options....&#xa;This application does stuff and things.  Select the script you wish to perform. &#xa;"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -223,8 +223,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="#Developer Name&#xa;Developer.Name=Adam Outler&#xa;#Donation link button title&#xa;Developer.DonateToButtonText= XDA-Developers&#xa;#Link for donate button&#xa;Developer.DonateLink= http://forum.xda-developers.com/donations.php&#xa;#This is the window title&#xa;Window.Title=Your Application Title!&#xa;#If true, BannerPic will be used for the main window banner decoration&#xa;Window.UsePictureForBanner=true&#xa;#The main window banner&#xa;Window.BannerPic=logo.png&#xa;#If UsePictureForBanner is false this text will be displayed in large format&#xa;Window.BannerText=Banner Text&#xa;#text for main button&#xa;Window.ExecuteButtonText=Execute Button Text&#xa;#&quot;true&quot; or &quot;True&quot; to enable&#xa;Audio.Enabled=true &#xa;"/>
-                    <Property name="caretPosition" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="#Developer Name&#xa;Developer.Name=Adam Outler&#xa;#Donation link button title&#xa;Developer.DonateToButtonText= XDA-Developers&#xa;#Link for donate button&#xa;Developer.DonateLink= http://forum.xda-developers.com/donations.php&#xa;#This is the window title&#xa;Window.Title=CASUAL TEST SCRIPTS&#xa;#If true, BannerPic will be used for the main window banner decoration&#xa;Window.UsePictureForBanner=True&#xa;#The main window banner&#xa;Window.BannerPic=logo.png&#xa;#If UsePictureForBanner is false this text will be displayed in large format&#xa;Window.BannerText=Do It!&#xa;#text for main button&#xa;Window.ExecuteButtonText=Do It&#xa;#&quot;true&quot; or &quot;True&quot; to enable&#xa;Audio.Enabled=true &#xa;"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -284,7 +283,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="The adb_usb.ini file contains instructions  for ADB to look at  non-standard  device &#xa; types.  Generally this will not be needed.  If you&apos;re using a  normally  unsupported  &#xa;device, you will  need to specify the USB  manufacturer code. Be careful  when&#xa;modifying this file.  it can cause problems on Mac if not modified properly."/>
+                    <Property name="text" type="java.lang.String" value="The adb_usb.ini file contains instructions  for ADB to look at  non-standard  device &#xa; types.  Generally this will not be needed.  If you&apos;re using a  normally  unsupported  &#xa;device (Nook Tablet) you will  need to specify the USB  manufacturer code.&#xa; Be careful  when modifying this file. "/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="null"/>
                     </Property>
@@ -455,7 +454,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="The script.txt file tells the user what this selection does.  "/>
+                    <Property name="text" type="java.lang.String" value="The script.txt file describes the currently selected item from the dropdown box"/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="null"/>
                     </Property>
@@ -481,7 +480,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="This option does what I say it does and nothing more. It will install various things to &#xa;various degrees.  Ensure you are rooted or this will fail."/>
+                    <Property name="text" type="java.lang.String" value="This option does what I say it does and nothing more.  &#xa; Ensure you are rooted or this will fail."/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -541,7 +540,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="The Script.zip should be used to store files to be pushed to a device for Script.scr.  A &#xa;Script.zip may be referenced by the Script.scr with the command $ZIPFILE.  &#xa;EG.  $ZIPFILE  refers to the root of the zip file. &#xa;EG.  $ZIPFILE$SLASHMyFolder$SLASH refers to the folder called &quot;MyFolder&quot; in the zipfile. "/>
+                    <Property name="text" type="java.lang.String" value="The Script.zip should be used to store files to be pushed to a device for Script.scr.  A &#xa;Script.zip may be referenced by the Script.scr with the command $ZIPFILE.  &#xa; "/>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="null"/>
                     </Property>
@@ -567,6 +566,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
+                    <Property name="text" type="java.lang.String" value="EG.  $ZIPFILE  refers to the root of the zip file. &#xa;EG.  $ZIPFILE$SLASHMyFolder$SLASH refers to the folder called &quot;MyFolder&quot; in the zipfile."/>
                   </Properties>
                 </Component>
               </SubComponents>
