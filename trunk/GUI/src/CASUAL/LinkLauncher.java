@@ -31,6 +31,9 @@ import java.net.URISyntaxException;
  */
 public class LinkLauncher implements Runnable  {
     static String Link;
+    /*
+     * launches a browser with a link
+     */
     public void launchLink(String link){
         Link = link;
         Runnable runnable = new LinkLauncher();
@@ -57,7 +60,9 @@ public class LinkLauncher implements Runnable  {
                             uri = new URI(Link);
                              desktop.browse(uri);
                         } catch (IOException ioe) {
+                            System.out.println("Attempted to open"+ Link+" Failed with IO error");
                         } catch (URISyntaxException use) {
+                            System.out.println("Attempted to open"+ Link+" Failed with URI Syntax error");
                         }
                      }
                 }

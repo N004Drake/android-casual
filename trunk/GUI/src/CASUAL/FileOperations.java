@@ -40,7 +40,9 @@ public class FileOperations {
    }
 
  
-
+/*
+ * copies a resource to a file
+ */
   public boolean copyFromResourceToFile(String Resource, String toFile){
         try {
             InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
@@ -73,11 +75,15 @@ public class FileOperations {
         }
    return false;
   }
-  
+  /*
+   * recursively deletes a string path
+   */
   public void recursiveDelete(String path){
    recursiveDelete(new File(path));   
   }
-  
+  /*
+   * recursively deletes a file path
+   */
   public void recursiveDelete(File path){
         File[] c = path.listFiles();
         if (path.exists()){
@@ -96,7 +102,9 @@ public class FileOperations {
         }
   }
   
-  
+  /*
+   * verify ability to write to every file in a path
+   */
   public boolean verifyPermissionsRecursive(String path){
        File Check = new File(path);
        File[] c = Check.listFiles();
@@ -110,6 +118,10 @@ public class FileOperations {
        } 
        return true;
   }
+  /* 
+   * takes a path and a name
+   * returns qualified path to file
+   */
     public String findRecursive(String PathToSearch,String FileName){
        File Check = new File(PathToSearch);
        File[] c = Check.listFiles();
@@ -139,9 +151,10 @@ public class FileOperations {
   }
 
          
-     
-
-  
+  /*
+   * makes a folder, verifies it exists
+   * returns a boolean value if the file exists
+   */
   public boolean makeFolder(String Folder){
     Boolean CreatedFolder = false;
     File folder= new File(Folder);
@@ -162,7 +175,10 @@ public class FileOperations {
     return CreatedFolder;
  }
   
-  
+  /*
+   * Takes an input stream and a file
+   * writes file to input stream
+   */
   private boolean writeInputStreamToFile(InputStream is, File file) {
       Log.level3("Attempting to write "+file.getPath());
       try {
@@ -193,14 +209,12 @@ public class FileOperations {
           Log.level1("false");
           return false;
       }
-     
   }
   
-
-
-
-   
-   
+  /*
+   * takes a string filename
+   * returns a boolean if the file was deleted
+   */
   public Boolean deleteFile(String FileName){
       Boolean Deleted=true;
       File file = new File(FileName);
@@ -222,7 +236,9 @@ public class FileOperations {
       }
       return Deleted;
   }
-   
+  /*
+   * copies a file from a source to a destination
+   */
   public void copyFile(File sourceFile, File destFile) throws IOException {
       
       Log.level3("Copying " + sourceFile.getPath() + " to " + destFile.getPath());
@@ -247,7 +263,9 @@ public class FileOperations {
       
       
   } 
-   
+  /*
+   * returns the name of the current folder
+   */
   public String currentDir() {
       String CurrentDir=new File(".").getAbsolutePath();
       Log.level3("Detected current folder: "+ CurrentDir);
@@ -256,6 +274,11 @@ public class FileOperations {
               }
       return CurrentDir;
   }
+  
+  /*
+   * copies a file from a string name to a string name
+   * returns a boolean if completed
+   */
   public boolean copyFile(String FromFile, String ToFile){
       File OriginalFile = new File(FromFile);
       File DestinationFile = new File(ToFile);
@@ -267,7 +290,10 @@ public class FileOperations {
         }
               
   }
-  
+  /*
+   * take a string filename
+   * returns a boolean if file exists
+   */
   public boolean verifyFileExists(String Folder){
       File FileFolder = new File(Folder);
       boolean Result=(FileFolder.length()>=1);
@@ -276,6 +302,10 @@ public class FileOperations {
       return (Result);
   }
   
+  /*
+   * takes a filename sets executable
+   * returns result
+   */
   public boolean setExecutableBit(String Executable){
       File Exe = new File(Executable);
       boolean Result = Exe.setExecutable(true);
@@ -284,7 +314,10 @@ public class FileOperations {
   }
 
 
-
+  /*
+   * takes a string resource name
+   * returns result if it exists
+   */
       public boolean verifyResource(String Res){
             boolean Result;
             //this.statusAnimationLabel.setText(Res);
@@ -310,7 +343,10 @@ public class FileOperations {
     private String setRes(String FileName ){
         return Statics.ScriptLocation + FileName;
     }
-    
+    /*
+     * takes a resource name
+     * returns a string of file contents
+     */
     public String readTextFromResource(String Resource){
         FileInputStream fis = null; 
         InputStreamReader in = null;
@@ -336,7 +372,9 @@ public class FileOperations {
     
     
     
-    
+    /*
+     * takes a string and a filename, writes to the file
+     */
     public void writeToFile(String Text, String File) throws IOException{
     
             BufferedWriter bw;
@@ -346,6 +384,10 @@ public class FileOperations {
             Log.level3("Write Finished");
     }
 
+    /*
+     * reads file contents
+     * returns string
+     */
     String readFile(String FileOnDisk) {
         String EntireFile="";
         try {

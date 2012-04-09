@@ -91,7 +91,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea15.setColumns(20);
         jTextArea15.setRows(5);
-        jTextArea15.setText("_,.-~=*^`Welcome To CASUAL`^*=~-.,_\nThis script is the default welcome message.\nThis text comes from a file called  Overview.Instructions.txt in the CASUAL/SCRIPT folder.  This file can be used for instructions on setting the device into ADB mode and giving a general overview of the scripts provided.");
+        jTextArea15.setText("This application is intended for the \nSony Ericsson Hero Incredible X S G1 Z 4G+ \nPut your device into develompent mode Settings>Applications>Developer Options....\nThis application does stuff and things.  Select the script you wish to perform. \n");
         jScrollPane15.setViewportView(jTextArea15);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -131,8 +131,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea16.setColumns(20);
         jTextArea16.setRows(5);
-        jTextArea16.setText("#Developer Name\nDeveloper.Name=Adam Outler\n#Donation link button title\nDeveloper.DonateToButtonText= XDA-Developers\n#Link for donate button\nDeveloper.DonateLink= http://forum.xda-developers.com/donations.php\n#This is the window title\nWindow.Title=Your Application Title!\n#If true, BannerPic will be used for the main window banner decoration\nWindow.UsePictureForBanner=true\n#The main window banner\nWindow.BannerPic=logo.png\n#If UsePictureForBanner is false this text will be displayed in large format\nWindow.BannerText=Banner Text\n#text for main button\nWindow.ExecuteButtonText=Execute Button Text\n#\"true\" or \"True\" to enable\nAudio.Enabled=true \n");
-        jTextArea16.setCaretPosition(0);
+        jTextArea16.setText("#Developer Name\nDeveloper.Name=Adam Outler\n#Donation link button title\nDeveloper.DonateToButtonText= XDA-Developers\n#Link for donate button\nDeveloper.DonateLink= http://forum.xda-developers.com/donations.php\n#This is the window title\nWindow.Title=CASUAL TEST SCRIPTS\n#If true, BannerPic will be used for the main window banner decoration\nWindow.UsePictureForBanner=True\n#The main window banner\nWindow.BannerPic=logo.png\n#If UsePictureForBanner is false this text will be displayed in large format\nWindow.BannerText=Do It!\n#text for main button\nWindow.ExecuteButtonText=Do It\n#\"true\" or \"True\" to enable\nAudio.Enabled=true \n");
         jScrollPane16.setViewportView(jTextArea16);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -162,7 +161,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea4.setColumns(20);
         jTextArea4.setRows(5);
-        jTextArea4.setText("The adb_usb.ini file contains instructions  for ADB to look at  non-standard  device \n types.  Generally this will not be needed.  If you're using a  normally  unsupported  \ndevice, you will  need to specify the USB  manufacturer code. Be careful  when\nmodifying this file.  it can cause problems on Mac if not modified properly.");
+        jTextArea4.setText("The adb_usb.ini file contains instructions  for ADB to look at  non-standard  device \n types.  Generally this will not be needed.  If you're using a  normally  unsupported  \ndevice (Nook Tablet) you will  need to specify the USB  manufacturer code.\n Be careful  when modifying this file. ");
         jTextArea4.setBorder(null);
         jScrollPane4.setViewportView(jTextArea4);
 
@@ -237,7 +236,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea8.setColumns(20);
         jTextArea8.setRows(5);
-        jTextArea8.setText("The script.txt file tells the user what this selection does.  ");
+        jTextArea8.setText("The script.txt file describes the currently selected item from the dropdown box");
         jTextArea8.setBorder(null);
         jScrollPane8.setViewportView(jTextArea8);
 
@@ -245,7 +244,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea19.setColumns(20);
         jTextArea19.setRows(5);
-        jTextArea19.setText("This option does what I say it does and nothing more. It will install various things to \nvarious degrees.  Ensure you are rooted or this will fail.");
+        jTextArea19.setText("This option does what I say it does and nothing more.  \n Ensure you are rooted or this will fail.");
         jScrollPane19.setViewportView(jTextArea19);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -275,7 +274,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea10.setColumns(20);
         jTextArea10.setRows(5);
-        jTextArea10.setText("The Script.zip should be used to store files to be pushed to a device for Script.scr.  A \nScript.zip may be referenced by the Script.scr with the command $ZIPFILE.  \nEG.  $ZIPFILE  refers to the root of the zip file. \nEG.  $ZIPFILE$SLASHMyFolder$SLASH refers to the folder called \"MyFolder\" in the zipfile. ");
+        jTextArea10.setText("The Script.zip should be used to store files to be pushed to a device for Script.scr.  A \nScript.zip may be referenced by the Script.scr with the command $ZIPFILE.  \n ");
         jTextArea10.setBorder(null);
         jScrollPane10.setViewportView(jTextArea10);
 
@@ -283,6 +282,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea20.setColumns(20);
         jTextArea20.setRows(5);
+        jTextArea20.setText("EG.  $ZIPFILE  refers to the root of the zip file. \nEG.  $ZIPFILE$SLASHMyFolder$SLASH refers to the folder called \"MyFolder\" in the zipfile.");
         jScrollPane20.setViewportView(jTextArea20);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);

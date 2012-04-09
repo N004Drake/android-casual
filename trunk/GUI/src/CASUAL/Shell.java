@@ -183,6 +183,8 @@ public class Shell implements Runnable {
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             String LineRead = null;
             String CharRead = null;
+            String LogRead="";
+
             boolean ResetLine = false;
             int c;
             while ((c = STDOUT.read()) > -1) {
@@ -192,6 +194,7 @@ public class Shell implements Runnable {
                 }
                 CharRead = Character.toString((char) c);
                 LineRead = LineRead + CharRead;
+                LogRead=LogRead+CharRead;
                 log.progress(CharRead);
                 if ((!LinkLaunched) && (LineRead.contains("Modified SBL Injection Completed Download Mode Activated"))) {
                     LinkLaunched = true;
@@ -214,6 +217,7 @@ public class Shell implements Runnable {
             while ((LineRead = STDERR.readLine()) != null) {
                 log.progress(LineRead);
             }
+            log.level3(LogRead);
 
         } catch (IOException ex) {
             String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();
@@ -237,6 +241,7 @@ public class Shell implements Runnable {
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String LineRead = null;
                     String CharRead = null;
+                    String LogData="";
                     boolean ResetLine = false;
                     int c;
                     while ((c = STDOUT.read()) > -1) {
@@ -247,6 +252,7 @@ public class Shell implements Runnable {
                         CharRead = Character.toString((char) c);
                         LineRead = LineRead + CharRead;
                         log.progress(CharRead);
+                        LogData=LogData+CharRead.toString();
                         if ((!LinkLaunched) && (LineRead.contains("Modified SBL Injection Completed Download Mode Activated"))) {
                             LinkLaunched = true;
                             TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
@@ -268,6 +274,7 @@ public class Shell implements Runnable {
                     while ((LineRead = STDERR.readLine()) != null) {
                         log.progress(LineRead);
                     }
+                    new Log().level2(LogData);
 
                 } catch (IOException ex) {
                     String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();
