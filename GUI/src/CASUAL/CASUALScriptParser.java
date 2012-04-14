@@ -188,6 +188,7 @@ public class CASUALScriptParser {
         //$USERINPUTBOX will stop processing and accept a String to be injected
         //into ADB.
         } else if (Line.startsWith("$USERINPUTBOX")){
+            CASUALAudioSystem.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             Line.replace("\\n", "\n");
             String[] Message=Line.replace("$USERINPUTBOX", "").split(",");
             String InputBoxText=JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
