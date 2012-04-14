@@ -166,6 +166,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         WindowBanner.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
         WindowBanner.setText("NARZ or picture of some sort");
 
+        ComboBoxScriptSelector.setEnabled(false);
         ComboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
@@ -182,6 +183,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         });
 
         StartButton.setText("Do It!");
+        StartButton.setEnabled(false);
         StartButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 StartButtonActionPerformed(evt);
