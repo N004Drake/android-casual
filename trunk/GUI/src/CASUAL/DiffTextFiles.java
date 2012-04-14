@@ -71,6 +71,10 @@ public class DiffTextFiles {
         if (Difference.startsWith("\n")) {
             Difference = Difference.replaceFirst("\n", "");
         }
+        if (Difference.endsWith("\n")){
+            Difference=new StringOperations().replaceLast(Difference, "\n", "");
+        }
+            
         return Difference;
 
     }

@@ -656,8 +656,6 @@ class RunableDeployADB implements Runnable{
             
             //TODO: figure out why this crashes adb on Mac.
             String addToADBUSB=DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac);
-            addToADBUSB=addToADBUSB.replace("\n\n", "");
-            if (addToADBUSB.endsWith("\n"))addToADBUSB.repl
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, addToADBUSB);
             
             
