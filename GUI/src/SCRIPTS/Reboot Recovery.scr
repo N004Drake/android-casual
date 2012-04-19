@@ -1,0 +1,1 @@
+reboot recovery || su -c reboot recovery
