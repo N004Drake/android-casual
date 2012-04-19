@@ -1,0 +1,1 @@
+reboot download || su -c reboot download
