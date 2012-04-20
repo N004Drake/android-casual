@@ -55,7 +55,7 @@ public class Statics {
     public static boolean LogCreated=false; //used by log class
     public static String[] DeviceTracker;
     /*
-     *Form data for Heimdall One-Click View 
+     *Form data 
      */
     public static String ScriptLocation="/SCRIPTS/";
     public static boolean TargetScriptIsResource=true;
@@ -66,7 +66,9 @@ public class Statics {
     public static String Slash=System.getProperty("file.separator");
     public static CASUALConnectionStatusMonitor DeviceMonitor=new CASUALConnectionStatusMonitor();
     public static String UseSound;
-
+    public static ArrayList ActionEvents = new ArrayList();
+    public static ArrayList ReactionEvents = new ArrayList();
+    
     
     
 

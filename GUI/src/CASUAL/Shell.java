@@ -181,37 +181,26 @@ public class Shell implements Runnable {
             Process process = new ProcessBuilder(params).start();
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String LineRead = null;
-            String CharRead = null;
+            String LineRead="";
+            String CharRead;
             String LogRead="";
 
-            boolean ResetLine = false;
             int c;
             while ((c = STDOUT.read()) > -1) {
-                if (ResetLine) {
-                    log.beginLine();
-                    ResetLine = !ResetLine;
-                }
+
                 CharRead = Character.toString((char) c);
                 LineRead = LineRead + CharRead;
                 LogRead=LogRead+CharRead;
                 log.progress(CharRead);
-                if ((!LinkLaunched) && (LineRead.contains("Modified SBL Injection Completed Download Mode Activated"))) {
-                    LinkLaunched = true;
-                    TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
-                    int DResult = timeOutOptionPane.showTimeoutDialog(
-                            7, //timeout
-                            null, //parentComponent
-                            "Don't forget to use the donate button.\n"
-                            + "Donations help developers justify time spent on projects "
-                            + "to their wives :).",
-                            "Succes!s",//DisplayTitle
-                            TimeOutOptionPane.OK_OPTION, // Options buttons
-                            TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
-                            new String[]{"OK"}, // option buttons
-                            "No"); //Default{
-                    if (DResult == 0) {
+                
+                if (Statics.ActionEvents != null && (LineRead.contains("\n") || LineRead.contains("\r"))){
+                    for (int i = 0; i<= Statics.ActionEvents.size() -1 ;i++){
+                        if (Statics.ActionEvents !=null && LineRead.contains((String)Statics.ActionEvents.get(i))){
+                          new CASUALScriptParser().executeOneShotCommand((String) Statics.ReactionEvents.get(i));
+                        }
                     }
+                    LineRead="";
+                              
                 }
             }
             while ((LineRead = STDERR.readLine()) != null) {

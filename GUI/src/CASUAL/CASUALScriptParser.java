@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class CASUALScriptParser {
 
-    boolean ScriptContinue = true;
+    static boolean ScriptContinue = true;
     Log Log = new Log();
     int LinesInScript = 0;
     int CurrentLine;
@@ -65,7 +65,7 @@ public class CASUALScriptParser {
         ScriptName = Script;
         ScriptTempFolder = Statics.TempFolder + (new File(Script).getName()) + Statics.Slash;
         LinesInScript = CountLines.countFileLines(Script + ".scr");
-        Log.level3("Lines in SCript " + LinesInScript);
+        Log.level3("Lines in Script " + LinesInScript);
         DataInputStream DIS;
         try {
 
@@ -80,6 +80,14 @@ public class CASUALScriptParser {
     }
 
     /*
+     * executeOneShotCommand provides a way to insert a script line.
+     * 
+     */
+    public void executeOneShotCommand (String Line){
+        commandHandler(Line);
+    }
+
+    /*
      * Script Handler contains all script commands and will execute commands
      */
     private void commandHandler(String Line) {
@@ -88,6 +96,11 @@ public class CASUALScriptParser {
         //Remove leading spaces
         Line = removeLeadingSpaces(Line);
 
+        if (Line.startsWith("$HALT")){
+            ScriptContinue=false;
+            Line=Line.replaceFirst("$HALT","");
+        }
+            
         //Disregard commented lines
         if (Line.startsWith("#")) {
             Log.level3("Ignoring commented line" + Line);
@@ -128,9 +141,29 @@ public class CASUALScriptParser {
             Line = removeLeadingSpaces(Line);
             Log.level1(Line);
             return;
+
+        
+        //$ON will trigger on an event
+        //PARAM1 = Textual input event
+        //PARAM2 = Command to execute
+        //,= separator
+        // example $ON File Not Found, $HALT
+        // example $ON Permission Denied, su -c !!
+        }else if (Line.startsWith("$ON")){
+            Line=Line.replace("$ON", "");
+            Line=removeLeadingSpaces(Line);
+            String Event[]=Line.split(",");
+            try {
+            Statics.ActionEvents.add(Event[0]);
+            Statics.ReactionEvents.add(Event[1]);
+            } catch (Exception e) {
+                               Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
+
+            }
+            
         //$USERNOTIFICATION will stop processing and force the user to 
         // press OK to continueNotification 
-        } else if (Line.startsWith("$USERNOTIFICATION")) {
+        }else if (Line.startsWith("$USERNOTIFICATION")) {
             if (Statics.UseSound.contains("true")) {
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
@@ -210,11 +243,14 @@ public class CASUALScriptParser {
     //TODO: do in background, not foreground
     DataInputStream DATAIN;
     private void executeSelectedScript(DataInputStream DIS) {
+        Statics.ReactionEvents=new ArrayList();
+        Statics.ActionEvents=new ArrayList();
+        ScriptContinue=true;
         DATAIN=DIS;
         Log.level3("Executing Scripted Datastream" + DIS.toString());
         Runnable r = new Runnable() {
             public void run() {
-                System.out.println("In Runnable Thread");
+                System.out.println("CASUAL has initiated a multithreaded execution environment");
                 CurrentLine = 1;
                 Statics.ProgressBar.setMaximum(LinesInScript);
                 Log.level3("Reading datastream" + DATAIN);
