@@ -97,7 +97,7 @@ public class CASUALAboutBox extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASUAL/resources/icons/logo.png"))); // NOI18N
 
-        jLabel2.setText("CASUAL: Cross-platform ADB Scripting Unified Android Loader");
+        jLabel2.setText("CASUAL: Cross-platform ADB Scripting Universal Android Loader");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -111,7 +111,7 @@ public class CASUALAboutBox extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel2)
-                        .addGap(0, 81, Short.MAX_VALUE)))
+                        .addGap(0, 67, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
