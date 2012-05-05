@@ -75,7 +75,8 @@ public class CASUALConnectionStatusMonitor {
                 DeviceList = Shell.elevateSimpleCommand(DeviceCommand);
                 // if permissions elevation was sucessful
                 if (!DeviceList.contains("????????????")) {
-                    Log.level1(DeviceList);
+                    Log.level3(DeviceList);
+                    Log.level1("Permissions problem corrected");
                     DeviceCheck.start();
                 //devices still not properly recognized.  Log it.
                 } else {
