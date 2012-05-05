@@ -451,7 +451,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_formWindowClosing
     private void comboBoxUpdate(){
         Log.level2("From Resource: " + Statics.TargetScriptIsResource);
-        Log.level1("\n--" + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
+        Log.level1("--" + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
         if (Statics.TargetScriptIsResource){
             Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         } else {
@@ -700,6 +700,7 @@ class RunableDeployADB implements Runnable{
             Shell.sendShellCommand(killCmd);
             TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
             String[] ok = {"ok"};
+            CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
             TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
                     + "is not set up properly to communicate\n"
                     + "with the device.  As a work-around we\n"
@@ -707,7 +708,8 @@ class RunableDeployADB implements Runnable{
                     + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
             DeviceList = Shell.elevateSimpleCommand(devicesCmd);
             if (!DeviceList.contains("????????????")) {
-                Log.level1(DeviceList);
+                Log.level2(DeviceList);
+                Log.level1("Permissions elevation sucessful.");
             } else {
                 Log.level0("Unrecognized device detected");
 
