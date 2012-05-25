@@ -1,1 +1,3 @@
-reboot download || su -c reboot download
+reboot download
+shell reboot download
+shell su -c reboot download
