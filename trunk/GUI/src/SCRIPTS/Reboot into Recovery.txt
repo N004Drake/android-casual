@@ -1,1 +1,0 @@
-This CASUAL test script will ask for confirmation to put your device into recovery mode.

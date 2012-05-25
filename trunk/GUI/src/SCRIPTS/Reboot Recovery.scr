@@ -1,1 +1,3 @@
-reboot recovery || su -c reboot recovery
+reboot recovery
+shell reboot recovery
+shell su -c reboot recovery
