@@ -1,2 +1,2 @@
-*Requires root* ****EXPERIMENTAL****
-This will unlock your device by flashing the params partition from an unlocked device. 
+*Requires root*
+This will Lock your device by flashing the params partition from a Locked device. 
