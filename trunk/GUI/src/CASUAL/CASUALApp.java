@@ -34,18 +34,13 @@ public class CASUALApp extends SingleFrameApplication {
      */
     @Override
     protected void startup() {
-        
-        FileOperations FileOperations= new FileOperations();
         Statics Statics=new Statics();
-        
-        FileOperations.makeFolder(Statics.TempFolder);
-        
+        Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Audio.Enabled");
+        CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
+
+        new FileOperations().makeFolder(Statics.TempFolder);
         Statics.GUI= new CASUALJFrame();
         Statics.GUI.setVisible(true);
-        
-
-        
-        
         show(Statics.GUI); 
         Statics.GUI.startStopTimer(true);
         Statics.GUI.setVisible(true);
