@@ -53,7 +53,9 @@ public class CASUALJFrame extends javax.swing.JFrame  {
      * Creates new form CASUALJFrame2
      */
     public CASUALJFrame() {
-        initComponents();      
+        initComponents();   
+        
+        
         //Statics.GUI=this;
         enableControls(false);
         Statics.ProgressArea = this.ProgressArea;
@@ -61,7 +63,6 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         ProgressArea.setText(Statics.PreProgress);
         populateFields();
         org.jdesktop.application.ResourceMap resourceMap = Application.getInstance().getContext().getResourceMap(CASUALJFrame.class);
-
 
         int busyAnimationRate = resourceMap.getInteger("StatusBar.busyAnimationRate");
         for (int count = 0; count < busyIcons.length; count++) {
@@ -94,7 +95,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         prepareScripts();
         comboBoxUpdate();
         //TODO: Uncompress zip if needed
-      
+
 
 
     }
