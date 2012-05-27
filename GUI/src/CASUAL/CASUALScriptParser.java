@@ -99,6 +99,7 @@ public class CASUALScriptParser {
         if (Line.startsWith("$HALT")){
             ScriptContinue=false;
             Line=Line.replaceFirst("$HALT","");
+            Line = removeLeadingSpaces(Line);
         }
             
 //# is a comment Disregard commented lines
