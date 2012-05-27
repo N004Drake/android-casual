@@ -95,13 +95,13 @@ public class CASUALScriptParser {
 
         //Remove leading spaces
         Line = removeLeadingSpaces(Line);
-
+//$HALT will execute any commands after the $HALT command and stop the script.
         if (Line.startsWith("$HALT")){
             ScriptContinue=false;
             Line=Line.replaceFirst("$HALT","");
         }
             
-        //Disregard commented lines
+//# is a comment Disregard commented lines
         if (Line.startsWith("#")) {
             Log.level3("Ignoring commented line" + Line);
             return;
@@ -112,13 +112,13 @@ public class CASUALScriptParser {
             return;
         }
         Log.level3("SCRIPT COMMAND:" + Line);
-        //replace $SLASH with "\" for windows or "/" for linux and mac
+//$SLASH will replace with "\" for windows or "/" for linux and mac
         if (Line.contains("$SLASH")) {
             Line = Line.replace("$SLASH", Statics.Slash);
             Log.level3("Expanded $SLASH: " + Line);
         }
 
-        //reference to the Script's .zip file
+//$ZIPFILE is a reference to the Script's .zip file
         if (Line.contains("$ZIPFILE")) {
             Line = Line.replace("$ZIPFILE", ScriptTempFolder);
             Log.level3("Expanded $ZIPFILE: " + Line);
@@ -129,21 +129,16 @@ public class CASUALScriptParser {
         }
             
 
-        //Disregard commented lines
-        if (Line.startsWith("#")) {
-            Log.level3("Ignoring commented line" + Line);
-            return;
-        }
-        //$ECHO command will display text in the main window
+//$ECHO command will display text in the main window
         if (Line.startsWith("$ECHO")) {
             Log.level3("Received ECHO command" + Line);
             Line = Line.replace("$ECHO", "");
             Line = removeLeadingSpaces(Line);
             Log.level1(Line);
             return;
-
-        
-        //$ON will trigger on an event
+            
+            
+//$ON will trigger on an event
         //PARAM1 = Textual input event
         //PARAM2 = Command to execute
         //,= separator
@@ -160,8 +155,14 @@ public class CASUALScriptParser {
                                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
 
             }
+
+// $CLEARON will remove all actions/reactions
+        } else if (Line.startsWith("$CLEARON")){
+            Statics.ActionEvents=new ArrayList();
+            Statics.ReactionEvents=new ArrayList();
             
-        //$USERNOTIFICATION will stop processing and force the user to 
+            
+//$USERNOTIFICATION will stop processing and force the user to 
         // press OK to continueNotification 
         }else if (Line.startsWith("$USERNOTIFICATION")) {
             if (Statics.UseSound.contains("true")) {
@@ -182,6 +183,10 @@ public class CASUALScriptParser {
                         JOptionPane.INFORMATION_MESSAGE);
             }
             return;
+
+// $USERCANCELOPTION will give the user the option to halt the script
+            //USE: $USERCANCELOPTION Message
+            //USE: $USERCANCELOPTION Title, Message
         } else if (Line.startsWith("$USERCANCELOPTION")) {
             if (Statics.UseSound.contains("true")) {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
@@ -218,8 +223,9 @@ public class CASUALScriptParser {
                     return;
                 }
             }
-        //$USERINPUTBOX will stop processing and accept a String to be injected
-        //into ADB.
+//$USERINPUTBOX will accept a String to be injected into ADB
+        //Any text will be injected into the $USERINPUT variable    
+        //USE: $USERINPUTBOX Title, Message, command $USERINPUT
         } else if (Line.startsWith("$USERINPUTBOX")){
             CASUALAudioSystem.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             Line.replace("\\n", "\n");
@@ -229,10 +235,10 @@ public class CASUALScriptParser {
             
             
             Log.level3(InputBoxText);
-            
+            //TODO Verify this
             doShellCommand(Message[2], "$USERINPUT", InputBoxText);
             return;
-        // if no prefix, then send command directly to ADB.
+// if no prefix, then send command directly to ADB.
         } else {
             doShellCommand(Line, null, null);
         }
@@ -240,7 +246,6 @@ public class CASUALScriptParser {
         Log.level3("COMMAND TEST" + Statics.AdbDeployed + " " + Line);
     }
 
-    //TODO: do in background, not foreground
     DataInputStream DATAIN;
     private void executeSelectedScript(DataInputStream DIS) {
         Statics.ReactionEvents=new ArrayList();
