@@ -111,7 +111,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
 
@@ -151,7 +151,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -189,7 +189,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane17, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(jScrollPane17, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -207,7 +207,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea18.setColumns(20);
         jTextArea18.setRows(5);
-        jTextArea18.setText("$USERNOTIFICATION Notification Title testing, This is a Notification  with a filename $ZIPFILE\n$USERCANCELOPTION This is the option to cancel, do you wish to cancel?\n$ECHO This folder, $ZIPFILE is my temp folder $SLASH is the system file separator\n$ECHO here is a line of slashes using the $ SLASH command $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH\n#This is a commented line.  The next line, because it is not prefixed, will use adb as its execution environment\n$ECHO I will now execute \"adb devices\".\ndevices\n$ECHO Pushing a file over to your device\npush $ZIPFILEMyFile.txt /sdcard\n$ECHO I will now execute \"adb shell ls /data\"\nshell ls /data");
+        jTextArea18.setText("#This is a comment\n#The next line will display an input box, then send a shell to echo the input\n$USERINPUTBOX Box Title, Box Message, shell echo $USERINPUT \n$USERNOTIFICATION Notification Title testing, This is a Notification  with a filename $ZIPFILE\n$USERCANCELOPTION This is the option to cancel, do you wish to cancel?\n#The commands $ZIPFILE and $SLASH  may be placed anywhere\n#$ZIPFILE is for a reference to the script's .zip file\n#SLASH is the reference to the system file separator\n#This will set up an action/reaction listener. \n#When the shell returns ERROR, the $HALT command will be executed\n$ON ERROR, $HALT $ECHO stopping because of error\n#$ECHO will display something to the user\n$ECHO I will now execute \"adb commands\".\ndevices\npush \"$ZIPFILEMyFile.txt\" /sdcard\nshell ls /data\n#$HALT will execute any command on the same line and then end the script\n$HALT $ECHO I will not execute any further comands becaue $HALT was issued\nshell echo hi");
         jScrollPane18.setViewportView(jTextArea18);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -226,7 +226,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
                 .addGap(24, 24, 24))
         );
 
@@ -264,7 +264,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -302,7 +302,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -337,7 +337,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextArea1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, Short.MAX_VALUE)
+                .addComponent(jTextArea1, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
