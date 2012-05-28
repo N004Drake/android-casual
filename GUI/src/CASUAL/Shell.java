@@ -196,6 +196,10 @@ public class Shell implements Runnable {
                 if (Statics.ActionEvents != null && (LineRead.contains("\n") || LineRead.contains("\r"))){
                     for (int i = 0; i<= Statics.ActionEvents.size() -1 ;i++){
                         if (Statics.ActionEvents !=null && LineRead.contains((String)Statics.ActionEvents.get(i))){
+                          
+                          String LastLine=StringOperations.replaceLast(LineRead, "\n", "");  
+                          LastLine=StringOperations.replaceLast(LastLine, "\r", "");
+                          Statics.LastLineReceived=LastLine;
                           new CASUALScriptParser().executeOneShotCommand((String) Statics.ReactionEvents.get(i));
                         }
                     }
@@ -242,23 +246,6 @@ public class Shell implements Runnable {
                         LineRead = LineRead + CharRead;
                         log.progress(CharRead);
                         LogData=LogData+CharRead.toString();
-                        if ((!LinkLaunched) && (LineRead.contains("Modified SBL Injection Completed Download Mode Activated"))) {
-                            LinkLaunched = true;
-                            TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
-                            int DResult = timeOutOptionPane.showTimeoutDialog(
-                                    7, //timeout
-                                    null, //parentComponent
-                                    "Don't forget to use the donate button.\n"
-                                    + "Donations help developers justify time spent on projects "
-                                    + "to their wives :).",
-                                    "Succes!s",//DisplayTitle
-                                    TimeOutOptionPane.OK_OPTION, // Options buttons
-                                    TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
-                                    new String[]{"OK"}, // option buttons
-                                    "No"); //Default{
-                            if (DResult == 0) {
-                            }
-                        }
                     }
                     while ((LineRead = STDERR.readLine()) != null) {
                         log.progress(LineRead);

@@ -84,6 +84,11 @@ public class CASUALScriptParser {
      * 
      */
     public void executeOneShotCommand (String Line){
+        //$LINE is a reference to the last line received in the shell            
+        if (Line.contains("$LINE")) {
+            Line = Line.replace("$LINE", Statics.LastLineReceived);
+            Log.level3("Expanded $LINE: " + Line);
+        }
         commandHandler(Line);
     }
 
@@ -113,6 +118,28 @@ public class CASUALScriptParser {
             return;
         }
         Log.level3("SCRIPT COMMAND:" + Line);
+
+//$ON will trigger on an event
+        //PARAM1 = Textual input event
+        //PARAM2 = Command to execute
+        //,= separator
+        // example $ON File Not Found, $HALT
+        // example $ON Permission Denied, su -c !!
+        if (Line.startsWith("$ON")){
+            Line=Line.replace("$ON", "");
+            Line=removeLeadingSpaces(Line);
+            String Event[]=Line.split(",");
+            try {
+              Statics.ActionEvents.add(Event[0]);
+              Statics.ReactionEvents.add(Event[1]);
+            } catch (Exception e) {
+                               Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
+
+            }
+            return;
+
+        }        
+
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (Line.contains("$SLASH")) {
             Line = Line.replace("$SLASH", Statics.Slash);
@@ -128,8 +155,14 @@ public class CASUALScriptParser {
         if ((Line.contains("\\n")) && ((Line.startsWith("$USERNOTIFICATION") || Line.startsWith("$USERNOTIFICATION")) || Line.startsWith("$USERCANCELOPTION"))){
             Line=Line.replace("\\n", "\n");
         }
+        
+//$HOMEFOLDER will ensure creation and expand to the user home folder on the system        
+        if (Line.contains("$HOMEFOLDER")) {
             
-
+            //TODO finish this.
+            Line = Line.replace("$SLASH", Statics.Slash);
+            Log.level3("Expanded $SLASH: " + Line);
+        }         
 //$ECHO command will display text in the main window
         if (Line.startsWith("$ECHO")) {
             Log.level3("Received ECHO command" + Line);
@@ -138,25 +171,7 @@ public class CASUALScriptParser {
             Log.level1(Line);
             return;
             
-            
-//$ON will trigger on an event
-        //PARAM1 = Textual input event
-        //PARAM2 = Command to execute
-        //,= separator
-        // example $ON File Not Found, $HALT
-        // example $ON Permission Denied, su -c !!
-        }else if (Line.startsWith("$ON")){
-            Line=Line.replace("$ON", "");
-            Line=removeLeadingSpaces(Line);
-            String Event[]=Line.split(",");
-            try {
-            Statics.ActionEvents.add(Event[0]);
-            Statics.ReactionEvents.add(Event[1]);
-            } catch (Exception e) {
-                               Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
-
-            }
-
+        
 // $CLEARON will remove all actions/reactions
         } else if (Line.startsWith("$CLEARON")){
             Statics.ActionEvents=new ArrayList();

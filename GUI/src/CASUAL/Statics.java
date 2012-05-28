@@ -54,6 +54,7 @@ public class Statics {
     public static PrintWriter OutFile;
     public static boolean LogCreated=false; //used by log class
     public static String[] DeviceTracker;
+    public static String LastLineReceived;
     /*
      *Form data 
      */
