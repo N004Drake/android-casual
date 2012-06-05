@@ -87,7 +87,7 @@ public class CASUALScriptParser {
         //$LINE is a reference to the last line received in the shell            
         if (Line.contains("$LINE")) {
             Line = Line.replace("$LINE", Statics.LastLineReceived);
-            Log.level3("Expanded $LINE: " + Line);
+            Log.level3("Executing Reaction - $LINE: " + Line);
         }
         commandHandler(Line);
     }
@@ -155,13 +155,10 @@ public class CASUALScriptParser {
         if ((Line.contains("\\n")) && ((Line.startsWith("$USERNOTIFICATION") || Line.startsWith("$USERNOTIFICATION")) || Line.startsWith("$USERCANCELOPTION"))){
             Line=Line.replace("\\n", "\n");
         }
-        
-//$HOMEFOLDER will ensure creation and expand to the user home folder on the system        
+//$HOMEFOLDER will reference the user's home folder on the system        
         if (Line.contains("$HOMEFOLDER")) {
-            
-            //TODO finish this.
-            Line = Line.replace("$SLASH", Statics.Slash);
-            Log.level3("Expanded $SLASH: " + Line);
+           Line=Line.replace("$HOMEFOLDER", Statics.CASUALHome);
+           Log.level3("Expanded $HOMEFOLDER" + Line); 
         }         
 //$ECHO command will display text in the main window
         if (Line.startsWith("$ECHO")) {
@@ -170,7 +167,28 @@ public class CASUALScriptParser {
             Line = removeLeadingSpaces(Line);
             Log.level1(Line);
             return;
+
+// $LISTDIR will a folder on the host machine
+        } else if (Line.startsWith("$LISTDIR")){
+            Line=Line.replace("$LISTDIR","");
+            Line=removeLeadingSpaces(Line);
+            File[] files= new File(Line).listFiles();
+            for (int i=0; i<=files.length; i++){
+                try {
+                    commandHandler("shell \"echo "+ files[i].getCanonicalPath()+"\"");
+                } catch (IOException ex) {
+                    Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             
+            return;
+        
+// $MAKEDIR will make a folder
+        } else if (Line.startsWith("$MAKEDIR")){
+            Line=Line.replaceFirst("$MAKEDIR","");
+            Line=removeLeadingSpaces(Line);
+            new File(Line).mkdirs();
+            return;
         
 // $CLEARON will remove all actions/reactions
         } else if (Line.startsWith("$CLEARON")){
@@ -256,10 +274,11 @@ public class CASUALScriptParser {
             return;
 // if no prefix, then send command directly to ADB.
         } else {
+            
             doShellCommand(Line, null, null);
         }
         //final line output for debugging purposes
-        Log.level3("COMMAND TEST" + Statics.AdbDeployed + " " + Line);
+        Log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + Line);
     }
 
     DataInputStream DATAIN;
