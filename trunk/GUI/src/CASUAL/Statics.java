@@ -73,7 +73,9 @@ public class Statics {
     
     
 
-            
+    /*
+     * Folders
+     */
     
     private static String TempF=null;
     //TempFolder is the folder used for file operations
@@ -100,7 +102,7 @@ public class Statics {
         }
         return TempF;
     }
-   
+    public static String CASUALHome=System.getProperty("user.home")+System.getProperty("file.separator")+".CASUAL"+System.getProperty("file.separator");
  
 
     /*

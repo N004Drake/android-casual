@@ -1,30 +1,9 @@
-$ECHO Pushing Mempodroid exploit
-push "$ZIPFILEmempodroid" /data/local/tmp/mempodroid
-$ECHO Pushing Switch User binary
-push "$ZIPFILEsu" /data/local/tmp/su
-$ECHO Pushing Superuser.apk
-push "$ZIPFILESuperuser.apk" /data/local/tmp/Superuser.apk
-$ECHO Pushing root script
-push "$ZIPFILErootGN.sh" /data/local/tmp/rootGN.sh
-
-$ECHO executing root exploit
-shell chmod 777 /data/local/tmp/mempodroid
-shell chmod 777 /data/local/tmp/rootGN.sh
-shell /data/local/tmp/mempodroid 0xd7f4 0xad4b /data/local/tmp/rootGN.sh
-$ECHO rebooting system
-
-reboot
-$ECHO done....
-
-
-
-
-
-
-
-
-
-
-
-
-
+push /home/adam/testfile /sdcard
+$ECHO Echo echos commands to the window only
+#This is a commented line
+shell "echo this sends commands to the device shell; cat /sdcard/myfile;"
+$USERINPUTBOX This is an inputbox title, this is an inputbox message, shell "echo $USERINPUT>/sdcard/myfile"
+$USERNOTIFICATION Notification Title testing, This is a Notification with a filename \n $ZIPFILE \n\n\n ...and several new lines.
+$USERCANCELOPTION This is the option to cancel, do you wish to \n cancel?
+$ECHO here is a line of slashes and the ZIPFILE folder $SLASH$SLASH$SLASH$SLASH$SLASH$SLASH $ZIPFILE
+shell ls /data;whoami;pwd;echo "woot"
