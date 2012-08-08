@@ -16,6 +16,7 @@ push "$ZIPFILEviewmem" /data/local/tmp
 $ECHO Remounting /system/ with read/write access.
 shell su -c "mount -o remount,rw -t`mount|grep /system|awk '{print $3}'` `mount|grep /system|awk '{print $1}'` `mount|grep /system|awk '{print $2}'`"
 $ECHO copying bash to /system/bin
+shell su -c "if /system/bin/su $USER; then cat /system/bin/su >/system/bin/sub; else echo placeholder >/system/bin/su; fi;"
 shell su -c "cat /data/local/tmp/bash > /system/bin/bash"
 $ECHO copying busybox to /system/bin
 shell su -c "cat /data/local/tmp/busybox > /system/bin/busybox"
