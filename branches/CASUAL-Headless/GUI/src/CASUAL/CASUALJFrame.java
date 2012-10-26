@@ -35,6 +35,7 @@ import java.util.zip.ZipInputStream;
 import javax.swing.*;
 import org.jdesktop.application.Application;
 
+
 /**
  *
  * @author adam
@@ -616,11 +617,10 @@ public class CASUALJFrame extends javax.swing.JFrame  {
             if (java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.UsePictureForBanner").equals("true")) {
                 WindowBanner.setText("");
                 WindowBanner.setIcon(createImageIcon("/SCRIPTS/" + java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerPic"), java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText")));
-
-
             } else {
                 this.WindowBanner.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText"));
             }
+            Statics.HeadlessEnabled=Boolean.valueOf(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Headless.Enabled"));
             Statics.DeveloperName = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.Name");
             Statics.DonateButtonText = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateToButtonText");
             Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Audio.Enabled");
@@ -630,9 +630,17 @@ public class CASUALJFrame extends javax.swing.JFrame  {
             Log.level0(ex.toString());
         }
     }
+
+    void startAutoScript() {
+       //TODO: turn on indicator light
+        StartButtonActionPerformed(null);
+        
+       
+        
+        
+    }
     
 }
-
 class RunableDeployADB implements Runnable{
     static public final String newline = "\n";
     FileOperations FileOperations=new FileOperations();
@@ -646,11 +654,25 @@ class RunableDeployADB implements Runnable{
 
         if (Statics.isLinux()) {
             Log.level3("Found Linux Computer");
-            //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
-            Statics.AdbDeployed = Statics.TempFolder + "adb";
-            FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
-            FileOperations.setExecutableBit(Statics.AdbDeployed);
+            String Arch= Statics.Arch();
+            if (Arch.contains("armv6l")){
+                Log.level2("Found Arch:" + Arch);
+                //add our lines to the current adbini
+                DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
+                Statics.AdbDeployed = Statics.TempFolder + "adb";
+                FileOperations.copyFromResourceToFile(Statics.ARMV6lLinuxADB, Statics.AdbDeployed);
+                FileOperations.setExecutableBit(Statics.AdbDeployed);
+                Statics.initLEDs();
+                Statics.LED(2, true);
+               
+            } else {
+                Log.level2("Found Arch: " + Arch + " . Defaulting to x86");
+                //add our lines to the current adbini
+                DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
+                Statics.AdbDeployed = Statics.TempFolder + "adb";
+                FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
+                FileOperations.setExecutableBit(Statics.AdbDeployed);
+            }
         } else if (Statics.isMac()) {
             Log.level3("Found Mac Computer");
             //add our lines to the current adbini
@@ -696,19 +718,22 @@ class RunableDeployADB implements Runnable{
 
 
         Log.level3("Device List:" + DeviceList);
-        if (DeviceList.contains("????????????")) {
+        if (DeviceList.contains("????????????") || DeviceList.contains("failed to start daemon")) {
             Log.level1("killing server and requesting elevated permissions");
             Shell.sendShellCommand(killCmd);
-            TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
-            String[] ok = {"ok"};
-            CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-            TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
-                    + "is not set up properly to communicate\n"
-                    + "with the device.  As a work-around we\n"
-                    + "will attempt to elevate permissions \n"
-                    + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
+            if (! Statics.HeadlessEnabled){
+                TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
+                String[] ok = {"ok"};
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
+
+                TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
+                            + "is not set up properly to communicate\n"
+                            + "with the device.  As a work-around we\n"
+                            + "will attempt to elevate permissions \n"
+                            + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
+            }
             DeviceList = Shell.elevateSimpleCommand(devicesCmd);
-            if (!DeviceList.contains("????????????")) {
+            if ( (! DeviceList.contains("????????????")) && (! DeviceList.contains("failed to start daemon")) ) {
                 Log.level2(DeviceList);
                 Log.level1("Permissions elevation sucessful.");
             } else {

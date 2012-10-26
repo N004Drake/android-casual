@@ -36,7 +36,7 @@ public class CASUALApp extends SingleFrameApplication {
     protected void startup() {
         Statics Statics=new Statics();
         Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Audio.Enabled");
-        CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
+        if (! Statics.HeadlessEnabled) CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
 
         new FileOperations().makeFolder(Statics.TempFolder);
         Statics.GUI= new CASUALJFrame();

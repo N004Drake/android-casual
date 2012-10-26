@@ -55,6 +55,9 @@ public class Statics {
     public static boolean LogCreated=false; //used by log class
     public static String[] DeviceTracker;
     public static String LastLineReceived;
+    public static int resetTimer=0;
+    static boolean complete=true;
+    static boolean armed=true;
     /*
      *Form data 
      */
@@ -111,11 +114,17 @@ public class Statics {
     public static String AdbDeployed;
     //public static String DeploymentBinaries[];
     public static String OSName=System.getProperty("os.name");
-    public static String Arch="";
+    public static String Arch(){
+        return new Shell().silentShellCommand(new String[]{"arch"});
+    }
+    
+    
     public static String SelectedScriptFolder;
     public static String WinElevatorInTempFolder=TempFolder+"Elevate.exe";
     final public static String CASUALSCRIPT="/SCRIPTS/";
     final public static String LinuxADB="/CASUAL/resources/ADB/adblinux";
+    final public static String ARMV6lLinuxADB="/CASUAL/resources/ADB/adblinux-armv6l";
+
     final public static String MacADB="/CASUAL/resources/ADB/adbmac";
     final public static String WinADB="/CASUAL/resources/ADB/adb.exe";
     final public static String WinADB2="/CASUAL/resources/ADB/AdbWinApi.dll";
@@ -128,6 +137,7 @@ public class Statics {
    
 
     /*Project properties*/
+    public static boolean HeadlessEnabled;
     public static String DeveloperName;
     public static String DeveloperDonateLink;
     public static String DonateButtonText;
@@ -159,8 +169,6 @@ public class Statics {
 	return (os.indexOf( "nux") >=0);}
     
     
-    
-  
     /*
      * sets system information, including binary presence, operating system and archetecture
      */
@@ -174,6 +182,40 @@ public class Statics {
             Statics.Slash="/";
         }
     }
+    
+    /*
+     * 
+     * 
+     * 
+     * 
+     * For raspberry pi
+     * 
+     * 
+     * 
+     * 
+     */
+    public static void initLEDs(){
+         new Shell().sendShellCommand(new String[]{"service","InitGPIO","Start"});
+    }
+    public static void LED(int led, boolean state){
+        String command;
+        if (state){
+            command="start";
+        } else {
+            command="stop";
+        }
+        new Shell().sendShellCommand(new String[]{"service","led"+led,command});
+    }
+    public static void LEDsOff(){
+        
+        
+        for( int i=0; i<=4; i++) {
+             new Shell().sendShellCommand(new String[]{"service","led"+i,"0"});
+        }
+        LED(2,true);
+        
+    }
+
 }
     
 

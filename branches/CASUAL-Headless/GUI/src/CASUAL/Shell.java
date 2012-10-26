@@ -148,7 +148,7 @@ public class Shell implements Runnable {
             }
             return AllText;
         } catch (IOException ex) {
-            return "error";
+            return "CritERROR!!!";
         }
 
     }
@@ -226,14 +226,13 @@ public class Shell implements Runnable {
         Runnable r = new Runnable() {
 
             public void run() {
-                boolean LinkLaunched = false;
                 try {
                     String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String LineRead = null;
-                    String CharRead = null;
+                    String CharRead;
                     String LogData="";
                     boolean ResetLine = false;
                     int c;
