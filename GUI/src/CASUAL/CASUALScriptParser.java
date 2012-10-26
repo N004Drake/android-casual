@@ -33,6 +33,7 @@ import java.util.ArrayList;
 public class CASUALScriptParser {
 
     static boolean ScriptContinue = true;
+    static boolean halted = false;
     Log Log = new Log();
     int LinesInScript = 0;
     int CurrentLine;
@@ -102,10 +103,13 @@ public class CASUALScriptParser {
         Line = removeLeadingSpaces(Line);
 //$HALT will execute any commands after the $HALT command and stop the script.
         if (Line.startsWith("$HALT")){
+            halted=true;
             ScriptContinue=false;
-            Line=Line.replaceFirst("$HALT","");
+            Line=Line.replace("$HALT","");
             Line = removeLeadingSpaces(Line);
         }
+        
+
             
 //# is a comment Disregard commented lines
         if (Line.startsWith("#")) {
@@ -131,9 +135,9 @@ public class CASUALScriptParser {
             String Event[]=Line.split(",");
             try {
               Statics.ActionEvents.add(Event[0]);
-              Statics.ReactionEvents.add(Event[1]);
+              Statics.ReactionEvents.add(removeLeadingSpaces(Event[1]));
             } catch (Exception e) {
-                               Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
+               Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
 
             }
             return;
@@ -200,7 +204,7 @@ public class CASUALScriptParser {
         // press OK to continueNotification 
         }else if (Line.startsWith("$USERNOTIFICATION")) {
             if (Statics.UseSound.contains("true")) {
-                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
+                if (! Statics.HeadlessEnabled) CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
             Line = Line.replace("$USERNOTIFICATION", "");
             Line = removeLeadingSpaces(Line);
@@ -223,8 +227,7 @@ public class CASUALScriptParser {
             //USE: $USERCANCELOPTION Title, Message
         } else if (Line.startsWith("$USERCANCELOPTION")) {
             if (Statics.UseSound.contains("true")) {
-                //CASUALAudioSystem CAS = new CASUALAudioSystem();
-                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
+                if (! Statics.HeadlessEnabled) CASUALAudioSystem.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             }
             Line = Line.replace("$USERCANCELOPTION", "");
             if (Line.contains(",")) {
@@ -261,7 +264,7 @@ public class CASUALScriptParser {
         //Any text will be injected into the $USERINPUT variable    
         //USE: $USERINPUTBOX Title, Message, command $USERINPUT
         } else if (Line.startsWith("$USERINPUTBOX")){
-            CASUALAudioSystem.playSound("/CASUAL/resources/sounds/InputRequested.wav");
+            if (! Statics.HeadlessEnabled) CASUALAudioSystem.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             Line.replace("\\n", "\n");
             String[] Message=Line.replace("$USERINPUTBOX", "").split(",");
             String InputBoxText=JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
@@ -270,12 +273,16 @@ public class CASUALScriptParser {
             
             Log.level3(InputBoxText);
             //TODO Verify this
-            doShellCommand(Message[2], "$USERINPUT", InputBoxText);
+            doShellCommand(Message[2], "$USERINPUT", InputBoxText, false);
             return;
+
+        } else if (Line.startsWith("$BACKGROUND")) {    
+            doShellCommand(Line, null, null, true);
+            
 // if no prefix, then send command directly to ADB.
         } else {
             
-            doShellCommand(Line, null, null);
+            doShellCommand(Line, null, null,false);
         }
         //final line output for debugging purposes
         Log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + Line);
@@ -317,10 +324,26 @@ public class CASUALScriptParser {
             while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
                 CurrentLine++;
                 Statics.ProgressBar.setValue(CurrentLine);
-
+                
 
                 commandHandler(strLine);
+                
             }
+            
+            if (halted && Statics.HeadlessEnabled){
+                Statics.initLEDs();
+                Statics.LED(0,false);
+                Statics.LED(3, true);
+                Statics.complete=true;
+                Log.level1("Halted.");
+            } else if (!halted && Statics.HeadlessEnabled) {
+                 Statics.initLEDs();
+                 Statics.LED(0,false);
+                 Statics.LED(4, true);
+                 Log.level1("Script stopped normally.");
+                 Statics.complete=true;
+            }
+            Log.level1("Done.");
             //Close the input stream
             dataIn.close();
         } catch (Exception e) {//Catch exception if any
@@ -394,7 +417,7 @@ public class CASUALScriptParser {
      * ReplaceThis WithThis allows for a last-minute insertion of commands
      * by default ReplaceThis should be null.
      */
-    private void doShellCommand(String Line, String ReplaceThis, String WithThis) {
+    private void doShellCommand(String Line, String ReplaceThis, String WithThis, boolean Background) {
             Line=this.removeLeadingSpaces(Line);
         
             Shell Shell = new Shell();
@@ -407,7 +430,12 @@ public class CASUALScriptParser {
                 StringCommand[i]=StringCommand[i].replace(ReplaceThis, WithThis);
                 }
             }
-            Shell.liveShellCommand(StringCommand);
+            if (! Background) {
+                Shell.liveShellCommand(StringCommand);
+            } else {
+                Statics.LiveSendCommand=ShellCommand;
+                Shell.liveBackgroundShellCommand();
+            }
     }
 
     private String returnSafeCharacters(String Str) {
