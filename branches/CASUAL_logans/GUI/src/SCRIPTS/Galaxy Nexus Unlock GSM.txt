@@ -1,2 +1,0 @@
-*Requires root*
-This will Lock your device by flashing the params partition from a Locked device. 

@@ -1,1 +1,0 @@
-shell "am start -n com.sec.android.app.phoneutil/com.sec.android.app.phoneutil.SetPortUartUsbMSM8960"

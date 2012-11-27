@@ -1,3 +1,0 @@
-reboot download
-shell reboot download
-shell su -c reboot download

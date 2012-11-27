@@ -1,1 +1,0 @@
-shell "am start -n com.android.hiddenmenu/.HiddenMenuEnable"
