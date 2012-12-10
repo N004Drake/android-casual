@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL;
+package CASUAL.gDrive;
 
 /**
  *
@@ -13,11 +13,24 @@ public class downUpProgress extends javax.swing.JFrame  {
     /**
      * Creates new form downUpProgress
      */
-    public downUpProgress() {
+    public downUpProgress(String name, boolean download) {
         initComponents();
-        
+        this.setVisible(true);
+        jLabel2.setText(name);
+        if (download)
+        {
+            this.setTitle("Downloading...");
+        }
+        else {
+            this.setTitle("Uploading...");
+        }
+        System.out.println(jProgressBar1.getMaximum());
     }
 
+    public void updateProgress(int progress)
+    {
+        jProgressBar1.setValue(progress);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,7 +51,7 @@ public class downUpProgress extends javax.swing.JFrame  {
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jButton2.setText("Cancel");
+        jButton2.setText("Close");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -111,7 +124,7 @@ public class downUpProgress extends javax.swing.JFrame  {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new downUpProgress().setVisible(true);
+                new downUpProgress((String) "test",(Boolean) true).setVisible(true);
             }
         });
     }

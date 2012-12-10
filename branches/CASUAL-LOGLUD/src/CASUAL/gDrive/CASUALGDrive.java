@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL;
+package CASUAL.gDrive;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -34,11 +34,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.mortbay.util.ajax.JSON;
 /**
  *
  * @author loglud
  */
 public class CASUALGDrive {
+    
+    
+    private static final String UPLOAD_FILE_PATH = "/Users/loglud/Documents/About Stacks.pdf";
+    private static final String DIR_FOR_DOWNLOADS = "/Users/loglud/Documents/2/";
+    private static final java.io.File UPLOAD_FILE = new java.io.File(UPLOAD_FILE_PATH);
+
     
     /**
      * Global instance of the HTTP transport.
@@ -113,11 +120,18 @@ public class CASUALGDrive {
 //        uploadedFile = uploadFile(true);
 //
 //        View.header1("Starting Simple Media Download");
-//        downloadFile(true, uploadedFile);
+                File downloadfile = drive.files().get("0B_-74RRbTwOqZzJONVlBQ21kd2s").execute();
+                System.out.println(downloadfile.getOriginalFilename());
+          downloadFile(true, downloadfile, DIR_FOR_DOWNLOADS);
 //
 //        View.header1("Success!");
 //        return;
-                System.out.println(drive.files().list().execute());
+                FileList results = drive.files().list().execute();
+                //System.out.println(results.toPrettyString());
+                //System.out.println(results.getEtag());
+
+                
+                
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
@@ -168,9 +182,9 @@ public class CASUALGDrive {
     /**
      * Updates the name of the uploaded file to have a "drivetest-" prefix.
      */
-    public static File updateFileWithTestSuffix(String id) throws IOException {
+    public static File updateFileWithTestSuffix(String id, java.io.File file) throws IOException {
         File fileMetadata = new File();
-        fileMetadata.setTitle("drivetest-" + UPLOAD_FILE.getName());
+        fileMetadata.setTitle("drivetest-" + file.getName());
         Drive.Files.Update update = drive.files().update(id, fileMetadata);
         return update.execute();
     }
@@ -178,20 +192,21 @@ public class CASUALGDrive {
     /**
      * Downloads a file using either resumable or direct media download.
      */
-    public static void downloadFile(boolean useDirectDownload, File uploadedFile)
+    public static void downloadFile(boolean useDirectDownload, File downloadFile, 
+            String fileLoc)
             throws IOException {
         // create parent directory (if necessary)
-        java.io.File parentDir = new java.io.File(DIR_FOR_DOWNLOADS);
+        java.io.File parentDir = new java.io.File(fileLoc);
         if (!parentDir.exists() && !parentDir.mkdirs()) {
             throw new IOException("Unable to create parent directory");
         }
-        OutputStream out = new FileOutputStream(new java.io.File(parentDir, uploadedFile.getTitle()));
+        OutputStream out = new FileOutputStream(new java.io.File(parentDir, downloadFile.getTitle()));
 
-        Drive.Files.Get get = drive.files().get(uploadedFile.getId());
+        Drive.Files.Get get = drive.files().get(downloadFile.getId());
         MediaHttpDownloader downloader = get.getMediaHttpDownloader();
         downloader.setDirectDownloadEnabled(useDirectDownload);
-        //downloader.setProgressListener(new FileDownloadProgressListener());
-        downloader.download(new GenericUrl(uploadedFile.getDownloadUrl()), out);
+        downloader.setProgressListener(new FileDownloadProgressListener(downloadFile.getTitle()));
+        downloader.download(new GenericUrl(downloadFile.getDownloadUrl()), out);
     }
     
     
