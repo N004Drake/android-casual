@@ -120,15 +120,16 @@ public class CASUALGDrive {
 //        uploadedFile = uploadFile(true);
 //
 //        View.header1("Starting Simple Media Download");
-                File downloadfile = drive.files().get("0B_-74RRbTwOqZzJONVlBQ21kd2s").execute();
-                System.out.println(downloadfile.getOriginalFilename());
-          downloadFile(true, downloadfile, DIR_FOR_DOWNLOADS);
+                //File downloadfile = drive.files().get("0B_-74RRbTwOqZzJONVlBQ21kd2s").execute();
+                //System.out.println(downloadfile.getOriginalFilename());
+          //downloadFile(true, downloadfile, DIR_FOR_DOWNLOADS);
 //
 //        View.header1("Success!");
 //        return;
-                FileList results = drive.files().list().execute();
+                //FileList results = drive.files().list().setQ("title= 'drivetest-About Stacks.pdf'").execute();
                 //System.out.println(results.toPrettyString());
-                //System.out.println(results.getEtag());
+                //System.out.println(results.getItems().get(0).getTitle());
+                getAllFileNames();
 
                 
                 
@@ -179,6 +180,23 @@ public class CASUALGDrive {
                 return result;
     }
 
+    public static List<String> getAllFileNames() throws IOException {
+        List<String> names = new ArrayList<String>();
+        List<File> filelist = getAllFilesFromDrive();
+        for (File file : filelist) {
+            names.add(file.getTitle());
+            System.out.println(file.getTitle());
+        }
+        return names;
+        
+    }
+    
+    public static File getFileQuery(String query) throws IOException  
+    {
+        FileList out = drive.files().list().setQ(query).execute();
+        return out.getItems().get(0);
+        
+    }
     /**
      * Updates the name of the uploaded file to have a "drivetest-" prefix.
      */
