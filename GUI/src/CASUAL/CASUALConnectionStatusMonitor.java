@@ -20,6 +20,7 @@
  */
 package CASUAL;
 
+import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
@@ -110,6 +111,10 @@ private void stateSwitcher(int State){
                 Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
                 Statics.GUI.setStatusMessageLabel("Target Acquired");
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
+                
+                //TODO In-Progress indicator must go on at this time
+                
+                
                 break;
             default:
                 
