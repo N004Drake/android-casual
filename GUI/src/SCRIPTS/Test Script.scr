@@ -59,7 +59,7 @@ push "$ZIPFILEpsneuter" /data/local/tmp/
 shell chmod 0755 /data/local/tmp/psneuter
 shell /data/local/tmp/psneuter
 wait-for-device
-shell /data/local/tmp/rootGN.sh
+shell /data/local/tmp/rootGN.sh 
 
 
 
