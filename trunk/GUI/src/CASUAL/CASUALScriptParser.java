@@ -103,10 +103,17 @@ public class CASUALScriptParser {
 //$HALT will execute any commands after the $HALT command and stop the script.
         if (Line.startsWith("$HALT")){
             ScriptContinue=false;
-            Line=Line.replaceFirst("$HALT","");
-            Line = removeLeadingSpaces(Line);
-        }
             
+            Line=Line.replace("$HALT","");
+            Line = removeLeadingSpaces(Line);
+            
+            
+            //TODO: add end LED notification here
+            
+            
+        }
+//TODO: add "reboot" with adb reboot then send shell command "sleep5" then wait-for-device to account for windows retardedness
+        
 //# is a comment Disregard commented lines
         if (Line.startsWith("#")) {
             Log.level3("Ignoring commented line" + Line);

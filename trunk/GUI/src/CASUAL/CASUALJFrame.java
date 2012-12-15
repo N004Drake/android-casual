@@ -326,9 +326,8 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
-    private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
-        Log.level0("");
+    public void StartButtonActionPerformed(){
+          Log.level0("");
         Log.level3("Script Activated");
         Log.level3("Script known as "+ this.ComboBoxScriptSelector.getSelectedItem().toString() + " is running");
         this.busyIconTimer.start();
@@ -344,6 +343,9 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         this.busyIconTimer.stop();
         enableControls(true);
         Statics.DeviceMonitor.DeviceCheck.start();
+    }
+    private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
+      this.StartButtonActionPerformed();
     }//GEN-LAST:event_StartButtonActionPerformed
 
     private void MenuItemShowDeveloperPaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowDeveloperPaneActionPerformed
@@ -696,7 +698,7 @@ class RunableDeployADB implements Runnable{
 
 
         Log.level3("Device List:" + DeviceList);
-        if (DeviceList.contains("????????????")) {
+        if (DeviceList.contains("????????????")||DeviceList.contains("error: cannot connect to daemon")) {
             Log.level1("killing server and requesting elevated permissions");
             Shell.sendShellCommand(killCmd);
             TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
