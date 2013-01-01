@@ -19,11 +19,16 @@
  * SOFTWARE.
  */
 package CASUAL;
+import java.awt.Color;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 
 
@@ -61,7 +66,12 @@ public class Statics {
     public static String ScriptLocation="/SCRIPTS/";
     public static boolean TargetScriptIsResource=true;
     public static CASUALJFrame GUI;
-    public static JTextArea ProgressArea; //used by log to update Progress
+    public static JTextPane ProgressPane; //used by log to update Progress
+    public static StyledDocument ProgressDoc;
+    
+
+    
+    
     public static String PreProgress="";
     public static JProgressBar ProgressBar;
     public static String Slash=System.getProperty("file.separator");
@@ -173,6 +183,15 @@ public class Statics {
         }else if(isLinux()){
             Statics.Slash="/";
         }
+    }
+    public static SimpleAttributeSet keyWord = new SimpleAttributeSet();
+    public static void initDocument(){
+        ProgressPane.setContentType("text/html");
+        ProgressDoc=ProgressPane.getStyledDocument();
+       
+StyleConstants.setForeground(keyWord, Color.RED);
+StyleConstants.setBackground(keyWord, Color.YELLOW);
+StyleConstants.setBold(keyWord, true);
     }
 }
     
