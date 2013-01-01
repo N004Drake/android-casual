@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import org.jdesktop.application.Application;
 
 /**
@@ -58,9 +59,16 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         
         //Statics.GUI=this;
         enableControls(false);
-        Statics.ProgressArea = this.ProgressArea;
         Statics.ProgressBar=this.ProgressBar;
-        ProgressArea.setText(Statics.PreProgress);
+        
+        ProgressArea.setContentType("text/html");
+        Statics.ProgressPane = this.ProgressArea;
+        Statics.initDocument();
+        
+        ProgressArea.setText(ProgressArea.getText() + Statics.PreProgress);
+        
+        
+        
         populateFields();
         org.jdesktop.application.ResourceMap resourceMap = Application.getInstance().getContext().getResourceMap(CASUALJFrame.class);
 
@@ -78,14 +86,8 @@ public class CASUALJFrame extends javax.swing.JFrame  {
 
         idleIcon = resourceMap.getIcon("/" + "StatusBar.idleIcon");
         StatusAnimationLabel.setIcon(idleIcon);
+Log.level3("OMFGWOOT");
 
-
-        // connecting action tasks to status bar via TaskMonitor
-
-
-
-
-        Statics.ProgressArea = this.ProgressArea;
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + "Overview.txt"));
 
         Log.level2("Deploying ADB");
@@ -117,8 +119,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
     private void initComponents() {
 
         FileChooser1 = new javax.swing.JFileChooser();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        ProgressArea = new javax.swing.JTextArea();
+        jDesktopPane1 = new javax.swing.JDesktopPane();
         WindowBanner = new javax.swing.JLabel();
         ComboBoxScriptSelector = new javax.swing.JComboBox();
         StartButton = new javax.swing.JButton();
@@ -128,6 +129,8 @@ public class CASUALJFrame extends javax.swing.JFrame  {
         StatusAnimationLabel = new javax.swing.JLabel();
         StatusLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        ProgressArea = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         MenuItemOpenScript = new javax.swing.JMenuItem();
@@ -155,26 +158,17 @@ public class CASUALJFrame extends javax.swing.JFrame  {
             }
         });
 
-        jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("Important Information"));
-
-        ProgressArea.setColumns(20);
-        ProgressArea.setLineWrap(true);
-        ProgressArea.setRows(5);
-        ProgressArea.setText("<html>\n");
-        ProgressArea.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(ProgressArea);
-
         WindowBanner.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
         WindowBanner.setText("NARZ or picture of some sort");
 
         ComboBoxScriptSelector.setEnabled(false);
         ComboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 ComboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         ComboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
@@ -211,12 +205,12 @@ public class CASUALJFrame extends javax.swing.JFrame  {
                 .addContainerGap()
                 .addComponent(StatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                .addComponent(ProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(StatusAnimationLabel)
                 .addGap(6, 6, 6))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jSeparator1)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -224,13 +218,20 @@ public class CASUALJFrame extends javax.swing.JFrame  {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(StatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(StatusAnimationLabel)
-                        .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(StatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(StatusAnimationLabel)
+                            .addGap(4, 4, 4)))
+                    .addComponent(ProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
+
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Abyssinica SIL", 0, 12))); // NOI18N
+
+        ProgressArea.setText("<html><a href=\"http://www.w3schools.com\">Visit W3Schools.com!</a>");
+        jScrollPane3.setViewportView(ProgressArea);
 
         jMenu1.setText("File");
 
@@ -295,15 +296,15 @@ public class CASUALJFrame extends javax.swing.JFrame  {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(WindowBanner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(WindowBanner, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ComboBoxScriptSelector, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ComboBoxScriptSelector, javax.swing.GroupLayout.Alignment.LEADING, 0, 511, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(StartButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(StartButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(DonateButton)))
+                                .addComponent(DonateButton))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -311,7 +312,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(WindowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ComboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -498,18 +499,19 @@ public class CASUALJFrame extends javax.swing.JFrame  {
     private javax.swing.JMenuItem MenuItemOpenScript;
     private javax.swing.JMenuItem MenuItemShowAboutBox;
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
-    private javax.swing.JTextArea ProgressArea;
+    public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JProgressBar ProgressBar;
     private javax.swing.JButton StartButton;
     private javax.swing.JLabel StatusAnimationLabel;
     private javax.swing.JLabel StatusLabel;
     private javax.swing.JLabel WindowBanner;
+    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
 

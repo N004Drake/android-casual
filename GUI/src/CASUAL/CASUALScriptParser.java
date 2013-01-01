@@ -38,6 +38,7 @@ public class CASUALScriptParser {
     int CurrentLine;
     String ScriptTempFolder = "";
     String ScriptName = "";
+ 
     /*
      * Executes a selected script as a resource reports to Log class.
      */
@@ -105,7 +106,9 @@ public class CASUALScriptParser {
             ScriptContinue=false;
             
             Line=Line.replace("$HALT","");
+            Log.level3("HALT RECEIVED");
             Line = removeLeadingSpaces(Line);
+            Log.level3("Finishing remaining commands:" + Line);
             
             
             //TODO: add end LED notification here
@@ -138,7 +141,10 @@ public class CASUALScriptParser {
             String Event[]=Line.split(",");
             try {
               Statics.ActionEvents.add(Event[0]);
+              Log.level3("***NEW EVENT ADDED***");
+              Log.level3("ON EVENT: "+ Event[0]);
               Statics.ReactionEvents.add(Event[1]);
+              Log.level3("PERFORM ACTION: "+ Event[1]);
             } catch (Exception e) {
                                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
 
@@ -194,6 +200,7 @@ public class CASUALScriptParser {
         } else if (Line.startsWith("$MAKEDIR")){
             Line=Line.replaceFirst("$MAKEDIR","");
             Line=removeLeadingSpaces(Line);
+            Log.level3("Creating Folder: " +Line);
             new File(Line).mkdirs();
             return;
         
@@ -201,6 +208,7 @@ public class CASUALScriptParser {
         } else if (Line.startsWith("$CLEARON")){
             Statics.ActionEvents=new ArrayList();
             Statics.ReactionEvents=new ArrayList();
+            Log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             
             
 //$USERNOTIFICATION will stop processing and force the user to 
@@ -213,6 +221,7 @@ public class CASUALScriptParser {
             Line = removeLeadingSpaces(Line);
             if (Line.contains(",")) {
                 String[] Message = Line.split(",");
+                Log.level3("Displaying Notification--" + Message[1]);
                 JOptionPane.showMessageDialog(Statics.GUI,
                         Message[1],
                         Message[0],

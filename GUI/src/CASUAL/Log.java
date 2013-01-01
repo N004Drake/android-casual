@@ -23,6 +23,8 @@ package CASUAL;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -50,12 +52,17 @@ public class Log{
             if (!"".equals(data)){ 
                 if (! "\n".equals(data)){
                     try{
+                    try {
+                        Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
+                        try {
+                            Statics.ProgressPane.setCaretPosition(Statics.ProgressPane.getText().length()-100);
+                        } catch ( java.lang.IllegalArgumentException x ){
+
+                        }
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                         
-                        
-                        Statics.ProgressArea.append("\n"+data);
-                        Statics.ProgressArea.setCaretPosition(
-                                Statics.ProgressArea.getDocument()
-                                .getLength());
 
                     }catch (NullPointerException e){
 
@@ -64,7 +71,7 @@ public class Log{
                             Statics.PreProgress=Statics.PreProgress.replaceFirst("\n", "");
                         }
                     }
-
+                    
                 }
             }
         }
@@ -146,8 +153,11 @@ public class Log{
        
         public void progress(String data) {
             try {
-                Statics.ProgressArea.append(data);
-                Statics.ProgressArea.setCaretPosition(Statics.ProgressArea.getDocument().getLength());
+            try {
+                Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 
             } catch (NullPointerException e){
                 level0(data + e.toString());
@@ -156,23 +166,21 @@ public class Log{
         }
         public void LiveUpdate(String data){
             System.out.println(data);
-            Statics.ProgressArea.append(data);
-            Statics.ProgressArea.setCaretPosition(Statics.ProgressArea.getDocument().getLength());
+        try {
+            Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         }
         public void beginLine(){
-            try {
-                int start=Statics.ProgressArea.getLineStartOffset
-                        (Statics.ProgressArea.getLineCount()-1);
-                int end = Statics.ProgressArea.getText().length();
-                
-                Statics.ProgressArea.replaceRange("", start, end);
+           /* try {
                 
                 int x=1;
                 System.out.print(x);
             }
-                catch (BadLocationException ex) {
-            }
+                //catch (BadLocationException ex) {
+            }*/
         }
         
 }

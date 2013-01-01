@@ -176,7 +176,6 @@ public class Shell implements Runnable {
 
     public void liveShellCommand(String[] params) {
 
-        boolean LinkLaunched = false;
         try {
             Process process = new ProcessBuilder(params).start();
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
