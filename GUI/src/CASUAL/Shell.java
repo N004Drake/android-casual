@@ -78,7 +78,7 @@ public class Shell implements Runnable {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
-            String[] SendCommand;
+            log.level3("###Elevating Command: " +Command+ " ###");
             if (message==null){
                 Result=Shell.sendShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile});
             } else {
@@ -130,16 +130,16 @@ public class Shell implements Runnable {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
             while ((line = STDERR.readLine()) != null) {
-                AllText = AllText + "\n" + line;
+                AllText = AllText + line;
             }
             while ((line = STDOUT.readLine()) != null) {
-                AllText = AllText + "\n" + line;
+                AllText = AllText +  line;
                 while ((line = STDERR.readLine()) != null) {
-                    AllText = AllText + "\n" + line;
+                    AllText = AllText + line;
                 }
             }
             //log.level0(cmd[0]+"\":"+AllText);
-            return AllText;
+            return AllText + "\n";
         } catch (IOException ex) {
             log.level2("Problem while executing" + arrayToString(cmd)
                     + " in Shell.sendShellCommand() Received " + AllText);
@@ -149,7 +149,7 @@ public class Shell implements Runnable {
     }
 
     public String silentShellCommand(String[] cmd) {
-
+        log.level3("\n###executing silent command: " + cmd[0] + "###");
         String AllText = "";
         try {
             String line;
@@ -188,7 +188,7 @@ public class Shell implements Runnable {
     }
 
     public void liveShellCommand(String[] params) {
-
+        log.level3("\n###executing real-time command: " + cmd[0] + "###");
         try {
             Process process = new ProcessBuilder(params).start();
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -234,7 +234,7 @@ public class Shell implements Runnable {
 
     public void liveBackgroundShellCommand() {
 
-
+        log.level3("\n###executing real-time background command: " + cmd[0] + "###");
         Runnable r = new Runnable() {
 
             public void run() {
@@ -284,6 +284,7 @@ public class Shell implements Runnable {
                 boolean LinkLaunched = false;
                 try {
                     String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);
+                    log.level3("\n###executing silent background command: " + params[0] + "###");
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -299,7 +300,7 @@ public class Shell implements Runnable {
                         }
                         CharRead = Character.toString((char) c);
                         LineRead = LineRead + CharRead;
-                        log.level3(CharRead);
+                        //log.level3(CharRead);
                         LogData=LogData+CharRead.toString();
                     }
                     while ((LineRead = STDERR.readLine()) != null) {
