@@ -262,7 +262,49 @@ public class Shell implements Runnable {
         Thread t = new Thread(r);
         t.start();
     }
+ public void silentBackgroundShellCommand() {
 
+
+        Runnable r = new Runnable() {
+
+            public void run() {
+                boolean LinkLaunched = false;
+                try {
+                    String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);
+                    Process process = new ProcessBuilder(params).start();
+                    BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    String LineRead = null;
+                    String CharRead = null;
+                    String LogData="";
+                    boolean ResetLine = false;
+                    int c;
+                    while ((c = STDOUT.read()) > -1) {
+                        if (ResetLine) {
+                            log.beginLine();
+                            ResetLine = !ResetLine;
+                        }
+                        CharRead = Character.toString((char) c);
+                        LineRead = LineRead + CharRead;
+                        log.level3(CharRead);
+                        LogData=LogData+CharRead.toString();
+                    }
+                    while ((LineRead = STDERR.readLine()) != null) {
+                        log.level3(LineRead);
+                    }
+                    new Log().level3(LogData);
+
+                } catch (IOException ex) {
+                    String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();
+                    log.level2("Problem while executing" + ArrayList
+                            + " in Shell.liveShellCommand()");
+                    Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        Thread t = new Thread(r);
+        t.start();
+    }
     public void run() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
