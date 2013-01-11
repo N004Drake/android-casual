@@ -179,6 +179,14 @@ Log.level3("OMFGWOOT");
 
         StartButton.setText("Do It!");
         StartButton.setEnabled(false);
+        StartButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                StartButtonMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                StartButtonMouseExited(evt);
+            }
+        });
         StartButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 StartButtonActionPerformed(evt);
@@ -453,6 +461,23 @@ Log.level3("OMFGWOOT");
          new Shell().sendShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
 
     }//GEN-LAST:event_formWindowClosing
+
+    boolean buttonEnableStage=false;
+    private void StartButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StartButtonMouseClicked
+       if ( buttonEnableStage ){
+           StartButton.setEnabled(buttonEnableStage);
+           this.StartButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+       }
+       if (! StartButton.isEnabled()) {
+           StartButton.setText("Click again to enable this button");
+           buttonEnableStage=true;
+       }
+    }//GEN-LAST:event_StartButtonMouseClicked
+
+    private void StartButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StartButtonMouseExited
+        this.StartButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+        buttonEnableStage=false;
+    }//GEN-LAST:event_StartButtonMouseExited
     private void comboBoxUpdate(){
         Log.level2("From Resource: " + Statics.TargetScriptIsResource);
         Log.level1("--" + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
