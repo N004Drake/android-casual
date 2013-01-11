@@ -135,7 +135,9 @@ public class Statics {
     final public static String ADBini=CASUALSCRIPT+"adb_usb.ini";
     final public static String FilesystemAdbIniLocationLinuxMac=System.getProperty("user.home")+Slash+".android"+Slash+"adb_usb.ini";
     final public static String FilesystemAdbIniLocationWindows=System.getProperty("user.home")+Slash+".android"+Slash+"adb_usb.ini";
-   
+    final private static String fastbootWindows="/CASUAL/resources/fastboot/fastbootWin.exe";
+    final private static String fastbootLinux="/CASUAL/resources/fastboot/fastbootLinux";
+    final private static String fastbootMac="/CASUAL/resources/fastboot/fastbootLinux";
 
     /*Project properties*/
     public static String DeveloperName;
@@ -193,6 +195,24 @@ StyleConstants.setForeground(keyWord, Color.RED);
 StyleConstants.setBackground(keyWord, Color.YELLOW);
 StyleConstants.setBold(keyWord, true);
     }
+    
+
+static boolean isFastbootDeployed=false;
+public static String fastbootResource="";
+public static String fastbootDeployed=TempFolder+"fastboot";
+public static void checkAndDeployFastboot(){
+    if (! isFastbootDeployed){
+            if (isLinux()) fastbootResource=fastbootLinux;
+            if (isWindows()) fastbootResource=fastbootWindows;
+            if (isMac()) fastbootResource=fastbootMac;
+            Log.level2("Deploying Fastboot from "+fastbootResource + " to " + fastbootDeployed);
+            new FileOperations().copyFromResourceToFile(fastbootResource, fastbootDeployed);    
+            if ( isLinux() || isMac() ) new FileOperations().setExecutableBit(fastbootDeployed);
+            isFastbootDeployed=true;
+        }
+    }
+  
+    
 }
     
 

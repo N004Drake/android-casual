@@ -288,9 +288,19 @@ public class CASUALScriptParser {
             //TODO Verify this
             doShellCommand(Message[2], "$USERINPUT", InputBoxText);
             return;
+// if Fastboot, Send to fastboot shell command
+        } else if (Line.startsWith("$FASTBOOT")) {
+            Line = Line.replace("$FASTBOOT", "");
+            Line = removeLeadingSpaces(Line);            
+            Statics.checkAndDeployFastboot();
+            doFastbootShellCommand(Line, null, null);
+            // if Fastboot, Send to fastboot shell command
+        } else if (Line.startsWith("$ADB")) {
+            Line = Line.replace("$ADB", "");
+            Line = removeLeadingSpaces(Line);            
+            doShellCommand(Line, null, null);
 // if no prefix, then send command directly to ADB.
         } else {
-            
             doShellCommand(Line, null, null);
         }
         //final line output for debugging purposes
@@ -425,7 +435,23 @@ public class CASUALScriptParser {
             }
             Shell.liveShellCommand(StringCommand);
     }
-
+    
+    
+    private void doFastbootShellCommand(String Line, String ReplaceThis, String WithThis) {
+            Line=this.removeLeadingSpaces(Line);
+        
+            Shell Shell = new Shell();
+            ArrayList ShellCommand=new ArrayList();
+            ShellCommand.add(Statics.fastbootDeployed);
+            ShellCommand.addAll(this.parseCommandLine(Line));
+            String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
+            if (ReplaceThis != null){
+                for ( int i=0; i<StringCommand.length; i++){
+                StringCommand[i]=StringCommand[i].replace(ReplaceThis, WithThis);
+                }
+            }
+            Shell.liveShellCommand(StringCommand);
+    }
     private String returnSafeCharacters(String Str) {
         Str=Str.replace("\\", "\\\\");
         Str=Str.replace("\"", "\\\"");
