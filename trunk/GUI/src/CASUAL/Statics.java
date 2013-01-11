@@ -137,7 +137,7 @@ public class Statics {
     final public static String FilesystemAdbIniLocationWindows=System.getProperty("user.home")+Slash+".android"+Slash+"adb_usb.ini";
     final private static String fastbootWindows="/CASUAL/resources/fastboot/fastbootWin.exe";
     final private static String fastbootLinux="/CASUAL/resources/fastboot/fastbootLinux";
-    final private static String fastbootMac="/CASUAL/resources/fastboot/fastbootLinux";
+    final private static String fastbootMac="/CASUAL/resources/fastboot/fastbootMac";
 
     /*Project properties*/
     public static String DeveloperName;
