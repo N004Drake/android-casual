@@ -40,8 +40,15 @@ public class Shell implements Runnable {
     //for external access
     Log log = new Log();
     //Send a command to the shell
-
+    public String elevateSimpleCommandWithMessage(String[] cmd, String message) {
+        return elevateSimpleCommands(cmd,message);
+    }
     public String elevateSimpleCommand(String[] cmd) {
+        return elevateSimpleCommands(cmd,null);
+        
+    }
+    
+    private String elevateSimpleCommands(String[] cmd, String message) {
         String NewCmd = "";
         FileOperations FileOperations = new FileOperations();
         Shell Shell = new Shell();
@@ -62,16 +69,22 @@ public class Shell implements Runnable {
                 TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", TO.OK_OPTION, TO.ERROR_MESSAGE, null, null);
             }
 
-
+            
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
+            FileOperations.deleteFile(ScriptFile);
             try {
                 FileOperations.writeToFile(Command, ScriptFile);
             } catch (IOException ex) {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
-            String[] SendCommand = {"gksudo", "-k", "-D", "CASUAL", ScriptFile};
-            Result = Shell.sendShellCommand(SendCommand);
+            String[] SendCommand;
+            if (message==null){
+                Result=Shell.sendShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile});
+            } else {
+                Result=Shell.sendShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile});
+            }
+           
         } else if (Statics.isMac()) {
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
             try {

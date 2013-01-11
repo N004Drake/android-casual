@@ -98,7 +98,7 @@ public class CASUALScriptParser {
      */
     private void commandHandler(String Line) {
 
-
+        Log.level3("");
         //Remove leading spaces
         Line = removeLeadingSpaces(Line);
 //$HALT will execute any commands after the $HALT command and stop the script.
@@ -293,7 +293,11 @@ public class CASUALScriptParser {
             Line = Line.replace("$FASTBOOT", "");
             Line = removeLeadingSpaces(Line);            
             Statics.checkAndDeployFastboot();
-            doFastbootShellCommand(Line, null, null);
+            if (Statics.isLinux()) {
+                doElevatedFastbootShellCommand(Line);
+            }
+            doFastbootShellCommand(Line);
+            
             // if Fastboot, Send to fastboot shell command
         } else if (Line.startsWith("$ADB")) {
             Line = Line.replace("$ADB", "");
@@ -437,7 +441,7 @@ public class CASUALScriptParser {
     }
     
     
-    private void doFastbootShellCommand(String Line, String ReplaceThis, String WithThis) {
+    private void doFastbootShellCommand(String Line) {
             Line=this.removeLeadingSpaces(Line);
         
             Shell Shell = new Shell();
@@ -445,13 +449,20 @@ public class CASUALScriptParser {
             ShellCommand.add(Statics.fastbootDeployed);
             ShellCommand.addAll(this.parseCommandLine(Line));
             String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
-            if (ReplaceThis != null){
-                for ( int i=0; i<StringCommand.length; i++){
-                StringCommand[i]=StringCommand[i].replace(ReplaceThis, WithThis);
-                }
-            }
             Shell.liveShellCommand(StringCommand);
     }
+    
+    private void doElevatedFastbootShellCommand(String Line) {
+            Line=this.removeLeadingSpaces(Line);
+        
+            Shell Shell = new Shell();
+            ArrayList ShellCommand=new ArrayList();
+            ShellCommand.add(Statics.fastbootDeployed);
+            ShellCommand.addAll(this.parseCommandLine(Line));
+            String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
+            Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
+    }
+    
     private String returnSafeCharacters(String Str) {
         Str=Str.replace("\\", "\\\\");
         Str=Str.replace("\"", "\\\"");
