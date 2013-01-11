@@ -678,6 +678,15 @@ class RunableDeployADB implements Runnable{
             FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
             FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
             FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
+            Statics.LiveSendCommand.add(Statics.AdbDeployed);
+            Statics.LiveSendCommand.add("get-state");
+            new Shell().silentBackgroundShellCommand();
+            try {
+                System.out.println("sleeping");
+                Thread.sleep(250);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(RunableDeployADB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             Log.level0("Your system is not supported");
         }
@@ -687,6 +696,10 @@ class RunableDeployADB implements Runnable{
         
         String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
+        
+            Statics.LiveSendCommand.add(Statics.AdbDeployed);
+            Statics.LiveSendCommand.add("get-state");
+            new Shell().silentBackgroundShellCommand();
         String DeviceList = Shell.sendShellCommand(devicesCmd);
         if (DeviceList.contains("ELFCLASS64")&& DeviceList.contains("wrong ELF")){
                 JOptionPane.showMessageDialog(Statics.GUI,
