@@ -188,9 +188,9 @@ public class Shell implements Runnable {
     }
 
     public void liveShellCommand(String[] params) {
-        log.level3("\n###executing real-time command: " + cmd[0] + "###");
-        try {
+         try {
             Process process = new ProcessBuilder(params).start();
+            log.level3("\n###executing real-time command: " + params[0] + "###");
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             String LineRead="";
@@ -234,13 +234,14 @@ public class Shell implements Runnable {
 
     public void liveBackgroundShellCommand() {
 
-        log.level3("\n###executing real-time background command: " + cmd[0] + "###");
+
         Runnable r = new Runnable() {
 
             public void run() {
                 boolean LinkLaunched = false;
                 try {
                     String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);
+                    log.level3("\n###executing real-time background command: " + params[0] + "###");
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
