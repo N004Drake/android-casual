@@ -138,7 +138,8 @@ public class Statics {
     final private static String fastbootWindows="/CASUAL/resources/fastboot/fastbootWin.exe";
     final private static String fastbootLinux="/CASUAL/resources/fastboot/fastbootLinux";
     final private static String fastbootMac="/CASUAL/resources/fastboot/fastbootMac";
-
+    final public static String CASUALRepo="http://android-casual.googlecode.com/svn/trunk/GUI/src";
+    
     /*Project properties*/
     public static String DeveloperName;
     public static String DeveloperDonateLink;

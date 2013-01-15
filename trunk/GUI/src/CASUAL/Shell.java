@@ -149,7 +149,6 @@ public class Shell implements Runnable {
     }
 
     public String silentShellCommand(String[] cmd) {
-        log.level3("\n###executing silent command: " + cmd[0] + "###");
         String AllText = "";
         try {
             String line;
@@ -285,7 +284,6 @@ public class Shell implements Runnable {
                 boolean LinkLaunched = false;
                 try {
                     String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);
-                    log.level3("\n###executing silent background command: " + params[0] + "###");
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
