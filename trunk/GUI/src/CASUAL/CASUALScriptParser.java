@@ -300,6 +300,9 @@ public class CASUALScriptParser {
             Line = removeLeadingSpaces(Line);
             Statics.checkAndDeployFastboot();
             if (Statics.isLinux()) {
+                if (Statics.UseSound.contains("true")) {
+                    CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
+                }
                 doElevatedFastbootShellCommand(Line);
             }
             doFastbootShellCommand(Line);
