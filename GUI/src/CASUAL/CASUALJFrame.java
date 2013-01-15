@@ -336,7 +336,7 @@ Log.level3("OMFGWOOT");
     }// </editor-fold>//GEN-END:initComponents
 
     public void StartButtonActionPerformed(){
-          Log.level0("");
+        Log.level0("");
         Log.level3("Script Activated");
         Log.level3("Script known as "+ this.ComboBoxScriptSelector.getSelectedItem().toString() + " is running");
         this.busyIconTimer.start();

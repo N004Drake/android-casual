@@ -182,5 +182,17 @@ public class Log{
                 //catch (BadLocationException ex) {
             }*/
         }
+
+
+    void replaceLine(String data, int position, int length ) {
+      try {
+            Statics.ProgressDoc.remove(position, length);
+            Statics.ProgressDoc.insertString(position, data, null);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        }
+    }
         
-}
+

@@ -38,13 +38,6 @@ public class CASUALApp extends SingleFrameApplication {
      */
     @Override
     protected void startup() {
-        try {
-            new CASUALUpdates().checkOfficialRepo("dropdownvalue", "FirstLineInScript", 123);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
         System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + " Build:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber"));
  
         Statics Statics=new Statics();

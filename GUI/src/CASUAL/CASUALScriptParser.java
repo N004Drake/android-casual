@@ -21,6 +21,7 @@
 package CASUAL;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -38,42 +39,47 @@ public class CASUALScriptParser {
     int CurrentLine;
     String ScriptTempFolder = "";
     String ScriptName = "";
- 
+
     /*
      * Executes a selected script as a resource reports to Log class.
      */
-
-    public void executeSelectedScriptResource(String Script) {
-        Log.level3("Selected resource" + Script);
-        ScriptName = Script;
+    public void executeSelectedScriptResource(final String script) {
+        Log.level3("Selected resource" + script);
+        ScriptName = script;
         CountLines CountLines = new CountLines();
-        LinesInScript = CountLines.countResourceLines(Script);
+        LinesInScript = CountLines.countResourceLines(script);
         Log.level3("Lines in Script " + LinesInScript);
-        ScriptTempFolder = Statics.TempFolder + Script + Statics.Slash;
+        ScriptTempFolder = Statics.TempFolder + script + Statics.Slash;
 
-        InputStream ResourceAsStream = getClass().getResourceAsStream(Statics.ScriptLocation + Script + ".scr");
-        DataInputStream DIS = new DataInputStream(ResourceAsStream);
-        executeSelectedScript(DIS);
+
+        DataInputStream RAS = new DataInputStream(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
+        executeSelectedScript(RAS, script);
+        ;
     }
 
+    public static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
     /*
      * executes a CASUAL script from a file Reports to Log
      *
      */
-    public void executeSelectedScriptFile(String Script) {
-        Log.level3("Selected file" + Script);
+
+    public void executeSelectedScriptFile(String script) {
+        Log.level3("Selected file" + script);
         CountLines CountLines = new CountLines();
-        ScriptName = Script;
-        ScriptTempFolder = Statics.TempFolder + (new File(Script).getName()) + Statics.Slash;
-        LinesInScript = CountLines.countFileLines(Script + ".scr");
+        ScriptName = script;
+        ScriptTempFolder = Statics.TempFolder + (new File(script).getName()) + Statics.Slash;
+        LinesInScript = CountLines.countFileLines(script + ".scr");
         Log.level3("Lines in Script " + LinesInScript);
         DataInputStream DIS;
         try {
 
             FileInputStream FileAsStream;
-            FileAsStream = new FileInputStream(Script + ".scr");
+            FileAsStream = new FileInputStream(script + ".scr");
             DIS = new DataInputStream(FileAsStream);
-            executeSelectedScript(DIS);
+            executeSelectedScript(DIS, script);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -82,9 +88,9 @@ public class CASUALScriptParser {
 
     /*
      * executeOneShotCommand provides a way to insert a script line.
-     * 
+     *
      */
-    public void executeOneShotCommand (String Line){
+    public void executeOneShotCommand(String Line) {
         //$LINE is a reference to the last line received in the shell            
         if (Line.contains("$LINE")) {
             Line = Line.replace("$LINE", Statics.LastLineReceived);
@@ -102,21 +108,21 @@ public class CASUALScriptParser {
         //Remove leading spaces
         Line = removeLeadingSpaces(Line);
 //$HALT will execute any commands after the $HALT command and stop the script.
-        if (Line.startsWith("$HALT")){
-            ScriptContinue=false;
-            
-            Line=Line.replace("$HALT","");
+        if (Line.startsWith("$HALT")) {
+            ScriptContinue = false;
+
+            Line = Line.replace("$HALT", "");
             Log.level3("HALT RECEIVED");
             Line = removeLeadingSpaces(Line);
             Log.level3("Finishing remaining commands:" + Line);
-            
-            
+
+
             //TODO: add end LED notification here
-            
-            
+
+
         }
 //TODO: add "reboot" with adb reboot then send shell command "sleep5" then wait-for-device to account for windows retardedness
-        
+
 //# is a comment Disregard commented lines
         if (Line.startsWith("#")) {
             Log.level3("Ignoring commented line" + Line);
@@ -135,23 +141,23 @@ public class CASUALScriptParser {
         //,= separator
         // example $ON File Not Found, $HALT
         // example $ON Permission Denied, su -c !!
-        if (Line.startsWith("$ON")){
-            Line=Line.replace("$ON", "");
-            Line=removeLeadingSpaces(Line);
-            String Event[]=Line.split(",");
+        if (Line.startsWith("$ON")) {
+            Line = Line.replace("$ON", "");
+            Line = removeLeadingSpaces(Line);
+            String Event[] = Line.split(",");
             try {
-              Statics.ActionEvents.add(Event[0]);
-              Log.level3("***NEW EVENT ADDED***");
-              Log.level3("ON EVENT: "+ Event[0]);
-              Statics.ReactionEvents.add(Event[1]);
-              Log.level3("PERFORM ACTION: "+ Event[1]);
+                Statics.ActionEvents.add(Event[0]);
+                Log.level3("***NEW EVENT ADDED***");
+                Log.level3("ON EVENT: " + Event[0]);
+                Statics.ReactionEvents.add(Event[1]);
+                Log.level3("PERFORM ACTION: " + Event[1]);
             } catch (Exception e) {
-                               Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
 
             }
             return;
 
-        }        
+        }
 
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (Line.contains("$SLASH")) {
@@ -164,15 +170,15 @@ public class CASUALScriptParser {
             Line = Line.replace("$ZIPFILE", ScriptTempFolder);
             Log.level3("Expanded $ZIPFILE: " + Line);
         }
-        
-        if ((Line.contains("\\n")) && ((Line.startsWith("$USERNOTIFICATION") || Line.startsWith("$USERNOTIFICATION")) || Line.startsWith("$USERCANCELOPTION"))){
-            Line=Line.replace("\\n", "\n");
+
+        if ((Line.contains("\\n")) && ((Line.startsWith("$USERNOTIFICATION") || Line.startsWith("$USERNOTIFICATION")) || Line.startsWith("$USERCANCELOPTION"))) {
+            Line = Line.replace("\\n", "\n");
         }
 //$HOMEFOLDER will reference the user's home folder on the system        
         if (Line.contains("$HOMEFOLDER")) {
-           Line=Line.replace("$HOMEFOLDER", Statics.CASUALHome);
-           Log.level3("Expanded $HOMEFOLDER" + Line); 
-        }         
+            Line = Line.replace("$HOMEFOLDER", Statics.CASUALHome);
+            Log.level3("Expanded $HOMEFOLDER" + Line);
+        }
 //$ECHO command will display text in the main window
         if (Line.startsWith("$ECHO")) {
             Log.level3("Received ECHO command" + Line);
@@ -182,38 +188,38 @@ public class CASUALScriptParser {
             return;
 
 // $LISTDIR will a folder on the host machine
-        } else if (Line.startsWith("$LISTDIR")){
-            Line=Line.replace("$LISTDIR","");
-            Line=removeLeadingSpaces(Line);
-            File[] files= new File(Line).listFiles();
-            for (int i=0; i<=files.length; i++){
+        } else if (Line.startsWith("$LISTDIR")) {
+            Line = Line.replace("$LISTDIR", "");
+            Line = removeLeadingSpaces(Line);
+            File[] files = new File(Line).listFiles();
+            for (int i = 0; i <= files.length; i++) {
                 try {
-                    commandHandler("shell \"echo "+ files[i].getCanonicalPath()+"\"");
+                    commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
                 } catch (IOException ex) {
                     Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
+
             return;
-        
+
 // $MAKEDIR will make a folder
-        } else if (Line.startsWith("$MAKEDIR")){
-            Line=Line.replaceFirst("$MAKEDIR","");
-            Line=removeLeadingSpaces(Line);
-            Log.level3("Creating Folder: " +Line);
+        } else if (Line.startsWith("$MAKEDIR")) {
+            Line = Line.replaceFirst("$MAKEDIR", "");
+            Line = removeLeadingSpaces(Line);
+            Log.level3("Creating Folder: " + Line);
             new File(Line).mkdirs();
             return;
-        
+
 // $CLEARON will remove all actions/reactions
-        } else if (Line.startsWith("$CLEARON")){
-            Statics.ActionEvents=new ArrayList();
-            Statics.ReactionEvents=new ArrayList();
+        } else if (Line.startsWith("$CLEARON")) {
+            Statics.ActionEvents = new ArrayList();
+            Statics.ReactionEvents = new ArrayList();
             Log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
-            
-            
+
+
 //$USERNOTIFICATION will stop processing and force the user to 
-        // press OK to continueNotification 
-        }else if (Line.startsWith("$USERNOTIFICATION")) {
+            // press OK to continueNotification 
+        } else if (Line.startsWith("$USERNOTIFICATION")) {
             if (Statics.UseSound.contains("true")) {
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
@@ -274,16 +280,16 @@ public class CASUALScriptParser {
                 }
             }
 //$USERINPUTBOX will accept a String to be injected into ADB
-        //Any text will be injected into the $USERINPUT variable    
-        //USE: $USERINPUTBOX Title, Message, command $USERINPUT
-        } else if (Line.startsWith("$USERINPUTBOX")){
+            //Any text will be injected into the $USERINPUT variable    
+            //USE: $USERINPUTBOX Title, Message, command $USERINPUT
+        } else if (Line.startsWith("$USERINPUTBOX")) {
             CASUALAudioSystem.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             Line.replace("\\n", "\n");
-            String[] Message=Line.replace("$USERINPUTBOX", "").split(",");
-            String InputBoxText=JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
-            InputBoxText=returnSafeCharacters(InputBoxText);
-            
-            
+            String[] Message = Line.replace("$USERINPUTBOX", "").split(",");
+            String InputBoxText = JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
+            InputBoxText = returnSafeCharacters(InputBoxText);
+
+
             Log.level3(InputBoxText);
             //TODO Verify this
             doShellCommand(Message[2], "$USERINPUT", InputBoxText);
@@ -291,17 +297,17 @@ public class CASUALScriptParser {
 // if Fastboot, Send to fastboot shell command
         } else if (Line.startsWith("$FASTBOOT")) {
             Line = Line.replace("$FASTBOOT", "");
-            Line = removeLeadingSpaces(Line);            
+            Line = removeLeadingSpaces(Line);
             Statics.checkAndDeployFastboot();
             if (Statics.isLinux()) {
                 doElevatedFastbootShellCommand(Line);
             }
             doFastbootShellCommand(Line);
-            
+
             // if Fastboot, Send to fastboot shell command
         } else if (Line.startsWith("$ADB")) {
             Line = Line.replace("$ADB", "");
-            Line = removeLeadingSpaces(Line);            
+            Line = removeLeadingSpaces(Line);
             doShellCommand(Line, null, null);
 // if no prefix, then send command directly to ADB.
         } else {
@@ -310,17 +316,29 @@ public class CASUALScriptParser {
         //final line output for debugging purposes
         Log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + Line);
     }
-
     DataInputStream DATAIN;
-    private void executeSelectedScript(DataInputStream DIS) {
-        Statics.ReactionEvents=new ArrayList();
-        Statics.ActionEvents=new ArrayList();
-        ScriptContinue=true;
-        DATAIN=DIS;
+
+    private void executeSelectedScript(DataInputStream DIS, final String script) {
+        Statics.ReactionEvents = new ArrayList();
+        Statics.ActionEvents = new ArrayList();
+        ScriptContinue = true;
+        DATAIN = DIS;
         Log.level3("Executing Scripted Datastream" + DIS.toString());
         Runnable r = new Runnable() {
+
             public void run() {
                 System.out.println("CASUAL has initiated a multithreaded execution environment");
+                String CASUALIDString = convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
+                if (CASUALIDString.startsWith("#")) {
+                    try {
+                       new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, CASUALIDString.split("\n")[0]);
+                    } catch (MalformedURLException ex) {
+                        //Script not in repository
+                    } catch (IOException ex) {
+                        //Bad internet connection
+                    }
+                }
+
                 CurrentLine = 1;
                 Statics.ProgressBar.setMaximum(LinesInScript);
                 Log.level3("Reading datastream" + DATAIN);
@@ -330,10 +348,10 @@ public class CASUALScriptParser {
         Thread ExecuteScript = new Thread(r);
         ExecuteScript.start();
     }
-    
-    private String[] convertArrayListToStringArray(ArrayList List){
-        String[] StringArray=new String[List.size()] ;
-        for (int i=0; i <= List.size()-1; i++){
+
+    private String[] convertArrayListToStringArray(ArrayList List) {
+        String[] StringArray = new String[List.size()];
+        for (int i = 0; i <= List.size() - 1; i++) {
             StringArray[i] = List.get(i).toString();
         }
         return StringArray;
@@ -371,102 +389,100 @@ public class CASUALScriptParser {
         ArrayList List = new ArrayList();
         Boolean SingleQuoteOn = false;
         Boolean DoubleQuoteOn = false;
-        String Word ="";
-        char LastChar=0;
+        String Word = "";
+        char LastChar = 0;
         char[] TestChars = {
             "\'".toCharArray()[0], //'
             "\"".toCharArray()[0], //"
-            " ".toCharArray()[0],  // 
+            " ".toCharArray()[0], // 
             "\\".toCharArray()[0], //\
-            
         };
         char[] CharLine = Line.toCharArray();
         for (int I = 0; I < CharLine.length; I++) {
             //If we are not double quoted, act on singe quotes
-            if (!DoubleQuoteOn && CharLine[I] == TestChars[0]&& LastChar != TestChars[3]) {
+            if (!DoubleQuoteOn && CharLine[I] == TestChars[0] && LastChar != TestChars[3]) {
                 //If we are single quoted and we see the last ' character;
-                if (SingleQuoteOn){
-                    SingleQuoteOn=false;  
-                //start single quote
-                } else if (! SingleQuoteOn){
-                    SingleQuoteOn=true;
-                } 
-            //if we are not single quoted, act on double quotes
-            } else if (!SingleQuoteOn && CharLine[I] == TestChars[1]&& LastChar != TestChars[3]) {
+                if (SingleQuoteOn) {
+                    SingleQuoteOn = false;
+                    //start single quote
+                } else if (!SingleQuoteOn) {
+                    SingleQuoteOn = true;
+                }
+                //if we are not single quoted, act on double quotes
+            } else if (!SingleQuoteOn && CharLine[I] == TestChars[1] && LastChar != TestChars[3]) {
                 //if we are doulbe quoted already and see the last character;
                 if (DoubleQuoteOn) {
                     //turn doublequote off
-                    DoubleQuoteOn=false;
-                //start doublequote
+                    DoubleQuoteOn = false;
+                    //start doublequote
                 } else {
-                    DoubleQuoteOn=true;
+                    DoubleQuoteOn = true;
                 }
-            //if space is detected and not single or double quoted
-            }else if (!SingleQuoteOn && !DoubleQuoteOn && CharLine[I] == TestChars[2] && LastChar != TestChars[3]) {
+                //if space is detected and not single or double quoted
+            } else if (!SingleQuoteOn && !DoubleQuoteOn && CharLine[I] == TestChars[2] && LastChar != TestChars[3]) {
                 List.add(Word);
-                Word="";
-            //Otherwise add it to the string
+                Word = "";
+                //Otherwise add it to the string
             } else {
-                Word=Word + String.valueOf(CharLine[I]);
+                Word = Word + String.valueOf(CharLine[I]);
             }
             //Annotate last char for literal character checks "\".
-            LastChar=CharLine[I];
+            LastChar = CharLine[I];
         }
         //add the last word to the list if it's not blank.
-        if (!Word.equals("")){ 
+        if (!Word.equals("")) {
             List.add(Word);
         }
         return List;
     }
 
     /*
-     * doShellCommand is the point where the shell is activated
-     * ReplaceThis WithThis allows for a last-minute insertion of commands
-     * by default ReplaceThis should be null.
+     * doShellCommand is the point where the shell is activated ReplaceThis
+     * WithThis allows for a last-minute insertion of commands by default
+     * ReplaceThis should be null.
      */
     private void doShellCommand(String Line, String ReplaceThis, String WithThis) {
-            Line=this.removeLeadingSpaces(Line);
-        
-            Shell Shell = new Shell();
-            ArrayList ShellCommand=new ArrayList();
-            ShellCommand.add(Statics.AdbDeployed);
-            ShellCommand.addAll(this.parseCommandLine(Line));
-            String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
-            if (ReplaceThis != null){
-                for ( int i=0; i<StringCommand.length; i++){
-                StringCommand[i]=StringCommand[i].replace(ReplaceThis, WithThis);
-                }
+        Line = this.removeLeadingSpaces(Line);
+
+        Shell Shell = new Shell();
+        ArrayList ShellCommand = new ArrayList();
+        ShellCommand.add(Statics.AdbDeployed);
+        ShellCommand.addAll(this.parseCommandLine(Line));
+        String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
+        if (ReplaceThis != null) {
+            for (int i = 0; i < StringCommand.length; i++) {
+                StringCommand[i] = StringCommand[i].replace(ReplaceThis, WithThis);
             }
-            Shell.liveShellCommand(StringCommand);
+        }
+        Shell.liveShellCommand(StringCommand);
     }
-    
-    
+
     private void doFastbootShellCommand(String Line) {
-            Line=this.removeLeadingSpaces(Line);
-        
-            Shell Shell = new Shell();
-            ArrayList ShellCommand=new ArrayList();
-            ShellCommand.add(Statics.fastbootDeployed);
-            ShellCommand.addAll(this.parseCommandLine(Line));
-            String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
-            Shell.liveShellCommand(StringCommand);
+        Line = this.removeLeadingSpaces(Line);
+
+        Shell Shell = new Shell();
+        ArrayList ShellCommand = new ArrayList();
+        ShellCommand.add(Statics.fastbootDeployed);
+        ShellCommand.addAll(this.parseCommandLine(Line));
+        String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
+        Shell.liveShellCommand(StringCommand);
     }
-    
+
     private void doElevatedFastbootShellCommand(String Line) {
-            Line=this.removeLeadingSpaces(Line);
-        
-            Shell Shell = new Shell();
-            ArrayList ShellCommand=new ArrayList();
-            ShellCommand.add(Statics.fastbootDeployed);
-            ShellCommand.addAll(this.parseCommandLine(Line));
-            String StringCommand[]= (convertArrayListToStringArray(ShellCommand));
-            Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
+        Line = this.removeLeadingSpaces(Line);
+
+        Shell Shell = new Shell();
+        ArrayList ShellCommand = new ArrayList();
+        ShellCommand.add(Statics.fastbootDeployed);
+        ShellCommand.addAll(this.parseCommandLine(Line));
+        String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
+        Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
     }
-    
+
     private String returnSafeCharacters(String Str) {
-        Str=Str.replace("\\", "\\\\");
-        Str=Str.replace("\"", "\\\"");
-        Str=Str.replace("\'", "\\\'");
+        Str = Str.replace("\\", "\\\\");
+        Str = Str.replace("\"", "\\\"");
+        Str = Str.replace("\'", "\\\'");
 
         return Str;
     }
