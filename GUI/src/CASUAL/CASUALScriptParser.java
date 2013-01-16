@@ -66,23 +66,27 @@ public class CASUALScriptParser {
      *
      */
 
-    public void executeSelectedScriptFile(String script) {
-        Log.level3("Selected file" + script);
-        CountLines CountLines = new CountLines();
+    public DataInputStream getDataStreamFromFile(String script){
+       Log.level3("Selected file" + script);
+        
         ScriptName = script;
         ScriptTempFolder = Statics.TempFolder + (new File(script).getName()) + Statics.Slash;
-        LinesInScript = CountLines.countFileLines(script + ".scr");
+        LinesInScript = new CountLines().countFileLines(script + ".scr");
         Log.level3("Lines in Script " + LinesInScript);
-        DataInputStream DIS;
+        
         try {
-
-            FileInputStream FileAsStream;
-            FileAsStream = new FileInputStream(script + ".scr");
-            DIS = new DataInputStream(FileAsStream);
-            executeSelectedScript(DIS, script);
+            return new DataInputStream(new FileInputStream(script + ".scr"));
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            Log.level0("An unknown error has happened while trying to getDataStreamFromFile! "+ script +"  Please report this");
+            return null;
         }
+
+    }
+        
+    public void executeSelectedScriptFile(String script) {
+        executeSelectedScript(getDataStreamFromFile(script), script);
 
     }
 
@@ -330,15 +334,50 @@ public class CASUALScriptParser {
         Runnable r = new Runnable() {
 
             public void run() {
-                System.out.println("CASUAL has initiated a multithreaded execution environment");
+                int updateStatus=0;
+                Log.level3("CASUAL has initiated a multithreaded execution environment");
                 String CASUALIDString = convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
                 if (CASUALIDString.startsWith("#")) {
                     try {
-                       new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, CASUALIDString.split("\n")[0]);
+                        
+                        
+                       updateStatus= new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, CASUALIDString.split("\n")[0]);
+                           /*
+     * checks for updates returns: 0=no updates found 1=random error
+     * 2=Script Update Required 3=CASUAL update required- cannot
+     * continue. 4=download failed 
+     * **/
+                       switch (updateStatus){
+                           //no updates found
+                           case 0: //do nothing
+                               break;
+                           //random error with URL formatting
+                           case 1: //do nothing
+                               break;
+                           //script update performed
+                           case 2: 
+                               Statics.setScriptLocationOnDisk(script, Statics.TempFolder+"SCRIPTS"+Statics.Slash+script);
+                               updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
+                               break;
+                           //CASUAL must be update    
+                           case 3: Log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
+                               return;
+                           //download error
+                           case 4: Log.level0("There was a problem downloading the script.  Please check your internet connection and try again.");
+                               //HALT script
+                               return;
+                           default: //unknown error do nothing
+                               break;
+                       
+                       
+                       
+                    }
                     } catch (MalformedURLException ex) {
+                        Log.level0("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script +" Please report this.");
                         //Script not in repository
                     } catch (IOException ex) {
-                        //Bad internet connection
+                        Log.level0("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
+
                     }
                 }
 
@@ -346,6 +385,10 @@ public class CASUALScriptParser {
                 Statics.ProgressBar.setMaximum(LinesInScript);
                 Log.level3("Reading datastream" + DATAIN);
                 doRead(DATAIN);
+            }
+
+            private void updateDataStream(String script) {
+               DATAIN=getDataStreamFromFile(script);
             }
         };
         Thread ExecuteScript = new Thread(r);

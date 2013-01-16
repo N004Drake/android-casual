@@ -56,7 +56,7 @@ public class Statics {
     static Shell shellCommand;
     static Log Log = new Log();    
     public static ArrayList LiveSendCommand=new ArrayList();
-    public static PrintWriter OutFile;
+    public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated=false; //used by log class
     public static String[] DeviceTracker;
     public static String LastLineReceived;
@@ -69,7 +69,10 @@ public class Statics {
     public static JTextPane ProgressPane; //used by log to update Progress
     public static StyledDocument ProgressDoc;
     
+    
 
+    
+    
     
     
     public static String PreProgress="";
@@ -197,7 +200,26 @@ StyleConstants.setBackground(keyWord, Color.YELLOW);
 StyleConstants.setBold(keyWord, true);
     }
     
-
+    
+     
+public static String[] scriptNames={""};
+public static String[] scriptLocations={""};
+public static String getScriptLocationOnDisk(String name){
+    for (int n=0; n<scriptNames.length; n++){
+        if (name.equals(scriptNames[n])) {
+            return scriptLocations[n];
+        }
+    }
+    return "";
+}
+public static void setScriptLocationOnDisk(String name, String location){
+    for (int n=0; n<scriptNames.length; n++){
+        if (name.equals(scriptNames[n])) {
+            scriptLocations[n]=location;
+        }
+    }
+    
+}    
 static boolean isFastbootDeployed=false;
 public static String fastbootResource="";
 public static String fastbootDeployed=TempFolder+"fastboot";

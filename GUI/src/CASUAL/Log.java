@@ -55,7 +55,7 @@ public class Log{
                     try {
                         Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
                         try {
-                            Statics.ProgressPane.setCaretPosition(Statics.ProgressPane.getText().length()-100);
+                            Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
                         } catch ( java.lang.IllegalArgumentException x ){
 
                         }
@@ -155,6 +155,7 @@ public class Log{
             try {
             try {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
+                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
             } catch (BadLocationException ex) {
                 Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -168,6 +169,7 @@ public class Log{
             System.out.println(data);
         try {
             Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
+            Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
         } catch (BadLocationException ex) {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -188,6 +190,7 @@ public class Log{
       try {
             Statics.ProgressDoc.remove(position, length);
             Statics.ProgressDoc.insertString(position, data, null);
+            Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
         } catch (BadLocationException ex) {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
+import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -239,6 +240,7 @@ Log.level3("OMFGWOOT");
         jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Abyssinica SIL", 0, 12))); // NOI18N
 
         ProgressArea.setText("<html><a href=\"http://www.w3schools.com\">Visit W3Schools.com!</a>");
+        ProgressArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jScrollPane3.setViewportView(ProgressArea);
 
         jMenu1.setText("File");
@@ -342,6 +344,11 @@ Log.level3("OMFGWOOT");
         this.busyIconTimer.start();
         Statics.DeviceMonitor.DeviceCheck.stop();
         enableControls(false);
+        String diskLocation=Statics.getScriptLocationOnDisk(ComboBoxValue);
+        if (!diskLocation.equals("")){
+            Statics.TargetScriptIsResource=true;
+            NonResourceFileName=Statics.getScriptLocationOnDisk(this.ComboBoxScriptSelector.getSelectedItem().toString());
+        }
         if (Statics.TargetScriptIsResource) {
             CASUALScriptParser ScriptParser = new CASUALScriptParser();
             ScriptParser.executeSelectedScriptResource(ComboBoxScriptSelector.getSelectedItem().toString());
@@ -350,7 +357,7 @@ Log.level3("OMFGWOOT");
             ScriptParser.executeSelectedScriptFile(NonResourceFileName);
         }
         this.busyIconTimer.stop();
-        enableControls(true);
+        //enableControls(true);
         Statics.DeviceMonitor.DeviceCheck.start();
     }
     private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
@@ -468,7 +475,7 @@ Log.level3("OMFGWOOT");
            StartButton.setEnabled(buttonEnableStage);
            this.StartButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
        }
-       if (! StartButton.isEnabled()) {
+       if (! StartButton.isEnabled() && !Statics.MasterLock) {
            StartButton.setText("Click again to enable this button");
            buttonEnableStage=true;
        }
@@ -597,7 +604,7 @@ Log.level3("OMFGWOOT");
         
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
-
+        ArrayList list=new ArrayList();
         if (Src != null) {
             Statics.setMasterLock(true);
             URL jar = Src.getLocation();
@@ -608,15 +615,24 @@ Log.level3("OMFGWOOT");
                 
                 String EntryName = ZEntry.getName();
                 if (EntryName.endsWith(".scr")) {
-                    EntryName=EntryName.replaceFirst("SCRIPTS/", "");
-                    Log.level3("Found: " + EntryName.replace(".scr", ""));
-                    ComboBoxScriptSelector.addItem(EntryName.replace(".scr", ""));
-                    Count++;
+                    list.add(EntryName);
                 }
             }
+            Statics.scriptLocations=new String[list.size()];
+            Statics.scriptNames=new String[list.size()];
+            for (int n=0; n<list.size();n++){
+                String EntryName= ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr","");
+                Log.level3("Found: " + EntryName);
+                Statics.scriptNames[n]=EntryName;
+                ComboBoxScriptSelector.addItem(EntryName);
+                Count++;
+            }
+            
             if (Count == 0) {
                 Log.level0("No Scripts found. Using Test Script.");
                 ComboBoxScriptSelector.addItem("Test Script");
+                Statics.scriptLocations=new String[]{""};
+                Statics.scriptNames=new String[]{"Test Script"};
             }
             Statics.MasterLock=false;
 
