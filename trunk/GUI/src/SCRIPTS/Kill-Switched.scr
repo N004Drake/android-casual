@@ -1,0 +1,3 @@
+#CASUAL160 , R20, ID TEH ROXOR, URL http://www.google.com, Message You should see this message because its important --AdamOutler
+shell "echo 'testing CASUAL'"
+reboot

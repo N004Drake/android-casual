@@ -71,7 +71,7 @@ public class CASUALUpdates {
                     URL url = this.stringToFormattedURL(Statics.CASUALRepo + script);
                     String scriptname = script.replaceFirst("/SCRIPTS/", Statics.Slash+"SCRIPTS"+Statics.Slash);
                     new FileOperations().makeFolder(Statics.TempFolder+Statics.Slash+"SCRIPTS"+Statics.Slash);
-                    
+                    Log.level0("Downloading Updates");
                     //TODO set /tmp/newfile as a real file
                     downloadFileFromInternet(new URL(url + ".zip"), Statics.TempFolder+scriptname+".zip" ,  scriptname + ".zip");
                     downloadFileFromInternet(new URL(url + ".scr"), Statics.TempFolder+scriptname+".scr",  scriptname + ".scr");
@@ -110,23 +110,22 @@ public class CASUALUpdates {
         try {
 
             input = url.openStream();
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096];
             File f = new File(outputFile);
             OutputStream output = new FileOutputStream(f);
             int bytes = 0;
-            Log.level1("Downloading update to " + friendlyName.replace("/SCRIPTS/", ""+":  "));
-            Log.level1("");
+            Log.progress(friendlyName.replace("/SCRIPTS/", ""));
             int lastlength = 0;
             int kilobytes=0;
-            int offset = Statics.ProgressDoc.getLength() - 1;
+            int offset = Statics.ProgressDoc.getLength();
             try {
                 int bytesRead = 0;
                 while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
                     output.write(buffer, 0, bytesRead);
                     bytes = bytes + buffer.length;
-                    kilobytes++;
-                    Log.replaceLine(" "+Integer.toString(kilobytes)+"kb", offset, lastlength);
-                    lastlength = 3 + Integer.toString(kilobytes).length();
+                    kilobytes=kilobytes+4;
+                    Log.replaceLine(("..."+Integer.toString(kilobytes))+"kb ", offset, lastlength);
+                    lastlength = 6 + Integer.toString(kilobytes).length();
 
                 }
             } finally {

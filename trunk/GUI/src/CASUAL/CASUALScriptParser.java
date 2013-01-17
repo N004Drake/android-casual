@@ -85,8 +85,8 @@ public class CASUALScriptParser {
 
     }
         
-    public void executeSelectedScriptFile(String script) {
-        executeSelectedScript(getDataStreamFromFile(script), script);
+    public void executeSelectedScriptFile(String File, String script) {
+        executeSelectedScript(getDataStreamFromFile(File), script);
 
     }
 
@@ -336,8 +336,11 @@ public class CASUALScriptParser {
             public void run() {
                 int updateStatus=0;
                 Log.level3("CASUAL has initiated a multithreaded execution environment");
-                String CASUALIDString = convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
-                if (CASUALIDString.startsWith("#")) {
+                String CASUALIDString="";
+                CASUALIDString = convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
+                System.out.println(Statics.scriptLocations[0]);
+                System.out.println(Statics.scriptNames[0]);
+                if (CASUALIDString.startsWith("#") && (Statics.getScriptLocationOnDisk(script).equals(""))) {
                     try {
                         
                         
@@ -385,6 +388,9 @@ public class CASUALScriptParser {
                 Statics.ProgressBar.setMaximum(LinesInScript);
                 Log.level3("Reading datastream" + DATAIN);
                 doRead(DATAIN);
+                Statics.GUI.enableControls(true);
+                Statics.DeviceMonitor.DeviceCheck.start();
+
             }
 
             private void updateDataStream(String script) {
