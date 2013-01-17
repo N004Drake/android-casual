@@ -339,26 +339,28 @@ Log.level3("OMFGWOOT");
 
     public void StartButtonActionPerformed(){
         Log.level0("");
-        Log.level3("Script Activated");
+        Log.level3("StartButtonActionPerformed() Script Activated");
         Log.level3("Script known as "+ this.ComboBoxScriptSelector.getSelectedItem().toString() + " is running");
         this.busyIconTimer.start();
         Statics.DeviceMonitor.DeviceCheck.stop();
         enableControls(false);
-        String diskLocation=Statics.getScriptLocationOnDisk(ComboBoxValue);
+        String script=ComboBoxScriptSelector.getSelectedItem().toString();
+        String diskLocation=Statics.getScriptLocationOnDisk(script);
+        
+        //check for updates
         if (!diskLocation.equals("")){
-            Statics.TargetScriptIsResource=true;
-            NonResourceFileName=Statics.getScriptLocationOnDisk(this.ComboBoxScriptSelector.getSelectedItem().toString());
+            Statics.TargetScriptIsResource=false;
+            NonResourceFileName=Statics.getScriptLocationOnDisk(script);
         }
+        
+        //execute
         if (Statics.TargetScriptIsResource) {
-            CASUALScriptParser ScriptParser = new CASUALScriptParser();
-            ScriptParser.executeSelectedScriptResource(ComboBoxScriptSelector.getSelectedItem().toString());
+            new CASUALScriptParser().executeSelectedScriptResource(script);
         } else {
-            CASUALScriptParser ScriptParser = new CASUALScriptParser();
-            ScriptParser.executeSelectedScriptFile(NonResourceFileName);
+            new CASUALScriptParser().executeSelectedScriptFile(NonResourceFileName, script);
         }
         this.busyIconTimer.stop();
         //enableControls(true);
-        Statics.DeviceMonitor.DeviceCheck.start();
     }
     private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
       this.StartButtonActionPerformed();
@@ -370,7 +372,7 @@ Log.level3("OMFGWOOT");
     }//GEN-LAST:event_MenuItemShowDeveloperPaneActionPerformed
 
     private void MenuItemOpenScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenScriptActionPerformed
-        Statics.TargetScriptIsResource = false;
+        
         String FileName;
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -383,13 +385,14 @@ Log.level3("OMFGWOOT");
                 Statics.SelectedScriptFolder = Statics.TempFolder + new File(NonResourceFileName).getName();
                 Log.level0("Delete this debug line in MenuItemOpenScriptActionPerformed()");
                 //TODO: Do this in the background
-                Unzip Unzip=new Unzip();
-                Unzip.unzipFile(NonResourceFileName.toString()+".zip",Statics.SelectedScriptFolder);
+                if (new FileOperations().verifyFileExists(NonResourceFileName.toString()+".zip")){ new Unzip().unzipFile(NonResourceFileName.toString()+".zip",Statics.SelectedScriptFolder);}
+                Statics.ScriptLocation=Statics.SelectedScriptFolder;
                 ComboBoxScriptSelector.setEditable(true);
                 ComboBoxValue=getFilenameWithoutExtension(FileName);
                 ComboBoxScriptSelector.setSelectedItem(ComboBoxValue);
                 ComboBoxScriptSelector.setEditable(false);
-                
+                Statics.TargetScriptIsResource = false;
+
             } catch (IOException ex) {
                 Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -398,7 +401,7 @@ Log.level3("OMFGWOOT");
     }//GEN-LAST:event_MenuItemOpenScriptActionPerformed
 
     private void MenuItemShowAboutBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowAboutBoxActionPerformed
-        Statics.TargetScriptIsResource = false;
+        Statics.TargetScriptIsResource = true;
         CASUALAboutBox CAB = new CASUALAboutBox();
         CAB.setVisible(true);
     }//GEN-LAST:event_MenuItemShowAboutBoxActionPerformed
@@ -438,7 +441,7 @@ Log.level3("OMFGWOOT");
     }//GEN-LAST:event_DonateButtonActionPerformed
 
     private void ComboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorActionPerformed
-
+        Statics.TargetScriptIsResource=true;        
 
     }//GEN-LAST:event_ComboBoxScriptSelectorActionPerformed
 
@@ -549,7 +552,7 @@ Log.level3("OMFGWOOT");
 
     private void deployADB() {
        RunableDeployADB RunableDeployADB = new RunableDeployADB();
-       RunableDeployADB.run();
+       RunableDeployADB.runAction();
     }
     public void setStatusLabelIcon(String Icon, String Text){
         StatusLabel.setIcon(createImageIcon(Icon, Text));
@@ -682,7 +685,7 @@ class RunableDeployADB implements Runnable{
     static public final String newline = "\n";
     FileOperations FileOperations=new FileOperations();
     Log Log=new Log();    
-    public static void runAction(String Action) {
+    public void runAction() {
         (new Thread(new RunableDeployADB())).start();
     }   
     public void run() {
