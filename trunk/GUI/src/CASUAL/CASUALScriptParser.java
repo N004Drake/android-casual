@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import java.net.MalformedURLException;
 
-
 /**
  *
  * @author adam
@@ -58,7 +57,6 @@ public class CASUALScriptParser {
 
         DataInputStream RAS = new DataInputStream(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
         executeSelectedScript(RAS, script);
-        ;
     }
 
     public static String convertStreamToString(java.io.InputStream is) {
@@ -70,25 +68,25 @@ public class CASUALScriptParser {
      *
      */
 
-    public DataInputStream getDataStreamFromFile(String script){
-       Log.level3("Selected file" + script);
-        
+    public DataInputStream getDataStreamFromFile(String script) {
+        Log.level3("Selected file" + script);
+
         ScriptName = script;
         ScriptTempFolder = Statics.TempFolder + (new File(script).getName()) + Statics.Slash;
         LinesInScript = new CountLines().countFileLines(script + ".scr");
         Log.level3("Lines in Script " + LinesInScript);
-        
+
         try {
             return new DataInputStream(new FileInputStream(script + ".scr"));
-            
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-            Log.level0("An unknown error has happened while trying to getDataStreamFromFile! "+ script +"  Please report this");
+            Log.level0("An unknown error has happened while trying to getDataStreamFromFile! " + script + "  Please report this");
             return null;
         }
 
     }
-        
+
     public void executeSelectedScriptFile(String File, String script) {
         executeSelectedScript(getDataStreamFromFile(File), script);
 
@@ -338,54 +336,55 @@ public class CASUALScriptParser {
         Runnable r = new Runnable() {
 
             public void run() {
-                int updateStatus=0;
+                int updateStatus;
                 Log.level3("CASUAL has initiated a multithreaded execution environment");
-                String CASUALIDString="";
+                String CASUALIDString;
                 CASUALIDString = convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
                 System.out.println(Statics.scriptLocations[0]);
                 System.out.println(Statics.scriptNames[0]);
                 if (CASUALIDString.startsWith("#") && (Statics.getScriptLocationOnDisk(script).equals(""))) {
                     try {
-                        
-                        
-                       updateStatus= new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, CASUALIDString.split("\n")[0]);
-                           /*
-     * checks for updates returns: 0=no updates found 1=random error
-     * 2=Script Update Required 3=CASUAL update required- cannot
-     * continue. 4=download failed 
-     * **/
-                       switch (updateStatus){
-                           //no updates found
-                           case 0: //do nothing
-                               break;
-                           //random error with URL formatting
-                           case 1: //do nothing
-                               break;
-                           //script update performed
-                           case 2: 
-                               Statics.setScriptLocationOnDisk(script, Statics.TempFolder+"SCRIPTS"+Statics.Slash+script);
-                               updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
-                               break;
-                           //CASUAL must be update    
-                           case 3: 
-                               Log.level0(Statics.updateMessageFromWb);
-                               Log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                               new TimeOutOptionPane().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n"+Statics.updateMessageFromWb+"\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
-                               new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
-                               System.exit(0);
-                               return;
-                           //download error
-                           case 4: Log.level0("There was a problem downloading the script.  Please check your internet connection and try again.");
-                               //HALT script
-                               return;
-                           default: //unknown error do nothing
-                               break;
-                       
-                       
-                       
-                    }
+
+
+                        updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, CASUALIDString.split("\n")[0]);
+                        /*
+                         * checks for updates returns: 0=no updates found
+                         * 1=random error 2=Script Update Required 3=CASUAL
+                         * update required- cannot continue. 4=download failed *
+                         */
+                        switch (updateStatus) {
+                            //no updates found
+                            case 0: //do nothing
+                                break;
+                            //random error with URL formatting
+                            case 1: //do nothing
+                                break;
+                            //script update performed
+                            case 2:
+                                Statics.setScriptLocationOnDisk(script, Statics.TempFolder + "SCRIPTS" + Statics.Slash + script);
+                                updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
+                                break;
+                            //CASUAL must be update    
+                            case 3:
+                                Log.level0(Statics.updateMessageFromWb);
+                                Log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
+                                new TimeOutOptionPane().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
+                                System.exit(0);
+                                return;
+                            //download error
+                            case 4:
+                                Log.level0("There was a problem downloading the script.  Please check your internet connection and try again.");
+                                //HALT script
+                                return;
+                            default: //unknown error do nothing
+                                break;
+
+
+
+                        }
                     } catch (MalformedURLException ex) {
-                        Log.level0("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script +" Please report this.");
+                        Log.level0("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script + " Please report this.");
                         //Script not in repository
                     } catch (IOException ex) {
                         Log.level0("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
@@ -403,7 +402,7 @@ public class CASUALScriptParser {
             }
 
             private void updateDataStream(String script) {
-               DATAIN=getDataStreamFromFile(script);
+                DATAIN = getDataStreamFromFile(script);
             }
         };
         Thread ExecuteScript = new Thread(r);

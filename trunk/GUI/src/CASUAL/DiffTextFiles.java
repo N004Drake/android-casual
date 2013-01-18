@@ -31,8 +31,7 @@ import java.util.logging.Logger;
 public class DiffTextFiles {
 
     /*
-     * takes a resource and a string
-     * outputs difference as a string
+     * takes a resource and a string outputs difference as a string
      */
     public String diffResourceVersusFile(String TestIStream, String OriginalFile) {
 
@@ -71,17 +70,16 @@ public class DiffTextFiles {
         if (Difference.startsWith("\n")) {
             Difference = Difference.replaceFirst("\n", "");
         }
-        if (Difference.endsWith("\n")){
-            Difference=new StringOperations().replaceLast(Difference, "\n", "");
+        if (Difference.endsWith("\n")) {
+            Difference = StringOperations.replaceLast(Difference, "\n", "");
         }
-            
+
         return Difference;
 
     }
 
     /*
-     * takes two files
-     * returns the difference between the two
+     * takes two files returns the difference between the two
      */
     public String diffTextFiles(String Original, String TestForDiff) {
         String DifferenceFromFile1 = "";
@@ -92,7 +90,7 @@ public class DiffTextFiles {
                 String Line;
                 String Line2;
                 while ((Line = BRTestDiff.readLine()) != null) {
-                    ;
+
                     BufferedReader BROriginal = new BufferedReader(new FileReader(Original));
                     try {
                         boolean LineExists = false;
@@ -113,7 +111,7 @@ public class DiffTextFiles {
                 BRTestDiff.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            new Log().level3(e.getMessage());
         }
         return DifferenceFromFile1;
     }
@@ -124,16 +122,16 @@ public class DiffTextFiles {
      * appends text to a file
      */
     public void appendDiffToFile(String NameOfFileToBeModified, String Diff) {
-        if (Diff.equals("")){
+        if (Diff.equals("")) {
             return;
         }
         String currentString;
-        FileOutputStream FileOut = null;
+        FileOutputStream FileOut;
         File FileToModify = new File(NameOfFileToBeModified);
         if (!FileToModify.exists()) {
             try {
                 FileToModify.mkdirs();
-                if (FileToModify.isDirectory()){
+                if (FileToModify.isDirectory()) {
                     FileToModify.delete();
                 }
                 FileToModify.createNewFile();

@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-
 import java.io.BufferedInputStream;
 import javax.sound.sampled.*;
 
@@ -34,24 +33,24 @@ public class CASUALAudioSystem {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
 
             public void run() {
-                if (Statics.UseSound.contains("true")||Statics.UseSound.contains("True")){
-                try {
-                    byte[] buffer = new byte[4096];
-                    AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
-                    AudioFormat Format = IS.getFormat();
-                    SourceDataLine Line = AudioSystem.getSourceDataLine(Format);
-                    Line.open(Format);
-                    Line.start();
-                    while (IS.available() > 0) {
-                        int Len = IS.read(buffer);
-                        Line.write(buffer, 0, Len);
+                if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
+                    try {
+                        byte[] buffer = new byte[4096];
+                        AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
+                        AudioFormat Format = IS.getFormat();
+                        SourceDataLine Line = AudioSystem.getSourceDataLine(Format);
+                        Line.open(Format);
+                        Line.start();
+                        while (IS.available() > 0) {
+                            int Len = IS.read(buffer);
+                            Line.write(buffer, 0, Len);
+                        }
+                        Line.drain();
+                        Line.close();
+                    } catch (Exception e) {
+                        System.err.println(e);
                     }
-                    Line.drain();
-                    Line.close();
-                } catch (Exception e) {
-                    System.err.println(e);
                 }
-            }
             }
         }).start();
     }
@@ -63,33 +62,35 @@ public class CASUALAudioSystem {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
 
             public void run() {
-                if (Statics.UseSound.contains("true")||Statics.UseSound.contains("True")){
-                byte[] buffer = new byte[4096];
-                int URLEndPosition=URLs.length - 1;
-                int CurrentURL=0;
-                SourceDataLine Line=null;
-                for (String URL : URLs) {
-                    try {
-                        AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
-                        AudioFormat Format = IS.getFormat();
-                        Line= AudioSystem.getSourceDataLine(Format);
-                        
-                        Line.open(Format);
-                        Line.start();
-                        Line.drain();
-                        while (IS.available() > 0) {
-                            int Len = IS.read(buffer);
-                            Line.write(buffer, 0, Len);
-                        };
-                        if (CurrentURL==URLEndPosition) Line.drain(); // wait for the buffer to empty before closing the line
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                  CurrentURL=CurrentURL++;  
-                }
-                Line.close();
+                if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
+                    byte[] buffer = new byte[4096];
+                    int URLEndPosition = URLs.length - 1;
+                    int CurrentURL = 0;
+                    SourceDataLine Line = null;
+                    for (String URL : URLs) {
+                        try {
+                            AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
+                            AudioFormat Format = IS.getFormat();
+                            Line = AudioSystem.getSourceDataLine(Format);
 
-            }
+                            Line.open(Format);
+                            Line.start();
+                            Line.drain();
+                            while (IS.available() > 0) {
+                                int Len = IS.read(buffer);
+                                Line.write(buffer, 0, Len);
+                            }
+                            if (CurrentURL == URLEndPosition) {
+                                Line.drain(); // wait for the buffer to empty before closing the line
+                            }
+                        } catch (Exception e) {
+                            new Log().level3(e.getMessage());
+                        }
+                        CurrentURL = CurrentURL++;
+                    }
+                    Line.close();
+
+                }
             }
         }).start();
     }

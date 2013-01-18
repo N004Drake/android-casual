@@ -25,7 +25,8 @@ import java.util.logging.Logger;
  * @author adam
  */
 public class CountLines {
-     public int countFileLines(String Filename) {
+
+    public int countFileLines(String Filename) {
         InputStream IS = null;
         int Lines = 0;
         try {
@@ -71,7 +72,7 @@ public class CountLines {
         int count = 0;
         try {
             byte[] c = new byte[1024];
-            int ReadChars = 0;
+            int ReadChars;
             while ((ReadChars = IS.read(c)) != -1) {
                 for (int i = 0; i < ReadChars; ++i) {
                     if (c[i] == '\n') {

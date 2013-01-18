@@ -25,46 +25,47 @@ import java.net.URISyntaxException;
  *
  * @author adam
  */
-public class LinkLauncher implements Runnable  {
+public class LinkLauncher implements Runnable {
+
     static String Link;
     /*
      * launches a browser with a link
      */
-    public void launchLink(String link){
+
+    public void launchLink(String link) {
         Link = link;
         Runnable runnable = new LinkLauncher();
         Thread thread = new Thread(runnable);
         thread.start();
     }
+
     public void run() {
-           
+
         Shell Shell = new Shell();
-        String Cmd[]={"firefox", Link};
-        String LaunchRes=Shell.sendShellCommand(Cmd);
-        if (LaunchRes.contains("CritERROR!!!")){
-            String MCmd[]={"open" , Link};
-            String MLaunchRes=Shell.sendShellCommand(MCmd);
-            if (MLaunchRes.contains("CritERROR!!!")){
-                String WCmd[]={"explorer", Link};
-                String WLaunchRes=Shell.sendShellCommand(WCmd);
-                if (WLaunchRes.contains("CritERROR!!!")){
-                     if (Desktop.isDesktopSupported()) {
+        String Cmd[] = {"firefox", Link};
+        String LaunchRes = Shell.sendShellCommand(Cmd);
+        if (LaunchRes.contains("CritERROR!!!")) {
+            String MCmd[] = {"open", Link};
+            String MLaunchRes = Shell.sendShellCommand(MCmd);
+            if (MLaunchRes.contains("CritERROR!!!")) {
+                String WCmd[] = {"explorer", Link};
+                String WLaunchRes = Shell.sendShellCommand(WCmd);
+                if (WLaunchRes.contains("CritERROR!!!")) {
+                    if (Desktop.isDesktopSupported()) {
                         Desktop desktop;
                         desktop = Desktop.getDesktop();
-                        URI uri = null;
+                        URI uri;
                         try {
                             uri = new URI(Link);
-                             desktop.browse(uri);
+                            desktop.browse(uri);
                         } catch (IOException ioe) {
-                            System.out.println("Attempted to open"+ Link+" Failed with IO error");
+                            System.out.println("Attempted to open" + Link + " Failed with IO error");
                         } catch (URISyntaxException use) {
-                            System.out.println("Attempted to open"+ Link+" Failed with URI Syntax error");
+                            System.out.println("Attempted to open" + Link + " Failed with URI Syntax error");
                         }
-                     }
+                    }
                 }
             }
         }
     }
 }
-    
-

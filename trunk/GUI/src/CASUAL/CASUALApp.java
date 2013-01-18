@@ -16,11 +16,6 @@
  */
 package CASUAL;
 
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -35,15 +30,15 @@ public class CASUALApp extends SingleFrameApplication {
     @Override
     protected void startup() {
         System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + " Build:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber"));
- 
-        Statics Statics=new Statics();
+
+        Statics Statics = new Statics();
         Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Audio.Enabled");
         CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
-         
+
         new FileOperations().makeFolder(Statics.TempFolder);
-        Statics.GUI= new CASUALJFrame();
+        Statics.GUI = new CASUALJFrame();
         Statics.GUI.setVisible(true);
-        show(Statics.GUI); 
+        show(Statics.GUI);
         Statics.GUI.startStopTimer(true);
         Statics.GUI.setVisible(true);
     }
@@ -70,7 +65,7 @@ public class CASUALApp extends SingleFrameApplication {
      * Main method launching the application.
      */
     public static void main(String[] args) {
-         
-         launch(CASUALApp.class, args);
+
+        launch(CASUALApp.class, args);
     }
 }

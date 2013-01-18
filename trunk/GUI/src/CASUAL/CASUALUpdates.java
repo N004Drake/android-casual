@@ -38,15 +38,15 @@ import java.io.IOException;
 public class CASUALUpdates {
 
     /*
-     * checks for updates returns: 0=no updates found 1=random error
-     * 2=Script Update Required 3=CASUAL update required- cannot
-     * continue. 4=download failed 
+     * checks for updates returns: 0=no updates found 1=random error 2=Script
+     * Update Required 3=CASUAL update required- cannot continue. 4=download
+     * failed
      */
     Log Log = new Log();
 
     public int checkOfficialRepo(String script, String localIdentificationString) throws MalformedURLException, IOException {
 
-        String webData = "";
+        String webData;
         try {
             webData = getWebData(Statics.CASUALRepo + script + ".scr");
         } catch (URISyntaxException ex) {
@@ -59,8 +59,8 @@ public class CASUALUpdates {
 
         System.out.println("***WEB VERSION***");
         String[] webInformation = parseIDString(webData.split("\n", 2)[0]);
-        Statics.updateMessageFromWb=webInformation[4];
-        Statics.supportWebsiteFromWeb=webInformation[3];
+        Statics.updateMessageFromWb = webInformation[4];
+        Statics.supportWebsiteFromWeb = webInformation[3];
         displayCASUALString(webInformation);
         System.out.println();
 
@@ -77,19 +77,19 @@ public class CASUALUpdates {
                     Log.level0(webInformation[4]);
 
                     URL url = this.stringToFormattedURL(Statics.CASUALRepo + script);
-                    String scriptname = script.replaceFirst("/SCRIPTS/", Statics.Slash+"SCRIPTS"+Statics.Slash);
-                    new FileOperations().makeFolder(Statics.TempFolder+Statics.Slash+"SCRIPTS"+Statics.Slash);
+                    String scriptname = script.replaceFirst("/SCRIPTS/", Statics.Slash + "SCRIPTS" + Statics.Slash);
+                    new FileOperations().makeFolder(Statics.TempFolder + Statics.Slash + "SCRIPTS" + Statics.Slash);
                     Log.level0("Downloading Updates");
                     //TODO set /tmp/newfile as a real file
-                    downloadFileFromInternet(new URL(url + ".zip"), Statics.TempFolder+scriptname+".zip" ,  scriptname + ".zip");
-                    downloadFileFromInternet(new URL(url + ".scr"), Statics.TempFolder+scriptname+".scr",  scriptname + ".scr");
-                    downloadFileFromInternet(new URL(url + ".txt"), Statics.TempFolder+scriptname+".txt",  scriptname + ".txt");
+                    downloadFileFromInternet(new URL(url + ".zip"), Statics.TempFolder + scriptname + ".zip", scriptname + ".zip");
+                    downloadFileFromInternet(new URL(url + ".scr"), Statics.TempFolder + scriptname + ".scr", scriptname + ".scr");
+                    downloadFileFromInternet(new URL(url + ".txt"), Statics.TempFolder + scriptname + ".txt", scriptname + ".txt");
                     return 2;
                 } catch (URISyntaxException ex) {
                     Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
                     return 4;
                 }
-            } 
+            }
         }
         return 0;
     }
@@ -124,15 +124,15 @@ public class CASUALUpdates {
             int bytes = 0;
             Log.progress(friendlyName.replace("/SCRIPTS/", ""));
             int lastlength = 0;
-            int kilobytes=0;
+            int kilobytes = 0;
             int offset = Statics.ProgressDoc.getLength();
             try {
-                int bytesRead = 0;
+                int bytesRead;
                 while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
                     output.write(buffer, 0, bytesRead);
                     bytes = bytes + buffer.length;
-                    kilobytes=kilobytes+4;
-                    Log.replaceLine(("..."+Integer.toString(kilobytes))+"kb ", offset, lastlength);
+                    kilobytes = kilobytes + 4;
+                    Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
                     lastlength = 6 + Integer.toString(kilobytes).length();
 
                 }
@@ -197,7 +197,7 @@ public class CASUALUpdates {
         for (int n = 0; n < commaSplit.length; n++) {
             String[] splitID = commaSplit[n].split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)", 4);
             if (splitID[0].startsWith("ID")) {
-                String id = splitID[0].replaceFirst("ID", "").replaceAll(" ","");
+                String id = splitID[0].replaceFirst("ID", "").replaceAll(" ", "");
                 SVNScriptRevision[0] = id;
             }
             if (splitID[0].replaceFirst(" ", "").startsWith("R")) {
