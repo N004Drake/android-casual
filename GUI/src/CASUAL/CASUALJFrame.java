@@ -122,8 +122,8 @@ Log.level3("OMFGWOOT");
         FileChooser1 = new javax.swing.JFileChooser();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         WindowBanner = new javax.swing.JLabel();
-        ComboBoxScriptSelector = new javax.swing.JComboBox();
-        StartButton = new javax.swing.JButton();
+        comboBoxScriptSelector = new javax.swing.JComboBox();
+        startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         ProgressBar = new javax.swing.JProgressBar();
@@ -162,35 +162,35 @@ Log.level3("OMFGWOOT");
         WindowBanner.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
         WindowBanner.setText("NARZ or picture of some sort");
 
-        ComboBoxScriptSelector.setEnabled(false);
-        ComboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+        comboBoxScriptSelector.setEnabled(false);
+        comboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
-                ComboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
+                comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
-        ComboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
+        comboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ComboBoxScriptSelectorActionPerformed(evt);
+                comboBoxScriptSelectorActionPerformed(evt);
             }
         });
 
-        StartButton.setText("Do It!");
-        StartButton.setEnabled(false);
-        StartButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        startButton.setText("Do It!");
+        startButton.setEnabled(false);
+        startButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                StartButtonMouseClicked(evt);
+                startButtonMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                StartButtonMouseExited(evt);
+                startButtonMouseExited(evt);
             }
         });
-        StartButton.addActionListener(new java.awt.event.ActionListener() {
+        startButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StartButtonActionPerformed(evt);
+                startButtonActionPerformed(evt);
             }
         });
 
@@ -309,9 +309,9 @@ Log.level3("OMFGWOOT");
                     .addComponent(WindowBanner, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(ComboBoxScriptSelector, javax.swing.GroupLayout.Alignment.LEADING, 0, 511, Short.MAX_VALUE)
+                            .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.Alignment.LEADING, 0, 511, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(StartButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+                                .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(DonateButton))
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
@@ -324,10 +324,10 @@ Log.level3("OMFGWOOT");
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ComboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(StartButton)
+                    .addComponent(startButton)
                     .addComponent(DonateButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -340,15 +340,17 @@ Log.level3("OMFGWOOT");
     public void StartButtonActionPerformed(){
         Log.level0("");
         Log.level3("StartButtonActionPerformed() Script Activated");
-        Log.level3("Script known as "+ this.ComboBoxScriptSelector.getSelectedItem().toString() + " is running");
+        Log.level3("Script known as "+ this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
         this.busyIconTimer.start();
         Statics.DeviceMonitor.DeviceCheck.stop();
         enableControls(false);
-        String script=ComboBoxScriptSelector.getSelectedItem().toString();
-        String diskLocation=Statics.getScriptLocationOnDisk(script);
+        String script=comboBoxScriptSelector.getSelectedItem().toString();
+        String diskLocation="";
+        diskLocation=Statics.getScriptLocationOnDisk(script);
+        
         
         //check for updates
-        if (!diskLocation.equals("")){
+        if (! (diskLocation.length()==0)){
             Statics.TargetScriptIsResource=false;
             NonResourceFileName=Statics.getScriptLocationOnDisk(script);
         }
@@ -362,9 +364,9 @@ Log.level3("OMFGWOOT");
         this.busyIconTimer.stop();
         //enableControls(true);
     }
-    private void StartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartButtonActionPerformed
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
       this.StartButtonActionPerformed();
-    }//GEN-LAST:event_StartButtonActionPerformed
+    }//GEN-LAST:event_startButtonActionPerformed
 
     private void MenuItemShowDeveloperPaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowDeveloperPaneActionPerformed
         CASUALDeveloperInstructions CDI = new CASUALDeveloperInstructions();
@@ -381,16 +383,16 @@ Log.level3("OMFGWOOT");
                 NonResourceFileName = this.getFilenameWithoutExtension(FileName);
                 Log.level1("Description for " + NonResourceFileName);
                 Log.level1(FileOperations.readFile(NonResourceFileName + ".txt"));
-                this.ComboBoxScriptSelector.setSelectedItem(NonResourceFileName);
+                this.comboBoxScriptSelector.setSelectedItem(NonResourceFileName);
                 Statics.SelectedScriptFolder = Statics.TempFolder + new File(NonResourceFileName).getName();
                 Log.level0("Delete this debug line in MenuItemOpenScriptActionPerformed()");
                 //TODO: Do this in the background
                 if (new FileOperations().verifyFileExists(NonResourceFileName.toString()+".zip")){ new Unzip().unzipFile(NonResourceFileName.toString()+".zip",Statics.SelectedScriptFolder);}
                 Statics.ScriptLocation=Statics.SelectedScriptFolder;
-                ComboBoxScriptSelector.setEditable(true);
+                comboBoxScriptSelector.setEditable(true);
                 ComboBoxValue=getFilenameWithoutExtension(FileName);
-                ComboBoxScriptSelector.setSelectedItem(ComboBoxValue);
-                ComboBoxScriptSelector.setEditable(false);
+                comboBoxScriptSelector.setSelectedItem(ComboBoxValue);
+                comboBoxScriptSelector.setEditable(false);
                 Statics.TargetScriptIsResource = false;
 
             } catch (IOException ex) {
@@ -440,21 +442,21 @@ Log.level3("OMFGWOOT");
 
     }//GEN-LAST:event_DonateButtonActionPerformed
 
-    private void ComboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorActionPerformed
+    private void comboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorActionPerformed
         Statics.TargetScriptIsResource=true;        
 
-    }//GEN-LAST:event_ComboBoxScriptSelectorActionPerformed
+    }//GEN-LAST:event_comboBoxScriptSelectorActionPerformed
 
-    private void ComboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_ComboBoxScriptSelectorPopupMenuWillBecomeInvisible
+    private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
         System.out.println(evt);
-        if (ComboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)){
+        if (comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)){
             Statics.TargetScriptIsResource = false;
         } else {
             Statics.TargetScriptIsResource=true;
             
         }
         comboBoxUpdate();
-    }//GEN-LAST:event_ComboBoxScriptSelectorPopupMenuWillBecomeInvisible
+    }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
        CASUALLog CASUALLogJFrame=new CASUALLog();
@@ -473,35 +475,35 @@ Log.level3("OMFGWOOT");
     }//GEN-LAST:event_formWindowClosing
 
     boolean buttonEnableStage=false;
-    private void StartButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StartButtonMouseClicked
+    private void startButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseClicked
        if ( buttonEnableStage ){
-           StartButton.setEnabled(buttonEnableStage);
-           this.StartButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+           startButton.setEnabled(buttonEnableStage);
+           this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
        }
-       if (! StartButton.isEnabled() && !Statics.MasterLock) {
-           StartButton.setText("Click again to enable this button");
+       if (! startButton.isEnabled() && !Statics.MasterLock) {
+           startButton.setText("Click again to enable this button");
            buttonEnableStage=true;
        }
-    }//GEN-LAST:event_StartButtonMouseClicked
+    }//GEN-LAST:event_startButtonMouseClicked
 
-    private void StartButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StartButtonMouseExited
-        this.StartButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+    private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
+        this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
         buttonEnableStage=false;
-    }//GEN-LAST:event_StartButtonMouseExited
+    }//GEN-LAST:event_startButtonMouseExited
     private void comboBoxUpdate(){
         Log.level2("From Resource: " + Statics.TargetScriptIsResource);
-        Log.level1("--" + ComboBoxScriptSelector.getSelectedItem().toString()+"--");
+        Log.level1("--" + comboBoxScriptSelector.getSelectedItem().toString()+"--");
         if (Statics.TargetScriptIsResource){
-            Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + ComboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         } else {
-            Log.level1(FileOperations.readFile( ComboBoxScriptSelector.getSelectedItem().toString() + ".txt")+ "\n");
+            Log.level1(FileOperations.readFile( comboBoxScriptSelector.getSelectedItem().toString() + ".txt")+ "\n");
         }
         String ZipResource="";
-        Statics.SelectedScriptFolder = Statics.TempFolder + ComboBoxScriptSelector.getSelectedItem().toString();
+        Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString();
         if (Statics.TargetScriptIsResource){
-            ZipResource=Statics.ScriptLocation+ComboBoxScriptSelector.getSelectedItem().toString()+".zip";    
+            ZipResource=Statics.ScriptLocation+comboBoxScriptSelector.getSelectedItem().toString()+".zip";    
         } else{
-            ZipResource=ComboBoxScriptSelector.getSelectedItem().toString()+".zip";    
+            ZipResource=comboBoxScriptSelector.getSelectedItem().toString()+".zip";    
         }
         
         if (getClass().getResource(ZipResource)!=null){
@@ -527,7 +529,6 @@ Log.level3("OMFGWOOT");
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox ComboBoxScriptSelector;
     private javax.swing.JButton DonateButton;
     private javax.swing.JFileChooser FileChooser1;
     private javax.swing.JMenuItem MenuItemExit;
@@ -536,10 +537,10 @@ Log.level3("OMFGWOOT");
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JProgressBar ProgressBar;
-    private javax.swing.JButton StartButton;
     private javax.swing.JLabel StatusAnimationLabel;
     private javax.swing.JLabel StatusLabel;
     private javax.swing.JLabel WindowBanner;
+    private javax.swing.JComboBox comboBoxScriptSelector;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -548,6 +549,7 @@ Log.level3("OMFGWOOT");
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton startButton;
     // End of variables declaration//GEN-END:variables
 
     private void deployADB() {
@@ -627,13 +629,13 @@ Log.level3("OMFGWOOT");
                 String EntryName= ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr","");
                 Log.level3("Found: " + EntryName);
                 Statics.scriptNames[n]=EntryName;
-                ComboBoxScriptSelector.addItem(EntryName);
+                comboBoxScriptSelector.addItem(EntryName);
                 Count++;
             }
             
             if (Count == 0) {
                 Log.level0("No Scripts found. Using Test Script.");
-                ComboBoxScriptSelector.addItem("Test Script");
+                comboBoxScriptSelector.addItem("Test Script");
                 Statics.scriptLocations=new String[]{""};
                 Statics.scriptNames=new String[]{"Test Script"};
             }
@@ -646,8 +648,8 @@ Log.level3("OMFGWOOT");
 
     public void enableControls(boolean status) {
         if (! Statics.MasterLock){
-            StartButton.setEnabled(status);
-            ComboBoxScriptSelector.setEnabled(status);
+            startButton.setEnabled(status);
+            comboBoxScriptSelector.setEnabled(status);
             Log.level3("Controls Enabled status: " + status);
         } else{
             Log.level3("Control Change requested but Statics.MasterLock is set.");
@@ -659,7 +661,7 @@ Log.level3("OMFGWOOT");
     private void populateFields() {
 
         try {
-            this.StartButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
             this.setTitle(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.Title") + " - " + this.getTitle());
             if (java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.UsePictureForBanner").equals("true")) {
                 WindowBanner.setText("");

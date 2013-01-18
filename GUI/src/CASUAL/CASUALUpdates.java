@@ -52,7 +52,8 @@ public class CASUALUpdates {
 
         System.out.println("***WEB VERSION***");
         String[] webInformation = parseIDString(webData.split("\n", 2)[0]);
-
+        Statics.updateMessageFromWb=webInformation[4];
+        Statics.supportWebsiteFromWeb=webInformation[3];
         displayCASUALString(webInformation);
         System.out.println();
 
@@ -192,19 +193,19 @@ public class CASUALUpdates {
                 String id = splitID[0].replaceFirst("ID", "");
                 SVNScriptRevision[0] = id;
             }
-            if (splitID[0].startsWith("R")) {
-                SVNScriptRevision[1] = splitID[1];
+            if (splitID[0].replaceFirst(" ", "").startsWith("R")) {
+                SVNScriptRevision[1] = splitID[1].replaceAll(" ", "");
             }
 
-            if (splitID[0].startsWith("CASUAL") || splitID[0].startsWith("SVN")) {
-                SVNScriptRevision[2] = splitID[1];
+            if (splitID[0].replaceFirst(" ", "").startsWith("CASUAL") || splitID[0].replaceFirst(" ", "").startsWith("SVN")) {
+                SVNScriptRevision[2] = splitID[1].replaceAll(" ", "");
             }
-            if (splitID[0].startsWith("URL")) {
+            if (splitID[0].replaceFirst(" ", "").startsWith("URL")) {
                 String URL = splitID[0].replaceFirst("URL", "");
                 SVNScriptRevision[3] = URL;
             }
-            if (splitID[0].startsWith("Message")) {
-                String message = splitID[0].replaceFirst("Message", "");
+            if (splitID[0].replaceFirst(" ", "").startsWith("Message")) {
+                String message = splitID[0].replaceFirst(" ", "").replaceFirst("Message", "");
                 SVNScriptRevision[4] = message;
             }
         }
