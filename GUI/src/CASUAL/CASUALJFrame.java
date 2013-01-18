@@ -30,15 +30,14 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import org.jdesktop.application.Application;
 
 /**
  *
  * @author adam
  */
-public class CASUALJFrame extends javax.swing.JFrame  {
-    
+public final class CASUALJFrame extends javax.swing.JFrame {
+
     private final Timer busyIconTimer;
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
@@ -46,26 +45,27 @@ public class CASUALJFrame extends javax.swing.JFrame  {
     String NonResourceFileName;
     Log Log = new Log();
     FileOperations FileOperations = new FileOperations();
-    private String ComboBoxValue="";
+    private String ComboBoxValue = "";
+
     /**
      * Creates new form CASUALJFrame2
      */
     public CASUALJFrame() {
-        initComponents();   
-        
-        
+        initComponents();
+
+
         //Statics.GUI=this;
         enableControls(false);
-        Statics.ProgressBar=this.ProgressBar;
-        
+        Statics.ProgressBar = this.ProgressBar;
+
         ProgressArea.setContentType("text/html");
-        Statics.ProgressPane = this.ProgressArea;
+        Statics.ProgressPane = CASUALJFrame.ProgressArea;
         Statics.initDocument();
-        
+
         ProgressArea.setText(ProgressArea.getText() + Statics.PreProgress);
-        
-        
-        
+
+
+
         populateFields();
         org.jdesktop.application.ResourceMap resourceMap = Application.getInstance().getContext().getResourceMap(CASUALJFrame.class);
 
@@ -83,7 +83,7 @@ public class CASUALJFrame extends javax.swing.JFrame  {
 
         idleIcon = resourceMap.getIcon("/" + "StatusBar.idleIcon");
         StatusAnimationLabel.setIcon(idleIcon);
-Log.level3("OMFGWOOT");
+        Log.level3("OMFGWOOT");
 
         Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + "Overview.txt"));
 
@@ -102,10 +102,6 @@ Log.level3("OMFGWOOT");
     /*
      * Timer for adb devices
      */
-
-   
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -333,24 +329,24 @@ Log.level3("OMFGWOOT");
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void StartButtonActionPerformed(){
+    public void StartButtonActionPerformed() {
         Log.level0("");
         Log.level3("StartButtonActionPerformed() Script Activated");
-        Log.level3("Script known as "+ this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
+        Log.level3("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
         this.busyIconTimer.start();
         Statics.DeviceMonitor.DeviceCheck.stop();
         enableControls(false);
-        String script=comboBoxScriptSelector.getSelectedItem().toString();
-        String diskLocation="";
-        diskLocation=Statics.getScriptLocationOnDisk(script);
-        
-        
+        String script = comboBoxScriptSelector.getSelectedItem().toString();
+        String diskLocation;
+        diskLocation = Statics.getScriptLocationOnDisk(script);
+
+
         //check for updates
-        if (! (diskLocation.length()==0)){
-            Statics.TargetScriptIsResource=false;
-            NonResourceFileName=Statics.getScriptLocationOnDisk(script);
+        if (!(diskLocation.length() == 0)) {
+            Statics.TargetScriptIsResource = false;
+            NonResourceFileName = Statics.getScriptLocationOnDisk(script);
         }
-        
+
         //execute
         if (Statics.TargetScriptIsResource) {
             new CASUALScriptParser().executeSelectedScriptResource(script);
@@ -361,7 +357,7 @@ Log.level3("OMFGWOOT");
         //enableControls(true);
     }
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-      this.StartButtonActionPerformed();
+        this.StartButtonActionPerformed();
     }//GEN-LAST:event_startButtonActionPerformed
 
     private void MenuItemShowDeveloperPaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowDeveloperPaneActionPerformed
@@ -370,7 +366,7 @@ Log.level3("OMFGWOOT");
     }//GEN-LAST:event_MenuItemShowDeveloperPaneActionPerformed
 
     private void MenuItemOpenScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenScriptActionPerformed
-        
+
         String FileName;
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -383,10 +379,12 @@ Log.level3("OMFGWOOT");
                 Statics.SelectedScriptFolder = Statics.TempFolder + new File(NonResourceFileName).getName();
                 Log.level0("Delete this debug line in MenuItemOpenScriptActionPerformed()");
                 //TODO: Do this in the background
-                if (new FileOperations().verifyFileExists(NonResourceFileName.toString()+".zip")){ new Unzip().unzipFile(NonResourceFileName.toString()+".zip",Statics.SelectedScriptFolder);}
-                Statics.ScriptLocation=Statics.SelectedScriptFolder;
+                if (new FileOperations().verifyFileExists(NonResourceFileName.toString() + ".zip")) {
+                    new Unzip().unzipFile(NonResourceFileName.toString() + ".zip", Statics.SelectedScriptFolder);
+                }
+                Statics.ScriptLocation = Statics.SelectedScriptFolder;
                 comboBoxScriptSelector.setEditable(true);
-                ComboBoxValue=getFilenameWithoutExtension(FileName);
+                ComboBoxValue = getFilenameWithoutExtension(FileName);
                 comboBoxScriptSelector.setSelectedItem(ComboBoxValue);
                 comboBoxScriptSelector.setEditable(false);
                 Statics.TargetScriptIsResource = false;
@@ -394,7 +392,7 @@ Log.level3("OMFGWOOT");
             } catch (IOException ex) {
                 Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-   
+
         }
     }//GEN-LAST:event_MenuItemOpenScriptActionPerformed
 
@@ -439,75 +437,74 @@ Log.level3("OMFGWOOT");
     }//GEN-LAST:event_DonateButtonActionPerformed
 
     private void comboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorActionPerformed
-        Statics.TargetScriptIsResource=true;        
+        Statics.TargetScriptIsResource = true;
 
     }//GEN-LAST:event_comboBoxScriptSelectorActionPerformed
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
         System.out.println(evt);
-        if (comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)){
+        if (comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
             Statics.TargetScriptIsResource = false;
         } else {
-            Statics.TargetScriptIsResource=true;
-            
+            Statics.TargetScriptIsResource = true;
+
         }
         comboBoxUpdate();
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       CASUALLog CASUALLogJFrame=new CASUALLog();
-       CASUALLogJFrame.setVisible(true);
+        CASUALLog CASUALLogJFrame = new CASUALLog();
+        CASUALLogJFrame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void stopADB(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_stopADB
         this.startStopTimer(false);
-        
+
     }//GEN-LAST:event_stopADB
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-         this.startStopTimer(false);
-         new Shell().sendShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
+        this.startStopTimer(false);
+        new Shell().sendShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
 
     }//GEN-LAST:event_formWindowClosing
-
-    boolean buttonEnableStage=false;
+    boolean buttonEnableStage = false;
     private void startButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseClicked
-       if ( buttonEnableStage ){
-           startButton.setEnabled(buttonEnableStage);
-           this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
-       }
-       if (! startButton.isEnabled() && !Statics.MasterLock) {
-           startButton.setText("Click again to enable this button");
-           buttonEnableStage=true;
-       }
+        if (buttonEnableStage) {
+            startButton.setEnabled(buttonEnableStage);
+            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+        }
+        if (!startButton.isEnabled() && !Statics.MasterLock) {
+            startButton.setText("Click again to enable this button");
+            buttonEnableStage = true;
+        }
     }//GEN-LAST:event_startButtonMouseClicked
 
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
         this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
-        buttonEnableStage=false;
+        buttonEnableStage = false;
     }//GEN-LAST:event_startButtonMouseExited
-    private void comboBoxUpdate(){
+    private void comboBoxUpdate() {
         Log.level2("From Resource: " + Statics.TargetScriptIsResource);
-        Log.level1("--" + comboBoxScriptSelector.getSelectedItem().toString()+"--");
-        if (Statics.TargetScriptIsResource){
+        Log.level1("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
+        if (Statics.TargetScriptIsResource) {
             Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         } else {
-            Log.level1(FileOperations.readFile( comboBoxScriptSelector.getSelectedItem().toString() + ".txt")+ "\n");
+            Log.level1(FileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         }
-        String ZipResource="";
+        String ZipResource;
         Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString();
-        if (Statics.TargetScriptIsResource){
-            ZipResource=Statics.ScriptLocation+comboBoxScriptSelector.getSelectedItem().toString()+".zip";    
-        } else{
-            ZipResource=comboBoxScriptSelector.getSelectedItem().toString()+".zip";    
+        if (Statics.TargetScriptIsResource) {
+            ZipResource = Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip";
+        } else {
+            ZipResource = comboBoxScriptSelector.getSelectedItem().toString() + ".zip";
         }
-        
-        if (getClass().getResource(ZipResource)!=null){
+
+        if (getClass().getResource(ZipResource) != null) {
             Log.level3("Extracting archive....");
 
             Unzip Unzip = new Unzip();
             try {
-                Unzip.UnZipResource(ZipResource.toString(),Statics.SelectedScriptFolder);
+                Unzip.UnZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
@@ -516,7 +513,7 @@ Log.level3("OMFGWOOT");
         }
         Log.level3("Exiting comboBoxUpdate()");
     }
-    
+
     private static void launchLink(String Link) {
         LinkLauncher LinkLauncher = new LinkLauncher();
         LinkLauncher.launchLink(Link);
@@ -549,13 +546,15 @@ Log.level3("OMFGWOOT");
     // End of variables declaration//GEN-END:variables
 
     private void deployADB() {
-       RunableDeployADB RunableDeployADB = new RunableDeployADB();
-       RunableDeployADB.runAction();
+        RunableDeployADB RunableDeployADB = new RunableDeployADB();
+        RunableDeployADB.runAction();
     }
-    public void setStatusLabelIcon(String Icon, String Text){
+
+    public void setStatusLabelIcon(String Icon, String Text) {
         StatusLabel.setIcon(createImageIcon(Icon, Text));
     }
-        protected ImageIcon createImageIcon(String path, String description) {
+
+    protected ImageIcon createImageIcon(String path, String description) {
         java.net.URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
@@ -564,11 +563,12 @@ Log.level3("OMFGWOOT");
             return null;
         }
     }
+
     private void prepareScripts() {
         try {
-            Statics.MasterLock=true;
+            Statics.MasterLock = true;
             listScripts();
-            Statics.MasterLock=false;
+            Statics.MasterLock = false;
         } catch (IOException ex) {
             Log.level0("ListScripts() could not find any entries");
             Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -586,26 +586,25 @@ Log.level3("OMFGWOOT");
         return FileName;
 
     }
-    
-    private boolean DeviceTimerState=false;
-    
-    public void startStopTimer(boolean StateCommanded){
-        if (StateCommanded && !DeviceTimerState){
+    private boolean DeviceTimerState = false;
+
+    public void startStopTimer(boolean StateCommanded) {
+        if (StateCommanded && !DeviceTimerState) {
             Statics.DeviceMonitor.DeviceCheck.start();
-        } else if (!StateCommanded && DeviceTimerState){
+        } else if (!StateCommanded && DeviceTimerState) {
             Statics.DeviceMonitor.DeviceCheck.start();
         }
     }
 
-    public void setStatusMessageLabel(String text){
+    public void setStatusMessageLabel(String text) {
         this.StatusLabel.setText(text);
     }
 
     private void listScripts() throws IOException {
-        
+
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
-        ArrayList list=new ArrayList();
+        ArrayList list = new ArrayList();
         if (Src != null) {
             Statics.setMasterLock(true);
             URL jar = Src.getLocation();
@@ -613,29 +612,29 @@ Log.level3("OMFGWOOT");
             ZipEntry ZEntry;
             Log.level3("Picking Jar File:" + jar.getFile());
             while ((ZEntry = Zip.getNextEntry()) != null) {
-                
+
                 String EntryName = ZEntry.getName();
                 if (EntryName.endsWith(".scr")) {
                     list.add(EntryName);
                 }
             }
-            Statics.scriptLocations=new String[list.size()];
-            Statics.scriptNames=new String[list.size()];
-            for (int n=0; n<list.size();n++){
-                String EntryName= ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr","");
+            Statics.scriptLocations = new String[list.size()];
+            Statics.scriptNames = new String[list.size()];
+            for (int n = 0; n < list.size(); n++) {
+                String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
                 Log.level3("Found: " + EntryName);
-                Statics.scriptNames[n]=EntryName;
+                Statics.scriptNames[n] = EntryName;
                 comboBoxScriptSelector.addItem(EntryName);
                 Count++;
             }
-            
+
             if (Count == 0) {
                 Log.level0("No Scripts found. Using Test Script.");
                 comboBoxScriptSelector.addItem("Test Script");
-                Statics.scriptLocations=new String[]{""};
-                Statics.scriptNames=new String[]{"Test Script"};
+                Statics.scriptLocations = new String[]{""};
+                Statics.scriptNames = new String[]{"Test Script"};
             }
-            Statics.MasterLock=false;
+            Statics.MasterLock = false;
 
         }
 
@@ -643,16 +642,14 @@ Log.level3("OMFGWOOT");
     }
 
     public void enableControls(boolean status) {
-        if (! Statics.MasterLock){
+        if (!Statics.MasterLock) {
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
             Log.level3("Controls Enabled status: " + status);
-        } else{
+        } else {
             Log.level3("Control Change requested but Statics.MasterLock is set.");
         }
     }
-
-
 
     private void populateFields() {
 
@@ -676,16 +673,18 @@ Log.level3("OMFGWOOT");
             Log.level0(ex.toString());
         }
     }
-    
 }
 
-class RunableDeployADB implements Runnable{
+class RunableDeployADB implements Runnable {
+
     static public final String newline = "\n";
-    FileOperations FileOperations=new FileOperations();
-    Log Log=new Log();    
+    FileOperations FileOperations = new FileOperations();
+    Log Log = new Log();
+
     public void runAction() {
         (new Thread(new RunableDeployADB())).start();
-    }   
+    }
+
     public void run() {
         DiffTextFiles DTF = new DiffTextFiles();
 
@@ -700,12 +699,12 @@ class RunableDeployADB implements Runnable{
         } else if (Statics.isMac()) {
             Log.level3("Found Mac Computer");
             //add our lines to the current adbini
-            
+
             //TODO: figure out why this crashes adb on Mac.
-            String addToADBUSB=DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac);
+            String addToADBUSB = DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac);
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, addToADBUSB);
-            
-            
+
+
             Statics.AdbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
@@ -735,27 +734,26 @@ class RunableDeployADB implements Runnable{
         FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
 
         Shell Shell = new Shell();
-        
+
         String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
-        
-            Statics.LiveSendCommand.add(Statics.AdbDeployed);
-            Statics.LiveSendCommand.add("get-state");
-            new Shell().silentBackgroundShellCommand();
+
+        Statics.LiveSendCommand.add(Statics.AdbDeployed);
+        Statics.LiveSendCommand.add("get-state");
+        new Shell().silentBackgroundShellCommand();
         String DeviceList = Shell.sendShellCommand(devicesCmd);
-        if (DeviceList.contains("ELFCLASS64")&& DeviceList.contains("wrong ELF")){
-                JOptionPane.showMessageDialog(Statics.GUI,
-                     "Could not execute ADB. 'Wrong ELF class' error\n"
-                        + "This can be resolved by installation of ia32-libs"
-                        + "eg.. sudo apt-get install ia32-libs\n"
-                        + "ie.. sudo YourPackageManger install ia32-libs"
-                        ,"ELFCLASS64 error!",
-                     JOptionPane.INFORMATION_MESSAGE);   
+        if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
+            JOptionPane.showMessageDialog(Statics.GUI,
+                    "Could not execute ADB. 'Wrong ELF class' error\n"
+                    + "This can be resolved by installation of ia32-libs"
+                    + "eg.. sudo apt-get install ia32-libs\n"
+                    + "ie.. sudo YourPackageManger install ia32-libs", "ELFCLASS64 error!",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
 
         Log.level3("Device List:" + DeviceList);
-        if (DeviceList.contains("????????????")||DeviceList.contains("error: cannot connect to daemon")) {
+        if (DeviceList.contains("????????????") || DeviceList.contains("error: cannot connect to daemon")) {
             Log.level1("killing server and requesting elevated permissions");
             Shell.sendShellCommand(killCmd);
             TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
@@ -777,12 +775,8 @@ class RunableDeployADB implements Runnable{
 
 
         }
-        
-        
+
+
 
     }
-
-    
-    
-    
 }

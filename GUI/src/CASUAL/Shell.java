@@ -19,7 +19,6 @@ package CASUAL;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,14 +35,16 @@ public class Shell implements Runnable {
     //for external access
     Log log = new Log();
     //Send a command to the shell
+
     public String elevateSimpleCommandWithMessage(String[] cmd, String message) {
-        return elevateSimpleCommands(cmd,message);
+        return elevateSimpleCommands(cmd, message);
     }
+
     public String elevateSimpleCommand(String[] cmd) {
-        return elevateSimpleCommands(cmd,null);
-        
+        return elevateSimpleCommands(cmd, null);
+
     }
-    
+
     private String elevateSimpleCommands(String[] cmd, String message) {
         String NewCmd = "";
         FileOperations FileOperations = new FileOperations();
@@ -62,10 +63,10 @@ public class Shell implements Runnable {
             String TestReturn = Shell.sendShellCommand(TestGKSudo);
             if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))) {
                 TimeOutOptionPane TO = new TimeOutOptionPane();
-                TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", TO.OK_OPTION, TO.ERROR_MESSAGE, null, null);
+                TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.ERROR_MESSAGE, null, null);
             }
 
-            
+
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
             FileOperations.deleteFile(ScriptFile);
             try {
@@ -74,13 +75,13 @@ public class Shell implements Runnable {
                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
-            log.level3("###Elevating Command: " +Command+ " ###");
-            if (message==null){
-                Result=Shell.sendShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile});
+            log.level3("###Elevating Command: " + Command + " ###");
+            if (message == null) {
+                Result = Shell.sendShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile});
             } else {
-                Result=Shell.sendShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile});
+                Result = Shell.sendShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile});
             }
-           
+
         } else if (Statics.isMac()) {
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
             try {
@@ -129,7 +130,7 @@ public class Shell implements Runnable {
                 AllText = AllText + line;
             }
             while ((line = STDOUT.readLine()) != null) {
-                AllText = AllText +  line;
+                AllText = AllText + line;
                 while ((line = STDERR.readLine()) != null) {
                     AllText = AllText + line;
                 }
@@ -183,35 +184,35 @@ public class Shell implements Runnable {
     }
 
     public void liveShellCommand(String[] params) {
-         try {
+        try {
             Process process = new ProcessBuilder(params).start();
             log.level3("\n###executing real-time command: " + params[0] + "###");
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String LineRead="";
+            String LineRead = "";
             String CharRead;
-            String LogRead="";
+            String LogRead = "";
 
             int c;
             while ((c = STDOUT.read()) > -1) {
 
                 CharRead = Character.toString((char) c);
                 LineRead = LineRead + CharRead;
-                LogRead=LogRead+CharRead;
+                LogRead = LogRead + CharRead;
                 log.progress(CharRead);
-                
-                if (Statics.ActionEvents != null && (LineRead.contains("\n") || LineRead.contains("\r"))){
-                    for (int i = 0; i<= Statics.ActionEvents.size() -1 ;i++){
-                        if (Statics.ActionEvents !=null && LineRead.contains((String)Statics.ActionEvents.get(i))){
-                          
-                          String LastLine=StringOperations.replaceLast(LineRead, "\n", "");  
-                          LastLine=StringOperations.replaceLast(LastLine, "\r", "");
-                          Statics.LastLineReceived=LastLine;
-                          new CASUALScriptParser().executeOneShotCommand((String) Statics.ReactionEvents.get(i));
+
+                if (Statics.ActionEvents != null && (LineRead.contains("\n") || LineRead.contains("\r"))) {
+                    for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
+                        if (Statics.ActionEvents != null && LineRead.contains((String) Statics.ActionEvents.get(i))) {
+
+                            String LastLine = StringOperations.replaceLast(LineRead, "\n", "");
+                            LastLine = StringOperations.replaceLast(LastLine, "\r", "");
+                            Statics.LastLineReceived = LastLine;
+                            new CASUALScriptParser().executeOneShotCommand((String) Statics.ReactionEvents.get(i));
                         }
                     }
-                    LineRead="";
-                              
+                    LineRead = "";
+
                 }
             }
             while ((LineRead = STDERR.readLine()) != null) {
@@ -241,8 +242,8 @@ public class Shell implements Runnable {
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String LineRead = null;
-                    String CharRead = null;
-                    String LogData="";
+                    String CharRead;
+                    String LogData = "";
                     boolean ResetLine = false;
                     int c;
                     while ((c = STDOUT.read()) > -1) {
@@ -253,7 +254,7 @@ public class Shell implements Runnable {
                         CharRead = Character.toString((char) c);
                         LineRead = LineRead + CharRead;
                         log.progress(CharRead);
-                        LogData=LogData+CharRead.toString();
+                        LogData = LogData + CharRead.toString();
                     }
                     while ((LineRead = STDERR.readLine()) != null) {
                         log.progress(LineRead);
@@ -271,7 +272,8 @@ public class Shell implements Runnable {
         Thread t = new Thread(r);
         t.start();
     }
- public void silentBackgroundShellCommand() {
+
+    public void silentBackgroundShellCommand() {
 
 
         Runnable r = new Runnable() {
@@ -284,8 +286,8 @@ public class Shell implements Runnable {
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String LineRead = null;
-                    String CharRead = null;
-                    String LogData="";
+                    String CharRead;
+                    String LogData = "";
                     boolean ResetLine = false;
                     int c;
                     while ((c = STDOUT.read()) > -1) {
@@ -296,7 +298,7 @@ public class Shell implements Runnable {
                         CharRead = Character.toString((char) c);
                         LineRead = LineRead + CharRead;
                         //log.level3(CharRead);
-                        LogData=LogData+CharRead.toString();
+                        LogData = LogData + CharRead.toString();
                     }
                     while ((LineRead = STDERR.readLine()) != null) {
                         log.level3(LineRead);
@@ -314,6 +316,7 @@ public class Shell implements Runnable {
         Thread t = new Thread(r);
         t.start();
     }
+
     public void run() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
