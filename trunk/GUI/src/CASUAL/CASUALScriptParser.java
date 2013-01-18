@@ -363,7 +363,12 @@ public class CASUALScriptParser {
                                updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
                                break;
                            //CASUAL must be update    
-                           case 3: Log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
+                           case 3: 
+                               Log.level0(Statics.updateMessageFromWb);
+                               Log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
+                               new TimeOutOptionPane().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n"+Statics.updateMessageFromWb+"\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                               new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
+                               System.exit(0);
                                return;
                            //download error
                            case 4: Log.level0("There was a problem downloading the script.  Please check your internet connection and try again.");

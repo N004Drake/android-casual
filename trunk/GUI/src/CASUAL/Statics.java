@@ -60,6 +60,8 @@ public class Statics {
     public static boolean LogCreated=false; //used by log class
     public static String[] DeviceTracker;
     public static String LastLineReceived;
+    public static String updateMessageFromWb;
+    public static String supportWebsiteFromWeb;
     /*
      *Form data 
      */
@@ -207,7 +209,12 @@ public static String[] scriptLocations={""};
 public static String getScriptLocationOnDisk(String name){
     for (int n=0; n<scriptNames.length; n++){
         if (name.equals(scriptNames[n])) {
-            return scriptLocations[n];
+            Log.level3("Script "+name+" returned #"+n+scriptNames[n]);
+            
+            if (scriptLocations[n]!=null){
+                return scriptLocations[n];
+            }
+            return "";
         }
     }
     return "";
@@ -215,6 +222,8 @@ public static String getScriptLocationOnDisk(String name){
 public static void setScriptLocationOnDisk(String name, String location){
     for (int n=0; n<scriptNames.length; n++){
         if (name.equals(scriptNames[n])) {
+            Log.level3("Associated Script "+name+" with #"+n+scriptNames[n]);
+
             scriptLocations[n]=location;
         }
     }
