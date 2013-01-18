@@ -16,13 +16,20 @@
  */
 package CASUAL;
 
-import java.io.*;
-import java.net.*;
+import java.io.InputStream;
+import java.io.File;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.net.URL;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.io.IOException;
 
 /**
  *
@@ -61,7 +68,7 @@ public class CASUALUpdates {
             if (checkVersionInformation(webInformation[2], localInformation[2])) {
                 //update SVN
                 Log.level0("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation[3] + " for more information. ");
-                Log.level0(webInformation[4]);
+                //Log.level0(webInformation[4]);
                 return 3;
             }
             if (checkVersionInformation(webInformation[1], localInformation[1])) {
@@ -184,13 +191,13 @@ public class CASUALUpdates {
      * Identification, support URL, message to user
      */
     private String[] parseIDString(String scriptIdentificationString) {
-        scriptIdentificationString = scriptIdentificationString.replaceAll(" ", "").replaceAll("#", "");
+        scriptIdentificationString = scriptIdentificationString.replaceAll("#", "");
         String[] commaSplit = scriptIdentificationString.split(",");
         String[] SVNScriptRevision = {"", "", "", "", ""};
         for (int n = 0; n < commaSplit.length; n++) {
             String[] splitID = commaSplit[n].split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)", 4);
             if (splitID[0].startsWith("ID")) {
-                String id = splitID[0].replaceFirst("ID", "");
+                String id = splitID[0].replaceFirst("ID", "").replaceAll(" ","");
                 SVNScriptRevision[0] = id;
             }
             if (splitID[0].replaceFirst(" ", "").startsWith("R")) {
@@ -205,7 +212,7 @@ public class CASUALUpdates {
                 SVNScriptRevision[3] = URL;
             }
             if (splitID[0].replaceFirst(" ", "").startsWith("Message")) {
-                String message = splitID[0].replaceFirst(" ", "").replaceFirst("Message", "");
+                String message = splitID[0].replaceFirst("Message", "");
                 SVNScriptRevision[4] = message;
             }
         }
