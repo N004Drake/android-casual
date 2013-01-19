@@ -112,14 +112,14 @@ public class CASUALScriptParser {
 
         Log.level3("");
         //Remove leading spaces
-        Line = removeLeadingSpaces(Line);
+        Line = StringOperations.removeLeadingSpaces(Line);
 //$HALT will execute any commands after the $HALT command and stop the script.
         if (Line.startsWith("$HALT")) {
             ScriptContinue = false;
 
             Line = Line.replace("$HALT", "");
             Log.level3("HALT RECEIVED");
-            Line = removeLeadingSpaces(Line);
+            Line = StringOperations.removeLeadingSpaces(Line);
             Log.level3("Finishing remaining commands:" + Line);
 
 
@@ -149,7 +149,7 @@ public class CASUALScriptParser {
         // example $ON Permission Denied, su -c !!
         if (Line.startsWith("$ON")) {
             Line = Line.replace("$ON", "");
-            Line = removeLeadingSpaces(Line);
+            Line = StringOperations.removeLeadingSpaces(Line);
             String Event[] = Line.split(",");
             try {
                 Statics.ActionEvents.add(Event[0]);
@@ -189,14 +189,14 @@ public class CASUALScriptParser {
         if (Line.startsWith("$ECHO")) {
             Log.level3("Received ECHO command" + Line);
             Line = Line.replace("$ECHO", "");
-            Line = removeLeadingSpaces(Line);
+            Line = StringOperations.removeLeadingSpaces(Line);
             Log.level1(Line);
             return;
 
 // $LISTDIR will a folder on the host machine
         } else if (Line.startsWith("$LISTDIR")) {
             Line = Line.replace("$LISTDIR", "");
-            Line = removeLeadingSpaces(Line);
+            Line = StringOperations.removeLeadingSpaces(Line);
             File[] files = new File(Line).listFiles();
             for (int i = 0; i <= files.length; i++) {
                 try {
@@ -211,7 +211,7 @@ public class CASUALScriptParser {
 // $MAKEDIR will make a folder
         } else if (Line.startsWith("$MAKEDIR")) {
             Line = Line.replaceFirst("$MAKEDIR", "");
-            Line = removeLeadingSpaces(Line);
+            Line = StringOperations.removeLeadingSpaces(Line);
             Log.level3("Creating Folder: " + Line);
             new File(Line).mkdirs();
             return;
@@ -230,7 +230,7 @@ public class CASUALScriptParser {
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
             Line = Line.replace("$USERNOTIFICATION", "");
-            Line = removeLeadingSpaces(Line);
+            Line = StringOperations.removeLeadingSpaces(Line);
             if (Line.contains(",")) {
                 String[] Message = Line.split(",");
                 Log.level3("Displaying Notification--" + Message[1]);
@@ -303,7 +303,7 @@ public class CASUALScriptParser {
 // if Fastboot, Send to fastboot shell command
         } else if (Line.startsWith("$FASTBOOT")) {
             Line = Line.replace("$FASTBOOT", "");
-            Line = removeLeadingSpaces(Line);
+            Line = StringOperations.removeLeadingSpaces(Line);
             Statics.checkAndDeployFastboot();
             if (Statics.isLinux()) {
                 if (Statics.UseSound.contains("true")) {
@@ -316,7 +316,7 @@ public class CASUALScriptParser {
             // if Fastboot, Send to fastboot shell command
         } else if (Line.startsWith("$ADB")) {
             Line = Line.replace("$ADB", "");
-            Line = removeLeadingSpaces(Line);
+            Line = StringOperations.removeLeadingSpaces(Line);
             doShellCommand(Line, null, null);
 // if no prefix, then send command directly to ADB.
         } else {
@@ -437,13 +437,7 @@ public class CASUALScriptParser {
 
     }
 
-    private String removeLeadingSpaces(String Line) {
-        while (Line.startsWith(" ")) {
-            Log.level3("Removing leading space.");
-            Line = Line.replaceFirst(" ", "");
-        }
-        return Line;
-    }
+
 
     private ArrayList parseCommandLine(String Line) {
         ArrayList List = new ArrayList();
@@ -502,7 +496,7 @@ public class CASUALScriptParser {
      * ReplaceThis should be null.
      */
     private void doShellCommand(String Line, String ReplaceThis, String WithThis) {
-        Line = this.removeLeadingSpaces(Line);
+        Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
         ArrayList ShellCommand = new ArrayList();
@@ -518,7 +512,7 @@ public class CASUALScriptParser {
     }
 
     private void doFastbootShellCommand(String Line) {
-        Line = this.removeLeadingSpaces(Line);
+        Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
         ArrayList ShellCommand = new ArrayList();
@@ -529,7 +523,7 @@ public class CASUALScriptParser {
     }
 
     private void doElevatedFastbootShellCommand(String Line) {
-        Line = this.removeLeadingSpaces(Line);
+        Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
         ArrayList ShellCommand = new ArrayList();
