@@ -196,23 +196,24 @@ public class CASUALUpdates {
         String[] SVNScriptRevision = {"", "", "", "", ""};
         for (int n = 0; n < commaSplit.length; n++) {
             String[] splitID = commaSplit[n].split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)", 4);
+            splitID[0]=StringOperations.removeLeadingSpaces(splitID[0]); 
             if (splitID[0].startsWith("ID")) {
-                String id = splitID[0].replaceFirst("ID", "").replaceAll(" ", "");
+                String id = StringOperations.removeLeadingSpaces(splitID[0].replaceFirst("ID", ""));
                 SVNScriptRevision[0] = id;
             }
-            if (splitID[0].replaceFirst(" ", "").startsWith("R")) {
+            if (splitID[0].startsWith("R")) {
                 SVNScriptRevision[1] = splitID[1].replaceAll(" ", "");
             }
 
-            if (splitID[0].replaceFirst(" ", "").startsWith("CASUAL") || splitID[0].replaceFirst(" ", "").startsWith("SVN")) {
+            if (splitID[0].startsWith("CASUAL") || splitID[0].startsWith("SVN")) {
                 SVNScriptRevision[2] = splitID[1].replaceAll(" ", "");
             }
-            if (splitID[0].replaceFirst(" ", "").startsWith("URL")) {
-                String URL = splitID[0].replaceFirst("URL", "");
+            if (splitID[0].startsWith("URL")) {
+                String URL = StringOperations.removeLeadingSpaces(splitID[0].replaceFirst("URL", ""));
                 SVNScriptRevision[3] = URL;
             }
-            if (splitID[0].replaceFirst(" ", "").startsWith("Message")) {
-                String message = splitID[0].replaceFirst("Message", "");
+            if (splitID[0].startsWith("Message")) {
+                String message = StringOperations.removeLeadingSpaces(commaSplit[n].replaceFirst("Message", ""));
                 SVNScriptRevision[4] = message;
             }
         }
