@@ -209,7 +209,7 @@ public class CASUALUpdates {
                 SVNScriptRevision[2] = splitID[1].replaceAll(" ", "");
             }
             if (splitID[0].startsWith("URL")) {
-                String URL = StringOperations.removeLeadingSpaces(splitID[0].replaceFirst("URL", ""));
+                String URL = StringOperations.removeLeadingSpaces(commaSplit[n].replaceFirst("URL", ""));
                 SVNScriptRevision[3] = URL;
             }
             if (splitID[0].startsWith("Message")) {
