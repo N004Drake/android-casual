@@ -59,10 +59,7 @@ public class CASUALScriptParser {
         executeSelectedScript(RAS, script);
     }
 
-    public static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
+
     /*
      * executes a CASUAL script from a file Reports to Log
      *
@@ -339,7 +336,7 @@ public class CASUALScriptParser {
                 int updateStatus;
                 Log.level3("CASUAL has initiated a multithreaded execution environment");
                 String CASUALIDString;
-                CASUALIDString = convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
+                CASUALIDString = StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
                 System.out.println(Statics.scriptLocations[0]);
                 System.out.println(Statics.scriptNames[0]);
                 if (CASUALIDString.startsWith("#") && (Statics.getScriptLocationOnDisk(script).equals(""))) {
