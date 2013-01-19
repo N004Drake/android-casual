@@ -88,13 +88,13 @@
         <echo>Revision found from SVN: ${svna.version}</echo>
 
     </target>
+     
+
+    <target name="-post-jar">
         <propertyfile file="src/CASUAL/resources/CASUALApp.properties">
             <entry key="Application.revision" value="${svna.version}" type="int" operation="="/>
             <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
-        </propertyfile>       
-
-    <target name="-post-jar">
-
+        </propertyfile>  
         <jar jarfile="dist/CASUAL-Revision${svna.version}b.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="src/Libraries/BSAFramework/bsaf-1.9.1.jar" excludes="META-INF/*" />                       
