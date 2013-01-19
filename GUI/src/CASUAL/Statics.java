@@ -47,7 +47,7 @@ public class Statics {
      */
     static Shell shellCommand;
     static Log Log = new Log();
-    public static ArrayList LiveSendCommand = new ArrayList();
+    public static ArrayList<String> LiveSendCommand = new ArrayList<String>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by log class
     public static String[] DeviceTracker;
@@ -67,8 +67,8 @@ public class Statics {
     final public static String Slash = System.getProperty("file.separator");
     public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
     public static String UseSound;
-    public static ArrayList ActionEvents = new ArrayList();
-    public static ArrayList ReactionEvents = new ArrayList();
+    public static ArrayList<String> ActionEvents = new ArrayList<String>();
+    public static ArrayList<String> ReactionEvents = new ArrayList<String>();
 
     /*
      * Folders

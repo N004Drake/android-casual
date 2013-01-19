@@ -215,8 +215,8 @@ public class CASUALScriptParser {
 
 // $CLEARON will remove all actions/reactions
         } else if (Line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList();
-            Statics.ReactionEvents = new ArrayList();
+            Statics.ActionEvents = new ArrayList<String>();
+            Statics.ReactionEvents = new ArrayList<String>();
             Log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
 
 
@@ -325,8 +325,8 @@ public class CASUALScriptParser {
     DataInputStream DATAIN;
 
     private void executeSelectedScript(DataInputStream DIS, final String script) {
-        Statics.ReactionEvents = new ArrayList();
-        Statics.ActionEvents = new ArrayList();
+        Statics.ReactionEvents = new ArrayList<String>();
+        Statics.ActionEvents = new ArrayList<String>();
         ScriptContinue = true;
         DATAIN = DIS;
         Log.level3("Executing Scripted Datastream" + DIS.toString());
@@ -436,8 +436,8 @@ public class CASUALScriptParser {
 
 
 
-    private ArrayList parseCommandLine(String Line) {
-        ArrayList List = new ArrayList();
+    private ArrayList<String> parseCommandLine(String Line) {
+        ArrayList<String> List = new ArrayList<String>();
         Boolean SingleQuoteOn = false;
         Boolean DoubleQuoteOn = false;
         String Word = "";
@@ -496,9 +496,9 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList ShellCommand = new ArrayList();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.AdbDeployed);
-        ShellCommand.addAll(this.parseCommandLine(Line));
+        ShellCommand.addAll(parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
         if (ReplaceThis != null) {
             for (int i = 0; i < StringCommand.length; i++) {
@@ -512,7 +512,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList ShellCommand = new ArrayList();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
@@ -523,7 +523,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList ShellCommand = new ArrayList();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));

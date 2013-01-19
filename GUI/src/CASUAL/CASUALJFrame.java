@@ -29,7 +29,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.swing.*;
+import javax.swing.Timer;
+import javax.swing.Icon;
+import javax.swing.JFileChooser;
+import javax.swing.ImageIcon;
 import org.jdesktop.application.Application;
 
 /**
@@ -116,7 +119,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         FileChooser1 = new javax.swing.JFileChooser();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         WindowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox();
+        comboBoxScriptSelector = new javax.swing.JComboBox<String>();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -535,7 +538,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel StatusAnimationLabel;
     private javax.swing.JLabel StatusLabel;
     private javax.swing.JLabel WindowBanner;
-    private javax.swing.JComboBox comboBoxScriptSelector;
+    private javax.swing.JComboBox<String> comboBoxScriptSelector;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -603,7 +606,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<String>();
         if (Src != null) {
             Statics.setMasterLock(true);
             URL jar = Src.getLocation();
