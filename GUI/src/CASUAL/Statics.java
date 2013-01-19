@@ -16,14 +16,12 @@
  */
 package CASUAL;
 
-import java.awt.Color;
+//import java.awt.Color;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 /**
@@ -42,10 +40,8 @@ public class Statics {
      * increase or decrease the logging level
      */
     public static int ConsoleLevel = 1; //userdata is output to console
-    /*
-     * increase or decrease the logging level
-     */
     public static int LogLevel = 4; //all logs are output to file
+
     /*
      * miscellanious variables
      */
@@ -58,10 +54,10 @@ public class Statics {
     public static String LastLineReceived;
     public static String updateMessageFromWb;
     public static String supportWebsiteFromWeb;
+    
     /*
      * Form data
      */
-    public static String ScriptLocation = "/SCRIPTS/";
     public static boolean TargetScriptIsResource = true;
     public static CASUALJFrame GUI;
     public static JTextPane ProgressPane; //used by log to update Progress
@@ -73,9 +69,11 @@ public class Statics {
     public static String UseSound;
     public static ArrayList ActionEvents = new ArrayList();
     public static ArrayList ReactionEvents = new ArrayList();
+
     /*
      * Folders
      */
+    public static String ScriptLocation = "/SCRIPTS/";
     private static String TempF = null;
     //TempFolder is the folder used for file operations
     final public static String TempFolder = getTempFolder();
@@ -113,7 +111,7 @@ public class Statics {
     public static String AdbDeployed;
     //public static String DeploymentBinaries[];
     public static String OSName = System.getProperty("os.name");
-    public static String Arch = "";
+    //public static String Arch = "";
     public static String SelectedScriptFolder;
     public static String WinElevatorInTempFolder = TempFolder + "Elevate.exe";
     final public static String CASUALSCRIPT = "/SCRIPTS/";
@@ -172,19 +170,18 @@ public class Statics {
      * sets system information, including binary presence, operating system and
      * archetecture
      */
-    public static SimpleAttributeSet keyWord = new SimpleAttributeSet();
 
     public static void initDocument() {
         ProgressPane.setContentType("text/html");
         ProgressDoc = ProgressPane.getStyledDocument();
 
-        StyleConstants.setForeground(keyWord, Color.RED);
-        StyleConstants.setBackground(keyWord, Color.YELLOW);
-        StyleConstants.setBold(keyWord, true);
+
     }
+    
+    
+    
     public static String[] scriptNames = {""};
     public static String[] scriptLocations = {""};
-
     public static String getScriptLocationOnDisk(String name) {
         for (int n = 0; n < scriptNames.length; n++) {
             if (name.equals(scriptNames[n])) {
@@ -209,10 +206,11 @@ public class Statics {
         }
 
     }
+
+    
     static boolean isFastbootDeployed = false;
     public static String fastbootResource = "";
     public static String fastbootDeployed = TempFolder + "fastboot";
-
     public static void checkAndDeployFastboot() {
         if (!isFastbootDeployed) {
             if (isLinux()) {
