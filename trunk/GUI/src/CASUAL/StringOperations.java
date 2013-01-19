@@ -32,4 +32,10 @@ public class StringOperations {
             return string;
         }
     }
+    public static String removeLeadingSpaces(String Line) {
+        while (Line.startsWith(" ")) {
+            Line = Line.replaceFirst(" ", "");
+        }
+        return Line;
+    }
 }
