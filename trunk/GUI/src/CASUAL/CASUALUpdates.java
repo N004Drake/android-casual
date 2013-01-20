@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import java.net.URISyntaxException;
 import java.net.MalformedURLException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  *
@@ -44,7 +45,10 @@ public class CASUALUpdates {
      */
     Log Log = new Log();
 
-    public int checkOfficialRepo(String script, String localIdentificationString) throws MalformedURLException, IOException {
+    public int checkOfficialRepo(String script, String localIdentificationString, String[] idStrings) throws MalformedURLException, IOException {
+        //TODO check actual MD5
+        
+        //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
 
         String webData;
         try {
@@ -81,10 +85,23 @@ public class CASUALUpdates {
                     new FileOperations().makeFolder(Statics.TempFolder + Statics.Slash + "SCRIPTS" + Statics.Slash);
                     Log.level0("Downloading Updates");
                     //TODO set /tmp/newfile as a real file
-                    downloadFileFromInternet(new URL(url + ".zip"), Statics.TempFolder + scriptname + ".zip", scriptname + ".zip");
-                    downloadFileFromInternet(new URL(url + ".scr"), Statics.TempFolder + scriptname + ".scr", scriptname + ".scr");
-                    downloadFileFromInternet(new URL(url + ".txt"), Statics.TempFolder + scriptname + ".txt", scriptname + ".txt");
-                    return 2;
+                    ArrayList<String> list = new ArrayList<String>();
+                    if (downloadFileFromInternet(new URL(url + ".scr"), Statics.TempFolder + scriptname + ".scr", scriptname + ".scr")){
+                        list.add(Statics.TempFolder + scriptname + ".scr");
+                    };
+                    if (downloadFileFromInternet(new URL(url + ".scr"), Statics.TempFolder + scriptname + ".scr", scriptname + ".zip")){
+                        list.add(Statics.TempFolder + scriptname + ".scr");
+                    }
+                    if (downloadFileFromInternet(new URL(url + ".txt"), Statics.TempFolder + scriptname + ".txt", scriptname + ".txt")){
+                        list.add(Statics.TempFolder + scriptname + ".scr");
+                    }
+                    String[] files = (String[]) list.toArray();
+                    if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation, files)){
+                        return 2;
+                    } else {
+                        return 5;
+                    }
+
                 } catch (URISyntaxException ex) {
                     Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
                     return 4;
@@ -137,7 +154,6 @@ public class CASUALUpdates {
 
                 }
             } finally {
-
                 output.flush();
                 output.close();
 
@@ -219,4 +235,9 @@ public class CASUALUpdates {
         }
         return SVNScriptRevision;
     }
+
+    /*
+     * returns a 2d array of FileName,md5SUM
+     */
+
 }
