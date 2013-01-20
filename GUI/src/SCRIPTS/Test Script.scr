@@ -1,4 +1,3 @@
-#CASUAL154 , R15, ID TEH ROXOR, URLhttp://www.google.com,MessageOMFG  I ROXOR TEH BIG11111
 $ECHO rebooting with ADB
 $ADB reboot bootloader
 $ECHO rebooting with Fastboot
