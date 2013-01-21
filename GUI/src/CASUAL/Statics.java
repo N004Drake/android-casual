@@ -32,7 +32,6 @@ import javax.swing.text.StyledDocument;
  * information to be used everywhere in the program.
  */
 public class Statics {
-
     public Statics() {
     }
 
@@ -52,9 +51,11 @@ public class Statics {
     public static boolean LogCreated = false; //used by log class
     public static String[] DeviceTracker;
     public static String LastLineReceived;
-    public static String updateMessageFromWb;
-    public static String supportWebsiteFromWeb;
     
+    
+    public static String updateMessageFromWeb;
+    public static String supportWebsiteFromWeb;
+    public static CASUALIDString localInformation=null;
     /*
      * Form data
      */
