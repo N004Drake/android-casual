@@ -57,6 +57,7 @@ public class CASUALUpdates {
             return 1;
 
         } catch (IOException ex) {
+            Log.level3(script + " not found in repository.");
             return 1;
         }
         //This is where we hold the local information to be compared to the update
