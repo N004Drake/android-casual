@@ -73,7 +73,7 @@ class CASUALDeployADB implements Runnable {
             Statics.LiveSendCommand.add("get-state");
             new Shell().silentBackgroundShellCommand();
             try {
-                System.out.println("sleeping");
+                Log.level3("sleeping for Windows ADB start");
                 Thread.sleep(250);
             } catch (InterruptedException ex) {
                 Logger.getLogger(CASUALDeployADB.class.getName()).log(Level.SEVERE, null, ex);

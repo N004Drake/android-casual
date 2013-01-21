@@ -70,12 +70,10 @@ public class CASUALUpdates {
         //This is where we hold web information to be checked for an update every run.
         CASUALIDString webInformation = new CASUALIDString();
         webInformation.setMetaDataFromIDString(webData.split("\n"));
-        
-        System.out.println("***WEB VERSION***"+webInformation.metaData);
+        Log.level3("***WEB VERSION***"+webInformation.metaData);
         Statics.updateMessageFromWeb = webInformation.getMetaData()[4];
         Statics.supportWebsiteFromWeb = webInformation.metaData[3];
         displayCASUALString(webInformation.metaData);
-        System.out.println();
 
         if (localInformation.metaData[0].equals(webInformation.metaData[0])) {
             if (checkVersionInformation(webInformation.metaData[2], localInformation.metaData[2])) {
@@ -90,15 +88,20 @@ public class CASUALUpdates {
                 
                 //ugly code dealing with /SCRIPTS/ folder on computer.
                 new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
-                downloadUpdates(script,webInformation,Statics.TempFolder);
-
-               /* if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation, files)) {
-                    return 2;
+                int status = downloadUpdates(script,webInformation,Statics.TempFolder);
+                if (status==0){
+                   Log.level0("... Update Sucessful! MD5s verified!");
+                   return 2;
                 } else {
-                    return 5;
+                   return 4;  
                 }
-                * 
-                */
+                
+                
+                //todo apply all update conditions here.
+                //update script location
+                //or fail out and return error
+
+               
 
             }
         }
@@ -153,7 +156,7 @@ public class CASUALUpdates {
 
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            Log.level3("Error Downloading " +ex.getMessage());
             return false;
         }
         return true;
@@ -161,11 +164,11 @@ public class CASUALUpdates {
 
     public void displayCASUALString(String[] CASUALString) {
         //SVN Revision, Script Revision, Script Identification, support URL, message to user
-        System.out.println("CASUALRevision: " + CASUALString[0]);
-        System.out.println("ScriptRevision: " + CASUALString[1]);
-        System.out.println("Identification: " + CASUALString[2]);
-        System.out.println("URL: " + CASUALString[3]);
-        System.out.println("Server Message: " + CASUALString[4]);
+        Log.level3("CASUALRevision: " + CASUALString[0]);
+        Log.level3("ScriptRevision: " + CASUALString[1]);
+        Log.level3("Identification: " + CASUALString[2]);
+        Log.level3("URL: " + CASUALString[3]);
+        Log.level3("Server Message: " + CASUALString[4]);
     }
 
     public URL stringToFormattedURL(String stringURL) throws MalformedURLException, URISyntaxException {
@@ -199,17 +202,20 @@ public class CASUALUpdates {
     /*
      * Takes CASUAL ID String Returns: SVN Revision, Script Revision, Script
      * Identification, support URL, message to user
+     * returns 0-update applied
+     * 1- update not available
+     * 2- update error
      */
-    private boolean downloadUpdates(String scriptname, CASUALIDString webInformation,String localPath) {
+    private int downloadUpdates(String scriptname, CASUALIDString webInformation,String localPath) {
         URL url;
         try {
             url = stringToFormattedURL(Statics.CASUALRepo + scriptname);
         } catch (MalformedURLException ex) {
             Log.level3("malformedURL exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo+scriptname);
-            return false;    
+            return 1;    
         } catch (URISyntaxException ex) {
             Log.level3("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo+scriptname);
-            return false;
+            return 1;
         }
         Log.level0("Downloading Updates");
         
@@ -237,13 +243,17 @@ public class CASUALUpdates {
             }
        
             String[] files = list.toArray(new String[list.size()]);
-            return new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation.md5sums, files);
+            if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation.md5sums, files)){
+                return 0;//success
+            } else {
+                return 2;//failure
+            }
             
            
         } catch (MalformedURLException ex) {
             Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        return 1;//no update available
     }
     
 }

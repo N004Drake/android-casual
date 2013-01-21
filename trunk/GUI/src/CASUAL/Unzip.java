@@ -34,14 +34,12 @@ import java.util.zip.ZipInputStream;
  * @author adam
  */
 public class Unzip {
-
+    Log log = new Log();
     int BUFFER = 4096;
 
-    public void unzipFiles() {
-    }
 
     public void unzipFile(String zipFile, String OutputFolder) throws ZipException, IOException {
-        System.out.println(zipFile);
+        log.level3(zipFile);
 
         File file = new File(zipFile);
         ZipFile zip = new ZipFile(file);
@@ -59,7 +57,6 @@ public class Unzip {
             File destinationParent = destFile.getParentFile();
             // create the parent directory structure if needed
             destinationParent.mkdirs();
-            System.out.println();
             if (!entry.isDirectory()) {
                 //if (Static)
                 BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
@@ -78,7 +75,7 @@ public class Unzip {
                 dest.close();
                 is.close();
             } else if (entry.isDirectory()) {
-                System.out.println(newPath + entry.getName());
+                log.level3(newPath + entry.getName());
                 new File(newPath + entry.getName()).mkdirs();
             }
             if (currentEntry.endsWith(".zip")) {
@@ -93,7 +90,7 @@ public class Unzip {
         ZipInputStream ZipInput = new ZipInputStream(ZStream);
         ZipEntry ZipEntryInstance;
         while ((ZipEntryInstance = ZipInput.getNextEntry()) != null) {
-            System.out.println("Unzipping " + ZipEntryInstance.getName());
+            log.level3("Unzipping " + ZipEntryInstance.getName());
             File EntryFile = new File(OutputFolder + System.getProperty("file.separator") + ZipEntryInstance.getName());
             if (ZipEntryInstance.isDirectory()) {
                 EntryFile.mkdirs();
