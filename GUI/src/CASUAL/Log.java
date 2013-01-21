@@ -169,11 +169,7 @@ public class Log {
     }
 
     public void beginLine() {
-        /*
-         * try {
-         *
-         * int x=1; System.out.print(x); } //catch (BadLocationException ex) { }
-         */
+        progress("\n");
     }
 
     void replaceLine(String data, int position, int length) {

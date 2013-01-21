@@ -72,10 +72,10 @@ public class MD5sum {
             matches[n]=false; //set match as false by default
             try {
                 String md5=md5sum(new File(MD5Filenames[n]));// get MD5 for current file
-                for (int nn=0; nn<FilenamesAndMD5[0].length; nn++){ //find MD5 in lookup table
-                    if (md5.equals(FilenamesAndMD5[n][0])) { //if md5 is found while looping through lookup table set match true
+                for (int nn=0; nn<FilenamesAndMD5.length; nn++){ //find MD5 in lookup table
+                    if (md5.length()!=32) { //if md5 is found while looping through lookup table set match true
                         matches[n]=true;
-                    } else if (md5.length()!=33){ //or if it is not an actual MD5 set as true;
+                    } else if (md5.equals(FilenamesAndMD5[nn][0])){ //or if it is not an actual MD5 set as true;
                         matches[n]=true;
                     }
                     
@@ -97,7 +97,7 @@ public class MD5sum {
         final int ROWS=idStrings.length; 
         int COLUMNS=2;
         final String[][] NameMD5=new String[ROWS][COLUMNS];
-        for (int n=0; n<COLUMNS; n++){
+        for (int n=0; n<ROWS; n++){
             try {
             if (idStrings[n].contains("  ")){
                String[] splitID=idStrings[n].split("  ");

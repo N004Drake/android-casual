@@ -447,7 +447,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBoxScriptSelectorActionPerformed
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
-        System.out.println(evt);
+        Log.level3("hiding script selector TargetScript: "+comboBoxScriptSelector.getSelectedItem().toString());
         if (comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
             Statics.TargetScriptIsResource = false;
         } else {
