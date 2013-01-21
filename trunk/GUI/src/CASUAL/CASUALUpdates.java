@@ -45,67 +45,61 @@ public class CASUALUpdates {
      */
     Log Log = new Log();
 
-    public int checkOfficialRepo(String script, String localIdentificationString, String[] idStrings) throws MalformedURLException, IOException {
+    public int checkOfficialRepo(String script, String localIdentificationString, String idStringFile) throws MalformedURLException, IOException {
         //TODO check actual MD5
-        
+
         //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
 
         String webData;
         try {
-            webData = getWebData(Statics.CASUALRepo + script + ".scr");
+            webData = getWebData(Statics.CASUALRepo + script + ".meta");
         } catch (URISyntaxException ex) {
             return 1;
 
         } catch (IOException ex) {
             return 1;
         }
-        String[] localInformation = parseIDString(localIdentificationString);
-
-        System.out.println("***WEB VERSION***");
-        String[] webInformation = parseIDString(webData.split("\n", 2)[0]);
-        Statics.updateMessageFromWb = webInformation[4];
-        Statics.supportWebsiteFromWeb = webInformation[3];
-        displayCASUALString(webInformation);
+        //This is where we hold the local information to be compared to the update
+        CASUALIDString localInformation = new CASUALIDString();
+        if (Statics.localInformation == null){
+            localInformation.setMetaDataFromIDString(localIdentificationString.split("\n"));
+        } else {
+            localInformation=Statics.localInformation;
+        }
+  
+        //This is where we hold web information to be checked for an update every run.
+        CASUALIDString webInformation = new CASUALIDString();
+        webInformation.setMetaDataFromIDString(webData.split("\n"));
+        
+        System.out.println("***WEB VERSION***"+webInformation.metaData);
+        Statics.updateMessageFromWeb = webInformation.getMetaData()[4];
+        Statics.supportWebsiteFromWeb = webInformation.metaData[3];
+        displayCASUALString(webInformation.metaData);
         System.out.println();
 
-        if (localInformation[0].equals(webInformation[0])) {
-            if (checkVersionInformation(webInformation[2], localInformation[2])) {
+        if (localInformation.metaData[0].equals(webInformation.metaData[0])) {
+            if (checkVersionInformation(webInformation.metaData[2], localInformation.metaData[2])) {
                 //update SVN
-                Log.level0("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation[3] + " for more information. ");
+                Log.level0("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.metaData[3] + " for more information. ");
                 //Log.level0(webInformation[4]);
                 return 3;
             }
-            if (checkVersionInformation(webInformation[1], localInformation[1])) {
-                try {
-                    Log.level0("Script is out of date. See " + webInformation[3] + " for more information.  Updating.");
-                    Log.level0(webInformation[4]);
+            if (checkVersionInformation(webInformation.metaData[1], localInformation.metaData[1])) {
+                Log.level0("Script is out of date. See " + webInformation.metaData[3] + " for more information.  Updating.");
+                Log.level0(webInformation.metaData[4]);
+                
+                //ugly code dealing with /SCRIPTS/ folder on computer.
+                new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
+                downloadUpdates(script,webInformation,Statics.TempFolder);
 
-                    URL url = this.stringToFormattedURL(Statics.CASUALRepo + script);
-                    String scriptname = script.replaceFirst("/SCRIPTS/", Statics.Slash + "SCRIPTS" + Statics.Slash);
-                    new FileOperations().makeFolder(Statics.TempFolder + Statics.Slash + "SCRIPTS" + Statics.Slash);
-                    Log.level0("Downloading Updates");
-                    //TODO set /tmp/newfile as a real file
-                    ArrayList<String> list = new ArrayList<String>();
-                    if (downloadFileFromInternet(new URL(url + ".scr"), Statics.TempFolder + scriptname + ".scr", scriptname + ".scr")){
-                        list.add(Statics.TempFolder + scriptname + ".scr");
-                    };
-                    if (downloadFileFromInternet(new URL(url + ".scr"), Statics.TempFolder + scriptname + ".scr", scriptname + ".zip")){
-                        list.add(Statics.TempFolder + scriptname + ".scr");
-                    }
-                    if (downloadFileFromInternet(new URL(url + ".txt"), Statics.TempFolder + scriptname + ".txt", scriptname + ".txt")){
-                        list.add(Statics.TempFolder + scriptname + ".scr");
-                    }
-                    String[] files = (String[]) list.toArray();
-                    if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation, files)){
-                        return 2;
-                    } else {
-                        return 5;
-                    }
-
-                } catch (URISyntaxException ex) {
-                    Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
-                    return 4;
+               /* if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation, files)) {
+                    return 2;
+                } else {
+                    return 5;
                 }
+                * 
+                */
+
             }
         }
         return 0;
@@ -206,38 +200,50 @@ public class CASUALUpdates {
      * Takes CASUAL ID String Returns: SVN Revision, Script Revision, Script
      * Identification, support URL, message to user
      */
-    private String[] parseIDString(String scriptIdentificationString) {
-        scriptIdentificationString = scriptIdentificationString.replaceAll("#", "");
-        String[] commaSplit = scriptIdentificationString.split(",");
-        String[] SVNScriptRevision = {"", "", "", "", ""};
-        for (int n = 0; n < commaSplit.length; n++) {
-            String[] splitID = commaSplit[n].split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)", 4);
-            splitID[0]=StringOperations.removeLeadingSpaces(splitID[0]); 
-            if (splitID[0].startsWith("ID")) {
-                String id = StringOperations.removeLeadingSpaces(splitID[0].replaceFirst("ID", ""));
-                SVNScriptRevision[0] = id;
-            }
-            if (splitID[0].startsWith("R")) {
-                SVNScriptRevision[1] = splitID[1].replaceAll(" ", "");
-            }
-
-            if (splitID[0].startsWith("CASUAL") || splitID[0].startsWith("SVN")) {
-                SVNScriptRevision[2] = splitID[1].replaceAll(" ", "");
-            }
-            if (splitID[0].startsWith("URL")) {
-                String URL = StringOperations.removeLeadingSpaces(commaSplit[n].replaceFirst("URL", ""));
-                SVNScriptRevision[3] = URL;
-            }
-            if (splitID[0].startsWith("Message")) {
-                String message = StringOperations.removeLeadingSpaces(commaSplit[n].replaceFirst("Message", ""));
-                SVNScriptRevision[4] = message;
-            }
+    private boolean downloadUpdates(String scriptname, CASUALIDString webInformation,String localPath) {
+        URL url;
+        try {
+            url = stringToFormattedURL(Statics.CASUALRepo + scriptname);
+        } catch (MalformedURLException ex) {
+            Log.level3("malformedURL exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo+scriptname);
+            return false;    
+        } catch (URISyntaxException ex) {
+            Log.level3("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo+scriptname);
+            return false;
         }
-        return SVNScriptRevision;
+        Log.level0("Downloading Updates");
+        
+        try {
+            ArrayList<String> list = new ArrayList<String>();
+            String localfile=Statics.TempFolder + scriptname;
+            String ext="";
+            for (int n=0; n<webInformation.md5sums.length; n++){
+                //get download extension from md5sum;
+
+                try {
+                    String[] md5=webInformation.md5sums[n].split("  ");
+                    String fileName=md5[1];
+                    ext="."+fileName.split("\\.")[1];
+                    if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
+                        list.add(Statics.TempFolder + scriptname + ext);
+                    }
+                } catch (ArrayIndexOutOfBoundsException e){
+                    continue;
+                } catch (NullPointerException e){
+                    continue;
+                }
+
+
+            }
+       
+            String[] files = list.toArray(new String[list.size()]);
+            return new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation.md5sums, files);
+            
+           
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
-
-    /*
-     * returns a 2d array of FileName,md5SUM
-     */
-
+    
 }

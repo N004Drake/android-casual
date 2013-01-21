@@ -334,15 +334,13 @@ public class CASUALScriptParser {
             public void run() {
                 int updateStatus;
                 Log.level3("CASUAL has initiated a multithreaded execution environment");
-                String[] idStrings = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta"))).split("\n");
-
-                for (int n = 0; n < idStrings.length; n++) {
-                    String TestString = StringOperations.removeLeadingSpaces(idStrings[n]);
-                    if (TestString.startsWith("#") && (Statics.getScriptLocationOnDisk(script).equals(""))) {
+                String idStringFile = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta")));
+                    String TestString = StringOperations.removeLeadingSpaces(idStringFile);
+                    if ((TestString!=null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
                         try {
 
                             //String[] IDStrings = CASUALIDString.split("\n");
-                            updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, TestString, idStrings);
+                            updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, TestString, idStringFile);
                             
                             /*
                              * checks for updates returns: 0=no updates found
@@ -364,9 +362,9 @@ public class CASUALScriptParser {
                                     break;
                                 //CASUAL must be update    
                                 case 3:
-                                    Log.level0(Statics.updateMessageFromWb);
+                                    Log.level0(Statics.updateMessageFromWeb);
                                     Log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                                    new TimeOutOptionPane().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                    new TimeOutOptionPane().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWeb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                     new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
                                     System.exit(0);
                                     return;
@@ -393,7 +391,7 @@ public class CASUALScriptParser {
 
                         }
                     }
-                }
+               
                 CurrentLine = 1;
                 Statics.ProgressBar.setMaximum(LinesInScript);
                 Log.level3("Reading datastream" + DATAIN);

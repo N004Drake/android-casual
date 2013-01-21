@@ -72,7 +72,7 @@
     nbproject/build-impl.xml file. 
 
     -->
-    <target name="-post-init" description="Sets the buildversion for the current build">
+    <target name="-pre-init" description="Sets the buildversion for the current build">
         <exec outputproperty="svna.version" executable="svnversion">
             <arg value="-c" />
             <redirector>

@@ -73,9 +73,9 @@ public class MD5sum {
             try {
                 String md5=md5sum(new File(MD5Filenames[n]));// get MD5 for current file
                 for (int nn=0; nn<FilenamesAndMD5[0].length; nn++){ //find MD5 in lookup table
-                    if (md5.equals(FilenamesAndMD5[n][1])) { //if md5 is found while looping through lookup table set match true
+                    if (md5.equals(FilenamesAndMD5[n][0])) { //if md5 is found while looping through lookup table set match true
                         matches[n]=true;
-                    } else if (md5.length()!=16){ //or if it is not an actual MD5 set as true;
+                    } else if (md5.length()!=33){ //or if it is not an actual MD5 set as true;
                         matches[n]=true;
                     }
                     
@@ -94,15 +94,17 @@ public class MD5sum {
         return true;
     }
     private String[][] splitFilenamesAndMD5(String[] idStrings) {
-        final int ROWS=2; 
-        int COLUMNS=idStrings.length;
+        final int ROWS=idStrings.length; 
+        int COLUMNS=2;
         final String[][] NameMD5=new String[ROWS][COLUMNS];
         for (int n=0; n<COLUMNS; n++){
+            try {
+            if (idStrings[n].contains("  ")){
                String[] splitID=idStrings[n].split("  ");
                if (splitID.length==2){
                        if ((splitID[0]!=null) && (splitID[1]!=null)){
-                           NameMD5[n][0]="splitID[0]";
-                           NameMD5[n][1]="splitID[1]";
+                           NameMD5[n][0]=splitID[0];
+                           NameMD5[n][1]=splitID[1];
                            //this is a valid MD5 split
                        } else {
                            //spoof empty string
@@ -115,6 +117,10 @@ public class MD5sum {
                     NameMD5[n][0]="";
                     NameMD5[n][1]="";
                }
+            }
+        } catch (NullPointerException e){
+            continue;
+        }
         }
         return NameMD5;        
     }
