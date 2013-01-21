@@ -1,5 +1,0 @@
-$ECHO rebooting with ADB
-$ADB reboot bootloader
-$ECHO rebooting with Fastboot
-$FASTBOOT reboot
-$ECHO Done.
