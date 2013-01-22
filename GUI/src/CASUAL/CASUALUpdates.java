@@ -46,8 +46,6 @@ public class CASUALUpdates {
     Log Log = new Log();
 
     public int checkOfficialRepo(String script, String localIdentificationString, String idStringFile) throws MalformedURLException, IOException {
-        //TODO check actual MD5
-
         //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
 
         String webData;
