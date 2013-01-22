@@ -137,7 +137,7 @@ public class Shell implements Runnable {
             }
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             log.level2("Problem while executing" + arrayToString(cmd)
                     + " in Shell.sendShellCommand() Received " + AllText);
             return "CritERROR!!!";
@@ -157,7 +157,7 @@ public class Shell implements Runnable {
             }
             return AllText;
         } catch (IOException ex) {
-            return "error";
+            return "CritError!!!";
         }
 
     }

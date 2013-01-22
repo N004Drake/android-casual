@@ -104,19 +104,57 @@ public class CASUALScriptParser {
     /*
      * Script Handler contains all script commands and will execute commands
      */
-    private void commandHandler(String Line) {
+    private void commandHandler(String line) {
 
+        
+       /*
+        * $WINDOWS/$LINUX/$MAC
+        * checks if the operating system is Windows, Linux Or Mac
+        * if it is, it will execute the commands
+        * Command may include $HALT and any other command like $ECHO
+        */
+       if (line.startsWith("$LINUX")) {
+           if (Statics.isLinux()){
+                String removeCommand="$LINUX";
+                line = removeCommandAndContinue(removeCommand, line);
+                Log.progress("Linux Detected: ");
+                Log.level3("OS IS LINUX! remaining commands:" + line);
+                
+           } else {
+               return;
+           }
+       }
+       if (line.startsWith("$WINDOWS")) {
+           if (Statics.isWindows()){
+                Log.progress("Windows Detected: ");
+                String removeCommand="$WINDOWS";
+                line = removeCommandAndContinue(removeCommand, line);
+                Log.level3("OS IS WINDOWS! remaining commands:" + line);
+           } else {
+               return;
+           }
+       }   
+       if (line.startsWith("$MAC")) {
+           if (Statics.isMac()){
+                Log.progress("Mac Detected: ");
+                String removeCommand="$MAC";
+                line = removeCommandAndContinue(removeCommand, line);
+                Log.level3("OS IS MAC! remaining commands:" + line);
+           } else {
+               return;
+           }
+       }        
         Log.level3("");
         //Remove leading spaces
-        Line = StringOperations.removeLeadingSpaces(Line);
-//$HALT will execute any commands after the $HALT command and stop the script.
-        if (Line.startsWith("$HALT")) {
+        line = StringOperations.removeLeadingSpaces(line);
+//$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
+        if (line.startsWith("$HALT")) {
             ScriptContinue = false;
 
-            Line = Line.replace("$HALT", "");
+            line = line.replace("$HALT", "");
             Log.level3("HALT RECEIVED");
-            Line = StringOperations.removeLeadingSpaces(Line);
-            Log.level3("Finishing remaining commands:" + Line);
+            line = StringOperations.removeLeadingSpaces(line);
+            Log.level3("Finishing remaining commands:" + line);
 
 
             //TODO: add end LED notification here
@@ -126,16 +164,16 @@ public class CASUALScriptParser {
 //TODO: add "reboot" with adb reboot then send shell command "sleep5" then wait-for-device to account for windows retardedness
 
 //# is a comment Disregard commented lines
-        if (Line.startsWith("#")) {
-            Log.level3("Ignoring commented line" + Line);
+        if (line.startsWith("#")) {
+            Log.level3("Ignoring commented line" + line);
             return;
         }
 
         //Disregard blank lines
-        if (Line.equals("")) {
+        if (line.equals("")) {
             return;
         }
-        Log.level3("SCRIPT COMMAND:" + Line);
+        Log.level3("SCRIPT COMMAND:" + line);
 
 //$ON will trigger on an event
         //PARAM1 = Textual input event
@@ -143,10 +181,10 @@ public class CASUALScriptParser {
         //,= separator
         // example $ON File Not Found, $HALT
         // example $ON Permission Denied, su -c !!
-        if (Line.startsWith("$ON")) {
-            Line = Line.replace("$ON", "");
-            Line = StringOperations.removeLeadingSpaces(Line);
-            String Event[] = Line.split(",");
+        if (line.startsWith("$ON")) {
+            line = line.replace("$ON", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            String Event[] = line.split(",");
             try {
                 Statics.ActionEvents.add(Event[0]);
                 Log.level3("***NEW EVENT ADDED***");
@@ -162,38 +200,38 @@ public class CASUALScriptParser {
         }
 
 //$SLASH will replace with "\" for windows or "/" for linux and mac
-        if (Line.contains("$SLASH")) {
-            Line = Line.replace("$SLASH", Statics.Slash);
-            Log.level3("Expanded $SLASH: " + Line);
+        if (line.contains("$SLASH")) {
+            line = line.replace("$SLASH", Statics.Slash);
+            Log.level3("Expanded $SLASH: " + line);
         }
 
 //$ZIPFILE is a reference to the Script's .zip file
-        if (Line.contains("$ZIPFILE")) {
-            Line = Line.replace("$ZIPFILE", ScriptTempFolder);
-            Log.level3("Expanded $ZIPFILE: " + Line);
+        if (line.contains("$ZIPFILE")) {
+            line = line.replace("$ZIPFILE", ScriptTempFolder);
+            Log.level3("Expanded $ZIPFILE: " + line);
         }
 
-        if ((Line.contains("\\n")) && ((Line.startsWith("$USERNOTIFICATION") || Line.startsWith("$USERNOTIFICATION")) || Line.startsWith("$USERCANCELOPTION"))) {
-            Line = Line.replace("\\n", "\n");
+        if ((line.contains("\\n")) && ((line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERNOTIFICATION")) || line.startsWith("$USERCANCELOPTION"))) {
+            line = line.replace("\\n", "\n");
         }
 //$HOMEFOLDER will reference the user's home folder on the system        
-        if (Line.contains("$HOMEFOLDER")) {
-            Line = Line.replace("$HOMEFOLDER", Statics.CASUALHome);
-            Log.level3("Expanded $HOMEFOLDER" + Line);
+        if (line.contains("$HOMEFOLDER")) {
+            line = line.replace("$HOMEFOLDER", Statics.CASUALHome);
+            Log.level3("Expanded $HOMEFOLDER" + line);
         }
 //$ECHO command will display text in the main window
-        if (Line.startsWith("$ECHO")) {
-            Log.level3("Received ECHO command" + Line);
-            Line = Line.replace("$ECHO", "");
-            Line = StringOperations.removeLeadingSpaces(Line);
-            Log.level1(Line);
+        if (line.startsWith("$ECHO")) {
+            Log.level3("Received ECHO command" + line);
+            line = line.replace("$ECHO", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            Log.level1(line);
             return;
 
 // $LISTDIR will a folder on the host machine
-        } else if (Line.startsWith("$LISTDIR")) {
-            Line = Line.replace("$LISTDIR", "");
-            Line = StringOperations.removeLeadingSpaces(Line);
-            File[] files = new File(Line).listFiles();
+        } else if (line.startsWith("$LISTDIR")) {
+            line = line.replace("$LISTDIR", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            File[] files = new File(line).listFiles();
             for (int i = 0; i <= files.length; i++) {
                 try {
                     commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
@@ -205,15 +243,15 @@ public class CASUALScriptParser {
             return;
 
 // $MAKEDIR will make a folder
-        } else if (Line.startsWith("$MAKEDIR")) {
-            Line = Line.replaceFirst("$MAKEDIR", "");
-            Line = StringOperations.removeLeadingSpaces(Line);
-            Log.level3("Creating Folder: " + Line);
-            new File(Line).mkdirs();
+        } else if (line.startsWith("$MAKEDIR")) {
+            line = line.replaceFirst("$MAKEDIR", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            Log.level3("Creating Folder: " + line);
+            new File(line).mkdirs();
             return;
 
 // $CLEARON will remove all actions/reactions
-        } else if (Line.startsWith("$CLEARON")) {
+        } else if (line.startsWith("$CLEARON")) {
             Statics.ActionEvents = new ArrayList<String>();
             Statics.ReactionEvents = new ArrayList<String>();
             Log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
@@ -221,14 +259,14 @@ public class CASUALScriptParser {
 
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 
-        } else if (Line.startsWith("$USERNOTIFICATION")) {
+        } else if (line.startsWith("$USERNOTIFICATION")) {
             if (Statics.UseSound.contains("true")) {
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
-            Line = Line.replace("$USERNOTIFICATION", "");
-            Line = StringOperations.removeLeadingSpaces(Line);
-            if (Line.contains(",")) {
-                String[] Message = Line.split(",");
+            line = line.replace("$USERNOTIFICATION", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            if (line.contains(",")) {
+                String[] Message = line.split(",");
                 Log.level3("Displaying Notification--" + Message[1]);
                 JOptionPane.showMessageDialog(Statics.GUI,
                         Message[1],
@@ -236,7 +274,7 @@ public class CASUALScriptParser {
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(Statics.GUI,
-                        Line,
+                        line,
                         "Information",
                         JOptionPane.INFORMATION_MESSAGE);
             }
@@ -245,14 +283,14 @@ public class CASUALScriptParser {
 // $USERCANCELOPTION will give the user the option to halt the script
             //USE: $USERCANCELOPTION Message
             //USE: $USERCANCELOPTION Title, Message
-        } else if (Line.startsWith("$USERCANCELOPTION")) {
+        } else if (line.startsWith("$USERCANCELOPTION")) {
             if (Statics.UseSound.contains("true")) {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             }
-            Line = Line.replace("$USERCANCELOPTION", "");
-            if (Line.contains(",")) {
-                String[] Message = Line.split(",");
+            line = line.replace("$USERCANCELOPTION", "");
+            if (line.contains(",")) {
+                String[] Message = line.split(",");
                 Object[] Options = {"Stop",
                     "Continue"};
                 int n = JOptionPane.showOptionDialog(
@@ -272,7 +310,7 @@ public class CASUALScriptParser {
             } else {
                 int n = JOptionPane.showConfirmDialog(
                         Statics.GUI,
-                        Line,
+                        line,
                         "Do you wish to continue?",
                         JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
@@ -284,42 +322,64 @@ public class CASUALScriptParser {
 //$USERINPUTBOX will accept a String to be injected into ADB
             //Any text will be injected into the $USERINPUT variable    
             //USE: $USERINPUTBOX Title, Message, command $USERINPUT
-        } else if (Line.startsWith("$USERINPUTBOX")) {
+        } else if (line.startsWith("$USERINPUTBOX")) {
             CASUALAudioSystem.playSound("/CASUAL/resources/sounds/InputRequested.wav");
-            Line.replace("\\n", "\n");
-            String[] Message = Line.replace("$USERINPUTBOX", "").split(",");
+            line.replace("\\n", "\n");
+            String[] Message = line.replace("$USERINPUTBOX", "").split(",");
             String InputBoxText = JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
             InputBoxText = returnSafeCharacters(InputBoxText);
 
 
             Log.level3(InputBoxText);
-            //TODO Verify this
             doShellCommand(Message[2], "$USERINPUT", InputBoxText);
             return;
+            
+// if Heimdall, Send to Heimdall shell command
+        } else if (line.startsWith("$HEIMDALL")){
+            line = line.replace("$HEIMDALL", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            
+            if (Statics.checkAndDeployHeimdall()){
+                this.doHeimdallWaitForDevice();
+                if (Statics.isLinux()) {
+                    doElevatedHeimdallShellCommand(line);
+                }
+            doHeimdallShellCommand(line);
+            } else {
+                this.executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
+            }
 // if Fastboot, Send to fastboot shell command
-        } else if (Line.startsWith("$FASTBOOT")) {
-            Line = Line.replace("$FASTBOOT", "");
-            Line = StringOperations.removeLeadingSpaces(Line);
+        } else if (line.startsWith("$FASTBOOT")) {
+            line = line.replace("$FASTBOOT", "");
+            line = StringOperations.removeLeadingSpaces(line);
             Statics.checkAndDeployFastboot();
             if (Statics.isLinux()) {
                 if (Statics.UseSound.contains("true")) {
                     CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 }
-                doElevatedFastbootShellCommand(Line);
+                doElevatedFastbootShellCommand(line);
             }
-            doFastbootShellCommand(Line);
+            doFastbootShellCommand(line);
 
             // if Fastboot, Send to fastboot shell command
-        } else if (Line.startsWith("$ADB")) {
-            Line = Line.replace("$ADB", "");
-            Line = StringOperations.removeLeadingSpaces(Line);
-            doShellCommand(Line, null, null);
+        } else if (line.startsWith("$ADB")) {
+            line = line.replace("$ADB", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            doShellCommand(line, null, null);
 // if no prefix, then send command directly to ADB.
         } else {
-            doShellCommand(Line, null, null);
+            doShellCommand(line, null, null);
         }
         //final line output for debugging purposes
-        Log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + Line);
+        Log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + line);
+    }
+
+    private String removeCommandAndContinue(String remove, String line) {
+        ScriptContinue = false;
+        line = line.replace(remove, "");
+        Log.level3("Removed " + remove );
+        line = StringOperations.removeLeadingSpaces(line);
+        return line;
     }
     DataInputStream DATAIN;
 
@@ -375,6 +435,8 @@ public class CASUALScriptParser {
                                     return;
                                 case 5:
                                     Log.level0("Problem downloading file from internet, please try again");
+                                    Log.level0("Problem downloading file from internet, please try again");
+
 
                                     //TODO stop and reset script to stock... possibly delete temp folder and restart CASUAL
                                     //HALT script
@@ -529,8 +591,64 @@ public class CASUALScriptParser {
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
         Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
+    } 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private void doHeimdallWaitForDevice(){
+        Shell Shell = new Shell();
+        ArrayList<String> shellCommand = new ArrayList<String>();
+        shellCommand.add(Statics.heimdallDeployed);
+        shellCommand.add("detect");
+        String stringCommand[] = (convertArrayListToStringArray(shellCommand));
+        while (! Shell.silentShellCommand(stringCommand).contains("Device detected")){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }
+    
+    private void doHeimdallShellCommand(String Line) {
+        Line = StringOperations.removeLeadingSpaces(Line);
+        Shell Shell = new Shell();
+        ArrayList<String> shellCommand = new ArrayList<String>();
+        shellCommand.add(Statics.heimdallDeployed);
+        shellCommand.addAll(this.parseCommandLine(Line));
+        String stringCommand2[] = convertArrayListToStringArray(shellCommand);
+        Shell.liveShellCommand(stringCommand2);
+    }
+    private void doElevatedHeimdallShellCommand(String Line) {
+        Line = StringOperations.removeLeadingSpaces(Line);
+        Shell Shell = new Shell();
+        ArrayList<String> shellCommand = new ArrayList<String>();
+        shellCommand.add(Statics.heimdallDeployed);
+        shellCommand.addAll(this.parseCommandLine(Line));
+        String stringCommand2[] = convertArrayListToStringArray(shellCommand);
+        Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private String returnSafeCharacters(String Str) {
         Str = Str.replace("\\", "\\\\");
         Str = Str.replace("\"", "\\\"");

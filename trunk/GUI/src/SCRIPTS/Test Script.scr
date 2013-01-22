@@ -1,5 +1,10 @@
-$ECHO rebooting with ADB
-$ADB reboot bootloader
-$ECHO rebooting with Fastboot
-$FASTBOOT reboot
-$ECHO Done.
+$WINDOWS $HALT $ECHO Cannot Continue.  This is not supported on Windows
+$MAC $HALT $ECHO Cannot Continue.  This is not supported on MAC
+$ECHO Rebooting download
+$ECHO 
+$ADB reboot download
+$ECHO rebooting ADB
+$ECHO
+$HEIMDALL close-pc-screen
+$ECHO
+$ECHO done

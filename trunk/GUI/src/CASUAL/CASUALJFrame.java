@@ -202,6 +202,14 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         StatusLabel.setFont(new java.awt.Font("Ubuntu", 0, 20)); // NOI18N
         StatusLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASUAL/resources/icons/DeviceDisconnected.png"))); // NOI18N
+        StatusLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                StatusLabelMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                StatusLabelMouseExited(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -474,20 +482,33 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
     boolean buttonEnableStage = false;
     private void startButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseClicked
-        if (buttonEnableStage) {
-            startButton.setEnabled(buttonEnableStage);
-            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
-        }
-        if (!startButton.isEnabled() && !Statics.MasterLock) {
-            startButton.setText("Click again to enable this button");
-            buttonEnableStage = true;
-        }
+
     }//GEN-LAST:event_startButtonMouseClicked
 
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
+    }//GEN-LAST:event_startButtonMouseExited
+
+    private void StatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseClicked
+        if (buttonEnableStage) {
+            startButton.setEnabled(buttonEnableStage);
+            this.comboBoxScriptSelector.setEnabled(buttonEnableStage);
+            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+            
+        }
+        if (!startButton.isEnabled() && !Statics.MasterLock) {
+            startButton.setText("Click again to enable all controls");
+            buttonEnableStage = true;
+            
+            
+            
+        }
+    }//GEN-LAST:event_StatusLabelMouseClicked
+
+    private void StatusLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseExited
         this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
         buttonEnableStage = false;
-    }//GEN-LAST:event_startButtonMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_StatusLabelMouseExited
     private void comboBoxUpdate() {
         Log.level2("From Resource: " + Statics.TargetScriptIsResource);
         Log.level1("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
