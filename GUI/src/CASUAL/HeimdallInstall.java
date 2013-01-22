@@ -94,7 +94,7 @@ public class HeimdallInstall {
                 if (new HeimdallInstall().checkHeimdallVersion()){
                     return true;
                 } else {
-                    new HeimdallInstall().runWinHeimdallInstallationProcedure();
+                    new HeimdallInstall().installWindowsVCRedist();
                         if (Statics.checkAndDeployHeimdall()){
                             return true;
                         } 
@@ -152,6 +152,8 @@ public class HeimdallInstall {
   public void installWindowsVCRedist(){
       //download 
       CASUALUpdates updater=new CASUALUpdates();
+      new Log().level0("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
+      
         try {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedistInRepo), Statics.TempFolder+"vcredist_x86.exe", "Visual Studio Redistributable");
         } catch (MalformedURLException ex) {
@@ -177,7 +179,7 @@ public class HeimdallInstall {
             null, //parentComponent
             "1. Put your device in --download mode-- and connect to computer.\n"
             + "2. In the next window select Options>List all devices.\n"
-            +"3. select 'USB TABLET' in the Zadig window\n"
+            +"3. select 'Gadget Serial' in the Zadig window\n"
             +"4.  click 'install driver'.\n", //Display Message
             "Driver Installation",   //DisplayTitle
             TimeOutOptionPane.OK_OPTION, // Options buttons
@@ -187,7 +189,7 @@ public class HeimdallInstall {
       new Log().level0("Driver Installation:\n"
               + "1. Put your device in --download mode-- and connect to computer.\n"
               + "2. In the next window select Options>List all devices.\n"
-              + "3. select USB Tablet in the main window\n"
+              + "3. select 'Gadget Serial' in the main window\n"
               + "4.  click 'install driver'.\n"
               + "Note: the USB port which you install this driver will be converted\n"
               + "to use Heimdall instead of Odin for download mode.  It only affects\n"
