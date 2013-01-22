@@ -37,6 +37,7 @@ public class CASUALConnectionStatusMonitor {
 
             //execute adb devices and filter
             String DeviceCommand[] = {Statics.AdbDeployed, "devices"};
+            try {
             String DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
             Statics.DeviceTracker = DeviceList.split("device");
 
@@ -84,6 +85,8 @@ public class CASUALConnectionStatusMonitor {
                 }
 
             }
+        } catch (java.lang.NullPointerException e) {
+        }
         }
     });
 

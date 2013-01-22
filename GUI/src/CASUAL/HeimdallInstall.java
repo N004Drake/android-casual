@@ -91,7 +91,7 @@ public class HeimdallInstall {
                 //TODO check if drivers and runtime is installed
                 //otherwise download and Shell().elevate
                 
-                if (Statics.checkAndDeployHeimdall()){
+                if (new HeimdallInstall().checkHeimdallVersion()){
                     return true;
                 } else {
                     new HeimdallInstall().runWinHeimdallInstallationProcedure();
