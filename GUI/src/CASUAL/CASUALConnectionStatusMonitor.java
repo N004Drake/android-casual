@@ -25,7 +25,7 @@ import javax.swing.Timer;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALConnectionStatusMonitor {
-
+     
     CASUALAudioSystem CAS = new CASUALAudioSystem();
     private static int LastState = 0;
     Log Log = new Log();
@@ -34,7 +34,9 @@ public class CASUALConnectionStatusMonitor {
     Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
 
         public void actionPerformed(ActionEvent evt) {
-
+            //TODO: if 25 cycles and a device is not connected, recommend installing Samsung Kies with the default options
+            // or check if Kies exists somehow.
+            // or something....
             //execute adb devices and filter
             String DeviceCommand[] = {Statics.AdbDeployed, "devices"};
             try {

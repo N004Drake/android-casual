@@ -177,14 +177,21 @@ public class HeimdallInstall {
             null, //parentComponent
             "1. Put your device in --download mode-- and connect to computer.\n"
             + "2. In the next window select Options>List all devices.\n"
-            +"3. select SAMSUNG USB Composite device in the main window\n"
+            +"3. select 'USB TABLET' in the Zadig window\n"
             +"4.  click 'install driver'.\n", //Display Message
             "Driver Installation",   //DisplayTitle
             TimeOutOptionPane.OK_OPTION, // Options buttons
             TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
             new String[]{"OK"}, // option buttons
             "OK"); //Default
-      
+      new Log().level0("Driver Installation:\n"
+              + "1. Put your device in --download mode-- and connect to computer.\n"
+              + "2. In the next window select Options>List all devices.\n"
+              + "3. select USB Tablet in the main window\n"
+              + "4.  click 'install driver'.\n"
+              + "Note: the USB port which you install this driver will be converted\n"
+              + "to use Heimdall instead of Odin for download mode.  It only affects\n"
+              + "ONE usb port.");
       //download 
       CASUALUpdates updater=new CASUALUpdates();
         try {
@@ -222,6 +229,7 @@ public class HeimdallInstall {
 
     void runWinHeimdallInstallationProcedure() {
         installWindowsDrivers();
+        new Log().level0("done.");
         installWindowsVCRedist();
     }
     

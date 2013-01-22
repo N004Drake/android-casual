@@ -283,14 +283,23 @@ public static void displayWindowsXPDiscontinued(){
          if (Statics.isWindows()){
                 FileOperations fo = new FileOperations();  //Windows must deploy heimdall every startup.
                 Statics.heimdallResource=Statics.heimdallWin2;
-                fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallStaging);
-                Statics.heimdallDeployed = Statics.TempFolder+"heimdall";
+                fo.copyFromResourceToFile(Statics.heimdallResource, Statics.TempFolder+"libusb-1.0.dll");
+                Statics.heimdallResource=Statics.heimdallWin;
+                Statics.heimdallDeployed = Statics.TempFolder+"heimdall.exe";
+                
                 fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
-                if ( ! new Shell().silentShellCommand(new String[]{"Statics.heimdallDeployed","version"}).contains("CritError!!!")){
+                String x=new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed,"version"});
+                if ( ! x.contains("CritError!!!")){
                     return true; 
                 } else {
+                    new HeimdallInstall().runWinHeimdallInstallationProcedure();
+                    x=new Shell().silentShellCommand(new String[]{"Statics.heimdallDeployed","version"});
+                    if (x.contains("CritError!!!")){
+                        return false;
+                    } else {
+                        return true;
+                   }
                     
-                    return false; //shell returned error
                 }
 //handling for Linux/mac
         } else {
