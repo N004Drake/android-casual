@@ -216,9 +216,18 @@ public class Shell implements Runnable {
                 }
             }
             while ((LineRead = STDERR.readLine()) != null) {
+                
+                if (! LineRead.equals("")){
                 log.progress(LineRead);
+                LogRead=LogRead+LineRead;
+                }
+                
             }
             log.level3(LogRead);
+            if ( (Statics.isWindows()) && (LogRead.contains("libusb error:")) ){
+                new HeimdallInstall().installWindowsDrivers();
+                liveShellCommand(params);
+            }
 
         } catch (IOException ex) {
             String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();

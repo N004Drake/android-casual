@@ -266,6 +266,8 @@ public static void displayWindowsXPDiscontinued(){
     
     //heimdall 
     static boolean isHeimdallDeployed = false;
+    static boolean ExectingHeimdallCommand=false;
+
     static String heimdallResource = "";
     static String arch="";
     //public static String heimdallResource2 = "";
@@ -289,11 +291,12 @@ public static void displayWindowsXPDiscontinued(){
                 
                 fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
                 String x=new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed,"version"});
-                if ( ! x.contains("CritError!!!")){
+                if ( ! x.equals("")){
+                    Statics.isHeimdallDeployed=true;
                     return true; 
                 } else {
-                    new HeimdallInstall().runWinHeimdallInstallationProcedure();
-                    x=new Shell().silentShellCommand(new String[]{"Statics.heimdallDeployed","version"});
+                    new HeimdallInstall().installWindowsVCRedist();
+                    x=new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed,"version"});
                     if (x.contains("CritError!!!")){
                         return false;
                     } else {

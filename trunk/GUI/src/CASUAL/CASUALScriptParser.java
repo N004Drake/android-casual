@@ -626,7 +626,9 @@ public class CASUALScriptParser {
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = convertArrayListToStringArray(shellCommand);
+        Statics.ExectingHeimdallCommand=true;
         Shell.liveShellCommand(stringCommand2);
+        Statics.ExectingHeimdallCommand=false;
     }
     private void doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
