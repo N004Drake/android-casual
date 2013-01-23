@@ -125,8 +125,19 @@ public class CASUALUpdates {
         }
 
     }
-
+public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
+        try {
+            downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    return true;
+}
     public boolean downloadFileFromInternet(URL url, String outputFile, String friendlyName) {
+        Log.level3("Downloading "+url);
+        Log.level3("To: "+ outputFile);
         InputStream input;
         try {
 

@@ -1,5 +1,3 @@
-$WINDOWS $HALT $ECHO Cannot Continue.  This is not supported on Windows
-$MAC $HALT $ECHO Cannot Continue.  This is not supported on MAC
 $ECHO Rebooting download
 $ECHO 
 $ADB reboot download

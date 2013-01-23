@@ -121,6 +121,8 @@ public class HeimdallInstall {
     
  private void installHeimdallMac(){   
         if (Statics.isMac()){
+        Statics.heimdallStaging=Statics.TempFolder+"Heimdall.dmg";
+        new CASUALUpdates().downloadFileFromInternet("http://heimdall-one-click.googlecode.com/svn/trunk/HeimdallOneClick/src/com/AdamOutler/HeimdallOneClick/resources/HeimdallPackage/heimdall-mac.dmg", Statics.heimdallStaging, "Downloading Heimdall");
         String[] mount={ "hdiutil", "mount" , Statics.heimdallStaging };
         String[] lineSplit=shell.silentShellCommand(mount).split("\n");
         String folder="";
@@ -134,7 +136,10 @@ public class HeimdallInstall {
             }
         }
         String[] getFolderContents={ "ls","-1", folder};
-        String[] folderContents=shell.sendShellCommand(getFolderContents).split("\n");
+        
+        
+        //TODO This is inoperative on mac.  I don't know why but it should work
+        String[] folderContents=shell.sendShellCommand(getFolderContents).split("\\n");
         String file="";
         for (String item : folderContents) {
              if (item.contains("mpkg")){
@@ -142,9 +147,12 @@ public class HeimdallInstall {
                  JOptionPane.showMessageDialog(null,"Heimdall One-Click will now launch Heimdall Installer\n"
                      + "You must install Heimdall in order to continue", "Exiting Heimdall One-Click",  JOptionPane.ERROR_MESSAGE);  }
         }
-        String[] openMpkg={ "open", folder + "/" + file};
-        shell.sendShellCommand(openMpkg);
+
+        String[] openMpkg={ "open", folder + "/" + "heimdall-1.3.1-command-line.mpkg"};
+        String x= shell.sendShellCommand(openMpkg);
+        System.err.println(x);
         System.exit(0);
+  
      }
 }
  
