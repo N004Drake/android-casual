@@ -267,7 +267,7 @@ public static void displayWindowsXPDiscontinued(){
     //heimdall 
     static boolean isHeimdallDeployed = false;
     static boolean ExectingHeimdallCommand=false;
-
+    static String heimdallMacURL="http://heimdall-one-click.googlecode.com/svn/trunk/HeimdallOneClick/src/com/AdamOutler/HeimdallOneClick/resources/HeimdallPackage/heimdall-mac.dmg";
     static String heimdallResource = "";
     static String arch="";
     //public static String heimdallResource2 = "";
