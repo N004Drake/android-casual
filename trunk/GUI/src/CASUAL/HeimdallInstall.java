@@ -122,7 +122,7 @@ public class HeimdallInstall {
  private void installHeimdallMac(){   
         if (Statics.isMac()){
         Statics.heimdallStaging=Statics.TempFolder+"Heimdall.dmg";
-        new CASUALUpdates().downloadFileFromInternet("http://heimdall-one-click.googlecode.com/svn/trunk/HeimdallOneClick/src/com/AdamOutler/HeimdallOneClick/resources/HeimdallPackage/heimdall-mac.dmg", Statics.heimdallStaging, "Downloading Heimdall");
+        new CASUALUpdates().downloadFileFromInternet(Statics.heimdallMacURL, Statics.heimdallStaging, "Downloading Heimdall");
         String[] mount={ "hdiutil", "mount" , Statics.heimdallStaging };
         String[] lineSplit=shell.silentShellCommand(mount).split("\n");
         String folder="";
