@@ -25,7 +25,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipException;
 import javax.swing.JOptionPane;
 
 /**
@@ -35,7 +34,7 @@ import javax.swing.JOptionPane;
 public class HeimdallInstall {
 
     private boolean installLinuxHeimdall() {
-        Shell shell=new Shell();
+       
         FileOperations fo=new FileOperations();
         Statics.checkLinuxArch();
 //Linux64

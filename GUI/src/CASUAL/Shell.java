@@ -224,8 +224,12 @@ public class Shell implements Runnable {
                 
             }
             log.level3(LogRead);
-            if ( (Statics.isWindows()) && (LogRead.contains("libusb error:")) ){
-                new HeimdallInstall().installWindowsDrivers();
+            if ( LogRead.contains("libusb error:") ){
+                if (Statics.isWindows()){
+                    new HeimdallInstall().installWindowsDrivers()
+                } else {
+                    new TimeOutOptionPane().showTimeoutDialog(600, null, "Install LibUSB drivers!", "LibUSB not found", TimeOutOptionPane.OK_CANCEL_OPTION, TimeOutOptionPane.ERROR, new String[]{"OK"}, "OK");    
+                }
                 liveShellCommand(params);
             }
 
