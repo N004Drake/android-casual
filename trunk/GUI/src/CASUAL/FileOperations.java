@@ -164,6 +164,10 @@ public class FileOperations {
      * makes a folder, verifies it exists returns a boolean value if the file
      * exists
      */
+    public boolean verifyFolder(String folder){
+        return new File(folder).exists() ? true : false;
+    }
+    
     public boolean makeFolder(String Folder) {
         Boolean CreatedFolder;
         File folder = new File(Folder);
