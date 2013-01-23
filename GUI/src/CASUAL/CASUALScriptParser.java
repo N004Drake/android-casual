@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import java.util.ArrayList;
 
 import java.net.MalformedURLException;
+import java.util.Arrays;
 
 /**
  *
@@ -105,9 +106,11 @@ public class CASUALScriptParser {
      * Script Handler contains all script commands and will execute commands
      */
     private void commandHandler(String line) {
-
+        Log.level3("new command: "+line);//log line
+        line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
         
-       /*
+        
+       /*OPERATING SYSTEM COMMANDS
         * $WINDOWS/$LINUX/$MAC
         * checks if the operating system is Windows, Linux Or Mac
         * if it is, it will execute the commands
@@ -144,9 +147,10 @@ public class CASUALScriptParser {
                return;
            }
        }        
-        Log.level3("");
-        //Remove leading spaces
-        line = StringOperations.removeLeadingSpaces(line);
+
+/*
+ * CONTROL COMMANDS
+ */
 //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
         if (line.startsWith("$HALT")) {
             ScriptContinue = false;
@@ -162,18 +166,6 @@ public class CASUALScriptParser {
 
         }
 //TODO: add "reboot" with adb reboot then send shell command "sleep5" then wait-for-device to account for windows retardedness
-
-//# is a comment Disregard commented lines
-        if (line.startsWith("#")) {
-            Log.level3("Ignoring commented line" + line);
-            return;
-        }
-
-        //Disregard blank lines
-        if (line.equals("")) {
-            return;
-        }
-        Log.level3("SCRIPT COMMAND:" + line);
 
 //$ON will trigger on an event
         //PARAM1 = Textual input event
@@ -199,12 +191,37 @@ public class CASUALScriptParser {
 
         }
 
+        // $CLEARON will remove all actions/reactions
+        if (line.startsWith("$CLEARON")) {
+            Statics.ActionEvents = new ArrayList<String>();
+            Statics.ReactionEvents = new ArrayList<String>();
+            Log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
+            return;
+        }
+        
+//# is a comment Disregard commented lines
+        if (line.startsWith("#")) {
+            Log.level3("Ignoring commented line" + line);
+            return;
+        }
+
+        //Disregard blank lines
+        if (line.equals("")) {
+            return;
+        }
+        Log.level3("SCRIPT COMMAND:" + line);
+        
+        
+        
+/*
+ * Environmental variables
+ */
+        
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
             line = line.replace("$SLASH", Statics.Slash);
             Log.level3("Expanded $SLASH: " + line);
         }
-
 //$ZIPFILE is a reference to the Script's .zip file
         if (line.contains("$ZIPFILE")) {
             line = line.replace("$ZIPFILE", ScriptTempFolder);
@@ -219,6 +236,12 @@ public class CASUALScriptParser {
             line = line.replace("$HOMEFOLDER", Statics.CASUALHome);
             Log.level3("Expanded $HOMEFOLDER" + line);
         }
+
+        
+
+/*
+ * GENERAL PURPOSE COMMANDS
+ */
 //$ECHO command will display text in the main window
         if (line.startsWith("$ECHO")) {
             Log.level3("Received ECHO command" + line);
@@ -226,8 +249,7 @@ public class CASUALScriptParser {
             line = StringOperations.removeLeadingSpaces(line);
             Log.level1(line);
             return;
-
-// $LISTDIR will a folder on the host machine
+//$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
         } else if (line.startsWith("$LISTDIR")) {
             line = line.replace("$LISTDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
@@ -239,9 +261,6 @@ public class CASUALScriptParser {
                     Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
-            return;
-
 // $MAKEDIR will make a folder
         } else if (line.startsWith("$MAKEDIR")) {
             line = line.replaceFirst("$MAKEDIR", "");
@@ -249,12 +268,6 @@ public class CASUALScriptParser {
             Log.level3("Creating Folder: " + line);
             new File(line).mkdirs();
             return;
-
-// $CLEARON will remove all actions/reactions
-        } else if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList<String>();
-            Statics.ReactionEvents = new ArrayList<String>();
-            Log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
 
 
 //$USERNOTIFICATION will stop processing and force the user to 
@@ -333,7 +346,49 @@ public class CASUALScriptParser {
             Log.level3(InputBoxText);
             doShellCommand(Message[2], "$USERINPUT", InputBoxText);
             return;
+//$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
+        } else if (line.startsWith("$DOWNLOAD")){
+            line=line.replaceFirst("$DOWNLOAD", "");
+            line=StringOperations.removeLeadingSpaces(line);
+            String[] downloadCommand=line.split(",");
+            FileOperations fo= new FileOperations();
+            Log.level3("Downloading " + downloadCommand[2]);
+            Log.level3("From " + downloadCommand[0]);
+            Log.level3("to " + downloadCommand[1]);
+            if (! fo.verifyFolder(Statics.TempFolder+"download"+Statics.Slash)){
+               fo.makeFolder(Statics.TempFolder+"download"+Statics.Slash);    
+            }
+            if (downloadCommand.length==2){
+                new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
+                return;
+            } else if (downloadCommand.length==3) {
+                new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
+                 if (! new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[] {downloadCommand[3]}, new String[]{downloadCommand[1]})){
+                     this.executeOneShotCommand("$HALT HALTING Downloaded md5sum did not check out");          
+                 }
+                 return;
+            } else {
+                Log.level0("Invalid download command");
+            }
+
+//$EXECUTE will blindly execute commands into the shell.  Usefull only with $LINUX $WINDOWS or $MAC commands.
+        } else if (line.startsWith("$EXECUTE")){
+            line=StringOperations.removeLeadingSpaces(line.replace("$EXECUTE",""));
+            ArrayList command=parseCommandLine(line);
+            String[] commandArray= Arrays.copyOf(command.toArray(),command.size(),String[].class);
+            new Shell().sendShellCommand(commandArray);
+            return;
+                     
+                
             
+            
+        
+            
+
+            
+/*
+ * SUPPORTED SHELLS
+ */
 // if Heimdall, Send to Heimdall shell command
         } else if (line.startsWith("$HEIMDALL")){
             line = line.replace("$HEIMDALL", "");
