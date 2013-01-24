@@ -377,14 +377,19 @@ public class FileOperations {
      * takes a string and a filename, writes to the file
      */
     public void writeToFile(String Text, String File) throws IOException {
-
         BufferedWriter bw;
         bw = new BufferedWriter(new FileWriter(File, true));
         bw.write(Text);
         bw.close();
         Log.level3("Write Finished");
     }
-
+    public void overwriteFile(String Text, String File) throws IOException {
+        BufferedWriter bw;
+        bw = new BufferedWriter(new FileWriter(File, false));
+        bw.write(Text);
+        bw.close();
+        Log.level3("File overwrite Finished");
+    }
     /*
      * reads file contents returns string
      */

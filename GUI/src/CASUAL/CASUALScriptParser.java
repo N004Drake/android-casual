@@ -396,9 +396,9 @@ public class CASUALScriptParser {
             
             if (Statics.checkAndDeployHeimdall()){
                 this.doHeimdallWaitForDevice();
-                if (Statics.isLinux()) {
+               /* if (Statics.isLinux()) {   //Is this needed?
                     doElevatedHeimdallShellCommand(line);
-                }
+                }*/
             doHeimdallShellCommand(line);
             } else {
                 this.executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
