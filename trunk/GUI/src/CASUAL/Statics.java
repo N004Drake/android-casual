@@ -32,7 +32,6 @@ import javax.swing.text.StyledDocument;
  * information to be used everywhere in the program.
  */
 public class Statics {
-    
 
 
     public Statics() {
@@ -64,7 +63,9 @@ public class Statics {
     final public static String WinVCRedistInRepoMD5="b88228d5fef4b6dc019d69d4471f23ec  vcredist_x86.exe";
     final public static String WinDriverInRepo="https://heimdall-one-click.googlecode.com/svn/trunk/HeimdallOneClick/src/com/AdamOutler/HeimdallOneClick/resources/HeimdallPackage/zadig.exe";
     final public static String WinDriverInRepoMD5="e0476fe60b539ff057371994dd4e8e30  zadig.exe";
-    
+    static String heimdallMacURL="http://heimdall-one-click.googlecode.com/svn/trunk/HeimdallOneClick/src/com/AdamOutler/HeimdallOneClick/resources/HeimdallPackage/heimdall-mac.dmg";
+    static String macMPKGName="heimdall-1.3.1-command-line.mpkg";
+
     //Form data
     public static boolean TargetScriptIsResource = true;
     public static CASUALJFrame GUI;
@@ -75,7 +76,7 @@ public class Statics {
     final public static String Slash = System.getProperty("file.separator");
     public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
     public static String UseSound;
-
+    
     public static void initDocument() {
         ProgressPane.setContentType("text/html");
         ProgressDoc = ProgressPane.getStyledDocument();
@@ -153,7 +154,8 @@ public class Statics {
     public static String DeveloperDonateLink;
     public static String DonateButtonText;
     public static boolean MasterLock = true;
-
+    public static int SVNRevisionRequired=0;
+    
     public static void setMasterLock(boolean status) {
         MasterLock = status;
         try {
@@ -267,7 +269,6 @@ public static void displayWindowsXPDiscontinued(){
     //heimdall 
     static boolean isHeimdallDeployed = false;
     static boolean ExectingHeimdallCommand=false;
-    static String heimdallMacURL="http://heimdall-one-click.googlecode.com/svn/trunk/HeimdallOneClick/src/com/AdamOutler/HeimdallOneClick/resources/HeimdallPackage/heimdall-mac.dmg";
     static String heimdallResource = "";
     static String arch="";
     //public static String heimdallResource2 = "";

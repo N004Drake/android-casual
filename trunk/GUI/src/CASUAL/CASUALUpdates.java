@@ -70,6 +70,7 @@ public class CASUALUpdates {
         CASUALIDString webInformation = new CASUALIDString();
         webInformation.setMetaDataFromIDString(webData.split("\n"));
         Log.level3("***WEB VERSION***"+webInformation.metaData);
+        Statics.SVNRevisionRequired = Integer.parseInt(webInformation.metaData[2]);
         Statics.updateMessageFromWeb = webInformation.getMetaData()[4];
         Statics.supportWebsiteFromWeb = webInformation.metaData[3];
         displayCASUALString(webInformation.metaData);
@@ -82,9 +83,9 @@ public class CASUALUpdates {
                 return 3;
             }
             if (checkVersionInformation(webInformation.metaData[1], localInformation.metaData[1])) {
+                Log.level0("Current Version "+localInformation.metaData[1]+" requires update to version "+webInformation.metaData[1]);
                 Log.level0("Script is out of date. See " + webInformation.metaData[3] + " for more information.  Updating.");
                 Log.level0(webInformation.metaData[4]);
-                
                 //ugly code dealing with /SCRIPTS/ folder on computer.
                 new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
                 int status = downloadUpdates(script,webInformation,Statics.TempFolder);

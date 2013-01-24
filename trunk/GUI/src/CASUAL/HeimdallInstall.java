@@ -148,7 +148,7 @@ public class HeimdallInstall {
                      + "You must install Heimdall in order to continue", "Exiting Heimdall One-Click",  JOptionPane.ERROR_MESSAGE);  }
         }
 
-        String[] openMpkg={ "open", folder + "/" + "heimdall-1.3.1-command-line.mpkg"};
+        String[] openMpkg={ "open", folder + "/" + Statics.macMPKGName};
         String x= shell.sendShellCommand(openMpkg);
         System.err.println(x);
         System.exit(0);

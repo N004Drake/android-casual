@@ -184,18 +184,37 @@ public class CASUALScriptParser {
 /*
  * CONTROL COMMANDS
  */
-//$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
-        if (line.startsWith("$HALT")) {
+//$RECALL, Last Acceptable CASUAL Value from meta, $ANY OTHER COMMAND. Will automatically halt.
+   /* This is for future use not implemented yet.    if (line.startsWith("$RECALL")){
+            if (Statics.SVNRevisionRequired!=0){
+                Log.level3("RECALL CHECK PARSING");
+                line=StringOperations.removeLeadingSpaces(line.replace("$RECALL",""));
+                String splitline[] = line.split(" ");
+                int recallValue=Integer.parseInt(splitline[0]);
+                if (recallValue > Statics.SVNRevisionRequired){
+                    Log.level1("This CASUAL has been recalled on your platform");
+                    Log.level1("I am now attempting to bring you to the support website");
+                    Log.level1(Statics.supportWebsiteFromWeb);
+                    if (splitline.length>1){
+                        line="$HALT"+line.replaceFirst(Integer.toString(recallValue), "");
+                        new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
+                    }
+                    
+                }
+            }
+            
+       } else {
+           return;
+       }
+       */
+       if (line.startsWith("$HALT")) {
             ScriptContinue = false;
-
+            
+//$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
             Log.level3("HALT RECEIVED");
             line = StringOperations.removeLeadingSpaces(line);
             Log.level3("Finishing remaining commands:" + line);
-
-
-            //TODO: add end LED notification here
-
 
         }
 //TODO: add "reboot" with adb reboot then send shell command "sleep5" then wait-for-device to account for windows retardedness
@@ -223,7 +242,7 @@ public class CASUALScriptParser {
             return;
 
         }
-
+        
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
             Statics.ActionEvents = new ArrayList<String>();
@@ -463,7 +482,6 @@ public class CASUALScriptParser {
     }
 
     private String removeCommandAndContinue(String remove, String line) {
-        ScriptContinue = false;
         line = line.replace(remove, "");
         Log.level3("Removed " + remove );
         line = StringOperations.removeLeadingSpaces(line);
@@ -575,7 +593,7 @@ public class CASUALScriptParser {
             while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
                 CurrentLine++;
                 Statics.ProgressBar.setValue(CurrentLine);
-
+              
 
                 commandHandler(strLine);
             }
