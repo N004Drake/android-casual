@@ -652,6 +652,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             }
 
             if (Count == 0) {
+                md5sumTestScripts();
                 Log.level0("No Scripts found. Using Test Script.");
                 comboBoxScriptSelector.addItem("Test Script");
                 Statics.scriptLocations = new String[]{""};
@@ -662,6 +663,38 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         }
 
 
+    }
+    
+    //for use in IDE only
+    private void md5sumTestScripts(){
+        System.out.println("We are in "+System.getProperty("user.dir"));
+        String scriptsPath=System.getProperty("user.dir")+Statics.Slash+"src"+Statics.Slash+"SCRIPTS"+Statics.Slash;
+        String meta=scriptsPath+"Test Script.meta";
+        System.out.println("We are targeting "+meta);
+        String fileContents=new FileOperations().readFile(meta);
+        String[] fileLines=fileContents.split("\\n");
+        String writeOut="";
+        for (int i = 0; i<fileLines.length; i++){
+            String line=StringOperations.removeLeadingSpaces(fileLines[i]);
+            if (line.matches("(\\S{32,})(\\s\\s)(.*\\..*)" )){
+                System.out.println(line);
+                String[] md5File=line.split("  ");
+                String newMD5=new MD5sum().md5sum(scriptsPath+md5File[1]);
+                Log.level3("updating md5 to "+newMD5);
+                writeOut=writeOut+newMD5+"  "+md5File[1]+"\n";
+            } else {
+                writeOut=writeOut+ line+"\n";
+            }
+                 
+        }    
+            try {
+                 new FileOperations().overwriteFile(writeOut, meta);
+            } catch (IOException ex) {
+                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+   
+        
+        
     }
 
     public void enableControls(boolean status) {

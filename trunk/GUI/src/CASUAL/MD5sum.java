@@ -34,7 +34,7 @@ public class MD5sum {
     private String[][] baselineMD5=null;
     private String[][] downloadedMD5=null;
     
-    public boolean compareFileToMD5(File f, String MD5) throws NoSuchAlgorithmException, FileNotFoundException {
+    public boolean compareFileToMD5(File f, String MD5) {
         if (md5sum(f).equals(MD5)) {
             return true;
         } else {
@@ -42,36 +42,42 @@ public class MD5sum {
         }
     }
 
-    public String md5sum(File f) throws NoSuchAlgorithmException, FileNotFoundException {
-        MessageDigest digest = MessageDigest.getInstance("MD5");
-        InputStream is = new FileInputStream(f);
-        byte[] buffer = new byte[8192];
-        int read;
+    public String md5sum(File f){
+        InputStream is = null;
         try {
-            while ((read = is.read(buffer)) > 0) {
-                digest.update(buffer, 0, read);
-            }
-            byte[] md5sum = digest.digest();
-            BigInteger bigInt = new BigInteger(1, md5sum);
-            String output = bigInt.toString(16);
-            return output;
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to process file for MD5", e);
-        } finally {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            is = new FileInputStream(f);
+            byte[] buffer = new byte[8192];
+            int read;
             try {
-                is.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Unable to close input stream for MD5 calculation", e);
+                while ((read = is.read(buffer)) > 0) {
+                    digest.update(buffer, 0, read);
+                }
+                byte[] md5sum = digest.digest();
+                BigInteger bigInt = new BigInteger(1, md5sum);
+                String output = bigInt.toString(16);
+                return output;
+
+            } finally {
+                    is.close();
             }
-        }
+        } catch (FileNotFoundException ex) {
+           return "ERROR0FileNotFoundException00000";
+
+        } catch (NoSuchAlgorithmException ex) {
+           return "ERROR0NoSuchAlgorythemException0";
+
+        } catch (IOException ex) {
+           return "ERROR00IOException00000000000000";
+        } 
+        
     }
     public boolean compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
         String[][] FilenamesAndMD5=splitFilenamesAndMD5(LinuxFormat);
         boolean[] matches=new boolean[MD5Filenames.length];
         for (int n=0; n<MD5Filenames.length; n++){ //loop through files
             matches[n]=false; //set match as false by default
-            try {
-                String md5=md5sum(new File(MD5Filenames[n]));// get MD5 for current file
+            String md5=md5sum(new File(MD5Filenames[n]));// get MD5 for current file
                 for (int nn=0; nn<FilenamesAndMD5.length; nn++){ //find MD5 in lookup table
                     if (md5.length()!=32) { //if md5 is found while looping through lookup table set match true
                         matches[n]=true;
@@ -80,11 +86,7 @@ public class MD5sum {
                     }
                     
                 }
-            } catch (NoSuchAlgorithmException ex) {
-                System.out.println("NoSuchAlgorythem Exception while parsing " +MD5Filenames[n] + " in compareMD5StringsFromLinuxFormatToFilenames");
-            } catch (FileNotFoundException ex) {
-                System.out.println("FileNotFound Exception while parsing " +MD5Filenames[n]+ " in compareMD5StringsFromLinuxFormatToFilenames");
-            }
+
             
         }
         for (int n=0; n<matches.length; n++){ //loop through all values
@@ -123,5 +125,10 @@ public class MD5sum {
         }
         }
         return NameMD5;        
+    }
+
+    String md5sum(String string) {
+        return md5sum(new File(string));
+
     }
 }
