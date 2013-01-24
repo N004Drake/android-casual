@@ -116,6 +116,39 @@ public class CASUALScriptParser {
         * if it is, it will execute the commands
         * Command may include $HALT and any other command like $ECHO
         */
+       if (line.startsWith("$LINUXMAC")) {
+           if (Statics.isLinux() || Statics.isMac()){
+                String removeCommand="$LINUXMAC";
+                line = removeCommandAndContinue(removeCommand, line);
+                Log.progress("Linux Or Mac Detected: ");
+                Log.level3("OS IS LINUX or MAC! remaining commands:" + line);
+                
+           } else {
+               return;
+           }
+       }
+       if (line.startsWith("$LINUXWINDOWS")) {
+           if (Statics.isLinux() || Statics.isWindows()){
+                String removeCommand="$LINUXWINDOWS";
+                line = removeCommandAndContinue(removeCommand, line);
+                Log.progress("Windows or Linux Detected: ");
+                Log.level3("OS IS WINDOWS OR LINUX! remaining commands:" + line);
+                
+           } else {
+               return;
+           }
+       }       
+       if (line.startsWith("$WINDOWSMAC")) {
+           if (Statics.isLinux()){
+                String removeCommand="$LINUXMAC";
+                line = removeCommandAndContinue(removeCommand, line);
+                Log.progress("Mac or Windows Detected: ");
+                Log.level3("OS IS Windows or Mac! remaining commands:" + line);
+                
+           } else {
+               return;
+           }
+       }
        if (line.startsWith("$LINUX")) {
            if (Statics.isLinux()){
                 String removeCommand="$LINUX";
@@ -126,7 +159,7 @@ public class CASUALScriptParser {
            } else {
                return;
            }
-       }
+       }       
        if (line.startsWith("$WINDOWS")) {
            if (Statics.isWindows()){
                 Log.progress("Windows Detected: ");
