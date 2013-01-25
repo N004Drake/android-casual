@@ -219,6 +219,12 @@ public class CASUALScriptParser {
         }
 //TODO: add "reboot" with adb reboot then send shell command "sleep5" then wait-for-device to account for windows retardedness
 
+       if (line.startsWith("$GOTO")){
+           line=line.replace("$GOTO","");
+           GOTO=StringOperations.removeLeadingAndTrailingSpaces(line);
+           return;
+       }
+           
 //$ON will trigger on an event
         //PARAM1 = Textual input event
         //PARAM2 = Command to execute
@@ -614,22 +620,34 @@ public class CASUALScriptParser {
         return StringArray;
     }
 
+    
+    static String GOTO="";
     private void doRead(DataInputStream dataIn) {
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
             String strLine;
-
+            bReader.mark(1);
             while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
                 CurrentLine++;
                 Statics.ProgressBar.setValue(CurrentLine);
-              
+                if (! GOTO.equals("")){
+                    
+                    bReader.reset();
+                    while (! strLine.startsWith(GOTO)){
+                        strLine=bReader.readLine();
+                        Log.level0(strLine);
+                    }
+                    GOTO="";
+                }
 
                 commandHandler(strLine);
             }
             //Close the input stream
             dataIn.close();
+            Log.level0("done");
         } catch (Exception e) {//Catch exception if any
             Log.level0("CASUAL SCRIPTING ERROR: " +e.toString() + e.getMessage() + e.getLocalizedMessage() );
+            e.printStackTrace();
         }
 
     }
