@@ -262,9 +262,35 @@ public class CASUALScriptParser {
             return;
         }
         Log.level3("SCRIPT COMMAND:" + line);
-        
-        
-        
+    
+        /*
+         * $IFCONTAINS takes:
+         * $IFCONTAINS A test string 
+         * $INCOMMAND a command to be sent to ADB
+         * $DO a CASUAL scripted command to be excuted if test string is found in the command sent to ADB
+         */
+        // $IFNOTCONTAINS foo $INCOMMAND shell "echo foo" $DO $ECHO foo is in foo so we will see this.
+        // $IFNOTCONTAINS foo $INCOMMAND shell "echo bar" $DO $ECHO foo is not in bar so we will not see this.
+        // $IFNOTCONTAINS value $INCOMMAND command $DO $ANY CASUAL COMMAND
+        if (line.startsWith("$IFCONTAINS ")) {
+            line=StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ",""));
+             doIfContainsReturnResults(line, true);
+            return;
+        }
+        /*
+         * $IFNOTCONTAINS takes:
+         * $IFNOTCONTAINS A test string 
+         * $INCOMMAND a command to be sent to ADB
+         * $DO a CASUAL scripted command to be excuted if test is not found in the command sent to ADB
+         */
+        // $IFNOTCONTAINS foo $INCOMMAND shell "echo foo" $DO $ECHO foo is in foo so we will not see this.
+        // $IFNOTCONTAINS foo $INCOMMAND shell "echo bar" $DO $ECHO foo is not in bar so we will see this.
+        // $IFNOTCONTAINS value $INCOMMAND command $DO $ANY CASUAL COMMAND
+        if (line.startsWith("$IFNOTCONTAINS ")){
+            line=StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ",""));
+            doIfContainsReturnResults(line, false);
+            return;
+        }
 /*
  * Environmental variables
  */
@@ -480,7 +506,10 @@ public class CASUALScriptParser {
         //final line output for debugging purposes
         Log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + line);
     }
-
+//END OF SCRIPT PARSER
+    
+    
+    
     private String removeCommandAndContinue(String remove, String line) {
         line = line.replace(remove, "");
         Log.level3("Removed " + remove );
@@ -600,7 +629,7 @@ public class CASUALScriptParser {
             //Close the input stream
             dataIn.close();
         } catch (Exception e) {//Catch exception if any
-            System.err.println("Error: " + e.getMessage());
+            Log.level0("CASUAL SCRIPTING ERROR: " +e.toString() + e.getMessage() + e.getLocalizedMessage() );
         }
 
     }
@@ -656,12 +685,21 @@ public class CASUALScriptParser {
         return List;
     }
 
+    private void doShellCommand(String Line, String ReplaceThis, String WithThis){
+          executeShellCommand(Line, ReplaceThis, WithThis);
+    }
+    
+
+    private String doShellCommandWithReturn(String Line, String ReplaceThis, String WithThis){
+          return executeShellCommand(Line, ReplaceThis, WithThis);
+    }
+    
     /*
      * doShellCommand is the point where the shell is activated ReplaceThis
      * WithThis allows for a last-minute insertion of commands by default
      * ReplaceThis should be null.
      */
-    private void doShellCommand(String Line, String ReplaceThis, String WithThis) {
+    private String executeShellCommand(String Line, String ReplaceThis, String WithThis) {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
@@ -674,7 +712,8 @@ public class CASUALScriptParser {
                 StringCommand[i] = StringCommand[i].replace(ReplaceThis, WithThis);
             }
         }
-        Shell.liveShellCommand(StringCommand);
+        return Shell.sendShellCommand(StringCommand);
+
     }
 
     private void doFastbootShellCommand(String Line) {
@@ -736,6 +775,8 @@ public class CASUALScriptParser {
         Shell.liveShellCommand(stringCommand2);
         Statics.ExectingHeimdallCommand=false;
     }
+    
+    //for future use. not currently needed.
     private void doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
@@ -763,5 +804,25 @@ public class CASUALScriptParser {
         Str = Str.replace("\'", "\\\'");
 
         return Str;
+    }
+   
+    //split the string from $IFCONTAINS "string string" $INCOMMAND "$ADB command to execute" $DO "CASUAL COMMAND"
+    private void doIfContainsReturnResults(String line, boolean ifContains) {
+        if (line.startsWith("$IFCONTAINS")){
+            line=StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFCONTAINS",""));
+        } else if (line.startsWith("$IFNOTCONTAINS")) {
+            line=StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFNOTCONTAINS",""));
+        }
+        String[] checkValueSplit = line.split("\\$INCOMMAND");
+        String checkValue= StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line)); //value to check
+        String[] commandSplit=checkValueSplit[1].split("\\$DO");
+        String command= StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);//command to check
+        String[] doSplit=commandSplit[1].split("$DO");
+        String casualCommand=StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);// command to execute if true
+        if (command.startsWith("$ADB")){ command=command.replaceFirst("\\$ADB","");}
+        String returnValue = this.doShellCommandWithReturn(command, null, null);
+        if ((returnValue.contains(checkValue)== ifContains)){
+            this.executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
+        }
     }
 }
