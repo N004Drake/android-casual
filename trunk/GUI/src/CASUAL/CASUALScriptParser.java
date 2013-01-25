@@ -635,7 +635,6 @@ public class CASUALScriptParser {
                     bReader.reset();
                     while (! strLine.startsWith(GOTO)){
                         strLine=bReader.readLine();
-                        Log.level0(strLine);
                     }
                     GOTO="";
                 }

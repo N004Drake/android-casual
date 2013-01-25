@@ -38,6 +38,25 @@ public class StringOperations {
         }
         return Line;
     }
+    public static String removeLeadingAndTrailingSpaces(String line) {
+        while (line.startsWith(" ")) {
+            line = line.replaceFirst(" ", "");
+        }
+        while (line.endsWith(" ")) {
+           StringBuilder b = new StringBuilder(line);
+           b.replace(line.lastIndexOf(" "), line.lastIndexOf(" ") + 1, "" );
+           line=b.toString();
+        }
+        return line;
+    }
+    public static String removeTrailingSpaces(String line) {
+        while (line.endsWith(" ")) {
+           StringBuilder b = new StringBuilder(line);
+           b.replace(line.lastIndexOf(" "), line.lastIndexOf(" ") + 1, "" );
+           line=b.toString();
+        }
+        return line;
+    }
     public static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
