@@ -64,7 +64,6 @@ public class Statics {
     final public static String WinDriverInRepo="https://heimdall-one-click.googlecode.com/svn/trunk/HeimdallOneClick/src/com/AdamOutler/HeimdallOneClick/resources/HeimdallPackage/zadig.exe";
     final public static String WinDriverInRepoMD5="e0476fe60b539ff057371994dd4e8e30  zadig.exe";
     static String heimdallMacURL="http://heimdall-one-click.googlecode.com/svn/trunk/HeimdallOneClick/src/com/AdamOutler/HeimdallOneClick/resources/HeimdallPackage/heimdall-mac132.dmg";
-    static String macMPKGName="heimdall-1.3.2-command-line.mpkg";
 
     //Form data
     public static boolean TargetScriptIsResource = true;
