@@ -19,6 +19,7 @@ package CASUAL;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
@@ -49,7 +50,7 @@ public class Log {
                         } catch (java.lang.IllegalArgumentException x) {
                         }
                     } catch (BadLocationException ex) {
-                        Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+                      
                     }
 
 
@@ -65,8 +66,12 @@ public class Log {
         }
     }
 
-    // level 0 is used for errors..  basically silent. Use level 1 for 
-    // for most tasks
+
+    /**
+     *level 0 is used for errors..  basically silent. Use level 1 for 
+     * for most tasks
+     * @param data is data to be written to log
+     */
     public void level0(String data) {
         if (Statics.ConsoleLevel >= 0) {
             consoleOut(data);
@@ -78,7 +83,10 @@ public class Log {
         }
     }
 
-    // level 1 is for user data
+     /**
+     *level 0 is used for normal user data.. 
+     * @param data is data to be written to log
+     */
     public void level1(String data) {
         if (Statics.ConsoleLevel >= 1) {
             consoleOut(data);
@@ -89,7 +97,10 @@ public class Log {
         }
 
     }
-
+    /**
+     *level 2 if for debugging data
+     * @param data is data to be written to log
+     */
     // level 2 is for debugging data
     public void level2(String data) {
         if (Statics.ConsoleLevel >= 2) {
@@ -100,8 +111,10 @@ public class Log {
 
         }
     }
-
-    // level 3 is conversions and other random test data
+    /**
+     * level 3 is for verbose data
+     * @param data is data to be written to log
+     */
     public void level3(String data) {
         if (Statics.ConsoleLevel >= 3) {
             consoleOut(data);
@@ -112,14 +125,6 @@ public class Log {
         }
     }
 
-    public void copyError(String Filename) {
-        //standard unexpected token failure
-        this.level0("File Copy Error: " + Filename);
-    }
-
-    public void genericError(String Message) {
-        this.level0("Error: " + Message);
-    }
 
     public void writeToLogFile(String data) {
         debugOut(data);
@@ -181,5 +186,15 @@ public class Log {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    /**
+     *
+     * @param e is any throwable
+     */
+    public void errorHandler(Exception e){
+        StringWriter writer = new StringWriter();
+        e.printStackTrace( new PrintWriter(writer));
+        level0(e.getLocalizedMessage()+ "\n" + e.getMessage()+ "\n" +e.toString()+ "\n" +"\n" + writer.toString());
+        level0("A critical error was encoutered.  Please copy the log from About>Show Log and report this issue ");
     }
 }

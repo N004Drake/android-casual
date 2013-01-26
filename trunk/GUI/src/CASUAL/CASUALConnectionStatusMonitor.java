@@ -88,6 +88,7 @@ public class CASUALConnectionStatusMonitor {
 
             }
         } catch (java.lang.NullPointerException e) {
+            Log.errorHandler(e);
         }
         }
     });

@@ -45,9 +45,9 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
-    String NonResourceFileName;
-    Log Log = new Log();
-    FileOperations FileOperations = new FileOperations();
+    String nonResourceFileName;
+    Log log = new Log();
+    FileOperations fileOperations = new FileOperations();
     private String ComboBoxValue = "";
 
     /**
@@ -86,17 +86,17 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         idleIcon = resourceMap.getIcon("/" + "StatusBar.idleIcon");
         StatusAnimationLabel.setIcon(idleIcon);
-        Log.level3("OMFGWOOT");
-        Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + "Overview.txt"));
+        log.level3("OMFGWOOT");
+        log.level1(fileOperations.readTextFromResource(Statics.ScriptLocation + "Overview.txt"));
 
         
-        Log.level2("Deploying ADB");
+        log.level2("Deploying ADB");
         new CASUALDeployADB().runAction();
   
-        Log.level3("Searching for scripts");
+        log.level3("Searching for scripts");
         prepareScripts();
 
-        Log.level3("Updating Scripts for UI");
+        log.level3("Updating Scripts for UI");
         comboBoxUpdate();
         //TODO: Uncompress zip if needed
 
@@ -343,9 +343,9 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     public void StartButtonActionPerformed() {
-        Log.level0("");
-        Log.level3("StartButtonActionPerformed() Script Activated");
-        Log.level3("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
+        log.level0("");
+        log.level3("StartButtonActionPerformed() Script Activated");
+        log.level3("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
         this.busyIconTimer.start();
         Statics.DeviceMonitor.DeviceCheck.stop();
         enableControls(false);
@@ -357,14 +357,14 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         //check for updates
         if (!(diskLocation.length() == 0)) {
             Statics.TargetScriptIsResource = false;
-            NonResourceFileName = Statics.getScriptLocationOnDisk(script);
+            nonResourceFileName = Statics.getScriptLocationOnDisk(script);
         }
 
         //execute
         if (Statics.TargetScriptIsResource) {
             new CASUALScriptParser().executeSelectedScriptResource(script);
         } else {
-            new CASUALScriptParser().executeSelectedScriptFile(NonResourceFileName, script);
+            new CASUALScriptParser().executeSelectedScriptFile(nonResourceFileName, script);
         }
         this.busyIconTimer.stop();
         //enableControls(true);
@@ -385,15 +385,15 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
-                NonResourceFileName = this.getFilenameWithoutExtension(FileName);
-                Log.level1("Description for " + NonResourceFileName);
-                Log.level1(FileOperations.readFile(NonResourceFileName + ".txt"));
-                this.comboBoxScriptSelector.setSelectedItem(NonResourceFileName);
-                Statics.SelectedScriptFolder = Statics.TempFolder + new File(NonResourceFileName).getName();
-                Log.level0("Delete this debug line in MenuItemOpenScriptActionPerformed()");
+                nonResourceFileName = this.getFilenameWithoutExtension(FileName);
+                log.level1("Description for " + nonResourceFileName);
+                log.level1(fileOperations.readFile(nonResourceFileName + ".txt"));
+                this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
+                Statics.SelectedScriptFolder = Statics.TempFolder + new File(nonResourceFileName).getName();
+                log.level0("Delete this debug line in MenuItemOpenScriptActionPerformed()");
                 //TODO: Do this in the background
-                if (new FileOperations().verifyFileExists(NonResourceFileName.toString() + ".zip")) {
-                    new Unzip().unzipFile(NonResourceFileName.toString() + ".zip", Statics.SelectedScriptFolder);
+                if (new FileOperations().verifyFileExists(nonResourceFileName.toString() + ".zip")) {
+                    new Unzip().unzipFile(nonResourceFileName.toString() + ".zip", Statics.SelectedScriptFolder);
                 }
                 Statics.ScriptLocation = Statics.SelectedScriptFolder;
                 comboBoxScriptSelector.setEditable(true);
@@ -403,7 +403,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                 Statics.TargetScriptIsResource = false;
 
             } catch (IOException ex) {
-                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                log.errorHandler(ex);
             }
 
         }
@@ -455,7 +455,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBoxScriptSelectorActionPerformed
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
-        Log.level3("hiding script selector TargetScript: "+comboBoxScriptSelector.getSelectedItem().toString());
+        log.level3("hiding script selector TargetScript: "+comboBoxScriptSelector.getSelectedItem().toString());
         if (comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
             Statics.TargetScriptIsResource = false;
         } else {
@@ -510,12 +510,12 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_StatusLabelMouseExited
     private void comboBoxUpdate() {
-        Log.level2("From Resource: " + Statics.TargetScriptIsResource);
-        Log.level1("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
+        log.level2("From Resource: " + Statics.TargetScriptIsResource);
+        log.level1("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
         if (Statics.TargetScriptIsResource) {
-            Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            log.level1(fileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         } else {
-            Log.level1(FileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            log.level1(fileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         }
         String ZipResource;
         Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString();
@@ -526,18 +526,18 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         }
 
         if (getClass().getResource(ZipResource) != null) {
-            Log.level3("Extracting archive....");
+            log.level3("Extracting archive....");
 
             Unzip Unzip = new Unzip();
             try {
                 Unzip.UnZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                log.errorHandler(ex);
             } catch (IOException ex) {
-                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                log.errorHandler(ex);
             }
         }
-        Log.level3("Exiting comboBoxUpdate()");
+        log.level3("Exiting comboBoxUpdate()");
     }
 
     private static void launchLink(String Link) {
@@ -593,8 +593,8 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             listScripts();
             Statics.MasterLock = false;
         } catch (IOException ex) {
-            Log.level0("ListScripts() could not find any entries");
-            Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            log.level0("ListScripts() could not find any entries");
+            log.errorHandler(ex);
 
         }
 
@@ -633,7 +633,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             URL jar = Src.getLocation();
             ZipInputStream Zip = new ZipInputStream(jar.openStream());
             ZipEntry ZEntry;
-            Log.level3("Picking Jar File:" + jar.getFile());
+            log.level3("Picking Jar File:" + jar.getFile());
             while ((ZEntry = Zip.getNextEntry()) != null) {
 
                 String EntryName = ZEntry.getName();
@@ -645,7 +645,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             Statics.scriptNames = new String[list.size()];
             for (int n = 0; n < list.size(); n++) {
                 String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
-                Log.level3("Found: " + EntryName);
+                log.level3("Found: " + EntryName);
                 Statics.scriptNames[n] = EntryName;
                 comboBoxScriptSelector.addItem(EntryName);
                 Count++;
@@ -653,7 +653,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
             if (Count == 0) {
                 md5sumTestScripts();
-                Log.level0("No Scripts found. Using Test Script.");
+                log.level0("No Scripts found. Using Test Script.");
                 comboBoxScriptSelector.addItem("Test Script");
                 Statics.scriptLocations = new String[]{""};
                 Statics.scriptNames = new String[]{"Test Script"};
@@ -680,7 +680,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                 System.out.println(line);
                 String[] md5File=line.split("  ");
                 String newMD5=new MD5sum().md5sum(scriptsPath+md5File[1]);
-                Log.level3("updating md5 to "+newMD5);
+                log.level3("updating md5 to "+newMD5);
                 writeOut=writeOut+newMD5+"  "+md5File[1]+"\n";
             } else {
                 writeOut=writeOut+ line+"\n";
@@ -690,7 +690,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             try {
                  new FileOperations().overwriteFile(writeOut, meta);
             } catch (IOException ex) {
-                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                log.errorHandler(ex);
             }
    
         
@@ -701,9 +701,9 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         if (!Statics.MasterLock) {
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
-            Log.level3("Controls Enabled status: " + status);
+            log.level3("Controls Enabled status: " + status);
         } else {
-            Log.level3("Control Change requested but Statics.MasterLock is set.");
+            log.level3("Control Change requested but Statics.MasterLock is set.");
         }
     }
 
@@ -725,8 +725,8 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Audio.Enabled");
             Statics.DeveloperDonateLink = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateLink");
         } catch (MissingResourceException ex) {
-            Log.level0("Could not find build.prop");
-            Log.level0(ex.toString());
+            log.level0("Could not find build.prop");
+            log.errorHandler(ex);
         }
     }
 }

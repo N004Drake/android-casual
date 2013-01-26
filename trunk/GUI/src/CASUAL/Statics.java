@@ -160,7 +160,7 @@ public class Statics {
         try {
             GUI.enableControls(MasterLock);
         } catch (NullPointerException e) {
-            Log.level3(e.getMessage());
+            Log.errorHandler(e);
         }
     }
 

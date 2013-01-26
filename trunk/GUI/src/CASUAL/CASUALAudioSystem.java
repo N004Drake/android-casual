@@ -51,6 +51,7 @@ public class CASUALAudioSystem {
                         Line.drain();
                         Line.close();
                     } catch (Exception e) {
+                        //sound is a non-critical system. No logging required
                         System.err.println(e);
                     }
                 }
@@ -87,7 +88,7 @@ public class CASUALAudioSystem {
                                 Line.drain(); // wait for the buffer to empty before closing the line
                             }
                         } catch (Exception e) {
-                            new Log().level3(e.getMessage());
+                            new Log().level3("EXCEPTION while attempting to play sound " +e.getMessage());
                         }
                         CurrentURL = CurrentURL++;
                     }

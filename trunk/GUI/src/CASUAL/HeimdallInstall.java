@@ -23,8 +23,6 @@ package CASUAL;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -164,9 +162,9 @@ public class HeimdallInstall {
         try {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedistInRepo), Statics.TempFolder+"vcredist_x86.exe", "Visual Studio Redistributable");
         } catch (MalformedURLException ex) {
-            Logger.getLogger(HeimdallInstall.class.getName()).log(Level.SEVERE, null, ex);
+            log.errorHandler(ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(HeimdallInstall.class.getName()).log(Level.SEVERE, null, ex);
+            log.errorHandler(ex);
         }
       //verify MD5 new String{"b88228d5fef4b6dc019d69d4471f23ec  vcredist_x86.exe"}
       new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinVCRedistInRepoMD5}, new String[]{Statics.TempFolder+"vcredist_x86.exe"});
@@ -206,9 +204,9 @@ public class HeimdallInstall {
         try {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder+"zadig.exe", "Open-Source Heimdall Drivers");
         } catch (MalformedURLException ex) {
-            Logger.getLogger(HeimdallInstall.class.getName()).log(Level.SEVERE, null, ex);
+            log.errorHandler(ex);
         } catch (URISyntaxException ex) {
-            Logger.getLogger(HeimdallInstall.class.getName()).log(Level.SEVERE, null, ex);
+            log.errorHandler(ex);
         }
       //verify MD5 new String{"b88228d5fef4b6dc019d69d4471f23ec  vcredist_x86.exe"}
       new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinDriverInRepoMD5}, new String[]{Statics.TempFolder+"zadig.exe"});
