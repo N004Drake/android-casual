@@ -1,1 +1,1 @@
-Testing CASUAL's ability to update
+This is a tool which will root, unlock, and install a custom recovery on a Verizon Galaxy Note 2.
