@@ -74,9 +74,9 @@ class CASUALDeployADB implements Runnable {
             new Shell().silentBackgroundShellCommand();
             try {
                 Log.level3("sleeping for Windows ADB start");
-                Thread.sleep(250);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CASUALDeployADB.class.getName()).log(Level.SEVERE, null, ex);
+               
             }
         } else {
             Log.level0("Your system is not supported");
@@ -103,7 +103,7 @@ class CASUALDeployADB implements Runnable {
 
 
         Log.level3("Device List:" + DeviceList);
-        if (DeviceList.contains("????????????") || DeviceList.contains("error: cannot connect to daemon")) {
+        if ( (!Statics.isWindows()) && (DeviceList.contains("????????????") || DeviceList.contains("error: cannot connect to daemon")) ) {
             Log.level1("killing server and requesting elevated permissions");
             Shell.sendShellCommand(killCmd);
             TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
