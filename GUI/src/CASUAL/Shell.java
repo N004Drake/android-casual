@@ -130,7 +130,7 @@ public class Shell implements Runnable {
                 AllText = AllText + line;
             }
             while ((line = STDOUT.readLine()) != null) {
-                AllText = AllText + line;
+                AllText = AllText + line+"\n";
                 while ((line = STDERR.readLine()) != null) {
                     AllText = AllText + line;
                 }
