@@ -117,7 +117,7 @@ public class HeimdallInstall {
     }
     
        
-    
+
     
  private void installHeimdallMac(){   
         if (Statics.isMac()){
@@ -129,17 +129,17 @@ public class HeimdallInstall {
         for (String lines : lineSplit ){
             String[] line = lines.split("	");
             for ( String item : line){
-                if (item.contains("HEIMDALL")){
+                if (item.contains("eimdall")){
                     folder=item;
                     log.progress("Mounted "+folder);
                 }
             }
         }
-        String[] getFolderContents={ "ls","-1", folder};
+        String[] getFolderContents={ "ls", "-1",folder};
         
         
         //TODO This is inoperative on mac.  I don't know why but it should work
-        String[] folderContents=shell.sendShellCommand(getFolderContents).split("\\n");
+        String[] folderContents=shell.silentShellCommand(getFolderContents).split("\\n");
         String file="";
         for (String item : folderContents) {
              if (item.contains("mpkg")){
@@ -148,7 +148,7 @@ public class HeimdallInstall {
                      + "You must install Heimdall in order to continue", "Exiting Heimdall One-Click",  JOptionPane.ERROR_MESSAGE);  }
         }
 
-        String[] openMpkg={ "open", folder + "/" + Statics.macMPKGName};
+        String[] openMpkg={ "open", folder + "/" + file};
         String x= shell.sendShellCommand(openMpkg);
         System.err.println(x);
         System.exit(0);
