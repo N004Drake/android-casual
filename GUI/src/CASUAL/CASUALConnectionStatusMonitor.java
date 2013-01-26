@@ -57,7 +57,7 @@ public class CASUALConnectionStatusMonitor {
 
             //Check and handle abnormalities
             //insufficient permissions
-            if (DeviceList.contains("????????????")) {
+            if (DeviceList.contains("????????????")&& (!Statics.isWindows())) {
                 DeviceCheck.stop();
                 Log.level0("Insufficient permissions on server detected.");
                 String cmd[] = {Statics.AdbDeployed, "kill-server"}; //kill the server
