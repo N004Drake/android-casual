@@ -76,7 +76,7 @@ class CASUALDeployADB implements Runnable {
                 Log.level3("sleeping for Windows ADB start");
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
-               
+               //no catch needed for sleep interruption
             }
         } else {
             Log.level0("Your system is not supported");

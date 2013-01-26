@@ -72,7 +72,7 @@ public class Shell implements Runnable {
             try {
                 FileOperations.writeToFile(Command, ScriptFile);
             } catch (IOException ex) {
-                Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                log.errorHandler(ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
             log.level3("###Elevating Command: " + Command + " ###");
@@ -93,7 +93,7 @@ public class Shell implements Runnable {
                         + "", ScriptFile);
 
             } catch (IOException ex) {
-                Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                log.errorHandler(ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
             String[] MacCommand = {ScriptFile};
@@ -124,7 +124,7 @@ public class Shell implements Runnable {
             try {
                 process.waitFor();
             } catch (InterruptedException ex) {
-                Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                log.errorHandler(ex);
             }
             while ((line = STDERR.readLine()) != null) {
                 AllText = AllText + line;

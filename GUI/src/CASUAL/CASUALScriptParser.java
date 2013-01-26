@@ -38,7 +38,7 @@ import java.util.Arrays;
 public class CASUALScriptParser {
 
     static boolean ScriptContinue = true;
-    Log Log = new Log();
+    Log log = new Log();
     int LinesInScript = 0;
     int CurrentLine;
     String ScriptTempFolder = "";
@@ -48,11 +48,11 @@ public class CASUALScriptParser {
      * Executes a selected script as a resource reports to Log class.
      */
     public void executeSelectedScriptResource(final String script) {
-        Log.level3("Selected resource" + script);
+        log.level3("Selected resource" + script);
         ScriptName = script;
         CountLines CountLines = new CountLines();
         LinesInScript = CountLines.countResourceLines(script);
-        Log.level3("Lines in Script " + LinesInScript);
+        log.level3("Lines in Script " + LinesInScript);
         ScriptTempFolder = Statics.TempFolder + script + Statics.Slash;
 
 
@@ -66,19 +66,18 @@ public class CASUALScriptParser {
      *
      */
     public DataInputStream getDataStreamFromFile(String script) {
-        Log.level3("Selected file" + script);
+        log.level3("Selected file" + script);
 
         ScriptName = script;
         ScriptTempFolder = Statics.TempFolder + (new File(script).getName()) + Statics.Slash;
         LinesInScript = new CountLines().countFileLines(script + ".scr");
-        Log.level3("Lines in Script " + LinesInScript);
+        log.level3("Lines in Script " + LinesInScript);
 
         try {
             return new DataInputStream(new FileInputStream(script + ".scr"));
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-            Log.level0("An unknown error has happened while trying to getDataStreamFromFile! " + script + "  Please report this");
+            log.errorHandler(ex);
             return null;
         }
 
@@ -97,7 +96,7 @@ public class CASUALScriptParser {
         //$LINE is a reference to the last line received in the shell            
         if (Line.contains("$LINE")) {
             Line = Line.replace("$LINE", Statics.LastLineReceived);
-            Log.level3("Executing Reaction - $LINE: " + Line);
+            log.level3("Executing Reaction - $LINE: " + Line);
         }
         commandHandler(Line);
     }
@@ -106,7 +105,7 @@ public class CASUALScriptParser {
      * Script Handler contains all script commands and will execute commands
      */
     private void commandHandler(String line) {
-        Log.level3("new command: "+line);//log line
+        log.level3("new command: "+line);//log line
         line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
         
         
@@ -120,8 +119,8 @@ public class CASUALScriptParser {
            if (Statics.isLinux() || Statics.isMac()){
                 String removeCommand="$LINUXMAC";
                 line = removeCommandAndContinue(removeCommand, line);
-                Log.progress("Linux Or Mac Detected: ");
-                Log.level3("OS IS LINUX or MAC! remaining commands:" + line);
+                log.progress("Linux Or Mac Detected: ");
+                log.level3("OS IS LINUX or MAC! remaining commands:" + line);
                 
            } else {
                return;
@@ -131,8 +130,8 @@ public class CASUALScriptParser {
            if (Statics.isLinux() || Statics.isWindows()){
                 String removeCommand="$LINUXWINDOWS";
                 line = removeCommandAndContinue(removeCommand, line);
-                Log.progress("Windows or Linux Detected: ");
-                Log.level3("OS IS WINDOWS OR LINUX! remaining commands:" + line);
+                log.progress("Windows or Linux Detected: ");
+                log.level3("OS IS WINDOWS OR LINUX! remaining commands:" + line);
                 
            } else {
                return;
@@ -142,8 +141,8 @@ public class CASUALScriptParser {
            if (Statics.isLinux()){
                 String removeCommand="$LINUXMAC";
                 line = removeCommandAndContinue(removeCommand, line);
-                Log.progress("Mac or Windows Detected: ");
-                Log.level3("OS IS Windows or Mac! remaining commands:" + line);
+                log.progress("Mac or Windows Detected: ");
+                log.level3("OS IS Windows or Mac! remaining commands:" + line);
                 
            } else {
                return;
@@ -153,8 +152,8 @@ public class CASUALScriptParser {
            if (Statics.isLinux()){
                 String removeCommand="$LINUX";
                 line = removeCommandAndContinue(removeCommand, line);
-                Log.progress("Linux Detected: ");
-                Log.level3("OS IS LINUX! remaining commands:" + line);
+                log.progress("Linux Detected: ");
+                log.level3("OS IS LINUX! remaining commands:" + line);
                 
            } else {
                return;
@@ -162,20 +161,20 @@ public class CASUALScriptParser {
        }       
        if (line.startsWith("$WINDOWS")) {
            if (Statics.isWindows()){
-                Log.progress("Windows Detected: ");
+                log.progress("Windows Detected: ");
                 String removeCommand="$WINDOWS";
                 line = removeCommandAndContinue(removeCommand, line);
-                Log.level3("OS IS WINDOWS! remaining commands:" + line);
+                log.level3("OS IS WINDOWS! remaining commands:" + line);
            } else {
                return;
            }
        }   
        if (line.startsWith("$MAC")) {
            if (Statics.isMac()){
-                Log.progress("Mac Detected: ");
+                log.progress("Mac Detected: ");
                 String removeCommand="$MAC";
                 line = removeCommandAndContinue(removeCommand, line);
-                Log.level3("OS IS MAC! remaining commands:" + line);
+                log.level3("OS IS MAC! remaining commands:" + line);
            } else {
                return;
            }
@@ -212,9 +211,9 @@ public class CASUALScriptParser {
             
 //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
-            Log.level3("HALT RECEIVED");
+            log.level3("HALT RECEIVED");
             line = StringOperations.removeLeadingSpaces(line);
-            Log.level3("Finishing remaining commands:" + line);
+            log.level3("Finishing remaining commands:" + line);
 
         }
 //TODO: add "reboot" with adb reboot then send shell command "sleep5" then wait-for-device to account for windows retardedness
@@ -237,12 +236,12 @@ public class CASUALScriptParser {
             String Event[] = line.split(",");
             try {
                 Statics.ActionEvents.add(Event[0]);
-                Log.level3("***NEW EVENT ADDED***");
-                Log.level3("ON EVENT: " + Event[0]);
+                log.level3("***NEW EVENT ADDED***");
+                log.level3("ON EVENT: " + Event[0]);
                 Statics.ReactionEvents.add(Event[1]);
-                Log.level3("PERFORM ACTION: " + Event[1]);
+                log.level3("PERFORM ACTION: " + Event[1]);
             } catch (Exception e) {
-                Logger.getLogger(CASUALJFrame.class.getName()).log(Level.SEVERE, null, e);
+                log.errorHandler(e);
 
             }
             return;
@@ -253,13 +252,13 @@ public class CASUALScriptParser {
         if (line.startsWith("$CLEARON")) {
             Statics.ActionEvents = new ArrayList<String>();
             Statics.ReactionEvents = new ArrayList<String>();
-            Log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
+            log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return;
         }
         
 //# is a comment Disregard commented lines
         if (line.startsWith("#")) {
-            Log.level3("Ignoring commented line" + line);
+            log.level3("Ignoring commented line" + line);
             return;
         }
 
@@ -267,7 +266,7 @@ public class CASUALScriptParser {
         if (line.equals("")) {
             return;
         }
-        Log.level3("SCRIPT COMMAND:" + line);
+        log.level3("SCRIPT COMMAND:" + line);
     
         /*
          * $IFCONTAINS takes:
@@ -304,12 +303,12 @@ public class CASUALScriptParser {
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
             line = line.replace("$SLASH", Statics.Slash);
-            Log.level3("Expanded $SLASH: " + line);
+            log.level3("Expanded $SLASH: " + line);
         }
 //$ZIPFILE is a reference to the Script's .zip file
         if (line.contains("$ZIPFILE")) {
             line = line.replace("$ZIPFILE", ScriptTempFolder);
-            Log.level3("Expanded $ZIPFILE: " + line);
+            log.level3("Expanded $ZIPFILE: " + line);
         }
 
         if ((line.contains("\\n")) && ((line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERNOTIFICATION")) || line.startsWith("$USERCANCELOPTION"))) {
@@ -318,7 +317,7 @@ public class CASUALScriptParser {
 //$HOMEFOLDER will reference the user's home folder on the system        
         if (line.contains("$HOMEFOLDER")) {
             line = line.replace("$HOMEFOLDER", Statics.CASUALHome);
-            Log.level3("Expanded $HOMEFOLDER" + line);
+            log.level3("Expanded $HOMEFOLDER" + line);
         }
 
         
@@ -328,10 +327,10 @@ public class CASUALScriptParser {
  */
 //$ECHO command will display text in the main window
         if (line.startsWith("$ECHO")) {
-            Log.level3("Received ECHO command" + line);
+            log.level3("Received ECHO command" + line);
             line = line.replace("$ECHO", "");
             line = StringOperations.removeLeadingSpaces(line);
-            Log.level1(line);
+            log.level1(line);
             return;
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
         } else if (line.startsWith("$LISTDIR")) {
@@ -342,14 +341,14 @@ public class CASUALScriptParser {
                 try {
                     commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
                 } catch (IOException ex) {
-                    Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+                    log.errorHandler(ex);
                 }
             }
 // $MAKEDIR will make a folder
         } else if (line.startsWith("$MAKEDIR")) {
             line = line.replaceFirst("$MAKEDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
-            Log.level3("Creating Folder: " + line);
+            log.level3("Creating Folder: " + line);
             new File(line).mkdirs();
             return;
 
@@ -364,7 +363,7 @@ public class CASUALScriptParser {
             line = StringOperations.removeLeadingSpaces(line);
             if (line.contains(",")) {
                 String[] Message = line.split(",");
-                Log.level3("Displaying Notification--" + Message[1]);
+                log.level3("Displaying Notification--" + Message[1]);
                 JOptionPane.showMessageDialog(Statics.GUI,
                         Message[1],
                         Message[0],
@@ -400,7 +399,7 @@ public class CASUALScriptParser {
                         Options,
                         Options[1]);
                 if (n == JOptionPane.YES_OPTION) {
-                    Log.level0(ScriptName + " canceled at user request");
+                    log.level0(ScriptName + " canceled at user request");
                     ScriptContinue = false;
                     return;
                 }
@@ -411,7 +410,7 @@ public class CASUALScriptParser {
                         "Do you wish to continue?",
                         JOptionPane.YES_NO_OPTION);
                 if (n == JOptionPane.YES_OPTION) {
-                    Log.level0(ScriptName + " canceled at user request");
+                    log.level0(ScriptName + " canceled at user request");
                     ScriptContinue = false;
                     return;
                 }
@@ -427,7 +426,7 @@ public class CASUALScriptParser {
             InputBoxText = returnSafeCharacters(InputBoxText);
 
 
-            Log.level3(InputBoxText);
+            log.level3(InputBoxText);
             doShellCommand(Message[2], "$USERINPUT", InputBoxText);
             return;
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
@@ -436,9 +435,9 @@ public class CASUALScriptParser {
             line=StringOperations.removeLeadingSpaces(line);
             String[] downloadCommand=line.split(",");
             FileOperations fo= new FileOperations();
-            Log.level3("Downloading " + downloadCommand[2]);
-            Log.level3("From " + downloadCommand[0]);
-            Log.level3("to " + downloadCommand[1]);
+            log.level3("Downloading " + downloadCommand[2]);
+            log.level3("From " + downloadCommand[0]);
+            log.level3("to " + downloadCommand[1]);
             if (! fo.verifyFolder(Statics.TempFolder+"download"+Statics.Slash)){
                fo.makeFolder(Statics.TempFolder+"download"+Statics.Slash);    
             }
@@ -452,7 +451,7 @@ public class CASUALScriptParser {
                  }
                  return;
             } else {
-                Log.level0("Invalid download command");
+                log.level0("Invalid download command");
             }
 
 //$EXECUTE will blindly execute commands into the shell.  Usefull only with $LINUX $WINDOWS or $MAC commands.
@@ -510,7 +509,7 @@ public class CASUALScriptParser {
             doShellCommand(line, null, null);
         }
         //final line output for debugging purposes
-        Log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + line);
+        log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + line);
     }
 //END OF SCRIPT PARSER
     
@@ -518,7 +517,7 @@ public class CASUALScriptParser {
     
     private String removeCommandAndContinue(String remove, String line) {
         line = line.replace(remove, "");
-        Log.level3("Removed " + remove );
+        log.level3("Removed " + remove );
         line = StringOperations.removeLeadingSpaces(line);
         return line;
     }
@@ -529,12 +528,12 @@ public class CASUALScriptParser {
         Statics.ActionEvents = new ArrayList<String>();
         ScriptContinue = true;
         DATAIN = DIS;
-        Log.level3("Executing Scripted Datastream" + DIS.toString());
+        log.level3("Executing Scripted Datastream" + DIS.toString());
         Runnable r = new Runnable() {
 
             public void run() {
                 int updateStatus;
-                Log.level3("CASUAL has initiated a multithreaded execution environment");
+                log.level3("CASUAL has initiated a multithreaded execution environment");
                 String idStringFile = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta")));
                     String TestString = StringOperations.removeLeadingSpaces(idStringFile);
                     if ((TestString!=null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
@@ -563,20 +562,20 @@ public class CASUALScriptParser {
                                     break;
                                 //CASUAL must be update    
                                 case 3:
-                                    Log.level0(Statics.updateMessageFromWeb);
-                                    Log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
+                                    log.level0(Statics.updateMessageFromWeb);
+                                    log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
                                     new TimeOutOptionPane().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWeb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                     new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
                                     System.exit(0);
                                     return;
                                 //download error
                                 case 4:
-                                    Log.level0("There was a problem downloading the script.  Please check your internet connection and try again.");
+                                    log.level0("There was a problem downloading the script.  Please check your internet connection and try again.");
                                     //HALT script
                                     return;
                                 case 5:
-                                    Log.level0("Problem downloading file from internet, please try again");
-                                    Log.level0("Problem downloading file from internet, please try again");
+                                    log.level0("Problem downloading file from internet, please try again");
+                                    log.level0("Problem downloading file from internet, please try again");
 
 
                                     //TODO stop and reset script to stock... possibly delete temp folder and restart CASUAL
@@ -587,17 +586,17 @@ public class CASUALScriptParser {
                             }
 
                         } catch (MalformedURLException ex) {
-                            Log.level0("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script + " Please report this.");
-                            //Script not in repository
+                            log.level0("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script + " Please report this.");
+                            log.errorHandler(ex);
                         } catch (IOException ex) {
-                            Log.level0("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
-
+                            log.level0("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
+                            log.errorHandler(ex);
                         }
                     }
                
                 CurrentLine = 1;
                 Statics.ProgressBar.setMaximum(LinesInScript);
-                Log.level3("Reading datastream" + DATAIN);
+                log.level3("Reading datastream" + DATAIN);
                 doRead(DATAIN);
                 Statics.GUI.enableControls(true);
                 Statics.DeviceMonitor.DeviceCheck.start();
@@ -643,10 +642,9 @@ public class CASUALScriptParser {
             }
             //Close the input stream
             dataIn.close();
-            Log.level0("done");
+            log.level0("done");
         } catch (Exception e) {//Catch exception if any
-            Log.level0("CASUAL SCRIPTING ERROR: " +e.toString() + e.getMessage() + e.getLocalizedMessage() );
-            e.printStackTrace();
+            log.errorHandler(e);
         }
 
     }
@@ -775,7 +773,7 @@ public class CASUALScriptParser {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+                log.errorHandler(ex);
             }
         }
         

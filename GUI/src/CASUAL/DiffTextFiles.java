@@ -66,7 +66,7 @@ public class DiffTextFiles {
                     Difference = Difference + TestStreamLine + "\n";
                 }
             } catch (IOException ex1) {
-                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex1);
+                new Log().errorHandler(ex);
             }
 
 
@@ -115,7 +115,7 @@ public class DiffTextFiles {
                 BRTestDiff.close();
             }
         } catch (IOException e) {
-            new Log().level3(e.getMessage());
+            new Log().errorHandler(e);
         }
         return DifferenceFromFile1;
     }
@@ -140,14 +140,14 @@ public class DiffTextFiles {
                 }
                 FileToModify.createNewFile();
             } catch (IOException ex) {
-                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             }
         }
         FileReader FR;
         try {
             FR = new FileReader(FileToModify);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
             return;
         }
         BufferedReader OriginalFileBuffer = new BufferedReader(FR);
@@ -168,7 +168,7 @@ public class DiffTextFiles {
                 OutputFile = new File(NameOfFileToBeModified + "_new");
                 OutputFile.renameTo(new File(NameOfFileToBeModified).getAbsoluteFile());
             } catch (IOException ex) {
-                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             }
         }
 

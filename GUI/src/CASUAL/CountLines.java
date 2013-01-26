@@ -40,14 +40,14 @@ public class CountLines {
 
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         } catch (IOException ex) {
-            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         } finally {
             try {
                 IS.close();
             } catch (IOException ex) {
-                Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             }
 
         }
@@ -61,12 +61,12 @@ public class CountLines {
         try {
             Lines = countISLines(IS);
         } catch (IOException ex) {
-            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         } finally {
             try {
                 IS.close();
             } catch (IOException ex) {
-                Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             }
         }
         return Lines;
