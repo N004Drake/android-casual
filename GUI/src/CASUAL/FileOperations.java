@@ -164,10 +164,10 @@ public class FileOperations {
      * makes a folder, verifies it exists returns a boolean value if the file
      * exists
      */
-    public boolean verifyFolder(String folder){
+    public boolean verifyFolder(String folder) {
         return new File(folder).exists() ? true : false;
     }
-    
+
     public boolean makeFolder(String Folder) {
         Boolean CreatedFolder;
         File folder = new File(Folder);
@@ -188,7 +188,6 @@ public class FileOperations {
         return CreatedFolder;
     }
 
- 
     /*
      * takes a string and a filename, writes to the file
      */
@@ -199,6 +198,7 @@ public class FileOperations {
         bw.close();
         Log.level3("Write Finished");
     }
+
     public void overwriteFile(String Text, String File) throws IOException {
         BufferedWriter bw;
         bw = new BufferedWriter(new FileWriter(File, false));
@@ -206,18 +206,19 @@ public class FileOperations {
         bw.close();
         Log.level3("File overwrite Finished");
     }
+
     private boolean writeInputStreamToFile(InputStream is, File file) {
         Log.level3("Attempting to write " + file.getPath());
         try {
-            BufferedOutputStream out= new BufferedOutputStream(new FileOutputStream(file));
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
             //integer for return value
             int currentByte;
             // establish buffer for writing file
-            int BUFFER=4096;
+            int BUFFER = 4096;
             byte data[] = new byte[BUFFER];
             if (is.available() > 0) {
                 // while stream does not return -1, fill data buffer and write.
-                while ((currentByte = is.read(data, 0, BUFFER)) != -1) { 
+                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
                     out.write(data, 0, currentByte);
                 }
             } else {
@@ -241,9 +242,7 @@ public class FileOperations {
             return false;
         }
     }
-    
-    
-    
+
     /*
      * takes a string filename returns a boolean if the file was deleted
      */

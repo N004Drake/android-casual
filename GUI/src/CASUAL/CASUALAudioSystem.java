@@ -34,7 +34,6 @@ public class CASUALAudioSystem {
      */
     public static synchronized void playSound(final String URL) {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
-
             public void run() {
                 if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
                     try {
@@ -64,7 +63,6 @@ public class CASUALAudioSystem {
 
     public static synchronized void playMultipleInputStreams(final String[] URLs) {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
-
             public void run() {
                 if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
                     byte[] buffer = new byte[4096];
@@ -88,7 +86,7 @@ public class CASUALAudioSystem {
                                 Line.drain(); // wait for the buffer to empty before closing the line
                             }
                         } catch (Exception e) {
-                            new Log().level3("EXCEPTION while attempting to play sound " +e.getMessage());
+                            new Log().level3("EXCEPTION while attempting to play sound " + e.getMessage());
                         }
                         CurrentURL = CurrentURL++;
                     }

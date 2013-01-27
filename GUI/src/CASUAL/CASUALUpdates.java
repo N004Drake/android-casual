@@ -60,16 +60,16 @@ public class CASUALUpdates {
         }
         //This is where we hold the local information to be compared to the update
         CASUALIDString localInformation = new CASUALIDString();
-        if (Statics.localInformation == null){
+        if (Statics.localInformation == null) {
             localInformation.setMetaDataFromIDString(localIdentificationString.split("\n"));
         } else {
-            localInformation=Statics.localInformation;
+            localInformation = Statics.localInformation;
         }
-  
+
         //This is where we hold web information to be checked for an update every run.
         CASUALIDString webInformation = new CASUALIDString();
         webInformation.setMetaDataFromIDString(webData.split("\n"));
-        Log.level3("***WEB VERSION***"+webInformation.metaData);
+        Log.level3("***WEB VERSION***" + webInformation.metaData);
         Statics.SVNRevisionRequired = Integer.parseInt(webInformation.metaData[2]);
         Statics.updateMessageFromWeb = webInformation.getMetaData()[4];
         Statics.supportWebsiteFromWeb = webInformation.metaData[3];
@@ -83,17 +83,17 @@ public class CASUALUpdates {
                 return 3;
             }
             if (checkVersionInformation(webInformation.metaData[1], localInformation.metaData[1])) {
-                Log.level0("Current Version "+localInformation.metaData[1]+" requires update to version "+webInformation.metaData[1]);
+                Log.level0("Current Version " + localInformation.metaData[1] + " requires update to version " + webInformation.metaData[1]);
                 Log.level0("Script is out of date. See " + webInformation.metaData[3] + " for more information.  Updating.");
                 Log.level0(webInformation.metaData[4]);
                 //ugly code dealing with /SCRIPTS/ folder on computer.
                 new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
-                int status = downloadUpdates(script,webInformation,Statics.TempFolder);
-                if (status==0){
-                   Log.level0("... Update Sucessful! MD5s verified!");
-                   return 2;
+                int status = downloadUpdates(script, webInformation, Statics.TempFolder);
+                if (status == 0) {
+                    Log.level0("... Update Sucessful! MD5s verified!");
+                    return 2;
                 } else {
-                   return 4;  
+                    return 4;
                 }
             }
         }
@@ -118,7 +118,8 @@ public class CASUALUpdates {
         }
 
     }
-public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
+
+    public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
         try {
             downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
         } catch (MalformedURLException ex) {
@@ -126,11 +127,12 @@ public boolean downloadFileFromInternet(String URL, String outputFile, String fr
         } catch (URISyntaxException ex) {
             Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
         }
-    return true;
-}
+        return true;
+    }
+
     public boolean downloadFileFromInternet(URL url, String outputFile, String friendlyName) {
-        Log.level3("Downloading "+url);
-        Log.level3("To: "+ outputFile);
+        Log.level3("Downloading " + url);
+        Log.level3("To: " + outputFile);
         InputStream input;
         try {
 
@@ -159,7 +161,7 @@ public boolean downloadFileFromInternet(String URL, String outputFile, String fr
 
             }
         } catch (Exception ex) {
-            Log.level3("Error Downloading " +ex.getMessage());
+            Log.level3("Error Downloading " + ex.getMessage());
             return false;
         }
         return true;
@@ -209,54 +211,53 @@ public boolean downloadFileFromInternet(String URL, String outputFile, String fr
      * 1- update not available
      * 2- update error
      */
-    private int downloadUpdates(String scriptname, CASUALIDString webInformation,String localPath) {
+    private int downloadUpdates(String scriptname, CASUALIDString webInformation, String localPath) {
         URL url;
         try {
             url = stringToFormattedURL(Statics.CASUALRepo + scriptname);
         } catch (MalformedURLException ex) {
-            Log.level3("malformedURL exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo+scriptname);
-            return 1;    
+            Log.level3("malformedURL exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo + scriptname);
+            return 1;
         } catch (URISyntaxException ex) {
-            Log.level3("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo+scriptname);
+            Log.level3("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo + scriptname);
             return 1;
         }
         Log.level0("Downloading Updates");
-        
+
         try {
             ArrayList<String> list = new ArrayList<String>();
-            String localfile=Statics.TempFolder + scriptname;
-            String ext="";
-            for (int n=0; n<webInformation.md5sums.length; n++){
+            String localfile = Statics.TempFolder + scriptname;
+            String ext;
+            for (int n = 0; n < webInformation.md5sums.length; n++) {
                 //get download extension from md5sum;
 
                 try {
-                    String[] md5=webInformation.md5sums[n].split("  ");
-                    String fileName=md5[1];
-                    ext="."+fileName.split("\\.")[1];
+                    String[] md5 = webInformation.md5sums[n].split("  ");
+                    String fileName = md5[1];
+                    ext = "." + fileName.split("\\.")[1];
                     if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
                         list.add(Statics.TempFolder + scriptname + ext);
                     }
-                } catch (ArrayIndexOutOfBoundsException e){
+                } catch (ArrayIndexOutOfBoundsException e) {
                     continue;
-                } catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     continue;
                 }
 
 
             }
-       
+
             String[] files = list.toArray(new String[list.size()]);
-            if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation.md5sums, files)){
+            if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation.md5sums, files)) {
                 return 0;//success
             } else {
                 return 2;//failure
             }
-            
-           
+
+
         } catch (MalformedURLException ex) {
             Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 1;//no update available
     }
-    
 }

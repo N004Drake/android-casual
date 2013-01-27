@@ -38,7 +38,7 @@ public class TimeOutOptionPane extends JOptionPane {
      * TimeOutOptionPane.INFORMATION_MESSAGE, //Icon new String[]{"blah", "hey",
      * "yo"}, // option buttons "yo"); //seconds before auto "yo"
      *     
-*
+     *
      */
 
     public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType,
@@ -51,7 +51,6 @@ public class TimeOutOptionPane extends JOptionPane {
 
         pane.selectInitialValue();
         new Thread() {
-
             @Override
             public void run() {
                 try {
