@@ -38,10 +38,6 @@ public class CASUALConnectionStatusMonitor {
     Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
 
         public void actionPerformed(ActionEvent evt) {
-            //TODO: do some sort of driver check on Windows
-            // or check if Kies exists somehow.
-            // or something....    I don't know how to do this.
-            //execute adb devices and filter
             String DeviceCommand[] = {Statics.AdbDeployed, "devices"};
             try {
             String DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
