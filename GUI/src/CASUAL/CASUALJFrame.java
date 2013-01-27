@@ -33,6 +33,7 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
+import oracle.jrockit.jfr.tools.ConCatRepository;
 import org.jdesktop.application.Application;
 
 /**
@@ -98,9 +99,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         log.level3("Updating Scripts for UI");
         comboBoxUpdate();
-        //TODO: Uncompress zip if needed
-
-
+ 
 
     }
 
@@ -507,7 +506,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     private void StatusLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseExited
         this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
         buttonEnableStage = false;
-        // TODO add your handling code here:
     }//GEN-LAST:event_StatusLabelMouseExited
     private void comboBoxUpdate() {
         log.level2("From Resource: " + Statics.TargetScriptIsResource);
@@ -517,26 +515,43 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         } else {
             log.level1(fileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         }
-        String ZipResource;
+
         Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString();
-        if (Statics.TargetScriptIsResource) {
-            ZipResource = Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip";
-        } else {
-            ZipResource = comboBoxScriptSelector.getSelectedItem().toString() + ".zip";
-        }
+        
+        //set the ZipResource
+        final String ZipResource = Statics.TargetScriptIsResource ? ( Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip" ) : ( comboBoxScriptSelector.getSelectedItem().toString() + ".zip" );
+  
+        
+        Thread t= new Thread(){
+            
+            
+            public void run(){
+                try {
+                    Statics.GUI.enableControls(false);
+                } catch (NullPointerException ex){
+                    log.level3("attempted to lock controls but controls are not availble yet");
+                }
+                Statics.lockControlsForUnzip=true;
+                if (getClass().getResource(ZipResource) != null) {
+                    log.level3("Extracting archive....");
 
-        if (getClass().getResource(ZipResource) != null) {
-            log.level3("Extracting archive....");
-
-            Unzip Unzip = new Unzip();
-            try {
-                Unzip.UnZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
-            } catch (FileNotFoundException ex) {
-                log.errorHandler(ex);
-            } catch (IOException ex) {
-                log.errorHandler(ex);
+                    Unzip Unzip = new Unzip();
+                    try {
+                        Unzip.UnZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
+                    } catch (FileNotFoundException ex) {
+                        log.errorHandler(ex);
+                    } catch (IOException ex) {
+                        log.errorHandler(ex);
+                    }
+                }                
+               log.level0("Zip Done");
+                Statics.lockControlsForUnzip=false;
+                Statics.GUI.enableControls(true);
             }
-        }
+
+        };
+        t.start();
+
         log.level3("Exiting comboBoxUpdate()");
     }
 
@@ -698,7 +713,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }
 
     public void enableControls(boolean status) {
-        if (!Statics.MasterLock) {
+        if (!Statics.MasterLock && !Statics.lockControlsForUnzip) {
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
             log.level3("Controls Enabled status: " + status);
