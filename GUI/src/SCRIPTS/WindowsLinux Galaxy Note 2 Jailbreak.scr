@@ -12,12 +12,13 @@ $MAC $HEIMDALL flash --8 "$ZIPFILEboot.img"
 $GOTO #ALL systems
 
 #gotoWINDOWS
-$ECHO If you have not already, please install the baseline http://d-h.st/Njj using Odin3 http://d-h.st/s6I
+$ECHO *You will need to use Odin.  Located here: http://d-h.st/s6I
+$ECHO *to install the exploitable baseline located here:http://d-h.st/Njj
 $USERCANCELOPTION Instructions, Please ensure you have flashed a Version VRALJB\nkernel before clicking OK.  If you use \nLinux I can do this automatically.\n\n If something goes wrong, do not continue.\n You can get the baseline here: http://d-h.st/Njj\nYou can get Odin3 here: http://d-h.st/s6I
 
 #ALL systems are the same for the exploit.
 
-$ECHO Your device should be rebooting into Android now.
+$ECHO Waiting for device to return to Android after baseline flash.
 $ADB wait-for-device
 #Reboot to clear logs
 shell "mkdir /data/local/tmp"
@@ -51,7 +52,7 @@ $ECHO [x]Ready for exploit
 
 #Verify Device is proper
 $IFNOTCONTAINS 3.0.31-414933 $INCOMMAND shell "cat /proc/version" $DO $USERCANCELOPTION Improper kernel, I have detected an unsupported kernel\n  You may continue if you are rooted. Otherwise click stop\n and restart the procedure.
-$ON noroot, $HALT $ECHO WHAT THE HELL ARE YOU DOING?  I EVEN GAVE YOU A DAMN WARNING.. DEVICE IS NOT ROOTED! ROOT YOUR DEVICE OR INSTALL THE KERNEL! Install any VRALJB kernel and disable any exploit killers --Adam Outler
+$ON noroot, $HALT $ECHO DEVICE IS NOT ROOTED! ROOT YOUR DEVICE OR INSTALL THE KERNEL! Install any VRALJB kernel and disable any exploit killers --Adam Outler
 shell 'su -c "ls 2>&1 >/dev/null && echo [x]Found rooted device || echo noroot"'
 $CLEARON 
 
@@ -84,5 +85,4 @@ wait-for-device
 reboot recovery
 #Give Notification that we are done.
 wait-for-device
-$USERNOTIFICATION Congratulations, You're unlocked!
-$ECHO Done
+$USERNOTIFICATION Congratulations, If you saw a custom recovery by\nTeam Win... You're Jailbroken!
