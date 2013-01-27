@@ -49,8 +49,6 @@ class CASUALDeployADB implements Runnable {
         } else if (Statics.isMac()) {
             Log.level3("Found Mac Computer");
             //add our lines to the current adbini
-
-            //TODO: figure out why this crashes adb on Mac.
             String addToADBUSB = DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac);
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, addToADBUSB);
 
@@ -59,9 +57,6 @@ class CASUALDeployADB implements Runnable {
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isWindows()) {
-            //TODO: add \ after home.android folder
-            //java.io.FileNotFoundException: C:\Users\adam.android\adb_usb.ini (The system can
-            //not find the path specified)
             Log.level3("Found Windows Computer");
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationWindows));
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);

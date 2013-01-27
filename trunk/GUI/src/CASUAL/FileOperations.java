@@ -188,42 +188,7 @@ public class FileOperations {
         return CreatedFolder;
     }
 
-    /*
-     * Takes an input stream and a file writes file to input stream
-     */
-    /*
-     * Commenting this for testing
-     * private boolean writeInputStreamToFile(InputStream is, File file) {
-        Log.level3("Attempting to write " + file.getPath());
-        try {
-            DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-            int c;
-            //TODO: write in bulk using an array
-            if (is.available() > 0) {
-                while ((c = is.read()) != -1) {
-                    out.writeByte(c);
-                }
-            } else {
-                Log.level0("ERROR: FILE READ WAS 0 LENGTH");
-                return false;
-            }
-            is.close();
-            out.close();
-
-        } catch (IOException e) {
-            System.err.print(e);
-            System.err.println("Error Writing/Reading Streams.");
-            return false;
-        }
-        if ((file.exists()) && (file.length() >= 4)) {
-            Log.level3("File verified.");
-            return true;
-        } else {
-            Log.level0(file.getAbsolutePath() + " Was a failed attempt to write- does not exist.");
-            Log.level1("false");
-            return false;
-        }
-    }*/
+ 
     /*
      * takes a string and a filename, writes to the file
      */

@@ -576,6 +576,14 @@ public class CASUALScriptParser {
                                 case 5:
                                     log.level0("Problem downloading file from internet, please try again");
                                     log.level0("Problem downloading file from internet, please try again");
+                                    new TimeOutOptionPane().showTimeoutDialog(60, null, "Download Failure.  CASUAL will now restart.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"OK"}, "ok");
+                                    try {
+                                        JavaSystem.restart(new String[]{""});
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
 
 
                                     //TODO stop and reset script to stock... possibly delete temp folder and restart CASUAL
