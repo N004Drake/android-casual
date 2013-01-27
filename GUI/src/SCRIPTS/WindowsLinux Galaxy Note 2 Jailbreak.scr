@@ -59,7 +59,7 @@ $CLEARON
 $ECHO [x]Device Verification Checks Complete
 $ECHO [x]Ready for exploit
 $ECHO Injecting Code
-shell 'su -c "dd if=/data/local/tmp/exploit of=/dev/block/mmcblk0 bs=512 seek=34 count=16"'
+shell 'su -c "dd if=/data/local/tmp/exploit of=/dev/block/mmcblk0 bs=512 seek=34 count=16; sync"'
 $ECHO [x]Exploit Injection Done.
 reboot download
 $WINDOWS $GOTO #gotoFinal Windows instructions
