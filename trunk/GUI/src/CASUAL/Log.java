@@ -50,7 +50,6 @@ public class Log {
                         } catch (java.lang.IllegalArgumentException x) {
                         }
                     } catch (BadLocationException ex) {
-                      
                     }
 
 
@@ -66,10 +65,10 @@ public class Log {
         }
     }
 
-
     /**
-     *level 0 is used for errors..  basically silent. Use level 1 for 
-     * for most tasks
+     * level 0 is used for errors.. basically silent. Use level 1 for for most
+     * tasks
+     *
      * @param data is data to be written to log
      */
     public void level0(String data) {
@@ -83,8 +82,9 @@ public class Log {
         }
     }
 
-     /**
-     *level 0 is used for normal user data.. 
+    /**
+     * level 0 is used for normal user data..
+     *
      * @param data is data to be written to log
      */
     public void level1(String data) {
@@ -97,8 +97,10 @@ public class Log {
         }
 
     }
+
     /**
-     *level 2 if for debugging data
+     * level 2 if for debugging data
+     *
      * @param data is data to be written to log
      */
     // level 2 is for debugging data
@@ -111,8 +113,10 @@ public class Log {
 
         }
     }
+
     /**
      * level 3 is for verbose data
+     *
      * @param data is data to be written to log
      */
     public void level3(String data) {
@@ -124,7 +128,6 @@ public class Log {
 
         }
     }
-
 
     public void writeToLogFile(String data) {
         debugOut(data);
@@ -187,14 +190,15 @@ public class Log {
         }
 
     }
+
     /**
      *
      * @param e is any throwable
      */
-    public void errorHandler(Exception e){
+    public void errorHandler(Exception e) {
         StringWriter writer = new StringWriter();
-        e.printStackTrace( new PrintWriter(writer));
-        level0(e.getLocalizedMessage()+ "\n" + e.getMessage()+ "\n" +e.toString()+ "\n" +"\n" + writer.toString());
+        e.printStackTrace(new PrintWriter(writer));
+        level0(e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
         level0("A critical error was encoutered.  Please copy the log from About>Show Log and report this issue ");
     }
 }

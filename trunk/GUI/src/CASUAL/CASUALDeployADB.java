@@ -14,7 +14,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package CASUAL;
 
 import java.util.logging.Level;
@@ -25,7 +24,6 @@ import javax.swing.JOptionPane;
  *
  * @author adam
  */
-
 class CASUALDeployADB implements Runnable {
 
     FileOperations FileOperations = new FileOperations();
@@ -72,12 +70,12 @@ class CASUALDeployADB implements Runnable {
                 Log.level3("sleeping for Windows ADB start");
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
-               //no catch needed for sleep interruption
+                //no catch needed for sleep interruption
             }
         } else {
             Log.level0("Your system is not supported");
         }
-        
+
         //TODO figure out why we have adb_usb.ini_new
         FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
 
@@ -101,39 +99,39 @@ class CASUALDeployADB implements Runnable {
 
 
         Log.level3("Device List:" + DeviceList);
-        if ( (!Statics.isWindows()) && (DeviceList.contains("????????????") || DeviceList.contains("error: cannot connect to daemon")) ) {
-            Log.level3("sleeping for 4 seconds.  Device list: " +DeviceList);
-                    try {
-                        Thread.sleep(4000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(CASUALConnectionStatusMonitor.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                DeviceList = Shell.silentShellCommand(devicesCmd).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
-                Statics.DeviceTracker = DeviceList.split("device");
-                if (DeviceList.contains("????????????")) {
-                    
+        if ((!Statics.isWindows()) && (DeviceList.contains("????????????") || DeviceList.contains("error: cannot connect to daemon"))) {
+            Log.level3("sleeping for 4 seconds.  Device list: " + DeviceList);
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CASUALConnectionStatusMonitor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            DeviceList = Shell.silentShellCommand(devicesCmd).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
+            Statics.DeviceTracker = DeviceList.split("device");
+            if (DeviceList.contains("????????????")) {
 
-                    Log.level1("killing server and requesting elevated permissions");
-                    Shell.sendShellCommand(killCmd);
-                    TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
-                    String[] ok = {"ok"};
-                    CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-                    TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
-                            + "is not set up properly to communicate\n"
-                            + "with the device.  As a work-around we\n"
-                            + "will attempt to elevate permissions \n"
-                            + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
-                    DeviceList = Shell.elevateSimpleCommand(devicesCmd);
-                    if (!DeviceList.contains("????????????")) {
-                        Log.level2(DeviceList);
-                        Log.level1("Permissions elevation sucessful.");
-                    } else {
-                        Log.level0("Unrecognized device detected");
 
-                    }
-                 } else {
-                    Log.level0("Problem corrected, delete this line. ");
+                Log.level1("killing server and requesting elevated permissions");
+                Shell.sendShellCommand(killCmd);
+                TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
+                String[] ok = {"ok"};
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
+                TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
+                        + "is not set up properly to communicate\n"
+                        + "with the device.  As a work-around we\n"
+                        + "will attempt to elevate permissions \n"
+                        + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
+                DeviceList = Shell.elevateSimpleCommand(devicesCmd);
+                if (!DeviceList.contains("????????????")) {
+                    Log.level2(DeviceList);
+                    Log.level1("Permissions elevation sucessful.");
+                } else {
+                    Log.level0("Unrecognized device detected");
+
                 }
+            } else {
+                Log.level0("Problem corrected, delete this line. ");
+            }
 
 
         }

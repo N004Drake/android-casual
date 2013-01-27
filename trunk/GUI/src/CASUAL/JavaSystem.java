@@ -4,7 +4,6 @@
  */
 package CASUAL;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -14,6 +13,7 @@ import java.lang.management.ManagementFactory;
  * @author adam
  */
 public class JavaSystem {
+
     public static void restart(String[] args) throws IOException, InterruptedException {
         StringBuilder cmd = new StringBuilder();
         cmd.append(System.getProperty("java.home")).append(File.separator).append("bin").append(File.separator).append("java ");
@@ -29,4 +29,3 @@ public class JavaSystem {
         System.exit(0);
     }
 }
-

@@ -151,10 +151,10 @@ public class CASUALAboutBox extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        if (jCheckBox1.isSelected()){
-            Statics.ConsoleLevel=4;
+        if (jCheckBox1.isSelected()) {
+            Statics.ConsoleLevel = 4;
         } else {
-            Statics.ConsoleLevel=1;
+            Statics.ConsoleLevel = 1;
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
@@ -193,7 +193,6 @@ public class CASUALAboutBox extends javax.swing.JFrame {
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             public void run() {
                 new CASUALAboutBox().setVisible(true);
             }

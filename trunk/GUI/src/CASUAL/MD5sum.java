@@ -31,9 +31,10 @@ import java.util.logging.Logger;
  * Inspired by R.J. Lorimer http://www.javalobby.org/java/forums/t84420.html
  */
 public class MD5sum {
-    private String[][] baselineMD5=null;
-    private String[][] downloadedMD5=null;
-    
+
+    private String[][] baselineMD5 = null;
+    private String[][] downloadedMD5 = null;
+
     public boolean compareFileToMD5(File f, String MD5) {
         if (md5sum(f).equals(MD5)) {
             return true;
@@ -42,7 +43,7 @@ public class MD5sum {
         }
     }
 
-    public String md5sum(File f){
+    public String md5sum(File f) {
         InputStream is = null;
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -59,72 +60,76 @@ public class MD5sum {
                 return output;
 
             } finally {
-                    is.close();
+                is.close();
             }
         } catch (FileNotFoundException ex) {
-           return "ERROR0FileNotFoundException00000";
+            return "ERROR0FileNotFoundException00000";
 
         } catch (NoSuchAlgorithmException ex) {
-           return "ERROR0NoSuchAlgorythemException0";
+            return "ERROR0NoSuchAlgorythemException0";
 
         } catch (IOException ex) {
-           return "ERROR00IOException00000000000000";
-        } 
-        
+            return "ERROR00IOException00000000000000";
+        }
+
     }
-    public boolean compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
-        String[][] FilenamesAndMD5=splitFilenamesAndMD5(LinuxFormat);
-        boolean[] matches=new boolean[MD5Filenames.length];
-        for (int n=0; n<MD5Filenames.length; n++){ //loop through files
-            matches[n]=false; //set match as false by default
-            String md5=md5sum(new File(MD5Filenames[n]));// get MD5 for current file
-                for (int nn=0; nn<FilenamesAndMD5.length; nn++){ //find MD5 in lookup table
-                    if (md5.length()!=32) { //if md5 is found while looping through lookup table set match true
-                        matches[n]=true;
-                    } else if (md5.equals(FilenamesAndMD5[nn][0])){ //or if it is not an actual MD5 set as true;
-                        matches[n]=true;
-                    }
-                    
+
+    public boolean compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames) {
+        String[][] FilenamesAndMD5 = splitFilenamesAndMD5(LinuxFormat);
+        boolean[] matches = new boolean[MD5Filenames.length];
+        for (int n = 0; n < MD5Filenames.length; n++) { //loop through files
+            matches[n] = false; //set match as false by default
+            String md5 = md5sum(new File(MD5Filenames[n]));// get MD5 for current file
+            for (int nn = 0; nn < FilenamesAndMD5.length; nn++) { //find MD5 in lookup table
+                if (md5.length() != 32) { //if md5 is found while looping through lookup table set match true
+                    matches[n] = true;
+                } else if (md5.equals(FilenamesAndMD5[nn][0])) { //or if it is not an actual MD5 set as true;
+                    matches[n] = true;
                 }
 
-            
+            }
+
+
         }
-        for (int n=0; n<matches.length; n++){ //loop through all values
-            if (matches[n]==false) return false; //if all values don't match, return false
+        for (int n = 0; n < matches.length; n++) { //loop through all values
+            if (matches[n] == false) {
+                return false; //if all values don't match, return false
+            }
         }
-        
+
         return true;
     }
+
     private String[][] splitFilenamesAndMD5(String[] idStrings) {
-        final int ROWS=idStrings.length; 
-        int COLUMNS=2;
-        final String[][] NameMD5=new String[ROWS][COLUMNS];
-        for (int n=0; n<ROWS; n++){
+        final int ROWS = idStrings.length;
+        int COLUMNS = 2;
+        final String[][] NameMD5 = new String[ROWS][COLUMNS];
+        for (int n = 0; n < ROWS; n++) {
             try {
-            if (idStrings[n].contains("  ")){
-               String[] splitID=idStrings[n].split("  ");
-               if (splitID.length==2){
-                       if ((splitID[0]!=null) && (splitID[1]!=null)){
-                           NameMD5[n][0]=splitID[0];
-                           NameMD5[n][1]=splitID[1];
-                           //this is a valid MD5 split
-                       } else {
-                           //spoof empty string
-                           NameMD5[n][0]="";
-                           NameMD5[n][1]="";
-                       }
-        
-               } else {
-               //spoof empty string;
-                    NameMD5[n][0]="";
-                    NameMD5[n][1]="";
-               }
+                if (idStrings[n].contains("  ")) {
+                    String[] splitID = idStrings[n].split("  ");
+                    if (splitID.length == 2) {
+                        if ((splitID[0] != null) && (splitID[1] != null)) {
+                            NameMD5[n][0] = splitID[0];
+                            NameMD5[n][1] = splitID[1];
+                            //this is a valid MD5 split
+                        } else {
+                            //spoof empty string
+                            NameMD5[n][0] = "";
+                            NameMD5[n][1] = "";
+                        }
+
+                    } else {
+                        //spoof empty string;
+                        NameMD5[n][0] = "";
+                        NameMD5[n][1] = "";
+                    }
+                }
+            } catch (NullPointerException e) {
+                continue;
             }
-        } catch (NullPointerException e){
-            continue;
         }
-        }
-        return NameMD5;        
+        return NameMD5;
     }
 
     String md5sum(String string) {

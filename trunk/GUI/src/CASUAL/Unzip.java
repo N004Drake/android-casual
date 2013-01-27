@@ -34,9 +34,9 @@ import java.util.zip.ZipInputStream;
  * @author adam
  */
 public class Unzip {
+
     Log log = new Log();
     int BUFFER = 4096;
-
 
     public void unzipFile(String zipFile, String OutputFolder) throws ZipException, IOException {
         log.level3(zipFile);

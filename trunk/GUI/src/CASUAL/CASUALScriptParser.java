@@ -105,110 +105,110 @@ public class CASUALScriptParser {
      * Script Handler contains all script commands and will execute commands
      */
     private void commandHandler(String line) {
-        log.level3("new command: "+line);//log line
+        log.level3("new command: " + line);//log line
         line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
-        
-        
-       /*OPERATING SYSTEM COMMANDS
-        * $WINDOWS/$LINUX/$MAC
-        * checks if the operating system is Windows, Linux Or Mac
-        * if it is, it will execute the commands
-        * Command may include $HALT and any other command like $ECHO
-        */
-       if (line.startsWith("$LINUXMAC")) {
-           if (Statics.isLinux() || Statics.isMac()){
-                String removeCommand="$LINUXMAC";
+
+
+        /*OPERATING SYSTEM COMMANDS
+         * $WINDOWS/$LINUX/$MAC
+         * checks if the operating system is Windows, Linux Or Mac
+         * if it is, it will execute the commands
+         * Command may include $HALT and any other command like $ECHO
+         */
+        if (line.startsWith("$LINUXMAC")) {
+            if (Statics.isLinux() || Statics.isMac()) {
+                String removeCommand = "$LINUXMAC";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Linux Or Mac Detected: ");
                 log.level3("OS IS LINUX or MAC! remaining commands:" + line);
-                
-           } else {
-               return;
-           }
-       }
-       if (line.startsWith("$LINUXWINDOWS")) {
-           if (Statics.isLinux() || Statics.isWindows()){
-                String removeCommand="$LINUXWINDOWS";
+
+            } else {
+                return;
+            }
+        }
+        if (line.startsWith("$LINUXWINDOWS")) {
+            if (Statics.isLinux() || Statics.isWindows()) {
+                String removeCommand = "$LINUXWINDOWS";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Windows or Linux Detected: ");
                 log.level3("OS IS WINDOWS OR LINUX! remaining commands:" + line);
-                
-           } else {
-               return;
-           }
-       }       
-       if (line.startsWith("$WINDOWSMAC")) {
-           if (Statics.isLinux()){
-                String removeCommand="$LINUXMAC";
+
+            } else {
+                return;
+            }
+        }
+        if (line.startsWith("$WINDOWSMAC")) {
+            if (Statics.isLinux()) {
+                String removeCommand = "$LINUXMAC";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Mac or Windows Detected: ");
                 log.level3("OS IS Windows or Mac! remaining commands:" + line);
-                
-           } else {
-               return;
-           }
-       }
-       if (line.startsWith("$LINUX")) {
-           if (Statics.isLinux()){
-                String removeCommand="$LINUX";
+
+            } else {
+                return;
+            }
+        }
+        if (line.startsWith("$LINUX")) {
+            if (Statics.isLinux()) {
+                String removeCommand = "$LINUX";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Linux Detected: ");
                 log.level3("OS IS LINUX! remaining commands:" + line);
-                
-           } else {
-               return;
-           }
-       }       
-       if (line.startsWith("$WINDOWS")) {
-           if (Statics.isWindows()){
+
+            } else {
+                return;
+            }
+        }
+        if (line.startsWith("$WINDOWS")) {
+            if (Statics.isWindows()) {
                 log.progress("Windows Detected: ");
-                String removeCommand="$WINDOWS";
+                String removeCommand = "$WINDOWS";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.level3("OS IS WINDOWS! remaining commands:" + line);
-           } else {
-               return;
-           }
-       }   
-       if (line.startsWith("$MAC")) {
-           if (Statics.isMac()){
+            } else {
+                return;
+            }
+        }
+        if (line.startsWith("$MAC")) {
+            if (Statics.isMac()) {
                 log.progress("Mac Detected: ");
-                String removeCommand="$MAC";
+                String removeCommand = "$MAC";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.level3("OS IS MAC! remaining commands:" + line);
-           } else {
-               return;
-           }
-       }        
+            } else {
+                return;
+            }
+        }
 
-/*
- * CONTROL COMMANDS
- */
+        /*
+         * CONTROL COMMANDS
+         */
 //$RECALL, Last Acceptable CASUAL Value from meta, $ANY OTHER COMMAND. Will automatically halt.
    /* This is for future use not implemented yet.    if (line.startsWith("$RECALL")){
-            if (Statics.SVNRevisionRequired!=0){
-                Log.level3("RECALL CHECK PARSING");
-                line=StringOperations.removeLeadingSpaces(line.replace("$RECALL",""));
-                String splitline[] = line.split(" ");
-                int recallValue=Integer.parseInt(splitline[0]);
-                if (recallValue > Statics.SVNRevisionRequired){
-                    Log.level1("This CASUAL has been recalled on your platform");
-                    Log.level1("I am now attempting to bring you to the support website");
-                    Log.level1(Statics.supportWebsiteFromWeb);
-                    if (splitline.length>1){
-                        line="$HALT"+line.replaceFirst(Integer.toString(recallValue), "");
-                        new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
-                    }
+         if (Statics.SVNRevisionRequired!=0){
+         Log.level3("RECALL CHECK PARSING");
+         line=StringOperations.removeLeadingSpaces(line.replace("$RECALL",""));
+         String splitline[] = line.split(" ");
+         int recallValue=Integer.parseInt(splitline[0]);
+         if (recallValue > Statics.SVNRevisionRequired){
+         Log.level1("This CASUAL has been recalled on your platform");
+         Log.level1("I am now attempting to bring you to the support website");
+         Log.level1(Statics.supportWebsiteFromWeb);
+         if (splitline.length>1){
+         line="$HALT"+line.replaceFirst(Integer.toString(recallValue), "");
+         new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
+         }
                     
-                }
-            }
+         }
+         }
             
-       } else {
-           return;
-       }
-       */
-       if (line.startsWith("$HALT")) {
+         } else {
+         return;
+         }
+         */
+        if (line.startsWith("$HALT")) {
             ScriptContinue = false;
-            
+
 //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
             log.level3("HALT RECEIVED");
@@ -217,12 +217,12 @@ public class CASUALScriptParser {
 
         }
 
-       if (line.startsWith("$GOTO")){
-           line=line.replace("$GOTO","");
-           GOTO=StringOperations.removeLeadingAndTrailingSpaces(line);
-           return;
-       }
-           
+        if (line.startsWith("$GOTO")) {
+            line = line.replace("$GOTO", "");
+            GOTO = StringOperations.removeLeadingAndTrailingSpaces(line);
+            return;
+        }
+
 //$ON will trigger on an event
         //PARAM1 = Textual input event
         //PARAM2 = Command to execute
@@ -246,7 +246,7 @@ public class CASUALScriptParser {
             return;
 
         }
-        
+
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
             Statics.ActionEvents = new ArrayList<String>();
@@ -254,7 +254,7 @@ public class CASUALScriptParser {
             log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return;
         }
-        
+
 //# is a comment Disregard commented lines
         if (line.startsWith("#")) {
             log.level3("Ignoring commented line" + line);
@@ -266,7 +266,7 @@ public class CASUALScriptParser {
             return;
         }
         log.level3("SCRIPT COMMAND:" + line);
-    
+
         /*
          * $IFCONTAINS takes:
          * $IFCONTAINS A test string 
@@ -277,8 +277,8 @@ public class CASUALScriptParser {
         // $IFNOTCONTAINS foo $INCOMMAND shell "echo bar" $DO $ECHO foo is not in bar so we will not see this.
         // $IFNOTCONTAINS value $INCOMMAND command $DO $ANY CASUAL COMMAND
         if (line.startsWith("$IFCONTAINS ")) {
-            line=StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ",""));
-             doIfContainsReturnResults(line, true);
+            line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
+            doIfContainsReturnResults(line, true);
             return;
         }
         /*
@@ -290,15 +290,15 @@ public class CASUALScriptParser {
         // $IFNOTCONTAINS foo $INCOMMAND shell "echo foo" $DO $ECHO foo is in foo so we will not see this.
         // $IFNOTCONTAINS foo $INCOMMAND shell "echo bar" $DO $ECHO foo is not in bar so we will see this.
         // $IFNOTCONTAINS value $INCOMMAND command $DO $ANY CASUAL COMMAND
-        if (line.startsWith("$IFNOTCONTAINS ")){
-            line=StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ",""));
+        if (line.startsWith("$IFNOTCONTAINS ")) {
+            line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
             doIfContainsReturnResults(line, false);
             return;
         }
-/*
- * Environmental variables
- */
-        
+        /*
+         * Environmental variables
+         */
+
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
             line = line.replace("$SLASH", Statics.Slash);
@@ -319,11 +319,11 @@ public class CASUALScriptParser {
             log.level3("Expanded $HOMEFOLDER" + line);
         }
 
-        
 
-/*
- * GENERAL PURPOSE COMMANDS
- */
+
+        /*
+         * GENERAL PURPOSE COMMANDS
+         */
 //$ECHO command will display text in the main window
         if (line.startsWith("$ECHO")) {
             log.level3("Received ECHO command" + line);
@@ -429,59 +429,59 @@ public class CASUALScriptParser {
             doShellCommand(Message[2], "$USERINPUT", InputBoxText);
             return;
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
-        } else if (line.startsWith("$DOWNLOAD")){
-            line=line.replaceFirst("$DOWNLOAD", "");
-            line=StringOperations.removeLeadingSpaces(line);
-            String[] downloadCommand=line.split(",");
-            FileOperations fo= new FileOperations();
+        } else if (line.startsWith("$DOWNLOAD")) {
+            line = line.replaceFirst("$DOWNLOAD", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            String[] downloadCommand = line.split(",");
+            FileOperations fo = new FileOperations();
             log.level3("Downloading " + downloadCommand[2]);
             log.level3("From " + downloadCommand[0]);
             log.level3("to " + downloadCommand[1]);
-            if (! fo.verifyFolder(Statics.TempFolder+"download"+Statics.Slash)){
-               fo.makeFolder(Statics.TempFolder+"download"+Statics.Slash);    
+            if (!fo.verifyFolder(Statics.TempFolder + "download" + Statics.Slash)) {
+                fo.makeFolder(Statics.TempFolder + "download" + Statics.Slash);
             }
-            if (downloadCommand.length==2){
+            if (downloadCommand.length == 2) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 return;
-            } else if (downloadCommand.length==3) {
+            } else if (downloadCommand.length == 3) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
-                 if (! new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[] {downloadCommand[3]}, new String[]{downloadCommand[1]})){
-                     this.executeOneShotCommand("$HALT HALTING Downloaded md5sum did not check out");          
-                 }
-                 return;
+                if (!new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{downloadCommand[3]}, new String[]{downloadCommand[1]})) {
+                    this.executeOneShotCommand("$HALT HALTING Downloaded md5sum did not check out");
+                }
+                return;
             } else {
                 log.level0("Invalid download command");
             }
 
 //$EXECUTE will blindly execute commands into the shell.  Usefull only with $LINUX $WINDOWS or $MAC commands.
-        } else if (line.startsWith("$EXECUTE")){
-            line=StringOperations.removeLeadingSpaces(line.replace("$EXECUTE",""));
-            ArrayList command=parseCommandLine(line);
-            String[] commandArray= Arrays.copyOf(command.toArray(),command.size(),String[].class);
+        } else if (line.startsWith("$EXECUTE")) {
+            line = StringOperations.removeLeadingSpaces(line.replace("$EXECUTE", ""));
+            ArrayList command = parseCommandLine(line);
+            String[] commandArray = Arrays.copyOf(command.toArray(), command.size(), String[].class);
             new Shell().sendShellCommand(commandArray);
             return;
-                     
-                
-            
-            
-        
-            
 
-            
-/*
- * SUPPORTED SHELLS
- */
+
+
+
+
+
+
+
+            /*
+             * SUPPORTED SHELLS
+             */
 // if Heimdall, Send to Heimdall shell command
-        } else if (line.startsWith("$HEIMDALL")){
+        } else if (line.startsWith("$HEIMDALL")) {
             line = line.replace("$HEIMDALL", "");
             line = StringOperations.removeLeadingSpaces(line);
-            
-            if (Statics.checkAndDeployHeimdall()){
+
+            if (Statics.checkAndDeployHeimdall()) {
                 this.doHeimdallWaitForDevice();
-               /* if (Statics.isLinux()) {   //Is this needed?
-                    doElevatedHeimdallShellCommand(line);
-                }*/
-            doHeimdallShellCommand(line);
+                /* if (Statics.isLinux()) {   //Is this needed?
+                 doElevatedHeimdallShellCommand(line);
+                 }*/
+                doHeimdallShellCommand(line);
             } else {
                 this.executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
             }
@@ -511,12 +511,10 @@ public class CASUALScriptParser {
         log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + line);
     }
 //END OF SCRIPT PARSER
-    
-    
-    
+
     private String removeCommandAndContinue(String remove, String line) {
         line = line.replace(remove, "");
-        log.level3("Removed " + remove );
+        log.level3("Removed " + remove);
         line = StringOperations.removeLeadingSpaces(line);
         return line;
     }
@@ -529,78 +527,77 @@ public class CASUALScriptParser {
         DATAIN = DIS;
         log.level3("Executing Scripted Datastream" + DIS.toString());
         Runnable r = new Runnable() {
-
             public void run() {
                 int updateStatus;
                 log.level3("CASUAL has initiated a multithreaded execution environment");
                 String idStringFile = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta")));
-                    String TestString = StringOperations.removeLeadingSpaces(idStringFile);
-                    if ((TestString!=null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
-                        try {
+                String TestString = StringOperations.removeLeadingSpaces(idStringFile);
+                if ((TestString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
+                    try {
 
-                            //String[] IDStrings = CASUALIDString.split("\n");
-                            updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, TestString, idStringFile);
-                            
-                            /*
-                             * checks for updates returns: 0=no updates found
-                             * 1=random error 2=Script Update Required 3=CASUAL
-                             * update required- cannot continue. 4=download
-                             * failed *
-                             */
-                            switch (updateStatus) {
-                                //no updates found
-                                case 0: //do nothing
-                                    break;
-                                //random error with URL formatting
-                                case 1: //do nothing
-                                    break;
-                                //script update performed
-                                case 2:
-                                    Statics.setScriptLocationOnDisk(script, Statics.TempFolder + "SCRIPTS" + Statics.Slash + script);
-                                    updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
-                                    break;
-                                //CASUAL must be update    
-                                case 3:
-                                    log.level0(Statics.updateMessageFromWeb);
-                                    log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                                    new TimeOutOptionPane().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWeb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
-                                    new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
-                                    System.exit(0);
-                                    return;
-                                //download error
-                                case 4:
-                                    log.level0("There was a problem downloading the script.  Please check your internet connection and try again.");
-                                    //HALT script
-                                    return;
-                                case 5:
-                                    log.level0("Problem downloading file from internet, please try again");
-                                    log.level0("Problem downloading file from internet, please try again");
-                                    new TimeOutOptionPane().showTimeoutDialog(60, null, "Download Failure.  CASUAL will now restart.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"OK"}, "ok");
-                                    try {
-                                        JavaSystem.restart(new String[]{""});
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (InterruptedException ex) {
-                                        Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
+                        //String[] IDStrings = CASUALIDString.split("\n");
+                        updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, TestString, idStringFile);
+
+                        /*
+                         * checks for updates returns: 0=no updates found
+                         * 1=random error 2=Script Update Required 3=CASUAL
+                         * update required- cannot continue. 4=download
+                         * failed *
+                         */
+                        switch (updateStatus) {
+                            //no updates found
+                            case 0: //do nothing
+                                break;
+                            //random error with URL formatting
+                            case 1: //do nothing
+                                break;
+                            //script update performed
+                            case 2:
+                                Statics.setScriptLocationOnDisk(script, Statics.TempFolder + "SCRIPTS" + Statics.Slash + script);
+                                updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
+                                break;
+                            //CASUAL must be update    
+                            case 3:
+                                log.level0(Statics.updateMessageFromWeb);
+                                log.level0("CASUAL has been kill-switched due to critical updates.  Please read the above message");
+                                new TimeOutOptionPane().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWeb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
+                                System.exit(0);
+                                return;
+                            //download error
+                            case 4:
+                                log.level0("There was a problem downloading the script.  Please check your internet connection and try again.");
+                                //HALT script
+                                return;
+                            case 5:
+                                log.level0("Problem downloading file from internet, please try again");
+                                log.level0("Problem downloading file from internet, please try again");
+                                new TimeOutOptionPane().showTimeoutDialog(60, null, "Download Failure.  CASUAL will now restart.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"OK"}, "ok");
+                                try {
+                                    JavaSystem.restart(new String[]{""});
+                                } catch (IOException ex) {
+                                    Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+                                }
 
 
-                                    //TODO stop and reset script to stock... possibly delete temp folder and restart CASUAL
-                                    //HALT script
-                                    return;
-                                default: //unknown error do nothing
-                                    break;
-                            }
-
-                        } catch (MalformedURLException ex) {
-                            log.level0("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script + " Please report this.");
-                            log.errorHandler(ex);
-                        } catch (IOException ex) {
-                            log.level0("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
-                            log.errorHandler(ex);
+                                //TODO stop and reset script to stock... possibly delete temp folder and restart CASUAL
+                                //HALT script
+                                return;
+                            default: //unknown error do nothing
+                                break;
                         }
+
+                    } catch (MalformedURLException ex) {
+                        log.level0("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script + " Please report this.");
+                        log.errorHandler(ex);
+                    } catch (IOException ex) {
+                        log.level0("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
+                        log.errorHandler(ex);
                     }
-               
+                }
+
                 CurrentLine = 1;
                 Statics.ProgressBar.setMaximum(LinesInScript);
                 log.level3("Reading datastream" + DATAIN);
@@ -625,9 +622,8 @@ public class CASUALScriptParser {
         }
         return StringArray;
     }
+    static String GOTO = "";
 
-    
-    static String GOTO="";
     private void doRead(DataInputStream dataIn) {
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
@@ -636,13 +632,13 @@ public class CASUALScriptParser {
             while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
                 CurrentLine++;
                 Statics.ProgressBar.setValue(CurrentLine);
-                if (! GOTO.equals("")){
-                    
+                if (!GOTO.equals("")) {
+
                     bReader.reset();
-                    while (! strLine.startsWith(GOTO)){
-                        strLine=bReader.readLine();
+                    while (!strLine.startsWith(GOTO)) {
+                        strLine = bReader.readLine();
                     }
-                    GOTO="";
+                    GOTO = "";
                 }
 
                 commandHandler(strLine);
@@ -707,15 +703,14 @@ public class CASUALScriptParser {
         return List;
     }
 
-    private void doShellCommand(String Line, String ReplaceThis, String WithThis){
-          executeShellCommand(Line, ReplaceThis, WithThis);
+    private void doShellCommand(String Line, String ReplaceThis, String WithThis) {
+        executeShellCommand(Line, ReplaceThis, WithThis);
     }
-    
 
-    private String doShellCommandWithReturn(String Line, String ReplaceThis, String WithThis){
-          return executeShellCommand(Line, ReplaceThis, WithThis);
+    private String doShellCommandWithReturn(String Line, String ReplaceThis, String WithThis) {
+        return executeShellCommand(Line, ReplaceThis, WithThis);
     }
-    
+
     /*
      * doShellCommand is the point where the shell is activated ReplaceThis
      * WithThis allows for a last-minute insertion of commands by default
@@ -758,34 +753,24 @@ public class CASUALScriptParser {
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
         Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
-    } 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    private void doHeimdallWaitForDevice(){
+    }
+
+    private void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
         ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
         String stringCommand[] = (convertArrayListToStringArray(shellCommand));
-        while (! Shell.silentShellCommand(stringCommand).contains("Device detected")){
+        while (!Shell.silentShellCommand(stringCommand).contains("Device detected")) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 log.errorHandler(ex);
             }
         }
-        
+
     }
-    
+
     private void doHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
@@ -793,11 +778,11 @@ public class CASUALScriptParser {
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = convertArrayListToStringArray(shellCommand);
-        Statics.ExectingHeimdallCommand=true;
+        Statics.ExectingHeimdallCommand = true;
         Shell.liveShellCommand(stringCommand2);
-        Statics.ExectingHeimdallCommand=false;
+        Statics.ExectingHeimdallCommand = false;
     }
-    
+
     //for future use. not currently needed.
     private void doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
@@ -809,17 +794,6 @@ public class CASUALScriptParser {
         Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     private String returnSafeCharacters(String Str) {
         Str = Str.replace("\\", "\\\\");
         Str = Str.replace("\"", "\\\"");
@@ -827,23 +801,25 @@ public class CASUALScriptParser {
 
         return Str;
     }
-   
+
     //split the string from $IFCONTAINS "string string" $INCOMMAND "$ADB command to execute" $DO "CASUAL COMMAND"
     private void doIfContainsReturnResults(String line, boolean ifContains) {
-        if (line.startsWith("$IFCONTAINS")){
-            line=StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFCONTAINS",""));
+        if (line.startsWith("$IFCONTAINS")) {
+            line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFCONTAINS", ""));
         } else if (line.startsWith("$IFNOTCONTAINS")) {
-            line=StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFNOTCONTAINS",""));
+            line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFNOTCONTAINS", ""));
         }
         String[] checkValueSplit = line.split("\\$INCOMMAND");
-        String checkValue= StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line)); //value to check
-        String[] commandSplit=checkValueSplit[1].split("\\$DO");
-        String command= StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);//command to check
-        String[] doSplit=commandSplit[1].split("$DO");
-        String casualCommand=StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);// command to execute if true
-        if (command.startsWith("$ADB")){ command=command.replaceFirst("\\$ADB","");}
+        String checkValue = StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line)); //value to check
+        String[] commandSplit = checkValueSplit[1].split("\\$DO");
+        String command = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);//command to check
+        String[] doSplit = commandSplit[1].split("$DO");
+        String casualCommand = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);// command to execute if true
+        if (command.startsWith("$ADB")) {
+            command = command.replaceFirst("\\$ADB", "");
+        }
         String returnValue = this.doShellCommandWithReturn(command, null, null);
-        if ((returnValue.contains(checkValue)== ifContains)){
+        if ((returnValue.contains(checkValue) == ifContains)) {
             this.executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
         }
     }

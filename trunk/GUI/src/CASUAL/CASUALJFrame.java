@@ -25,15 +25,12 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.MissingResourceException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
-import oracle.jrockit.jfr.tools.ConCatRepository;
 import org.jdesktop.application.Application;
 
 /**
@@ -78,7 +75,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             busyIcons[count] = resourceMap.getIcon("StatusBar.busyIcons[" + count + "]");
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
                 StatusAnimationLabel.setIcon(busyIcons[busyIconIndex]);
@@ -90,16 +86,16 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         log.level3("OMFGWOOT");
         log.level1(fileOperations.readTextFromResource(Statics.ScriptLocation + "Overview.txt"));
 
-        
+
         log.level2("Deploying ADB");
         new CASUALDeployADB().runAction();
-  
+
         log.level3("Searching for scripts");
         prepareScripts();
 
         log.level3("Updating Scripts for UI");
         comboBoxUpdate();
- 
+
 
     }
 
@@ -453,7 +449,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBoxScriptSelectorActionPerformed
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
-        log.level3("hiding script selector TargetScript: "+comboBoxScriptSelector.getSelectedItem().toString());
+        log.level3("hiding script selector TargetScript: " + comboBoxScriptSelector.getSelectedItem().toString());
         if (comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
             Statics.TargetScriptIsResource = false;
         } else {
@@ -480,7 +476,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
     boolean buttonEnableStage = false;
     private void startButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseClicked
-
     }//GEN-LAST:event_startButtonMouseClicked
 
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
@@ -491,14 +486,14 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             startButton.setEnabled(buttonEnableStage);
             this.comboBoxScriptSelector.setEnabled(buttonEnableStage);
             this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
-            
+
         }
         if (!startButton.isEnabled() && !Statics.MasterLock) {
             startButton.setText("Click again to enable all controls");
             buttonEnableStage = true;
-            
-            
-            
+
+
+
         }
     }//GEN-LAST:event_StatusLabelMouseClicked
 
@@ -516,21 +511,21 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         }
 
         Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString();
-        
+
         //set the ZipResource
-        final String ZipResource = Statics.TargetScriptIsResource ? ( Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip" ) : ( comboBoxScriptSelector.getSelectedItem().toString() + ".zip" );
-  
-        
-        Thread t= new Thread(){
-            
-            
-            public void run(){
+        final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip") : (comboBoxScriptSelector.getSelectedItem().toString() + ".zip");
+
+
+        Thread t;
+        t = new Thread() {
+            @Override
+            public void run() {
                 try {
                     Statics.GUI.enableControls(false);
-                } catch (NullPointerException ex){
+                } catch (NullPointerException ex) {
                     log.level3("attempted to lock controls but controls are not availble yet");
                 }
-                Statics.lockControlsForUnzip=true;
+                Statics.lockControlsForUnzip = true;
                 if (getClass().getResource(ZipResource) != null) {
                     log.level3("Extracting archive....");
 
@@ -542,10 +537,9 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         log.errorHandler(ex);
                     }
-                }                
-                Statics.lockControlsForUnzip=false;
+                }
+                Statics.lockControlsForUnzip = false;
             }
-
         };
         t.start();
 
@@ -582,8 +576,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton startButton;
     // End of variables declaration//GEN-END:variables
-
-
 
     public void setStatusLabelIcon(String Icon, String Text) {
         StatusLabel.setIcon(createImageIcon(Icon, Text));
@@ -676,37 +668,37 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
 
     }
-    
+
     //for use in IDE only
-    private void md5sumTestScripts(){
-        System.out.println("We are in "+System.getProperty("user.dir"));
-        String scriptsPath=System.getProperty("user.dir")+Statics.Slash+"src"+Statics.Slash+"SCRIPTS"+Statics.Slash;
-        String meta=scriptsPath+"Test Script.meta";
-        System.out.println("We are targeting "+meta);
-        String fileContents=new FileOperations().readFile(meta);
-        String[] fileLines=fileContents.split("\\n");
-        String writeOut="";
-        for (int i = 0; i<fileLines.length; i++){
-            String line=StringOperations.removeLeadingSpaces(fileLines[i]);
-            if (line.matches("(\\S{32,})(\\s\\s)(.*\\..*)" )){
+    private void md5sumTestScripts() {
+        System.out.println("We are in " + System.getProperty("user.dir"));
+        String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "src" + Statics.Slash + "SCRIPTS" + Statics.Slash;
+        String meta = scriptsPath + "Test Script.meta";
+        System.out.println("We are targeting " + meta);
+        String fileContents = new FileOperations().readFile(meta);
+        String[] fileLines = fileContents.split("\\n");
+        String writeOut = "";
+        for (int i = 0; i < fileLines.length; i++) {
+            String line = StringOperations.removeLeadingSpaces(fileLines[i]);
+            if (line.matches("(\\S{32,})(\\s\\s)(.*\\..*)")) {
                 System.out.println(line);
-                String[] md5File=line.split("  ");
-                String newMD5=new MD5sum().md5sum(scriptsPath+md5File[1]);
-                log.level3("updating md5 to "+newMD5);
-                writeOut=writeOut+newMD5+"  "+md5File[1]+"\n";
+                String[] md5File = line.split("  ");
+                String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
+                log.level3("updating md5 to " + newMD5);
+                writeOut = writeOut + newMD5 + "  " + md5File[1] + "\n";
             } else {
-                writeOut=writeOut+ line+"\n";
+                writeOut = writeOut + line + "\n";
             }
-                 
-        }    
-            try {
-                 new FileOperations().overwriteFile(writeOut, meta);
-            } catch (IOException ex) {
-                log.errorHandler(ex);
-            }
-   
-        
-        
+
+        }
+        try {
+            new FileOperations().overwriteFile(writeOut, meta);
+        } catch (IOException ex) {
+            log.errorHandler(ex);
+        }
+
+
+
     }
 
     public void enableControls(boolean status) {
@@ -742,4 +734,3 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         }
     }
 }
-
