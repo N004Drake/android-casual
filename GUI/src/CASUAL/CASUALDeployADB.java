@@ -58,6 +58,7 @@ class CASUALDeployADB implements Runnable {
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isWindows()) {
             Log.level3("Found Windows Computer");
+            //c
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationWindows));
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.AdbDeployed = Statics.TempFolder + "adb.exe";
@@ -76,6 +77,8 @@ class CASUALDeployADB implements Runnable {
         } else {
             Log.level0("Your system is not supported");
         }
+        
+        //TODO figure out why we have adb_usb.ini_new
         FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
 
         Shell Shell = new Shell();
