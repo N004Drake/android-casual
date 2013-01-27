@@ -544,7 +544,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                     }
                 }                
                 Statics.lockControlsForUnzip=false;
-                Statics.GUI.enableControls(true);
             }
 
         };
