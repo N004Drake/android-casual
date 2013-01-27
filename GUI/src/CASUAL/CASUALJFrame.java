@@ -544,7 +544,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                         log.errorHandler(ex);
                     }
                 }                
-               log.level0("Zip Done");
                 Statics.lockControlsForUnzip=false;
                 Statics.GUI.enableControls(true);
             }

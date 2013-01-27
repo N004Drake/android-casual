@@ -191,7 +191,9 @@ public class FileOperations {
     /*
      * Takes an input stream and a file writes file to input stream
      */
-    private boolean writeInputStreamToFile(InputStream is, File file) {
+    /*
+     * Commenting this for testing
+     * private boolean writeInputStreamToFile(InputStream is, File file) {
         Log.level3("Attempting to write " + file.getPath());
         try {
             DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
@@ -221,8 +223,62 @@ public class FileOperations {
             Log.level1("false");
             return false;
         }
+    }*/
+    /*
+     * takes a string and a filename, writes to the file
+     */
+    public void writeToFile(String Text, String File) throws IOException {
+        BufferedWriter bw;
+        bw = new BufferedWriter(new FileWriter(File, true));
+        bw.write(Text);
+        bw.close();
+        Log.level3("Write Finished");
     }
+    public void overwriteFile(String Text, String File) throws IOException {
+        BufferedWriter bw;
+        bw = new BufferedWriter(new FileWriter(File, false));
+        bw.write(Text);
+        bw.close();
+        Log.level3("File overwrite Finished");
+    }
+    private boolean writeInputStreamToFile(InputStream is, File file) {
+        Log.level3("Attempting to write " + file.getPath());
+        try {
+            BufferedOutputStream out= new BufferedOutputStream(new FileOutputStream(file));
+            //integer for return value
+            int currentByte;
+            // establish buffer for writing file
+            int BUFFER=4096;
+            byte data[] = new byte[BUFFER];
+            if (is.available() > 0) {
+                // while stream does not return -1, fill data buffer and write.
+                while ((currentByte = is.read(data, 0, BUFFER)) != -1) { 
+                    out.write(data, 0, currentByte);
+                }
+            } else {
+                Log.level0("ERROR: FILE READ WAS 0 LENGTH");
+                return false;
+            }
+            is.close();
+            out.close();
 
+        } catch (IOException e) {
+            System.err.print(e);
+            System.err.println("Error Writing/Reading Streams.");
+            return false;
+        }
+        if ((file.exists()) && (file.length() >= 4)) {
+            Log.level3("File verified.");
+            return true;
+        } else {
+            Log.level0(file.getAbsolutePath() + " Was a failed attempt to write- does not exist.");
+            Log.level1("false");
+            return false;
+        }
+    }
+    
+    
+    
     /*
      * takes a string filename returns a boolean if the file was deleted
      */
@@ -373,23 +429,7 @@ public class FileOperations {
         return text.toString();
     }
 
-    /*
-     * takes a string and a filename, writes to the file
-     */
-    public void writeToFile(String Text, String File) throws IOException {
-        BufferedWriter bw;
-        bw = new BufferedWriter(new FileWriter(File, true));
-        bw.write(Text);
-        bw.close();
-        Log.level3("Write Finished");
-    }
-    public void overwriteFile(String Text, String File) throws IOException {
-        BufferedWriter bw;
-        bw = new BufferedWriter(new FileWriter(File, false));
-        bw.write(Text);
-        bw.close();
-        Log.level3("File overwrite Finished");
-    }
+
     /*
      * reads file contents returns string
      */
