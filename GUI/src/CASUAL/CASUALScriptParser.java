@@ -216,7 +216,6 @@ public class CASUALScriptParser {
             log.level3("Finishing remaining commands:" + line);
 
         }
-//TODO: add "reboot" with adb reboot then send shell command "sleep5" then wait-for-device to account for windows retardedness
 
        if (line.startsWith("$GOTO")){
            line=line.replace("$GOTO","");
