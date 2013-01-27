@@ -390,7 +390,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
                 Statics.SelectedScriptFolder = Statics.TempFolder + new File(nonResourceFileName).getName();
                 log.level0("Delete this debug line in MenuItemOpenScriptActionPerformed()");
-                //TODO: Do this in the background
                 if (new FileOperations().verifyFileExists(nonResourceFileName.toString() + ".zip")) {
                     new Unzip().unzipFile(nonResourceFileName.toString() + ".zip", Statics.SelectedScriptFolder);
                 }

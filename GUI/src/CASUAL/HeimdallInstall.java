@@ -251,7 +251,6 @@ public class HeimdallInstall {
         String[] command={heimdallCommand,"version"};
         String Version=new Shell().silentShellCommand(command);
         if ( ! Version.contains("CritError!!!")){
-            //TODO CHECK VERSION of HEIMDALL here
             Version=Version.replaceAll("\n","").replaceAll("v","");
             if (Version.contains(" ")){
                 Version=Version.split(" ")[0];

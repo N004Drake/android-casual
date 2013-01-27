@@ -32,7 +32,7 @@ import javax.swing.text.StyledDocument;
  * information to be used everywhere in the program.
  */
 public class Statics {
-
+    
 
     public Statics() {
     }
@@ -75,7 +75,7 @@ public class Statics {
     final public static String Slash = System.getProperty("file.separator");
     public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
     public static String UseSound;
-    
+    static boolean lockControlsForUnzip=false;
     public static void initDocument() {
         ProgressPane.setContentType("text/html");
         ProgressDoc = ProgressPane.getStyledDocument();

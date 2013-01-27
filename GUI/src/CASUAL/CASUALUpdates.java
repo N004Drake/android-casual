@@ -95,14 +95,6 @@ public class CASUALUpdates {
                 } else {
                    return 4;  
                 }
-                
-                
-                //todo apply all update conditions here.
-                //update script location
-                //or fail out and return error
-
-               
-
             }
         }
         return 0;

@@ -38,18 +38,32 @@ public class CASUALConnectionStatusMonitor {
     Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
 
         public void actionPerformed(ActionEvent evt) {
-            //TODO: if 25 cycles and a device is not connected, recommend installing Samsung Kies with the default options
+            //TODO: do some sort of driver check on Windows
             // or check if Kies exists somehow.
-            // or something....
+            // or something....    I don't know how to do this.
             //execute adb devices and filter
             String DeviceCommand[] = {Statics.AdbDeployed, "devices"};
             try {
             String DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
             Statics.DeviceTracker = DeviceList.split("device");
 
+            if (! hasConnected ){
+                if (cycles > 15 ){
+                    if (Statics.isWindows()){
+                        new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install drivers\nPlease search for \"windows driver *your device*\" on google.", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                    } else if (Statics.isLinux()){
+                        new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install a KO or libusb \nPlease search for \"using adb Linux *your device*\" on google.", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                    } else if (Statics.isMac()){
+                        new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install a kext\nPlease search for \"kext *your device*\" on google.", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                    }
+                    hasConnected=true;
+                }
+                cycles++;
+            }
             //Multiple devices detected
             if (Statics.DeviceTracker.length > 1) {
                 stateSwitcher(Statics.DeviceTracker.length);
+                hasConnected=true;
             //No devices detected
             } else if (Statics.DeviceTracker[0].isEmpty()) {
                 stateSwitcher(0);
@@ -122,10 +136,6 @@ public class CASUALConnectionStatusMonitor {
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
                     Statics.GUI.setStatusMessageLabel("Target Acquired");
                     CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
-
-                    //TODO In-Progress indicator must go on at this time
-
-
                     break;
                 default:
 
