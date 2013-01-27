@@ -75,7 +75,7 @@ $LINUX $HEIMDALL flash --82 "$ZIPFILEswagBoot" --60 "$ZIPFILErecoverThis"
 $GOTO #END OF SCRIPT
 
 #gotoFinal Windows instructions
-$ECHO If you have not already, please install the baseline http://d-h.st/Wyo with Odin3.
+$ECHO Install the BackAtchaVerizon Bootloader now http://d-h.st/Wyo with Odin3.
 $USERCANCELOPTION Instructions, You must flash the final exploit with Odin3.\n If you use Linux I can do this automatically.\n\n You can get the baseline here: http://d-h.st/Wyo
 
 
