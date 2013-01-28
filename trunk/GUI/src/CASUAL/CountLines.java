@@ -28,6 +28,11 @@ import java.io.FileNotFoundException;
  */
 public class CountLines {
 
+    /**
+     *Counts lines in a file
+     * @param Filename
+     * @return number of lines in a file 
+     */
     public int countFileLines(String Filename) {
         InputStream IS = null;
         int Lines = 0;
@@ -53,6 +58,11 @@ public class CountLines {
 
     }
 
+    /**
+     *Takes a resource and returns number of new lines.
+     * @param ResourceName
+     * @return number of lines in a file
+     */
     public int countResourceLines(String ResourceName) {
         InputStream IS = getClass().getResourceAsStream(Statics.ScriptLocation + ResourceName + ".scr");
         int Lines = 0;

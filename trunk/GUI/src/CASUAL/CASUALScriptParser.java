@@ -437,7 +437,7 @@ public class CASUALScriptParser {
             log.level3("Downloading " + downloadCommand[2]);
             log.level3("From " + downloadCommand[0]);
             log.level3("to " + downloadCommand[1]);
-            if (!fo.verifyFolder(Statics.TempFolder + "download" + Statics.Slash)) {
+            if (!fo.verifyExists(Statics.TempFolder + "download" + Statics.Slash)) {
                 fo.makeFolder(Statics.TempFolder + "download" + Statics.Slash);
             }
             if (downloadCommand.length == 2) {
