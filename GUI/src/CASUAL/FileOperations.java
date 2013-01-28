@@ -46,8 +46,12 @@ public class FileOperations {
     public FileOperations() {
     }
 
-    /*
-     * copies a resource to a file
+
+    /**
+     *copies a resource to a file
+     * @param Resource
+     * @param toFile
+     * @return true if complete
      */
     public boolean copyFromResourceToFile(String Resource, String toFile) {
         try {
@@ -81,17 +85,19 @@ public class FileOperations {
         }
         return false;
     }
-    /*
-     * recursively deletes a string path
-     */
 
+    /**
+     *recursively deletes a String path
+     * @param path
+     */
     public void recursiveDelete(String path) {
         recursiveDelete(new File(path));
     }
-    /*
-     * recursively deletes a file path
-     */
 
+    /**
+     *recursively deletes a file path
+     * @param path
+     */
     public void recursiveDelete(File path) {
         File[] c = path.listFiles();
         if (path.exists()) {
@@ -110,10 +116,13 @@ public class FileOperations {
         }
     }
 
-    /*
-     * verify ability to write to every file in a path
+
+    /**
+     *verify ability to write to every file in a path
+     * @param path
+     * @return true if permission to write
      */
-    public boolean verifyPermissionsRecursive(String path) {
+    public boolean verifyReadPermissionsRecursive(String path) {
         File Check = new File(path);
         File[] c = Check.listFiles();
         if (Check.exists()) {
@@ -126,10 +135,14 @@ public class FileOperations {
         }
         return true;
     }
-    /*
-     * takes a path and a name returns qualified path to file
-     */
 
+
+    /**
+     *takes a path and a name returns qualified path to file
+     * @param PathToSearch
+     * @param FileName
+     * @return absolute path to folder
+     */
     public String findRecursive(String PathToSearch, String FileName) {
         File Check = new File(PathToSearch);
         File[] c = Check.listFiles();
@@ -143,7 +156,7 @@ public class FileOperations {
                     for (File sub : subdir) {
                         if (sub.isDirectory()) {
                             String FoundFile = findRecursive(sub.toString(), FileName);
-                            if (FoundFile.toString().endsWith("heimdall.exe")) {
+                            if (FoundFile.toString().endsWith(FileName)) {
                                 return FoundFile;
                             }
                         } else {
@@ -152,7 +165,7 @@ public class FileOperations {
                             }
                         }
                     }
-                } else if (file.getName().equals("heimdall.exe")) {
+                } else if (file.getName().equals(FileName)) {
                     return file.getAbsoluteFile().toString();
                 }
             }
@@ -160,14 +173,21 @@ public class FileOperations {
         return null;
     }
 
-    /*
-     * makes a folder, verifies it exists returns a boolean value if the file
-     * exists
+
+    /**
+     * verifies file/folder exists returns a boolean value if the file exists
+     * @param folder
+     * @return true if exists
      */
-    public boolean verifyFolder(String folder) {
-        return new File(folder).exists() ? true : false;
+    public boolean verifyExists(String file) {
+        return new File(file).exists() ? true : false;
     }
 
+    /**
+     * makes a folder, works recursively
+     * @param Folder
+     * @return true if folder was created
+     */
     public boolean makeFolder(String Folder) {
         Boolean CreatedFolder;
         File folder = new File(Folder);
@@ -188,8 +208,12 @@ public class FileOperations {
         return CreatedFolder;
     }
 
-    /*
-     * takes a string and a filename, writes to the file
+
+    /**
+     *takes a string and a filename, writes to the file
+     * @param Text
+     * @param File
+     * @throws IOException
      */
     public void writeToFile(String Text, String File) throws IOException {
         BufferedWriter bw;
@@ -199,6 +223,12 @@ public class FileOperations {
         Log.level3("Write Finished");
     }
 
+    /**
+     *takes a string and a filename, overwrites to the file
+     * @param Text
+     * @param File
+     * @throws IOException
+     */
     public void overwriteFile(String Text, String File) throws IOException {
         BufferedWriter bw;
         bw = new BufferedWriter(new FileWriter(File, false));
@@ -243,8 +273,11 @@ public class FileOperations {
         }
     }
 
-    /*
-     * takes a string filename returns a boolean if the file was deleted
+
+    /**
+     *takes a string filename returns a boolean if the file was deleted
+     * @param FileName
+     * @return true if file was deleted
      */
     public Boolean deleteFile(String FileName) {
         Boolean Deleted;
@@ -265,10 +298,14 @@ public class FileOperations {
         }
         return Deleted;
     }
-    /*
-     * copies a file from a source to a destination
-     */
 
+    
+    /**
+     * copies a file from a source to a destination
+     * @param sourceFile
+     * @param destFile
+     * @throws IOException
+     */
     public void copyFile(File sourceFile, File destFile) throws IOException {
 
         Log.level3("Copying " + sourceFile.getPath() + " to " + destFile.getPath());
@@ -293,10 +330,12 @@ public class FileOperations {
 
 
     }
-    /*
-     * returns the name of the current folder
-     */
+    
 
+    /**
+     *returns the name of the current folder
+     * @return current folder
+     */
     public String currentDir() {
         String CurrentDir = new File(".").getAbsolutePath();
         Log.level3("Detected current folder: " + CurrentDir);
@@ -306,9 +345,11 @@ public class FileOperations {
         return CurrentDir;
     }
 
-    /*
-     * copies a file from a string name to a string name returns a boolean if
-     * completed
+    /**
+     *copies a file from a string path to a string path returns a boolean if completed
+     * @param FromFile 
+     * @param ToFile
+     * @return true if completed
      */
     public boolean copyFile(String FromFile, String ToFile) {
         File OriginalFile = new File(FromFile);
@@ -321,10 +362,12 @@ public class FileOperations {
         }
 
     }
-    /*
-     * take a string filename returns a boolean if file exists
-     */
 
+    /**
+     * take a string filename returns a boolean if file exists
+     * @param Folder
+     * @return true if file exists
+     */
     public boolean verifyFileExists(String Folder) {
         File FileFolder = new File(Folder);
         boolean Result = (FileFolder.length() >= 1);
@@ -333,8 +376,11 @@ public class FileOperations {
         return (Result);
     }
 
-    /*
-     * takes a filename sets executable returns result
+
+    /**
+     *takes a filename sets executable returns result
+     * @param Executable
+     * @return true if executable bit was set
      */
     public boolean setExecutableBit(String Executable) {
         File Exe = new File(Executable);
@@ -344,8 +390,10 @@ public class FileOperations {
     }
 
 
-    /*
+    /**
      * takes a string resource name returns result if it exists
+     * @param Res
+     * @return true if resource exists
      */
     public boolean verifyResource(String Res) {
         boolean Result;
@@ -369,10 +417,13 @@ public class FileOperations {
     private String setRes(String FileName) {
         return Statics.ScriptLocation + FileName;
     }
-    /*
-     * takes a resource name returns a string of file contents
-     */
 
+
+    /**
+     * takes a resource name returns a string of file contents
+     * @param Resource
+     * @return string contents of resource
+     */
     public String readTextFromResource(String Resource) {
         InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
         StringBuilder text = new StringBuilder();
