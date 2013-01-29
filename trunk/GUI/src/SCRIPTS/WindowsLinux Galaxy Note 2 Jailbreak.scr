@@ -5,7 +5,7 @@ $ECHO Rebooting into download mode
 $ADB reboot download
 $WINDOWS $GOTO #gotoWINDOWS
 
-
+$MAC $HALT $ECHO this is inoperative until we get someone to package a .deb file. 
 $LINUX $HEIMDALL flash --8 "$ZIPFILEboot.img"
 $MAC USERCANCELOPTION  Experimental warning, This is lightly tested on a modified\nmac machine. If you have problems\nPlease report them. \nRead reviews in the thread you got this to verify everything works.\n After reboot, double-click the "disconected" icon to resume.
 $MAC $HEIMDALL flash --8 "$ZIPFILEboot.img"
