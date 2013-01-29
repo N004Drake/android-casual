@@ -14,7 +14,7 @@ $GOTO #ALL systems
 #gotoWINDOWS
 $ECHO *You will need to use Odin.  Located here: http://d-h.st/s6I
 $ECHO *to install the exploitable baseline located here:http://d-h.st/Njj
-$USERCANCELOPTION Instructions, Please ensure you have flashed a Version VRALJB\nkernel before clicking OK.  If you use \nLinux I can do this automatically.\n\n If something goes wrong, do not continue.\n You can get the baseline here: http://d-h.st/Njj\nYou can get Odin3 here: http://d-h.st/s6I
+$USERCANCELOPTION Instructions, Please ensure you have flashed a Version VRALJB\nkernel before clicking OK.  If you use \nLinux I can do this automatically.\n\n If something goes wrong-- do not continue.\n You can get the baseline here: http://d-h.st/Njj\nYou can get Odin3 here: http://d-h.st/s6I
 
 #ALL systems are the same for the exploit.
 

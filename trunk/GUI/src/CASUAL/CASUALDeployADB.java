@@ -42,21 +42,18 @@ class CASUALDeployADB implements Runnable {
             //add our lines to the current adbini
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
             Statics.AdbDeployed = Statics.TempFolder + "adb";
-            FileOperations.copyFromResourceToFile(Statics.LinuxADB, Statics.AdbDeployed);
+            FileOperations.copyFromResourceToFile(Statics.LinuxADB(), Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isMac()) {
             Log.level3("Found Mac Computer");
             //add our lines to the current adbini
             String addToADBUSB = DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac);
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, addToADBUSB);
-
-
             Statics.AdbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isWindows()) {
             Log.level3("Found Windows Computer");
-            //c
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationWindows));
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.AdbDeployed = Statics.TempFolder + "adb.exe";
@@ -99,7 +96,7 @@ class CASUALDeployADB implements Runnable {
 
 
         Log.level3("Device List:" + DeviceList);
-        if ((!Statics.isWindows()) && (DeviceList.contains("????????????") || DeviceList.contains("error: cannot connect to daemon"))) {
+        if ( ( ! Statics.isWindows()) && ( (DeviceList.contains("????????????") || (DeviceList.contains("**************")) || (DeviceList.contains("error: cannot connect to daemon"))) )) {
             Log.level3("sleeping for 4 seconds.  Device list: " + DeviceList);
             try {
                 Thread.sleep(4000);
@@ -108,32 +105,9 @@ class CASUALDeployADB implements Runnable {
             }
             DeviceList = Shell.silentShellCommand(devicesCmd).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
             Statics.DeviceTracker = DeviceList.split("device");
-            if (DeviceList.contains("????????????")) {
-
-
-                Log.level1("killing server and requesting elevated permissions");
-                Shell.sendShellCommand(killCmd);
-                TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
-                String[] ok = {"ok"};
-                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-                TimeOutOptionPane.showTimeoutDialog(60, null, "It would appear that this computer\n"
-                        + "is not set up properly to communicate\n"
-                        + "with the device.  As a work-around we\n"
-                        + "will attempt to elevate permissions \n"
-                        + "to access the device properly.", "Insufficient Permissions", TimeOutOptionPane.OK_OPTION, 2, ok, 0);
-                DeviceList = Shell.elevateSimpleCommand(devicesCmd);
-                if (!DeviceList.contains("????????????")) {
-                    Log.level2(DeviceList);
-                    Log.level1("Permissions elevation sucessful.");
-                } else {
-                    Log.level0("Unrecognized device detected");
-
-                }
-            } else {
-                Log.level0("Problem corrected, delete this line. ");
+            if (DeviceList.contains("????????????") || (DeviceList.contains("**************"))) {
             }
-
-
+        } else {
         }
 
 

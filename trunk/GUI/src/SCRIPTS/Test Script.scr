@@ -1,4 +1,4 @@
 $ECHO rebooting download
-$ADB reboot download
-$ECHO rebooting adb
-$HEIMDALL close-pc-screen
+reboot download
+$ECHO waiting for download
+$HEIMDALl close-pc-screen

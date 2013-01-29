@@ -118,21 +118,46 @@ public class Statics {
     public static String WinElevatorInTempFolder = TempFolder + "Elevate.exe";
     final public static String CASUALSCRIPT = "/SCRIPTS/";
     //ADB
-    final public static String LinuxADB = "/CASUAL/resources/ADB/adblinux";
+
+    public static String LinuxADB() {
+        if (Statics.arch == "x86_64") {
+            return Linux64ADB;
+        }
+        if (Statics.arch == "ARMv6") {
+            return LinuxARMv6ADB;
+        }
+        return Linux32ADB;  //defautlt to 32bit ADB
+    }
+    final public static String Linux32ADB = "/CASUAL/resources/ADB/adb-linux32";
+    final public static String Linux64ADB = "/CASUAL/resources/ADB/adb-linux64";
+    final public static String LinuxARMv6ADB = "/CASUAL/resources/ADB/adblinuxARMv6";
     final public static String MacADB = "/CASUAL/resources/ADB/adbmac";
     final public static String WinADB = "/CASUAL/resources/ADB/adb.exe";
     final public static String WinADB2 = "/CASUAL/resources/ADB/AdbWinApi.dll";
     final public static String WinADB3 = "/CASUAL/resources/ADB/AdbWinUsbApi.dll";
     //Heimdall
     final public static String heimdallVersion = "132";  //primary version string
-    final public static String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
-    final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
     final public static String heimdallLinuxi386 = "/CASUAL/resources/heimdall/heimdall_i386.deb";
     final public static String heimdallLinuxamd64 = "/CASUAL/resources/heimdall/heimdall_amd64.deb";
+    final public static String heimdallLinuxARMv6 = "/CASUAL/resources/heimdall/heimdall_armv6.deb";
     final public static String heimdallMac = "/CASUAL/resources/heimdall/heimdall-mac.dmg";
+    final public static String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
+    final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
     //Fastboot
+
+    public static String fastbootLinux() {
+        if (Statics.arch == "x86_64") {
+            return fastbootLinux64;
+        }
+        if (Statics.arch == "ARMv6") {
+            return fastbootLinuxARMv6;
+        }
+        return fastbootLinux32;
+    }
+    final private static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastbootLinux64";
+    final private static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastbootLinux32";
+    final private static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
     final private static String fastbootWindows = "/CASUAL/resources/fastboot/fastbootWin.exe";
-    final private static String fastbootLinux = "/CASUAL/resources/fastboot/fastbootLinux";
     final private static String fastbootMac = "/CASUAL/resources/fastboot/fastbootMac";
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
@@ -177,6 +202,9 @@ public class Statics {
     //Check for Linux
 
     public static boolean isLinux() {
+        if (arch == "") {
+            checkLinuxArch();
+        }
         String os = System.getProperty("os.name").toLowerCase();
         return (os.indexOf("nux") >= 0);
     }
@@ -238,7 +266,7 @@ public class Statics {
     public static void checkAndDeployFastboot() {
         if (!isFastbootDeployed) {
             if (isLinux()) {
-                fastbootResource = fastbootLinux;
+                fastbootResource = fastbootLinux();
             }
             if (isWindows()) {
                 fastbootResource = fastbootWindows;
@@ -315,7 +343,10 @@ public class Statics {
         if (dpkgResults.contains("aptitude") || dpkgResults.contains("debian") || dpkgResults.contains("deb")) {
             String[] CommandArch = {"arch"};
             String rawArch = shell.sendShellCommand(CommandArch);
-            if (rawArch.contains("i686")) {
+            if (rawArch.contains("armv6")) {
+                Statics.heimdallResource = heimdallLinuxARMv6;
+                Statics.arch = "armv6";
+            } else if (rawArch.contains("i686")) {
                 Statics.heimdallResource = Statics.heimdallLinuxi386;
                 Statics.arch = "i686";
             } else if (rawArch.contains("x86_64")) {
