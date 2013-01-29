@@ -85,6 +85,24 @@ class CASUALDeployADB implements Runnable {
         Statics.LiveSendCommand.add("get-state");
         new Shell().silentBackgroundShellCommand();
         String DeviceList = Shell.sendShellCommand(devicesCmd);
+
+        
+        if (DeviceList.contains("ERROR-3")){ //Don't know how to handle this yet
+        
+            
+            //handle libusb -3
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        }
+        
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
             JOptionPane.showMessageDialog(Statics.GUI,
                     "Could not execute ADB. 'Wrong ELF class' error\n"
