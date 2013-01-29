@@ -169,9 +169,9 @@ public class CASUALUpdates {
 
     public void displayCASUALString(String[] CASUALString) {
         //SVN Revision, Script Revision, Script Identification, support URL, message to user
-        Log.level3("CASUALRevision: " + CASUALString[0]);
+        Log.level3("Identification: " + CASUALString[0]);
         Log.level3("ScriptRevision: " + CASUALString[1]);
-        Log.level3("Identification: " + CASUALString[2]);
+        Log.level3("CASUALRevision: " + CASUALString[2]);
         Log.level3("URL: " + CASUALString[3]);
         Log.level3("Server Message: " + CASUALString[4]);
     }
