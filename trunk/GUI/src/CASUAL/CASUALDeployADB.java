@@ -86,8 +86,23 @@ class CASUALDeployADB implements Runnable {
         new Shell().silentBackgroundShellCommand();
         String DeviceList = Shell.sendShellCommand(devicesCmd);
 
+         
+        if ( (Statics.isLinux()) && (DeviceList.contains("something about UDEV rules")) ){ //Don't know how to handle this yet
         
-        if (DeviceList.contains("ERROR-3")){ //Don't know how to handle this yet
+            
+            //handle add udevrule
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        }
+        if ( (Statics.isLinux()) && (DeviceList.contains("ERROR-3")) ){ //Don't know how to handle this yet
         
             
             //handle libusb -3
