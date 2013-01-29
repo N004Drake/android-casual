@@ -97,7 +97,7 @@
         </propertyfile>  
         <jar jarfile="dist/CASUAL-Revision${svna.version}b.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-            <zipfileset src="src/Libraries/BSAFramework/bsaf-1.9.1.jar" excludes="META-INF/*" />                       
+            <zipfileset src="Libraries/BSAFramework/bsaf-1.9.1.jar" excludes="META-INF/*" />                       
             <manifest>
                 <attribute name="Main-Class" value="CASUAL.CASUALApp"/>
             </manifest>
