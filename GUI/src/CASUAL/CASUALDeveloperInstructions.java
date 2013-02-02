@@ -69,6 +69,11 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
         jTextArea10 = new javax.swing.JTextArea();
         jScrollPane20 = new javax.swing.JScrollPane();
         jTextArea20 = new javax.swing.JTextArea();
+        jPanel7 = new javax.swing.JPanel();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        jTextArea11 = new javax.swing.JTextArea();
+        jScrollPane21 = new javax.swing.JScrollPane();
+        jTextArea21 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jTextArea1 = new javax.swing.JTextArea();
 
@@ -98,7 +103,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane15)
-                    .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
                 .addGap(12, 12, 12))
         );
         jPanel1Layout.setVerticalGroup(
@@ -137,8 +142,8 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
-                    .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                    .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -176,7 +181,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane17, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane17, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -213,8 +218,8 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
-                    .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                    .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -240,7 +245,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea19.setColumns(20);
         jTextArea19.setRows(5);
-        jTextArea19.setText("This option does what I say it does and nothing more.  \n Ensure you are rooted or this will fail.");
+        jTextArea19.setText("This gives the user a helpful message before they click the button. ie...\n  \n Ensure you are rooted or this will fail. credits to me.");
         jScrollPane19.setViewportView(jTextArea19);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -250,8 +255,8 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -278,7 +283,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea20.setColumns(20);
         jTextArea20.setRows(5);
-        jTextArea20.setText("EG.  $ZIPFILE  refers to the root of the zip file. \nEG.  $ZIPFILE$SLASHMyFolder$SLASH refers to the folder called \"MyFolder\" in the zipfile.");
+        jTextArea20.setText("EG.  $ZIPFILE  refers to the root of the zip file. \nEG.  $ZIPFILEMyFolder$SLASH refers to the folder called \"MyFolder\" in the zipfile.");
         jScrollPane20.setViewportView(jTextArea20);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -288,8 +293,8 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
-                    .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                    .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -298,11 +303,49 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("Script.zip", jPanel6);
+
+        jScrollPane11.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
+
+        jTextArea11.setColumns(20);
+        jTextArea11.setRows(5);
+        jTextArea11.setText("A CASUAL meta is used for killswitch and auto-update. this must be present upon\ndeployment of CASUAL in order to make use of it.  Meta consists of the following:\n*Minimum CASUAL revision required or killswitch will be active and user will be \nbrought to a support page.\n*Minimum script revision required or update will occur automatically.\n*Anti-collision ID which must match in the repository what is in the script or meta\nwill be deactivated.\n*Update/Killswitch message will be displayed to the user when update or killswitch\noccurs\n*MD5sum and filename in the repository version of a meta instructs CASUAL to \ndownload the particular file and perform an MD5.  This is only used for updates.");
+        jTextArea11.setBorder(null);
+        jScrollPane11.setViewportView(jTextArea11);
+
+        jScrollPane21.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Example"));
+
+        jTextArea21.setColumns(20);
+        jTextArea21.setRows(5);
+        jTextArea21.setText("CASUAL 216\nRevision 9001\nID MY UNIQUE SCRIPT IDENTIFIER\nURL http://forum.xda-developers.com/showthread.php\nMessage  YOUR MESSAGE HERE \n41685fb7827d6d0e1054e466dc55554b  Script.scr");
+        jScrollPane21.setViewportView(jTextArea21);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                    .addComponent(jScrollPane21, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane21, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Script.meta", jPanel7);
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         jLabel1.setText("Building your own CASUAL application");
@@ -390,7 +433,9 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane14;
     private javax.swing.JScrollPane jScrollPane15;
@@ -399,12 +444,14 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane18;
     private javax.swing.JScrollPane jScrollPane19;
     private javax.swing.JScrollPane jScrollPane20;
+    private javax.swing.JScrollPane jScrollPane21;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea10;
+    private javax.swing.JTextArea jTextArea11;
     private javax.swing.JTextArea jTextArea12;
     private javax.swing.JTextArea jTextArea14;
     private javax.swing.JTextArea jTextArea15;
@@ -413,6 +460,7 @@ public class CASUALDeveloperInstructions extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea18;
     private javax.swing.JTextArea jTextArea19;
     private javax.swing.JTextArea jTextArea20;
+    private javax.swing.JTextArea jTextArea21;
     private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea6;
     private javax.swing.JTextArea jTextArea8;

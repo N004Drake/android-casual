@@ -54,7 +54,7 @@ public class Shell implements Runnable {
 
         String Command = "";
         for (int i = 0; i < cmd.length; i++) {
-            Command = Command + cmd[i] + " ";
+            Command = Command + "\"" + cmd[i] + "\" ";
         }
 
         String[] newCmd;
@@ -234,10 +234,8 @@ public class Shell implements Runnable {
             }
 
         } catch (IOException ex) {
-            String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();
-            log.level2("Problem while executing" + ArrayList
-                    + " in Shell.liveShellCommand()");
-            Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+            log.errorHandler(ex);
+            
         }
     }
 

@@ -72,7 +72,7 @@
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane15" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jScrollPane14" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="jScrollPane14" alignment="0" pref="629" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   </Group>
@@ -84,7 +84,7 @@
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Component id="jScrollPane14" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane15" pref="190" max="32767" attributes="0"/>
+                      <Component id="jScrollPane15" pref="203" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -157,7 +157,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane12" pref="625" max="32767" attributes="0"/>
+                          <Component id="jScrollPane12" pref="629" max="32767" attributes="0"/>
                           <Component id="jScrollPane16" alignment="0" pref="629" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -170,7 +170,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane12" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane16" pref="209" max="32767" attributes="0"/>
+                      <Component id="jScrollPane16" pref="203" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -258,7 +258,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane17" pref="192" max="32767" attributes="0"/>
+                      <Component id="jScrollPane17" pref="203" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -331,7 +331,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane6" pref="625" max="32767" attributes="0"/>
+                          <Component id="jScrollPane6" pref="629" max="32767" attributes="0"/>
                           <Component id="jScrollPane18" alignment="0" pref="629" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -343,7 +343,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jScrollPane6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane18" pref="190" max="32767" attributes="0"/>
+                      <Component id="jScrollPane18" pref="187" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -417,7 +417,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane19" pref="629" max="32767" attributes="0"/>
-                          <Component id="jScrollPane8" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="jScrollPane8" alignment="0" pref="629" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -429,7 +429,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane8" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane19" pref="192" max="32767" attributes="0"/>
+                      <Component id="jScrollPane19" pref="203" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -480,7 +480,7 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="This option does what I say it does and nothing more.  &#xa; Ensure you are rooted or this will fail."/>
+                    <Property name="text" type="java.lang.String" value="This gives the user a helpful message before they click the button. ie...&#xa;  &#xa; Ensure you are rooted or this will fail. credits to me."/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -502,7 +502,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane10" alignment="0" pref="625" max="32767" attributes="0"/>
+                          <Component id="jScrollPane10" alignment="0" pref="629" max="32767" attributes="0"/>
                           <Component id="jScrollPane20" alignment="0" pref="629" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -515,7 +515,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane10" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane20" pref="192" max="32767" attributes="0"/>
+                      <Component id="jScrollPane20" pref="203" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -566,7 +566,93 @@
                   <Properties>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="EG.  $ZIPFILE  refers to the root of the zip file. &#xa;EG.  $ZIPFILE$SLASHMyFolder$SLASH refers to the folder called &quot;MyFolder&quot; in the zipfile."/>
+                    <Property name="text" type="java.lang.String" value="EG.  $ZIPFILE  refers to the root of the zip file. &#xa;EG.  $ZIPFILEMyFolder$SLASH refers to the folder called &quot;MyFolder&quot; in the zipfile."/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="jPanel7">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Script.meta">
+                <Property name="tabTitle" type="java.lang.String" value="Script.meta"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane11" alignment="0" pref="629" max="32767" attributes="0"/>
+                          <Component id="jScrollPane21" alignment="0" pref="629" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane11" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane21" pref="205" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Container class="javax.swing.JScrollPane" name="jScrollPane11">
+              <Properties>
+                <Property name="viewportBorder" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="Description"/>
+                  </Border>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+              </AuxValues>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JTextArea" name="jTextArea11">
+                  <Properties>
+                    <Property name="columns" type="int" value="20"/>
+                    <Property name="rows" type="int" value="5"/>
+                    <Property name="text" type="java.lang.String" value="A CASUAL meta is used for killswitch and auto-update. this must be present upon&#xa;deployment of CASUAL in order to make use of it.  Meta consists of the following:&#xa;*Minimum CASUAL revision required or killswitch will be active and user will be &#xa;brought to a support page.&#xa;*Minimum script revision required or update will occur automatically.&#xa;*Anti-collision ID which must match in the repository what is in the script or meta&#xa;will be deactivated.&#xa;*Update/Killswitch message will be displayed to the user when update or killswitch&#xa;occurs&#xa;*MD5sum and filename in the repository version of a meta instructs CASUAL to &#xa;download the particular file and perform an MD5.  This is only used for updates."/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="null"/>
+                    </Property>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JScrollPane" name="jScrollPane21">
+              <Properties>
+                <Property name="viewportBorder" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                    <TitledBorder title="Example"/>
+                  </Border>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+              </AuxValues>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JTextArea" name="jTextArea21">
+                  <Properties>
+                    <Property name="columns" type="int" value="20"/>
+                    <Property name="rows" type="int" value="5"/>
+                    <Property name="text" type="java.lang.String" value="CASUAL 216&#xa;Revision 9001&#xa;ID MY UNIQUE SCRIPT IDENTIFIER&#xa;URL http://forum.xda-developers.com/showthread.php&#xa;Message  YOUR MESSAGE HERE &#xa;41685fb7827d6d0e1054e466dc55554b  Script.scr"/>
                   </Properties>
                 </Component>
               </SubComponents>

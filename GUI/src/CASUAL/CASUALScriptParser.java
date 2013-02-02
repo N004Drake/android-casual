@@ -490,13 +490,19 @@ public class CASUALScriptParser {
             line = line.replace("$FASTBOOT", "");
             line = StringOperations.removeLeadingSpaces(line);
             Statics.checkAndDeployFastboot();
+            boolean elevated=false;
             if (Statics.isLinux()) {
                 if (Statics.UseSound.contains("true")) {
                     CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 }
-                doElevatedFastbootShellCommand(line);
+                
+                if (! doElevatedFastbootShellCommand(line.replaceAll("\"","\\\"")).contentEquals("\n")){
+                    elevated=true;
+                }
             }
-            doFastbootShellCommand(line);
+            if (! elevated) { 
+                doFastbootShellCommand(line);
+            }
 
             // if Fastboot, Send to fastboot shell command
         } else if (line.startsWith("$ADB")) {
@@ -530,8 +536,14 @@ public class CASUALScriptParser {
             public void run() {
                 int updateStatus;
                 log.level3("CASUAL has initiated a multithreaded execution environment");
-                String idStringFile = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta")));
-                String TestString = StringOperations.removeLeadingSpaces(idStringFile);
+                String idStringFile="";
+                String TestString="";        
+                try { 
+                    idStringFile = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta")));
+                    TestString = StringOperations.removeLeadingSpaces(idStringFile);
+                } catch (NullPointerException ex){
+                    log.level3("NO METADATA FOUND\nNO METADATA FOUND\n");
+                }
                 if ((TestString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
                     try {
 
@@ -744,7 +756,7 @@ public class CASUALScriptParser {
         Shell.liveShellCommand(StringCommand);
     }
 
-    private void doElevatedFastbootShellCommand(String Line) {
+    private String doElevatedFastbootShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
@@ -752,7 +764,8 @@ public class CASUALScriptParser {
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
-        Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
+        String returnval=Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
+        return returnval;
     }
 
     private void doHeimdallWaitForDevice() {
@@ -784,14 +797,15 @@ public class CASUALScriptParser {
     }
 
     //for future use. not currently needed.
-    private void doElevatedHeimdallShellCommand(String Line) {
+    private String doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
         ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = convertArrayListToStringArray(shellCommand);
-        Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
+        String returnval=Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
+        return returnval;
     }
 
     private String returnSafeCharacters(String Str) {
