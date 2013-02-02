@@ -457,6 +457,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         }
         comboBoxUpdate();
+        this.enableControls(true);
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -539,6 +540,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                     }
                 }
                 Statics.lockControlsForUnzip = false;
+                Statics.GUI.enableControls(true);
             }
         };
         t.start();

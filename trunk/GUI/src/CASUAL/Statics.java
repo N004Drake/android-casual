@@ -154,8 +154,8 @@ public class Statics {
         }
         return fastbootLinux32;
     }
-    final private static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastbootLinux64";
-    final private static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastbootLinux32";
+    final private static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-Linux64";
+    final private static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-Linux32";
     final private static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
     final private static String fastbootWindows = "/CASUAL/resources/fastboot/fastbootWin.exe";
     final private static String fastbootMac = "/CASUAL/resources/fastboot/fastbootMac";

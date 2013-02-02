@@ -58,15 +58,16 @@ public class CASUALConnectionStatusMonitor {
                 //Multiple devices detected
                 if (Statics.DeviceTracker.length > 1) {
                     stateSwitcher(Statics.DeviceTracker.length);
-                    hasConnected = true;
                     //No devices detected
                 } else if (Statics.DeviceTracker[0].isEmpty()) {
                     stateSwitcher(0);
-
                     //One device detected
                 } else if (!Statics.DeviceTracker[0].isEmpty()) {
+                    hasConnected=true;
                     stateSwitcher(1);
-                }
+                } else if (Statics.DeviceTracker[0].contains("offline")) {
+                   
+                }     
 
                 //Check and handle abnormalities
                 //insufficient permissions
@@ -75,7 +76,7 @@ public class CASUALConnectionStatusMonitor {
                     try {
                         Thread.sleep(4000);
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(CASUALConnectionStatusMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                        Log.errorHandler(ex);
                     }
                     DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
                     Statics.DeviceTracker = DeviceList.split("device");

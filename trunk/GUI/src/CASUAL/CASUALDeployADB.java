@@ -134,7 +134,7 @@ class CASUALDeployADB implements Runnable {
             try {
                 Thread.sleep(4000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CASUALConnectionStatusMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                Log.errorHandler(ex);
             }
             DeviceList = Shell.silentShellCommand(devicesCmd).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
             Statics.DeviceTracker = DeviceList.split("device");
