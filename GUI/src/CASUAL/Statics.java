@@ -59,8 +59,10 @@ public class Statics {
     public static CASUALIDString localInformation = null;
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe";
     final public static String WinVCRedis64tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x64.exe";
+    final public static String WinVCRedist2010InRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x862010.exe";
     final public static String WinVCRedis32tInRepoMD5 = "a8d5962623206751bdd4416d140ae7c5  vcredist_x86.exe";
     final public static String WinVCRedis64tInRepoMD5 = "ba2c17a20b2b1d8a30f96d53e2632a68  vcredist_x64.exe";
+    final public static String WinVCRedis201064tInRepoMD5 = "b88228d5fef4b6dc019d69d4471f23ec  vcredist_x862010.exe";
 
     
     

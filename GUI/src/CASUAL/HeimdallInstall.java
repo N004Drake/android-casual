@@ -156,10 +156,12 @@ public class HeimdallInstall {
         new Log().level0("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
         String installVCResults = "CritERROR!!!";
         try {
-            
+                updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedist2010InRepo), Statics.TempFolder + "vcredist_x862010.exe", "Visual Studio Redistributable");
+                new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedist2010InRepo}, new String[]{Statics.TempFolder + "vcredist_x862010.exe"});
+                installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x862010.exe"});
             //Will need upating in the future
             //This downloads, MD5's and Installs Visual C++ for Win32/64
-            if (Statics.isWindows64Arch()){
+            /*if (Statics.isWindows64Arch()){
                 updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis64tInRepo), Statics.TempFolder + "vcredist_x64.exe", "Visual Studio Redistributable");
                 new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis32tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
                 installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x86.exe"});
@@ -167,7 +169,7 @@ public class HeimdallInstall {
                 updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_x86.exe", "Visual Studio Redistributable");
                 new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis64tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
                 installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x64.exe"});
-             }        
+             }*/        
         } catch (MalformedURLException ex) {
             log.errorHandler(ex);
         } catch (URISyntaxException ex) {
