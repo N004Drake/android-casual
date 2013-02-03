@@ -154,19 +154,26 @@ public class HeimdallInstall {
         //download 
         CASUALUpdates updater = new CASUALUpdates();
         new Log().level0("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
-
+        String installVCResults = "CritERROR!!!";
         try {
-            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedistInRepo), Statics.TempFolder + "vcredist_x86.exe", "Visual Studio Redistributable");
+            
+            //Will need upating in the future
+            //This downloads, MD5's and Installs Visual C++ for Win32/64
+            if (Statics.isWindows64Arch()){
+                updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis64tInRepo), Statics.TempFolder + "vcredist_x64.exe", "Visual Studio Redistributable");
+                new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis32tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
+                installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x86.exe"});
+            } else{
+                updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_x86.exe", "Visual Studio Redistributable");
+                new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis64tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
+                installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x64.exe"});
+             }        
         } catch (MalformedURLException ex) {
             log.errorHandler(ex);
         } catch (URISyntaxException ex) {
             log.errorHandler(ex);
         }
-        //verify MD5 new String{"b88228d5fef4b6dc019d69d4471f23ec  vcredist_x86.exe"}
-        new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinVCRedistInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
-        //execute
-        String InstallVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x86.exe"});
-        if (InstallVCResults.contains("CritERROR!!!")) {
+        if (installVCResults.contains("CritERROR!!!")) {
             displayWindowsPermissionsMessageAndExit();
         }
     }
@@ -199,6 +206,8 @@ public class HeimdallInstall {
         CASUALUpdates updater = new CASUALUpdates();
         try {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder + "zadig.exe", "Open-Source Heimdall Drivers");
+            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverIniInRepo), Statics.TempFolder + "zadig.ini", "Open-Source Heimdall Drivers config");
+
         } catch (MalformedURLException ex) {
             log.errorHandler(ex);
         } catch (URISyntaxException ex) {
