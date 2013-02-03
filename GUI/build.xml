@@ -73,7 +73,12 @@
 
     -->
     <target name="-pre-init" description="Sets the buildversion for the current build">
-        <exec outputproperty="svna.version" executable="svnversion">
+        <loadproperties srcfile="src/CASUAL/resources/CASUALApp.properties"/>
+        <property name="svna.version" value="${Application.revision}"/>
+
+        <echo>Loaded property value: ${svna.version}</echo>
+  
+        <exec outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
             <arg value="-c" />
             <redirector>
                 <outputfilterchain>
@@ -84,8 +89,7 @@
                 </outputfilterchain>
             </redirector>
         </exec>
- 
-        <echo>Revision found from SVN: ${svna.version}</echo>
+        <echo>revision after svnversion command: ${svna.version}</echo>
 
     </target>
      
