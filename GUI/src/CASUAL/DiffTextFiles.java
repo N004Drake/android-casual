@@ -16,15 +16,7 @@
  */
 package CASUAL;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,15 +80,12 @@ public class DiffTextFiles {
     public String diffTextFiles(String Original, String TestForDiff) {
         String DifferenceFromFile1 = "";
         try {
-            BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff));
-            try {
+            try (BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff))) {
 
                 String Line;
                 String Line2;
                 while ((Line = BRTestDiff.readLine()) != null) {
-
-                    BufferedReader BROriginal = new BufferedReader(new FileReader(Original));
-                    try {
+                    try (BufferedReader BROriginal = new BufferedReader(new FileReader(Original))) {
                         boolean LineExists = false;
                         while ((Line2 = BROriginal.readLine()) != null) {
                             if (Line2.equals(Line)) {
@@ -107,12 +96,8 @@ public class DiffTextFiles {
                             DifferenceFromFile1 = DifferenceFromFile1 + "\n" + Line;
                         }
 
-                    } finally {
-                        BROriginal.close();
                     }
                 }
-            } finally {
-                BRTestDiff.close();
             }
         } catch (IOException e) {
             new Log().errorHandler(e);

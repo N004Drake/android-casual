@@ -16,21 +16,17 @@
  */
 package CASUAL;
 
-import java.io.InputStream;
-import java.io.File;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.net.URL;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.URISyntaxException;
-import java.net.MalformedURLException;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  *
@@ -122,9 +118,7 @@ public class CASUALUpdates {
     public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
         try {
             downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (URISyntaxException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
@@ -225,7 +219,7 @@ public class CASUALUpdates {
         Log.level0("Downloading Updates");
 
         try {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             String localfile = Statics.TempFolder + scriptname;
             String ext;
             for (int n = 0; n < webInformation.md5sums.length; n++) {
@@ -238,9 +232,7 @@ public class CASUALUpdates {
                     if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
                         list.add(Statics.TempFolder + scriptname + ext);
                     }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    continue;
-                } catch (NullPointerException e) {
+                } catch ( ArrayIndexOutOfBoundsException | NullPointerException e) {
                     continue;
                 }
 

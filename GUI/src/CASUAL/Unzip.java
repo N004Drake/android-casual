@@ -16,13 +16,7 @@
  */
 package CASUAL;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -58,22 +52,20 @@ public class Unzip {
             // create the parent directory structure if needed
             destinationParent.mkdirs();
             if (!entry.isDirectory()) {
-                //if (Static)
-                BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
-                int currentByte;
-                // establish buffer for writing file
-                byte data[] = new byte[BUFFER];
-                // write the current file to disk
-                FileOutputStream fos = new FileOutputStream(newPath + entry);
-                BufferedOutputStream dest = new BufferedOutputStream(fos,
-                        BUFFER);
-                // read and write until last byte is encountered
-                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-                    dest.write(data, 0, currentByte);
+                try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
+                    int currentByte;
+                    // establish buffer for writing file
+                    byte data[] = new byte[BUFFER];
+                    // write the current file to disk
+                    FileOutputStream fos = new FileOutputStream(newPath + entry);
+                    try (BufferedOutputStream dest = new BufferedOutputStream(fos,
+                                 BUFFER)) {
+                        while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+                            dest.write(data, 0, currentByte);
+                        }
+                        dest.flush();
+                    }
                 }
-                dest.flush();
-                dest.close();
-                is.close();
             } else if (entry.isDirectory()) {
                 log.level3(newPath + entry.getName());
                 new File(newPath + entry.getName()).mkdirs();
@@ -87,38 +79,36 @@ public class Unzip {
 
     public void UnZipResource(String ZipResource, String OutputFolder) throws FileNotFoundException, IOException {
         InputStream ZStream = getClass().getResourceAsStream(ZipResource);
-        ZipInputStream ZipInput = new ZipInputStream(ZStream);
-        ZipEntry ZipEntryInstance;
-        while ((ZipEntryInstance = ZipInput.getNextEntry()) != null) {
-            log.level3("Unzipping " + ZipEntryInstance.getName());
-            File EntryFile = new File(OutputFolder + System.getProperty("file.separator") + ZipEntryInstance.getName());
-            if (ZipEntryInstance.isDirectory()) {
-                EntryFile.mkdirs();
-                continue;
-            }
-            File EntryFolder = new File(EntryFile.getParent());
-            if (!EntryFolder.exists()) {
-                EntryFolder.mkdirs();
+        try (ZipInputStream ZipInput = new ZipInputStream(ZStream)) {
+            ZipEntry ZipEntryInstance;
+            while ((ZipEntryInstance = ZipInput.getNextEntry()) != null) {
+                log.level3("Unzipping " + ZipEntryInstance.getName());
+                File EntryFile = new File(OutputFolder + System.getProperty("file.separator") + ZipEntryInstance.getName());
+                if (ZipEntryInstance.isDirectory()) {
+                    EntryFile.mkdirs();
+                    continue;
+                }
+                File EntryFolder = new File(EntryFile.getParent());
+                if (!EntryFolder.exists()) {
+                    EntryFolder.mkdirs();
+
+                }
+                int currentByte;
+                // establish buffer for writing file
+                byte data[] = new byte[BUFFER];
+                String currentEntry = ZipEntryInstance.getName();
+                File DestFile = new File(OutputFolder + System.getProperty("file.separator"), currentEntry);
+                FileOutputStream FileOut = new FileOutputStream(DestFile);
+                BufferedInputStream BufferedInputStream = new BufferedInputStream(ZipInput);
+                try (BufferedOutputStream Destination = new BufferedOutputStream(FileOut)) {
+                    while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
+                        Destination.write(data, 0, currentByte);
+                    }
+
+                    Destination.flush();
+                }
 
             }
-            int currentByte;
-            // establish buffer for writing file
-            byte data[] = new byte[BUFFER];
-            String currentEntry = ZipEntryInstance.getName();
-            File DestFile = new File(OutputFolder + System.getProperty("file.separator"), currentEntry);
-            FileOutputStream FileOut = new FileOutputStream(DestFile);
-            BufferedInputStream BufferedInputStream = new BufferedInputStream(ZipInput);
-            BufferedOutputStream Destination = new BufferedOutputStream(FileOut);
-
-            while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
-                Destination.write(data, 0, currentByte);
-            }
-
-            Destination.flush();
-            Destination.close();
-
         }
-
-        ZipInput.close();
     }
 }

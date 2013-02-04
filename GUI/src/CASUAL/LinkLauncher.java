@@ -39,6 +39,7 @@ public class LinkLauncher implements Runnable {
         thread.start();
     }
 
+    @Override
     public void run() {
         if (Desktop.isDesktopSupported()) {
             Desktop desktop;

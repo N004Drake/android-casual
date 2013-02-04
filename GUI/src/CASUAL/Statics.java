@@ -47,7 +47,7 @@ public class Statics {
      */
     static Shell shellCommand;
     static Log Log = new Log();
-    public static ArrayList<String> LiveSendCommand = new ArrayList<String>();
+    public static ArrayList<String> LiveSendCommand = new ArrayList<>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by log class
     public static String[] DeviceTracker;
@@ -128,10 +128,10 @@ public class Statics {
     //ADB
 
     public static String LinuxADB() {
-        if (Statics.arch == "x86_64") {
+        if (Statics.arch.equals("x86_64")) {
             return Linux64ADB;
         }
-        if (Statics.arch == "ARMv6") {
+        if (Statics.arch.equals("ARMv6")) {
             return LinuxARMv6ADB;
         }
         return Linux32ADB;  //defautlt to 32bit ADB
@@ -154,10 +154,10 @@ public class Statics {
     //Fastboot
 
     public static String fastbootLinux() {
-        if (Statics.arch == "x86_64") {
+        if (Statics.arch.equals("x86_64")) {
             return fastbootLinux64;
         }
-        if (Statics.arch == "ARMv6") {
+        if (Statics.arch.equals("ARMv6")) {
             return fastbootLinuxARMv6;
         }
         return fastbootLinux32;
@@ -210,7 +210,7 @@ public class Statics {
     //Check for Linux
 
     public static boolean isLinux() {
-        if (arch == "") {
+        if (arch.equals("")) {
             checkLinuxArch();
         }
         String os = System.getProperty("os.name").toLowerCase();
@@ -237,8 +237,8 @@ public class Statics {
     }
     //restart app
     //script data
-    public static ArrayList<String> ActionEvents = new ArrayList<String>();
-    public static ArrayList<String> ReactionEvents = new ArrayList<String>();
+    public static ArrayList<String> ActionEvents = new ArrayList<>();
+    public static ArrayList<String> ReactionEvents = new ArrayList<>();
     public static String[] scriptNames = {""};
     public static String[] scriptLocations = {""};
 

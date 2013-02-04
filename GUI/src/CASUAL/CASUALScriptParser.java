@@ -15,21 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package CASUAL;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.DataInputStream;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import java.util.ArrayList;
-
-import java.net.MalformedURLException;
-import java.util.Arrays;
 
 /**
  *
@@ -249,8 +241,8 @@ public class CASUALScriptParser {
 
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList<String>();
-            Statics.ReactionEvents = new ArrayList<String>();
+            Statics.ActionEvents = new ArrayList<>();
+            Statics.ReactionEvents = new ArrayList<>();
             log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return;
         }
@@ -527,12 +519,13 @@ public class CASUALScriptParser {
     DataInputStream DATAIN;
 
     private void executeSelectedScript(DataInputStream DIS, final String script) {
-        Statics.ReactionEvents = new ArrayList<String>();
-        Statics.ActionEvents = new ArrayList<String>();
+        Statics.ReactionEvents = new ArrayList<>();
+        Statics.ActionEvents = new ArrayList<>();
         ScriptContinue = true;
         DATAIN = DIS;
         log.level3("Executing Scripted Datastream" + DIS.toString());
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 int updateStatus;
                 log.level3("CASUAL has initiated a multithreaded execution environment");
@@ -587,9 +580,7 @@ public class CASUALScriptParser {
                                 new TimeOutOptionPane().showTimeoutDialog(60, null, "Download Failure.  CASUAL will now restart.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"OK"}, "ok");
                                 try {
                                     JavaSystem.restart(new String[]{""});
-                                } catch (IOException ex) {
-                                    Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
-                                } catch (InterruptedException ex) {
+                                } catch ( IOException | InterruptedException ex) {
                                     Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
                                 }
 
@@ -665,7 +656,7 @@ public class CASUALScriptParser {
     }
 
     private ArrayList<String> parseCommandLine(String Line) {
-        ArrayList<String> List = new ArrayList<String>();
+        ArrayList<String> List = new ArrayList<>();
         Boolean SingleQuoteOn = false;
         Boolean DoubleQuoteOn = false;
         String Word = "";
@@ -732,7 +723,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.AdbDeployed);
         ShellCommand.addAll(parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
@@ -749,7 +740,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
@@ -760,7 +751,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
@@ -770,7 +761,7 @@ public class CASUALScriptParser {
 
     private void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
+        ArrayList<String> shellCommand = new ArrayList<>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
         String stringCommand[] = (convertArrayListToStringArray(shellCommand));
@@ -787,7 +778,7 @@ public class CASUALScriptParser {
     private void doHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
+        ArrayList<String> shellCommand = new ArrayList<>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = convertArrayListToStringArray(shellCommand);
@@ -800,7 +791,7 @@ public class CASUALScriptParser {
     private String doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
+        ArrayList<String> shellCommand = new ArrayList<>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = convertArrayListToStringArray(shellCommand);

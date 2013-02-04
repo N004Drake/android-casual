@@ -16,18 +16,7 @@
  */
 package CASUAL;
 
-import java.io.InputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.BufferedWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -239,23 +228,22 @@ public class FileOperations {
     private boolean writeInputStreamToFile(InputStream is, File file) {
         Log.level3("Attempting to write " + file.getPath());
         try {
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-            //integer for return value
-            int currentByte;
-            // establish buffer for writing file
-            int BUFFER = 4096;
-            byte data[] = new byte[BUFFER];
-            if (is.available() > 0) {
-                // while stream does not return -1, fill data buffer and write.
-                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-                    out.write(data, 0, currentByte);
+            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
+                int currentByte;
+                // establish buffer for writing file
+                int BUFFER = 4096;
+                byte data[] = new byte[BUFFER];
+                if (is.available() > 0) {
+                    // while stream does not return -1, fill data buffer and write.
+                    while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+                        out.write(data, 0, currentByte);
+                    }
+                } else {
+                    Log.level0("ERROR: FILE READ WAS 0 LENGTH");
+                    return false;
                 }
-            } else {
-                Log.level0("ERROR: FILE READ WAS 0 LENGTH");
-                return false;
+                is.close();
             }
-            is.close();
-            out.close();
 
         } catch (IOException e) {
             System.err.print(e);
