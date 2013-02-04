@@ -182,6 +182,7 @@ public class HeimdallInstall {
 
     public void installWindowsDrivers() {
         //install drivers
+        HeimdallInstallDriversForWindowsPicture.main(null);
         log.level0("Installing drivers");
         TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
         timeOutOptionPane.showTimeoutDialog(
