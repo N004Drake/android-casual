@@ -15,6 +15,7 @@ public class HeimdallInstallDriversForWindowsPicture extends javax.swing.JFrame 
      */
     public HeimdallInstallDriversForWindowsPicture() {
         initComponents();
+        this.setTitle("You can leave this window open while you do it.");
     }
 
     /**
@@ -67,7 +68,7 @@ public class HeimdallInstallDriversForWindowsPicture extends javax.swing.JFrame 
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("system".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
