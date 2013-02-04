@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.swing.Timer;
 import javax.swing.Icon;
-import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.Timer;
 import org.jdesktop.application.Application;
 
 /**
@@ -75,6 +75,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             busyIcons[count] = resourceMap.getIcon("StatusBar.busyIcons[" + count + "]");
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
                 StatusAnimationLabel.setIcon(busyIcons[busyIconIndex]);
@@ -633,7 +634,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         if (Src != null) {
             Statics.setMasterLock(true);
             URL jar = Src.getLocation();

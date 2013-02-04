@@ -16,8 +16,6 @@
  */
 package CASUAL;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -33,6 +31,7 @@ class CASUALDeployADB implements Runnable {
         (new Thread(new CASUALDeployADB())).start();
     }
 
+    @Override
     public void run() {
         DiffTextFiles DTF = new DiffTextFiles();
 
@@ -65,7 +64,7 @@ class CASUALDeployADB implements Runnable {
             new Shell().silentBackgroundShellCommand();
             try {
                 Log.level3("sleeping for Windows ADB start");
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 //no catch needed for sleep interruption
             }
@@ -78,7 +77,6 @@ class CASUALDeployADB implements Runnable {
 
         Shell Shell = new Shell();
 
-        String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
 
         Statics.LiveSendCommand.add(Statics.AdbDeployed);

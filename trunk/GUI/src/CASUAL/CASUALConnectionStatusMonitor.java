@@ -18,8 +18,6 @@ package CASUAL;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Timer;
 
 /**
@@ -36,6 +34,7 @@ public class CASUALConnectionStatusMonitor {
     private static int cycles = 0;
     private static boolean hasConnected = false;
     Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent evt) {
             String DeviceCommand[] = {Statics.AdbDeployed, "devices"};
             try {

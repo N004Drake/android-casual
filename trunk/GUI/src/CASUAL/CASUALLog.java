@@ -113,6 +113,7 @@ public class CASUALLog extends javax.swing.JFrame {
 
     public static void initializeAsMain() {
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new CASUALLog().setVisible(true);
             }

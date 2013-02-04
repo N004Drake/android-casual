@@ -16,16 +16,10 @@
  */
 package CASUAL;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * Inspired by R.J. Lorimer http://www.javalobby.org/java/forums/t84420.html
@@ -44,7 +38,7 @@ public class MD5sum {
     }
 
     public String md5sum(File f) {
-        InputStream is = null;
+        InputStream is;
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             is = new FileInputStream(f);

@@ -17,10 +17,8 @@
 package CASUAL;
 
 import java.io.BufferedInputStream;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.SourceDataLine;
+import java.io.IOException;
+import javax.sound.sampled.*;
 
 /**
  * CASUALAudioSystem handles Sounds
@@ -34,22 +32,23 @@ public class CASUALAudioSystem {
      */
     public static synchronized void playSound(final String URL) {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
+            @Override
             public void run() {
                 if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
                     try {
                         byte[] buffer = new byte[4096];
                         AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
                         AudioFormat Format = IS.getFormat();
-                        SourceDataLine Line = AudioSystem.getSourceDataLine(Format);
-                        Line.open(Format);
-                        Line.start();
-                        while (IS.available() > 0) {
-                            int Len = IS.read(buffer);
-                            Line.write(buffer, 0, Len);
+                        try (SourceDataLine Line = AudioSystem.getSourceDataLine(Format)) {
+                            Line.open(Format);
+                            Line.start();
+                            while (IS.available() > 0) {
+                                int Len = IS.read(buffer);
+                                Line.write(buffer, 0, Len);
+                            }
+                            Line.drain();
                         }
-                        Line.drain();
-                        Line.close();
-                    } catch (Exception e) {
+                    } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                         //sound is a non-critical system. No logging required
                         System.err.println(e);
                     }
@@ -63,6 +62,7 @@ public class CASUALAudioSystem {
 
     public static synchronized void playMultipleInputStreams(final String[] URLs) {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
+            @Override
             public void run() {
                 if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
                     byte[] buffer = new byte[4096];
@@ -85,7 +85,7 @@ public class CASUALAudioSystem {
                             if (CurrentURL == URLEndPosition) {
                                 Line.drain(); // wait for the buffer to empty before closing the line
                             }
-                        } catch (Exception e) {
+                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                             new Log().level3("EXCEPTION while attempting to play sound " + e.getMessage());
                         }
                         CurrentURL = CurrentURL++;
