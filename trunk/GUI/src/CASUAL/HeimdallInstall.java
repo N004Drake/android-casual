@@ -156,9 +156,9 @@ public class HeimdallInstall {
         new Log().level0("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
         String installVCResults = "CritERROR!!!";
         try {
-                updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedist2010InRepo), Statics.TempFolder + "vcredist_x862010.exe", "Visual Studio Redistributable");
-                new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedist2010InRepo}, new String[]{Statics.TempFolder + "vcredist_x862010.exe"});
-                installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x862010.exe"});
+                updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_32.exe", "Visual Studio Redistributable");
+                new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis32tInRepo}, new String[]{Statics.TempFolder + "vcredist_32.exe"});
+                installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_32.exe"});
             //Will need upating in the future
             //This downloads, MD5's and Installs Visual C++ for Win32/64
             /*if (Statics.isWindows64Arch()){
@@ -184,24 +184,11 @@ public class HeimdallInstall {
         //install drivers
         HeimdallInstallDriversForWindowsPicture.main(null);
         log.level0("Installing drivers");
-        TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
-        timeOutOptionPane.showTimeoutDialog(
-                60, //timeout
-                null, //parentComponent
-                "1. Put your device in --download mode-- and connect to computer.\n"
-                + "2. In the next window select Options>List all devices.\n"
-                + "3. select 'Gadget Serial' in the Zadig window\n"
-                + "4.  click 'install driver'.\n", //Display Message
-                "Driver Installation", //DisplayTitle
-                TimeOutOptionPane.OK_OPTION, // Options buttons
-                TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
-                new String[]{"OK"}, // option buttons
-                "OK"); //Default
-        new Log().level0("Driver Installation:\n"
-                + "1. Put your device in --download mode-- and connect to computer.\n"
-                + "2. In the next window select Options>List all devices.\n"
-                + "3. select 'Gadget Serial' in the main window\n"
-                + "4.  click 'install driver'.\n"
+        new Log().level0("Driver Problems suck. Lemme make it easy.\n"
+                + "1. Check that your device is download mode and connected up.\n"
+                + "2. Select the one that says ---Gadget Serial--- in the main window\n"
+                + "3. Click ---install driver---.\n" 
+                + "4. Close out zadig and use CASUAL."
                 + "Note: the USB port which you install this driver will be converted\n"
                 + "to use Heimdall instead of Odin for download mode.  It only affects\n"
                 + "ONE usb port.");
@@ -209,7 +196,7 @@ public class HeimdallInstall {
         CASUALUpdates updater = new CASUALUpdates();
         try {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder + "zadig.exe", "Open-Source Heimdall Drivers");
-            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverIniInRepo), Statics.TempFolder + "zadig.ini", "Open-Source Heimdall Drivers config");
+            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverIniInRepo),"zadig.ini", "Open-Source Heimdall Drivers config");
 
         } catch (MalformedURLException ex) {
             log.errorHandler(ex);
