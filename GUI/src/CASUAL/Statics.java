@@ -80,7 +80,6 @@ public class Statics {
     final public static String Slash = System.getProperty("file.separator");
     public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
     public static String UseSound;
-    static boolean lockControlsForUnzip = false;
 
     public static void initDocument() {
         ProgressPane.setContentType("text/html");
@@ -178,17 +177,16 @@ public class Statics {
     public static String DeveloperName;
     public static String DeveloperDonateLink;
     public static String DonateButtonText;
-    public static boolean MasterLock = true;
+    public static boolean lockGUIformPrep = true;
+    public static boolean lockGUIunzip = false;
+    public static boolean lockGUIdeviceConnectionStatus=false;
+    
+
+    
+    
     public static int SVNRevisionRequired = 0;
 
-    public static void setMasterLock(boolean status) {
-        MasterLock = status;
-        try {
-            GUI.enableControls(MasterLock);
-        } catch (NullPointerException e) {
-            //no logging for this fault because the GUI may not be up yet
-        }
-    }
+  
 
     /*
      * Determines if Linux, Mac or Windows

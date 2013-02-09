@@ -1,3 +1,5 @@
+$ACTIONREQUIRED please put the device into whatever \n mode or something like that!
+
 #$IFNOTCONTAINS ro.product.model=X909 $INCOMMAND shell "cat /system/build.prop" $DO $HALT $ECHO your system is not an X909. This won't work. halting.
 $ECHO rebooting device... please wait
 reboot bootloader
