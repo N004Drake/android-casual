@@ -96,6 +96,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         log.level3("Updating Scripts for UI");
         comboBoxUpdate();
+        Statics.lockGUIformPrep = false;
 
 
     }
@@ -363,7 +364,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             new CASUALScriptParser().executeSelectedScriptFile(nonResourceFileName, script);
         }
         this.busyIconTimer.stop();
-        //enableControls(true);
     }
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         this.StartButtonActionPerformed();
@@ -458,7 +458,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         }
         comboBoxUpdate();
-        this.enableControls(true);
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -490,7 +489,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
 
         }
-        if (!startButton.isEnabled() && !Statics.MasterLock) {
+        if (!startButton.isEnabled() && !Statics.lockGUIformPrep) {
             startButton.setText("Click again to enable all controls");
             buttonEnableStage = true;
 
@@ -527,7 +526,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                 } catch (NullPointerException ex) {
                     log.level3("attempted to lock controls but controls are not availble yet");
                 }
-                Statics.lockControlsForUnzip = true;
+                Statics.lockGUIunzip = true;
                 if (getClass().getResource(ZipResource) != null) {
                     log.level3("Extracting archive....");
 
@@ -540,8 +539,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                         log.errorHandler(ex);
                     }
                 }
-                Statics.lockControlsForUnzip = false;
-                Statics.GUI.enableControls(true);
+                Statics.lockGUIunzip = false;
             }
         };
         t.start();
@@ -596,9 +594,8 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
     private void prepareScripts() {
         try {
-            Statics.MasterLock = true;
             listScripts();
-            Statics.MasterLock = false;
+            Statics.lockGUIformPrep = false;
         } catch (IOException ex) {
             log.level0("ListScripts() could not find any entries");
             log.errorHandler(ex);
@@ -636,7 +633,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         int Count = 0;
         ArrayList<String> list = new ArrayList<>();
         if (Src != null) {
-            Statics.setMasterLock(true);
             URL jar = Src.getLocation();
             ZipInputStream Zip = new ZipInputStream(jar.openStream());
             ZipEntry ZEntry;
@@ -665,8 +661,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                 Statics.scriptLocations = new String[]{""};
                 Statics.scriptNames = new String[]{"Test Script"};
             }
-            Statics.MasterLock = false;
-
         }
 
 
@@ -714,7 +708,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }
 
     public void enableControls(boolean status) {
-        if (!Statics.MasterLock && !Statics.lockControlsForUnzip) {
+        if (!Statics.lockGUIformPrep && !Statics.lockGUIunzip) {
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
             log.level3("Controls Enabled status: " + status);

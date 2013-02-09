@@ -375,7 +375,7 @@ public class CASUALScriptParser {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             }
-            line = line.replace("$USERCANCELOPTION", "");
+            line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
             if (line.contains(",")) {
                 String[] Message = line.split(",");
                 Object[] Options = {"Stop",
@@ -406,6 +406,38 @@ public class CASUALScriptParser {
                     return;
                 }
             }
+            
+            
+            
+            
+//$ACTIONREQUIRED Message            
+            
+        } else if (line.startsWith("$ACTIONREQUIRED")) {
+            if (Statics.UseSound.contains("true")) {
+                //CASUALAudioSystem CAS = new CASUALAudioSystem();
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
+            }
+            line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
+            line = line.replaceAll("\\n", "\n");
+            
+                
+                Object[] Options = {"I didn't do it",
+                    "I did it"};
+                int n = JOptionPane.showOptionDialog(
+                        null,
+                        new StringBuilder(line),
+                        "Dont click through this!",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        Options,
+                        Options[1]);
+                if (n == JOptionPane.YES_OPTION) {
+                    log.level0(ScriptName + " Halted.  Perform sthe required actions to continue.");
+                    ScriptContinue = false;
+                    return;
+                }
+
 //$USERINPUTBOX will accept a String to be injected into ADB
             //Any text will be injected into the $USERINPUT variable    
             //USE: $USERINPUTBOX Title, Message, command $USERINPUT
@@ -628,9 +660,10 @@ public class CASUALScriptParser {
     static String GOTO = "";
 
     private void doRead(DataInputStream dataIn) {
+        String strLine="";
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
-            String strLine;
+
             bReader.mark(1);
             while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
                 CurrentLine++;
@@ -650,7 +683,8 @@ public class CASUALScriptParser {
             dataIn.close();
             log.level0("done");
         } catch (Exception e) {//Catch exception if any
-            log.errorHandler(e);
+           log.errorHandler(new RuntimeException("CASUAL scripting error\n   "+strLine ,e));
+           log.level0("CASUAL experienced an error while parsing command:\n" + strLine+"\nplease report the above exception.");
         }
 
     }

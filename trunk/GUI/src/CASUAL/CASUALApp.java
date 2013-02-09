@@ -29,6 +29,7 @@ public class CASUALApp extends SingleFrameApplication {
      */
     @Override
     protected void startup() {
+        Statics.lockGUIformPrep = true;
         System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + " Build:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber"));
 
         Statics Statics = new Statics();
