@@ -36,6 +36,13 @@ public class CASUALConnectionStatusMonitor {
     Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent evt) {
+            
+            if (Statics.lockGUIformPrep||Statics.lockGUIunzip) {
+                Statics.GUI.enableControls(false);
+                Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
+                LastState=0;
+                return;
+            }
             String DeviceCommand[] = {Statics.AdbDeployed, "devices"};
             try {
                 String DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
@@ -127,10 +134,10 @@ public class CASUALConnectionStatusMonitor {
                     break;
                 case 1:
                     Log.level3("State Connected");
-                    Statics.GUI.enableControls(true);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
                     Statics.GUI.setStatusMessageLabel("Target Acquired");
                     CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
+                    Statics.GUI.enableControls(true);
                     break;
                 default:
 
