@@ -86,34 +86,20 @@ class CASUALDeployADB implements Runnable {
 
          
         if ( (Statics.isLinux()) && (DeviceList.contains("something about UDEV rules")) ){ //Don't know how to handle this yet
-        
+
             
             //handle add udevrule
             
             
             
-            
-            
-            
-            
-            
-            
-            
         }
+
+        //handle libusb -3
         if ( (Statics.isLinux()) && (DeviceList.contains("ERROR-3")) ){ //Don't know how to handle this yet
-        
-            
-            //handle libusb -3
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            Shell shell = new Shell();
+            Log.level0("Permissions problem detected. Killing and requesting permissions escillation.");
+            shell.silentShellCommand(new String[]{Statics.AdbDeployed,"kill-server"});
+            shell.elevateSimpleCommandWithMessage(devicesCmd, "Device permissions problem detected");
         }
         
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
