@@ -34,9 +34,9 @@ public class FileOperations {
     public FileOperations() {
     }
 
-
     /**
-     *copies a resource to a file
+     * copies a resource to a file
+     *
      * @param Resource
      * @param toFile
      * @return true if complete
@@ -75,7 +75,8 @@ public class FileOperations {
     }
 
     /**
-     *recursively deletes a String path
+     * recursively deletes a String path
+     *
      * @param path
      */
     public void recursiveDelete(String path) {
@@ -83,7 +84,8 @@ public class FileOperations {
     }
 
     /**
-     *recursively deletes a file path
+     * recursively deletes a file path
+     *
      * @param path
      */
     public void recursiveDelete(File path) {
@@ -104,9 +106,9 @@ public class FileOperations {
         }
     }
 
-
     /**
-     *verify ability to write to every file in a path
+     * verify ability to write to every file in a path
+     *
      * @param path
      * @return true if permission to write
      */
@@ -124,9 +126,9 @@ public class FileOperations {
         return true;
     }
 
-
     /**
-     *takes a path and a name returns qualified path to file
+     * takes a path and a name returns qualified path to file
+     *
      * @param PathToSearch
      * @param FileName
      * @return absolute path to folder
@@ -161,9 +163,9 @@ public class FileOperations {
         return null;
     }
 
-
     /**
      * verifies file/folder exists returns a boolean value if the file exists
+     *
      * @param folder
      * @return true if exists
      */
@@ -173,6 +175,7 @@ public class FileOperations {
 
     /**
      * makes a folder, works recursively
+     *
      * @param Folder
      * @return true if folder was created
      */
@@ -196,9 +199,9 @@ public class FileOperations {
         return CreatedFolder;
     }
 
-
     /**
-     *takes a string and a filename, writes to the file
+     * takes a string and a filename, writes to the file
+     *
      * @param Text
      * @param File
      * @throws IOException
@@ -212,7 +215,8 @@ public class FileOperations {
     }
 
     /**
-     *takes a string and a filename, overwrites to the file
+     * takes a string and a filename, overwrites to the file
+     *
      * @param Text
      * @param File
      * @throws IOException
@@ -228,22 +232,21 @@ public class FileOperations {
     private boolean writeInputStreamToFile(InputStream is, File file) {
         Log.level3("Attempting to write " + file.getPath());
         try {
-            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
-                int currentByte;
-                // establish buffer for writing file
-                int BUFFER = 4096;
-                byte data[] = new byte[BUFFER];
-                if (is.available() > 0) {
-                    // while stream does not return -1, fill data buffer and write.
-                    while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-                        out.write(data, 0, currentByte);
-                    }
-                } else {
-                    Log.level0("ERROR: FILE READ WAS 0 LENGTH");
-                    return false;
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+            int currentByte;
+            // establish buffer for writing file
+            int BUFFER = 4096;
+            byte data[] = new byte[BUFFER];
+            if (is.available() > 0) {
+                // while stream does not return -1, fill data buffer and write.
+                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+                    out.write(data, 0, currentByte);
                 }
-                is.close();
+            } else {
+                Log.level0("ERROR: FILE READ WAS 0 LENGTH");
+                return false;
             }
+            is.close();
 
         } catch (IOException e) {
             System.err.print(e);
@@ -260,9 +263,9 @@ public class FileOperations {
         }
     }
 
-
     /**
-     *takes a string filename returns a boolean if the file was deleted
+     * takes a string filename returns a boolean if the file was deleted
+     *
      * @param FileName
      * @return true if file was deleted
      */
@@ -286,9 +289,9 @@ public class FileOperations {
         return Deleted;
     }
 
-    
     /**
      * copies a file from a source to a destination
+     *
      * @param sourceFile
      * @param destFile
      * @throws IOException
@@ -317,10 +320,10 @@ public class FileOperations {
 
 
     }
-    
 
     /**
-     *returns the name of the current folder
+     * returns the name of the current folder
+     *
      * @return current folder
      */
     public String currentDir() {
@@ -333,8 +336,10 @@ public class FileOperations {
     }
 
     /**
-     *copies a file from a string path to a string path returns a boolean if completed
-     * @param FromFile 
+     * copies a file from a string path to a string path returns a boolean if
+     * completed
+     *
+     * @param FromFile
      * @param ToFile
      * @return true if completed
      */
@@ -352,6 +357,7 @@ public class FileOperations {
 
     /**
      * take a string filename returns a boolean if file exists
+     *
      * @param Folder
      * @return true if file exists
      */
@@ -363,9 +369,9 @@ public class FileOperations {
         return (Result);
     }
 
-
     /**
-     *takes a filename sets executable returns result
+     * takes a filename sets executable returns result
+     *
      * @param Executable
      * @return true if executable bit was set
      */
@@ -376,9 +382,9 @@ public class FileOperations {
         return Result;
     }
 
-
     /**
      * takes a string resource name returns result if it exists
+     *
      * @param Res
      * @return true if resource exists
      */
@@ -405,9 +411,9 @@ public class FileOperations {
         return Statics.ScriptLocation + FileName;
     }
 
-
     /**
      * takes a resource name returns a string of file contents
+     *
      * @param Resource
      * @return string contents of resource
      */

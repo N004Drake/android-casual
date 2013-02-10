@@ -631,7 +631,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<String>();
         if (Src != null) {
             URL jar = Src.getLocation();
             ZipInputStream Zip = new ZipInputStream(jar.openStream());
@@ -667,7 +667,6 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }
 
     //for use in IDE only
-    
     private void md5sumTestScripts() {
         System.out.println("We are in " + System.getProperty("user.dir"));
         String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "src" + Statics.Slash + "SCRIPTS" + Statics.Slash;
@@ -696,11 +695,11 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                     new FileOperations().overwriteFile(writeOut, meta);
                 } catch (IOException ex) {
                     log.errorHandler(ex);
-                }        
-        } else {
-            System.out.println(fileEntry.getName());
-        }
-        
+                }
+            } else {
+                System.out.println(fileEntry.getName());
+            }
+
         }
 
 

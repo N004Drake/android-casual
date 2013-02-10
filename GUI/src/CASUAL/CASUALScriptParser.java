@@ -15,6 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package CASUAL;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -108,14 +109,14 @@ public class CASUALScriptParser {
          * Command may include $HALT and any other command like $ECHO
          */
         if (line.startsWith("$LINUXMAC")) {
-            if (Statics.isLinux() || Statics.isMac()) {
+            if (!Statics.isLinux() && !Statics.isMac()) {
+                return;
+            } else {
                 String removeCommand = "$LINUXMAC";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Linux Or Mac Detected: ");
                 log.level3("OS IS LINUX or MAC! remaining commands:" + line);
 
-            } else {
-                return;
             }
         }
         if (line.startsWith("$LINUXWINDOWS")) {
@@ -241,8 +242,8 @@ public class CASUALScriptParser {
 
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList<>();
-            Statics.ReactionEvents = new ArrayList<>();
+            Statics.ActionEvents = new ArrayList<String>();
+            Statics.ReactionEvents = new ArrayList<String>();
             log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return;
         }
@@ -406,12 +407,12 @@ public class CASUALScriptParser {
                     return;
                 }
             }
-            
-            
-            
-            
+
+
+
+
 //$ACTIONREQUIRED Message            
-            
+
         } else if (line.startsWith("$ACTIONREQUIRED")) {
             if (Statics.UseSound.contains("true")) {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
@@ -419,31 +420,31 @@ public class CASUALScriptParser {
             }
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
             line = line.replaceAll("\\n", "\n");
-            
-                
-                Object[] Options = {"I didn't do it",
-                    "I did it"};
-                int n = JOptionPane.showOptionDialog(
-                        null,
-                        new StringBuilder(line),
-                        "Dont click through this!",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        Options,
-                        Options[1]);
-                if (n == JOptionPane.YES_OPTION) {
-                    log.level0(ScriptName + " Halted.  Perform sthe required actions to continue.");
-                    ScriptContinue = false;
-                    return;
-                }
+
+
+            Object[] Options = {"I didn't do it",
+                "I did it"};
+            int n = JOptionPane.showOptionDialog(
+                    null,
+                    new StringBuilder(line),
+                    "Dont click through this!",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    Options,
+                    Options[1]);
+            if (n == JOptionPane.YES_OPTION) {
+                log.level0(ScriptName + " Halted.  Perform sthe required actions to continue.");
+                ScriptContinue = false;
+                return;
+            }
 
 //$USERINPUTBOX will accept a String to be injected into ADB
             //Any text will be injected into the $USERINPUT variable    
             //USE: $USERINPUTBOX Title, Message, command $USERINPUT
         } else if (line.startsWith("$USERINPUTBOX")) {
             CASUALAudioSystem.playSound("/CASUAL/resources/sounds/InputRequested.wav");
-            line.replace("\\n", "\n");
+            line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",");
             String InputBoxText = JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
             InputBoxText = returnSafeCharacters(InputBoxText);
@@ -514,17 +515,17 @@ public class CASUALScriptParser {
             line = line.replace("$FASTBOOT", "");
             line = StringOperations.removeLeadingSpaces(line);
             Statics.checkAndDeployFastboot();
-            boolean elevated=false;
+            boolean elevated = false;
             if (Statics.isLinux()) {
                 if (Statics.UseSound.contains("true")) {
                     CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 }
-                
-                if (! doElevatedFastbootShellCommand(line.replaceAll("\"","\\\"")).contentEquals("\n")){
-                    elevated=true;
+
+                if (!doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\"")).contentEquals("\n")) {
+                    elevated = true;
                 }
             }
-            if (! elevated) { 
+            if (!elevated) {
                 doFastbootShellCommand(line);
             }
 
@@ -551,8 +552,8 @@ public class CASUALScriptParser {
     DataInputStream DATAIN;
 
     private void executeSelectedScript(DataInputStream DIS, final String script) {
-        Statics.ReactionEvents = new ArrayList<>();
-        Statics.ActionEvents = new ArrayList<>();
+        Statics.ReactionEvents = new ArrayList<String>();
+        Statics.ActionEvents = new ArrayList<String>();
         ScriptContinue = true;
         DATAIN = DIS;
         log.level3("Executing Scripted Datastream" + DIS.toString());
@@ -561,12 +562,12 @@ public class CASUALScriptParser {
             public void run() {
                 int updateStatus;
                 log.level3("CASUAL has initiated a multithreaded execution environment");
-                String idStringFile="";
-                String TestString="";        
-                try { 
+                String idStringFile = "";
+                String TestString = "";
+                try {
                     idStringFile = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta")));
                     TestString = StringOperations.removeLeadingSpaces(idStringFile);
-                } catch (NullPointerException ex){
+                } catch (NullPointerException ex) {
                     log.level3("NO METADATA FOUND\nNO METADATA FOUND\n");
                 }
                 if ((TestString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
@@ -612,8 +613,8 @@ public class CASUALScriptParser {
                                 new TimeOutOptionPane().showTimeoutDialog(60, null, "Download Failure.  CASUAL will now restart.", "CRITICAL ERROR!", TimeOutOptionPane.ERROR_MESSAGE, TimeOutOptionPane.ERROR_MESSAGE, new String[]{"OK"}, "ok");
                                 try {
                                     JavaSystem.restart(new String[]{""});
-                                } catch ( IOException | InterruptedException ex) {
-                                    Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                                 }
 
 
@@ -660,7 +661,7 @@ public class CASUALScriptParser {
     static String GOTO = "";
 
     private void doRead(DataInputStream dataIn) {
-        String strLine="";
+        String strLine = "";
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
 
@@ -683,14 +684,14 @@ public class CASUALScriptParser {
             dataIn.close();
             log.level0("done");
         } catch (Exception e) {//Catch exception if any
-           log.errorHandler(new RuntimeException("CASUAL scripting error\n   "+strLine ,e));
-           log.level0("CASUAL experienced an error while parsing command:\n" + strLine+"\nplease report the above exception.");
+            log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
+            log.level0("CASUAL experienced an error while parsing command:\n" + strLine + "\nplease report the above exception.");
         }
 
     }
 
     private ArrayList<String> parseCommandLine(String Line) {
-        ArrayList<String> List = new ArrayList<>();
+        ArrayList<String> List = new ArrayList<String>();
         Boolean SingleQuoteOn = false;
         Boolean DoubleQuoteOn = false;
         String Word = "";
@@ -757,7 +758,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<>();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.AdbDeployed);
         ShellCommand.addAll(parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
@@ -774,7 +775,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<>();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
@@ -785,17 +786,17 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<>();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
-        String returnval=Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
+        String returnval = Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
         return returnval;
     }
 
     private void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<>();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
         String stringCommand[] = (convertArrayListToStringArray(shellCommand));
@@ -812,7 +813,7 @@ public class CASUALScriptParser {
     private void doHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<>();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = convertArrayListToStringArray(shellCommand);
@@ -825,11 +826,11 @@ public class CASUALScriptParser {
     private String doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<>();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = convertArrayListToStringArray(shellCommand);
-        String returnval=Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
+        String returnval = Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
         return returnval;
     }
 

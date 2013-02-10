@@ -84,24 +84,19 @@ class CASUALDeployADB implements Runnable {
         new Shell().silentBackgroundShellCommand();
         String DeviceList = Shell.sendShellCommand(devicesCmd);
 
-         
-        if ( (Statics.isLinux()) && (DeviceList.contains("something about UDEV rules")) ){ //Don't know how to handle this yet
 
-            
+        if ((Statics.isLinux()) && (DeviceList.contains("something about UDEV rules"))) { //Don't know how to handle this yet
             //handle add udevrule
-            
-            
-            
         }
 
         //handle libusb -3
-        if ( (Statics.isLinux()) && (DeviceList.contains("ERROR-3")) ){ //Don't know how to handle this yet
+        if ((Statics.isLinux()) && (DeviceList.contains("ERROR-3"))) { //Don't know how to handle this yet
             Shell shell = new Shell();
             Log.level0("Permissions problem detected. Killing and requesting permissions escillation.");
-            shell.silentShellCommand(new String[]{Statics.AdbDeployed,"kill-server"});
+            shell.silentShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
             shell.elevateSimpleCommandWithMessage(devicesCmd, "Device permissions problem detected");
         }
-        
+
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
             JOptionPane.showMessageDialog(Statics.GUI,
                     "Could not execute ADB. 'Wrong ELF class' error\n"
@@ -113,7 +108,7 @@ class CASUALDeployADB implements Runnable {
 
 
         Log.level3("Device List:" + DeviceList);
-        if ( ( ! Statics.isWindows()) && ( (DeviceList.contains("????????????") || (DeviceList.contains("**************")) || (DeviceList.contains("error: cannot connect to daemon"))) )) {
+        if ((!Statics.isWindows()) && ((DeviceList.contains("????????????") || (DeviceList.contains("**************")) || (DeviceList.contains("error: cannot connect to daemon"))))) {
             Log.level3("sleeping for 4 seconds.  Device list: " + DeviceList);
             try {
                 Thread.sleep(4000);

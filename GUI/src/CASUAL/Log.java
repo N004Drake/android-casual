@@ -141,13 +141,13 @@ public class Log {
             WriteFile = new FileWriter(Statics.TempFolder + "log.txt", true);
         } catch (IOException ex) {
         }
-        try (PrintWriter out = new PrintWriter(WriteFile)) {
-            Statics.OutFile = out;
-            if (Statics.OutFile != null) {
-                Statics.LogCreated = true;
-            }
-            out.print(data + "\n");
+
+        PrintWriter out = new PrintWriter(WriteFile);
+        Statics.OutFile = out;
+        if (Statics.OutFile != null) {
+            Statics.LogCreated = true;
         }
+        out.print(data + "\n");
     }
 
     public void progress(String data) {

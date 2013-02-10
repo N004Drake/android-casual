@@ -79,29 +79,28 @@ public class DiffTextFiles {
      */
     public String diffTextFiles(String Original, String TestForDiff) {
         String DifferenceFromFile1 = "";
+
         try {
-            try (BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff))) {
-
-                String Line;
-                String Line2;
-                while ((Line = BRTestDiff.readLine()) != null) {
-                    try (BufferedReader BROriginal = new BufferedReader(new FileReader(Original))) {
-                        boolean LineExists = false;
-                        while ((Line2 = BROriginal.readLine()) != null) {
-                            if (Line2.equals(Line)) {
-                                LineExists = true;
-                            }
-                        }
-                        if (!LineExists) {
-                            DifferenceFromFile1 = DifferenceFromFile1 + "\n" + Line;
-                        }
-
+            BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff));
+            String line;
+            String line2;
+            while ((line = BRTestDiff.readLine()) != null) {
+                BufferedReader BROriginal;
+                BROriginal = new BufferedReader(new FileReader(Original));
+                boolean lineExists = false;
+                while ((line2 = BROriginal.readLine()) != null) {
+                    if (line2.equals(line)) {
+                        lineExists = true;
                     }
+                }
+                if (!lineExists) {
+                    DifferenceFromFile1 = DifferenceFromFile1 + "\n" + line;
                 }
             }
         } catch (IOException e) {
             new Log().errorHandler(e);
         }
+
         return DifferenceFromFile1;
     }
     //Takes in the Diff from the constructor and writes it to the file that is 

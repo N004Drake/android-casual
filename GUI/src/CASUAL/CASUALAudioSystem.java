@@ -68,9 +68,9 @@ public class CASUALAudioSystem {
                             Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                        
 
-                    
+
+
                 }
             }
         }).start();
@@ -117,10 +117,10 @@ public class CASUALAudioSystem {
                                 Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        
-                        }
-                        CurrentURL = CurrentURL++;
-                  
+
+                    }
+                    CurrentURL = CurrentURL++;
+
                     Line.close();
 
                 }
