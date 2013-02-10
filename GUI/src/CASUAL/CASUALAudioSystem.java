@@ -18,7 +18,14 @@ package CASUAL;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import javax.sound.sampled.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * CASUALAudioSystem handles Sounds
@@ -35,23 +42,35 @@ public class CASUALAudioSystem {
             @Override
             public void run() {
                 if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
+                    AudioInputStream IS = null;
                     try {
                         byte[] buffer = new byte[4096];
-                        AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
+                        IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
                         AudioFormat Format = IS.getFormat();
-                        try (SourceDataLine Line = AudioSystem.getSourceDataLine(Format)) {
-                            Line.open(Format);
-                            Line.start();
-                            while (IS.available() > 0) {
-                                int Len = IS.read(buffer);
-                                Line.write(buffer, 0, Len);
-                            }
-                            Line.drain();
+                        SourceDataLine line = AudioSystem.getSourceDataLine(Format);
+                        line.open(Format);
+                        line.start();
+                        while (IS.available() > 0) {
+                            int Len = IS.read(buffer);
+                            line.write(buffer, 0, Len);
                         }
-                    } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                        //sound is a non-critical system. No logging required
-                        System.err.println(e);
+                        line.drain();
+                    } catch (UnsupportedAudioFileException ex) {
+                        Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (LineUnavailableException ex) {
+                        Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            IS.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
+                        
+
+                    
                 }
             }
         }).start();
@@ -70,14 +89,14 @@ public class CASUALAudioSystem {
                     int CurrentURL = 0;
                     SourceDataLine Line = null;
                     for (String URL : URLs) {
+                        AudioInputStream IS = null;
                         try {
-                            AudioInputStream IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
+                            IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
                             AudioFormat Format = IS.getFormat();
-                            Line = AudioSystem.getSourceDataLine(Format);
-
-                            Line.open(Format);
-                            Line.start();
-                            Line.drain();
+                            SourceDataLine line = AudioSystem.getSourceDataLine(Format);
+                            line.open(Format);
+                            line.start();
+                            line.drain();
                             while (IS.available() > 0) {
                                 int Len = IS.read(buffer);
                                 Line.write(buffer, 0, Len);
@@ -85,11 +104,23 @@ public class CASUALAudioSystem {
                             if (CurrentURL == URLEndPosition) {
                                 Line.drain(); // wait for the buffer to empty before closing the line
                             }
-                        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                            new Log().level3("EXCEPTION while attempting to play sound " + e.getMessage());
+                        } catch (UnsupportedAudioFileException ex) {
+                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (LineUnavailableException ex) {
+                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                        } finally {
+                            try {
+                                IS.close();
+                            } catch (IOException ex) {
+                                Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        
                         }
                         CurrentURL = CurrentURL++;
-                    }
+                  
                     Line.close();
 
                 }
