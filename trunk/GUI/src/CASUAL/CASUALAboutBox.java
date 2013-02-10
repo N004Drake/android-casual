@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import javax.swing.UnsupportedLookAndFeelException;
+
 /**
  *
  * @author adam
@@ -171,16 +173,24 @@ public class CASUALAboutBox extends javax.swing.JFrame {
          * default look and feel. For details see
          * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                try {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+                } catch (ClassNotFoundException ex) {
+                    new Log().errorHandler(ex);
+                } catch (InstantiationException ex) {
+                    new Log().errorHandler(ex);
+                } catch (IllegalAccessException ex) {
+                    new Log().errorHandler(ex);
+                } catch (UnsupportedLookAndFeelException ex) {
+                    new Log().errorHandler(ex);
                 }
+                break;
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CASUALAboutBox.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+
         //</editor-fold>
 
         /*
