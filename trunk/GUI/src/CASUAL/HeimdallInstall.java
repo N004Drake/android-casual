@@ -156,21 +156,23 @@ public class HeimdallInstall {
         new Log().level0("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
         String installVCResults = "CritERROR!!!";
         try {
-                updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_32.exe", "Visual Studio Redistributable");
-                new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis32tInRepo}, new String[]{Statics.TempFolder + "vcredist_32.exe"});
-                installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_32.exe"});
+            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_32.exe", "Visual Studio Redistributable");
+            new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinVCRedis32tInRepo}, new String[]{Statics.TempFolder + "vcredist_32.exe"});
+            installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_32.exe"});
             //Will need upating in the future
             //This downloads, MD5's and Installs Visual C++ for Win32/64
             /*if (Statics.isWindows64Arch()){
-                updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis64tInRepo), Statics.TempFolder + "vcredist_x64.exe", "Visual Studio Redistributable");
-                new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis32tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
-                installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x86.exe"});
-            } else{
-                updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_x86.exe", "Visual Studio Redistributable");
-                new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis64tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
-                installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x64.exe"});
-             }*/        
-        } catch (MalformedURLException | URISyntaxException ex) {
+             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis64tInRepo), Statics.TempFolder + "vcredist_x64.exe", "Visual Studio Redistributable");
+             new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis32tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
+             installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x86.exe"});
+             } else{
+             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_x86.exe", "Visual Studio Redistributable");
+             new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis64tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
+             installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x64.exe"});
+             }*/
+        } catch (MalformedURLException ex) {
+            log.errorHandler(ex);
+        } catch (URISyntaxException ex) {
             log.errorHandler(ex);
         }
         if (installVCResults.contains("CritERROR!!!")) {
@@ -185,7 +187,7 @@ public class HeimdallInstall {
         new Log().level0("Driver Problems suck. Lemme make it easy.\n"
                 + "1. Check that your device is download mode and connected up.\n"
                 + "2. Select the one that says ---Gadget Serial--- in the main window\n"
-                + "3. Click ---install driver---.\n" 
+                + "3. Click ---install driver---.\n"
                 + "4. Close out zadig and use CASUAL."
                 + "Note: the USB port which you install this driver will be converted\n"
                 + "to use Heimdall instead of Odin for download mode.  It only affects\n"
@@ -194,9 +196,11 @@ public class HeimdallInstall {
         CASUALUpdates updater = new CASUALUpdates();
         try {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder + "zadig.exe", "Open-Source Heimdall Drivers");
-            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverIniInRepo),"zadig.ini", "Open-Source Heimdall Drivers config");
+            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverIniInRepo), "zadig.ini", "Open-Source Heimdall Drivers config");
 
-        } catch (MalformedURLException | URISyntaxException ex) {
+        } catch (MalformedURLException ex) {
+            log.errorHandler(ex);
+        } catch (URISyntaxException ex) {
             log.errorHandler(ex);
         }
         //verify MD5 new String{"b88228d5fef4b6dc019d69d4471f23ec  vcredist_x86.exe"}

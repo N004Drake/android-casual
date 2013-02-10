@@ -25,9 +25,10 @@ import java.io.*;
 public class CountLines {
 
     /**
-     *Counts lines in a file
+     * Counts lines in a file
+     *
      * @param Filename
-     * @return number of lines in a file 
+     * @return number of lines in a file
      */
     public int countFileLines(String Filename) {
         InputStream IS = null;
@@ -55,7 +56,8 @@ public class CountLines {
     }
 
     /**
-     *Takes a resource and returns number of new lines.
+     * Takes a resource and returns number of new lines.
+     *
      * @param ResourceName
      * @return number of lines in a file
      */

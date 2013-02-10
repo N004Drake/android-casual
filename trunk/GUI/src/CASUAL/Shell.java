@@ -235,7 +235,7 @@ public class Shell implements Runnable {
 
         } catch (IOException ex) {
             log.errorHandler(ex);
-            
+
         }
     }
 

@@ -47,7 +47,7 @@ public class Statics {
      */
     static Shell shellCommand;
     static Log Log = new Log();
-    public static ArrayList<String> LiveSendCommand = new ArrayList<>();
+    public static ArrayList<String> LiveSendCommand = new ArrayList<String>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by log class
     public static String[] DeviceTracker;
@@ -63,9 +63,6 @@ public class Statics {
     final public static String WinVCRedis32tInRepoMD5 = "a8d5962623206751bdd4416d140ae7c5  vcredist_x86.exe";
     final public static String WinVCRedis64tInRepoMD5 = "ba2c17a20b2b1d8a30f96d53e2632a68  vcredist_x64.exe";
     final public static String WinVCRedis201064tInRepoMD5 = "b88228d5fef4b6dc019d69d4471f23ec  vcredist_x862010.exe";
-
-    
-    
     final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/zadig.exe";
     final public static String WinDriverIniInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/zadig.ini";
     final public static String WinDriverInRepoMD5 = "e0476fe60b539ff057371994dd4e8e30  zadig.exe";
@@ -179,14 +176,8 @@ public class Statics {
     public static String DonateButtonText;
     public static boolean lockGUIformPrep = true;
     public static boolean lockGUIunzip = false;
-    public static boolean lockGUIdeviceConnectionStatus=false;
-    
-
-    
-    
+    public static boolean lockGUIdeviceConnectionStatus = false;
     public static int SVNRevisionRequired = 0;
-
-  
 
     /*
      * Determines if Linux, Mac or Windows
@@ -235,8 +226,8 @@ public class Statics {
     }
     //restart app
     //script data
-    public static ArrayList<String> ActionEvents = new ArrayList<>();
-    public static ArrayList<String> ReactionEvents = new ArrayList<>();
+    public static ArrayList<String> ActionEvents = new ArrayList<String>();
+    public static ArrayList<String> ReactionEvents = new ArrayList<String>();
     public static String[] scriptNames = {""};
     public static String[] scriptLocations = {""};
 
@@ -342,9 +333,7 @@ public class Statics {
         }
     }
 
- 
-    
-    public static boolean isWindows64Arch(){
+    public static boolean isWindows64Arch() {
         return (System.getenv("ProgramFiles(x86)") != null);
     }
 
