@@ -247,7 +247,7 @@ public class Shell implements Runnable {
             public void run() {
                 boolean LinkLaunched = false;
                 try {
-                    String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);
+                    String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
                     log.level3("\n###executing real-time background command: " + params[0] + "###");
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -273,7 +273,7 @@ public class Shell implements Runnable {
                     new Log().level2(LogData);
 
                 } catch (IOException ex) {
-                    String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();
+                    String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
                     log.level2("Problem while executing" + ArrayList
                             + " in Shell.liveShellCommand()");
                     Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
@@ -292,7 +292,7 @@ public class Shell implements Runnable {
             public void run() {
                 boolean LinkLaunched = false;
                 try {
-                    String[] params = (String[]) Statics.LiveSendCommand.toArray(new String[0]);
+                    String[] params =Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -317,7 +317,7 @@ public class Shell implements Runnable {
                     new Log().level3(LogData);
 
                 } catch (IOException ex) {
-                    String[] ArrayList = (String[]) Statics.LiveSendCommand.toArray();
+                    String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
                     log.level2("Problem while executing" + ArrayList
                             + " in Shell.liveShellCommand()");
                     Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
