@@ -247,7 +247,8 @@ public class FileOperations {
                 return false;
             }
             is.close();
-
+            out.flush();
+            out.close();
         } catch (IOException e) {
             System.err.print(e);
             System.err.println("Error Writing/Reading Streams.");
