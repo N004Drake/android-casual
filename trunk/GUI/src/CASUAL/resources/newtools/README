@@ -1,0 +1,5 @@
+This directory contains adbx 1.0.31 and heimdall 1.4 RC2 for mac windows and linux
+
+heimdall does not require any additional dependencies but does need testing to 
+make sure it functions correctly.
+
