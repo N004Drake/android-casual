@@ -818,7 +818,12 @@ public class CASUALScriptParser {
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = convertArrayListToStringArray(shellCommand);
         Statics.ExectingHeimdallCommand = true;
-        Shell.liveShellCommand(stringCommand2);
+        String returnread=Shell.liveShellCommand(stringCommand2);
+        if (returnread.contains("libusb error: -3") && Statics.isLinux()){
+             this.doElevatedHeimdallShellCommand(Line);
+        }
+        //todo: get return
+        /*libusb error: -3*/
         Statics.ExectingHeimdallCommand = false;
     }
 

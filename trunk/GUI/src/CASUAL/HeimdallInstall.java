@@ -265,3 +265,81 @@ public class HeimdallInstall {
         }
     }
 }
+
+/*
+ * ###executing real-time command: heimdall###
+Heimdall v1.4 RC2
+
+Copyright (c) 2010-2012, Benjamin Dobell, Glass Echidna
+http://www.glassechidna.com.au/
+
+This software is provided free of charge. Copying and redistribution is
+encouraged.
+
+If you appreciate this software and you would like to support future
+development please consider donating:
+http://www.glassechidna.com.au/donate/
+
+Initialising connection...
+Detecting device...
+ERROR: Failed to access device. libusb error: -3
+CASUAL scripting error
+   $HEIMDALL close-pc-screen
+CASUAL scripting error
+   $HEIMDALL close-pc-screen
+java.lang.RuntimeException: CASUAL scripting error
+   $HEIMDALL close-pc-screen
+
+java.lang.RuntimeException: CASUAL scripting error
+   $HEIMDALL close-pc-screen
+	at CASUAL.CASUALScriptParser.doRead(CASUALScriptParser.java:687)
+	at CASUAL.CASUALScriptParser.access$000(CASUALScriptParser.java:31)
+	at CASUAL.CASUALScriptParser$1.run(CASUALScriptParser.java:640)
+	at java.lang.Thread.run(Thread.java:722)
+Caused by: java.lang.RuntimeException: JOptionPane: type must be one of JOptionPane.ERROR_MESSAGE, JOptionPane.INFORMATION_MESSAGE, JOptionPane.WARNING_MESSAGE, JOptionPane.QUESTION_MESSAGE or JOptionPane.PLAIN_MESSAGE
+	at javax.swing.JOptionPane.setMessageType(JOptionPane.java:2083)
+	at javax.swing.JOptionPane.<init>(JOptionPane.java:1842)
+	at CASUAL.TimeOutOptionPane.showTimeoutDialog(TimeOutOptionPane.java:46)
+	at CASUAL.Shell.liveShellCommand(Shell.java:231)
+	at CASUAL.CASUALScriptParser.doHeimdallShellCommand(CASUALScriptParser.java:821)
+	at CASUAL.CASUALScriptParser.commandHandler(CASUALScriptParser.java:509)
+	at CASUAL.CASUALScriptParser.doRead(CASUALScriptParser.java:681)
+	... 3 more
+
+CASUAL scripting error
+   $HEIMDALL close-pc-screen
+CASUAL scripting error
+   $HEIMDALL close-pc-screen
+java.lang.RuntimeException: CASUAL scripting error
+   $HEIMDALL close-pc-screen
+
+java.lang.RuntimeException: CASUAL scripting error
+   $HEIMDALL close-pc-screen
+	at CASUAL.CASUALScriptParser.doRead(CASUALScriptParser.java:687)
+	at CASUAL.CASUALScriptParser.access$000(CASUALScriptParser.java:31)
+	at CASUAL.CASUALScriptParser$1.run(CASUALScriptParser.java:640)
+	at java.lang.Thread.run(Thread.java:722)
+Caused by: java.lang.RuntimeException: JOptionPane: type must be one of JOptionPane.ERROR_MESSAGE, JOptionPane.INFORMATION_MESSAGE, JOptionPane.WARNING_MESSAGE, JOptionPane.QUESTION_MESSAGE or JOptionPane.PLAIN_MESSAGE
+	at javax.swing.JOptionPane.setMessageType(JOptionPane.java:2083)
+	at javax.swing.JOptionPane.<init>(JOptionPane.java:1842)
+	at CASUAL.TimeOutOptionPane.showTimeoutDialog(TimeOutOptionPane.java:46)
+	at CASUAL.Shell.liveShellCommand(Shell.java:231)
+	at CASUAL.CASUALScriptParser.doHeimdallShellCommand(CASUALScriptParser.java:821)
+	at CASUAL.CASUALScriptParser.commandHandler(CASUALScriptParser.java:509)
+	at CASUAL.CASUALScriptParser.doRead(CASUALScriptParser.java:681)
+	... 3 more
+
+A critical error was encoutered.  Please copy the log from About>Show Log and report this issue 
+A critical error was encoutered.  Please copy the log from About>Show Log and report this issue 
+CASUAL experienced an error while parsing command:
+$HEIMDALL close-pc-screen
+please report the above exception.
+CASUAL experienced an error while parsing command:
+$HEIMDALL close-pc-screen
+please report the above exception.
+Controls Enabled status: true
+State Change Detected, The new state is: 0
+State Disconnected
+Controls Enabled status: false
+
+ */
