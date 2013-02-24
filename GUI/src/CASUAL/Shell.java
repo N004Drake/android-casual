@@ -183,7 +183,8 @@ public class Shell implements Runnable {
 
     }
 
-    public void liveShellCommand(String[] params) {
+    public String liveShellCommand(String[] params) {
+        String LogRead = "";
         try {
             Process process = new ProcessBuilder(params).start();
             log.level3("\n###executing real-time command: " + params[0] + "###");
@@ -191,7 +192,6 @@ public class Shell implements Runnable {
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             String LineRead = "";
             String CharRead;
-            String LogRead = "";
 
             int c;
             while ((c = STDOUT.read()) > -1) {
@@ -224,6 +224,8 @@ public class Shell implements Runnable {
 
             }
             log.level3(LogRead);
+
+            //
             if (LogRead.contains("libusb error:")) {
                 if (Statics.isWindows()) {
                     new HeimdallInstall().installWindowsDrivers();
@@ -232,11 +234,12 @@ public class Shell implements Runnable {
                 }
                 liveShellCommand(params);
             }
-
+        } catch (RuntimeException ex) {
+            return LogRead;
         } catch (IOException ex) {
             log.errorHandler(ex);
-
         }
+        return LogRead;
     }
 
     public void liveBackgroundShellCommand() {
