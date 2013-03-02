@@ -76,7 +76,19 @@ public class CASUALConnectionStatusMonitor {
                 }     
 
                 //Check and handle abnormalities
+                // pairing problem with 4.2+
+                if (DeviceList.contains("offline")){
+                    TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
+                    String[] ok = {"All set and done!"};
+                    new TimeOutOptionPane().showTimeoutDialog(60, null, "It would appear that the connected device is not paired properly.\n"
+                            + "Please disconnect the device, then reconnect it.\n"
+                            + "Next unlock the device and check for a message onscreen.\n"
+                            + "Select \"Always allow from this computer\" then press OK.\n", 
+                            "Device Not Paired", TimeOutOptionPane.OK_OPTION, 2, ok , 0);
+                    DeviceList = Shell.elevateSimpleCommand(DeviceCommand);
+                }
                 //insufficient permissions
+
                 if (DeviceList.contains("????????????") && (!Statics.isWindows())) {
                     Log.level3("sleeping for 4 seconds.  Device list: " + DeviceList);
                     try {
@@ -87,17 +99,7 @@ public class CASUALConnectionStatusMonitor {
                     DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
                     Statics.DeviceTracker = DeviceList.split("device");
                     
-                    if (DeviceList.contains("\toffline")){
-                        TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
-                        String[] ok = {"All set and done!"};
-                        new TimeOutOptionPane().showTimeoutDialog(60, null, "It would appear that the connected device is not paired properly.\n"
-                                + "Please disconnect the device, then reconnect it.\n"
-                                + "Next unlock the device check for a message onscreen.\n"
-                                + "Select \"Always allow from this computer\" then press OK.\n", 
-                                "Device Not Paired", TimeOutOptionPane.OK_OPTION, 2, ok , 0);
-                        DeviceList = Shell.elevateSimpleCommand(DeviceCommand);
-                    }
-                    
+
                     if (DeviceList.contains("????????????")) {
                         DeviceCheck.stop();
                         Log.level0("Insufficient permissions on server detected.");
