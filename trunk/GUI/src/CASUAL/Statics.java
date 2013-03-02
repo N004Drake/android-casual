@@ -134,8 +134,8 @@ public class Statics {
     }
     final public static String Linux32ADB = "/CASUAL/resources/ADB/adb-linux32";
     final public static String Linux64ADB = "/CASUAL/resources/ADB/adb-linux64";
-    final public static String LinuxARMv6ADB = "/CASUAL/resources/ADB/adblinuxARMv6";
-    final public static String MacADB = "/CASUAL/resources/ADB/adbmac";
+    final public static String LinuxARMv6ADB = "/CASUAL/resources/ADB/adb-linuxARMv6";
+    final public static String MacADB = "/CASUAL/resources/ADB/adb-mac";
     final public static String WinADB = "/CASUAL/resources/ADB/adb.exe";
     final public static String WinADB2 = "/CASUAL/resources/ADB/AdbWinApi.dll";
     final public static String WinADB3 = "/CASUAL/resources/ADB/AdbWinUsbApi.dll";
@@ -158,11 +158,11 @@ public class Statics {
         }
         return fastbootLinux32;
     }
-    final private static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-Linux64";
-    final private static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-Linux32";
+    final private static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
+    final private static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
     final private static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
-    final private static String fastbootWindows = "/CASUAL/resources/fastboot/fastbootWin.exe";
-    final private static String fastbootMac = "/CASUAL/resources/fastboot/fastbootMac";
+    final private static String fastbootWindows = "/CASUAL/resources/fastboot/fastboot-win.exe";
+    final private static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
     final public static String ADBini = CASUALSCRIPT + "adb_usb.ini";
