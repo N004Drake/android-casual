@@ -800,14 +800,16 @@ public class CASUALScriptParser {
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
         String stringCommand[] = (convertArrayListToStringArray(shellCommand));
+        log.progress("Waiting for Downoad Mode device.");
         while (!Shell.silentShellCommand(stringCommand).contains("Device detected")) {
             try {
                 Thread.sleep(1000);
+                log.progress(".");
             } catch (InterruptedException ex) {
                 log.errorHandler(ex);
             }
         }
-
+        log.level0("detected!");
     }
 
     private void doHeimdallShellCommand(String Line) {
