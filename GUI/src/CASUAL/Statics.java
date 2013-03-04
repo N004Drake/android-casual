@@ -146,7 +146,7 @@ public class Statics {
     final public static String heimdallLinuxARMv6 = "/CASUAL/resources/heimdall/heimdall_armv6.deb";
     final public static String heimdallMac = "/CASUAL/resources/heimdall/heimdall-mac.dmg";
     final public static String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
-    final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
+    final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusbx.dll";
     //Fastboot
 
     public static String fastbootLinux() {
@@ -299,7 +299,7 @@ public class Statics {
             if (Statics.isWindows()) {
                 FileOperations fo = new FileOperations();  //Windows must deploy heimdall every startup.
                 Statics.heimdallResource = Statics.heimdallWin2;
-                fo.copyFromResourceToFile(Statics.heimdallResource, Statics.TempFolder + "libusb-1.0.dll");
+                fo.copyFromResourceToFile(Statics.heimdallResource, Statics.TempFolder + "libusbx.dll");
                 Statics.heimdallResource = Statics.heimdallWin;
                 Statics.heimdallDeployed = Statics.TempFolder + "heimdall.exe";
 
