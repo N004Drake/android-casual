@@ -66,7 +66,7 @@ public class Statics {
     final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/zadig.exe";
     final public static String WinDriverIniInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/zadig.ini";
     final public static String WinDriverInRepoMD5 = "e0476fe60b539ff057371994dd4e8e30  zadig.exe";
-    static String heimdallMacURL = "https://android-casual.googlecode.com/svn/trunk/repo/Heimdall_1.4.1_compressed.dmg";
+    static String heimdallMacURL = "https://android-casual.googlecode.com/svn/trunk/repo/Heimdall_1.4.1_compressed.dmg.sh";
     //Form data
     public static boolean TargetScriptIsResource = true;
     public static CASUALJFrame GUI;
