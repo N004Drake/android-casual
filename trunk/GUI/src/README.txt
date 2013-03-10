@@ -1,7 +1,7 @@
 If you're trying to run CASUAL, YOU'RE DOING IT WRONG! Install java and open the .jar file with java, not winzip.
 
 CASUAL package layout:
-/SCRIPTS <This is where you can modify the scripts, drop new ones, or change the application's behavior.
+/SCRIPTS < This is where you can modify the scripts, drop new ones, or change the application's behavior.
 /META-INF < Don't modify this
 /CASUAL < Stay out of here. 
 
