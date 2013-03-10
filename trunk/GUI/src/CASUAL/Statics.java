@@ -199,11 +199,13 @@ public class Statics {
     //Check for Linux
 
     public static boolean isLinux() {
-        if (arch.equals("")) {
-            checkLinuxArch();
-        }
         String os = System.getProperty("os.name").toLowerCase();
-        return (os.indexOf("nux") >= 0);
+        if ((os.indexOf("nux") >= 0) && (arch.equals(""))) {
+            checkLinuxArch();
+            return true;
+        }
+        
+        return false;
     }
 
     public static void displayWindowsXPDiscontinued() {
