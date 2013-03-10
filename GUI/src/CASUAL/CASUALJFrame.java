@@ -656,7 +656,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
             if (Count == 0) {
                 md5sumTestScripts();
-                log.level0("No Scripts found. Using Test Script.");
+                log.level0("IDE Mode: Using Test Script.scr ONLY!");
                 comboBoxScriptSelector.addItem("Test Script");
                 Statics.scriptLocations = new String[]{""};
                 Statics.scriptNames = new String[]{"Test Script"};
@@ -668,13 +668,14 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
     //for use in IDE only
     private void md5sumTestScripts() {
-        System.out.println("We are in " + System.getProperty("user.dir"));
+        log.level3("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
+        
         String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "src" + Statics.Slash + "SCRIPTS" + Statics.Slash;
         final File folder = new File(scriptsPath);
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.toString().endsWith(".meta")) {
                 String meta = fileEntry.toString();
-                System.out.println("We are targeting " + meta);
+                System.out.println("Updating meta: " + meta);
                 String fileContents = new FileOperations().readFile(meta);
                 String[] fileLines = fileContents.split("\\n");
                 String writeOut = "";
@@ -683,8 +684,9 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                     if (line.matches("(\\S{32,})(\\s\\s)(.*\\..*)")) {
                         System.out.println(line);
                         String[] md5File = line.split("  ");
+                        log.level3("Old MD5: " + md5File[0]);
                         String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
-                        log.level3("updating md5 to " + newMD5);
+                        log.level3("New MD5 " + newMD5);
                         writeOut = writeOut + newMD5 + "  " + md5File[1] + "\n";
                     } else {
                         writeOut = writeOut + line + "\n";
@@ -696,14 +698,8 @@ public final class CASUALJFrame extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     log.errorHandler(ex);
                 }
-            } else {
-                System.out.println(fileEntry.getName());
             }
-
         }
-
-
-
     }
 
     public void enableControls(boolean status) {
