@@ -146,7 +146,7 @@ public class Statics {
     final public static String heimdallLinuxARMv6 = "/CASUAL/resources/heimdall/heimdall_armv6.deb";
     final public static String heimdallMac = "/CASUAL/resources/heimdall/heimdall-mac.dmg";
     final public static String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
-    final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusbx.dll";
+    final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
     //Fastboot
 
     public static String fastbootLinux() {
