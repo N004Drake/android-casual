@@ -301,7 +301,7 @@ public class Statics {
             if (Statics.isWindows()) {
                 FileOperations fo = new FileOperations();  //Windows must deploy heimdall every startup.
                 Statics.heimdallResource = Statics.heimdallWin2;
-                fo.copyFromResourceToFile(Statics.heimdallResource, Statics.TempFolder + "libusbx.dll");
+                fo.copyFromResourceToFile(Statics.heimdallResource, Statics.TempFolder + "libusb-1.0.dll");
                 Statics.heimdallResource = Statics.heimdallWin;
                 Statics.heimdallDeployed = Statics.TempFolder + "heimdall.exe";
 
