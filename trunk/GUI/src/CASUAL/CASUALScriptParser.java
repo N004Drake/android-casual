@@ -493,9 +493,9 @@ public class CASUALScriptParser {
 
 
 
-            /*
-             * SUPPORTED SHELLS
-             */
+/*
+ * SUPPORTED SHELLS
+ */
 // if Heimdall, Send to Heimdall shell command
         } else if (line.startsWith("$HEIMDALL")) {
             line = line.replace("$HEIMDALL", "");
@@ -651,13 +651,7 @@ public class CASUALScriptParser {
         ExecuteScript.start();
     }
 
-    private String[] convertArrayListToStringArray(ArrayList List) {
-        String[] StringArray = new String[List.size()];
-        for (int i = 0; i <= List.size() - 1; i++) {
-            StringArray[i] = List.get(i).toString();
-        }
-        return StringArray;
-    }
+
     static String GOTO = "";
 
     private void doRead(DataInputStream dataIn) {
@@ -761,7 +755,7 @@ public class CASUALScriptParser {
         ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.AdbDeployed);
         ShellCommand.addAll(parseCommandLine(Line));
-        String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
+        String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
         if (ReplaceThis != null) {
             for (int i = 0; i < StringCommand.length; i++) {
                 StringCommand[i] = StringCommand[i].replace(ReplaceThis, WithThis);
@@ -778,7 +772,7 @@ public class CASUALScriptParser {
         ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
-        String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
+        String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
         Shell.liveShellCommand(StringCommand);
     }
 
@@ -789,7 +783,7 @@ public class CASUALScriptParser {
         ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
-        String StringCommand[] = (convertArrayListToStringArray(ShellCommand));
+        String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
         String returnval = Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
         return returnval;
     }
@@ -799,9 +793,11 @@ public class CASUALScriptParser {
         ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
-        String stringCommand[] = (convertArrayListToStringArray(shellCommand));
+        String stringCommand[] = (StringOperations.convertArrayListToStringArray(shellCommand));
         log.progress("Waiting for Downoad Mode device.");
-        while (!Shell.silentShellCommand(stringCommand).contains("Device detected")) {
+        String shellReturn="";
+        while (! shellReturn.contains("Device detected")) {
+            shellReturn=Shell.silentShellCommand(stringCommand);
             try {
                 Thread.sleep(1000);
                 log.progress(".");
@@ -818,7 +814,7 @@ public class CASUALScriptParser {
         ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
-        String stringCommand2[] = convertArrayListToStringArray(shellCommand);
+        String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         Statics.ExectingHeimdallCommand = true;
         String returnread=Shell.liveShellCommand(stringCommand2);
         if (returnread.contains("libusb error: -3") && Statics.isLinux()){
@@ -836,7 +832,7 @@ public class CASUALScriptParser {
         ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
-        String stringCommand2[] = convertArrayListToStringArray(shellCommand);
+        String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         String returnval = Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
         return returnval;
     }
