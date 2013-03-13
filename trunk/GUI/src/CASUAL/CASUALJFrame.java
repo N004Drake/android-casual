@@ -85,7 +85,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         idleIcon = resourceMap.getIcon("/" + "StatusBar.idleIcon");
         StatusAnimationLabel.setIcon(idleIcon);
         log.level3("OMFGWOOT");
-        log.level1(fileOperations.readTextFromResource(Statics.ScriptLocation + "Overview.txt"));
+        log.level1(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt"));
 
 
         log.level2("Deploying ADB");
@@ -485,7 +485,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         if (buttonEnableStage) {
             startButton.setEnabled(buttonEnableStage);
             this.comboBoxScriptSelector.setEnabled(buttonEnableStage);
-            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
 
         }
         if (!startButton.isEnabled() && !Statics.lockGUIformPrep) {
@@ -498,7 +498,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_StatusLabelMouseClicked
 
     private void StatusLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseExited
-        this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
+        this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
         buttonEnableStage = false;
     }//GEN-LAST:event_StatusLabelMouseExited
     private void comboBoxUpdate() {
@@ -655,10 +655,10 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
             if (Count == 0) {
                 md5sumTestScripts();
-                log.level0("IDE Mode: Using Test Script.scr ONLY!");
-                comboBoxScriptSelector.addItem("Test Script");
+                log.level0("IDE Mode: Using CASUAL Script.scr ONLY!");
+                comboBoxScriptSelector.addItem("CASUAL Script");
                 Statics.scriptLocations = new String[]{""};
-                Statics.scriptNames = new String[]{"Test Script"};
+                Statics.scriptNames = new String[]{"CASUAL Script"};
             }
         }
 
@@ -714,20 +714,20 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     private void populateFields() {
 
         try {
-            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.ExecuteButtonText"));
-            this.setTitle(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.Title") + " - " + this.getTitle());
-            if (java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.UsePictureForBanner").equals("true")) {
+            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
+            this.setTitle(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.Title") + " - " + this.getTitle());
+            if (java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.UsePictureForBanner").equals("true")) {
                 WindowBanner.setText("");
-                WindowBanner.setIcon(createImageIcon("/SCRIPTS/" + java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerPic"), java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText")));
+                WindowBanner.setIcon(createImageIcon("/SCRIPTS/" + java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.BannerPic"), java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.BannerText")));
 
 
             } else {
-                this.WindowBanner.setText(java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Window.BannerText"));
+                this.WindowBanner.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.BannerText"));
             }
-            Statics.DeveloperName = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.Name");
-            Statics.DonateButtonText = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateToButtonText");
-            Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Audio.Enabled");
-            Statics.DeveloperDonateLink = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Developer.DonateLink");
+            Statics.DeveloperName = java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Developer.Name");
+            Statics.DonateButtonText = java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Developer.DonateToButtonText");
+            Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Audio.Enabled");
+            Statics.DeveloperDonateLink = java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Developer.DonateLink");
         } catch (MissingResourceException ex) {
             log.level0("Could not find build.prop");
             log.errorHandler(ex);

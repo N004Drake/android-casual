@@ -232,7 +232,8 @@ public class FileOperations {
     private boolean writeInputStreamToFile(InputStream is, File file) {
         Log.level3("Attempting to write " + file.getPath());
         try {
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+            BufferedOutputStream out;
+            out = new BufferedOutputStream(new FileOutputStream(file));
             int currentByte;
             // establish buffer for writing file
             int BUFFER = 4096;

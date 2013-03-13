@@ -242,8 +242,8 @@ public class CASUALScriptParser {
 
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList<String>();
-            Statics.ReactionEvents = new ArrayList<String>();
+            Statics.ActionEvents = new ArrayList();
+            Statics.ReactionEvents = new ArrayList();
             log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return;
         }
@@ -552,8 +552,8 @@ public class CASUALScriptParser {
     DataInputStream DATAIN;
 
     private void executeSelectedScript(DataInputStream DIS, final String script) {
-        Statics.ReactionEvents = new ArrayList<String>();
-        Statics.ActionEvents = new ArrayList<String>();
+        Statics.ReactionEvents = new ArrayList();
+        Statics.ActionEvents = new ArrayList();
         ScriptContinue = true;
         DATAIN = DIS;
         log.level3("Executing Scripted Datastream" + DIS.toString());
@@ -685,7 +685,7 @@ public class CASUALScriptParser {
     }
 
     private ArrayList<String> parseCommandLine(String Line) {
-        ArrayList<String> List = new ArrayList<String>();
+        ArrayList<String> List = new ArrayList();
         Boolean SingleQuoteOn = false;
         Boolean DoubleQuoteOn = false;
         String Word = "";
@@ -734,13 +734,15 @@ public class CASUALScriptParser {
         }
         return List;
     }
-
+    private String doShellCommandWithReturnIgnoreError(String Line, String ReplaceThis, String WithThis) {
+        return executeShellCommand(Line, ReplaceThis, WithThis, false);
+    }
     private void doShellCommand(String Line, String ReplaceThis, String WithThis) {
-        executeShellCommand(Line, ReplaceThis, WithThis);
+        executeShellCommand(Line, ReplaceThis, WithThis, true);
     }
 
     private String doShellCommandWithReturn(String Line, String ReplaceThis, String WithThis) {
-        return executeShellCommand(Line, ReplaceThis, WithThis);
+        return executeShellCommand(Line, ReplaceThis, WithThis, true);
     }
 
     /*
@@ -748,11 +750,11 @@ public class CASUALScriptParser {
      * WithThis allows for a last-minute insertion of commands by default
      * ReplaceThis should be null.
      */
-    private String executeShellCommand(String Line, String ReplaceThis, String WithThis) {
+    private String executeShellCommand(String Line, String ReplaceThis, String WithThis, boolean parseError) {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList();
         ShellCommand.add(Statics.AdbDeployed);
         ShellCommand.addAll(parseCommandLine(Line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
@@ -761,7 +763,12 @@ public class CASUALScriptParser {
                 StringCommand[i] = StringCommand[i].replace(ReplaceThis, WithThis);
             }
         }
-        return Shell.sendShellCommand(StringCommand);
+        log.level3("sending");
+        if (parseError){
+            return Shell.sendShellCommand(StringCommand);
+        } else {
+            return Shell.sendShellCommandIgnoreError(StringCommand);
+        }
 
     }
 
@@ -769,7 +776,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
@@ -780,7 +787,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
@@ -790,7 +797,7 @@ public class CASUALScriptParser {
 
     private void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
+        ArrayList<String> shellCommand = new ArrayList();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
         String stringCommand[] = (StringOperations.convertArrayListToStringArray(shellCommand));
@@ -798,20 +805,23 @@ public class CASUALScriptParser {
         String shellReturn="";
         while (! shellReturn.contains("Device detected")) {
             shellReturn=Shell.silentShellCommand(stringCommand);
+        
+        }
+        log.level0("detected!");
+    }
+
+    private void sleepForOneSecond(){
             try {
                 Thread.sleep(1000);
                 log.progress(".");
             } catch (InterruptedException ex) {
                 log.errorHandler(ex);
             }
-        }
-        log.level0("detected!");
     }
-
     private void doHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
+        ArrayList<String> shellCommand = new ArrayList();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
@@ -829,7 +839,7 @@ public class CASUALScriptParser {
     private String doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
+        ArrayList<String> shellCommand = new ArrayList();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
@@ -856,12 +866,11 @@ public class CASUALScriptParser {
         String checkValue = StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line)); //value to check
         String[] commandSplit = checkValueSplit[1].split("\\$DO");
         String command = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);//command to check
-        String[] doSplit = commandSplit[1].split("$DO");
         String casualCommand = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);// command to execute if true
         if (command.startsWith("$ADB")) {
             command = command.replaceFirst("\\$ADB", "");
         }
-        String returnValue = this.doShellCommandWithReturn(command, null, null);
+        String returnValue = this.doShellCommandWithReturnIgnoreError(command, null, null);
         if ((returnValue.contains(checkValue) == ifContains)) {
             this.executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
         }
