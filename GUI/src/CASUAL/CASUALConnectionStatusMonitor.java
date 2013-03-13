@@ -76,11 +76,7 @@ public class CASUALConnectionStatusMonitor {
                         stateSwitcher(Statics.DeviceTracker.length);
                         //No devices detected
                     } else if (Statics.DeviceTracker[0].isEmpty()) {
-                        //TODO: Execute adb wait-for-device as a blocking call to stop additional processes
                         stateSwitcher(0);
-
-                        //TODO: verify this causes no problems. 
-                        Log.level0("Device is not connnected");
                         Statics.DeviceMonitor.DeviceCheck.stop();
                         Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
                         Statics.DeviceMonitor.DeviceCheck.start();

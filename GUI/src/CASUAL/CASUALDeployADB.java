@@ -72,13 +72,9 @@ class CASUALDeployADB implements Runnable {
             Log.level0("Your system is not supported");
         }
 
-        //TODO figure out why we have adb_usb.ini_new
         FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
-
         Shell Shell = new Shell();
-
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
-
         Statics.LiveSendCommand.add(Statics.AdbDeployed);
         Statics.LiveSendCommand.add("get-state");
         new Shell().silentBackgroundShellCommand();
