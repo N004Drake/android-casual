@@ -30,15 +30,15 @@ public class CASUALConnectionStatusMonitor {
     private static int LastState = 0;
     Log Log = new Log();
     Shell Shell = new Shell();
-    public final static int ONE_SECOND = 1000;
+    public static int timerInterval = 1000;
     private static int cycles = 0;
     private static boolean hasConnected = false;
-    Timer DeviceCheck = new Timer(ONE_SECOND, new ActionListener() {
+    Timer DeviceCheck = new Timer(timerInterval, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent evt) {
-            
            Thread t = new Thread(r);
            t.start();
+           System.out.print("ping");
         }
     });
 
@@ -46,7 +46,8 @@ public class CASUALConnectionStatusMonitor {
                 @Override
         public void run() {
 
-        
+            
+
             if (Statics.lockGUIformPrep||Statics.lockGUIunzip) {
                     Statics.GUI.enableControls(false);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
@@ -58,47 +59,34 @@ public class CASUALConnectionStatusMonitor {
                     String DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
                     Statics.DeviceTracker = DeviceList.split("device");
 
-                    if (!hasConnected) {
-                        if (cycles > 15) {
-                            if (Statics.isWindows()) {
-                                new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install drivers\nPlease search for \"windows driver *your device*\" on google.", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-                            } else if (Statics.isLinux()) {
-                                new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install a KO or libusb \nPlease search for \"using adb Linux *your device*\" on google.", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-                            } else if (Statics.isMac()) {
-                                new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install a kext\nPlease search for \"kext *your device*\" on google.", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-                            }
-                            hasConnected = true;
-                        }
-                        cycles++;
-                    }
+                    
                     //Multiple devices detected
-                    if (Statics.DeviceTracker.length > 1) {
+                    if (Statics.DeviceTracker.length > 1 && (! DeviceList.contains("offline"))) {
                         stateSwitcher(Statics.DeviceTracker.length);
                         //No devices detected
                     } else if (Statics.DeviceTracker[0].isEmpty()) {
                         stateSwitcher(0);
-                        Statics.DeviceMonitor.DeviceCheck.stop();
-                        Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
-                        Statics.DeviceMonitor.DeviceCheck.start();
+                        if (! hasConnected){ messageUser(); }
                         //One device detected
                     } else if (!Statics.DeviceTracker[0].isEmpty()) {
                         hasConnected=true;
                         stateSwitcher(1);
-                    } else if (Statics.DeviceTracker[0].contains("offline")) {
 
-                    }     
 
                     //Check and handle abnormalities
                     // pairing problem with 4.2+
                     if (DeviceList.contains("offline")){
                         TimeOutOptionPane TimeOutOptionPane = new TimeOutOptionPane();
                         String[] ok = {"All set and done!"};
+                        Statics.DeviceMonitor.DeviceCheck.stop();
                         new TimeOutOptionPane().showTimeoutDialog(60, null, "It would appear that the connected device is not paired properly.\n"
                                 + "Please disconnect the device, then reconnect it.\n"
                                 + "Next unlock the device and check for a message onscreen.\n"
                                 + "Select \"Always allow from this computer\" then press OK.\n", 
                                 "Device Not Paired", TimeOutOptionPane.OK_OPTION, 2, ok , 0);
-                        DeviceList = Shell.elevateSimpleCommand(DeviceCommand);
+                        Log.level0("Disconnect and reconnect your device.  Check the device for instructions.");
+                        DeviceList = Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
+                        Statics.DeviceMonitor.DeviceCheck.start();
                     }
                     //insufficient permissions
 
@@ -143,11 +131,12 @@ public class CASUALConnectionStatusMonitor {
                             }
                         }
                     }
-                } catch (java.lang.NullPointerException e) {
-                    Log.errorHandler(e);
-                }
-        }
 
+                }
+            } catch (NullPointerException E) {
+                //unreported because there's no reason to report there are no devices.
+            }
+        }
 
         
     };
@@ -187,4 +176,20 @@ public class CASUALConnectionStatusMonitor {
             LastState = State;
         }
     }
+
+    private void messageUser(){
+        cycles++;
+        if (cycles == 30) {
+            if (Statics.isWindows()) {
+                new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install drivers\nGoogle \"windows driver *your device*\" for more.", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+            } else if (Statics.isLinux()) {
+                new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install libusb \nGoogle \"using adb Linux *your device*\" for more.", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+            } else if (Statics.isMac()) {
+                new TimeOutOptionPane().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install a kext\nGoogle \"kext *your device*\" for more", "Device not detected", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+            }
+            hasConnected = true;
+        }
+       
+    }
+
 }
