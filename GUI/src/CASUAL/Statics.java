@@ -47,7 +47,7 @@ public class Statics {
      */
     static Shell shellCommand;
     static Log Log = new Log();
-    public static ArrayList<String> LiveSendCommand = new ArrayList<String>();
+    public static ArrayList<String> LiveSendCommand = new ArrayList();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by log class
     public static String[] DeviceTracker;
@@ -165,7 +165,7 @@ public class Statics {
     final private static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
-    final public static String ADBini = CASUALSCRIPT + "adb_usb.ini";
+    final public static String ADBini = CASUALSCRIPT + "-adb_usb.ini";
     final public static String FilesystemAdbIniLocationLinuxMac = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
     final public static String FilesystemAdbIniLocationWindows = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
     /*
@@ -228,8 +228,8 @@ public class Statics {
     }
     //restart app
     //script data
-    public static ArrayList<String> ActionEvents = new ArrayList<String>();
-    public static ArrayList<String> ReactionEvents = new ArrayList<String>();
+    public static ArrayList<String> ActionEvents = new ArrayList();
+    public static ArrayList<String> ReactionEvents = new ArrayList();
     public static String[] scriptNames = {""};
     public static String[] scriptLocations = {""};
 

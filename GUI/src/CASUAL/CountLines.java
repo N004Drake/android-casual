@@ -31,7 +31,7 @@ public class CountLines {
      * @return number of lines in a file
      */
     public int countFileLines(String Filename) {
-        InputStream IS = null;
+        InputStream IS;
         int Lines = 0;
         try {
             IS = new BufferedInputStream(new FileInputStream(Filename));
@@ -43,13 +43,6 @@ public class CountLines {
             new Log().errorHandler(ex);
         } catch (IOException ex) {
             new Log().errorHandler(ex);
-        } finally {
-            try {
-                IS.close();
-            } catch (IOException ex) {
-                new Log().errorHandler(ex);
-            }
-
         }
         return Lines;
 

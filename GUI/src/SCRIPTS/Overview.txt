@@ -1,2 +1,0 @@
-This CASUAL app contains things for use with Oppo X909.  
-Please put your Find 5 into USB Debugging mode.  Go to settings>Developer Options> and enable USB debugging.

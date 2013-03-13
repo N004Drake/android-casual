@@ -42,12 +42,13 @@ public class CASUALAudioSystem {
             @Override
             public void run() {
                 if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
-                    AudioInputStream IS = null;
+                    AudioInputStream IS;
                     try {
                         byte[] buffer = new byte[4096];
                         IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
                         AudioFormat Format = IS.getFormat();
-                        SourceDataLine line = AudioSystem.getSourceDataLine(Format);
+                        SourceDataLine line;
+                        line = AudioSystem.getSourceDataLine(Format);
                         line.open(Format);
                         line.start();
                         while (IS.available() > 0) {
@@ -55,22 +56,14 @@ public class CASUALAudioSystem {
                             line.write(buffer, 0, Len);
                         }
                         line.drain();
+                        line.close();
                     } catch (UnsupportedAudioFileException ex) {
                         Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
                         Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (LineUnavailableException ex) {
                         Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
-                    } finally {
-                        try {
-                            IS.close();
-                        } catch (IOException ex) {
-                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
-                        }
                     }
-
-
-
                 }
             }
         }).start();
@@ -87,22 +80,24 @@ public class CASUALAudioSystem {
                     byte[] buffer = new byte[4096];
                     int URLEndPosition = URLs.length - 1;
                     int CurrentURL = 0;
-                    SourceDataLine Line = null;
+                    SourceDataLine line;
+
                     for (String URL : URLs) {
-                        AudioInputStream IS = null;
                         try {
-                            IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
+                            AudioInputStream IS; 
+                            IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));   
                             AudioFormat Format = IS.getFormat();
-                            SourceDataLine line = AudioSystem.getSourceDataLine(Format);
+                            line = AudioSystem.getSourceDataLine(Format);
                             line.open(Format);
                             line.start();
                             line.drain();
                             while (IS.available() > 0) {
                                 int Len = IS.read(buffer);
-                                Line.write(buffer, 0, Len);
+                                line.write(buffer, 0, Len);
                             }
                             if (CurrentURL == URLEndPosition) {
-                                Line.drain(); // wait for the buffer to empty before closing the line
+                                line.drain(); // wait for the buffer to empty before closing the line
+                                line.close();
                             }
                         } catch (UnsupportedAudioFileException ex) {
                             Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,19 +105,10 @@ public class CASUALAudioSystem {
                             Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (LineUnavailableException ex) {
                             Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
-                        } finally {
-                            try {
-                                IS.close();
-                            } catch (IOException ex) {
-                                Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
-                            }
                         }
 
                     }
-                    CurrentURL = CurrentURL++;
-
-                    Line.close();
-
+                    
                 }
             }
         }).start();

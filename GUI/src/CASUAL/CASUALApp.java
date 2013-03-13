@@ -33,7 +33,7 @@ public class CASUALApp extends SingleFrameApplication {
         System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + " Build:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber"));
 
         Statics Statics = new Statics();
-        Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/build").getString("Audio.Enabled");
+        Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Audio.Enabled");
         CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
 
         new FileOperations().makeFolder(Statics.TempFolder);

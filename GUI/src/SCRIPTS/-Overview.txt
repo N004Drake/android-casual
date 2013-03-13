@@ -1,0 +1,1 @@
+This application will root a GS3.  Please report results on Windows, Mac and Linux.   This is a test of Heimdall capabilities for CASUAL.

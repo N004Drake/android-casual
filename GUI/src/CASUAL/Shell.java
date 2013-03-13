@@ -121,19 +121,19 @@ public class Shell implements Runnable {
             Process process = new ProcessBuilder(cmd).start();
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            try {
+            /*try {
                 process.waitFor();
             } catch (InterruptedException ex) {
                 log.errorHandler(ex);
-            }
-            while ((line = STDERR.readLine()) != null) {
-                AllText = AllText + line;
-            }
+            }*/
             while ((line = STDOUT.readLine()) != null) {
                 AllText = AllText + line + "\n";
                 while ((line = STDERR.readLine()) != null) {
                     AllText = AllText + line;
                 }
+            }            
+            while ((line = STDERR.readLine()) != null && ! line.equals("")) {
+                AllText = AllText + line;
             }
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
@@ -144,7 +144,26 @@ public class Shell implements Runnable {
         }
 
     }
+    public String sendShellCommandIgnoreError(String[] cmd) {
+        log.level3("\n###executing: " + cmd[0] + "###");
+        String AllText = "";
+        try {
+            String line;
+            Process process = new ProcessBuilder(cmd).start();
+            BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            while ((line = STDOUT.readLine()) != null) {
+                AllText = AllText + line + "\n";
+            }            
+            //log.level0(cmd[0]+"\":"+AllText);
+            return AllText + "\n";
+        } catch (Exception ex) {
+            log.level2("Problem while executing" + arrayToString(cmd)
+                    + " in Shell.sendShellCommand() Received " + AllText);
+            return "CritERROR!!!";
+        }
 
+    }
     public String silentShellCommand(String[] cmd) {
         String AllText = "";
         try {
