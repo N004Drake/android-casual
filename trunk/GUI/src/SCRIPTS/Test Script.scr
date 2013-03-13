@@ -6,7 +6,7 @@ $ECHO adb completed
 
 #$HEIMDALL will loop on heimdall detect before executing a command... note to self, use heimdall detect for installing drivers and VC redist
 $ECHO Waiting for heimdall detect to pass and then excuting close-pc-screen
-$HEIMDALL close-pc-screen
+$HEIMDALL flash --CACHE "$ZIPFILEcache.img.ext4" --RECOVERY "$ZIPFILErecovery.img"
 
 
 $ECHO heimdall completed
