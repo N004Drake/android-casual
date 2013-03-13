@@ -149,18 +149,31 @@ public class Log {
         }
         out.print(data + "\n");
     }
-
+    private static String progressBuffer="";
+    int lastNewLine=100;
     public void progress(String data) {
+        progressBuffer=progressBuffer+data;
         try {
-            try {
-                Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
-                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-            } catch (BadLocationException ex) {
-                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
+        if (data.contains("\b")){
+            writeToLogFile(progressBuffer);
+            progressBuffer="";
+            Statics.ProgressDoc.remove(lastNewLine, Statics.ProgressDoc.getLength()-lastNewLine);
+            //lastNewLine=Statics.ProgressDoc.getLength();
+
+        }
+        Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
+        Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
+        
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NullPointerException e) {
             level0(data + e.toString());
+        }
+        if (data.contains("\n")) {
+            writeToLogFile(progressBuffer);
+            progressBuffer="";
+            lastNewLine=Statics.ProgressPane.getCaretPosition();
         }
 
     }
