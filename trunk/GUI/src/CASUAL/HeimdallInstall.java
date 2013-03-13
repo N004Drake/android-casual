@@ -158,7 +158,8 @@ public class HeimdallInstall {
 
     public void installWindowsDrivers() {
         //install drivers
-        HeimdallInstallDriversForWindowsPicture.main(null);
+        HeimdallInstallDriversForWindowsPicture HID= new HeimdallInstallDriversForWindowsPicture();
+        HID.setVisible(true);
         log.level0("Installing drivers");
         new Log().level0("Driver Problems suck. Lemme make it easy.\n"
                 + "1. Check that your device is download mode and connected up.\n"
@@ -186,6 +187,7 @@ public class HeimdallInstall {
         if (InstallZadigResults.contains("CritERROR!!!")) {
             displayWindowsPermissionsMessageAndExit();
         }
+        HID.dispose();
 
     }
 

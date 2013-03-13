@@ -631,7 +631,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList();
         if (Src != null) {
             URL jar = Src.getLocation();
             ZipInputStream Zip = new ZipInputStream(jar.openStream());
