@@ -62,7 +62,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         ProgressArea.setContentType("text/html");
         Statics.ProgressPane = CASUALJFrame.ProgressArea;
         Statics.initDocument();
-
+        
         ProgressArea.setText(ProgressArea.getText() + Statics.PreProgress);
 
 
@@ -93,12 +93,11 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         log.level3("Searching for scripts");
         prepareScripts();
+        if (comboBoxScriptSelector.getItemCount() == 1){ comboBoxScriptSelector.setVisible(false);}
 
         log.level3("Updating Scripts for UI");
         comboBoxUpdate();
         Statics.lockGUIformPrep = false;
-
-
     }
 
     /*
