@@ -38,7 +38,6 @@ public class CASUALConnectionStatusMonitor {
         public void actionPerformed(ActionEvent evt) {
            Thread t = new Thread(r);
            t.start();
-           System.out.print("ping");
         }
     });
 
@@ -46,9 +45,7 @@ public class CASUALConnectionStatusMonitor {
                 @Override
         public void run() {
 
-            
-
-            if (Statics.lockGUIformPrep||Statics.lockGUIunzip) {
+              if (Statics.lockGUIformPrep||Statics.lockGUIunzip) {
                     Statics.GUI.enableControls(false);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                     LastState=0;
