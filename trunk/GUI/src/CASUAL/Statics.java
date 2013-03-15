@@ -200,8 +200,10 @@ public class Statics {
 
     public static boolean isLinux() {
         String os = System.getProperty("os.name").toLowerCase();
-        if ((os.indexOf("nux") >= 0) && (arch.equals(""))) {
-            checkLinuxArch();
+        if (os.indexOf("nux") >= 0){
+            if (arch.equals("")) {
+                checkLinuxArch();
+            }
             return true;
         }
         
