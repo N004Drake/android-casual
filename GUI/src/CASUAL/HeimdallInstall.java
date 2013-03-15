@@ -74,7 +74,7 @@ public class HeimdallInstall {
     public static boolean checkAndDeployHeimdall() {
         //if ( installedHeimdallVersion.length==2 && REGEX FOR STRING NUMBERS ONLY){ isHeimdallDeployed=true;
 
-        if ((Statics.isHeimdallDeployed)) { //if heimdall is installed, return true
+        if (Statics.isHeimdallDeployed) { //if heimdall is installed, return true
 
             return true;
         } else { //attempt to correct the issue
