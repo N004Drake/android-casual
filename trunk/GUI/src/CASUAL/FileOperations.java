@@ -423,12 +423,14 @@ public class FileOperations {
         InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
         StringBuilder text = new StringBuilder();
         try {
-            InputStreamReader in = new InputStreamReader(resourceAsStream, "UTF-8");
+            InputStreamReader in; 
+            in = new InputStreamReader(resourceAsStream, "UTF-8");
             int read;
             while ((read = in.read()) != -1) {
                 char C = Character.valueOf((char) read);
                 text.append(C);
             }
+            in.close();
         } catch (NullPointerException ex) {
             Log.level0("Could not find resource named:" + Resource);
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);

@@ -85,19 +85,19 @@ public class CASUALScriptParser {
      * executeOneShotCommand provides a way to insert a script line.
      *
      */
-    public void executeOneShotCommand(String Line) {
+    public String executeOneShotCommand(String Line) {
         //$LINE is a reference to the last line received in the shell            
         if (Line.contains("$LINE")) {
             Line = Line.replace("$LINE", Statics.LastLineReceived);
             log.level3("Executing Reaction - $LINE: " + Line);
         }
-        commandHandler(Line);
+        return commandHandler(Line);
     }
 
     /*
      * Script Handler contains all script commands and will execute commands
      */
-    private void commandHandler(String line) {
+    private String commandHandler(String line) {
         log.level3("new command: " + line);//log line
         line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
 
@@ -110,7 +110,7 @@ public class CASUALScriptParser {
          */
         if (line.startsWith("$LINUXMAC")) {
             if (!Statics.isLinux() && !Statics.isMac()) {
-                return;
+                return "";
             } else {
                 String removeCommand = "$LINUXMAC";
                 line = removeCommandAndContinue(removeCommand, line);
@@ -127,7 +127,7 @@ public class CASUALScriptParser {
                 log.level3("OS IS WINDOWS OR LINUX! remaining commands:" + line);
 
             } else {
-                return;
+                return "";
             }
         }
         if (line.startsWith("$WINDOWSMAC")) {
@@ -138,7 +138,7 @@ public class CASUALScriptParser {
                 log.level3("OS IS Windows or Mac! remaining commands:" + line);
 
             } else {
-                return;
+                return "";
             }
         }
         if (line.startsWith("$LINUX")) {
@@ -149,7 +149,7 @@ public class CASUALScriptParser {
                 log.level3("OS IS LINUX! remaining commands:" + line);
 
             } else {
-                return;
+                return "";
             }
         }
         if (line.startsWith("$WINDOWS")) {
@@ -159,7 +159,7 @@ public class CASUALScriptParser {
                 line = removeCommandAndContinue(removeCommand, line);
                 log.level3("OS IS WINDOWS! remaining commands:" + line);
             } else {
-                return;
+                return "";
             }
         }
         if (line.startsWith("$MAC")) {
@@ -169,7 +169,7 @@ public class CASUALScriptParser {
                 line = removeCommandAndContinue(removeCommand, line);
                 log.level3("OS IS MAC! remaining commands:" + line);
             } else {
-                return;
+                return "";
             }
         }
 
@@ -213,7 +213,7 @@ public class CASUALScriptParser {
         if (line.startsWith("$GOTO")) {
             line = line.replace("$GOTO", "");
             GOTO = StringOperations.removeLeadingAndTrailingSpaces(line);
-            return;
+            return "";
         }
 
 //$ON will trigger on an event
@@ -236,7 +236,7 @@ public class CASUALScriptParser {
                 log.errorHandler(e);
 
             }
-            return;
+            return "";
 
         }
 
@@ -245,18 +245,18 @@ public class CASUALScriptParser {
             Statics.ActionEvents = new ArrayList();
             Statics.ReactionEvents = new ArrayList();
             log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
-            return;
+            return "";
         }
 
 //# is a comment Disregard commented lines
         if (line.startsWith("#")) {
             log.level3("Ignoring commented line" + line);
-            return;
+            return "";
         }
 
         //Disregard blank lines
         if (line.equals("")) {
-            return;
+            return "";
         }
         log.level3("SCRIPT COMMAND:" + line);
 
@@ -272,7 +272,7 @@ public class CASUALScriptParser {
         if (line.startsWith("$IFCONTAINS ")) {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
             doIfContainsReturnResults(line, true);
-            return;
+            return "";
         }
         /*
          * $IFNOTCONTAINS takes:
@@ -286,7 +286,7 @@ public class CASUALScriptParser {
         if (line.startsWith("$IFNOTCONTAINS ")) {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
             doIfContainsReturnResults(line, false);
-            return;
+            return "";
         }
         /*
          * Environmental variables
@@ -323,7 +323,7 @@ public class CASUALScriptParser {
             line = line.replace("$ECHO", "");
             line = StringOperations.removeLeadingSpaces(line);
             log.level1(line);
-            return;
+            return "";
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
         } else if (line.startsWith("$LISTDIR")) {
             line = line.replace("$LISTDIR", "");
@@ -342,7 +342,7 @@ public class CASUALScriptParser {
             line = StringOperations.removeLeadingSpaces(line);
             log.level3("Creating Folder: " + line);
             new File(line).mkdirs();
-            return;
+            return "";
 
 
 //$USERNOTIFICATION will stop processing and force the user to 
@@ -366,7 +366,7 @@ public class CASUALScriptParser {
                         "Information",
                         JOptionPane.INFORMATION_MESSAGE);
             }
-            return;
+            return "";
 
 // $USERCANCELOPTION will give the user the option to halt the script
             //USE: $USERCANCELOPTION Message
@@ -393,7 +393,7 @@ public class CASUALScriptParser {
                 if (n == JOptionPane.YES_OPTION) {
                     log.level0(ScriptName + " canceled at user request");
                     ScriptContinue = false;
-                    return;
+                    return "";
                 }
             } else {
                 int n = JOptionPane.showConfirmDialog(
@@ -404,7 +404,7 @@ public class CASUALScriptParser {
                 if (n == JOptionPane.YES_OPTION) {
                     log.level0(ScriptName + " canceled at user request");
                     ScriptContinue = false;
-                    return;
+                    return "";
                 }
             }
 
@@ -436,7 +436,7 @@ public class CASUALScriptParser {
             if (n == JOptionPane.YES_OPTION) {
                 log.level0(ScriptName + " Halted.  Perform sthe required actions to continue.");
                 ScriptContinue = false;
-                return;
+                return "";
             }
 
 //$USERINPUTBOX will accept a String to be injected into ADB
@@ -452,7 +452,7 @@ public class CASUALScriptParser {
 
             log.level3(InputBoxText);
             doShellCommand(Message[2], "$USERINPUT", InputBoxText);
-            return;
+            return "";
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
         } else if (line.startsWith("$DOWNLOAD")) {
             line = line.replaceFirst("$DOWNLOAD", "");
@@ -467,15 +467,16 @@ public class CASUALScriptParser {
             }
             if (downloadCommand.length == 2) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
-                return;
+                return "";
             } else if (downloadCommand.length == 3) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 if (!new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{downloadCommand[3]}, new String[]{downloadCommand[1]})) {
                     this.executeOneShotCommand("$HALT HALTING Downloaded md5sum did not check out");
                 }
-                return;
+                return "";
             } else {
                 log.level0("Invalid download command");
+                return "Invalid Download Command";
             }
 
 //$EXECUTE will blindly execute commands into the shell.  Usefull only with $LINUX $WINDOWS or $MAC commands.
@@ -483,8 +484,8 @@ public class CASUALScriptParser {
             line = StringOperations.removeLeadingSpaces(line.replace("$EXECUTE", ""));
             ArrayList command = parseCommandLine(line);
             String[] commandArray = Arrays.copyOf(command.toArray(), command.size(), String[].class);
-            new Shell().sendShellCommand(commandArray);
-            return;
+            return new Shell().sendShellCommand(commandArray);
+            
 
 
 
@@ -506,40 +507,38 @@ public class CASUALScriptParser {
                 /* if (Statics.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
                  }*/
-                doHeimdallShellCommand(line);
+                return doHeimdallShellCommand(line);
             } else {
-                this.executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
+                return executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
             }
 // if Fastboot, Send to fastboot shell command
         } else if (line.startsWith("$FASTBOOT")) {
             line = line.replace("$FASTBOOT", "");
             line = StringOperations.removeLeadingSpaces(line);
             Statics.checkAndDeployFastboot();
-            boolean elevated = false;
             if (Statics.isLinux()) {
                 if (Statics.UseSound.contains("true")) {
                     CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 }
-
-                if (!doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\"")).contentEquals("\n")) {
-                    elevated = true;
+                String returnValue= doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
+                if (!returnValue.contentEquals("\n")) {
+                    return returnValue;
                 }
             }
-            if (!elevated) {
-                doFastbootShellCommand(line);
-            }
-
+                return doFastbootShellCommand(line);
+ 
             // if Fastboot, Send to fastboot shell command
         } else if (line.startsWith("$ADB")) {
             line = line.replace("$ADB", "");
             line = StringOperations.removeLeadingSpaces(line);
-            doShellCommand(line, null, null);
+            return doShellCommand(line, null, null);
 // if no prefix, then send command directly to ADB.
         } else {
-            doShellCommand(line, null, null);
+            return doShellCommand(line, null, null);
         }
         //final line output for debugging purposes
         log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + line);
+        return "";
     }
 //END OF SCRIPT PARSER
 
@@ -737,8 +736,8 @@ public class CASUALScriptParser {
     private String doShellCommandWithReturnIgnoreError(String Line, String ReplaceThis, String WithThis) {
         return executeShellCommand(Line, ReplaceThis, WithThis, false);
     }
-    private void doShellCommand(String Line, String ReplaceThis, String WithThis) {
-        executeShellCommand(Line, ReplaceThis, WithThis, true);
+    private String doShellCommand(String Line, String ReplaceThis, String WithThis) {
+        return executeShellCommand(Line, ReplaceThis, WithThis, true);
     }
 
     private String doShellCommandWithReturn(String Line, String ReplaceThis, String WithThis) {
@@ -772,7 +771,7 @@ public class CASUALScriptParser {
 
     }
 
-    private void doFastbootShellCommand(String Line) {
+    private String doFastbootShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
@@ -780,7 +779,7 @@ public class CASUALScriptParser {
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
-        Shell.liveShellCommand(StringCommand);
+        return Shell.liveShellCommand(StringCommand);
     }
 
     private String doElevatedFastbootShellCommand(String Line) {
@@ -818,7 +817,7 @@ public class CASUALScriptParser {
                 log.errorHandler(ex);
             }
     }
-    private void doHeimdallShellCommand(String Line) {
+    private String doHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
         ArrayList<String> shellCommand = new ArrayList();
@@ -826,13 +825,14 @@ public class CASUALScriptParser {
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         Statics.ExectingHeimdallCommand = true;
-        String returnread=Shell.liveShellCommand(stringCommand2);
-        if (returnread.contains("libusb error: -3") && Statics.isLinux()){
+        String returnRead=Shell.liveShellCommand(stringCommand2);
+        if (returnRead.contains("libusb error: -3") && Statics.isLinux()){
              this.doElevatedHeimdallShellCommand(Line);
         }
         //todo: get return
         /*libusb error: -3*/
         Statics.ExectingHeimdallCommand = false;
+        return returnRead;
     }
 
     //for future use. not currently needed.
@@ -870,7 +870,7 @@ public class CASUALScriptParser {
         if (command.startsWith("$ADB")) {
             command = command.replaceFirst("\\$ADB", "");
         }
-        String returnValue = this.doShellCommandWithReturnIgnoreError(command, null, null);
+        String returnValue = executeOneShotCommand(command);
         if ((returnValue.contains(checkValue) == ifContains)) {
             this.executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
         }
