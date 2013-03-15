@@ -51,6 +51,11 @@ public class CASUALScriptParser {
 
         DataInputStream RAS = new DataInputStream(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
         executeSelectedScript(RAS, script);
+        try {
+            RAS.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 
@@ -77,7 +82,13 @@ public class CASUALScriptParser {
     }
 
     public void executeSelectedScriptFile(String File, String script) {
-        executeSelectedScript(getDataStreamFromFile(File), script);
+        DataInputStream DIS = getDataStreamFromFile(File);
+        executeSelectedScript(DIS, script);
+        try {
+            DIS.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
