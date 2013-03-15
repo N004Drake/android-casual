@@ -531,10 +531,14 @@ public class CASUALScriptParser {
         } else if (line.startsWith("$ADB")) {
             line = line.replace("$ADB", "");
             line = StringOperations.removeLeadingSpaces(line);
-            return doShellCommand(line, null, null);
+            String retVal= doShellCommand(line, null, null);
+            log.level3("return from ADB:" + retVal);
+            return retVal;
 // if no prefix, then send command directly to ADB.
         } else {
-            return doShellCommand(line, null, null);
+            String retVal= doShellCommand(line, null, null);
+            log.level3("return from ADB:" + retVal);
+            return retVal;
         }
         //final line output for debugging purposes
         log.level3("COMMAND processed - " + Statics.AdbDeployed + " " + line);
@@ -875,7 +879,10 @@ public class CASUALScriptParser {
         if (command.startsWith("$ADB")) {
             command = command.replaceFirst("\\$ADB", "");
         }
+        log.level3("checking for results to be " + ifContains);
+        log.level3("requesting " + command);
         String returnValue = executeOneShotCommand(command);
+        log.level3("got " + returnValue);
         if ((returnValue.contains(checkValue) == ifContains)) {
             this.executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
         }
