@@ -128,10 +128,7 @@ public class Shell implements Runnable {
             }*/
             while ((line = STDOUT.readLine()) != null) {
                 AllText = AllText + line + "\n";
-                while ((line = STDERR.readLine()) != null) {
-                    AllText = AllText + line;
-                }
-            }            
+            }           
             while ((line = STDERR.readLine()) != null && ! line.equals("")) {
                 AllText = AllText + line;
             }
