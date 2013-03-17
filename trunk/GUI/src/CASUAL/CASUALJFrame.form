@@ -142,7 +142,7 @@
           <Group type="102" alignment="1" attributes="0">
               <Component id="windowBanner" min="-2" pref="61" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane3" pref="288" max="32767" attributes="0"/>
+              <Component id="jScrollPane3" min="-2" pref="288" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="comboBoxScriptSelector" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>

@@ -50,7 +50,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         while (!CASUALPackageData.PackageDataHasBeenSet){
             
         }
-        CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
+
 
 
         Statics.ProgressBar = this.ProgressBar;
@@ -62,14 +62,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         ProgressArea.setText(ProgressArea.getText() + Statics.PreProgress);
        
        
-        setStartButtonText(CASUALPackageData.ButtonText);
-        setTitle(CASUALPackageData.Title);
-        if (CASUALPackageData.usePictureForBanner) {
-            setWindowBannerText("");
-            setWindowBannerImage(CASUALPackageData.BannerPic, CASUALPackageData.BannerText);
-        } else {
-            setWindowBannerText(CASUALPackageData.BannerText);
-        }
+
 
       
         log.level3("OMFGWOOT GUI running!");
@@ -86,6 +79,15 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         log.level3("Updating Scripts for UI");
         updateSelectedFromGUI();
+        
+                setStartButtonText(CASUALPackageData.ButtonText);
+        setTitle(CASUALPackageData.Title);
+        if (CASUALPackageData.usePictureForBanner) {
+            setWindowBannerText("");
+            setWindowBannerImage("/SCRIPTS/"+CASUALPackageData.BannerPic, CASUALPackageData.BannerText);
+        } else {
+            setWindowBannerText(CASUALPackageData.BannerText);
+        }
         Statics.lockGUIformPrep = false;
     }
 
@@ -311,7 +313,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -411,6 +413,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemExitActionPerformed
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
+        setWindowBannerImage("SCRIPTS/"+CASUALPackageData.BannerPic, CASUALPackageData.BannerText);
         TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
         int DResult = timeOutOptionPane.showTimeoutDialog(
                 60, //timeout
@@ -601,7 +604,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
        startButton.setText(text);
    }
    public void setWindowBannerImage(String icon,String text){
-        windowBanner.setIcon(createImageIcon(icon, text));
+        windowBanner.setIcon(new ImageIcon(getClass().getResource(icon), ""));
 
    }
 }

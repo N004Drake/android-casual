@@ -53,6 +53,7 @@ public class CASUALMain {
         @Override
         public void run() {
             CASUALPackageData casualPackageData = new CASUALPackageData();
+            if (CASUALPackageData.UseSound) CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
         }
     };
     
