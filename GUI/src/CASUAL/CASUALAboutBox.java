@@ -29,7 +29,7 @@ public class CASUALAboutBox extends javax.swing.JFrame {
      */
     public CASUALAboutBox() {
         initComponents();
-        this.jLabel4.setText("CASUAL Revision:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + " Build:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber"));
+        this.jLabel4.setText("CASUAL Revision:" + CASUALPackageData.CASUALSVNRevision + " Build:" + CASUALPackageData.CASUALBuildNumber);
     }
 
     /**

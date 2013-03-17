@@ -16,40 +16,27 @@
  */
 package CASUAL;
 
-import org.jdesktop.application.Application;
-import org.jdesktop.application.SingleFrameApplication;
+
 
 /**
  * The main class of the application.
  */
-public class CASUALApp extends SingleFrameApplication {
+public class CASUALApp {
 
     /**
      * At startup create and show the main frame of the application.
      */
-    @Override
-    protected void startup() {
-        Statics.lockGUIformPrep = true;
-        System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + " Build:" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber"));
 
-        Statics Statics = new Statics();
-        Statics.UseSound = java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Audio.Enabled");
-        CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
-
-        new FileOperations().makeFolder(Statics.TempFolder);
-        Statics.GUI = new CASUALJFrame();
-        Statics.GUI.setVisible(true);
-        show(Statics.GUI);
-        Statics.GUI.startStopTimer(true);
-        Statics.GUI.setVisible(true);
+    void startup() {
+       new CASUALMain().doStartup();
     }
+
 
     /**
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
      */
-    @Override
     protected void configureWindow(java.awt.Window root) {
     }
 
@@ -58,15 +45,12 @@ public class CASUALApp extends SingleFrameApplication {
      *
      * @return the instance of NARSApp
      */
-    public static CASUALApp getApplication() {
-        return Application.getInstance(CASUALApp.class);
-    }
 
     /**
      * Main method launching the application.
      */
     public static void main(String[] args) {
 
-        launch(CASUALApp.class, args);
+        new CASUALApp().startup();
     }
 }

@@ -1,24 +1,14 @@
-
-$USERCANCELOPTION Are you sure?, This is your only warning.\n You will be Unlocked and Rooted. Your device will\n reboot once and then again into Odin mode.  You\n will then flash the Suck It Verizon Odin Bootloader\n package.,
+$MAC $HALT $ECHO This version of CASUAL cannot support mac
+$USERCANCELOPTION Are you sure?, This is your only warning.\n You will be Unlocked and Rooted. Your device will\n reboot once and then again into Odin mode.  You\n will then flash the Suck It Verizon Odin Bootloader\n package.
 $ECHO Rebooting into download mode
 
+
+
 $ADB reboot download
-$WINDOWS $GOTO #gotoWINDOWS
+$HEIMDALL flash --8 "$ZIPFILEboot.img"
 
-$MAC $HALT $ECHO this is inoperative until we get someone to package a .deb file. 
-$LINUX $HEIMDALL flash --8 "$ZIPFILEboot.img"
-$MAC USERCANCELOPTION  Experimental warning, This is lightly tested on a modified\nmac machine. If you have problems\nPlease report them. \nRead reviews in the thread you got this to verify everything works.\n After reboot, double-click the "disconected" icon to resume.
-$MAC $HEIMDALL flash --8 "$ZIPFILEboot.img"
-$GOTO #ALL systems
 
-#gotoWINDOWS
-$ECHO *You will need to use Odin.  Located here: http://d-h.st/s6I
-$ECHO *to install the exploitable baseline located here:http://d-h.st/Njj
-$USERCANCELOPTION Instructions, Please ensure you have flashed a Version VRALJB\nkernel before clicking OK.  If you use \nLinux I can do this automatically.\n\n If something goes wrong-- do not continue.\n You can get the baseline here: http://d-h.st/Njj\nYou can get Odin3 here: http://d-h.st/s6I
-
-#ALL systems are the same for the exploit.
-
-$ECHO Waiting for device to return to Android after baseline flash.
+$ECHO Your device should be rebooting into Android now.
 $ADB wait-for-device
 #Reboot to clear logs
 shell "mkdir /data/local/tmp"
@@ -52,17 +42,17 @@ $ECHO [x]Ready for exploit
 
 #Verify Device is proper
 $IFNOTCONTAINS 3.0.31-414933 $INCOMMAND shell "cat /proc/version" $DO $USERCANCELOPTION Improper kernel, I have detected an unsupported kernel\n  You may continue if you are rooted. Otherwise click stop\n and restart the procedure.
-$ON noroot, $HALT $ECHO DEVICE IS NOT ROOTED! ROOT YOUR DEVICE OR INSTALL THE KERNEL! Install any VRALJB kernel and disable any exploit killers --Adam Outler
+$ON noroot, $HALT $ECHO WHAT THE HELL ARE YOU DOING?  I EVEN GAVE YOU A DAMN WARNING.. DEVICE IS NOT ROOTED! ROOT YOUR DEVICE OR INSTALL THE KERNEL! Install any VRALJB kernel and disable any exploit killers --Adam Outler
 shell 'su -c "ls 2>&1 >/dev/null && echo [x]Found rooted device || echo noroot"'
 $CLEARON 
 
 $ECHO [x]Device Verification Checks Complete
 $ECHO [x]Ready for exploit
 $ECHO Injecting Code
-shell 'su -c "dd if=/data/local/tmp/exploit of=/dev/block/mmcblk0 bs=512 seek=34 count=16; sync"'
+shell 'su -c "dd if=/data/local/tmp/exploit of=/dev/block/mmcblk0 bs=512 seek=34 count=16"'
 $ECHO [x]Exploit Injection Done.
 reboot download
-$WINDOWS $GOTO #gotoFinal Windows instructions
+
 
 
 #TODO remember to upgrade kernel
@@ -72,12 +62,7 @@ $WINDOWS $GOTO #gotoFinal Windows instructions
 
 
 $ECHO your device is now rebooting into a totally insecure download mode.  Press the Volume Up buton when requested by Download Mode.  You will then flash the Suck It Verizon bootloader located here: http://d-h.st/DQG.   Upon completion of this step, you will be rebooted into TWRP Recovery.  CASUAL will wait for you to complete the insecure flash of the Suck It Verizon Bootloader. Press the Up Key before you flash the bootloader in Odin Mode.
-$LINUX $HEIMDALL flash --82 "$ZIPFILEswagBoot" --60 "$ZIPFILErecoverThis"
-$GOTO #END OF SCRIPT
-
-#gotoFinal Windows instructions
-$ECHO Install the BackAtchaVerizon Bootloader now http://d-h.st/Wyo with Odin3.
-$USERCANCELOPTION Instructions, You must flash the final exploit with Odin3.\n If you use Linux I can do this automatically.\n\n You can get the baseline here: http://d-h.st/Wyo
+$HEIMDALL flash --82 "$ZIPFILEswagBoot" --60 "$ZIPFILErecoverThis"
 
 
 #END OF SCRIPT
@@ -85,4 +70,5 @@ wait-for-device
 reboot recovery
 #Give Notification that we are done.
 wait-for-device
-$USERNOTIFICATION Congratulations, If you saw a custom recovery by\nTeam Win... You're Jailbroken!
+$USERNOTIFICATION Congratulations, You're unlocked!
+$ECHO Done

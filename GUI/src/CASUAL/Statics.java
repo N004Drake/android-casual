@@ -32,6 +32,8 @@ import javax.swing.text.StyledDocument;
  * information to be used everywhere in the program.
  */
 public class Statics {
+    static final String BUILDPROPERTIES="SCRIPTS/-build";
+    static boolean GUIIsAvailable=false;
 
     public Statics() {
     }
@@ -76,7 +78,6 @@ public class Statics {
     public static JProgressBar ProgressBar;
     final public static String Slash = System.getProperty("file.separator");
     public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
-    public static String UseSound;
 
     public static void initDocument() {
         ProgressPane.setContentType("text/html");
@@ -171,9 +172,7 @@ public class Statics {
     /*
      * Project properties
      */
-    public static String DeveloperName;
-    public static String DeveloperDonateLink;
-    public static String DonateButtonText;
+
     public static boolean lockGUIformPrep = true;
     public static boolean lockGUIunzip = false;
     public static boolean lockGUIdeviceConnectionStatus = false;
