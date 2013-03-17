@@ -348,7 +348,7 @@ public class CASUALScriptParser {
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 
         } else if (line.startsWith("$USERNOTIFICATION")) {
-            if (Statics.UseSound.contains("true")) {
+            if (CASUALPackageData.UseSound) {
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
             line = line.replace("$USERNOTIFICATION", "");
@@ -372,7 +372,7 @@ public class CASUALScriptParser {
             //USE: $USERCANCELOPTION Message
             //USE: $USERCANCELOPTION Title, Message
         } else if (line.startsWith("$USERCANCELOPTION")) {
-            if (Statics.UseSound.contains("true")) {
+            if (CASUALPackageData.UseSound) {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             }
@@ -414,7 +414,7 @@ public class CASUALScriptParser {
 //$ACTIONREQUIRED Message            
 
         } else if (line.startsWith("$ACTIONREQUIRED")) {
-            if (Statics.UseSound.contains("true")) {
+            if (CASUALPackageData.UseSound) {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             }
@@ -517,7 +517,7 @@ public class CASUALScriptParser {
             line = StringOperations.removeLeadingSpaces(line);
             Statics.checkAndDeployFastboot();
             if (Statics.isLinux()) {
-                if (Statics.UseSound.contains("true")) {
+                if (CASUALPackageData.UseSound) {
                     CASUALAudioSystem.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 }
                 String returnValue= doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));

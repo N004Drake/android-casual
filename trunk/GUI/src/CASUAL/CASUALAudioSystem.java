@@ -41,7 +41,7 @@ public class CASUALAudioSystem {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
             @Override
             public void run() {
-                if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
+                if (CASUALPackageData.UseSound) {
                     AudioInputStream IS;
                     try {
                         byte[] buffer = new byte[4096];
@@ -76,7 +76,7 @@ public class CASUALAudioSystem {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
             @Override
             public void run() {
-                if (Statics.UseSound.contains("true") || Statics.UseSound.contains("True")) {
+                if (CASUALPackageData.UseSound) {
                     byte[] buffer = new byte[4096];
                     int URLEndPosition = URLs.length - 1;
                     int CurrentURL = 0;

@@ -45,7 +45,7 @@ public class CASUALConnectionStatusMonitor {
                 @Override
         public void run() {
 
-              if (Statics.lockGUIformPrep||Statics.lockGUIunzip) {
+              if ((Statics.GUIIsAvailable) && (Statics.lockGUIformPrep||Statics.lockGUIunzip)) {
                     Statics.GUI.enableControls(false);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                     LastState=0;
