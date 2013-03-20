@@ -35,55 +35,52 @@ public final class CASUALMain {
         //Statics Statics = new Statics();
         new FileOperations().makeFolder(Statics.TempFolder);
         Thread adb = new Thread(adbDeployment);
-        adb.start();
+        adb.start(); //start ADB deployment
         Statics.lockGUIformPrep = true;
         Thread scriptPrep = new Thread(prepScripts);
-        scriptPrep.start();
+        scriptPrep.start(); //scan self for embedded scripts
         Thread pData = new Thread(packageData);
-        pData.start();
+        pData.start(); // scan self and set package properties
         Thread cSound = new Thread (casualSound);
         try {
-            pData.join();
-            cSound.start();
-            scriptPrep.join();
-            adb.join();
+            pData.join(); //wait for properties
+            cSound.start();  //do startup sound
+            scriptPrep.join(); //wait for embedded scripts scan
+            adb.join(); //wait for adb deployment
         } catch (InterruptedException ex) {
             Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-        new CASUALTools().startStopADBDeviceCheckTimer(true);
+        new CASUALTools().startStopADBDeviceCheckTimer(true); //start device scanning
 
 
         if (args.length == 0) {
             Statics.UseGUI=true;
-            doGUIStartup();
+            doGUIStartup(); //bring up GUI and wait for user to click start
         } else {
-            doConsoleStartup();
+            doConsoleStartup();  //use command line args
         }
     }
 
     private void doConsoleStartup() {
-        //TODO: lock and wait for all other threads to complete before going here.
-
         for (int i = 0; i < args.length; i++) {
             if (args[i].contains("--execute")) {
-                String command = "";
                 i++;
                 new CASUALScriptParser().executeOneShotCommand(args[i]);
             } else {
                 System.out.println("Unrecogized command");
             }
-
-
         }
         System.exit(0);
-
     }
 
     private void doGUIStartup() {
         Thread startGUI = new Thread(GUI);
         startGUI.start();
-        System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + CASUALPackageData.CASUALSVNRevision + CASUALPackageData.CASUALBuildNumber);
+        System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + CASUALPackageData.CASUALSVNRevision + " build:" +CASUALPackageData.CASUALBuildNumber);
     }
+
+    
+    
     Runnable adbDeployment = new Runnable() {
         @Override
         public void run() {
@@ -94,6 +91,7 @@ public final class CASUALMain {
         @Override
         public void run() {
             CASUALPackageData casualPackageData = new CASUALPackageData();
+            casualPackageData.scan();
         }
     };
     Runnable casualSound = new Runnable() {
@@ -104,10 +102,6 @@ public final class CASUALMain {
             }
         }
     };
-    
-
-    
-    
     Runnable GUI = new Runnable() {
         @Override
         public void run() {

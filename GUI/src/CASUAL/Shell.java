@@ -46,7 +46,6 @@ public class Shell implements Runnable {
     }
 
     private String elevateSimpleCommands(String[] cmd, String message) {
-        String NewCmd = "";
         FileOperations FileOperations = new FileOperations();
         Shell Shell = new Shell();
         String Result = "";
@@ -77,9 +76,9 @@ public class Shell implements Runnable {
             FileOperations.setExecutableBit(ScriptFile);
             log.level3("###Elevating Command: " + Command + " ###");
             if (message == null) {
-                Result = Shell.sendShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile});
+                Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile});
             } else {
-                Result = Shell.sendShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile});
+                Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile});
             }
 
         } else if (Statics.isMac()) {
@@ -97,7 +96,7 @@ public class Shell implements Runnable {
             }
             FileOperations.setExecutableBit(ScriptFile);
             String[] MacCommand = {ScriptFile};
-            Result = sendShellCommand(MacCommand);
+            Result = liveShellCommand(MacCommand);
         } else if (!Statics.OSName.equals("Windows XP")) {
             newCmd = new String[cmd.length + 2];
             newCmd[0] = Statics.WinElevatorInTempFolder;
@@ -106,7 +105,7 @@ public class Shell implements Runnable {
                 newCmd[i] = cmd[i - 2] + " ";
             }
 
-            Result = sendShellCommand(newCmd);
+            Result = liveShellCommand(newCmd);
 
         }
 
