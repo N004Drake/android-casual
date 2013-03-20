@@ -178,13 +178,7 @@ public class CASUALAboutBox extends javax.swing.JFrame {
             if ("Nimbus".equals(info.getName())) {
                 try {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                } catch (ClassNotFoundException ex) {
-                    new Log().errorHandler(ex);
-                } catch (InstantiationException ex) {
-                    new Log().errorHandler(ex);
-                } catch (IllegalAccessException ex) {
-                    new Log().errorHandler(ex);
-                } catch (UnsupportedLookAndFeelException ex) {
+                } catch ( ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     new Log().errorHandler(ex);
                 }
                 break;

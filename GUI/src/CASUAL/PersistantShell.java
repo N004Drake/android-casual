@@ -4,9 +4,9 @@
  */
 package CASUAL;
 
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+
 
 /**
  *
@@ -22,10 +22,6 @@ public class PersistantShell {
             INPUT=new BufferedOutputStream(p.getOutputStream());
             OUTPUT=new BufferedInputStream(p.getInputStream());
             ERROR=new BufferedInputStream(p.getErrorStream());
-            
     }
     public Process p;
-        
-
-
 }

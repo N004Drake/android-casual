@@ -74,6 +74,10 @@ public class Statics {
     public static boolean TargetScriptIsResource = true;
     public static CASUALJFrame GUI;
     public static JTextPane ProgressPane=new JTextPane(); //used by log to update Progress
+    /**
+     *ProgressDoc provides a static reference to the program output
+     */
+    //todo figure out a better way to reference this if not using GUI
     public static StyledDocument ProgressDoc=ProgressPane.getStyledDocument();
     public static String PreProgress = "";
     public static JProgressBar ProgressBar;

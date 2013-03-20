@@ -57,11 +57,7 @@ public class CASUALAudioSystem {
                         }
                         line.drain();
                         line.close();
-                    } catch (UnsupportedAudioFileException ex) {
-                        Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (LineUnavailableException ex) {
+                    } catch (            UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                         Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -99,11 +95,7 @@ public class CASUALAudioSystem {
                                 line.drain(); // wait for the buffer to empty before closing the line
                                 line.close();
                             }
-                        } catch (UnsupportedAudioFileException ex) {
-                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IOException ex) {
-                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (LineUnavailableException ex) {
+                        } catch (                UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                             Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
