@@ -67,10 +67,10 @@ public class CASUALPackageData {
         BannerPic = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.BannerPic");
         DonateButtonName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateToButtonText");
         DonationLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
-
-        //todo remove this
-
         PackageDataHasBeenSet=true;
+    }
+    public void scan(){
+        
     }
   
 }

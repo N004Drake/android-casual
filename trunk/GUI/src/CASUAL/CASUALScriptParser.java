@@ -625,6 +625,7 @@ public class CASUALScriptParser {
                                 //HALT script
                                 return;
                             default: //unknown error do nothing
+                                log.level0("CASUALScriptParser().executeSelectedScript: CASUAL has encountered an unknown error. Please report this.");
                                 break;
                         }
 
@@ -836,15 +837,14 @@ public class CASUALScriptParser {
         Statics.ExectingHeimdallCommand = true;
         String returnRead=Shell.liveShellCommand(stringCommand2);
         if (returnRead.contains("libusb error: -3") && Statics.isLinux()){
+             log.level0("#A permissions error was detected.  Elevating permissions.");
              this.doElevatedHeimdallShellCommand(Line);
         }
-        //todo: get return
-        /*libusb error: -3*/
         Statics.ExectingHeimdallCommand = false;
         return returnRead;
     }
 
-    //for future use. not currently needed.
+
     private String doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();

@@ -83,9 +83,6 @@ public class HeimdallInstall {
 
                 return new HeimdallInstall().installLinuxHeimdall();
             } else if (Statics.isWindows()) {
-                //TODO check if drivers and runtime is installed
-                //otherwise download and Shell().elevate
-
                 if (new HeimdallInstall().checkHeimdallVersion()) {
                     return true;
                 } else {
