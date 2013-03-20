@@ -24,12 +24,12 @@ import java.awt.datatransfer.StringSelection;
  *
  * @author Adam Outler adamoutler@gmail.com
  */
-public class CASUALLog extends javax.swing.JFrame {
+public class CASUALLogFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form CASUALLogJFrame
      */
-    public CASUALLog() {
+    public CASUALLogFrame() {
         initComponents();
         refreshLog();
     }
@@ -60,7 +60,6 @@ public class CASUALLog extends javax.swing.JFrame {
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setAutoscrolls(true);
         jTextArea1.setDragEnabled(true);
         jScrollPane1.setViewportView(jTextArea1);
 
@@ -115,7 +114,7 @@ public class CASUALLog extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new CASUALLog().setVisible(true);
+                new CASUALLogFrame().setVisible(true);
             }
         });
     }

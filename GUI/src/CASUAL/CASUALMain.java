@@ -32,17 +32,19 @@ public final class CASUALMain {
     }
 
     public void startup() {
-        Statics Statics = new Statics();
+        //Statics Statics = new Statics();
         new FileOperations().makeFolder(Statics.TempFolder);
+        Thread adb = new Thread(adbDeployment);
+        adb.start();
         Statics.lockGUIformPrep = true;
         Thread scriptPrep = new Thread(prepScripts);
         scriptPrep.start();
-        Thread adb = new Thread(adbDeployment);
-        adb.start();
         Thread pData = new Thread(packageData);
         pData.start();
+        Thread cSound = new Thread (casualSound);
         try {
             pData.join();
+            cSound.start();
             scriptPrep.join();
             adb.join();
         } catch (InterruptedException ex) {
@@ -92,11 +94,20 @@ public final class CASUALMain {
         @Override
         public void run() {
             CASUALPackageData casualPackageData = new CASUALPackageData();
+        }
+    };
+    Runnable casualSound = new Runnable() {
+        @Override
+        public void run() {
             if (CASUALPackageData.UseSound) {
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
             }
         }
     };
+    
+
+    
+    
     Runnable GUI = new Runnable() {
         @Override
         public void run() {
