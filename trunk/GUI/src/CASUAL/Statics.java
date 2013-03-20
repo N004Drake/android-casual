@@ -32,9 +32,9 @@ import javax.swing.text.StyledDocument;
  * information to be used everywhere in the program.
  */
 public class Statics {
-    static final String BUILDPROPERTIES="SCRIPTS/-build";
-    static boolean GUIIsAvailable=false;
-    boolean UseGUI=false;
+    public static final String BUILDPROPERTIES="SCRIPTS/-build";
+    public static boolean GUIIsAvailable=false;
+    public static boolean UseGUI=false;
 
     public Statics() {
     }

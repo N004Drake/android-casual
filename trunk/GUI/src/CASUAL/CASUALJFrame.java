@@ -456,7 +456,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        CASUALLog CASUALLogJFrame = new CASUALLog();
+        CASUALLogFrame CASUALLogJFrame = new CASUALLogFrame();
         CASUALLogJFrame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 

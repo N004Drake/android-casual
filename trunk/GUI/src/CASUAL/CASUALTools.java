@@ -74,7 +74,7 @@ public class CASUALTools {
                 new CASUALTools().md5sumTestScripts();
                 log.level0("IDE Mode: Using "+CASUALApp.defaultPackage+".scr ONLY!");
                 //Statics.scriptLocations = new String[]{""};
-                Statics.scriptNames = new String[]{"WindowsLinux Galaxy Note 2 Jailbreak"};
+                Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
             }
             CASUALPackageData.ScriptsHaveBeenRecognized=true;
         }
