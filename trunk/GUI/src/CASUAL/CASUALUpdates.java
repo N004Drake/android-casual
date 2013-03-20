@@ -118,9 +118,7 @@ public class CASUALUpdates {
     public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
         try {
             downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
-        } catch (MalformedURLException ex) {
-            Log.errorHandler(ex);
-        } catch (URISyntaxException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             Log.errorHandler(ex);
         }
         return true;
@@ -234,10 +232,8 @@ public class CASUALUpdates {
                     if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
                         list.add(Statics.TempFolder + scriptname + ext);
                     }
-                } catch (ArrayIndexOutOfBoundsException ex) {
+                } catch ( ArrayIndexOutOfBoundsException | NullPointerException ex) {
                     continue; //TODO should this be handled better?
-                } catch (NullPointerException ex) {
-                    continue; //TODO shoudl this be handled better?
                 }
 
 

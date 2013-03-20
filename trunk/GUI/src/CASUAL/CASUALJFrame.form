@@ -142,7 +142,7 @@
           <Group type="102" alignment="1" attributes="0">
               <Component id="windowBanner" min="-2" pref="61" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jScrollPane3" pref="292" max="32767" attributes="0"/>
+              <Component id="jScrollPane3" pref="296" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="comboBoxScriptSelector" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -206,16 +206,15 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="StatusLabel" min="-2" pref="300" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="ProgressBar" pref="165" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="StatusAnimationLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="jSeparator1" pref="511" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="StatusLabel" min="-2" pref="300" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="ProgressBar" max="32767" attributes="0"/>
+                      </Group>
+                      <Component id="jSeparator1" alignment="0" pref="511" max="32767" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -226,14 +225,8 @@
                   <Component id="jSeparator1" min="-2" pref="6" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="StatusLabel" min="-2" pref="26" max="-2" attributes="0"/>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="StatusAnimationLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Component id="ProgressBar" min="-2" max="-2" attributes="0"/>
+                      <Component id="StatusLabel" min="-2" pref="26" max="-2" attributes="0"/>
+                      <Component id="ProgressBar" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -242,13 +235,6 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JProgressBar" name="ProgressBar">
-        </Component>
-        <Component class="javax.swing.JLabel" name="StatusAnimationLabel">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/CASUAL/resources/icons/idle-icon.png"/>
-            </Property>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="StatusLabel">
           <Properties>

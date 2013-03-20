@@ -141,15 +141,13 @@ public class Log {
             WriteFile = new FileWriter(Statics.TempFolder + "log.txt", true);
         } catch (IOException ex) {
         }
-
-        PrintWriter out = new PrintWriter(WriteFile);
-        
-        Statics.OutFile = out;
-        if (Statics.OutFile != null) {
-            Statics.LogCreated = true;
+        try (PrintWriter out = new PrintWriter(WriteFile)) {
+            Statics.OutFile = out;
+            if (Statics.OutFile != null) {
+                Statics.LogCreated = true;
+            }
+            out.print(data + "\n");
         }
-        out.print(data + "\n");
-        out.close();
     }
     private static String progressBuffer="";
     int lastNewLine=100;
