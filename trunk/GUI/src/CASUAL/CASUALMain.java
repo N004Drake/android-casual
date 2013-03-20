@@ -32,7 +32,6 @@ public final class CASUALMain {
     }
 
     public void startup() {
-        //Statics Statics = new Statics();
         new FileOperations().makeFolder(Statics.TempFolder);
         Thread adb = new Thread(adbDeployment);
         adb.start(); //start ADB deployment
@@ -76,7 +75,6 @@ public final class CASUALMain {
     private void doGUIStartup() {
         Thread startGUI = new Thread(GUI);
         startGUI.start();
-        System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + CASUALPackageData.CASUALSVNRevision + " build:" +CASUALPackageData.CASUALBuildNumber);
     }
 
     
