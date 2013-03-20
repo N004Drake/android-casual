@@ -22,13 +22,17 @@ package CASUAL;
  * The main class of the application.
  */
 public class CASUALApp {
-
+    final public static String defaultPackage="ATT GS3 Root";
+    final private static boolean useOverrideArgs=false;
+    final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
+    
+    String[] arguments;
     /**
      * At startup create and show the main frame of the application.
      */
 
-    void startup() {
-       new CASUALMain().doStartup();
+    void startup(String[] args) {
+       new CASUALMain(args).startup();
     }
 
 
@@ -50,7 +54,10 @@ public class CASUALApp {
      * Main method launching the application.
      */
     public static void main(String[] args) {
-
-        new CASUALApp().startup();
+        
+        if (useOverrideArgs){
+            args=overrideArguments;
+        }
+        new CASUALApp().startup(args);
     }
 }
