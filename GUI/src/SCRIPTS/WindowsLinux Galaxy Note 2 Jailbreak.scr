@@ -1,4 +1,3 @@
-$MAC $HALT $ECHO This version of CASUAL cannot support mac
 $USERCANCELOPTION Are you sure?, This is your only warning.\n You will be Unlocked and Rooted. Your device will\n reboot once and then again into Odin mode.  You\n will then flash the Suck It Verizon Odin Bootloader\n package.
 $ECHO Rebooting into download mode
 
