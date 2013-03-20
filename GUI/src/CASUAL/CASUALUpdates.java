@@ -219,7 +219,7 @@ public class CASUALUpdates {
         Log.level0("Downloading Updates");
 
         try {
-            ArrayList<String> list = new ArrayList();
+            ArrayList<String> list = new ArrayList<String>();
             String localfile = Statics.TempFolder + scriptname;
             String ext;
             for (int n = 0; n < webInformation.md5sums.length; n++) {

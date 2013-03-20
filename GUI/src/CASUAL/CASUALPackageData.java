@@ -37,6 +37,7 @@ public class CASUALPackageData {
     public static String DeveloperDonateLink;
     public static String DontateButtonText;
     public static String DonationLink;
+    public static String CASUALFileName;
 
     CASUALPackageData(String build) {
        if ((build==null) || (build.equals(""))){
@@ -53,8 +54,6 @@ public class CASUALPackageData {
     }
 
     private void setProperties(){
-        CASUALSVNRevision= java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
-        CASUALBuildNumber= java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
         usePictureForBanner = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.UsePictureForBanner").contains("rue");
         DeveloperDonateLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
         UseSound = java.util.ResourceBundle.getBundle(buildProperties).getString("Audio.Enabled").contains("rue");

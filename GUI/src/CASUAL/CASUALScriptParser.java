@@ -242,8 +242,8 @@ public class CASUALScriptParser {
 
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList();
-            Statics.ReactionEvents = new ArrayList();
+            Statics.ActionEvents = new ArrayList<String>();
+            Statics.ReactionEvents = new ArrayList<String>();
             log.level3("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return "";
         }
@@ -555,8 +555,8 @@ public class CASUALScriptParser {
     DataInputStream DATAIN;
 
     private void executeSelectedScript(DataInputStream DIS, final String script) {
-        Statics.ReactionEvents = new ArrayList();
-        Statics.ActionEvents = new ArrayList();
+        Statics.ReactionEvents = new ArrayList<String>();
+        Statics.ActionEvents = new ArrayList<String>();
         ScriptContinue = true;
         DATAIN = DIS;
         log.level3("Executing Scripted Datastream" + DIS.toString());
@@ -694,7 +694,7 @@ public class CASUALScriptParser {
     }
 
     private ArrayList<String> parseCommandLine(String Line) {
-        ArrayList<String> List = new ArrayList();
+        ArrayList<String> List = new ArrayList<String>();
         Boolean SingleQuoteOn = false;
         Boolean DoubleQuoteOn = false;
         String Word = "";
@@ -763,7 +763,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.AdbDeployed);
         ShellCommand.addAll(parseCommandLine(Line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
@@ -785,7 +785,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
@@ -796,7 +796,7 @@ public class CASUALScriptParser {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(this.parseCommandLine(Line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
@@ -806,7 +806,7 @@ public class CASUALScriptParser {
 
     private void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
         String stringCommand[] = (StringOperations.convertArrayListToStringArray(shellCommand));
@@ -830,7 +830,7 @@ public class CASUALScriptParser {
     private String doHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
@@ -848,7 +848,7 @@ public class CASUALScriptParser {
     private String doElevatedHeimdallShellCommand(String Line) {
         Line = StringOperations.removeLeadingSpaces(Line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(this.parseCommandLine(Line));
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);

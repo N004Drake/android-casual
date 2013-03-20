@@ -118,7 +118,7 @@ IllegalAccessException | UnsupportedLookAndFeelException ex) {
         FileChooser1 = new javax.swing.JFileChooser();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox();
+        comboBoxScriptSelector = new javax.swing.JComboBox<String>();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -316,7 +316,7 @@ IllegalAccessException | UnsupportedLookAndFeelException ex) {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -531,7 +531,7 @@ IllegalAccessException | UnsupportedLookAndFeelException ex) {
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JProgressBar ProgressBar;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox comboBoxScriptSelector;
+    private javax.swing.JComboBox<String> comboBoxScriptSelector;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;

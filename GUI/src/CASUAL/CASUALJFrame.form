@@ -142,7 +142,7 @@
           <Group type="102" alignment="1" attributes="0">
               <Component id="windowBanner" min="-2" pref="61" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jScrollPane3" pref="296" max="32767" attributes="0"/>
+              <Component id="jScrollPane3" pref="300" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="comboBoxScriptSelector" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -178,7 +178,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboBoxScriptSelectorActionPerformed"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value=""/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="startButton">

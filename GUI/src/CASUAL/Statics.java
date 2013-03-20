@@ -50,7 +50,7 @@ public class Statics {
      */
     static Shell shellCommand;
     static Log Log = new Log();
-    public static ArrayList<String> LiveSendCommand = new ArrayList();
+    public static ArrayList<String> LiveSendCommand = new ArrayList<>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by log class
     public static String[] DeviceTracker;
@@ -234,8 +234,8 @@ public class Statics {
     }
     //restart app
     //script data
-    public static ArrayList<String> ActionEvents = new ArrayList();
-    public static ArrayList<String> ReactionEvents = new ArrayList();
+    public static ArrayList<String> ActionEvents = new ArrayList<>();
+    public static ArrayList<String> ReactionEvents = new ArrayList<>();
     public static String[] scriptNames = {""};
     public static String[] scriptLocations = {""};
 
@@ -348,10 +348,10 @@ public class Statics {
     public static void checkLinuxArch() {
         Shell shell = new Shell();
         String[] Command = {"dpkg", "--help"};
-        String dpkgResults = shell.sendShellCommand(Command);
+        String dpkgResults = shell.silentShellCommand(Command);
         if (dpkgResults.contains("aptitude") || dpkgResults.contains("debian") || dpkgResults.contains("deb")) {
             String[] CommandArch = {"arch"};
-            String rawArch = shell.sendShellCommand(CommandArch);
+            String rawArch = shell.silentShellCommand(CommandArch);
             if (rawArch.contains("armv6")) {
                 Statics.heimdallResource = heimdallLinuxARMv6;
                 Statics.arch = "armv6";
