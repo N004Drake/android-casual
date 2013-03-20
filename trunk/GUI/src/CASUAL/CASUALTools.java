@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
-import java.util.MissingResourceException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -31,6 +30,8 @@ import java.util.zip.ZipInputStream;
  * @author adam
  */
 public class CASUALTools {
+    final public String defaultPackage="ATT GS3 Root";
+    
     Log log = new Log();
     private boolean DeviceTimerState = false;
 
@@ -71,7 +72,7 @@ public class CASUALTools {
 
             if (Count == 0) {
                 new CASUALTools().md5sumTestScripts();
-                log.level0("IDE Mode: Using CASUAL Script.scr ONLY!");
+                log.level0("IDE Mode: Using "+CASUALApp.defaultPackage+".scr ONLY!");
                 //Statics.scriptLocations = new String[]{""};
                 Statics.scriptNames = new String[]{"WindowsLinux Galaxy Note 2 Jailbreak"};
             }

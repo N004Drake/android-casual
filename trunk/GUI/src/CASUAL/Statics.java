@@ -34,6 +34,7 @@ import javax.swing.text.StyledDocument;
 public class Statics {
     static final String BUILDPROPERTIES="SCRIPTS/-build";
     static boolean GUIIsAvailable=false;
+    boolean UseGUI=false;
 
     public Statics() {
     }
@@ -72,8 +73,8 @@ public class Statics {
     //Form data
     public static boolean TargetScriptIsResource = true;
     public static CASUALJFrame GUI;
-    public static JTextPane ProgressPane; //used by log to update Progress
-    public static StyledDocument ProgressDoc;
+    public static JTextPane ProgressPane=new JTextPane(); //used by log to update Progress
+    public static StyledDocument ProgressDoc=ProgressPane.getStyledDocument();
     public static String PreProgress = "";
     public static JProgressBar ProgressBar;
     final public static String Slash = System.getProperty("file.separator");
