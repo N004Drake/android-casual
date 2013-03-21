@@ -94,7 +94,7 @@ public class CASUALTools {
                 String writeOut = "";
                 for (int i = 0; i < fileLines.length; i++) {
                     String line = StringOperations.removeLeadingSpaces(fileLines[i]);
-                    if (line.matches("(\\S{32,})(\\s\\s)(.*\\..*)")) {
+                    if (line.matches("(\\S{31,})(\\s\\s)(.*\\..*)")) {
                         System.out.println(line);
                         String[] md5File = line.split("  ");
                         log.level3("Old MD5: " + md5File[0]);

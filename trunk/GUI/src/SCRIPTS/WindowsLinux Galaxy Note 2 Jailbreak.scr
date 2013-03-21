@@ -1,4 +1,4 @@
-$USERCANCELOPTION Are you sure?, This is your only warning.\n You will be Unlocked and Rooted. Your device will\n reboot once and then again into Odin mode.  You\n will then flash the Suck It Verizon Odin Bootloader\n package.
+$USERCANCELOPTION Are you sure?, This is your only warning.\n You will be Unlocked and Rooted. Your device will\n reboot once and then again into Odin mode.  CASUAL\n will then flash the Back Atcha Verizon Odin Bootloader\n package for you.
 $ECHO Rebooting into download mode
 
 
@@ -47,27 +47,18 @@ $CLEARON
 
 $ECHO [x]Device Verification Checks Complete
 $ECHO [x]Ready for exploit
-$ECHO Injecting Code
+$ECHO Injecting Code 
 shell 'su -c "dd if=/data/local/tmp/exploit of=/dev/block/mmcblk0 bs=512 seek=34 count=16"'
 $ECHO [x]Exploit Injection Done.
 reboot download
 
-
-
-#TODO remember to upgrade kernel
-
-
-
-
-
 $ECHO your device is now rebooting into a totally insecure download mode.  Press the Volume Up buton when requested by Download Mode.  You will then flash the Suck It Verizon bootloader located here: http://d-h.st/DQG.   Upon completion of this step, you will be rebooted into TWRP Recovery.  CASUAL will wait for you to complete the insecure flash of the Suck It Verizon Bootloader. Press the Up Key before you flash the bootloader in Odin Mode.
 $HEIMDALL flash --82 "$ZIPFILEswagBoot" --60 "$ZIPFILErecoverThis"
-
+$ECHO waiting for device
 
 #END OF SCRIPT
 wait-for-device
 reboot recovery
-#Give Notification that we are done.
-wait-for-device
-$USERNOTIFICATION Congratulations, You're unlocked!
+$ECHO Rebooting into recovery
+$USERNOTIFICATION Congratulations, You should be unlocked!
 $ECHO Done
