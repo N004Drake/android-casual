@@ -530,7 +530,7 @@ IllegalAccessException | UnsupportedLookAndFeelException ex) {
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JProgressBar ProgressBar;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox comboBoxScriptSelector;
+    private javax.swing.JComboBox<String> comboBoxScriptSelector;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
