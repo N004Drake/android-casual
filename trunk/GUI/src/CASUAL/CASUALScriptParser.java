@@ -16,6 +16,9 @@
  */
 package CASUAL;
 
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 /**
  *
@@ -812,10 +816,23 @@ public class CASUALScriptParser {
         String stringCommand[] = (StringOperations.convertArrayListToStringArray(shellCommand));
         log.progress("Waiting for Downoad Mode device.");
         String shellReturn="";
+        Timer connectionTimer = new Timer(90000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                new TimeOutOptionPane().showTimeoutDialog(60, null, "It would appear that the connected device is not recognized.\n"
+                        + "The device should be in download mode.. Is it?.\n\n"
+                        + "If it's download mode, use a different USB port.\n"
+                        + "Don't use a USB hub.  Also, the USB ports behind\n"
+                        + "the computer are better than the front.\n",
+                        "I don't see the device", TimeOutOptionPane.OK_OPTION, 2, new String[]{"I did it"} , 0);
+            }
+        });
+        connectionTimer.start();
+        //Start timer  wait(90000) and recommend changing USB ports
         while (! shellReturn.contains("Device detected")) {
             shellReturn=Shell.silentShellCommand(stringCommand);
-        
         }
+        connectionTimer.stop();
         log.level0("detected!");
     }
 
