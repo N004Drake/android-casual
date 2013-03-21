@@ -74,21 +74,23 @@ public class Statics {
     public static boolean TargetScriptIsResource = true;
     public static CASUALJFrame GUI;
     public static JTextPane ProgressPane=new JTextPane(); //used by log to update Progress
+    final public static String Slash = System.getProperty("file.separator");
+        
+    
     /**
      *ProgressDoc provides a static reference to the program output
      */
-    //todo figure out a better way to reference this if not using GUI
-    public static StyledDocument ProgressDoc=ProgressPane.getStyledDocument();
     public static String PreProgress = "";
     public static JProgressBar ProgressBar;
-    final public static String Slash = System.getProperty("file.separator");
-    public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
-
+    public static StyledDocument ProgressDoc;
     public static void initDocument() {
         ProgressPane.setContentType("text/html");
         ProgressDoc = ProgressPane.getStyledDocument();
     }
+
+    
     //Folders
+    public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
     public static String ScriptLocation = "/SCRIPTS/";
     private static String TempF = null;
     //TempFolder is the folder used for file operations
