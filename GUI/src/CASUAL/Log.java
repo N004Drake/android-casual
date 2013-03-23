@@ -141,30 +141,32 @@ public class Log {
             WriteFile = new FileWriter(Statics.TempFolder + "log.txt", true);
         } catch (IOException ex) {
         }
-        try (PrintWriter out = new PrintWriter(WriteFile)) {
-            Statics.OutFile = out;
-            if (Statics.OutFile != null) {
-                Statics.LogCreated = true;
-            }
-            out.print(data + "\n");
+
+        PrintWriter out = new PrintWriter(WriteFile);
+        
+        Statics.OutFile = out;
+        if (Statics.OutFile != null) {
+            Statics.LogCreated = true;
         }
+        out.close();
     }
-    private static String progressBuffer="";
-    int lastNewLine=100;
+    private static String progressBuffer = "";
+    int lastNewLine = 100;
+
     public void progress(String data) {
-        progressBuffer=progressBuffer+data;
+        progressBuffer = progressBuffer + data;
         try {
 
-        if (data.contains("\b")){
-            writeToLogFile(progressBuffer);
-            progressBuffer="";
-            Statics.ProgressDoc.remove(lastNewLine, Statics.ProgressDoc.getLength()-lastNewLine);
-            //lastNewLine=Statics.ProgressDoc.getLength();
+            if (data.contains("\b")) {
+                writeToLogFile(progressBuffer);
+                progressBuffer = "";
+                Statics.ProgressDoc.remove(lastNewLine, Statics.ProgressDoc.getLength() - lastNewLine);
+                //lastNewLine=Statics.ProgressDoc.getLength();
 
-        }
-        Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
-        Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-        
+            }
+            Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
+            Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
+
         } catch (BadLocationException ex) {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NullPointerException e) {
@@ -172,8 +174,8 @@ public class Log {
         }
         if (data.contains("\n")) {
             writeToLogFile(progressBuffer);
-            progressBuffer="";
-            lastNewLine=Statics.ProgressPane.getCaretPosition();
+            progressBuffer = "";
+            lastNewLine = Statics.ProgressPane.getCaretPosition();
         }
 
     }
