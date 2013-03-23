@@ -1,6 +1,6 @@
 curl http://android-casual.googlecode.com/svn/trunk/repo/Heimdall_1.4.1_compressed.dmg>./heimdall.dmg
 hdiutil mount heimdall.dmg
-open /volumes/Heimdall_1.4.1/Heimdall\ Suite\ 1.4.1.pkg
+sudo open /volumes/Heimdall_1.4.1/Heimdall\ Suite\ 1.4.1.pkg
 hdiutil umount heimdall.dmg
 rm ./heimdall.dmg
 sudo chown -R root:wheel /System/Library/Extensions/heimdall.kext
