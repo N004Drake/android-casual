@@ -115,10 +115,20 @@ public class HeimdallInstall {
             String installScript=Statics.TempFolder+"installer.sh";
             update.downloadFileFromInternet(Statics.heimdallMacURL, installScript, "Downloading Heimdall Installation file");
             new FileOperations().setExecutableBit(installScript);
-            JOptionPane.showMessageDialog(null, "Heimdall One-Click will now launch Heimdall Installer\n"
+            if (System.getProperty("os.arch").contains("i386")){
+            JOptionPane.showMessageDialog(null, "Heimdall is optimized for 64 bit systems.\nWe won't prevent you from installing Heimdall,\nbut you will be stuck in a loop until you quit..\n"
+                            , "Wrong Architecture detected", JOptionPane.ERROR_MESSAGE);
+                
+            }
+            System.out.println(System.getProperty("os.arch"));
+            JOptionPane.showMessageDialog(null, "Heimdall One-Click will now launch Heimdall Installer.\n  Hit cancel if asked to set up any network interfaces.\n"
                             + "You must install Heimdall in order to continue", "Exiting Heimdall One-Click", JOptionPane.ERROR_MESSAGE);
-            shell.liveShellCommand(new String[]{installScript});
-            System.exit(0);
+            shell.elevateSimpleCommand(new String[]{installScript});
+            JOptionPane.showMessageDialog(null, ""
+                    + "In order to continue, you must unplug the device and\n"
+                    + "then it back in.  Use a GOOD port, in the back, not\n"
+                    + "in the front.  Use a good cable too.", "Unplug it and then plug it back in", JOptionPane.ERROR_MESSAGE);
+            
 
         }
     }
