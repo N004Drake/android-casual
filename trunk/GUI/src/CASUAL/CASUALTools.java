@@ -150,5 +150,4 @@ public class CASUALTools {
 
         log.level3("Exiting comboBoxUpdate()");
     }
-
 }

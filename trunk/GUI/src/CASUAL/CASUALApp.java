@@ -25,9 +25,9 @@ import java.io.File;
  */
 public class CASUALApp {
     final public static String defaultPackage="ATT GS3 Root"; //note this will be used for IDE only.
-    final private static boolean useOverrideArgs=false; // this will use overrideArguments.
+    final private static boolean useOverrideArgs=true; // this will use overrideArguments.
     //final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
-    final private static String[] overrideArguments=new String[]{"--help"};
+    final private static String[] overrideArguments=new String[]{"--casualpack","/home/adam/Desktop/casualpack/casualpack.zip"};
     
     String[] arguments;
     /**
@@ -67,10 +67,11 @@ public class CASUALApp {
         new CASUALApp().startup(args);
     }
         private static void checkEarlyArgs(String args[]){
-        for (int i = 0; i < args.length; i++) {
             CASUALPackageData.CASUALSVNRevision= java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
             CASUALPackageData.CASUALBuildNumber= java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
-            System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + CASUALPackageData.CASUALSVNRevision + " build:" +CASUALPackageData.CASUALBuildNumber +"\n"+
+  
+        for (int i = 0; i < args.length; i++) {
+           System.out.println("CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + CASUALPackageData.CASUALSVNRevision + " build:" +CASUALPackageData.CASUALBuildNumber +"\n"+
                     "    CASUAL  Copyright (C) 2013  Adam Outler\n" +
                     "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n" +
                     "    and you are welcome to redistribute it, under certain conditions; run\n"+
@@ -78,7 +79,7 @@ public class CASUALApp {
                     "    for details. http://android-casual.googlecode.com for source.");
             
 
-            if (args[i].equals("--help")||args[i].equals("-?")){
+            if (args[i].equals("--help")||args[i].equals("-v?")){
                 System.out.println("\n"
                         + " Usage: casual.jar [optional parameters]\n"
                         + " without arguments - Launch the GUI\n"
@@ -101,7 +102,10 @@ public class CASUALApp {
                 "    GNU General Public License for more details.");
                 System.exit(0);
             }
-            
+            if (args[i].contains("--casualpack")) {
+                i++;
+                new CASUALModularPack().loadCASUALPackFileForCommandLineOnly(args[i]);
+            }
         }
     }
 }

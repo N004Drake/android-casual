@@ -69,13 +69,13 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         log.level3("Updating Scripts for UI");
         updateSelectedFromGUI();
         
-                setStartButtonText(CASUALPackageData.ButtonText);
-        setTitle(CASUALPackageData.Title);
+                setStartButtonText(CASUALPackageData.buttonText);
+        setTitle(CASUALPackageData.title);
         if (CASUALPackageData.usePictureForBanner) {
             setWindowBannerText("");
-            setWindowBannerImage("/SCRIPTS/"+CASUALPackageData.BannerPic, CASUALPackageData.BannerText);
+            setWindowBannerImage("/SCRIPTS/"+CASUALPackageData.bannerPic, CASUALPackageData.bannerText);
         } else {
-            setWindowBannerText(CASUALPackageData.BannerText);
+            setWindowBannerText(CASUALPackageData.bannerText);
         }
         Statics.lockGUIformPrep = false;
     }
@@ -392,12 +392,12 @@ public final class CASUALJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemExitActionPerformed
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
-        setWindowBannerImage("SCRIPTS/"+CASUALPackageData.BannerPic, CASUALPackageData.BannerText);
+        setWindowBannerImage("SCRIPTS/"+CASUALPackageData.bannerPic, CASUALPackageData.bannerText);
         TimeOutOptionPane timeOutOptionPane = new TimeOutOptionPane();
         int DResult = timeOutOptionPane.showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
-                "This application was developed by " + CASUALPackageData.DeveloperName + " using CASUAL framework.\n"
+                "This application was developed by " + CASUALPackageData.developerName + " using CASUAL framework.\n"
                 + "Donations give developers a tangeble reason to continue quality software development\n",
                 "Donate to the developers", //DisplayTitle
                 TimeOutOptionPane.OK_OPTION, // Options buttons
@@ -407,7 +407,7 @@ public final class CASUALJFrame extends javax.swing.JFrame {
         if (DResult == 0) {
             launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
         } else if (DResult == 1) {
-            launchLink(CASUALPackageData.DonationLink);
+            launchLink(CASUALPackageData.donationLink);
         }
     }//GEN-LAST:event_DonateButtonActionPerformed
 
