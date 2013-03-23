@@ -143,7 +143,9 @@ public class HeimdallInstall {
              new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis64tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
              installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x64.exe"});
              }*/
-        } catch (MalformedURLException | URISyntaxException ex) {
+        } catch (MalformedURLException ex) {
+            log.errorHandler(ex);
+        } catch (URISyntaxException ex) {
             log.errorHandler(ex);
         }
         if (installVCResults.contains("CritERROR!!!")) {
@@ -170,7 +172,9 @@ public class HeimdallInstall {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder + "zadig.exe", "Open-Source Heimdall Drivers");
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverIniInRepo), "zadig.ini", "Open-Source Heimdall Drivers config");
 
-        } catch (MalformedURLException | URISyntaxException ex) {
+        } catch (MalformedURLException ex) {
+            log.errorHandler(ex);
+        } catch (URISyntaxException ex) {
             log.errorHandler(ex);
         }
         //verify MD5 new String{"b88228d5fef4b6dc019d69d4471f23ec  vcredist_x86.exe"}

@@ -216,7 +216,7 @@ public class Shell implements Runnable {
                 LogRead = LogRead + CharRead;
                 log.progress(CharRead);
 
-                if (!Statics.ActionEvents.isEmpty() && (LineRead.contains("\n") || LineRead.contains("\r"))) {
+                if (Statics.ActionEvents.size() != 0 && (LineRead.contains("\n") || LineRead.contains("\r"))) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
                         if (Statics.ActionEvents != null && LineRead.contains((String) Statics.ActionEvents.get(i))) {
 

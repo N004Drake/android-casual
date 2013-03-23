@@ -21,13 +21,11 @@ package CASUAL;
 import java.io.File;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+
 
 
 
@@ -48,41 +46,20 @@ public final class CASUALJFrame extends javax.swing.JFrame {
      * Creates new form CASUALJFrame2
      */
     public CASUALJFrame() {
-         String nativeLF = UIManager.getSystemLookAndFeelClassName();
-    try {
-        UIManager.setLookAndFeel(nativeLF);
-    } catch (ClassNotFoundException | InstantiationException | 
-IllegalAccessException | UnsupportedLookAndFeelException ex) {
-        Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
-    }
-
+        
         initComponents();
         enableControls(false);        
-        
-        while (!CASUALPackageData.PackageDataHasBeenSet){
-            
-        }
-
-
-
         Statics.ProgressBar = this.ProgressBar;
         
         ProgressArea.setContentType("text/html");
         Statics.ProgressPane = CASUALJFrame.ProgressArea;
         Statics.initDocument();
         
-        ProgressArea.setText(ProgressArea.getText() + Statics.PreProgress);
-       
-       
-
-
-      
+        ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
+     
         log.level3("OMFGWOOT GUI running!");
         log.level1(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt"));
 
-
-        log.level2("Deploying ADB");
-        new CASUALDeployADB().runAction();
 
         log.level3("Searching for scripts");
         prepareScripts();
@@ -117,7 +94,7 @@ IllegalAccessException | UnsupportedLookAndFeelException ex) {
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox<>();
+        comboBoxScriptSelector = new javax.swing.JComboBox();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -530,7 +507,7 @@ IllegalAccessException | UnsupportedLookAndFeelException ex) {
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JProgressBar ProgressBar;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox<String> comboBoxScriptSelector;
+    private javax.swing.JComboBox comboBoxScriptSelector;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
