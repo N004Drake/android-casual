@@ -86,11 +86,11 @@ public class Shell implements Runnable {
             try {
                 FileOperations.writeToFile(""
                         + "#!/bin/sh \n"
-                        + "export bar=\"" + Command + "\"\n"
-                        + "for i in \"$@\"; do export bar=\"$bar '${i}'\";done"
-                        + "osascript -e \"do shell script \"$bar\" with administrator privileges\""
-                        + "", ScriptFile);
-
+                        + "export bar="+ Command +" ;\n"
+                        + "for i in \"$@\"; do export bar=\"$bar '${i}'\";done;\n"
+                        + "osascript -e \'do shell script \"$bar\" with administrator privileges\'"
+                        , ScriptFile);
+            log.level0(ScriptFile);
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
