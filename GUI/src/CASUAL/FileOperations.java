@@ -199,6 +199,19 @@ public class FileOperations {
         return CreatedFolder;
     }
 
+    public void writeStreamToFile(BufferedInputStream stream, String destination) throws FileNotFoundException, IOException{
+        int currentByte;
+        int buffer = 4096;
+        byte data[] = new byte[buffer];
+        FileOutputStream fos = new FileOutputStream(new File(destination));
+        BufferedOutputStream dest;
+        dest = new BufferedOutputStream(fos,buffer);
+        while ((currentByte = stream.read(data, 0, buffer)) != -1) {
+            dest.write(data, 0, currentByte);
+        }
+        dest.flush();
+        dest.close();
+    }
     /**
      * takes a string and a filename, writes to the file
      *
@@ -440,7 +453,22 @@ public class FileOperations {
         //Log.level3(text.toString());
         return text.toString();
     }
-
+    public String readTextFromStream(BufferedInputStream in) {
+;
+        StringBuilder text = new StringBuilder();
+        try {
+            int read;
+            while ((read = in.read()) != -1) {
+                char C = Character.valueOf((char) read);
+                text.append(C);
+            }
+            in.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //Log.level3(text.toString());
+        return text.toString();
+    }
 
     /*
      * reads file contents returns string

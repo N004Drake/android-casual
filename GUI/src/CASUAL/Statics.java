@@ -119,6 +119,7 @@ public class Statics {
             if (!TempF.endsWith(Slash)) {
                 TempF = TempF + Slash;
             }
+            new FileOperations().makeFolder(TempF);
         }
         return TempF;
     }

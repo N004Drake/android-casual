@@ -68,6 +68,7 @@ public final class CASUALMain {
             } else {
                 System.out.println("Unrecogized command");
             }
+            
         }
         System.exit(0);
     }
@@ -89,13 +90,13 @@ public final class CASUALMain {
         @Override
         public void run() {
             CASUALPackageData casualPackageData = new CASUALPackageData();
-            casualPackageData.scan();
+            casualPackageData.setProperties();
         }
     };
     Runnable casualSound = new Runnable() {
         @Override
         public void run() {
-            if (CASUALPackageData.UseSound) {
+            if (CASUALPackageData.useSound) {
                 CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
             }
         }

@@ -16,60 +16,81 @@
  */
 package CASUAL;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
+
 /**
  *
  * @author adam
  */
 public class CASUALPackageData {
-    public static boolean PackageDataHasBeenSet=false;
-    public static boolean ScriptsHaveBeenRecognized=false;
+
+    public static boolean packageDataHasBeenSet = false;
+    public static boolean ScriptsHaveBeenRecognized = false;
     public static String CASUALSVNRevision;
     public static String CASUALBuildNumber;
     public static String buildProperties;
-    public static String ButtonText;
-    public static String Title;
-    public static String BannerText;
-    public static String BannerPic;
+    public static String buttonText;
+    public static String title;
+    public static String bannerText;
+    public static String bannerPic;
     public static boolean usePictureForBanner;
-    public static String DeveloperName;
-    public static String DonateButtonName;
-    public static boolean UseSound;
-    public static String DeveloperDonateLink;
+    public static String developerName;
+    public static String donateButtonName;
+    public static boolean useSound;
+    public static String developerDonateLink;
     public static String DontateButtonText;
-    public static String DonationLink;
+    public static String donationLink;
     public static String CASUALFileName;
 
-    CASUALPackageData(String build) {
-       if ((build==null) || (build.equals(""))){
-           buildProperties=Statics.BUILDPROPERTIES;
-       } else{
-           buildProperties=build;
-       }
-       setProperties();
-    }
 
-    CASUALPackageData() {
-        buildProperties=Statics.BUILDPROPERTIES;
-        setProperties();
-    }
-
-    private void setProperties(){
-        usePictureForBanner = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.UsePictureForBanner").contains("rue");
-        DeveloperDonateLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
-        UseSound = java.util.ResourceBundle.getBundle(buildProperties).getString("Audio.Enabled").contains("rue");
-        DonateButtonName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateToButtonText");
-        DeveloperName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.Name");
+    public void setProperties() {
         buildProperties = Statics.BUILDPROPERTIES;
-        ButtonText = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.ExecuteButtonText");
-        Title = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.Title") + " - "+ java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") +java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
-        BannerText = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.BannerText");
-        BannerPic = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.BannerPic");
-        DonateButtonName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateToButtonText");
-        DonationLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
-        PackageDataHasBeenSet=true;
+        usePictureForBanner = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.UsePictureForBanner").contains("rue");
+        developerDonateLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
+        useSound = java.util.ResourceBundle.getBundle(buildProperties).getString("Audio.Enabled").contains("rue");
+        donateButtonName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateToButtonText");
+        developerName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.Name");
+        buttonText = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.ExecuteButtonText");
+        title = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.Title") + " - " + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+        bannerText = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.BannerText");
+        bannerPic = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.BannerPic");
+        donateButtonName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateToButtonText");
+        donationLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
+        packageDataHasBeenSet = true;
     }
-    public void scan(){
+
+    public void setPropertiesFromInputStream(BufferedInputStream in) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+        Properties properties = new Properties();
+        properties.load(in);
+        //properties.list(System.out);
+        in.close();
+        buildProperties = null;
+        usePictureForBanner = properties.getProperty("Window.UsePictureForBanner").contains("rue");
+        developerDonateLink =  properties.getProperty("Developer.DonateLink");
+        useSound = properties.getProperty("Audio.Enabled").contains("rue");
+        donateButtonName = properties.getProperty("Developer.DonateToButtonText");
+        developerName =properties.getProperty("Developer.Name");
+        buttonText = properties.getProperty("Window.ExecuteButtonText");
+        title =properties.getProperty("Window.Title") + " - " + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+        bannerText = properties.getProperty("Window.BannerText");
+        bannerPic = properties.getProperty("Window.BannerPic");
+        donateButtonName = properties.getProperty("Developer.DonateToButtonText");
+        donationLink = properties.getProperty("Developer.DonateLink");
+        packageDataHasBeenSet = true;
+        
+        System.out.println("-----CASUAL PACKAGE-----");
+        System.out.println(""+title+"\n by:"+developerName+ "");
+        if (!donationLink.equals("")){
+            System.out.println(" Donate:"+donationLink);
+        }
+        System.out.println("-----CASUAL PACKAGE-----");
+        
         
     }
-  
 }

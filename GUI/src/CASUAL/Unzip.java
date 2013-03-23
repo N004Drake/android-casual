@@ -58,24 +58,7 @@ public class Unzip {
             // create the parent directory structure if needed
             destinationParent.mkdirs();
             if (!entry.isDirectory()) {
-                //if (Static)
-                BufferedInputStream is;
-                is = new BufferedInputStream(zip.getInputStream(entry));
-                int currentByte;
-                // establish buffer for writing file
-                byte data[] = new byte[BUFFER];
-                // write the current file to disk
-                FileOutputStream fos = new FileOutputStream(newPath + entry);
-                BufferedOutputStream dest;
-                dest = new BufferedOutputStream(fos,
-                        BUFFER);
-                // read and write until last byte is encountered
-                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-                    dest.write(data, 0, currentByte);
-                }
-                dest.flush();
-                dest.close();
-                is.close();
+                writeFromZipToFile(zip, entry, newPath);
             } else if (entry.isDirectory()) {
                 log.level3(newPath + entry.getName());
                 new File(newPath + entry.getName()).mkdirs();
@@ -120,4 +103,42 @@ public class Unzip {
         }
         ZipInput.close();
     }
+    
+    
+    
+    public Enumeration getZipFileEntries(File f) throws ZipException, IOException {
+        ZipFile zip = new ZipFile(f);
+        Enumeration zipFileEntries = zip.entries();
+        return zipFileEntries;
+    }
+    public String deployFileFromZip(File zipFile, Object entry, String outputFolder ) throws ZipException, IOException {
+        ZipFile zip = new ZipFile(zipFile);
+        ZipEntry zipEntry=new ZipEntry((ZipEntry) entry);
+        writeFromZipToFile(zip, zipEntry,outputFolder);
+        return outputFolder+entry.toString();
+    }
+    public BufferedInputStream streamFileFromZip(File zipFile, Object entry) throws ZipException, IOException {
+        ZipFile zip = new ZipFile(zipFile);
+        return new BufferedInputStream(zip.getInputStream((ZipEntry) entry));
+    }
+    private void writeFromZipToFile(ZipFile zip, ZipEntry entry, String newPath) throws IOException, FileNotFoundException {
+        //if (Static)
+        BufferedInputStream is;
+        is = new BufferedInputStream(zip.getInputStream(entry));
+        int currentByte;
+        // establish buffer for writing file
+        byte data[] = new byte[BUFFER];
+        // write the current file to disk
+        FileOutputStream fos = new FileOutputStream(new File(newPath + entry));
+        BufferedOutputStream dest;
+        dest = new BufferedOutputStream(fos,BUFFER);
+        // read and write until last byte is encountered
+        while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+            dest.write(data, 0, currentByte);
+        }
+        dest.flush();
+        dest.close();
+        is.close();
+    }
+    
 }
