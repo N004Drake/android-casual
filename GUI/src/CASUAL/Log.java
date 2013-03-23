@@ -134,7 +134,7 @@ public class Log {
     }
 
     private void debugOut(String data) {
-        System.out.println(data);
+        // for testing log  System.out.println(data);
 
         FileWriter WriteFile = null;
         try {

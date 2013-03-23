@@ -170,7 +170,7 @@ public class FileOperations {
      * @return true if exists
      */
     public boolean verifyExists(String file) {
-        return new File(file).exists() ? true : false;
+        return new File(file).exists();
     }
 
     /**

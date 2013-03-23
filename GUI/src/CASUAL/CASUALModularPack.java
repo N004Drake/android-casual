@@ -22,6 +22,11 @@ public class CASUALModularPack {
         
         try {
             File f=new File(pack);
+            if ( ! f.exists()){
+                new Log().level0("File Not Found "+pack); 
+                System.exit(1);
+            }    
+            
             Enumeration zippedFiles =unzip.getZipFileEntries(f);
             while (zippedFiles.hasMoreElements()){
                 Object entry = zippedFiles.nextElement();
@@ -39,8 +44,7 @@ public class CASUALModularPack {
             }
             System.exit(0);
         } catch (ZipException ex) {
-            new Log().errorHandler(ex);
-            new Log().level0("Zip File is corrupt cannot continue.");
+            new Log().level0("Zip File is corrupt. cannot continue.");
             System.exit(1);
         } catch (IOException ex) {
             new Log().errorHandler(ex);
