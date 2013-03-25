@@ -58,6 +58,7 @@ public class Unzip {
             // create the parent directory structure if needed
             destinationParent.mkdirs();
             if (!entry.isDirectory()) {
+                System.out.println("unzipping "+entry.toString());
                 writeFromZipToFile(zip, entry, newPath);
             } else if (entry.isDirectory()) {
                 log.level3(newPath + entry.getName());
