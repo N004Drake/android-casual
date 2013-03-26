@@ -36,8 +36,6 @@ public class CASUALModularPack {
                     new CASUALPackageData().setPropertiesFromInputStream(unzip.streamFileFromZip(f, entry));
                 } else if (entry.toString().equals("-Overview.txt")){
                     System.out.print("\n"+new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry))+"\n");
-                } else if (entry.toString().equals("-adb_usb.ini")){
-                    new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), Statics.TempFolder+"adb_usb.ini");
                 } else if (entry.toString().endsWith("zip")){
                     //uncompress to scripts folder
                     

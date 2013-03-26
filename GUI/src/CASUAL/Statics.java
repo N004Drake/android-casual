@@ -174,7 +174,7 @@ public class Statics {
     final private static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
-    final public static String ADBini = CASUALSCRIPT + "-adb_usb.ini";
+    final public static String ADBini = "/CASUAL/resources/ADB/adb_usb.ini";
     final public static String FilesystemAdbIniLocationLinuxMac = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
     final public static String FilesystemAdbIniLocationWindows = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
     /*
