@@ -39,7 +39,6 @@ public class Log {
     }
 
     private void consoleOut(String data) {
-        System.out.println(data);
         if (!"".equals(data)) {
             if (!"\n".equals(data)) {
                 try {
@@ -72,6 +71,7 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level0(String data) {
+        System.out.println(data);
         if (Statics.ConsoleLevel >= 0) {
             consoleOut(data);
 
@@ -88,6 +88,7 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level1(String data) {
+        System.out.println(data);
         if (Statics.ConsoleLevel >= 1) {
             consoleOut(data);
         }
@@ -105,6 +106,7 @@ public class Log {
      */
     // level 2 is for debugging data
     public void level2(String data) {
+        System.out.println(data);
         if (Statics.ConsoleLevel >= 2) {
             consoleOut(data);
         }
@@ -120,6 +122,7 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level3(String data) {
+        System.out.println(data);
         if (Statics.ConsoleLevel >= 3) {
             consoleOut(data);
         }
@@ -192,6 +195,7 @@ public class Log {
     }
 
     public void beginLine() {
+        System.out.println();
         progress("\n");
     }
 
