@@ -71,8 +71,12 @@ public class Unzip {
         }
     }
 
-    public void UnZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
+    public void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
         InputStream ZStream = getClass().getResourceAsStream(zipResource);
+        unZipInputStream(ZStream,outputFolder);
+    }
+    public void unZipInputStream(InputStream ZStream, String outputFolder) throws FileNotFoundException, IOException {
+        //InputStream ZStream = getClass().getResourceAsStream(zipResource);
         ZipInputStream ZipInput;
         ZipInput = new ZipInputStream(ZStream);
         ZipEntry ZipEntryInstance;

@@ -136,7 +136,7 @@ public class CASUALTools {
 
                     Unzip Unzip = new Unzip();
                     try {
-                        Unzip.UnZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
+                        Unzip.unZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
                     } catch (FileNotFoundException ex) {
                         log.errorHandler(ex);
                     } catch (IOException ex) {

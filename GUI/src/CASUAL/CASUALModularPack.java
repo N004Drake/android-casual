@@ -18,9 +18,10 @@ import java.util.zip.ZipException;
 public class CASUALModularPack {
 
         void loadCASUALPackFileForCommandLineOnly(String pack) {
-    Unzip unzip = new Unzip();
-        
+        Unzip unzip = new Unzip();
+        String activeScript="";    
         try {
+            //todo start adb deployment thread
             File f=new File(pack);
             if ( ! f.exists()){
                 new Log().level0("File Not Found "+pack); 
@@ -28,31 +29,32 @@ public class CASUALModularPack {
             } else {
                 System.out.println("-----CASPAC MODE-----\nCASPAC: "+f.getAbsolutePath());
             }
-            
+            //begin unziping CASPAC
             Enumeration zippedFiles =unzip.getZipFileEntries(f);
             while (zippedFiles.hasMoreElements()){
-                Object entry = zippedFiles.nextElement();
+                Object entry = zippedFiles.nextElement(); //get the object and begin examination
                 if (entry.toString().equals("-build.properties")){
                     new CASUALPackageData().setPropertiesFromInputStream(unzip.streamFileFromZip(f, entry));
                 } else if (entry.toString().equals("-Overview.txt")){
                     System.out.print("\n"+new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry))+"\n");
-                } else if (entry.toString().endsWith("zip")){
-                    //uncompress to scripts folder
-                    
-                    //TODO: get zipstream and parse zipstream instead of uncompressing twice. 
-                    Statics.ScriptLocation=Statics.TempFolder+ StringOperations.replaceLast(entry.toString(),".zip", "")+Statics.Slash;
+                    //TODO: allow specification of which script here and take no action unless specified script is called. 
+                } else if (entry.toString().endsWith(".scr")){
+                    Statics.ScriptLocation=Statics.TempFolder+StringOperations.replaceLast(entry.toString(),".scr", "")+Statics.Slash;
+                    activeScript=Statics.ScriptLocation+".scr";
                     new FileOperations().makeFolder(Statics.ScriptLocation);
                     new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry),Statics.ScriptLocation+entry.toString());
-                    System.out.println("writing " +Statics.ScriptLocation +entry.toString());
-                    unzip.unzipFile(Statics.ScriptLocation+entry.toString(), Statics.ScriptLocation);
-                } else {
-                    
-                   //note script name
+                } else if (entry.toString().endsWith(".zip")){
+                    Statics.ScriptLocation=Statics.TempFolder+ StringOperations.replaceLast(entry.toString(),".zip", "")+Statics.Slash;
+                    new FileOperations().makeFolder(Statics.ScriptLocation);
+                    unzip.unZipInputStream(unzip.streamFileFromZip(f, entry),Statics.ScriptLocation);
+                } else if (entry.toString().endsWith(".txt")){
+                    System.out.print("\n"+new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry))+"\n");
                 }
-                
-                
-                
+                //DONE with extraction and preparation of zip
             }
+            //TODO join adb thread
+            //TODO pump InputStream(activeScript) into CASUALScriptParser
+            
             System.exit(0);
         } catch (ZipException ex) {
             new Log().errorHandler(ex);
