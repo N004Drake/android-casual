@@ -34,7 +34,7 @@ import javax.swing.text.StyledDocument;
 public class Statics {
     public static final String BUILDPROPERTIES="SCRIPTS/-build";
     public static boolean GUIIsAvailable=false;
-    public static boolean UseGUI=false;
+    public static boolean useGUI=false;
 
     public Statics() {
     }

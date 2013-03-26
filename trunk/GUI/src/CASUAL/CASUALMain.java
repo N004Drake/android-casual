@@ -27,18 +27,15 @@ import java.util.logging.Logger;
 public final class CASUALMain {
     String[] args;
 
-    CASUALMain(String[] cmd) {
-        args = cmd;
-    }
-
-    public void startup() {
+    public void startup(String[] cmd) {
+        args=cmd;
         new FileOperations().makeFolder(Statics.TempFolder);
         Thread adb = new Thread(adbDeployment);
         adb.start(); //start ADB deployment
         Statics.lockGUIformPrep = true;
         Thread scriptPrep = new Thread(prepScripts);
         scriptPrep.start(); //scan self for embedded scripts
-        Thread pData = new Thread(packageData);
+        Thread pData = new Thread(setCASUALPackageDataFromScriptsFolder);
         pData.start(); // scan self and set package properties
         Thread cSound = new Thread (casualSound);
         try {
@@ -52,17 +49,17 @@ public final class CASUALMain {
         new CASUALTools().startStopADBDeviceCheckTimer(true); //start device scanning
 
 
-        if (args.length == 0) {
-            Statics.UseGUI=true;
-            doGUIStartup(); //bring up GUI and wait for user to click start
-        } else {
+        if (args.length != 0 || ! Statics.useGUI) {
             doConsoleStartup();  //use command line args
+        } else {
+            Statics.useGUI=true;
+            doGUIStartup(); //bring up GUI and wait for user to click start
         }
     }
 
     private void doConsoleStartup() {
         for (int i = 0; i < args.length; i++) {
-            if (args[i].contains("--execute")) {
+            if (args[i].contains("--execute")||args[i].contains("-e")) {
                 i++;
                 new CASUALScriptParser().executeOneShotCommand(args[i]);
             } else {
@@ -80,20 +77,29 @@ public final class CASUALMain {
 
     
     
-    Runnable adbDeployment = new Runnable() {
+    /**
+     *deploys ADB to Statics.ADBDeployed.
+     */
+    public Runnable adbDeployment = new Runnable() {
         @Override
         public void run() {
             new CASUALDeployADB().runAction();
         }
     };
-    Runnable packageData = new Runnable() {
+     /**
+     *sets up the static CASUALPackageData for use with /SCRIPTS/folder.
+     */
+    public Runnable setCASUALPackageDataFromScriptsFolder = new Runnable() {
         @Override
         public void run() {
             CASUALPackageData casualPackageData = new CASUALPackageData();
             casualPackageData.setProperties();
         }
     };
-    Runnable casualSound = new Runnable() {
+     /**
+     *Plays the CASUAL startup sound.
+     */    
+    public Runnable casualSound = new Runnable() {
         @Override
         public void run() {
             if (CASUALPackageData.useSound) {
@@ -101,13 +107,21 @@ public final class CASUALMain {
             }
         }
     };
-    Runnable GUI = new Runnable() {
+
+    /**
+     *Starts the GUI, should be done last and only if needed.
+     */    
+    public Runnable GUI = new Runnable() {
         @Override
         public void run() {
             Statics.GUI = new CASUALJFrame();
             Statics.GUI.setVisible(true);
         }
     };
+
+    /**
+     *Scans /SCRIPTS/ Folder to locate scripts. 
+     */    
     Runnable prepScripts = new Runnable() {
         @Override
         public void run() {
