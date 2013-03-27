@@ -4,10 +4,11 @@
  */
 package CASUAL;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
@@ -21,7 +22,8 @@ public class CASUALModularPack {
         Unzip unzip = new Unzip();
         String activeScript="";    
         try {
-            //todo start adb deployment thread
+            Thread adb= new Thread(new CASUALMain().adbDeployment);
+            adb.start();
             File f=new File(pack);
             if ( ! f.exists()){
                 new Log().level0("File Not Found "+pack); 
@@ -39,8 +41,9 @@ public class CASUALModularPack {
                     System.out.print("\n"+new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry))+"\n");
                     //TODO: allow specification of which script here and take no action unless specified script is called. 
                 } else if (entry.toString().endsWith(".scr")){
-                    Statics.ScriptLocation=Statics.TempFolder+StringOperations.replaceLast(entry.toString(),".scr", "")+Statics.Slash;
-                    activeScript=Statics.ScriptLocation+".scr";
+                    String scriptBasename=StringOperations.replaceLast(entry.toString(),".scr", "");
+                    Statics.ScriptLocation=Statics.TempFolder+scriptBasename+Statics.Slash;
+                    activeScript=Statics.ScriptLocation+scriptBasename;
                     new FileOperations().makeFolder(Statics.ScriptLocation);
                     new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry),Statics.ScriptLocation+entry.toString());
                 } else if (entry.toString().endsWith(".zip")){
@@ -52,10 +55,15 @@ public class CASUALModularPack {
                 }
                 //DONE with extraction and preparation of zip
             }
-            //TODO join adb thread
+            try {
+                adb.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //new CASUALScriptParser().getDataStreamFromFile(activeScript);
+            new CASUALScriptParser().executeSelectedScriptFile(activeScript,activeScript );
             //TODO pump InputStream(activeScript) into CASUALScriptParser
             
-            System.exit(0);
         } catch (ZipException ex) {
             new Log().errorHandler(ex);
             new Log().level0("Zip File is corrupt. cannot continue.");

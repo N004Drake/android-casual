@@ -203,7 +203,9 @@ public class FileOperations {
         int currentByte;
         int buffer = 4096;
         byte data[] = new byte[buffer];
-        FileOutputStream fos = new FileOutputStream(new File(destination));
+        File f=new File(destination);
+        if (! verifyExists(f.getParent())){makeFolder(f.getParent());}
+        FileOutputStream fos = new FileOutputStream(f);
         BufferedOutputStream dest;
         dest = new BufferedOutputStream(fos,buffer);
         while ((currentByte = stream.read(data, 0, buffer)) != -1) {
