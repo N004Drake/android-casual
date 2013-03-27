@@ -643,10 +643,12 @@ public class CASUALScriptParser {
                 }
 
                 CurrentLine = 1;
-                Statics.ProgressBar.setMaximum(LinesInScript);
+                if (Statics.useGUI) { 
+                    Statics.ProgressBar.setMaximum(LinesInScript);
+                };
                 log.level3("Reading datastream" + DATAIN);
                 doRead(DATAIN);
-                Statics.GUI.enableControls(true);
+                if (Statics.useGUI) Statics.GUI.enableControls(true);
                 Statics.DeviceMonitor.DeviceCheck.start();
                 try {
                     DATAIN.close();
@@ -675,7 +677,7 @@ public class CASUALScriptParser {
             bReader.mark(1);
             while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
                 CurrentLine++;
-                Statics.ProgressBar.setValue(CurrentLine);
+                if (Statics.useGUI) Statics.ProgressBar.setValue(CurrentLine);
                 if (!GOTO.equals("")) {
 
                     bReader.reset();

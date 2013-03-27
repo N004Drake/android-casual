@@ -49,7 +49,7 @@ public final class CASUALMain {
         new CASUALTools().startStopADBDeviceCheckTimer(true); //start device scanning
 
 
-        if (args.length != 0 || ! Statics.useGUI) {
+        if (args.length != 0 && ! Statics.useGUI) {
             doConsoleStartup();  //use command line args
         } else {
             Statics.useGUI=true;
@@ -67,7 +67,7 @@ public final class CASUALMain {
             }
             
         }
-        System.exit(0);
+     //   System.exit(0);
     }
 
     private void doGUIStartup() {
