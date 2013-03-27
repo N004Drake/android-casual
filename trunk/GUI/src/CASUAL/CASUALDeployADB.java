@@ -22,17 +22,13 @@ import javax.swing.JOptionPane;
  *
  * @author adam
  */
-class CASUALDeployADB implements Runnable {
+class CASUALDeployADB{
 
     FileOperations FileOperations = new FileOperations();
     Log Log = new Log();
 
-    public void runAction() {
-        (new Thread(new CASUALDeployADB())).start();
-    }
 
-    @Override
-    public void run() {
+    public void deployADB() {
         DiffTextFiles DTF = new DiffTextFiles();
 
 

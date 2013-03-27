@@ -44,7 +44,7 @@ public class CASUALScriptParser {
     /*
      * Executes a selected script as a resource reports to Log class.
      */
-    public void executeSelectedScriptResource(final String script) {
+    public void executeSelectedScriptResource(final String script, boolean multiThreaded) {
         log.level3("Selected resource" + script);
         ScriptName = script;
         CountLines CountLines = new CountLines();
@@ -54,7 +54,7 @@ public class CASUALScriptParser {
 
 
         DataInputStream RAS = new DataInputStream(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
-        executeSelectedScript(RAS, script);
+        executeSelectedScript(RAS, script, multiThreaded);
     }
 
 
@@ -80,9 +80,9 @@ public class CASUALScriptParser {
 
     }
 
-    public void executeSelectedScriptFile(String File, String script) {
+    public void executeSelectedScriptFile(String File, String script, boolean multiThreaded) {
         DataInputStream DIS = getDataStreamFromFile(File);
-        executeSelectedScript(DIS, script);
+        executeSelectedScript(DIS, script, multiThreaded);
     }
 
     /*
@@ -558,7 +558,7 @@ public class CASUALScriptParser {
     }
     DataInputStream DATAIN;
 
-    private void executeSelectedScript(DataInputStream DIS, final String script) {
+    private void executeSelectedScript(DataInputStream DIS, final String script, boolean startThreaded) {
         Statics.ReactionEvents = new ArrayList();
         Statics.ActionEvents = new ArrayList();
         ScriptContinue = true;
@@ -662,8 +662,12 @@ public class CASUALScriptParser {
                 DATAIN = getDataStreamFromFile(script);
             }
         };
-        Thread ExecuteScript = new Thread(r);
-        ExecuteScript.start();
+        if (startThreaded){
+            Thread ExecuteScript = new Thread(r);
+            ExecuteScript.start();
+        } else {
+            r.run();
+        }
     }
 
 
@@ -693,6 +697,7 @@ public class CASUALScriptParser {
             dataIn.close();
             log.level0("done");
         } catch (Exception e) {//Catch exception if any
+            log.errorHandler(e);
             log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
             log.level0("CASUAL experienced an error while parsing command:\n" + strLine + "\nplease report the above exception.");
         }

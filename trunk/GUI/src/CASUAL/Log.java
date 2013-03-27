@@ -158,56 +158,63 @@ public class Log {
 
     public void progress(String data) {
         progressBuffer = progressBuffer + data;
-        try {
+        if (Statics.useGUI){
+            try {
 
-            if (data.contains("\b")) {
+                if (data.contains("\b")) {
+                    writeToLogFile(progressBuffer);
+                    progressBuffer = "";
+                    Statics.ProgressDoc.remove(lastNewLine, Statics.ProgressDoc.getLength() - lastNewLine);
+                    //lastNewLine=Statics.ProgressDoc.getLength();
+
+                }
+                Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
+                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
+
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NullPointerException e) {
+                level0(data + e.toString());
+            }
+            if (data.contains("\n")) {
                 writeToLogFile(progressBuffer);
                 progressBuffer = "";
-                Statics.ProgressDoc.remove(lastNewLine, Statics.ProgressDoc.getLength() - lastNewLine);
-                //lastNewLine=Statics.ProgressDoc.getLength();
-
+                lastNewLine = Statics.ProgressPane.getCaretPosition();
             }
-            Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
-            Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-
-        } catch (BadLocationException ex) {
-            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NullPointerException e) {
-            level0(data + e.toString());
-        }
-        if (data.contains("\n")) {
-            writeToLogFile(progressBuffer);
-            progressBuffer = "";
-            lastNewLine = Statics.ProgressPane.getCaretPosition();
+        } else {
+            System.out.print(data);
         }
 
     }
 
     public void LiveUpdate(String data) {
         System.out.println(data);
-        try {
-            Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
-            Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-        } catch (BadLocationException ex) {
-            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        if (Statics.useGUI){
+            try {
+                Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
+                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
 
     public void beginLine() {
         System.out.println();
-        progress("\n");
+        if (Statics.useGUI) progress("\n");
     }
 
     void replaceLine(String data, int position, int length) {
-        try {
-            Statics.ProgressDoc.remove(position, length);
-            Statics.ProgressDoc.insertString(position, data, null);
-            Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-        } catch (BadLocationException ex) {
-            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        if (Statics.useGUI){
+            try {
+                Statics.ProgressDoc.remove(position, length);
+                Statics.ProgressDoc.insertString(position, data, null);
+                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
+            } catch (BadLocationException ex) {
+                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
     }
 
     /**

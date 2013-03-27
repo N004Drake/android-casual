@@ -327,9 +327,9 @@ public final class CASUALJFrame extends javax.swing.JFrame {
 
         //execute
         if (Statics.TargetScriptIsResource) {
-            new CASUALScriptParser().executeSelectedScriptResource(script);
+            new CASUALScriptParser().executeSelectedScriptResource(script,true);
         } else {
-            new CASUALScriptParser().executeSelectedScriptFile(nonResourceFileName, script);
+            new CASUALScriptParser().executeSelectedScriptFile(nonResourceFileName, script,true);
         }
 
     }

@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -30,7 +32,7 @@ import java.util.zip.ZipInputStream;
  * @author adam
  */
 public class CASUALTools {
-    final public String defaultPackage="ATT GS3 Root";
+    //final public String defaultPackage="ATT GS3 Root";
     
     Log log = new Log();
     private boolean DeviceTimerState = false;
@@ -150,4 +152,63 @@ public class CASUALTools {
 
         log.level3("Exiting comboBoxUpdate()");
     }
+    
+    
+    /**
+     *deploys ADB to Statics.ADBDeployed.
+     */
+    public Runnable adbDeployment = new Runnable() {
+        @Override
+        public void run() {
+            new CASUALDeployADB().deployADB();
+        }
+    };
+     /**
+     *sets up the static CASUALPackageData for use with /SCRIPTS/folder.
+     */
+    public Runnable setCASUALPackageDataFromScriptsFolder = new Runnable() {
+        @Override
+        public void run() {
+            CASUALPackageData casualPackageData = new CASUALPackageData();
+            casualPackageData.setProperties();
+        }
+    };
+     /**
+     *Plays the CASUAL startup sound.
+     */    
+    public Runnable casualSound = new Runnable() {
+        @Override
+        public void run() {
+            if (CASUALPackageData.useSound) {
+                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
+            }
+        }
+    };
+
+    /**
+     *Starts the GUI, should be done last and only if needed.
+     */    
+    public Runnable GUI = new Runnable() {
+        @Override
+        public void run() {
+            Statics.GUI = new CASUALJFrame();
+            Statics.GUI.setVisible(true);
+        }
+    };
+
+    /**
+     *Scans /SCRIPTS/ Folder to locate scripts. 
+     */    
+    public Runnable prepScripts = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                new CASUALTools().listScripts();
+            } catch (IOException ex) {
+                Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    };
+    
+    
 }
