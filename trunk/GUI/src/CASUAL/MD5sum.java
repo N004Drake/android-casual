@@ -20,6 +20,8 @@ import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * Inspired by R.J. Lorimer http://www.javalobby.org/java/forums/t84420.html
@@ -36,12 +38,25 @@ public class MD5sum {
             return false;
         }
     }
-
+    public String md5sum(InputStream is){
+        
+        return md5sumStream(is);//TODO: return stream
+    }
     public String md5sum(File f) {
-        InputStream is;
+    InputStream is;
+        try {
+            is = new FileInputStream(f);
+            return md5sumStream(is);
+        } catch (FileNotFoundException ex) {
+            return "ERROR0FileNotFoundException00000";
+        }
+    }
+    
+    public String md5sumStream(InputStream is) {
+
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
-            is = new FileInputStream(f);
+     
             byte[] buffer = new byte[8192];
             int read;
             try {
@@ -56,8 +71,6 @@ public class MD5sum {
             } finally {
                 is.close();
             }
-        } catch (FileNotFoundException ex) {
-            return "ERROR0FileNotFoundException00000";
 
         } catch (NoSuchAlgorithmException ex) {
             return "ERROR0NoSuchAlgorythemException0";
