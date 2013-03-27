@@ -17,12 +17,11 @@ import java.util.zip.ZipException;
  */
 
 public class CASUALModularPack {
-
+        String activeScript="";    
         void loadCASUALPackFileForCommandLineOnly(String pack) {
         Unzip unzip = new Unzip();
-        String activeScript="";    
         try {
-            Thread adb= new Thread(new CASUALMain().adbDeployment);
+            Thread adb= new Thread(new CASUALTools().adbDeployment);
             adb.start();
             File f=new File(pack);
             if ( ! f.exists()){
@@ -31,7 +30,7 @@ public class CASUALModularPack {
             } else {
                 System.out.println("-----CASPAC MODE-----\nCASPAC: "+f.getAbsolutePath());
             }
-            //begin unziping CASPAC
+            //begin unziping and analyzing CASPAC
             Enumeration zippedFiles =unzip.getZipFileEntries(f);
             while (zippedFiles.hasMoreElements()){
                 Object entry = zippedFiles.nextElement(); //get the object and begin examination
@@ -55,14 +54,26 @@ public class CASUALModularPack {
                 }
                 //DONE with extraction and preparation of zip
             }
+
+            //get ADB ready
             try {
                 adb.join();
+                
             } catch (InterruptedException ex) {
                 Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //new CASUALScriptParser().getDataStreamFromFile(activeScript);
-            new CASUALScriptParser().executeSelectedScriptFile(activeScript,activeScript );
-            //TODO pump InputStream(activeScript) into CASUALScriptParser
+            new CASUALScriptParser().executeOneShotCommand("$ADB wait-for-device");
+            //Launch script
+            Thread t= new Thread(activateScript);
+            t.start();
+                //do communications here
+            try {
+                 t.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
             
         } catch (ZipException ex) {
             new Log().errorHandler(ex);
@@ -77,6 +88,12 @@ public class CASUALModularPack {
         System.out.println();
     }
         
+    Runnable activateScript=new Runnable(){
+            @Override
+            public void run() {
+                  new CASUALScriptParser().executeSelectedScriptFile(activeScript,activeScript,false );
+            }
+    };
         
         
 }

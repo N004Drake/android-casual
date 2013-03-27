@@ -25,7 +25,7 @@ import java.io.File;
  */
 public class CASUALApp {
     final public static String defaultPackage="ATT GS3 Root"; //note this will be used for IDE only.
-    final private static boolean useOverrideArgs=true; // this will use overrideArguments.
+    final private static boolean useOverrideArgs=false; // this will use overrideArguments.
     //final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
     final private static String[] overrideArguments=new String[]{"--caspac","/home/adam/Desktop/casualpack/casualpack.zip"};
     
@@ -106,6 +106,7 @@ public class CASUALApp {
             if (args[i].contains("--caspac")||args[i].contains("-c")) {
                 i++;
                 new CASUALModularPack().loadCASUALPackFileForCommandLineOnly(args[i]);
+                //System.exit(0);
             }
             if (args[i].contains("--gui")||args[i].contains("-g")) {
                 Statics.useGUI=true;
