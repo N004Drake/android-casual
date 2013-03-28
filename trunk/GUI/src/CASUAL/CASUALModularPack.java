@@ -1,8 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/*CASUALModularPack provides a way to launch CASPAC format. 
+ *Copyright (C) 2013  Adam Outler
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+ package CASUAL;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,9 +33,10 @@ public class CASUALModularPack {
     String activeScript = "";
     Thread script;
     Thread zip;
-
+    CASUALModularPackData cpm;
     void loadCASUALPackFileForCommandLineOnly(String pack) {
         Unzip unzip = new Unzip();
+        boolean gotScript=false; //CASPAC will contain only one script.
         try {
             Thread adb = new Thread(new CASUALTools().adbDeployment);
             adb.start();
@@ -39,24 +52,26 @@ public class CASUALModularPack {
             while (zippedFiles.hasMoreElements()) {
                 Object entry = zippedFiles.nextElement(); //get the object and begin examination
                 if (entry.toString().equals("-build.properties")) {
-                    
+
                     new CASUALPackageData().setPropertiesFromInputStream(unzip.streamFileFromZip(f, entry));
-                } else if (entry.toString().equals("-Overview.txt")) {
+                } else if (entry.toString().equals("-Overview.txt")) { //TODO: is this needed or should it be used for notes in CASPAC?
                     System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
-                    //TODO: allow specification of which script here and take no action unless specified script is called. 
-                } else if (entry.toString().endsWith(".scr")) {
+                } else if (entry.toString().endsWith(".meta")) {
+                    cpm=new CASUALModularPackData(unzip.streamFileFromZip(f, entry));
+                } else if (entry.toString().endsWith(".scr")&& !gotScript) {
                     String scriptBasename = StringOperations.replaceLast(entry.toString(), ".scr", "");
                     Statics.ScriptLocation = Statics.TempFolder + scriptBasename + Statics.Slash;
-                    activeScript = Statics.ScriptLocation + scriptBasename+".scr";
+                    activeScript = Statics.ScriptLocation + scriptBasename + ".scr";
                     new FileOperations().makeFolder(Statics.ScriptLocation);
                     new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), activeScript);
-                    script=new Thread(new MD5sumRunnable(activeScript,entry.toString()));
+                    script = new Thread(new MD5sumRunnable(activeScript, entry.toString()));
+                    gotScript=true;
                 } else if (entry.toString().endsWith(".zip")) {
-                    Statics.ScriptLocation =StringOperations.replaceLast(Statics.TempFolder+entry.toString(), ".zip", "") + Statics.Slash;
+                    Statics.ScriptLocation = StringOperations.replaceLast(Statics.TempFolder + entry.toString(), ".zip", "") + Statics.Slash;
                     new FileOperations().makeFolder(Statics.ScriptLocation);
                     unzip.unZipInputStream(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation);
-                    zip=new Thread(new MD5sumRunnable(unzip.streamFileFromZip(f, entry),entry.toString()));
-                    
+                    zip = new Thread(new MD5sumRunnable(unzip.streamFileFromZip(f, entry), entry.toString()));
+
                 } else if (entry.toString().endsWith(".txt")) {
                     System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
                 }
@@ -71,15 +86,28 @@ public class CASUALModularPack {
             } catch (InterruptedException ex) {
                 Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            
-            //TODO: verify MD5 in JAR mode and update MD5 in IDE mode
-            for (Object md5 :  Statics.runnableMD5list.toArray()){
-                System.out.println(md5.toString());
+
+         //TODO: move this to CASUAL tools
+            String className = this.getClass().getName().replace('.', '/');
+            String classJar = this.getClass().getResource("/" + className + ".class").toString();
+            if (classJar.startsWith("jar:")) {
+                System.out.println("");
+                for (Object md5 : Statics.runnableMD5list.toArray()) {
+                    System.out.println(md5.toString());
+        //TODO: verify MD5s from CASPAC
+                    
+                }
+            } else {
+                for (Object md5 : Statics.runnableMD5list.toArray()) {
+                    System.out.println(md5.toString());
+        //TODO: update MD5s in CASPAC
+                }
+
+                System.out.println("*****IDE MODE*****");
             }
-            
-            
-            
+
+            System.out.println("Testatesta" + CASUALModularPack.class.getResource("Foo.class"));
+
             new CASUALScriptParser().executeOneShotCommand("$ADB wait-for-device");
             //Launch script
             Thread t = new Thread(activateScript);
@@ -111,6 +139,4 @@ public class CASUALModularPack {
             new CASUALScriptParser().executeSelectedScriptFile(activeScript, activeScript, false);
         }
     };
-
-
 }
