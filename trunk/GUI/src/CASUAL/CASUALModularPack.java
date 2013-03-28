@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- package CASUAL;
+package CASUAL;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +34,10 @@ public class CASUALModularPack {
     Thread script;
     Thread zip;
     CASUALModularPackData cpm;
+
     void loadCASUALPackFileForCommandLineOnly(String pack) {
         Unzip unzip = new Unzip();
-        boolean gotScript=false; //CASPAC will contain only one script.
+        boolean gotScript = false; //CASPAC will contain only one script.
         try {
             Thread adb = new Thread(new CASUALTools().adbDeployment);
             adb.start();
@@ -57,15 +58,15 @@ public class CASUALModularPack {
                 } else if (entry.toString().equals("-Overview.txt")) { //TODO: is this needed or should it be used for notes in CASPAC?
                     System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
                 } else if (entry.toString().endsWith(".meta")) {
-                    cpm=new CASUALModularPackData(unzip.streamFileFromZip(f, entry));
-                } else if (entry.toString().endsWith(".scr")&& !gotScript) {
+                    cpm = new CASUALModularPackData(unzip.streamFileFromZip(f, entry));
+                } else if (entry.toString().endsWith(".scr") && !gotScript) {
                     String scriptBasename = StringOperations.replaceLast(entry.toString(), ".scr", "");
                     Statics.ScriptLocation = Statics.TempFolder + scriptBasename + Statics.Slash;
                     activeScript = Statics.ScriptLocation + scriptBasename + ".scr";
                     new FileOperations().makeFolder(Statics.ScriptLocation);
                     new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), activeScript);
                     script = new Thread(new MD5sumRunnable(activeScript, entry.toString()));
-                    gotScript=true;
+                    gotScript = true;
                 } else if (entry.toString().endsWith(".zip")) {
                     Statics.ScriptLocation = StringOperations.replaceLast(Statics.TempFolder + entry.toString(), ".zip", "") + Statics.Slash;
                     new FileOperations().makeFolder(Statics.ScriptLocation);
@@ -87,41 +88,67 @@ public class CASUALModularPack {
                 Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-         //TODO: move this to CASUAL tools
-            String className = this.getClass().getName().replace('.', '/');
-            String classJar = this.getClass().getResource("/" + className + ".class").toString();
-            if (classJar.startsWith("jar:")) {
-                System.out.println("");
+            try {
+            int scriptSVNRevision=(Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")));
+            int minSVNRevision=Integer.parseInt(cpm.minSVNRevision);
+            //verify it's an integer
+            if (scriptSVNRevision>0 && minSVNRevision>0){
+                //do the check
+                if (scriptSVNRevision<minSVNRevision){
+                    System.out.println("FAILURE!  CASUAL MUST BE UPDATED TO RUN THIS!");
+                    System.exit(1);
+                } else {
+                    System.out.println("Application Revision Check Passed");
+                }
+                
+            }
+            } catch (NumberFormatException E) {
+                System.out.println("WARNING: could not parse SVN revision.. Continuing");
+            
+            }
+            //TODO: go online check ID and revision (should we use these for CASPAC or should it implement a file naming)?
+            //TODO: possible: PackageNameR2.CASPAC.zip
+            
+            if (new CASUALTools().getIDEMode()) {
+                //we are in IDE mode
                 for (Object md5 : Statics.runnableMD5list.toArray()) {
                     System.out.println(md5.toString());
-        //TODO: verify MD5s from CASPAC
+                    boolean md5Matches=false;
+                    for (Object expectedMD5 : cpm.md5s.toArray()){
+                       if (expectedMD5.toString().equals(md5.toString())){
+                           md5Matches=true;
+                       }
+                    }
+                    if (!md5Matches) {
+                        System.out.println("ERROR: Package is corrupt. Cannot continue.");
+                        System.exit(0);
+                    }
+                }
+                System.out.println("File Integrity Verification Check passed.");
+            } else {
+                //we are in normal mode
+                
+                for (Object md5 : Statics.runnableMD5list.toArray()) {
+                    System.out.println(md5.toString());
+                   //TODO: verify MD5s from CASPAC   
                     
                 }
-            } else {
-                for (Object md5 : Statics.runnableMD5list.toArray()) {
-                    System.out.println(md5.toString());
-        //TODO: update MD5s in CASPAC
+
+      
+                new CASUALScriptParser().executeOneShotCommand("$ADB wait-for-device");
+                //Launch script
+                Thread t = new Thread(activateScript);
+                //t.start();
+                //do communications here
+                try {
+                    t.join();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                System.out.println("*****IDE MODE*****");
             }
 
-            System.out.println("Testatesta" + CASUALModularPack.class.getResource("Foo.class"));
-
-            new CASUALScriptParser().executeOneShotCommand("$ADB wait-for-device");
-            //Launch script
-            Thread t = new Thread(activateScript);
-            //t.start();
-            //do communications here
-            try {
-                t.join();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-
-
-        } catch (ZipException ex) {
+        }  catch (ZipException ex) {
             new Log().errorHandler(ex);
             new Log().level0("Zip File is corrupt. cannot continue.");
             System.exit(1);
