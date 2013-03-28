@@ -33,11 +33,9 @@ import java.util.zip.ZipInputStream;
  */
 public class CASUALTools {
     //final public String defaultPackage="ATT GS3 Root";
-    
+
     Log log = new Log();
     private boolean DeviceTimerState = false;
-
-
 
     public void startStopADBDeviceCheckTimer(boolean StateCommanded) {
         if (StateCommanded && !DeviceTimerState) {
@@ -74,11 +72,11 @@ public class CASUALTools {
 
             if (Count == 0) {
                 new CASUALTools().md5sumTestScripts();
-                log.level0("IDE Mode: Using "+CASUALApp.defaultPackage+".scr ONLY!");
+                log.level0("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
                 //Statics.scriptLocations = new String[]{""};
                 Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
             }
-            CASUALPackageData.ScriptsHaveBeenRecognized=true;
+            CASUALPackageData.ScriptsHaveBeenRecognized = true;
         }
     }
 
@@ -152,10 +150,19 @@ public class CASUALTools {
 
         log.level3("Exiting comboBoxUpdate()");
     }
-    
-    
+
+    public boolean getIDEMode() {
+        //TODO: move this to CASUAL tools
+        String className = this.getClass().getName().replace('.', '/');
+        String classJar = this.getClass().getResource("/" + className + ".class").toString();
+        if (classJar.startsWith("jar:")) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     /**
-     *deploys ADB to Statics.ADBDeployed.
+     * deploys ADB to Statics.ADBDeployed.
      */
     public Runnable adbDeployment = new Runnable() {
         @Override
@@ -163,8 +170,8 @@ public class CASUALTools {
             new CASUALDeployADB().deployADB();
         }
     };
-     /**
-     *sets up the static CASUALPackageData for use with /SCRIPTS/folder.
+    /**
+     * sets up the static CASUALPackageData for use with /SCRIPTS/folder.
      */
     public Runnable setCASUALPackageDataFromScriptsFolder = new Runnable() {
         @Override
@@ -173,9 +180,9 @@ public class CASUALTools {
             casualPackageData.setProperties();
         }
     };
-     /**
-     *Plays the CASUAL startup sound.
-     */    
+    /**
+     * Plays the CASUAL startup sound.
+     */
     public Runnable casualSound = new Runnable() {
         @Override
         public void run() {
@@ -184,10 +191,9 @@ public class CASUALTools {
             }
         }
     };
-
     /**
-     *Starts the GUI, should be done last and only if needed.
-     */    
+     * Starts the GUI, should be done last and only if needed.
+     */
     public Runnable GUI = new Runnable() {
         @Override
         public void run() {
@@ -195,10 +201,9 @@ public class CASUALTools {
             Statics.GUI.setVisible(true);
         }
     };
-
     /**
-     *Scans /SCRIPTS/ Folder to locate scripts. 
-     */    
+     * Scans /SCRIPTS/ Folder to locate scripts.
+     */
     public Runnable prepScripts = new Runnable() {
         @Override
         public void run() {
@@ -209,6 +214,4 @@ public class CASUALTools {
             }
         }
     };
-    
-    
 }

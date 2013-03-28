@@ -21,20 +21,22 @@ public class CASUALModularPackData {
     public String uniqueIdentifier;
     public String supportURL;
     public String updateMessage;
-    public ArrayList md5s;
+    public ArrayList md5s=new ArrayList();
 
     CASUALModularPackData(BufferedInputStream BIS) {
         String packdata = "";
         try {
             while (BIS.available() > 0) {
-                packdata=packdata+BIS.read();
+                packdata=packdata+(char)BIS.read();
             }
         } catch (IOException ex) {
             Logger.getLogger(CASUALModularPackData.class.getName()).log(Level.SEVERE, null, ex);
         }
+        setValues(packdata);
     }
 
     CASUALModularPackData(String string) {
+        setValues(string);
     }
     
     private void setValues(String script){
