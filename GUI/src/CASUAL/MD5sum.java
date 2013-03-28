@@ -20,16 +20,11 @@ import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * Inspired by R.J. Lorimer http://www.javalobby.org/java/forums/t84420.html
  */
 public class MD5sum {
-
-    private String[][] baselineMD5 = null;
-    private String[][] downloadedMD5 = null;
 
     public boolean compareFileToMD5(File f, String MD5) {
         if (md5sum(f).equals(MD5)) {
@@ -38,12 +33,13 @@ public class MD5sum {
             return false;
         }
     }
-    public String md5sum(InputStream is){
-        
+
+    public String md5sum(InputStream is) {
         return md5sumStream(is);//TODO: return stream
     }
+
     public String md5sum(File f) {
-    InputStream is;
+        InputStream is;
         try {
             is = new FileInputStream(f);
             return md5sumStream(is);
@@ -51,12 +47,12 @@ public class MD5sum {
             return "ERROR0FileNotFoundException00000";
         }
     }
-    
+
     public String md5sumStream(InputStream is) {
 
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
-     
+
             byte[] buffer = new byte[8192];
             int read;
             try {
@@ -142,5 +138,9 @@ public class MD5sum {
     String md5sum(String string) {
         return md5sum(new File(string));
 
+    }
+
+    public String makeMD5String(String md5, String filename) {
+        return md5 + "  " + filename;
     }
 }

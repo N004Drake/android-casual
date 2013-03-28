@@ -106,7 +106,7 @@ public class CASUALApp {
             if (args[i].contains("--caspac")||args[i].contains("-c")) {
                 i++;
                 new CASUALModularPack().loadCASUALPackFileForCommandLineOnly(args[i]);
-                //System.exit(0);
+                System.exit(0);
             }
             if (args[i].contains("--gui")||args[i].contains("-g")) {
                 Statics.useGUI=true;
