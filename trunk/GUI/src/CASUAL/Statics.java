@@ -185,7 +185,7 @@ public class Statics {
     public static boolean lockGUIunzip = false;
     public static boolean lockGUIdeviceConnectionStatus = false;
     public static int SVNRevisionRequired = 0;
-
+    public static ArrayList runnableMD5list=new ArrayList();
     /*
      * Determines if Linux, Mac or Windows
      */

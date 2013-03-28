@@ -97,7 +97,7 @@ public class CASUALConnectionStatusMonitor {
                         DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
                         Statics.DeviceTracker = DeviceList.split("device");
 
-
+                        //Linux and mac only.
                         if (DeviceList.contains("????????????")) {
                             DeviceCheck.stop();
                             Log.level0("Insufficient permissions on server detected.");
@@ -118,13 +118,11 @@ public class CASUALConnectionStatusMonitor {
                             if (!DeviceList.contains("????????????")) {
                                 Log.level3(DeviceList);
                                 Log.level1("Permissions problem corrected");
+                                stateSwitcher(1);
                                 DeviceCheck.start();
                                 //devices still not properly recognized.  Log it.
                             } else {
-                                Log.level0("Unrecognized device detected");
-                                Log.level0("");
-                                Log.level0("Application halted. Please restart the application.");
-                                Log.level0("If you continue to experience problems, please report this issue ");
+                                Log.level0("Unrecognized device detected\nIf you continue to experience problems, please report this issue");
                             }
                         }
                     }
