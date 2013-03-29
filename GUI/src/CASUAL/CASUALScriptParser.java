@@ -645,7 +645,7 @@ public class CASUALScriptParser {
                 CurrentLine = 1;
                 if (Statics.useGUI) { 
                     Statics.ProgressBar.setMaximum(LinesInScript);
-                };
+                }
                 log.level3("Reading datastream" + DATAIN);
                 doRead(DATAIN);
                 if (Statics.useGUI) Statics.GUI.enableControls(true);
