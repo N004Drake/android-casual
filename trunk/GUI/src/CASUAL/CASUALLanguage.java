@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -65,10 +66,12 @@ public class CASUALLanguage {
     }
 
     public String commandHandler(String line) {
-        log.level4Debug("new command: " + line);//log line
         line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
-
-
+        if (line.equals("")){
+            //log.level4Debug("received blank line");
+            return "";
+        }
+        log.level4Debug("new command: " + line);//log line
         /*OPERATING SYSTEM COMMANDS
          * $WINDOWS/$LINUX/$MAC
          * checks if the operating system is Windows, Linux Or Mac
@@ -275,6 +278,9 @@ public class CASUALLanguage {
         }
 //$HOMEFOLDER will reference the user's home folder on the system        
         if (line.contains("$HOMEFOLDER")) {
+            if (! new FileOperations().verifyExists(Statics.CASUALHome)){
+                new FileOperations().makeFolder(Statics.CASUALHome);
+            }
             line = line.replace("$HOMEFOLDER", Statics.CASUALHome);
             log.level4Debug("Expanded $HOMEFOLDER" + line);
         }
@@ -289,23 +295,27 @@ public class CASUALLanguage {
             log.level4Debug("Received ECHO command" + line);
             line = line.replace("$ECHO", "");
             line = StringOperations.removeLeadingSpaces(line);
-            log.Level1Interaction(line);
+            log.level2Information(line);
             return "";
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
         } else if (line.startsWith("$LISTDIR")) {
             line = line.replace("$LISTDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
             File[] files = new File(line).listFiles();
-            for (int i = 0; i <= files.length; i++) {
-                try {
-                    commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
-                } catch (IOException ex) {
-                    log.errorHandler(ex);
+            if (files.length>0){
+                for (int i = 0; i < files.length; i++) {
+                    try {
+                        commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
+                    } catch (IOException ex) {
+                        log.errorHandler(ex);
+                    }
                 }
+            } else {
+                log.level2Information("no files");
             }
 // $MAKEDIR will make a folder
         } else if (line.startsWith("$MAKEDIR")) {
-            line = line.replaceFirst("$MAKEDIR", "");
+            line = line.replace("$MAKEDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
             log.level4Debug("Creating Folder: " + line);
             new File(line).mkdirs();
@@ -349,7 +359,7 @@ public class CASUALLanguage {
                 Object[] Options = {"Stop",
                     "Continue"};
                 int n = JOptionPane.showOptionDialog(
-                        Statics.GUI,
+                        null,
                         Message[1],
                         Message[0],
                         JOptionPane.YES_NO_OPTION,
@@ -382,18 +392,15 @@ public class CASUALLanguage {
 
         } else if (line.startsWith("$ACTIONREQUIRED")) {
             if (CASUALPackageData.useSound) {
-                //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             }
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
-            line = line.replaceAll("\\n", "\n");
-
-
-            Object[] Options = {"I didn't do it",
-                "I did it"};
+            Object[] Options = {"I didn't do it", "I did it"};
+            
+            line = "<html>"+ line.replace("\\n", "<BR>")+"</html>";
             int n = JOptionPane.showOptionDialog(
                     null,
-                    new StringBuilder(line),
+                    line,
                     "Dont click through this!",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
@@ -401,7 +408,7 @@ public class CASUALLanguage {
                     Options,
                     Options[1]);
             if (n == JOptionPane.YES_OPTION) {
-                log.level0Error(ScriptName + " Halted.  Perform sthe required actions to continue.");
+                log.level0Error(ScriptName + " Halted.  Perform the required actions to continue.");
                 ScriptContinue = false;
                 return "";
             }
@@ -411,16 +418,48 @@ public class CASUALLanguage {
             //USE: $USERINPUTBOX Title, Message, command $USERINPUT
         } else if (line.startsWith("$USERINPUTBOX")) {
             AudioHandler.playSound("/CASUAL/resources/sounds/InputRequested.wav");
-            line = line.replace("\\n", "\n");
+            //line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",");
+            Message[1] = "<html>"+ Message[1].replace("\\n", "<BR>")+"</html>";
+
             String InputBoxText = JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
             InputBoxText = returnSafeCharacters(InputBoxText);
-
-
+            
             log.level4Debug(InputBoxText);
-            doShellCommand(Message[2], "$USERINPUT", InputBoxText);
+            
+            //TODO: this is limited to userinput right now. 
+            String command=Message[2].replace("$USERINPUT", InputBoxText);
+            new CASUALScriptParser().executeOneShotCommand(command);
+            
             return "";
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
+            
+            
+            /*
+             * BROKEN
+             * [ERROR]no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
+no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
+java.net.MalformedURLException: no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
+
+java.net.MalformedURLException: no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
+	at java.net.URL.<init>(URL.java:585)
+	at java.net.URL.<init>(URL.java:482)
+	at java.net.URL.<init>(URL.java:431)
+	at CASUAL.CASUALUpdates.stringToFormattedURL(CASUALUpdates.java:176)
+	at CASUAL.CASUALUpdates.downloadFileFromInternet(CASUALUpdates.java:120)
+	at CASUAL.CASUALLanguage.commandHandler(CASUALLanguage.java:439)
+	at CASUAL.CASUALLanguage.beginScriptingHandler(CASUALLanguage.java:54)
+	at CASUAL.CASUALScriptParser$1.run(CASUALScriptParser.java:124)
+	at java.lang.Thread.run(Thread.java:722)
+
+[ERROR]A critical error was encoutered.  Please copy the log from About>Show Log and report this issue 
+[ERROR]3
+3
+java.lang.ArrayIndexOutOfBoundsException: 3
+
+java.lang.ArrayIndexOutOfBoundsException: 3
+	at CASUAL.CASUALLanguage.commandHandler(CASUALLa
+             */
         } else if (line.startsWith("$DOWNLOAD")) {
             line = line.replaceFirst("$DOWNLOAD", "");
             line = StringOperations.removeLeadingSpaces(line);
@@ -593,7 +632,7 @@ public class CASUALLanguage {
         }
         log.level4Debug("sending");
         if (parseError) {
-            return Shell.sendShellCommand(StringCommand);
+            return Shell.liveShellCommand(StringCommand, true);
         } else {
             return Shell.sendShellCommandIgnoreError(StringCommand);
         }

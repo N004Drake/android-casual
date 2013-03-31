@@ -189,7 +189,7 @@ public class FileOperations {
             CreatedFolder = folder.mkdirs();
         }
         if (CreatedFolder) {
-            Log.level2Information("Created Folder:" + Folder);
+            Log.level3Verbose("Created Folder:" + Folder);
         } else {
 
             CreatedFolder = false;
@@ -278,7 +278,7 @@ public class FileOperations {
             return true;
         } else {
             Log.level0Error(file.getAbsolutePath() + " Was a failed attempt to write- does not exist.");
-            Log.Level1Interaction("false");
+            Log.level2Information("false");
             return false;
         }
     }

@@ -154,9 +154,9 @@ public class CASUALJFrameAboutBox extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         if (jCheckBox1.isSelected()) {
-            Statics.ConsoleLevel = 4;
+            Statics.GUIVerboseLevel = 4;
         } else {
-            Statics.ConsoleLevel = 1;
+            Statics.GUIVerboseLevel = 1;
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 

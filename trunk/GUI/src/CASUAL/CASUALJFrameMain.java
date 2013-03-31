@@ -52,7 +52,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
         log.level4Debug("OMFGWOOT GUI running!");
-        log.Level1Interaction(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt"));
+        log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt"));
 
 
         log.level4Debug("Searching for scripts");
@@ -348,8 +348,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             try {
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
-                log.Level1Interaction("Description for " + nonResourceFileName);
-                log.Level1Interaction(fileOperations.readFile(nonResourceFileName + ".txt"));
+                log.level2Information("Description for " + nonResourceFileName);
+                log.level2Information(fileOperations.readFile(nonResourceFileName + ".txt"));
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
                 Statics.SelectedScriptFolder = Statics.TempFolder + new File(nonResourceFileName).getName();
                 log.level0Error("Delete this debug line in MenuItemOpenScriptActionPerformed()");
@@ -391,15 +391,15 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
         setWindowBannerImage("SCRIPTS/" + CASUALPackageData.bannerPic, CASUALPackageData.bannerText);
-        CASUALUserInteraction timeOutOptionPane = new CASUALUserInteraction();
+        CASUALInteraction timeOutOptionPane = new CASUALInteraction();
         int DResult = timeOutOptionPane.showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
                 "This application was developed by " + CASUALPackageData.developerName + " using CASUAL framework.\n"
                 + "Donations give developers a tangeble reason to continue quality software development\n",
                 "Donate to the developers", //DisplayTitle
-                CASUALUserInteraction.OK_OPTION, // Options buttons
-                CASUALUserInteraction.INFORMATION_MESSAGE, //Icon
+                CASUALInteraction.OK_OPTION, // Options buttons
+                CASUALInteraction.INFORMATION_MESSAGE, //Icon
                 new String[]{"Donate To CASUAL", "Donate To " + CASUALPackageData.DontateButtonText}, // option buttons
                 "No"); //Default{
         if (DResult == 0) {
@@ -455,11 +455,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }//GEN-LAST:event_startButtonMouseExited
     public void updateSelectedFromGUI() {
         log.level2Information("From Resource: " + Statics.TargetScriptIsResource);
-        log.Level1Interaction("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
+        log.level2Information("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
         if (Statics.TargetScriptIsResource) {
-            log.Level1Interaction(fileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         } else {
-            log.Level1Interaction(fileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            log.level2Information(fileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
         }
         Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString();
         //set the ZipResource

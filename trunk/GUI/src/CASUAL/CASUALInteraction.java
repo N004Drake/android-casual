@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  *
  * @author adam
  */
-public class CASUALUserInteraction extends JOptionPane {
+public class CASUALInteraction extends JOptionPane {
 
     public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType, int messageType, Object[] options, final Object initialValue) {
         if (Statics.useGUI) {
@@ -29,11 +29,12 @@ public class CASUALUserInteraction extends JOptionPane {
     private String getCommandLineInput(String message) {
         System.out.println(message);
         try {
-            char x = (char) new InputStreamReader(System.in).read();
-
-
-            System.out.println(x);
-            return String.valueOf(x);
+            char x = 0;
+            new Log().Level1Interaction(message);
+            while (x<1){
+                x = (char) new InputStreamReader(System.in).read();
+            }
+             return String.valueOf(x);
         } catch (IOException e) {
             return "0";
         }

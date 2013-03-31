@@ -1,12 +1,78 @@
+$ECHO Testing ALL CASUAL commands. Connect your device
+$ADB wait-for-device
+$LINUXMAC $ECHO LINUXMAC This is a Linux or Mac Computer.
+$LINUXWINDOWS $ECHO LINUXWINDOWS This is a Linux or Windows Computer.
+$WINDOWSMAC $ECHO WINDOWSMAC This is a Windows or Mac Computer.
+$LINUX $GOTO #for LiN
+$WINDOWS $GOTO #for MaC
+$MAC $GOTO #for WiN
 
-$ECHO Rebooting into download mode
-#This will work the same as though you had typed $ADB reboot download
-reboot download
-$ECHO adb completed
+#for LiNuX
+$ECHO [PASS] LINUX This is a Linux computer.
+$GOTO #THIS IS A COMMEN
 
-#$HEIMDALL will loop on heimdall detect before executing a command... note to self, use heimdall detect for installing drivers and VC redist
-$ECHO Waiting for heimdall detect to pass and then excuting close-pc-screen
-$HEIMDALL flash --CACHE "$ZIPFILEcache.img.ext4" --RECOVERY "$ZIPFILErecovery.img"
+#for MaC
+$ECHO [PASS] MAC This is a Mac Computer.
+$GOTO #THIS IS A COMMEN
 
 
-$ECHO heimdall completed
+#for WiNdOwS
+$ECHO [PASS] WINDOWS This is a Windows Computer.
+$GOTO #THIS IS A COMMEN
+
+#THIS IS A COMMENT and it's a target for $GOTO
+$ECHO Testing On
+$ON woot, $GOTO #PASS ON command test
+$ADB shell "echo woot"
+
+$HALT $ECHO $ON Failure!
+$GOTO #Done with ON
+
+
+#PASS ON command test
+$ECHO 
+#Done with ON
+$ECHO [PASS] done with ON testing.
+
+
+#this is just in case I want to use the word woot again while writing this.
+$CLEARON
+
+$IFCONTAINS foo $INCOMMAND $ADB shell "echo woot `pwd`" $DO $HALT $ECHO Failure
+$ECHO [PASS] IFCONTAINS
+$IFNOTCONTAINS woot $INCOMMAND $ADB shell "echo woot `pwd`" $DO $HALT $ECHO Failure
+$ECHO [PASS] IFNOTCONTAINS
+$ECHO This is ZIPFILE reference $ZIPFILE.
+$ADB shell "echo $ZIPFILE"
+
+$ECHO This is SLASH reference $SLASH.
+
+$ECHO This is HOMEFOLDER reference.
+$ADB shell "echo [PASS] $HOMEFOLDER"
+
+$ECHO Making a folder in HOMEFOLDER called foo.
+$MAKEDIR $HOMEFOLDERfoo
+
+#$ECHO Downloading a file into foo
+#do we need this? $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java, $HOMEFOLDERfoo,  a file from CASUAL rep/
+#Same for $EXECUTE
+#$ECHO attempting to execute 'ls' command
+#$EXECUTE ls
+
+
+$ECHO This is a LISTDIR on HOMEFOLDER and you should see something in there.
+$LISTDIR $HOMEFOLDER
+$ADB reboot download
+$ECHO USERNOTIFICATION
+$USERNOTIFICATION notification, This is a \n notification and tests new lines too.
+$ECHO USERCANCELOPTION
+$USERCANCELOPTION want to quit?, If you want to quit\n hit stop.
+$ECHO ACTIONREQUIRED
+$ACTIONREQUIRED you have to do something dummy,  In order to continue you have do\n this!
+$ECHO USERINPUTBOX
+$USERINPUTBOX type something, I will repeat what\nyou type., $ECHO [PASS] $USERINPUT
+$HEIMDALL close-pc-screen
+wait-for-device
+
+
+$HALT $ECHO $HALT [PASS] If your device was in download mode, ALL TESTS PASSED!!!!!!!!!!!!. 
