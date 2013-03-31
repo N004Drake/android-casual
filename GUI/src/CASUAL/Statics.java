@@ -44,8 +44,8 @@ public class Statics {
     /*
      * increase or decrease the logging level
      */
-    public static int ConsoleLevel = 1; //userdata is output to console
-    public static int LogLevel = 4; //all logs are output to file
+    public static int GUIVerboseLevel = 2; //userdata is output to console
+    public static int CommandLineVerboseLevel = 4; //all logs are output to file
 
     /*
      * miscellanious variables
@@ -217,7 +217,7 @@ public class Statics {
     }
 
     public static void displayWindowsXPDiscontinued() {
-        int dResult = new CASUALUserInteraction().showTimeoutDialog(
+        int dResult = new CASUALInteraction().showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
                 "Windows XP is a " + (Calendar.getInstance().get(Calendar.YEAR) - 2001) + " year old Operating system.\n"
@@ -226,8 +226,8 @@ public class Statics {
                 + "an Administrator if you wish to continue.... However,\n"
                 + "I recommend letting this window timeout, quit CASUAL and upgrade.\n",
                 "Your Operating System is Not Supported", //DisplayTitle
-                CASUALUserInteraction.OK_OPTION, // Options buttons
-                CASUALUserInteraction.INFORMATION_MESSAGE, //Icon
+                CASUALInteraction.OK_OPTION, // Options buttons
+                CASUALInteraction.INFORMATION_MESSAGE, //Icon
                 new String[]{"Continue At Your Own Risk!!"}, // option buttons
                 "Quit"); //Default{
         if (dResult != 0) {

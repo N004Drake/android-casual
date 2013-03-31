@@ -12,24 +12,26 @@ import java.util.ArrayList;
  */
 public class FastbootTools {
 
-    public String doFastbootShellCommand(String Line) {
-        Line = StringOperations.removeLeadingSpaces(Line);
+    public String doFastbootShellCommand(String line) {
+        line = StringOperations.removeLeadingSpaces(line);
 
         Shell Shell = new Shell();
         ArrayList<String> ShellCommand = new ArrayList();
         ShellCommand.add(Statics.fastbootDeployed);
-        ShellCommand.addAll(new ShellTools().parseCommandLine(Line));
+        ShellCommand.addAll(new ShellTools().parseCommandLine(line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
-        return Shell.liveShellCommand(StringCommand);
+        new Log().level3Verbose("Performing elevated Fastboot command" + line);
+        return Shell.liveShellCommand(StringCommand,true);
     }
 
-    public String doElevatedFastbootShellCommand(String Line) {
-        Line = StringOperations.removeLeadingSpaces(Line);
+    public String doElevatedFastbootShellCommand(String line) {
+        line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
         ArrayList<String> ShellCommand = new ArrayList();
         ShellCommand.add(Statics.fastbootDeployed);
-        ShellCommand.addAll(new ShellTools().parseCommandLine(Line));
+        ShellCommand.addAll(new ShellTools().parseCommandLine(line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
+        new Log().level3Verbose("Performing elevated Fastboot command" + line);
         String returnval = Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
         return returnval;
     }

@@ -38,8 +38,8 @@ public class Log {
     public Log() {
     }
 
-    private void consoleOut(String data) {
-        if (!"".equals(data)) {
+    private void sendToGUI(String data) {
+        if (Statics.useGUI && !"".equals(data)) {
             if (!"\n".equals(data)) {
                 try {
                     try {
@@ -71,29 +71,29 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level0Error(String data) {
-        System.out.println(data);
-        if (Statics.ConsoleLevel >= 0) {
-            consoleOut(data);
+        writeOutToLog("[ERROR]"+data);
+        if (Statics.GUIVerboseLevel >= 0) {
+            sendToGUI(data);
 
         }
-        if (Statics.LogLevel >= 0) {
-            debugOut(data);
+        if (Statics.CommandLineVerboseLevel >= 0) {
+        System.out.println("[ERROR]"+data);
 
         }
     }
 
     /**
-     * level 0 is used for critical data.
+     * level 1 is used for interactive tasks.
      *
      * @param data is data to be written to log
      */
     public void Level1Interaction(String data) {
-        System.out.println(data);
-        if (Statics.ConsoleLevel >= 1) {
-            consoleOut(data);
+            writeOutToLog("[INTERACTION]"+data);
+        if (Statics.GUIVerboseLevel >= 1) {
+            sendToGUI(data);
         }
-        if (Statics.LogLevel >= 1) {
-            debugOut(data);
+        if (Statics.CommandLineVerboseLevel >= 1) {
+        System.out.println("[INTERACTION]"+data);
 
         }
 
@@ -106,13 +106,12 @@ public class Log {
      */
     // level 2 is for info-type data
     public void level2Information(String data) {
-        System.out.println(data);
-        if (Statics.ConsoleLevel >= 2) {
-            consoleOut(data);
+           writeOutToLog("[INFO]"+data);
+        if (Statics.GUIVerboseLevel >= 2) {
+            sendToGUI(data);
         }
-        if (Statics.LogLevel >= 2) {
-            debugOut(data);
-
+        if (Statics.CommandLineVerboseLevel >= 2) {
+        System.out.println("[INFO]"+data); 
         }
     }
 
@@ -122,41 +121,40 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level3Verbose(String data) {
-        System.out.println(data);
-        if (Statics.ConsoleLevel >= 3) {
-            consoleOut(data);
+        writeOutToLog("[VERBOSE]"+ data);
+        if (Statics.GUIVerboseLevel >= 3) {
+            sendToGUI(data);
         }
-        if (Statics.LogLevel >= 3) {
-            debugOut(data);
-
+        if (Statics.CommandLineVerboseLevel >= 3) {
+            System.out.println("[VERBOSE]"+data);
         }
     }
 
     public void level4Debug(String data) {
-        System.out.println(data);
-        if (Statics.ConsoleLevel >= 4) {
-            consoleOut(data);
+        writeOutToLog("[DEBUG]"+data);
+        
+        if (Statics.GUIVerboseLevel >= 4) {
+            sendToGUI(data);
         }
-        if (Statics.LogLevel >= 4) {
-            debugOut(data);
-
+        if (Statics.CommandLineVerboseLevel >= 4) {
+            System.out.println("[DEBUG]"+data);
         }
     }
 
     public void writeToLogFile(String data) {
-        debugOut(data);
+        writeOutToLog(data);
     }
 
-    private void debugOut(String data) {
-        // for testing log  System.out.println(data);
-
+    private void writeOutToLog(String data) {
         FileWriter WriteFile = null;
         try {
             WriteFile = new FileWriter(Statics.TempFolder + "log.txt", true);
         } catch (IOException ex) {
+            System.out.println("Attempted to write to log but could not.");
         }
 
         PrintWriter out = new PrintWriter(WriteFile);
+        out.write(data+"\n");
 
         Statics.OutFile = out;
         if (Statics.OutFile != null) {
@@ -211,6 +209,9 @@ public class Log {
 
     }
 
+    /*
+     * begins a new line
+     */
     public void beginLine() {
         System.out.println();
         if (Statics.useGUI) {
@@ -218,6 +219,9 @@ public class Log {
         }
     }
 
+    /*
+     * replaces a line of text
+     */
     void replaceLine(String data, int position, int length) {
         if (Statics.useGUI) {
             try {
@@ -232,12 +236,12 @@ public class Log {
 
     /**
      *
-     * @param e is any throwable
+     * @param e is any Throwable.
      */
     public void errorHandler(Exception e) {
         StringWriter writer = new StringWriter();
         e.printStackTrace(new PrintWriter(writer));
-        level0Error(e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
+        level0Error("[CRITICAL]"+e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
         level0Error("A critical error was encoutered.  Please copy the log from About>Show Log and report this issue ");
     }
 }

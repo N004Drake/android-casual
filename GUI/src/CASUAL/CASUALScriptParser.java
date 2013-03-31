@@ -105,7 +105,7 @@ public class CASUALScriptParser {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                int updateStatus;
+                //int updateStatus;
                 log.level4Debug("CASUAL has initiated a multithreaded execution environment");
                 String idStringFile = "";
                 String TestString = "";
@@ -166,7 +166,7 @@ public class CASUALScriptParser {
                             case 3:
                                 log.level0Error(Statics.updateMessageFromWeb);
                                 log.level0Error("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                                new CASUALUserInteraction().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWeb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", CASUALUserInteraction.ERROR_MESSAGE, CASUALUserInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                new CASUALInteraction().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWeb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                 new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
                                 System.exit(0);
                                 return true;
@@ -178,7 +178,7 @@ public class CASUALScriptParser {
                             case 5:
                                 log.level0Error("Problem downloading file from internet, please try again");
                                 log.level0Error("Problem downloading file from internet, please try again");
-                                new CASUALUserInteraction().showTimeoutDialog(60, null, "Download Failure.  CASUAL will now restart.", "CRITICAL ERROR!", CASUALUserInteraction.ERROR_MESSAGE, CASUALUserInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
+                                new CASUALInteraction().showTimeoutDialog(60, null, "Download Failure.  CASUAL will now restart.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
                                 try {
                                     JavaSystem.restart(new String[]{""});
                                 } catch (InterruptedException ex) {

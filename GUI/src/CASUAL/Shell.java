@@ -61,8 +61,8 @@ public class Shell implements Runnable {
             String[] TestGKSudo = {"which", "gksudo"};
             String TestReturn = Shell.sendShellCommand(TestGKSudo);
             if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))) {
-                CASUALUserInteraction TO = new CASUALUserInteraction();
-                TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", CASUALUserInteraction.OK_OPTION, CASUALUserInteraction.ERROR_MESSAGE, null, null);
+                CASUALInteraction TO = new CASUALInteraction();
+                TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
             }
 
 
@@ -76,9 +76,9 @@ public class Shell implements Runnable {
             FileOperations.setExecutableBit(ScriptFile);
             log.level4Debug("###Elevating Command: " + Command + " ###");
             if (message == null) {
-                Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile});
+                Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile},true);
             } else {
-                Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile});
+                Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile},true);
             }
 
         } else if (Statics.isMac()) {
@@ -95,7 +95,7 @@ public class Shell implements Runnable {
             }
             FileOperations.setExecutableBit(ScriptFile);
             String[] MacCommand = {ScriptFile};
-            Result = liveShellCommand(MacCommand);
+            Result = liveShellCommand(MacCommand,true);
         } else if (!Statics.OSName.equals("Windows XP")) {
             newCmd = new String[cmd.length + 2];
             newCmd[0] = Statics.WinElevatorInTempFolder;
@@ -104,7 +104,7 @@ public class Shell implements Runnable {
                 newCmd[i] = cmd[i - 2] + " ";
             }
 
-            Result = liveShellCommand(newCmd);
+            Result = liveShellCommand(newCmd,true);
 
         }
 
@@ -133,7 +133,8 @@ public class Shell implements Runnable {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level2Information("Problem while executing" + arrayToString(cmd)
+            //todo: is this an error or do we handle it appropriately?
+            log.level0Error("Problem while executing" + arrayToString(cmd)
                     + " in Shell.sendShellCommand() Received " + AllText);
             return "CritERROR!!!";
         }
@@ -199,7 +200,7 @@ public class Shell implements Runnable {
 
     }
 
-    public String liveShellCommand(String[] params) {
+    public String liveShellCommand(String[] params,boolean display) {
         String LogRead = "";
         try {
             Process process = new ProcessBuilder(params).start();
@@ -215,9 +216,9 @@ public class Shell implements Runnable {
                 CharRead = Character.toString((char) c);
                 LineRead = LineRead + CharRead;
                 LogRead = LogRead + CharRead;
-                log.progress(CharRead);
+                if (display)log.progress(CharRead);
 
-                if (Statics.ActionEvents.isEmpty() && (LineRead.contains("\n") || LineRead.contains("\r"))) {
+                if (!Statics.ActionEvents.isEmpty() && ((LineRead.contains("\n") || LineRead.contains("\r")))) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
                         if (Statics.ActionEvents != null && LineRead.contains((String) Statics.ActionEvents.get(i))) {
 
@@ -246,9 +247,9 @@ public class Shell implements Runnable {
                 if (Statics.isWindows()) {
                     new HeimdallInstall().installWindowsDrivers();
                 } else {
-                    new CASUALUserInteraction().showTimeoutDialog(600, null, "Install LibUSB drivers!", "LibUSB not found", CASUALUserInteraction.OK_CANCEL_OPTION, CASUALUserInteraction.ERROR, new String[]{"OK"}, "OK");
+                    new CASUALInteraction().showTimeoutDialog(600, null, "Install LibUSB drivers!", "LibUSB not found", CASUALInteraction.OK_CANCEL_OPTION, CASUALInteraction.ERROR, new String[]{"OK"}, "OK");
                 }
-                liveShellCommand(params);
+                liveShellCommand(params,true);
             }
         } catch (RuntimeException ex) {
             return LogRead;
