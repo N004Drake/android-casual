@@ -39,9 +39,10 @@ $ECHO [PASS] done with ON testing.
 $CLEARON
 
 $IFCONTAINS foo $INCOMMAND $ADB shell "echo woot `pwd`" $DO $HALT $ECHO Failure
-$ECHO [PASS] IFCONTAINS
+$IFCONTAINS foo $INCOMMAND $ADB shell "echo foo" $DO $ECHO [PASS] IFCONTAINS
 $IFNOTCONTAINS woot $INCOMMAND $ADB shell "echo woot `pwd`" $DO $HALT $ECHO Failure
-$ECHO [PASS] IFNOTCONTAINS
+$IFNOTCONTAINS foo $INCOMMAND $ADB shell "echo woot `pwd`" $DO $ECHO [PASS] IFNOTCONTAINS
+
 $ECHO This is ZIPFILE reference $ZIPFILE.
 $ADB shell "echo $ZIPFILE"
 
@@ -61,7 +62,7 @@ $MAKEDIR $HOMEFOLDERfoo
 
 
 $ECHO This is a LISTDIR on HOMEFOLDER and you should see something in there.
-$LISTDIR $HOMEFOLDER
+$LISTDIR /
 $ADB reboot download
 $ECHO USERNOTIFICATION
 $USERNOTIFICATION notification, This is a \n notification and tests new lines too.
