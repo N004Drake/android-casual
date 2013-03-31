@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
 /**
  *
@@ -67,7 +66,7 @@ public class CASUALLanguage {
 
     public String commandHandler(String line) {
         line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
-        if (line.equals("")){
+        if (line.equals("")) {
             //log.level4Debug("received blank line");
             return "";
         }
@@ -79,14 +78,13 @@ public class CASUALLanguage {
          * Command may include $HALT and any other command like $ECHO
          */
         if (line.startsWith("$LINUXMAC")) {
-            if (!Statics.isLinux() && !Statics.isMac()) {
-                return "";
-            } else {
+            if (Statics.isLinux() || Statics.isMac()) {
                 String removeCommand = "$LINUXMAC";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Linux Or Mac Detected: ");
                 log.level4Debug("OS IS LINUX or MAC! remaining commands:" + line);
-
+            } else {
+                return "";
             }
         }
         if (line.startsWith("$LINUXWINDOWS")) {
@@ -95,18 +93,16 @@ public class CASUALLanguage {
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Windows or Linux Detected: ");
                 log.level4Debug("OS IS WINDOWS OR LINUX! remaining commands:" + line);
-
             } else {
                 return "";
             }
         }
         if (line.startsWith("$WINDOWSMAC")) {
-            if (Statics.isLinux()) {
-                String removeCommand = "$LINUXMAC";
+            if (Statics.isWindows() || Statics.isMac()) {
+                String removeCommand = "$WINDOWSMAC";
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Mac or Windows Detected: ");
                 log.level4Debug("OS IS Windows or Mac! remaining commands:" + line);
-
             } else {
                 return "";
             }
@@ -117,7 +113,6 @@ public class CASUALLanguage {
                 line = removeCommandAndContinue(removeCommand, line);
                 log.progress("Linux Detected: ");
                 log.level4Debug("OS IS LINUX! remaining commands:" + line);
-
             } else {
                 return "";
             }
@@ -278,7 +273,7 @@ public class CASUALLanguage {
         }
 //$HOMEFOLDER will reference the user's home folder on the system        
         if (line.contains("$HOMEFOLDER")) {
-            if (! new FileOperations().verifyExists(Statics.CASUALHome)){
+            if (!new FileOperations().verifyExists(Statics.CASUALHome)) {
                 new FileOperations().makeFolder(Statics.CASUALHome);
             }
             line = line.replace("$HOMEFOLDER", Statics.CASUALHome);
@@ -302,7 +297,7 @@ public class CASUALLanguage {
             line = line.replace("$LISTDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
             File[] files = new File(line).listFiles();
-            if (files.length>0){
+            if (files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
                     try {
                         commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
@@ -396,8 +391,8 @@ public class CASUALLanguage {
             }
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
             Object[] Options = {"I didn't do it", "I did it"};
-            
-            line = "<html>"+ line.replace("\\n", "<BR>")+"</html>";
+
+            line = "<html>" + line.replace("\\n", "<BR>") + "</html>";
             int n = JOptionPane.showOptionDialog(
                     null,
                     line,
@@ -420,45 +415,45 @@ public class CASUALLanguage {
             AudioHandler.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             //line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",");
-            Message[1] = "<html>"+ Message[1].replace("\\n", "<BR>")+"</html>";
+            Message[1] = "<html>" + Message[1].replace("\\n", "<BR>") + "</html>";
 
             String InputBoxText = JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
             InputBoxText = returnSafeCharacters(InputBoxText);
-            
+
             log.level4Debug(InputBoxText);
-            
+
             //TODO: this is limited to userinput right now. 
-            String command=Message[2].replace("$USERINPUT", InputBoxText);
+            String command = Message[2].replace("$USERINPUT", InputBoxText);
             new CASUALScriptParser().executeOneShotCommand(command);
-            
+
             return "";
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
-            
-            
+
+
             /*
              * BROKEN
              * [ERROR]no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
-no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
-java.net.MalformedURLException: no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
+             no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
+             java.net.MalformedURLException: no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
 
-java.net.MalformedURLException: no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
-	at java.net.URL.<init>(URL.java:585)
-	at java.net.URL.<init>(URL.java:482)
-	at java.net.URL.<init>(URL.java:431)
-	at CASUAL.CASUALUpdates.stringToFormattedURL(CASUALUpdates.java:176)
-	at CASUAL.CASUALUpdates.downloadFileFromInternet(CASUALUpdates.java:120)
-	at CASUAL.CASUALLanguage.commandHandler(CASUALLanguage.java:439)
-	at CASUAL.CASUALLanguage.beginScriptingHandler(CASUALLanguage.java:54)
-	at CASUAL.CASUALScriptParser$1.run(CASUALScriptParser.java:124)
-	at java.lang.Thread.run(Thread.java:722)
+             java.net.MalformedURLException: no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
+             at java.net.URL.<init>(URL.java:585)
+             at java.net.URL.<init>(URL.java:482)
+             at java.net.URL.<init>(URL.java:431)
+             at CASUAL.CASUALUpdates.stringToFormattedURL(CASUALUpdates.java:176)
+             at CASUAL.CASUALUpdates.downloadFileFromInternet(CASUALUpdates.java:120)
+             at CASUAL.CASUALLanguage.commandHandler(CASUALLanguage.java:439)
+             at CASUAL.CASUALLanguage.beginScriptingHandler(CASUALLanguage.java:54)
+             at CASUAL.CASUALScriptParser$1.run(CASUALScriptParser.java:124)
+             at java.lang.Thread.run(Thread.java:722)
 
-[ERROR]A critical error was encoutered.  Please copy the log from About>Show Log and report this issue 
-[ERROR]3
-3
-java.lang.ArrayIndexOutOfBoundsException: 3
+             [ERROR]A critical error was encoutered.  Please copy the log from About>Show Log and report this issue 
+             [ERROR]3
+             3
+             java.lang.ArrayIndexOutOfBoundsException: 3
 
-java.lang.ArrayIndexOutOfBoundsException: 3
-	at CASUAL.CASUALLanguage.commandHandler(CASUALLa
+             java.lang.ArrayIndexOutOfBoundsException: 3
+             at CASUAL.CASUALLanguage.commandHandler(CASUALLa
              */
         } else if (line.startsWith("$DOWNLOAD")) {
             line = line.replaceFirst("$DOWNLOAD", "");
