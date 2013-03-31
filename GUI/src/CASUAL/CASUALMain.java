@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,10 +24,11 @@ import java.util.logging.Logger;
  * @author adam
  */
 public final class CASUALMain {
+
     String[] args;
 
     public void startup(String[] cmd) {
-        args=cmd;
+        args = cmd;
         new FileOperations().makeFolder(Statics.TempFolder);
         Thread adb = new Thread(new CASUALTools().adbDeployment);
         adb.start(); //start ADB deployment
@@ -37,7 +37,7 @@ public final class CASUALMain {
         scriptPrep.start(); //scan self for embedded scripts
         Thread pData = new Thread(new CASUALTools().setCASUALPackageDataFromScriptsFolder);
         pData.start(); // scan self and set package properties
-        Thread cSound = new Thread (new CASUALTools().casualSound);
+        Thread cSound = new Thread(new CASUALTools().casualSound);
         try {
             pData.join(); //wait for properties
             cSound.start();  //do startup sound
@@ -49,24 +49,25 @@ public final class CASUALMain {
         new CASUALTools().startStopADBDeviceCheckTimer(true); //start device scanning
 
 
-        if (args.length != 0 && ! Statics.useGUI) {
+        if (args.length != 0 && !Statics.useGUI) {
             doConsoleStartup();  //use command line args
         } else {
-            Statics.useGUI=true;
+            Statics.useGUI = true;
             doGUIStartup(); //bring up GUI and wait for user to click start
         }
     }
-      private void doConsoleStartup() {
+
+    private void doConsoleStartup() {
         for (int i = 0; i < args.length; i++) {
-            if (args[i].contains("--execute")||args[i].contains("-e")) {
+            if (args[i].contains("--execute") || args[i].contains("-e")) {
                 i++;
                 new CASUALScriptParser().executeOneShotCommand(args[i]);
             } else {
                 System.out.println("Unrecogized command");
             }
-            
+
         }
-     //   System.exit(0);
+        //   System.exit(0);
     }
 
     private void doGUIStartup() {

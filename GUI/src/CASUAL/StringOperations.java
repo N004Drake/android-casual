@@ -67,7 +67,7 @@ public class StringOperations {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
-    
+
     public static String[] convertArrayListToStringArray(ArrayList List) {
         String[] StringArray = new String[List.size()];
         for (int i = 0; i <= List.size() - 1; i++) {
@@ -76,4 +76,3 @@ public class StringOperations {
         return StringArray;
     }
 }
-

@@ -52,12 +52,12 @@ public class FileOperations {
                         return true;
                     } else {
 
-                        Log.level0("Failed to write file");
+                        Log.level0Error("Failed to write file");
                         return false;
                     }
 
                 } else {
-                    Log.level0("Critical Error copying " + Resource);
+                    Log.level0Error("Critical Error copying " + Resource);
                 }
             } catch (NullPointerException e) {
                 return false;
@@ -68,7 +68,7 @@ public class FileOperations {
 
         } catch (IOException ex) {
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
-            Log.level0("Critical Error copying " + Resource);
+            Log.level0Error("Critical Error copying " + Resource);
             return false;
         }
         return false;
@@ -91,11 +91,11 @@ public class FileOperations {
     public void recursiveDelete(File path) {
         File[] c = path.listFiles();
         if (path.exists()) {
-            Log.level2("Cleaning up folder:" + path.toString());
+            Log.level2Information("Cleaning up folder:" + path.toString());
 
             for (File file : c) {
                 if (file.isDirectory()) {
-                    Log.level3("Deleting " + file.toString());
+                    Log.level4Debug("Deleting " + file.toString());
                     recursiveDelete(file);
                     file.delete();
                 } else {
@@ -116,7 +116,7 @@ public class FileOperations {
         File Check = new File(path);
         File[] c = Check.listFiles();
         if (Check.exists()) {
-            Log.level2("Verifying permissions in folder:" + path.toString());
+            Log.level2Information("Verifying permissions in folder:" + path.toString());
             for (File file : c) {
                 if (!file.canWrite()) {
                     return false;
@@ -137,11 +137,11 @@ public class FileOperations {
         File Check = new File(PathToSearch);
         File[] c = Check.listFiles();
         if (Check.exists()) {
-            Log.level2("Searching for file in folder:" + PathToSearch.toString());
+            Log.level2Information("Searching for file in folder:" + PathToSearch.toString());
             for (File file : c) {
                 String x = file.getName();
                 if (file.isDirectory()) {
-                    Log.level3("Searching " + file.toString());
+                    Log.level4Debug("Searching " + file.toString());
                     File[] subdir = file.listFiles();
                     for (File sub : subdir) {
                         if (sub.isDirectory()) {
@@ -189,31 +189,34 @@ public class FileOperations {
             CreatedFolder = folder.mkdirs();
         }
         if (CreatedFolder) {
-            Log.level2("Created Folder:" + Folder);
+            Log.level2Information("Created Folder:" + Folder);
         } else {
 
             CreatedFolder = false;
-            Log.level0("Could not create temp folder in " + Folder);
+            Log.level0Error("Could not create temp folder in " + Folder);
         }
 
         return CreatedFolder;
     }
 
-    public void writeStreamToFile(BufferedInputStream stream, String destination) throws FileNotFoundException, IOException{
+    public void writeStreamToFile(BufferedInputStream stream, String destination) throws FileNotFoundException, IOException {
         int currentByte;
         int buffer = 4096;
         byte data[] = new byte[buffer];
-        File f=new File(destination);
-        if (! verifyExists(f.getParent())){makeFolder(f.getParent());}
+        File f = new File(destination);
+        if (!verifyExists(f.getParent())) {
+            makeFolder(f.getParent());
+        }
         FileOutputStream fos = new FileOutputStream(f);
         BufferedOutputStream dest;
-        dest = new BufferedOutputStream(fos,buffer);
+        dest = new BufferedOutputStream(fos, buffer);
         while ((currentByte = stream.read(data, 0, buffer)) != -1) {
             dest.write(data, 0, currentByte);
         }
         dest.flush();
         dest.close();
     }
+
     /**
      * takes a string and a filename, writes to the file
      *
@@ -226,7 +229,7 @@ public class FileOperations {
         bw = new BufferedWriter(new FileWriter(File, true));
         bw.write(Text);
         bw.close();
-        Log.level3("Write Finished");
+        Log.level4Debug("Write Finished");
     }
 
     /**
@@ -241,11 +244,11 @@ public class FileOperations {
         bw = new BufferedWriter(new FileWriter(File, false));
         bw.write(Text);
         bw.close();
-        Log.level3("File overwrite Finished");
+        Log.level4Debug("File overwrite Finished");
     }
 
     private boolean writeInputStreamToFile(InputStream is, File file) {
-        Log.level3("Attempting to write " + file.getPath());
+        Log.level4Debug("Attempting to write " + file.getPath());
         try {
             BufferedOutputStream out;
             out = new BufferedOutputStream(new FileOutputStream(file));
@@ -259,7 +262,7 @@ public class FileOperations {
                     out.write(data, 0, currentByte);
                 }
             } else {
-                Log.level0("ERROR: FILE READ WAS 0 LENGTH");
+                Log.level0Error("ERROR: FILE READ WAS 0 LENGTH");
                 return false;
             }
             is.close();
@@ -271,11 +274,11 @@ public class FileOperations {
             return false;
         }
         if ((file.exists()) && (file.length() >= 4)) {
-            Log.level3("File verified.");
+            Log.level4Debug("File verified.");
             return true;
         } else {
-            Log.level0(file.getAbsolutePath() + " Was a failed attempt to write- does not exist.");
-            Log.level1("false");
+            Log.level0Error(file.getAbsolutePath() + " Was a failed attempt to write- does not exist.");
+            Log.Level1Interaction("false");
             return false;
         }
     }
@@ -292,10 +295,10 @@ public class FileOperations {
         if (file.exists()) {
             if (file.delete()) {
                 Deleted = true;
-                Log.level3("Deleted " + FileName);
+                Log.level4Debug("Deleted " + FileName);
             } else {
                 Deleted = false;
-                Log.level0("ERROR DELETING FILE:" + FileName);
+                Log.level0Error("ERROR DELETING FILE:" + FileName);
                 JOptionPane.showMessageDialog(null, "Could not delete " + FileName
                         + ".  Delete this folder manually",
                         "file error", JOptionPane.ERROR_MESSAGE);
@@ -315,7 +318,7 @@ public class FileOperations {
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
 
-        Log.level3("Copying " + sourceFile.getPath() + " to " + destFile.getPath());
+        Log.level4Debug("Copying " + sourceFile.getPath() + " to " + destFile.getPath());
         if (!destFile.exists()) {
             destFile.createNewFile();
         }
@@ -345,7 +348,7 @@ public class FileOperations {
      */
     public String currentDir() {
         String CurrentDir = new File(".").getAbsolutePath();
-        Log.level3("Detected current folder: " + CurrentDir);
+        Log.level4Debug("Detected current folder: " + CurrentDir);
         if (CurrentDir.endsWith(".")) {
             CurrentDir = CurrentDir.substring(0, CurrentDir.length() - 1);
         }
@@ -381,8 +384,8 @@ public class FileOperations {
     public boolean verifyFileExists(String Folder) {
         File FileFolder = new File(Folder);
         boolean Result = (FileFolder.length() >= 1);
-        Log.level3("Verifying " + Folder + " .  Result=" + Result);
-        Log.level3("Result=" + Result);
+        Log.level4Debug("Verifying " + Folder + " .  Result=" + Result);
+        Log.level4Debug("Result=" + Result);
         return (Result);
     }
 
@@ -395,7 +398,7 @@ public class FileOperations {
     public boolean setExecutableBit(String Executable) {
         File Exe = new File(Executable);
         boolean Result = Exe.setExecutable(true);
-        Log.level3("Setting executable " + Exe + ". Result=" + Result);
+        Log.level4Debug("Setting executable " + Exe + ". Result=" + Result);
         return Result;
     }
 
@@ -438,7 +441,7 @@ public class FileOperations {
         InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
         StringBuilder text = new StringBuilder();
         try {
-            InputStreamReader in; 
+            InputStreamReader in;
             in = new InputStreamReader(resourceAsStream, "UTF-8");
             int read;
             while ((read = in.read()) != -1) {
@@ -447,7 +450,7 @@ public class FileOperations {
             }
             in.close();
         } catch (NullPointerException ex) {
-            Log.level0("Could not find resource named:" + Resource);
+            Log.level0Error("Could not find resource named:" + Resource);
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
@@ -455,8 +458,8 @@ public class FileOperations {
         //Log.level3(text.toString());
         return text.toString();
     }
+
     public String readTextFromStream(BufferedInputStream in) {
-;
         StringBuilder text = new StringBuilder();
         try {
             int read;
@@ -485,10 +488,10 @@ public class FileOperations {
                 EntireFile = EntireFile + "\n" + Line;
             }
         } catch (FileNotFoundException ex) {
-            Log.level0("File Not Found Error: " + FileOnDisk);
+            Log.level0Error("File Not Found Error: " + FileOnDisk);
 
         } catch (IOException ex) {
-            Log.level0("Permission Error: " + FileOnDisk);
+            Log.level0Error("Permission Error: " + FileOnDisk);
         }
         EntireFile = EntireFile.replaceFirst("\n", "");
         return EntireFile;

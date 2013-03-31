@@ -19,6 +19,7 @@ package CASUAL;
 //import java.awt.Color;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 import javax.swing.JProgressBar;
 import javax.swing.JTextPane;
@@ -32,9 +33,10 @@ import javax.swing.text.StyledDocument;
  * information to be used everywhere in the program.
  */
 public class Statics {
-    public static final String BUILDPROPERTIES="SCRIPTS/-build";
-    public static boolean GUIIsAvailable=false;
-    public static boolean useGUI=false;
+
+    public static final String BUILDPROPERTIES = "SCRIPTS/-build";
+    public static boolean GUIIsAvailable = false;
+    public static boolean useGUI = false;
 
     public Statics() {
     }
@@ -72,23 +74,20 @@ public class Statics {
     static String heimdallMacURL = "https://android-casual.googlecode.com/svn/trunk/repo/Heimdall_1.4.1_compressed.dmg.sh";
     //Form data
     public static boolean TargetScriptIsResource = true;
-    public static CASUALJFrame GUI;
-    public static JTextPane ProgressPane=new JTextPane(); //used by log to update Progress
+    public static CASUALJFrameMain GUI;
+    public static JTextPane ProgressPane = new JTextPane(); //used by log to update Progress
     final public static String Slash = System.getProperty("file.separator");
-        
-    
     /**
-     *ProgressDoc provides a static reference to the program output
+     * ProgressDoc provides a static reference to the program output
      */
     public static String PreProgress = "";
     public static JProgressBar ProgressBar;
     public static StyledDocument ProgressDoc;
+
     public static void initDocument() {
         ProgressPane.setContentType("text/html");
         ProgressDoc = ProgressPane.getStyledDocument();
     }
-
-    
     //Folders
     public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
     public static String ScriptLocation = "/SCRIPTS/";
@@ -180,16 +179,16 @@ public class Statics {
     /*
      * Project properties
      */
-
     public static boolean lockGUIformPrep = true;
     public static boolean lockGUIunzip = false;
     public static boolean lockGUIdeviceConnectionStatus = false;
     public static int SVNRevisionRequired = 0;
-    public static ArrayList runnableMD5list=new ArrayList();
+    public static ArrayList runnableMD5list = new ArrayList();
     /*
      * Determines if Linux, Mac or Windows
      */
     //Check for windows
+
     public static boolean isWindows() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("XP")) {
@@ -207,28 +206,28 @@ public class Statics {
 
     public static boolean isLinux() {
         String os = System.getProperty("os.name").toLowerCase();
-        if (os.indexOf("nux") >= 0){
+        if (os.indexOf("nux") >= 0) {
             if (arch.equals("")) {
                 checkLinuxArch();
             }
             return true;
         }
-        
+
         return false;
     }
 
     public static void displayWindowsXPDiscontinued() {
-        int dResult = new TimeOutOptionPane().showTimeoutDialog(
+        int dResult = new CASUALUserInteraction().showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
-                "Windows XP is a 12 year old Operating system.\n"
+                "Windows XP is a " + (Calendar.getInstance().get(Calendar.YEAR) - 2001) + " year old Operating system.\n"
                 + "CASUAL is not able to handle problems caused by this.\n"
                 + "Certain critial operations may not work. Please run as\n"
                 + "an Administrator if you wish to continue.... However,\n"
                 + "I recommend letting this window timeout, quit CASUAL and upgrade.\n",
                 "Your Operating System is Not Supported", //DisplayTitle
-                TimeOutOptionPane.OK_OPTION, // Options buttons
-                TimeOutOptionPane.INFORMATION_MESSAGE, //Icon
+                CASUALUserInteraction.OK_OPTION, // Options buttons
+                CASUALUserInteraction.INFORMATION_MESSAGE, //Icon
                 new String[]{"Continue At Your Own Risk!!"}, // option buttons
                 "Quit"); //Default{
         if (dResult != 0) {
@@ -245,7 +244,7 @@ public class Statics {
     public static String getScriptLocationOnDisk(String name) {
         for (int n = 0; n < scriptNames.length; n++) {
             if (name.equals(scriptNames[n])) {
-                Log.level3("Script " + name + " returned #" + n + scriptNames[n]);
+                Log.level4Debug("Script " + name + " returned #" + n + scriptNames[n]);
 
                 if (scriptLocations[n] != null) {
                     return scriptLocations[n];
@@ -259,7 +258,7 @@ public class Statics {
     public static void setScriptLocationOnDisk(String name, String location) {
         for (int n = 0; n < scriptNames.length; n++) {
             if (name.equals(scriptNames[n])) {
-                Log.level3("Associated Script " + name + " with #" + n + scriptNames[n]);
+                Log.level4Debug("Associated Script " + name + " with #" + n + scriptNames[n]);
 
                 scriptLocations[n] = location;
             }
@@ -282,7 +281,7 @@ public class Statics {
             if (isMac()) {
                 fastbootResource = fastbootMac;
             }
-            Log.level2("Deploying Fastboot from " + fastbootResource + " to " + fastbootDeployed);
+            Log.level2Information("Deploying Fastboot from " + fastbootResource + " to " + fastbootDeployed);
             new FileOperations().copyFromResourceToFile(fastbootResource, fastbootDeployed);
             if (isLinux() || isMac()) {
                 new FileOperations().setExecutableBit(fastbootDeployed);

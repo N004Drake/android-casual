@@ -53,7 +53,7 @@ public class CASUALTools {
             URL jar = Src.getLocation();
             ZipInputStream Zip = new ZipInputStream(jar.openStream());
             ZipEntry ZEntry;
-            log.level3("Picking Jar File:" + jar.getFile());
+            log.level4Debug("Picking Jar File:" + jar.getFile());
             while ((ZEntry = Zip.getNextEntry()) != null) {
 
                 String EntryName = ZEntry.getName();
@@ -65,14 +65,14 @@ public class CASUALTools {
             Statics.scriptNames = new String[list.size()];
             for (int n = 0; n < list.size(); n++) {
                 String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
-                log.level3("Found: " + EntryName);
+                log.level4Debug("Found: " + EntryName);
                 Statics.scriptNames[n] = EntryName;
                 Count++;
             }
 
             if (Count == 0) {
                 new CASUALTools().md5sumTestScripts();
-                log.level0("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
+                log.level0Error("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
                 //Statics.scriptLocations = new String[]{""};
                 Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
             }
@@ -81,7 +81,7 @@ public class CASUALTools {
     }
 
     public void md5sumTestScripts() {
-        log.level3("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
+        log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
 
         String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "src" + Statics.Slash + "SCRIPTS" + Statics.Slash;
         final File folder = new File(scriptsPath);
@@ -97,9 +97,9 @@ public class CASUALTools {
                     if (line.matches("(\\S{31,})(\\s\\s)(.*\\..*)")) {
                         System.out.println(line);
                         String[] md5File = line.split("  ");
-                        log.level3("Old MD5: " + md5File[0]);
+                        log.level4Debug("Old MD5: " + md5File[0]);
                         String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
-                        log.level3("New MD5 " + newMD5);
+                        log.level4Debug("New MD5 " + newMD5);
                         writeOut = writeOut + newMD5 + "  " + md5File[1] + "\n";
                     } else {
                         writeOut = writeOut + line + "\n";
@@ -128,11 +128,11 @@ public class CASUALTools {
                 try {
                     Statics.GUI.enableControls(false);
                 } catch (NullPointerException ex) {
-                    log.level3("attempted to lock controls but controls are not availble yet");
+                    log.level4Debug("attempted to lock controls but controls are not availble yet");
                 }
                 Statics.lockGUIunzip = true;
                 if (getClass().getResource(ZipResource) != null) {
-                    log.level3("Extracting archive....");
+                    log.level4Debug("Extracting archive....");
 
                     Unzip Unzip = new Unzip();
                     try {
@@ -148,7 +148,7 @@ public class CASUALTools {
         };
         t.start();
 
-        log.level3("Exiting comboBoxUpdate()");
+        log.level4Debug("Exiting comboBoxUpdate()");
     }
 
     public boolean getIDEMode() {
@@ -187,7 +187,7 @@ public class CASUALTools {
         @Override
         public void run() {
             if (CASUALPackageData.useSound) {
-                CASUALAudioSystem.playSound("/CASUAL/resources/sounds/CASUAL.wav");
+                AudioHandler.playSound("/CASUAL/resources/sounds/CASUAL.wav");
             }
         }
     };
@@ -197,7 +197,7 @@ public class CASUALTools {
     public Runnable GUI = new Runnable() {
         @Override
         public void run() {
-            Statics.GUI = new CASUALJFrame();
+            Statics.GUI = new CASUALJFrameMain();
             Statics.GUI.setVisible(true);
         }
     };

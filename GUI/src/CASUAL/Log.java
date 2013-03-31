@@ -70,7 +70,7 @@ public class Log {
      *
      * @param data is data to be written to log
      */
-    public void level0(String data) {
+    public void level0Error(String data) {
         System.out.println(data);
         if (Statics.ConsoleLevel >= 0) {
             consoleOut(data);
@@ -83,11 +83,11 @@ public class Log {
     }
 
     /**
-     * level 0 is used for normal user data..
+     * level 0 is used for critical data.
      *
      * @param data is data to be written to log
      */
-    public void level1(String data) {
+    public void Level1Interaction(String data) {
         System.out.println(data);
         if (Statics.ConsoleLevel >= 1) {
             consoleOut(data);
@@ -104,8 +104,8 @@ public class Log {
      *
      * @param data is data to be written to log
      */
-    // level 2 is for debugging data
-    public void level2(String data) {
+    // level 2 is for info-type data
+    public void level2Information(String data) {
         System.out.println(data);
         if (Statics.ConsoleLevel >= 2) {
             consoleOut(data);
@@ -121,12 +121,23 @@ public class Log {
      *
      * @param data is data to be written to log
      */
-    public void level3(String data) {
+    public void level3Verbose(String data) {
         System.out.println(data);
         if (Statics.ConsoleLevel >= 3) {
             consoleOut(data);
         }
         if (Statics.LogLevel >= 3) {
+            debugOut(data);
+
+        }
+    }
+
+    public void level4Debug(String data) {
+        System.out.println(data);
+        if (Statics.ConsoleLevel >= 4) {
+            consoleOut(data);
+        }
+        if (Statics.LogLevel >= 4) {
             debugOut(data);
 
         }
@@ -146,7 +157,7 @@ public class Log {
         }
 
         PrintWriter out = new PrintWriter(WriteFile);
-        
+
         Statics.OutFile = out;
         if (Statics.OutFile != null) {
             Statics.LogCreated = true;
@@ -158,7 +169,7 @@ public class Log {
 
     public void progress(String data) {
         progressBuffer = progressBuffer + data;
-        if (Statics.useGUI){
+        if (Statics.useGUI) {
             try {
 
                 if (data.contains("\b")) {
@@ -174,7 +185,7 @@ public class Log {
             } catch (BadLocationException ex) {
                 Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NullPointerException e) {
-                level0(data + e.toString());
+                level0Error(data + e.toString());
             }
             if (data.contains("\n")) {
                 writeToLogFile(progressBuffer);
@@ -189,7 +200,7 @@ public class Log {
 
     public void LiveUpdate(String data) {
         System.out.println(data);
-        if (Statics.useGUI){
+        if (Statics.useGUI) {
             try {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
@@ -202,11 +213,13 @@ public class Log {
 
     public void beginLine() {
         System.out.println();
-        if (Statics.useGUI) progress("\n");
+        if (Statics.useGUI) {
+            progress("\n");
+        }
     }
 
     void replaceLine(String data, int position, int length) {
-        if (Statics.useGUI){
+        if (Statics.useGUI) {
             try {
                 Statics.ProgressDoc.remove(position, length);
                 Statics.ProgressDoc.insertString(position, data, null);
@@ -224,7 +237,7 @@ public class Log {
     public void errorHandler(Exception e) {
         StringWriter writer = new StringWriter();
         e.printStackTrace(new PrintWriter(writer));
-        level0(e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
-        level0("A critical error was encoutered.  Please copy the log from About>Show Log and report this issue ");
+        level0Error(e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
+        level0Error("A critical error was encoutered.  Please copy the log from About>Show Log and report this issue ");
     }
 }

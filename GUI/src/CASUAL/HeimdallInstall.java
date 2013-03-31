@@ -61,7 +61,7 @@ public class HeimdallInstall {
                 return false;
             }
         } else {
-            new Log().level0("This system has been detected as not compatible with Heimdall automatic-installer. If this is not correct, contact AdamOutler from XDA. You must compile and install heimdall from source to continue.  Heimdall's source is available from https://github.com/Benjamin-Dobell/Heimdall .  ");
+            new Log().level0Error("This system has been detected as not compatible with Heimdall automatic-installer. If this is not correct, contact AdamOutler from XDA. You must compile and install heimdall from source to continue.  Heimdall's source is available from https://github.com/Benjamin-Dobell/Heimdall .  ");
             return false;
         }
 
@@ -112,23 +112,22 @@ public class HeimdallInstall {
     private void installHeimdallMac() {
         if (Statics.isMac()) {
             CASUALUpdates update = new CASUALUpdates();
-            String installScript=Statics.TempFolder+"installer.sh";
+            String installScript = Statics.TempFolder + "installer.sh";
             update.downloadFileFromInternet(Statics.heimdallMacURL, installScript, "Downloading Heimdall Installation file");
             new FileOperations().setExecutableBit(installScript);
-            if (System.getProperty("os.arch").contains("i386")){
-            JOptionPane.showMessageDialog(null, "Heimdall is optimized for 64 bit systems.\nWe won't prevent you from installing Heimdall,\nbut you will be stuck in a loop until you quit..\n"
-                            , "Wrong Architecture detected", JOptionPane.ERROR_MESSAGE);
-                
+            if (System.getProperty("os.arch").contains("i386")) {
+                JOptionPane.showMessageDialog(null, "Heimdall is optimized for 64 bit systems.\nWe won't prevent you from installing Heimdall,\nbut you will be stuck in a loop until you quit..\n", "Wrong Architecture detected", JOptionPane.ERROR_MESSAGE);
+
             }
             System.out.println(System.getProperty("os.arch"));
             JOptionPane.showMessageDialog(null, "Heimdall One-Click will now launch Heimdall Installer.\n  Hit cancel if asked to set up any network interfaces.\n"
-                            + "You must install Heimdall in order to continue", "Exiting Heimdall One-Click", JOptionPane.ERROR_MESSAGE);
+                    + "You must install Heimdall in order to continue", "Exiting Heimdall One-Click", JOptionPane.ERROR_MESSAGE);
             shell.elevateSimpleCommand(new String[]{installScript});
             JOptionPane.showMessageDialog(null, ""
                     + "In order to continue, you must unplug the device and\n"
                     + "then it back in.  Use a GOOD port, in the back, not\n"
                     + "in the front.  Use a good cable too.", "Unplug it and then plug it back in", JOptionPane.ERROR_MESSAGE);
-            
+
 
         }
     }
@@ -136,7 +135,7 @@ public class HeimdallInstall {
     public void installWindowsVCRedist() {
         //download 
         CASUALUpdates updater = new CASUALUpdates();
-        new Log().level0("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
+        new Log().level0Error("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
         String installVCResults = "CritERROR!!!";
         try {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_32.exe", "Visual Studio Redistributable");
@@ -165,10 +164,10 @@ public class HeimdallInstall {
 
     public void installWindowsDrivers() {
         //install drivers
-        HeimdallInstallDriversForWindowsPicture HID= new HeimdallInstallDriversForWindowsPicture();
+        CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         HID.setVisible(true);
-        log.level0("Installing drivers");
-        new Log().level0("Driver Problems suck. Lemme make it easy.\n"
+        log.level0Error("Installing drivers");
+        new Log().level0Error("Driver Problems suck. Lemme make it easy.\n"
                 + "1. Check that your device is download mode and connected up.\n"
                 + "2. Select the one that says ---Gadget Serial--- in the main window\n"
                 + "3. Click ---install driver---.\n"
@@ -212,7 +211,7 @@ public class HeimdallInstall {
 
     void runWinHeimdallInstallationProcedure() {
         installWindowsDrivers();
-        new Log().level0("done.");
+        new Log().level0Error("done.");
         installWindowsVCRedist();
     }
 

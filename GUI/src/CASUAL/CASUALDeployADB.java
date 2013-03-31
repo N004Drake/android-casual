@@ -33,14 +33,14 @@ class CASUALDeployADB{
 
 
         if (Statics.isLinux()) {
-            Log.level3("Found Linux Computer");
+            Log.level4Debug("Found Linux Computer");
             //add our lines to the current adbini
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
             Statics.AdbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.LinuxADB(), Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isMac()) {
-            Log.level3("Found Mac Computer");
+            Log.level4Debug("Found Mac Computer");
             //add our lines to the current adbini
             String addToADBUSB = DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac);
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, addToADBUSB);
@@ -48,7 +48,7 @@ class CASUALDeployADB{
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isWindows()) {
-            Log.level3("Found Windows Computer");
+            Log.level4Debug("Found Windows Computer");
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationWindows));
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.AdbDeployed = Statics.TempFolder + "adb.exe";
@@ -59,13 +59,13 @@ class CASUALDeployADB{
             Statics.LiveSendCommand.add("get-state");
             new Shell().silentBackgroundShellCommand();
             try {
-                Log.level3("sleeping for Windows ADB start");
+                Log.level4Debug("sleeping for Windows ADB start");
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 //no catch needed for sleep interruption
             }
         } else {
-            Log.level0("Your system is not supported");
+            Log.level0Error("Your system is not supported");
         }
 
         FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
@@ -84,7 +84,7 @@ class CASUALDeployADB{
         //handle libusb -3
         if ((Statics.isLinux()) && (DeviceList.contains("ERROR-3"))) { //Don't know how to handle this yet
             Shell shell = new Shell();
-            Log.level0("Permissions problem detected. Killing and requesting permissions escillation.");
+            Log.level0Error("Permissions problem detected. Killing and requesting permissions escillation.");
             shell.silentShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
             shell.elevateSimpleCommandWithMessage(devicesCmd, "Device permissions problem detected");
         }
@@ -99,9 +99,9 @@ class CASUALDeployADB{
         }
 
 
-        Log.level3("Device List:" + DeviceList);
+        Log.level4Debug("Device List:" + DeviceList);
         if ((!Statics.isWindows()) && ((DeviceList.contains("????????????") || (DeviceList.contains("**************")) || (DeviceList.contains("error: cannot connect to daemon"))))) {
-            Log.level3("sleeping for 4 seconds.  Device list: " + DeviceList);
+            Log.level4Debug("sleeping for 4 seconds.  Device list: " + DeviceList);
             try {
                 Thread.sleep(4000);
             } catch (InterruptedException ex) {
