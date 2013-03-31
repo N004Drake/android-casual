@@ -32,7 +32,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  *
  * @author Adam Outler adamoutler@gmail.com
  */
-public class CASUALAudioSystem {
+public class AudioHandler {
 
     /*
      * playSound plays sounds
@@ -58,11 +58,11 @@ public class CASUALAudioSystem {
                         line.drain();
                         line.close();
                     } catch (UnsupportedAudioFileException ex) {
-                        Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
-                        Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (LineUnavailableException ex) {
-                        Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -84,8 +84,8 @@ public class CASUALAudioSystem {
 
                     for (String URL : URLs) {
                         try {
-                            AudioInputStream IS; 
-                            IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));   
+                            AudioInputStream IS;
+                            IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
                             AudioFormat Format = IS.getFormat();
                             line = AudioSystem.getSourceDataLine(Format);
                             line.open(Format);
@@ -100,15 +100,15 @@ public class CASUALAudioSystem {
                                 line.close();
                             }
                         } catch (UnsupportedAudioFileException ex) {
-                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (IOException ex) {
-                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (LineUnavailableException ex) {
-                            Logger.getLogger(CASUALAudioSystem.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
                     }
-                    
+
                 }
             }
         }).start();

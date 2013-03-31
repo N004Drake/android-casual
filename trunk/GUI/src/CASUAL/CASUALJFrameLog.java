@@ -24,12 +24,12 @@ import java.awt.datatransfer.StringSelection;
  *
  * @author Adam Outler adamoutler@gmail.com
  */
-public class CASUALLogFrame extends javax.swing.JFrame {
+public class CASUALJFrameLog extends javax.swing.JFrame {
 
     /**
      * Creates new form CASUALLogJFrame
      */
-    public CASUALLogFrame() {
+    public CASUALJFrameLog() {
         initComponents();
         refreshLog();
     }
@@ -114,7 +114,7 @@ public class CASUALLogFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new CASUALLogFrame().setVisible(true);
+                new CASUALJFrameLog().setVisible(true);
             }
         });
     }

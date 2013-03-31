@@ -14,34 +14,34 @@ import java.util.logging.Logger;
  *
  * @author adam
  */
-public class CASUALModularPackData {
+public class CASPACData {
 
     public String minSVNRevision;
     public String scriptRevision;
     public String uniqueIdentifier;
     public String supportURL;
     public String updateMessage;
-    public ArrayList md5s=new ArrayList();
+    public ArrayList md5s = new ArrayList();
 
-    CASUALModularPackData(BufferedInputStream BIS) {
+    CASPACData(BufferedInputStream BIS) {
         String packdata = "";
         try {
             while (BIS.available() > 0) {
-                packdata=packdata+(char)BIS.read();
+                packdata = packdata + (char) BIS.read();
             }
         } catch (IOException ex) {
-            Logger.getLogger(CASUALModularPackData.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CASPACData.class.getName()).log(Level.SEVERE, null, ex);
         }
         setValues(packdata);
     }
 
-    CASUALModularPackData(String string) {
+    CASPACData(String string) {
         setValues(string);
     }
-    
-    private void setValues(String script){
+
+    private void setValues(String script) {
         String[] scriptIdentificationString = script.split("\n");
-        
+
         for (int n = 0; n < scriptIdentificationString.length; n++) { //parse each line
 
             String[] splitID = scriptIdentificationString[n].split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
@@ -66,5 +66,4 @@ public class CASUALModularPackData {
 
         }
     }
-    
 }

@@ -51,7 +51,7 @@ public class CASUALUpdates {
             return 1;
 
         } catch (IOException ex) {
-            Log.level3(script + " not found in repository.");
+            Log.level4Debug(script + " not found in repository.");
             return 1;
         }
         //This is where we hold the local information to be compared to the update
@@ -65,7 +65,7 @@ public class CASUALUpdates {
         //This is where we hold web information to be checked for an update every run.
         CASUALIDString webInformation = new CASUALIDString();
         webInformation.setMetaDataFromIDString(webData.split("\n"));
-        Log.level3("***WEB VERSION***" + webInformation.metaData);
+        Log.level4Debug("***WEB VERSION***" + webInformation.metaData);
         Statics.SVNRevisionRequired = Integer.parseInt(webInformation.metaData[2]);
         Statics.updateMessageFromWeb = webInformation.getMetaData()[4];
         Statics.supportWebsiteFromWeb = webInformation.metaData[3];
@@ -74,19 +74,19 @@ public class CASUALUpdates {
         if (localInformation.metaData[0].equals(webInformation.metaData[0])) {
             if (checkVersionInformation(webInformation.metaData[2], localInformation.metaData[2])) {
                 //update SVN
-                Log.level0("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.metaData[3] + " for more information. ");
+                Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.metaData[3] + " for more information. ");
                 //Log.level0(webInformation[4]);
                 return 3;
             }
             if (checkVersionInformation(webInformation.metaData[1], localInformation.metaData[1])) {
-                Log.level0("Current Version " + localInformation.metaData[1] + " requires update to version " + webInformation.metaData[1]);
-                Log.level0("Script is out of date. See " + webInformation.metaData[3] + " for more information.  Updating.");
-                Log.level0(webInformation.metaData[4]);
+                Log.level0Error("Current Version " + localInformation.metaData[1] + " requires update to version " + webInformation.metaData[1]);
+                Log.level0Error("Script is out of date. See " + webInformation.metaData[3] + " for more information.  Updating.");
+                Log.level0Error(webInformation.metaData[4]);
                 //ugly code dealing with /SCRIPTS/ folder on computer.
                 new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
                 int status = downloadUpdates(script, webInformation, Statics.TempFolder);
                 if (status == 0) {
-                    Log.level0("... Update Sucessful! MD5s verified!");
+                    Log.level0Error("... Update Sucessful! MD5s verified!");
                     return 2;
                 } else {
                     return 4;
@@ -127,8 +127,8 @@ public class CASUALUpdates {
     }
 
     public boolean downloadFileFromInternet(URL url, String outputFile, String friendlyName) {
-        Log.level3("Downloading " + url);
-        Log.level3("To: " + outputFile);
+        Log.level4Debug("Downloading " + url);
+        Log.level4Debug("To: " + outputFile);
         InputStream input;
         try {
 
@@ -157,7 +157,7 @@ public class CASUALUpdates {
 
             }
         } catch (Exception ex) {
-            Log.level3("Error Downloading " + ex.getMessage());
+            Log.level4Debug("Error Downloading " + ex.getMessage());
             return false;
         }
         return true;
@@ -165,11 +165,11 @@ public class CASUALUpdates {
 
     public void displayCASUALString(String[] CASUALString) {
         //SVN Revision, Script Revision, Script Identification, support URL, message to user
-        Log.level3("Identification: " + CASUALString[0]);
-        Log.level3("ScriptRevision: " + CASUALString[1]);
-        Log.level3("CASUALRevision: " + CASUALString[2]);
-        Log.level3("URL: " + CASUALString[3]);
-        Log.level3("Server Message: " + CASUALString[4]);
+        Log.level4Debug("Identification: " + CASUALString[0]);
+        Log.level4Debug("ScriptRevision: " + CASUALString[1]);
+        Log.level4Debug("CASUALRevision: " + CASUALString[2]);
+        Log.level4Debug("URL: " + CASUALString[3]);
+        Log.level4Debug("Server Message: " + CASUALString[4]);
     }
 
     public URL stringToFormattedURL(String stringURL) throws MalformedURLException, URISyntaxException {
@@ -212,13 +212,13 @@ public class CASUALUpdates {
         try {
             url = stringToFormattedURL(Statics.CASUALRepo + scriptname);
         } catch (MalformedURLException ex) {
-            Log.level3("malformedURL exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo + scriptname);
+            Log.level4Debug("malformedURL exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo + scriptname);
             return 1;
         } catch (URISyntaxException ex) {
-            Log.level3("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo + scriptname);
+            Log.level4Debug("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo + scriptname);
             return 1;
         }
-        Log.level0("Downloading Updates");
+        Log.level0Error("Downloading Updates");
 
         try {
             ArrayList<String> list = new ArrayList();

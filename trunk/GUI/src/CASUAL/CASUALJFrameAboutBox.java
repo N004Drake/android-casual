@@ -22,12 +22,12 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author adam
  */
-public class CASUALAboutBox extends javax.swing.JFrame {
+public class CASUALJFrameAboutBox extends javax.swing.JFrame {
 
     /**
      * Creates new form CASUALAboutBox1
      */
-    public CASUALAboutBox() {
+    public CASUALJFrameAboutBox() {
         initComponents();
         this.jLabel4.setText("CASUAL Revision:" + CASUALPackageData.CASUALSVNRevision + " Build:" + CASUALPackageData.CASUALBuildNumber);
     }
@@ -122,13 +122,13 @@ public class CASUALAboutBox extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel2))
                             .addComponent(jCheckBox1))
-                        .addGap(0, 67, Short.MAX_VALUE)))
+                        .addGap(0, 227, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 13, Short.MAX_VALUE)
+                    .addGap(0, 64, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 13, Short.MAX_VALUE)))
+                    .addGap(0, 65, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,7 +137,7 @@ public class CASUALAboutBox extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 265, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
                 .addComponent(jCheckBox1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
@@ -199,7 +199,7 @@ public class CASUALAboutBox extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new CASUALAboutBox().setVisible(true);
+                new CASUALJFrameAboutBox().setVisible(true);
             }
         });
     }

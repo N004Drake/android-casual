@@ -61,8 +61,8 @@ public class Shell implements Runnable {
             String[] TestGKSudo = {"which", "gksudo"};
             String TestReturn = Shell.sendShellCommand(TestGKSudo);
             if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))) {
-                TimeOutOptionPane TO = new TimeOutOptionPane();
-                TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", TimeOutOptionPane.OK_OPTION, TimeOutOptionPane.ERROR_MESSAGE, null, null);
+                CASUALUserInteraction TO = new CASUALUserInteraction();
+                TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", CASUALUserInteraction.OK_OPTION, CASUALUserInteraction.ERROR_MESSAGE, null, null);
             }
 
 
@@ -74,7 +74,7 @@ public class Shell implements Runnable {
                 log.errorHandler(ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
-            log.level3("###Elevating Command: " + Command + " ###");
+            log.level4Debug("###Elevating Command: " + Command + " ###");
             if (message == null) {
                 Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile});
             } else {
@@ -86,11 +86,10 @@ public class Shell implements Runnable {
             try {
                 FileOperations.writeToFile(""
                         + "#!/bin/sh \n"
-                        + "export bar="+ Command +" ;\n"
+                        + "export bar=" + Command + " ;\n"
                         + "for i in \"$@\"; do export bar=\"$bar '${i}'\";done;\n"
-                        + "osascript -e \'do shell script \"$bar\" with administrator privileges\'"
-                        , ScriptFile);
-            log.level0(ScriptFile);
+                        + "osascript -e \'do shell script \"$bar\" with administrator privileges\'", ScriptFile);
+                log.level0Error(ScriptFile);
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
@@ -113,7 +112,7 @@ public class Shell implements Runnable {
     }
 
     public String sendShellCommand(String[] cmd) {
-        log.level3("\n###executing: " + cmd[0] + "###");
+        log.level4Debug("\n###executing: " + cmd[0] + "###");
         String AllText = "";
         try {
             String line;
@@ -121,27 +120,28 @@ public class Shell implements Runnable {
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             /*try {
-                process.waitFor();
-            } catch (InterruptedException ex) {
-                log.errorHandler(ex);
-            }*/
+             process.waitFor();
+             } catch (InterruptedException ex) {
+             log.errorHandler(ex);
+             }*/
             while ((line = STDOUT.readLine()) != null) {
                 AllText = AllText + line + "\n";
-            }           
-            while ((line = STDERR.readLine()) != null && ! line.equals("")) {
+            }
+            while ((line = STDERR.readLine()) != null && !line.equals("")) {
                 AllText = AllText + line;
             }
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level2("Problem while executing" + arrayToString(cmd)
+            log.level2Information("Problem while executing" + arrayToString(cmd)
                     + " in Shell.sendShellCommand() Received " + AllText);
             return "CritERROR!!!";
         }
 
     }
+
     public String sendShellCommandIgnoreError(String[] cmd) {
-        log.level3("\n###executing: " + cmd[0] + "###");
+        log.level4Debug("\n###executing: " + cmd[0] + "###");
         String AllText = "";
         try {
             String line;
@@ -150,16 +150,17 @@ public class Shell implements Runnable {
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             while ((line = STDOUT.readLine()) != null) {
                 AllText = AllText + line + "\n";
-            }            
+            }
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level2("Problem while executing" + arrayToString(cmd)
+            log.level2Information("Problem while executing" + arrayToString(cmd)
                     + " in Shell.sendShellCommand() Received " + AllText);
             return "CritERROR!!!";
         }
 
     }
+
     public String silentShellCommand(String[] cmd) {
         String AllText = "";
         try {
@@ -182,7 +183,7 @@ public class Shell implements Runnable {
         for (int i = 0; i < stringarray.length; i++) {
             str = str + " " + stringarray[i];
         }
-        log.level3("arrayToString " + stringarray + " expanded to: " + str);
+        log.level4Debug("arrayToString " + stringarray + " expanded to: " + str);
         return str;
     }
 
@@ -202,7 +203,7 @@ public class Shell implements Runnable {
         String LogRead = "";
         try {
             Process process = new ProcessBuilder(params).start();
-            log.level3("\n###executing real-time command: " + params[0] + "###");
+            log.level4Debug("\n###executing real-time command: " + params[0] + "###");
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             String LineRead = "";
@@ -216,7 +217,7 @@ public class Shell implements Runnable {
                 LogRead = LogRead + CharRead;
                 log.progress(CharRead);
 
-                if (Statics.ActionEvents.size() != 0 && (LineRead.contains("\n") || LineRead.contains("\r"))) {
+                if (Statics.ActionEvents.isEmpty() && (LineRead.contains("\n") || LineRead.contains("\r"))) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
                         if (Statics.ActionEvents != null && LineRead.contains((String) Statics.ActionEvents.get(i))) {
 
@@ -238,14 +239,14 @@ public class Shell implements Runnable {
                 }
 
             }
-            log.level3(LogRead);
+            log.level4Debug(LogRead);
 
             //
             if (LogRead.contains("libusb error:")) {
                 if (Statics.isWindows()) {
                     new HeimdallInstall().installWindowsDrivers();
                 } else {
-                    new TimeOutOptionPane().showTimeoutDialog(600, null, "Install LibUSB drivers!", "LibUSB not found", TimeOutOptionPane.OK_CANCEL_OPTION, TimeOutOptionPane.ERROR, new String[]{"OK"}, "OK");
+                    new CASUALUserInteraction().showTimeoutDialog(600, null, "Install LibUSB drivers!", "LibUSB not found", CASUALUserInteraction.OK_CANCEL_OPTION, CASUALUserInteraction.ERROR, new String[]{"OK"}, "OK");
                 }
                 liveShellCommand(params);
             }
@@ -266,7 +267,7 @@ public class Shell implements Runnable {
                 boolean LinkLaunched = false;
                 try {
                     String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    log.level3("\n###executing real-time background command: " + params[0] + "###");
+                    log.level4Debug("\n###executing real-time background command: " + params[0] + "###");
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -288,11 +289,11 @@ public class Shell implements Runnable {
                     while ((LineRead = STDERR.readLine()) != null) {
                         log.progress(LineRead);
                     }
-                    new Log().level2(LogData);
+                    new Log().level2Information(LogData);
 
                 } catch (IOException ex) {
                     String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    log.level2("Problem while executing" + ArrayList
+                    log.level2Information("Problem while executing" + ArrayList
                             + " in Shell.liveShellCommand()");
                     Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -310,7 +311,7 @@ public class Shell implements Runnable {
             public void run() {
                 boolean LinkLaunched = false;
                 try {
-                    String[] params =Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
+                    String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
@@ -330,13 +331,13 @@ public class Shell implements Runnable {
                         LogData = LogData + CharRead.toString();
                     }
                     while ((LineRead = STDERR.readLine()) != null) {
-                        log.level3(LineRead);
+                        log.level4Debug(LineRead);
                     }
-                    new Log().level3(LogData);
+                    new Log().level4Debug(LogData);
 
                 } catch (IOException ex) {
                     String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    log.level2("Problem while executing" + ArrayList
+                    log.level2Information("Problem while executing" + ArrayList
                             + " in Shell.liveShellCommand()");
                     Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
                 }

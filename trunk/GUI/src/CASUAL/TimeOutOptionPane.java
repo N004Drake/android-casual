@@ -41,7 +41,7 @@ public class TimeOutOptionPane extends JOptionPane {
      *
      */
 
-    public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType,
+    public int timeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType,
             int messageType, Object[] options, final Object initialValue) {
         JOptionPane pane = new JOptionPane(message, messageType, optionType, null, options, initialValue);
 

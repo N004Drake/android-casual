@@ -18,7 +18,6 @@ package CASUAL;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,12 +27,12 @@ import java.util.zip.ZipException;
  *
  * @author adam
  */
-public class CASUALModularPack {
+public class CASPACHandler {
 
     String activeScript = "";
     Thread script;
     Thread zip;
-    CASUALModularPackData cpm;
+    CASPACData cpm;
 
     void loadCASUALPackFileForCommandLineOnly(String pack) {
         Unzip unzip = new Unzip();
@@ -43,7 +42,7 @@ public class CASUALModularPack {
             adb.start();
             File f = new File(pack);
             if (!f.exists()) {
-                new Log().level0("File Not Found " + pack);
+                new Log().level0Error("File Not Found " + pack);
                 System.exit(1);
             } else {
                 System.out.println("-----CASPAC MODE-----\nCASPAC: " + f.getAbsolutePath());
@@ -60,13 +59,13 @@ public class CASUALModularPack {
                         System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
                     }
                 } else if (entry.toString().endsWith(".meta")) {
-                    cpm = new CASUALModularPackData(unzip.streamFileFromZip(f, entry));
+                    cpm = new CASPACData(unzip.streamFileFromZip(f, entry));
                 } else if (entry.toString().endsWith(".scr") && !gotScript) {
                     String scriptBasename = StringOperations.replaceLast(entry.toString(), ".scr", "");
                     Statics.ScriptLocation = Statics.TempFolder + scriptBasename + Statics.Slash;
                     activeScript = Statics.ScriptLocation + scriptBasename;
                     new FileOperations().makeFolder(Statics.ScriptLocation);
-                    new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation+entry);
+                    new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation + entry);
                     gotScript = true;
                 } else if (entry.toString().endsWith(".zip")) {
                     Statics.ScriptLocation = StringOperations.replaceLast(Statics.TempFolder + entry.toString(), ".zip", "") + Statics.Slash;
@@ -82,11 +81,11 @@ public class CASUALModularPack {
 
             //get ADB ready
             try {
-                
+
                 adb.join();
                 zip.join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             try {
@@ -147,18 +146,18 @@ public class CASUALModularPack {
             try {
                 t.join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(CASUALModularPack.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
 
 
 
         } catch (ZipException ex) {
             new Log().errorHandler(ex);
-            new Log().level0("Zip File is corrupt. cannot continue.");
+            new Log().level0Error("Zip File is corrupt. cannot continue.");
             System.exit(1);
         } catch (IOException ex) {
             new Log().errorHandler(ex);
-            new Log().level0("There was a problem reading the file.");
+            new Log().level0Error("There was a problem reading the file.");
             System.exit(1);
         }
 
@@ -167,7 +166,7 @@ public class CASUALModularPack {
     Runnable activateScript = new Runnable() {
         @Override
         public void run() {
-            new CASUALScriptParser().executeSelectedScriptFile(activeScript, activeScript, false);
+            new CASUALScriptParser().loadFileAndExecute(activeScript, activeScript, false);
         }
     };
 }

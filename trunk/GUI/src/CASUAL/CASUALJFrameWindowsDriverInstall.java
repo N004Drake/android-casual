@@ -8,12 +8,12 @@ package CASUAL;
  *
  * @author adam
  */
-public class HeimdallInstallDriversForWindowsPicture extends javax.swing.JFrame {
+public class CASUALJFrameWindowsDriverInstall extends javax.swing.JFrame {
 
     /**
      * Creates new form HeimdallInstallDriversForWindowsPicture
      */
-    public HeimdallInstallDriversForWindowsPicture() {
+    public CASUALJFrameWindowsDriverInstall() {
         initComponents();
         this.setTitle("You can leave this window open while you do it.");
     }
