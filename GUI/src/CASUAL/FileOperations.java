@@ -20,7 +20,6 @@ import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -299,9 +298,6 @@ public class FileOperations {
             } else {
                 Deleted = false;
                 Log.level0Error("ERROR DELETING FILE:" + FileName);
-                JOptionPane.showMessageDialog(null, "Could not delete " + FileName
-                        + ".  Delete this folder manually",
-                        "file error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             Deleted = true;

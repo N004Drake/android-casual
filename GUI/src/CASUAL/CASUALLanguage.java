@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -324,20 +323,7 @@ public class CASUALLanguage {
                 AudioHandler.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
             line = line.replace("$USERNOTIFICATION", "");
-            line = StringOperations.removeLeadingSpaces(line);
-            if (line.contains(",")) {
-                String[] Message = line.split(",");
-                log.level4Debug("Displaying Notification--" + Message[1]);
-                JOptionPane.showMessageDialog(Statics.GUI,
-                        Message[1],
-                        Message[0],
-                        JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(Statics.GUI,
-                        line,
-                        "Information",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
+            new CASUALInteraction().showUserNotification(line);
             return "";
 
 // $USERCANCELOPTION will give the user the option to halt the script
@@ -348,38 +334,15 @@ public class CASUALLanguage {
                 //CASUALAudioSystem CAS = new CASUALAudioSystem();
                 AudioHandler.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             }
+            int n;
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
-            if (line.contains(",")) {
-                String[] Message = line.split(",");
-                Object[] Options = {"Stop",
-                    "Continue"};
-                int n = JOptionPane.showOptionDialog(
-                        null,
-                        Message[1],
-                        Message[0],
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        Options,
-                        Options[1]);
-                if (n == JOptionPane.YES_OPTION) {
+            n = new CASUALInteraction().showUserCancelOption(line);
+            if (n == 0) {
                     log.level0Error(ScriptName + " canceled at user request");
                     ScriptContinue = false;
                     return "";
-                }
-            } else {
-                int n = JOptionPane.showConfirmDialog(
-                        Statics.GUI,
-                        line,
-                        "Do you wish to continue?",
-                        JOptionPane.YES_NO_OPTION);
-                if (n == JOptionPane.YES_OPTION) {
-                    log.level0Error(ScriptName + " canceled at user request");
-                    ScriptContinue = false;
-                    return "";
-                }
             }
-
+            return  "";
 
 
 
@@ -390,23 +353,13 @@ public class CASUALLanguage {
                 AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             }
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
-            Object[] Options = {"I didn't do it", "I did it"};
-
-            line = "<html>" + line.replace("\\n", "<BR>") + "</html>";
-            int n = JOptionPane.showOptionDialog(
-                    null,
-                    line,
-                    "Dont click through this!",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    Options,
-                    Options[1]);
-            if (n == JOptionPane.YES_OPTION) {
+            int n = new CASUALInteraction().showActionRequiredDialog(line);
+            if (n == 0) {
                 log.level0Error(ScriptName + " Halted.  Perform the required actions to continue.");
                 ScriptContinue = false;
                 return "";
             }
+            return "";
 
 //$USERINPUTBOX will accept a String to be injected into ADB
             //Any text will be injected into the $USERINPUT variable    
@@ -417,7 +370,7 @@ public class CASUALLanguage {
             String[] Message = line.replace("$USERINPUTBOX", "").split(",");
             Message[1] = "<html>" + Message[1].replace("\\n", "<BR>") + "</html>";
 
-            String InputBoxText = JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
+            String InputBoxText = new CASUALInteraction().inputDialog(Message);
             InputBoxText = returnSafeCharacters(InputBoxText);
 
             log.level4Debug(InputBoxText);
@@ -633,4 +586,6 @@ public class CASUALLanguage {
         }
 
     }
+
+
 }

@@ -22,7 +22,6 @@ package CASUAL;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -115,18 +114,17 @@ public class HeimdallInstall {
             String installScript = Statics.TempFolder + "installer.sh";
             update.downloadFileFromInternet(Statics.heimdallMacURL, installScript, "Downloading Heimdall Installation file");
             new FileOperations().setExecutableBit(installScript);
-            if (System.getProperty("os.arch").contains("i386")) {
-                JOptionPane.showMessageDialog(null, "Heimdall is optimized for 64 bit systems.\nWe won't prevent you from installing Heimdall,\nbut you will be stuck in a loop until you quit..\n", "Wrong Architecture detected", JOptionPane.ERROR_MESSAGE);
 
-            }
-            System.out.println(System.getProperty("os.arch"));
-            JOptionPane.showMessageDialog(null, "Heimdall One-Click will now launch Heimdall Installer.\n  Hit cancel if asked to set up any network interfaces.\n"
-                    + "You must install Heimdall in order to continue", "Exiting Heimdall One-Click", JOptionPane.ERROR_MESSAGE);
+            String title="Exiting CASUAL";
+            String message="CASUAL will now launch Heimdall Installer.\n  Hit cancel if asked to set up any network interfaces.\n"
+                    + "You must install Heimdall in order to continue";
+            new CASUALInteraction().showErrorDialog(message, title);
             shell.elevateSimpleCommand(new String[]{installScript});
-            JOptionPane.showMessageDialog(null, ""
-                    + "In order to continue, you must unplug the device and\n"
+            
+            
+            new CASUALInteraction().showErrorDialog("In order to continue, you must unplug the device and\n"
                     + "then it back in.  Use a GOOD port, in the back, not\n"
-                    + "in the front.  Use a good cable too.", "Unplug it and then plug it back in", JOptionPane.ERROR_MESSAGE);
+                    + "in the front.  Use a good cable too.", "Unplug it and then plug it back in");
 
 
         }
@@ -141,17 +139,6 @@ public class HeimdallInstall {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_32.exe", "Visual Studio Redistributable");
             new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinVCRedis32tInRepo}, new String[]{Statics.TempFolder + "vcredist_32.exe"});
             installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_32.exe"});
-            //Will need upating in the future
-            //This downloads, MD5's and Installs Visual C++ for Win32/64
-            /*if (Statics.isWindows64Arch()){
-             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis64tInRepo), Statics.TempFolder + "vcredist_x64.exe", "Visual Studio Redistributable");
-             new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis32tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
-             installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x86.exe"});
-             } else{
-             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_x86.exe", "Visual Studio Redistributable");
-             new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics. WinVCRedis64tInRepoMD5}, new String[]{Statics.TempFolder + "vcredist_x86.exe"});
-             installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_x64.exe"});
-             }*/
         } catch (MalformedURLException ex) {
             log.errorHandler(ex);
         } catch (URISyntaxException ex) {
@@ -199,11 +186,11 @@ public class HeimdallInstall {
 
     public void displayWindowsPermissionsMessageAndExit() {
         if (Statics.isWindows()) {
-            JOptionPane.showMessageDialog(null, ""
+            new CASUALInteraction().showErrorDialog(""
                     + "Administrative permissions are required to continue.\n"
                     + "Please log in as a System Administrator  and rerun the command or use the console: \n"
                     + "runas /user:Administrator java -jar " + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString(), //Display Message
-                    "Permissions Error", JOptionPane.ERROR_MESSAGE);
+                    "Permissions Error");
             //WindowsProblem.start();
         }
         System.exit(0);
