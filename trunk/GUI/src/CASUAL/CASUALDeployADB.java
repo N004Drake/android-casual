@@ -16,8 +16,6 @@
  */
 package CASUAL;
 
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author adam
@@ -90,12 +88,7 @@ class CASUALDeployADB{
         }
 
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
-            JOptionPane.showMessageDialog(Statics.GUI,
-                    "Could not execute ADB. 'Wrong ELF class' error\n"
-                    + "This can be resolved by installation of ia32-libs"
-                    + "eg.. sudo apt-get install ia32-libs\n"
-                    + "ie.. sudo YourPackageManger install ia32-libs", "ELFCLASS64 error!",
-                    JOptionPane.INFORMATION_MESSAGE);
+            new CASUALInteraction().wrongElfClassMessage();
         }
 
 
@@ -117,4 +110,5 @@ class CASUALDeployADB{
 
 
     }
+
 }
