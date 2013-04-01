@@ -45,12 +45,12 @@ public class CASUALInteraction extends JOptionPane {
         return InputBoxText;
     }
 
-    public int showActionRequiredDialog(String line) throws HeadlessException {
+    public int showActionRequiredDialog(String instructionalMessage) throws HeadlessException {
         Object[] Options = {"I didn't do it", "I did it"};
-        line = "<html>" + line.replace("\\n", "<BR>") + "</html>";
+        instructionalMessage = "<html>" + instructionalMessage.replace("\\n", "<BR>") + "</html>";
         int n = JOptionPane.showOptionDialog(
                 null,
-                line,
+                instructionalMessage,
                 "Dont click through this!",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -60,10 +60,10 @@ public class CASUALInteraction extends JOptionPane {
         return n;
     }
 
-    public int showUserCancelOption(String line) throws HeadlessException {
+    public int showUserCancelOption(String CASUALStringCommand) throws HeadlessException {
         int n;
-        if (line.contains(",")) {
-            String[] Message = line.split(",");
+        if (CASUALStringCommand.contains(",")) {
+            String[] Message = CASUALStringCommand.split(",");
             Object[] Options = {"Stop", "Continue"};
             n = JOptionPane.showOptionDialog(
                     null,
@@ -77,36 +77,33 @@ public class CASUALInteraction extends JOptionPane {
         } else {
             n = JOptionPane.showConfirmDialog(
                     Statics.GUI,
-                    line,
+                    CASUALStringCommand,
                     "Do you wish to continue?",
                     JOptionPane.YES_NO_OPTION);
         }
         return n;
     }
 
-    public void showUserNotification(String line) throws HeadlessException {
-        line = StringOperations.removeLeadingSpaces(line);
-        if (line.contains(",")) {
-            String[] Message = line.split(",");
+    public void showUserNotification(String CASUALStringCommand) throws HeadlessException {
+        CASUALStringCommand = StringOperations.removeLeadingSpaces(CASUALStringCommand);
+        if (CASUALStringCommand.contains(",")) {
+            String[] Message = CASUALStringCommand.split(",");
             JOptionPane.showMessageDialog(Statics.GUI,
                     Message[1],
                     Message[0],
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(Statics.GUI,
-                    line,
+                    CASUALStringCommand,
                     "Information",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
 
-    public void wrongElfClassMessage() throws HeadlessException {
-        JOptionPane.showMessageDialog(Statics.GUI,
-                "Could not execute ADB. 'Wrong ELF class' error\n"
-                + "This can be resolved by installation of ia32-libs"
-                + "eg.. sudo apt-get install ia32-libs\n"
-                + "ie.. sudo YourPackageManger install ia32-libs", "ELFCLASS64 error!",
+    public void showInformationMessage(String message, String title) throws HeadlessException {
+        JOptionPane.showMessageDialog(null,
+                message, title,
                 JOptionPane.INFORMATION_MESSAGE);
     }
     public void showErrorDialog(String message, String title) throws HeadlessException {
