@@ -20,6 +20,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 /*
  * Inspired by R.J. Lorimer http://www.javalobby.org/java/forums/t84420.html
@@ -143,4 +144,21 @@ public class MD5sum {
     public String makeMD5String(String md5, String filename) {
         return md5 + "  " + filename;
     }
+    public boolean lineContainsMD5(String testLine){
+        
+       boolean x= testLine.matches("([0-9a-f]{32}([\\s\\S]*))");
+       return x;
+    }
+    
+    public String pickNewMD5fromArrayList(ArrayList list, String OldMD5){
+        String[] md5FileSplit=OldMD5.split("  ");
+        for (Object item:list.toArray()){
+            if (((String)item).endsWith(md5FileSplit[1])){
+                return (String)item;
+            }
+
+        }
+        return OldMD5;
+    }
+    
 }

@@ -24,7 +24,7 @@ import java.io.File;
 public class CASUALApp {
 
     final public static String defaultPackage = "Test Script"; //note this will be used for IDE only.
-    final private static boolean useOverrideArgs = false; // this will use overrideArguments.
+    final private static boolean useOverrideArgs = true; // this will use overrideArguments.
     //final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
     final private static String[] overrideArguments = new String[]{"--caspac", "/home/adam/Desktop/casualpack/testPak.zip"};
     String[] arguments;
