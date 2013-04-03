@@ -32,7 +32,7 @@ public class MD5sumRunnable implements Runnable {
         this.sumstream = sumstream;
         this.fileToMD5 = "";
         this.filename = filename;
-        getMD5();
+        addMD5ToList();
 
     }
 
@@ -40,10 +40,10 @@ public class MD5sumRunnable implements Runnable {
         this.fileToMD5 = fileToMD5;
         this.sumstream = null;
         this.filename = filename;
-        getMD5();
+        addMD5ToList();
     }
 
-    private void getMD5() {
+    private void addMD5ToList() {
         MD5sum md5 = new MD5sum();
         if (fileToMD5.equals("")) {
             Statics.runnableMD5list.add(md5.makeMD5String(md5.md5sum(sumstream), filename));
