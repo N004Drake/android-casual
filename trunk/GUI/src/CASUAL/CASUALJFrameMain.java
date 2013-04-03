@@ -76,6 +76,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             setWindowBannerText(CASUALPackageData.bannerText);
         }
         Statics.lockGUIformPrep = false;
+        if (Statics.dumbTerminalGUI)setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /*

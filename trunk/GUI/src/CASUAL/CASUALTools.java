@@ -17,14 +17,17 @@
 package CASUAL;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -214,4 +217,63 @@ public class CASUALTools {
             }
         }
     };
+
+    void rewriteMD5OnCASPAC(File CASPAC, CASPACHandler caspacHandler) {
+        System.out.println("Writing new CASUAL Package Data!");
+        ArrayList list;
+        Enumeration zippedFiles;
+        String CASUALMeta;
+        try {
+            zippedFiles = new Unzip().getZipFileEntries(CASPAC);
+            CASUALMeta = Statics.TempFolder + caspacHandler.getMetaName(zippedFiles);
+            if (CASUALMeta == null) {
+                return;
+            }
+            list = caspacHandler.getMD5sfromCASPAC(new Unzip().getZipFileEntries(CASPAC), CASPAC.toString(), CASUALMeta);
+        } catch (ZipException ex) {
+            System.out.println("Could not read meta");
+            return;
+        } catch (IOException ex) {
+            System.out.println("Could not read meta");
+            return;
+        }
+        FileInputStream buildfile;
+        try {
+            String line = "";
+            String output = "";
+            buildfile = new FileInputStream(CASUALMeta);
+            MD5sum md5sum = new MD5sum();
+            while (buildfile.available() > 0) {
+                line = line + (char) buildfile.read();
+                if (line.contains("\n")) {
+                    if (md5sum.lineContainsMD5(line)) {
+                        System.out.println("MD5" + line);
+                        String mdstring = md5sum.pickNewMD5fromArrayList(list, line);
+                        String filetocheck = mdstring.split("  ")[1];
+                        Enumeration entries = new Unzip().getZipFileEntries(CASPAC);
+                        while (entries.hasMoreElements()) {
+                            Object e = entries.nextElement();
+                            System.out.println(e.toString());
+                            if (filetocheck.contains(e.toString())) {
+                                String newMD5 = new MD5sum().md5sum(new Unzip().streamFileFromZip(CASPAC, e));
+                                output = output + new MD5sum().makeMD5String(newMD5, e.toString() + "\n");
+                            }
+                        }
+                    } else {
+                        output = output + line;
+                    }
+                    line = "";
+                }
+            }
+            new FileOperations().overwriteFile(output, CASUALMeta);
+            System.out.println(output);
+        } catch (IOException ex) {
+            Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            Zip.addFilesToExistingZip(CASPAC, caspacHandler.meta);
+        } catch (IOException ex) {
+            Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

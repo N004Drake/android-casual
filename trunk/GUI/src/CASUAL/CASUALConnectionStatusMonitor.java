@@ -1,4 +1,4 @@
-/*CASUALConnectionStatus provides connection status monitoring for CASUAL
+/*CASUALConnectionStatus provides ADB connection status monitoring for CASUAL
  *Copyright (C) 2013  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -30,10 +30,14 @@ public class CASUALConnectionStatusMonitor {
     private static int LastState = 0;
     Log Log = new Log();
     Shell Shell = new Shell();
-    public static int timerInterval = 1000;
+    private static int timerInterval = 1000;
     private static int cycles = 0;
     private static boolean hasConnected = false;
-    Timer DeviceCheck = new Timer(timerInterval, new ActionListener() {
+    
+    /*
+     * Starts and stops the ADB timer
+     */
+    public Timer DeviceCheck = new Timer(timerInterval, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent evt) {
             Thread t = new Thread(r);

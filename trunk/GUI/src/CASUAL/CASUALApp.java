@@ -23,6 +23,9 @@ import java.io.File;
  */
 public class CASUALApp {
 
+    /**
+     *
+     */
     final public static String defaultPackage = "Test Script"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = true; // this will use overrideArguments.
     //final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
@@ -40,17 +43,15 @@ public class CASUALApp {
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
+     * @param root 
      */
     protected void configureWindow(java.awt.Window root) {
     }
 
-    /**
-     * A convenient static getter for the application instance.
-     *
-     * @return the instance of NARSApp
-     */
+
     /**
      * Main method launching the application.
+     * @param args 
      */
     public static void main(String[] args) {
         CASUALPackageData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
@@ -102,7 +103,7 @@ public class CASUALApp {
             }
             if (args[i].contains("--caspac") || args[i].contains("-c")) {
                 i++;
-                new CASPACHandler().loadCASUALPackFileForCommandLineOnly(args[i]);
+                new CASPACHandler().loadCASUALPack(args[i]);
                 System.out.println("CASPAC completed.");
                 System.exit(0);
             }
