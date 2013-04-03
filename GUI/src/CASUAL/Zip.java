@@ -50,6 +50,15 @@ public class Zip {
         addFilesToExistingZip(zip, fileList);
     }
 
+    public static void addFilesToExistingZip(File zipFile, File fileToAdd) throws IOException{
+        addFilesToExistingZip(zipFile, new File[]{fileToAdd});
+    }
+    public static void addFilesToExistingZip(File zipFile, String fileToAdd) throws IOException{
+        File f=new File(fileToAdd);
+        File[] zipAdd=new File[]{f};
+        addFilesToExistingZip(zipFile, zipAdd);
+    }    
+    
     public static void addFilesToExistingZip(File zipFile,
             File[] files) throws IOException {
         // get a temp file

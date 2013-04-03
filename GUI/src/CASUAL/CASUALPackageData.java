@@ -45,7 +45,9 @@ public class CASUALPackageData {
     public static String DontateButtonText;
     public static String donationLink;
     public static String CASUALFileName;
+    public static String meta;
 
+    
     public void setProperties() {
         buildProperties = Statics.BUILDPROPERTIES;
         usePictureForBanner = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.UsePictureForBanner").contains("rue");

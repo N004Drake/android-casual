@@ -37,6 +37,7 @@ public class Statics {
     public static final String BUILDPROPERTIES = "SCRIPTS/-build";
     public static boolean GUIIsAvailable = false;
     public static boolean useGUI = false;
+    public static boolean dumbTerminalGUI=false;
 
     public Statics() {
     }
