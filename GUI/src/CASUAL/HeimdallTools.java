@@ -85,6 +85,7 @@ public class HeimdallTools {
             log.level0Error("#A permissions error was detected.  Elevating permissions.");
             this.doElevatedHeimdallShellCommand(line);
         }
+        
         Statics.ExectingHeimdallCommand = false;
         return returnRead;
     }

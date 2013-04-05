@@ -71,3 +71,16 @@ Created Folder:/tmp/TempCASUALE78D4395/
 [VERBOSE]Created Folder:/tmp/TempCASUAL35897C37/
 [VERBOSE]Created Folder:/tmp/TempCASUALFB9FA836/
 [VERBOSE]Created Folder:/tmp/TempCASUAL9EFE6BC7/
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL8FAEE519\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL65D18238\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUALF7CCAFA3\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL45D45939\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL694A1F99\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL8BC9D22D\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL1E78EBCD\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUALF94D681A\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUALD27892D1\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6C3DE5FE\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUALA36F58FC\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUALFF2F32DA\
+[VERBOSE]Created Folder:C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL2158BDE6\

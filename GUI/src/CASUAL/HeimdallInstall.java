@@ -136,6 +136,7 @@ public class HeimdallInstall {
         new Log().level0Error("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
         String installVCResults = "CritERROR!!!";
         try {
+            //TODO: verify if it is in the resources at /CASUAL/resource/heimdall/vcredist_32.exe before installing. else deploy and execute
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_32.exe", "Visual Studio Redistributable");
             new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinVCRedis32tInRepo}, new String[]{Statics.TempFolder + "vcredist_32.exe"});
             installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_32.exe"});
@@ -162,9 +163,12 @@ public class HeimdallInstall {
                 + "Note: the USB port which you install this driver will be converted\n"
                 + "to use Heimdall instead of Odin for download mode.  It only affects\n"
                 + "ONE usb port.");
-        //download 
+       
         CASUALUpdates updater = new CASUALUpdates();
-        String driverName=new MD5sum().splitMD5String(Statics.WinDriverInRepo)[1];
+       
+        //TODO: verify if driver is in the resources at /CASUAL/resources/heimdall/ before downloading else deploy and execute
+        String driverName=new MD5sum().splitMD5String(Statics.WinDriverInRepoMD5)[1];
+        //download driver
         try {
             updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder + driverName, "CADI- CASUAL Automated Driver Installer");
         } catch (MalformedURLException ex) {
@@ -172,7 +176,7 @@ public class HeimdallInstall {
         } catch (URISyntaxException ex) {
             log.errorHandler(ex);
         }
-        //verify MD5 new String{"b88228d5fef4b6dc019d69d4471f23ec  vcredist_x86.exe"}
+        //verify MD5
         new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinDriverInRepoMD5}, new String[]{Statics.TempFolder + driverName});
         //execute
         String installZadigResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + driverName});
