@@ -69,9 +69,8 @@ public class Statics {
     final public static String WinVCRedis32tInRepoMD5 = "a8d5962623206751bdd4416d140ae7c5  vcredist_x86.exe";
     final public static String WinVCRedis64tInRepoMD5 = "ba2c17a20b2b1d8a30f96d53e2632a68  vcredist_x64.exe";
     final public static String WinVCRedis201064tInRepoMD5 = "b88228d5fef4b6dc019d69d4471f23ec  vcredist_x862010.exe";
-    final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/zadig.exe";
-    final public static String WinDriverIniInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/zadig.ini";
-    final public static String WinDriverInRepoMD5 = "e0476fe60b539ff057371994dd4e8e30  zadig.exe";
+    final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe";
+    final public static String WinDriverInRepoMD5 = "db4abbddd6cbc92351b8a33c6f58740b  CADI.exe";
     static String heimdallMacURL = "https://android-casual.googlecode.com/svn/trunk/repo/Heimdall_1.4.1_compressed.dmg.sh";
     //Form data
     public static boolean TargetScriptIsResource = true;
