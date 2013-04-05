@@ -141,6 +141,10 @@ public class MD5sum {
 
     }
 
+    public String[] splitMD5String(String md5){
+        return md5.split("  ");
+
+    }
     public String makeMD5String(String md5, String filename) {
         return md5 + "  " + filename;
     }

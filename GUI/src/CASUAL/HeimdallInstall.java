@@ -151,8 +151,8 @@ public class HeimdallInstall {
 
     public void installWindowsDrivers() {
         //install drivers
-        CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
-        HID.setVisible(true);
+        //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
+        //HID.setVisible(true);
         log.level0Error("Installing drivers");
         new Log().level0Error("Driver Problems suck. Lemme make it easy.\n"
                 + "1. Check that your device is download mode and connected up.\n"
@@ -164,23 +164,23 @@ public class HeimdallInstall {
                 + "ONE usb port.");
         //download 
         CASUALUpdates updater = new CASUALUpdates();
+        String driverName=new MD5sum().splitMD5String(Statics.WinDriverInRepo)[1];
         try {
-            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder + "zadig.exe", "Open-Source Heimdall Drivers");
-            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverIniInRepo), "zadig.ini", "Open-Source Heimdall Drivers config");
-
+            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder + driverName, "CADI- CASUAL Automated Driver Installer");
         } catch (MalformedURLException ex) {
             log.errorHandler(ex);
         } catch (URISyntaxException ex) {
             log.errorHandler(ex);
         }
         //verify MD5 new String{"b88228d5fef4b6dc019d69d4471f23ec  vcredist_x86.exe"}
-        new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinDriverInRepoMD5}, new String[]{Statics.TempFolder + "zadig.exe"});
+        new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinDriverInRepoMD5}, new String[]{Statics.TempFolder + driverName});
         //execute
-        String InstallZadigResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "zadig.exe"});
-        if (InstallZadigResults.contains("CritERROR!!!")) {
+        String installZadigResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + driverName});
+        log.level3Verbose(installZadigResults);
+        if (installZadigResults.contains("CritERROR!!!")) {
             displayWindowsPermissionsMessageAndExit();
         }
-        HID.dispose();
+        //HID.dispose();
 
     }
 
