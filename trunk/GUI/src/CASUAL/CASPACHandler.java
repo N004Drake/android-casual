@@ -113,7 +113,7 @@ public class CASPACHandler {
     private CASPACData handleCASPACFiles(Object entry, File f) throws IOException {
         Unzip unzip=new Unzip();
         if (entry.toString().equals("-build.properties")) {
-            new CASUALPackageData().setPropertiesFromInputStream(unzip.streamFileFromZip(f, entry));
+            new CASUALapplicationData().setPropertiesFromInputStream(unzip.streamFileFromZip(f, entry));
         } else if (entry.toString().equals("-Overview.txt")) {
             if (Statics.useGUI) { //only display overview if using GUI.
                 System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
@@ -121,7 +121,7 @@ public class CASPACHandler {
 
             }
         } else if (entry.toString().endsWith(".meta")) {
-            CASUALPackageData.meta=entry.toString();
+            CASUALapplicationData.meta=entry.toString();
             meta=Statics.TempFolder+entry.toString();
             unzip.deployFileFromZip(f, entry, Statics.TempFolder);
             return new CASPACData(new FileOperations().readFile(meta));
@@ -244,7 +244,7 @@ public class CASPACHandler {
     }
 
     private void startDumbTerminalGUI() {
-        CASUALPackageData.ScriptsHaveBeenRecognized=true;
+        CASUALapplicationData.ScriptsHaveBeenRecognized=true;
         Statics.TargetScriptIsResource=false;
         Statics.dumbTerminalGUI=true;
         Statics.GUI=new CASUALJFrameMain();

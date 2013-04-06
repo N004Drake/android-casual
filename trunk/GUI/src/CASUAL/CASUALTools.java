@@ -79,7 +79,7 @@ public class CASUALTools {
                 //Statics.scriptLocations = new String[]{""};
                 Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
             }
-            CASUALPackageData.ScriptsHaveBeenRecognized = true;
+            CASUALapplicationData.ScriptsHaveBeenRecognized = true;
         }
     }
 
@@ -179,7 +179,7 @@ public class CASUALTools {
     public Runnable setCASUALPackageDataFromScriptsFolder = new Runnable() {
         @Override
         public void run() {
-            CASUALPackageData casualPackageData = new CASUALPackageData();
+            CASUALapplicationData casualPackageData = new CASUALapplicationData();
             casualPackageData.setProperties();
         }
     };
@@ -189,7 +189,7 @@ public class CASUALTools {
     public Runnable casualSound = new Runnable() {
         @Override
         public void run() {
-            if (CASUALPackageData.useSound) {
+            if (CASUALapplicationData.useSound) {
                 AudioHandler.playSound("/CASUAL/resources/sounds/CASUAL.wav");
             }
         }

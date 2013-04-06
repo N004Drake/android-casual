@@ -60,9 +60,9 @@ public class Statics {
     public static String LastLineReceived;
     //web information
     final public static String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/GUI/src";
-    public static String updateMessageFromWeb;
-    public static String supportWebsiteFromWeb;
-    public static CASUALIDString localInformation = null;
+
+    public static CASPACData localInformation;
+    public static CASPACData webInformation;
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe";
     final public static String WinVCRedis64tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x64.exe";
     final public static String WinVCRedist2010InRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x862010.exe";
@@ -182,7 +182,6 @@ public class Statics {
     public static boolean lockGUIformPrep = true;
     public static boolean lockGUIunzip = false;
     public static boolean lockGUIdeviceConnectionStatus = false;
-    public static int SVNRevisionRequired = 0;
     public static ArrayList runnableMD5list = new ArrayList();
     /*
      * Determines if Linux, Mac or Windows

@@ -26,7 +26,7 @@ import java.util.Properties;
  *
  * @author adam
  */
-public class CASUALPackageData {
+public class CASUALapplicationData {
 
     public static boolean packageDataHasBeenSet = false;
     public static boolean ScriptsHaveBeenRecognized = false;

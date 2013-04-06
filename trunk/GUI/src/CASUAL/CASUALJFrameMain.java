@@ -67,13 +67,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         log.level4Debug("Updating Scripts for UI");
         updateSelectedFromGUI();
 
-        setStartButtonText(CASUALPackageData.buttonText);
-        setTitle(CASUALPackageData.title);
-        if (CASUALPackageData.usePictureForBanner) {
+        setStartButtonText(CASUALapplicationData.buttonText);
+        setTitle(CASUALapplicationData.title);
+        if (CASUALapplicationData.usePictureForBanner) {
             setWindowBannerText("");
-            setWindowBannerImage("/SCRIPTS/" + CASUALPackageData.bannerPic, CASUALPackageData.bannerText);
+            setWindowBannerImage("/SCRIPTS/" + CASUALapplicationData.bannerPic, CASUALapplicationData.bannerText);
         } else {
-            setWindowBannerText(CASUALPackageData.bannerText);
+            setWindowBannerText(CASUALapplicationData.bannerText);
         }
         Statics.lockGUIformPrep = false;
         if (Statics.dumbTerminalGUI)setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -391,22 +391,22 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemExitActionPerformed
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
-        setWindowBannerImage("SCRIPTS/" + CASUALPackageData.bannerPic, CASUALPackageData.bannerText);
+        setWindowBannerImage("SCRIPTS/" + CASUALapplicationData.bannerPic, CASUALapplicationData.bannerText);
         CASUALInteraction timeOutOptionPane = new CASUALInteraction();
         int DResult = timeOutOptionPane.showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
-                "This application was developed by " + CASUALPackageData.developerName + " using CASUAL framework.\n"
+                "This application was developed by " + CASUALapplicationData.developerName + " using CASUAL framework.\n"
                 + "Donations give developers a tangeble reason to continue quality software development\n",
                 "Donate to the developers", //DisplayTitle
                 CASUALInteraction.OK_OPTION, // Options buttons
                 CASUALInteraction.INFORMATION_MESSAGE, //Icon
-                new String[]{"Donate To CASUAL", "Donate To " + CASUALPackageData.DontateButtonText}, // option buttons
+                new String[]{"Donate To CASUAL", "Donate To " + CASUALapplicationData.DontateButtonText}, // option buttons
                 "No"); //Default{
         if (DResult == 0) {
             launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
         } else if (DResult == 1) {
-            launchLink(CASUALPackageData.donationLink);
+            launchLink(CASUALapplicationData.donationLink);
         }
     }//GEN-LAST:event_DonateButtonActionPerformed
 
@@ -535,7 +535,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void prepareScripts() {
         try {
-            while (!CASUALPackageData.ScriptsHaveBeenRecognized) {
+            while (!CASUALapplicationData.ScriptsHaveBeenRecognized) {
             }
             new CASUALTools().listScripts();
             Statics.lockGUIformPrep = false;
