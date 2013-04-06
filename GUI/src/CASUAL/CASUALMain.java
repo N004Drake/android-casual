@@ -16,8 +16,6 @@
  */
 package CASUAL;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -44,7 +42,7 @@ public final class CASUALMain {
             scriptPrep.join(); //wait for embedded scripts scan
             adb.join(); //wait for adb deployment
         } catch (InterruptedException ex) {
-            Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
         new CASUALTools().startStopADBDeviceCheckTimer(true); //start device scanning
 
