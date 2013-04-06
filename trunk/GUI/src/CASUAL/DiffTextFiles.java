@@ -39,8 +39,11 @@ public class DiffTextFiles {
         String OriginalFileLine;
         try {
             while ((TestStreamLine = TestStream.readLine()) != null) {
-                boolean LineExists = false;
                 BufferedReader OriginalReader = new BufferedReader(new FileReader(Original));
+                OriginalReader.mark(0);
+
+                boolean LineExists = false;
+                OriginalReader.reset();
                 while ((OriginalFileLine = OriginalReader.readLine()) != null) {
                     if (OriginalFileLine.equals(TestStreamLine)) {
                         LineExists = true;
@@ -84,9 +87,11 @@ public class DiffTextFiles {
             BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff));
             String line;
             String line2;
+            BufferedReader BROriginal;
+            BROriginal = new BufferedReader(new FileReader(Original));
+            BROriginal.mark(0);
             while ((line = BRTestDiff.readLine()) != null) {
-                BufferedReader BROriginal;
-                BROriginal = new BufferedReader(new FileReader(Original));
+                BROriginal.reset();
                 boolean lineExists = false;
                 while ((line2 = BROriginal.readLine()) != null) {
                     if (line2.equals(line)) {
