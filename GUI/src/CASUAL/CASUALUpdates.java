@@ -41,12 +41,12 @@ public class CASUALUpdates {
      */
     Log Log = new Log();
 
-    public int checkOfficialRepo(String script, String localIdentificationString, String idStringFile) throws MalformedURLException, IOException {
+    public int checkOfficialRepo(String script, String localIdentificationString) throws MalformedURLException, IOException {
         //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
 
-        String webData;
+        CASPACData webInformation;
         try {
-            webData = getWebData(Statics.CASUALRepo + script + ".meta");
+            webInformation = new CASPACData(getWebData(Statics.CASUALRepo + script + ".meta"));
         } catch (URISyntaxException ex) {
             return 1;
 
@@ -55,33 +55,22 @@ public class CASUALUpdates {
             return 1;
         }
         //This is where we hold the local information to be compared to the update
-        CASUALIDString localInformation = new CASUALIDString();
-        if (Statics.localInformation == null) {
-            localInformation.setMetaDataFromIDString(localIdentificationString.split("\n"));
-        } else {
-            localInformation = Statics.localInformation;
-        }
+        CASPACData localInformation = new CASPACData(localIdentificationString);
 
-        //This is where we hold web information to be checked for an update every run.
-        CASUALIDString webInformation = new CASUALIDString();
-        webInformation.setMetaDataFromIDString(webData.split("\n"));
-        Log.level4Debug("***WEB VERSION***" + webInformation.metaData);
-        Statics.SVNRevisionRequired = Integer.parseInt(webInformation.metaData[2]);
-        Statics.updateMessageFromWeb = webInformation.getMetaData()[4];
-        Statics.supportWebsiteFromWeb = webInformation.metaData[3];
-        displayCASUALString(webInformation.metaData);
+        Log.level4Debug("***WEB VERSION***\nIDString:"+webInformation.uniqueIdentifier+"\nSVNRevision:"+webInformation.minSVNRevision+"\nScriptRevision:"+webInformation.scriptRevision+"\nsupportURL:"+webInformation.supportURL + "updateMessage"+webInformation.updateMessage);
 
-        if (localInformation.metaData[0].equals(webInformation.metaData[0])) {
-            if (checkVersionInformation(webInformation.metaData[2], localInformation.metaData[2])) {
+        
+        if (localInformation.uniqueIdentifier.equals(webInformation.uniqueIdentifier)) {
+            if (checkVersionInformation(webInformation.minSVNRevision, localInformation.minSVNRevision)) {
                 //update SVN
-                Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.metaData[3] + " for more information. ");
+                Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.supportURL+ " for more information. ");
                 //Log.level0(webInformation[4]);
                 return 3;
             }
-            if (checkVersionInformation(webInformation.metaData[1], localInformation.metaData[1])) {
-                Log.level0Error("Current Version " + localInformation.metaData[1] + " requires update to version " + webInformation.metaData[1]);
-                Log.level0Error("Script is out of date. See " + webInformation.metaData[3] + " for more information.  Updating.");
-                Log.level0Error(webInformation.metaData[4]);
+            if (checkVersionInformation(webInformation.scriptRevision, localInformation.scriptRevision)) {
+                Log.level0Error("Current Version " + localInformation.scriptRevision + " requires update to version " + webInformation.scriptRevision);
+                Log.level0Error("Script is out of date. See " + webInformation.supportURL + " for more information.  Updating.");
+                Log.level0Error(webInformation.updateMessage);
                 //ugly code dealing with /SCRIPTS/ folder on computer.
                 new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
                 int status = downloadUpdates(script, webInformation, Statics.TempFolder);
@@ -145,8 +134,8 @@ public class CASUALUpdates {
                 int bytesRead;
                 while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
                     output.write(buffer, 0, bytesRead);
-                    bytes = bytes + buffer.length;
-                    kilobytes = kilobytes + 4;
+                    bytes = bytes + bytesRead;
+                    kilobytes = bytes/1024;
                     Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
                     lastlength = 6 + Integer.toString(kilobytes).length();
 
@@ -186,15 +175,11 @@ public class CASUALUpdates {
         int numRead = 0;
         while (numRead >= 0) {
             buf.rewind();
-
             numRead = rbc.read(buf);
-
             buf.rewind();
-
             for (int i = 0; i < numRead; i++) {
                 byte b = buf.get();
                 webData = webData + (new String(new byte[]{b}));
-
             }
         }
         return webData;
@@ -207,7 +192,7 @@ public class CASUALUpdates {
      * 1- update not available
      * 2- update error
      */
-    private int downloadUpdates(String scriptname, CASUALIDString webInformation, String localPath) {
+    private int downloadUpdates(String scriptname, CASPACData webInformation, String localPath) {
         URL url;
         try {
             url = stringToFormattedURL(Statics.CASUALRepo + scriptname);
@@ -219,16 +204,18 @@ public class CASUALUpdates {
             return 1;
         }
         Log.level0Error("Downloading Updates");
+        String[] md5lines=StringOperations.convertArrayListToStringArray(webInformation.md5s);
 
         try {
             ArrayList<String> list = new ArrayList();
             String localfile = Statics.TempFolder + scriptname;
             String ext;
-            for (int n = 0; n < webInformation.md5sums.length; n++) {
+            for (int n = 0; n < md5lines.length; n++) {
                 //get download extension from md5sum;
 
                 try {
-                    String[] md5 = webInformation.md5sums[n].split("  ");
+                    
+                    String[] md5 = md5lines[n].split("  ");
                     String fileName = md5[1];
                     ext = "." + fileName.split("\\.")[1];
                     if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
@@ -244,7 +231,7 @@ public class CASUALUpdates {
             }
 
             String[] files = list.toArray(new String[list.size()]);
-            if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(webInformation.md5sums, files)) {
+            if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(md5lines, files)) {
                 return 0;//success
             } else {
                 return 2;//failure

@@ -143,7 +143,7 @@ public class CASUALScriptParser {
                 if ((TestString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
                     try {
                         //String[] IDStrings = CASUALIDString.split("\n");
-                        updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, TestString, idStringFile);
+                        updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, TestString);
                         /*
                          * checks for updates returns: 0=no updates found
                          * 1=random error 2=Script Update Required 3=CASUAL
@@ -164,10 +164,10 @@ public class CASUALScriptParser {
                             break;
                         //CASUAL must be update    
                             case 3:
-                                log.level0Error(Statics.updateMessageFromWeb);
+                                log.level0Error(Statics.webInformation.updateMessage);
                                 log.level0Error("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                                new CASUALInteraction().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.updateMessageFromWeb + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
-                                new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
+                                new CASUALInteraction().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.webInformation.updateMessage+ "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                new LinkLauncher().launchLink(Statics.webInformation.supportURL);
                                 System.exit(0);
                                 return true;
                         //download error
