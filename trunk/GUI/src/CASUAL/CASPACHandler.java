@@ -21,8 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
@@ -61,7 +59,7 @@ public class CASPACHandler {
                 adb.join();
                 zip.join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+               new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted"+ex));
             }
             if (cd!=null){
                 new Log().level2Information("Verifying CASPAC metainfo and MD5s");
@@ -87,17 +85,18 @@ public class CASPACHandler {
             try {
                 t.join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted"+ex));
+
             }
 
 
 
         } catch (ZipException ex) {
-            new Log().errorHandler(ex);
+            new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack unzip failed"+ex));
             new Log().level0Error("Zip File is corrupt. cannot continue.");
             System.exit(1);
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack"+ex));
             new Log().level0Error("There was a problem reading the file.");
             System.exit(1);
         }
