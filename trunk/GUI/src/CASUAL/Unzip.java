@@ -107,6 +107,7 @@ public class Unzip {
             Destination.close();
         }
         ZipInput.close();
+        System.out.println("Unzip Complete");
     }
 
     public Enumeration getZipFileEntries(File f) throws ZipException, IOException {
