@@ -47,6 +47,7 @@ public class DiffTextFiles {
                 while ((OriginalFileLine = OriginalReader.readLine()) != null) {
                     if (OriginalFileLine.equals(TestStreamLine)) {
                         LineExists = true;
+                        break;
                     }
                 }
                 if (!LineExists) {
@@ -96,6 +97,7 @@ public class DiffTextFiles {
                 while ((line2 = BROriginal.readLine()) != null) {
                     if (line2.equals(line)) {
                         lineExists = true;
+                        break;
                     }
                 }
                 if (!lineExists) {
