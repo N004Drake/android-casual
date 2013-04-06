@@ -148,7 +148,6 @@ public class Shell implements Runnable {
             String line;
             Process process = new ProcessBuilder(cmd).start();
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             while ((line = STDOUT.readLine()) != null) {
                 AllText = AllText + line + "\n";
             }
@@ -168,6 +167,11 @@ public class Shell implements Runnable {
             String line;
             Process process = new ProcessBuilder(cmd).start();
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            try {
+                process.waitFor();
+            } catch (InterruptedException ex) {
+                log.errorHandler(ex);
+            }
             while ((line = STDOUT.readLine()) != null) {
                 AllText = AllText + "\n" + line;
 
@@ -313,14 +317,20 @@ public class Shell implements Runnable {
                 boolean LinkLaunched = false;
                 try {
                     String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    Process process = new ProcessBuilder(params).start();
+                    ProcessBuilder pb = new ProcessBuilder(params);
+                    pb.redirectErrorStream(true);
+                    Process process=pb.start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String LineRead = null;
                     String CharRead;
                     String LogData = "";
                     boolean ResetLine = false;
                     int c;
+                    try {
+                        process.waitFor();
+                    } catch (InterruptedException ex) {
+                        log.errorHandler(ex);
+                    }
                     while ((c = STDOUT.read()) > -1) {
                         if (ResetLine) {
                             log.beginLine();
@@ -331,9 +341,7 @@ public class Shell implements Runnable {
                         //log.level3(CharRead);
                         LogData = LogData + CharRead.toString();
                     }
-                    while ((LineRead = STDERR.readLine()) != null) {
-                        log.level4Debug(LineRead);
-                    }
+                    
                     new Log().level4Debug(LogData);
 
                 } catch (IOException ex) {
