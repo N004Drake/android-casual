@@ -244,4 +244,5 @@ public class Log {
         level0Error("[CRITICAL]"+e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
         level0Error("A critical error was encoutered.  Please copy the log from About>Show Log and report this issue ");
     }
+
 }
