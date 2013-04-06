@@ -188,7 +188,7 @@ public class FileOperations {
             CreatedFolder = folder.mkdirs();
         }
         if (CreatedFolder) {
-            Log.level3Verbose("Created Folder:" + Folder);
+            //Log.level3Verbose("Created Folder:" + Folder);
         } else {
 
             CreatedFolder = false;

@@ -54,6 +54,7 @@ public class CASUALApp {
      * @param args 
      */
     public static void main(String[] args) {
+        new Log().level3Verbose("Creating Temp Folder in:"+Statics.TempFolder);
         CASUALPackageData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
         CASUALPackageData.CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         CASUALPackageData.CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
