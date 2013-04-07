@@ -80,15 +80,16 @@ public class HeimdallTools {
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         Statics.ExectingHeimdallCommand = true;
         log.level3Verbose("Performing standard Heimdall command" + line);
-        String returnRead = Shell.liveShellCommand(stringCommand2,true);
+        String returnRead = Shell.liveShellCommand(stringCommand2, true);
         if (returnRead.contains("libusb error: -3") && Statics.isLinux()) {
             log.level0Error("#A permissions error was detected.  Elevating permissions.");
             this.doElevatedHeimdallShellCommand(line);
         }
-        
+
         Statics.ExectingHeimdallCommand = false;
         return returnRead;
     }
+
     private void sleepForOneSecond() {
         try {
             Thread.sleep(1000);

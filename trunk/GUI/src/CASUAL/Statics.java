@@ -37,7 +37,7 @@ public class Statics {
     public static final String BUILDPROPERTIES = "SCRIPTS/-build";
     public static boolean GUIIsAvailable = false;
     public static boolean useGUI = false;
-    public static boolean dumbTerminalGUI=false;
+    public static boolean dumbTerminalGUI = false;
 
     public Statics() {
     }
@@ -60,7 +60,6 @@ public class Statics {
     public static String LastLineReceived;
     //web information
     final public static String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/GUI/src";
-
     public static CASPACData localInformation;
     public static CASPACData webInformation;
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe";
@@ -152,7 +151,7 @@ public class Statics {
     //Fastboot
     final public static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
     final public static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
-    final public  static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
+    final public static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
     final public static String fastbootWindows = "/CASUAL/resources/fastboot/fastboot-win.exe";
     final public static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
     //Windows permissions elevator
@@ -305,9 +304,9 @@ public class Statics {
             }
         }
     }
-    
-    public static boolean is64bitSystem(){
-        if (isWindows()){
+
+    public static boolean is64bitSystem() {
+        if (isWindows()) {
             return isWindows64Arch();
         } else {
             return isMacLinux64Arch();
@@ -317,9 +316,10 @@ public class Statics {
     private static boolean isWindows64Arch() {
         return (System.getenv("ProgramFiles(x86)") != null);
     }
+
     private static boolean isMacLinux64Arch() {
-            String[] CommandArch = {"arch"};
-            return new Shell().silentShellCommand(CommandArch).contains("64");
+        String[] CommandArch = {"arch"};
+        return new Shell().silentShellCommand(CommandArch).contains("64");
     }
 
     public static void checkLinuxArch() {

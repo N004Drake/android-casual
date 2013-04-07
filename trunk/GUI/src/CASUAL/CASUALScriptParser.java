@@ -49,6 +49,7 @@ public class CASUALScriptParser {
         DataInputStream RAS = new DataInputStream(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
         executeSelectedScript(RAS, ScriptTempFolder, script, multiThreaded);
     }
+
     public void loadFileAndExecute(String File, String script, boolean multiThreaded) {
         DataInputStream DIS = getDataStreamFromFile(File);
         executeSelectedScript(DIS, ScriptTempFolder, script, multiThreaded);
@@ -75,8 +76,6 @@ public class CASUALScriptParser {
         }
 
     }
-
-
 
     /*
      * executeOneShotCommand provides a way to insert a script line.
@@ -115,7 +114,9 @@ public class CASUALScriptParser {
                 } catch (NullPointerException ex) {
                     log.level4Debug("NO METADATA FOUND\nNO METADATA FOUND\n");
                 }
-                if (checkForUpdates(TestString, idStringFile)) return;
+                if (checkForUpdates(TestString, idStringFile)) {
+                    return;
+                }
 
                 if (Statics.useGUI) {
                     Statics.ProgressBar.setMaximum(LinesInScript);
@@ -151,26 +152,26 @@ public class CASUALScriptParser {
                          * failed *
                          */
                         switch (updateStatus) {
-                        //no updates found
-                        case 0: //do nothing
-                            break;
-                        //random error with URL formatting
-                        case 1: //do nothing
-                            break;
-                        //script update performed
-                        case 2:
-                            Statics.setScriptLocationOnDisk(script, Statics.TempFolder + "SCRIPTS" + Statics.Slash + script);
-                            updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
-                            break;
-                        //CASUAL must be update    
+                            //no updates found
+                            case 0: //do nothing
+                                break;
+                            //random error with URL formatting
+                            case 1: //do nothing
+                                break;
+                            //script update performed
+                            case 2:
+                                Statics.setScriptLocationOnDisk(script, Statics.TempFolder + "SCRIPTS" + Statics.Slash + script);
+                                updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
+                                break;
+                            //CASUAL must be update    
                             case 3:
                                 log.level0Error(Statics.webInformation.updateMessage);
                                 log.level0Error("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                                new CASUALInteraction().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.webInformation.updateMessage+ "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                new CASUALInteraction().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.webInformation.updateMessage + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                 new LinkLauncher().launchLink(Statics.webInformation.supportURL);
                                 System.exit(0);
                                 return true;
-                        //download error
+                            //download error
                             case 4:
                                 log.level0Error("There was a problem downloading the script.  Please check your internet connection and try again.");
                                 //HALT script
@@ -187,17 +188,17 @@ public class CASUALScriptParser {
                                 //TODO stop and reset script to stock... possibly delete temp folder and restart CASUAL
                                 //HALT script
                                 return true;
-                        default: //unknown error do nothing
-                            log.level0Error("CASUALScriptParser().executeSelectedScript: CASUAL has encountered an unknown error. Please report this.");
-                            break;
+                            default: //unknown error do nothing
+                                log.level0Error("CASUALScriptParser().executeSelectedScript: CASUAL has encountered an unknown error. Please report this.");
+                                break;
                         }
-                    }catch (MalformedURLException ex) {
-                       log.level0Error("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script + " Please report this.");
-                       log.errorHandler(ex);
-                   }catch (IOException ex) {
-                      log.level0Error("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
-                      log.errorHandler(ex);
-                  }
+                    } catch (MalformedURLException ex) {
+                        log.level0Error("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script + " Please report this.");
+                        log.errorHandler(ex);
+                    } catch (IOException ex) {
+                        log.level0Error("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
+                        log.errorHandler(ex);
+                    }
                 }
                 return false;
             }

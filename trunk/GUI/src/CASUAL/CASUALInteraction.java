@@ -34,7 +34,7 @@ public class CASUALInteraction extends JOptionPane {
         if (Statics.useGUI) {
             return new TimeOutOptionPane().timeoutDialog(PRESET_TIME, parentComponent, message, title, optionType, messageType, options, initialValue);
         } else {
-            new Log().Level1Interaction("[STANDARDMESSAGE]"+title + "\n" + message);
+            new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + message);
             String s = getCommandLineInput();
             return 0;
 
@@ -54,9 +54,9 @@ public class CASUALInteraction extends JOptionPane {
             return "0";
         }
     }
-    
+
     //TODO: this is broken
-     private int getCommandLineInputNumber() {
+    private int getCommandLineInputNumber() {
         System.out.println(message);
         try {
             char x = 0;
@@ -69,17 +69,17 @@ public class CASUALInteraction extends JOptionPane {
             return 0;
         }
     }
-    
-     private void waitForStandardInputBeforeContinuing(){
-         int x=0;  
-         while (x < 1) {
-             try {
-                 x = (char) new InputStreamReader(System.in).read();
-             } catch (IOException ex) {
-                 Logger.getLogger(CASUALInteraction.class.getName()).log(Level.SEVERE, null, ex);
-             }
-         }
-     }
+
+    private void waitForStandardInputBeforeContinuing() {
+        int x = 0;
+        while (x < 1) {
+            try {
+                x = (char) new InputStreamReader(System.in).read();
+            } catch (IOException ex) {
+                Logger.getLogger(CASUALInteraction.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
     public String inputDialog(String[] Message) throws HeadlessException {
         String InputBoxText = JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
@@ -102,10 +102,10 @@ public class CASUALInteraction extends JOptionPane {
                     Options,
                     Options[1]);
         } else {
-            new Log().Level1Interaction("[USERTASK][CRITICAL]" +instructionalMessage);
-            n=getCommandLineInputNumber();
+            new Log().Level1Interaction("[USERTASK][CRITICAL]" + instructionalMessage);
+            n = getCommandLineInputNumber();
         }
-        
+
         return n;
     }
 
@@ -134,8 +134,8 @@ public class CASUALInteraction extends JOptionPane {
                         JOptionPane.YES_NO_OPTION);
             }
         } else {
-            new Log().Level1Interaction("[CANCELOPTION]"+ Message[0]+"\n" +Message[1]);
-            n=getCommandLineInputNumber();
+            new Log().Level1Interaction("[CANCELOPTION]" + Message[0] + "\n" + Message[1]);
+            n = getCommandLineInputNumber();
         }
         return n;
     }
@@ -157,7 +157,7 @@ public class CASUALInteraction extends JOptionPane {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            new Log().Level1Interaction("[NOTIFICATION]"+ Message[0]+"\n" +Message[1]+"  Press any key to continue.");
+            new Log().Level1Interaction("[NOTIFICATION]" + Message[0] + "\n" + Message[1] + "  Press any key to continue.");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -168,7 +168,7 @@ public class CASUALInteraction extends JOptionPane {
                     message, title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
-            new Log().Level1Interaction("[INFOMESSAGE]"+ title +"\n"+ message +"  Press any key to continue.");
+            new Log().Level1Interaction("[INFOMESSAGE]" + title + "\n" + message + "  Press any key to continue.");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -179,7 +179,7 @@ public class CASUALInteraction extends JOptionPane {
             JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 
         } else {
-            new Log().Level1Interaction("[ERRORMESSAGE]"+ title +"\n"+ message +"  Press any key to continue.");
+            new Log().Level1Interaction("[ERRORMESSAGE]" + title + "\n" + message + "  Press any key to continue.");
             waitForStandardInputBeforeContinuing();
         }
     }

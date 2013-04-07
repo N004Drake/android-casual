@@ -47,7 +47,6 @@ public class CASUALapplicationData {
     public static String CASUALFileName;
     public static String meta;
 
-    
     public void setProperties() {
         buildProperties = Statics.BUILDPROPERTIES;
         usePictureForBanner = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.UsePictureForBanner").contains("rue");

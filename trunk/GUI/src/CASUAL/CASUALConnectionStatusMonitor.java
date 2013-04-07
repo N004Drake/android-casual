@@ -33,7 +33,6 @@ public class CASUALConnectionStatusMonitor {
     private static int timerInterval = 1000;
     private static int cycles = 0;
     private static boolean hasConnected = false;
-    
     /*
      * Starts and stops the ADB timer
      * reference with Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
@@ -86,7 +85,7 @@ public class CASUALConnectionStatusMonitor {
                                 + "Please disconnect the device, then reconnect it.\n"
                                 + "Next unlock the device and check for a message onscreen.\n"
                                 + "Select \"Always allow from this computer\" then press OK.\n",
-                                "Device Not Paired", CASUALUserInteraction.OK_OPTION, 2, ok, 0);
+                                "Device Not Paired", CASUALInteraction.OK_OPTION, 2, ok, 0);
                         Log.level0Error("Disconnect and reconnect your device.  Check the device for instructions.");
                         DeviceList = Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
                         Statics.casualConnectionStatusMonitor.DeviceCheck.start();
@@ -118,7 +117,7 @@ public class CASUALConnectionStatusMonitor {
                                     + "is not set up properly to communicate\n"
                                     + "with the device.  As a work-around we\n"
                                     + "will attempt to elevate permissions \n"
-                                    + "to access the device properly.", "Insufficient Permissions", CASUALUserInteraction.OK_OPTION, 2, ok, 0);
+                                    + "to access the device properly.", "Insufficient Permissions", CASUALInteraction.OK_OPTION, 2, ok, 0);
                             DeviceList = Shell.elevateSimpleCommand(DeviceCommand);
                             // if permissions elevation was sucessful
                             if (!DeviceList.contains("????????????")) {

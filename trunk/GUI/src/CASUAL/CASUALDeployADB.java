@@ -20,11 +20,10 @@ package CASUAL;
  *
  * @author adam
  */
-class CASUALDeployADB{
+class CASUALDeployADB {
 
     FileOperations FileOperations = new FileOperations();
     Log Log = new Log();
-
 
     public void deployADB() {
         DiffTextFiles DTF = new DiffTextFiles();
@@ -89,10 +88,10 @@ class CASUALDeployADB{
 
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
             new CASUALInteraction().showInformationMessage("Could not execute ADB. 'Wrong ELF class' error\n"
-                + "This can be resolved by installation of ia32-libs"
-                + "eg.. sudo apt-get install ia32-libs\n"
-                + "ie.. sudo YourPackageManger install ia32-libs", "ELFCLASS64 error!");
-                       
+                    + "This can be resolved by installation of ia32-libs"
+                    + "eg.. sudo apt-get install ia32-libs\n"
+                    + "ie.. sudo YourPackageManger install ia32-libs", "ELFCLASS64 error!");
+
         }
 
 
@@ -114,5 +113,4 @@ class CASUALDeployADB{
 
 
     }
-
 }
