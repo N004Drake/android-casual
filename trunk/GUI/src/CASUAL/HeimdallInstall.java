@@ -20,8 +20,7 @@
  */
 package CASUAL;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+
 
 /**
  *
@@ -133,18 +132,18 @@ public class HeimdallInstall {
     public void installWindowsVCRedist() {
         //download 
         CASUALUpdates updater = new CASUALUpdates();
-        new Log().level0Error("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
+        new Log().Level1Interaction("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
         String installVCResults = "CritERROR!!!";
+        
+        
+        String exec="";
         try {
-            //TODO: verify if it is in the resources at /CASUAL/resource/heimdall/vcredist_32.exe before installing. else deploy and execute
-            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinVCRedis32tInRepo), Statics.TempFolder + "vcredist_32.exe", "Visual Studio Redistributable");
-            new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinVCRedis32tInRepo}, new String[]{Statics.TempFolder + "vcredist_32.exe"});
-            installVCResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + "vcredist_32.exe"});
-        } catch (MalformedURLException ex) {
+            exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/vcredist.properties");
+        } catch( Exception ex ){
             log.errorHandler(ex);
-        } catch (URISyntaxException ex) {
-            log.errorHandler(ex);
+            
         }
+        new Shell().liveShellCommand(new String[]{exec}, true);
         if (installVCResults.contains("CritERROR!!!")) {
             displayWindowsPermissionsMessageAndExit();
         }
@@ -164,8 +163,7 @@ public class HeimdallInstall {
                 + "to use Heimdall instead of Odin for download mode.  It only affects\n"
                 + "ONE usb port.");
        
-        CASUALUpdates updater = new CASUALUpdates();
-       
+              
         //TODO: verify if driver is in the resources at /CASUAL/resources/heimdall/ before downloading else deploy and execute
         String exec="";
         try {
@@ -196,9 +194,10 @@ public class HeimdallInstall {
     }
 
     void runWinHeimdallInstallationProcedure() {
+        installWindowsVCRedist();
         installWindowsDrivers();
         new Log().level0Error("done.");
-        installWindowsVCRedist();
+        
     }
 
     public boolean checkHeimdallVersion() {
