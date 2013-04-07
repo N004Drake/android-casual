@@ -175,7 +175,7 @@ public class HeimdallInstall {
         }
         //verify MD5
 
-        log.level2Information(new Shell().liveShellCommand(new String[]{"cmd.exe","/C","start","/WAIT","/B",exec}, true));
+        log.level2Information(new Shell().sendShellCommand(new String[]{"cmd.exe","/C",exec}));
         
 
     }
