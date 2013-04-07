@@ -252,7 +252,10 @@ public class CASUALUpdates {
     static String arch="";
     static String system="";
     public String CASUALRepoDownload(String propertiesFileInCASUALOnlineRepo) throws FileNotFoundException, IOException, InterruptedException{
-        Thread gather=new Thread(gatherInfo);
+        arch = Statics.is64bitSystem() ? "64" : "32";
+        system = Statics.isWindows() ? "win": system;
+        system = Statics.isLinux() ? "linux": system;
+        system = Statics.isMac() ? "mac": system;
         String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
         //download location, md5, and version information
         downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.TempFolder+basename, "locating files");
@@ -263,8 +266,6 @@ public class CASUALUpdates {
         int counter=1;
         String filenumber="";
 
-        //wait for system information if it hasn't finished
-        gather.join();
         /*
          * This loop uses the filenumber as a blank the first time through
          * after that filenumber turns to "2", so it will look for 
@@ -273,12 +274,15 @@ public class CASUALUpdates {
          * It will download the applicable files in the properties file. then
          * MD5sum against the value in the properties file.
          */
-        while (! (prop.getProperty(system+arch+filenumber)).equals("")){
+        while (prop.getProperty(system+arch+filenumber)!=null){
             String downloadURL=prop.getProperty(system+arch+filenumber);
-            String downloadBasename = new File(downloadURL).getName();
+            
+  
+            String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/')+1, downloadURL.length() );
             String availableVersion=prop.getProperty(system+arch+filenumber+"version");
             String downloadedFile=Statics.TempFolder+downloadBasename;
             //download update based on information available.
+
             downloadFileFromInternet(downloadURL, downloadedFile, downloadBasename + " ver"+ availableVersion );
 
             //get expected MD5
