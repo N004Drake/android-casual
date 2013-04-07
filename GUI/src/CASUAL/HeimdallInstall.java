@@ -174,9 +174,8 @@ public class HeimdallInstall {
             
         }
         //verify MD5
-        Timer t=new Timer(){          
-        };
-        new Shell().elevateSimpleCommand(new String[]{exec});
+
+        new Shell().fireShellCommand(new String[]{"cmd.exe","start","/WAIT","/B",exec});
         
 
     }
