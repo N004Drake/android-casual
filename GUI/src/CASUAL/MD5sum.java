@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class MD5sum {
 
     public boolean compareFileToMD5(File f, String MD5) {
-        if (md5sum(f).equals(MD5)) {
+        if (md5sum(f).equals(MD5.toLowerCase())) {
             return true;
         } else {
             return false;

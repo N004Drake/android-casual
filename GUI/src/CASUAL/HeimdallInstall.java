@@ -172,7 +172,7 @@ public class HeimdallInstall {
             
         }
         //verify MD5
-        String returnval= new Shell().sendShellCommand(new String[]{exec});
+        String returnval= new Shell().liveShellCommand(new String[]{exec},false);
         log.level3Verbose(returnval);
         if (returnval.contains("CritERROR!!!")) {
             displayWindowsPermissionsMessageAndExit();
