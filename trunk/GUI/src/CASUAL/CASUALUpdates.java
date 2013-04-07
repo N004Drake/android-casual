@@ -292,10 +292,10 @@ public class CASUALUpdates {
                 //if MD5 does not match
                 if (! new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)){
                     //show message and exit
-                    new CASUALInteraction().showErrorDialog("ERROR!", "During update a bad file was downlaoded.\n"
+                    new CASUALInteraction().showErrorDialog( "During update a bad file was downlaoded.\n"
                             + "Please check your internet connection and try again.\n"
                             + "If the problem persists, report it.\n"
-                            + "CASUAL will now exit.  Please try again.");
+                            + "CASUAL will now exit.  Please try again.","ERROR!");
                     System.exit(0);
                 }
             }
