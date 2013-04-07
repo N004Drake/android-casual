@@ -37,7 +37,7 @@ public class HeimdallTools {
         String stringCommand[] = (StringOperations.convertArrayListToStringArray(shellCommand));
         log.progress("Waiting for Downoad Mode device.");
         String shellReturn = "";
-        Timer connectionTimer = new Timer(90000, new ActionListener() {
+        Timer connectionTimer = new Timer(60000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 new CASUALInteraction().showTimeoutDialog(60, null, "It would appear that the connected device is not recognized.\n"

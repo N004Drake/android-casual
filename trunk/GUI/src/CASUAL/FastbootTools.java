@@ -24,6 +24,38 @@ import java.util.ArrayList;
  */
 public class FastbootTools {
 
+    public static void checkAndDeployFastboot() {
+        if (!Statics.isFastbootDeployed) {
+            if (Statics.isLinux()) {
+                Statics.fastbootResource = fastbootLinux();
+            }
+            if (Statics.isWindows()) {
+                Statics.fastbootResource = Statics.fastbootWindows;
+            }
+            if (Statics.isMac()) {
+                Statics.fastbootResource = Statics.fastbootMac;
+            }
+            Statics.Log.level2Information("Deploying Fastboot...");
+            Statics.Log.level3Verbose("Deploying Fastboot from " + Statics.fastbootResource + " to " + Statics.fastbootDeployed);
+            new FileOperations().copyFromResourceToFile(Statics.fastbootResource, Statics.fastbootDeployed);
+            if (Statics.isLinux() || Statics.isMac()) {
+                new FileOperations().setExecutableBit(Statics.fastbootDeployed);
+            }
+            Statics.isFastbootDeployed = true;
+            Statics.Log.level2Information("Fastboot deployed.");
+        }
+    }
+
+    public static String fastbootLinux() {
+        if (Statics.arch.equals("x86_64")) {
+            return Statics.fastbootLinux64;
+        }
+        if (Statics.arch.equals("ARMv6")) {
+            return Statics.fastbootLinuxARMv6;
+        }
+        return Statics.fastbootLinux32;
+    }
+
     public String doFastbootShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
 

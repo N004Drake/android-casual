@@ -481,7 +481,7 @@ public class CASUALLanguage {
         } else if (line.startsWith("$FASTBOOT")) {
             line = line.replace("$FASTBOOT", "");
             line = StringOperations.removeLeadingSpaces(line);
-            Statics.checkAndDeployFastboot();
+            FastbootTools.checkAndDeployFastboot();
             if (Statics.isLinux()) {
                 if (CASUALapplicationData.useSound) {
                     AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
