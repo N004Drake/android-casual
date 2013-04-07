@@ -143,7 +143,7 @@ public class DiffTextFiles {
         }
         BufferedReader OriginalFileBuffer = new BufferedReader(FR);
         try {
-            FileOut = new FileOutputStream(NameOfFileToBeModified + "_new");
+            FileOut = new FileOutputStream(NameOfFileToBeModified);
             while ((currentString = OriginalFileBuffer.readLine()) != null) {
                 new PrintStream(FileOut).println(currentString);
             }

@@ -150,21 +150,11 @@ public class Statics {
     final public static String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
     final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
     //Fastboot
-
-    public static String fastbootLinux() {
-        if (Statics.arch.equals("x86_64")) {
-            return fastbootLinux64;
-        }
-        if (Statics.arch.equals("ARMv6")) {
-            return fastbootLinuxARMv6;
-        }
-        return fastbootLinux32;
-    }
-    final private static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
-    final private static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
-    final private static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
-    final private static String fastbootWindows = "/CASUAL/resources/fastboot/fastboot-win.exe";
-    final private static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
+    final public static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
+    final public static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
+    final public  static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
+    final public static String fastbootWindows = "/CASUAL/resources/fastboot/fastboot-win.exe";
+    final public static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
     final public static String ADBini = "/CASUAL/resources/ADB/adb_usb.ini";
@@ -262,26 +252,6 @@ public class Statics {
     static boolean isFastbootDeployed = false;
     public static String fastbootResource = "";
     public static String fastbootDeployed = TempFolder + "fastboot";
-
-    public static void checkAndDeployFastboot() {
-        if (!isFastbootDeployed) {
-            if (isLinux()) {
-                fastbootResource = fastbootLinux();
-            }
-            if (isWindows()) {
-                fastbootResource = fastbootWindows;
-            }
-            if (isMac()) {
-                fastbootResource = fastbootMac;
-            }
-            Log.level2Information("Deploying Fastboot from " + fastbootResource + " to " + fastbootDeployed);
-            new FileOperations().copyFromResourceToFile(fastbootResource, fastbootDeployed);
-            if (isLinux() || isMac()) {
-                new FileOperations().setExecutableBit(fastbootDeployed);
-            }
-            isFastbootDeployed = true;
-        }
-    }
     //heimdall 
     static boolean isHeimdallDeployed = false;
     static boolean ExectingHeimdallCommand = false;

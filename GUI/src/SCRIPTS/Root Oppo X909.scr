@@ -5,12 +5,12 @@ $FASTBOOT boot "$ZIPFILEinsecureboot.img"
 $ECHO Booting insecure bootloader.. please wait
 wait-for-device
 $ECHO pushing files
-push "$ZIPFILEsu" /data/local/tmp
+push "$ZIPFILEsu" /data/local/tmp/su
 $ECHO rooting device
 shell "mount -o remount,rw /system"
-shell "cat /data/local/tmp/Superuser.apk > /system/app/Superuser.apk"
+shell "cat /data/local/tmp/su> /system/xbin/su"
 $ECHO Setting permissions
-shell "chmod 6755 /system/bin/su"
+shell "chmod 6755 /system/xbin/su"
 $ECHO Waiting for GUI...
 shell "sleep 15"
 $ECHO installing SuperSU Authentication Controller 
