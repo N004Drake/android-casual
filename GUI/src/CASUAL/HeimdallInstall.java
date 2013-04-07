@@ -156,10 +156,11 @@ public class HeimdallInstall {
         try {
             exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
         } catch (Exception ex) {
+            log.level0Error("There was a problem while accessing the online repository.");
         }
         //verify MD5
 
-        log.level2Information(new Shell().sendShellCommand(new String[]{exec}));
+        log.level2Information(new Shell().sendShellCommand(new String[]{"cmd.exe","/C",exec}));
 
 
     }
