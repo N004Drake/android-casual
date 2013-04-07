@@ -76,9 +76,9 @@ public class Shell implements Runnable {
             FileOperations.setExecutableBit(ScriptFile);
             log.level4Debug("###Elevating Command: " + Command + " ###");
             if (message == null) {
-                Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile},true);
+                Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
             } else {
-                Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile},true);
+                Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile}, true);
             }
 
         } else if (Statics.isMac()) {
@@ -95,7 +95,7 @@ public class Shell implements Runnable {
             }
             FileOperations.setExecutableBit(ScriptFile);
             String[] MacCommand = {ScriptFile};
-            Result = liveShellCommand(MacCommand,true);
+            Result = liveShellCommand(MacCommand, true);
         } else if (!Statics.OSName.equals("Windows XP")) {
             newCmd = new String[cmd.length + 2];
             newCmd[0] = Statics.WinElevatorInTempFolder;
@@ -104,7 +104,7 @@ public class Shell implements Runnable {
                 newCmd[i] = cmd[i - 2] + " ";
             }
 
-            Result = liveShellCommand(newCmd,true);
+            Result = liveShellCommand(newCmd, true);
 
         }
 
@@ -205,7 +205,7 @@ public class Shell implements Runnable {
 
     }
 
-    public String liveShellCommand(String[] params,boolean display) {
+    public String liveShellCommand(String[] params, boolean display) {
         String LogRead = "";
         try {
             Process process = new ProcessBuilder(params).start();
@@ -221,7 +221,9 @@ public class Shell implements Runnable {
                 CharRead = Character.toString((char) c);
                 LineRead = LineRead + CharRead;
                 LogRead = LogRead + CharRead;
-                if (display)log.progress(CharRead);
+                if (display) {
+                    log.progress(CharRead);
+                }
 
                 if (!Statics.ActionEvents.isEmpty() && ((LineRead.contains("\n") || LineRead.contains("\r")))) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
@@ -254,7 +256,7 @@ public class Shell implements Runnable {
                 } else {
                     new CASUALInteraction().showTimeoutDialog(600, null, "Install LibUSB drivers!", "LibUSB not found", CASUALInteraction.OK_CANCEL_OPTION, CASUALInteraction.ERROR, new String[]{"OK"}, "OK");
                 }
-                liveShellCommand(params,true);
+                liveShellCommand(params, true);
             }
         } catch (RuntimeException ex) {
             return LogRead;
@@ -320,7 +322,7 @@ public class Shell implements Runnable {
                     String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
                     ProcessBuilder pb = new ProcessBuilder(params);
                     pb.redirectErrorStream(true);
-                    Process process=pb.start();
+                    Process process = pb.start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String LineRead = null;
                     String CharRead;
@@ -342,7 +344,7 @@ public class Shell implements Runnable {
                         //log.level3(CharRead);
                         LogData = LogData + CharRead.toString();
                     }
-                    
+
                     new Log().level4Debug(LogData);
 
                 } catch (IOException ex) {

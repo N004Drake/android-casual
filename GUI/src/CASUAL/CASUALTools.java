@@ -16,13 +16,11 @@
  */
 package CASUAL;
 
-import static CASUAL.CASUALapplicationData.buildProperties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -222,14 +220,13 @@ public class CASUALTools {
             }
         }
     };
-
-    private Runnable updateMD5s = new Runnable(){
+    private Runnable updateMD5s = new Runnable() {
         @Override
         public void run() {
             new CASUALTools().md5sumTestScripts();
         }
     };
-    
+
     void rewriteMD5OnCASPAC(File CASPAC, CASPACHandler caspacHandler) {
         System.out.println("Writing new CASUAL Package Data!");
         ArrayList list;
@@ -290,15 +287,15 @@ public class CASUALTools {
     }
 
     private void incrementBuildNumber() throws NumberFormatException {
-        Properties prop=new Properties();
+        Properties prop = new Properties();
         try {
-            prop.load(new FileInputStream(System.getProperty("user.dir")+"/src/CASUAL/resources/CASUALApp.properties"));
-            int x=Integer.parseInt(prop.getProperty("Application.buildnumber").replace(",", ""));
+            prop.load(new FileInputStream(System.getProperty("user.dir") + "/src/CASUAL/resources/CASUALApp.properties"));
+            int x = Integer.parseInt(prop.getProperty("Application.buildnumber").replace(",", ""));
             x++;
             prop.setProperty("Application.buildnumber", Integer.toString(x));
             prop.setProperty("Application.buildnumber", Integer.toString(x));
-         
-            prop.store(new FileOutputStream(System.getProperty("user.dir")+"/src/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber="+x);
+
+            prop.store(new FileOutputStream(System.getProperty("user.dir") + "/src/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber=" + x);
         } catch (IOException ex) {
             Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
         }

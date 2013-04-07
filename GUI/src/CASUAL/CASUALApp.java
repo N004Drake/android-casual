@@ -29,7 +29,7 @@ public class CASUALApp {
     final public static String defaultPackage = "Test Script_2"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     //final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
-    final private static String[] overrideArguments = new String[]{"-g","--caspac", "/home/adam/Desktop/casualpack/testPak.zip"};
+    final private static String[] overrideArguments = new String[]{"-g", "--caspac", "/home/adam/Desktop/casualpack/testPak.zip"};
     String[] arguments;
 
     /**
@@ -43,28 +43,29 @@ public class CASUALApp {
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
-     * @param root 
+     *
+     * @param root
      */
     protected void configureWindow(java.awt.Window root) {
     }
 
-
     /**
      * Main method launching the application.
-     * @param args 
+     *
+     * @param args
      */
     public static void main(String[] args) {
         CASUALapplicationData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
         CASUALapplicationData.CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         CASUALapplicationData.CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
-        new Log().level2Information("We are running "+System.getProperty("os.name") +"\nCreating Temp Folder in:"+Statics.TempFolder
-        + "CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + CASUALapplicationData.CASUALSVNRevision + " build:" + CASUALapplicationData.CASUALBuildNumber + "\n"
-        + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
-        + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
-        + "    and you are welcome to redistribute it, under certain conditions; run\n"
-        + "    '" + CASUALapplicationData.CASUALFileName + " --license'\n"
-        + "    for details. http://android-casual.googlecode.com for source.");
-        
+        new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
+                + "CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + CASUALapplicationData.CASUALSVNRevision + " build:" + CASUALapplicationData.CASUALBuildNumber + "\n"
+                + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
+                + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
+                + "    and you are welcome to redistribute it, under certain conditions; run\n"
+                + "    '" + CASUALapplicationData.CASUALFileName + " --license'\n"
+                + "    for details. http://android-casual.googlecode.com for source.");
+
         if (useOverrideArgs) {
             args = overrideArguments;
         }

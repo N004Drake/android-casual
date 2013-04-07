@@ -71,13 +71,13 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level0Error(String data) {
-        writeOutToLog("[ERROR]"+data);
+        writeOutToLog("[ERROR]" + data);
         if (Statics.GUIVerboseLevel >= 0) {
             sendToGUI(data);
 
         }
         if (Statics.CommandLineVerboseLevel >= 0) {
-        System.out.println("[ERROR]"+data);
+            System.out.println("[ERROR]" + data);
 
         }
     }
@@ -88,12 +88,12 @@ public class Log {
      * @param data is data to be written to log
      */
     public void Level1Interaction(String data) {
-            writeOutToLog("[INTERACTION]"+data);
+        writeOutToLog("[INTERACTION]" + data);
         if (Statics.GUIVerboseLevel >= 1) {
             sendToGUI(data);
         }
         if (Statics.CommandLineVerboseLevel >= 1) {
-        System.out.println("[INTERACTION]"+data);
+            System.out.println("[INTERACTION]" + data);
 
         }
 
@@ -106,12 +106,12 @@ public class Log {
      */
     // level 2 is for info-type data
     public void level2Information(String data) {
-           writeOutToLog("[INFO]"+data);
+        writeOutToLog("[INFO]" + data);
         if (Statics.GUIVerboseLevel >= 2) {
             sendToGUI(data);
         }
         if (Statics.CommandLineVerboseLevel >= 2) {
-        System.out.println("[INFO]"+data); 
+            System.out.println("[INFO]" + data);
         }
     }
 
@@ -121,23 +121,23 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level3Verbose(String data) {
-        writeOutToLog("[VERBOSE]"+ data);
+        writeOutToLog("[VERBOSE]" + data);
         if (Statics.GUIVerboseLevel >= 3) {
             sendToGUI(data);
         }
         if (Statics.CommandLineVerboseLevel >= 3) {
-            System.out.println("[VERBOSE]"+data);
+            System.out.println("[VERBOSE]" + data);
         }
     }
 
     public void level4Debug(String data) {
-        writeOutToLog("[DEBUG]"+data);
-        
+        writeOutToLog("[DEBUG]" + data);
+
         if (Statics.GUIVerboseLevel >= 4) {
             sendToGUI(data);
         }
         if (Statics.CommandLineVerboseLevel >= 4) {
-            System.out.println("[DEBUG]"+data);
+            System.out.println("[DEBUG]" + data);
         }
     }
 
@@ -154,7 +154,7 @@ public class Log {
         }
 
         PrintWriter out = new PrintWriter(WriteFile);
-        out.write(data+"\n");
+        out.write(data + "\n");
 
         Statics.OutFile = out;
         if (Statics.OutFile != null) {
@@ -241,8 +241,7 @@ public class Log {
     public void errorHandler(Exception e) {
         StringWriter writer = new StringWriter();
         e.printStackTrace(new PrintWriter(writer));
-        level0Error("[CRITICAL]"+e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
+        level0Error("[CRITICAL]" + e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
         level0Error("A critical error was encoutered.  Please copy the log from About>Show Log and report this issue ");
     }
-
 }

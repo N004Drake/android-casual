@@ -58,13 +58,13 @@ public class CASUALUpdates {
         //This is where we hold the local information to be compared to the update
         CASPACData localInformation = new CASPACData(localIdentificationString);
 
-        Log.level4Debug("***WEB VERSION***\nIDString:"+webInformation.uniqueIdentifier+"\nSVNRevision:"+webInformation.minSVNRevision+"\nScriptRevision:"+webInformation.scriptRevision+"\nsupportURL:"+webInformation.supportURL + "updateMessage"+webInformation.updateMessage);
+        Log.level4Debug("***WEB VERSION***\nIDString:" + webInformation.uniqueIdentifier + "\nSVNRevision:" + webInformation.minSVNRevision + "\nScriptRevision:" + webInformation.scriptRevision + "\nsupportURL:" + webInformation.supportURL + "updateMessage" + webInformation.updateMessage);
 
-        
+
         if (localInformation.uniqueIdentifier.equals(webInformation.uniqueIdentifier)) {
             if (checkVersionInformation(webInformation.minSVNRevision, localInformation.minSVNRevision)) {
                 //update SVN
-                Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.supportURL+ " for more information. ");
+                Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.supportURL + " for more information. ");
                 //Log.level0(webInformation[4]);
                 return 3;
             }
@@ -129,14 +129,14 @@ public class CASUALUpdates {
             int bytes = 0;
             Log.progress(friendlyName.replace("/SCRIPTS/", ""));
             int lastlength = 0;
-            int kilobytes = 0;
+            int kilobytes;
             int offset = Statics.ProgressDoc.getLength();
             try {
                 int bytesRead;
                 while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
                     output.write(buffer, 0, bytesRead);
                     bytes = bytes + bytesRead;
-                    kilobytes = bytes/1024;
+                    kilobytes = bytes / 1024;
                     Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
                     lastlength = 6 + Integer.toString(kilobytes).length();
 
@@ -205,7 +205,7 @@ public class CASUALUpdates {
             return 1;
         }
         Log.level0Error("Downloading Updates");
-        String[] md5lines=StringOperations.convertArrayListToStringArray(webInformation.md5s);
+        String[] md5lines = StringOperations.convertArrayListToStringArray(webInformation.md5s);
 
         try {
             ArrayList<String> list = new ArrayList();
@@ -215,7 +215,7 @@ public class CASUALUpdates {
                 //get download extension from md5sum;
 
                 try {
-                    
+
                     String[] md5 = md5lines[n].split("  ");
                     String fileName = md5[1];
                     ext = "." + fileName.split("\\.")[1];
@@ -244,27 +244,27 @@ public class CASUALUpdates {
         }
         return 1;//no update available
     }
-    
     /*
      * String Properties File
      * Returns location of first downloaded file
      */
-    static String arch="";
-    static String system="";
-    public String CASUALRepoDownload(String propertiesFileInCASUALOnlineRepo) throws FileNotFoundException, IOException, InterruptedException{
+    static String arch = "";
+    static String system = "";
+
+    public String CASUALRepoDownload(String propertiesFileInCASUALOnlineRepo) throws FileNotFoundException, IOException, InterruptedException {
         arch = Statics.is64bitSystem() ? "64" : "32";
-        system = Statics.isWindows() ? "win": system;
-        system = Statics.isLinux() ? "linux": system;
-        system = Statics.isMac() ? "mac": system;
+        system = Statics.isWindows() ? "win" : system;
+        system = Statics.isLinux() ? "linux" : system;
+        system = Statics.isMac() ? "mac" : system;
         String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
         //download location, md5, and version information
-        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.TempFolder+basename, "locating files");
+        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.TempFolder + basename, "locating files");
         //Set properties file
         Properties prop = new Properties();
-        prop.load(new FileInputStream(Statics.TempFolder+basename));
+        prop.load(new FileInputStream(Statics.TempFolder + basename));
         // get information from properties file
-        int counter=1;
-        String filenumber="";
+        int counter = 1;
+        String filenumber = "";
 
         /*
          * This loop uses the filenumber as a blank the first time through
@@ -274,50 +274,47 @@ public class CASUALUpdates {
          * It will download the applicable files in the properties file. then
          * MD5sum against the value in the properties file.
          */
-        while (prop.getProperty(system+arch+filenumber)!=null){
-            String downloadURL=prop.getProperty(system+arch+filenumber);
-            
-  
-            String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/')+1, downloadURL.length() );
-            String availableVersion=prop.getProperty(system+arch+filenumber+"version");
-            String downloadedFile=Statics.TempFolder+downloadBasename;
+        while (prop.getProperty(system + arch + filenumber) != null) {
+            String downloadURL = prop.getProperty(system + arch + filenumber);
+
+
+            String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/') + 1, downloadURL.length());
+            String availableVersion = prop.getProperty(system + arch + filenumber + "version");
+            String downloadedFile = Statics.TempFolder + downloadBasename;
             //download update based on information available.
 
-            downloadFileFromInternet(downloadURL, downloadedFile, downloadBasename + " ver"+ availableVersion );
+            downloadFileFromInternet(downloadURL, downloadedFile, downloadBasename + " ver" + availableVersion);
 
             //get expected MD5
-            String expectedMD5=new MD5sum().getMD5fromLinuxMD5String(prop.getProperty(system+arch+"md5"));
+            String expectedMD5 = new MD5sum().getMD5fromLinuxMD5String(prop.getProperty(system + arch + "md5"));
             //verify  we have an MD5
-            if (expectedMD5.length()>=31){
+            if (expectedMD5.length() >= 31) {
                 //if MD5 does not match
-                if (! new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)){
+                if (!new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)) {
                     //show message and exit
-                    new CASUALInteraction().showErrorDialog( "During update a bad file was downlaoded.\n"
+                    new CASUALInteraction().showErrorDialog("During update a bad file was downlaoded.\n"
                             + "Please check your internet connection and try again.\n"
                             + "If the problem persists, report it.\n"
-                            + "CASUAL will now exit.  Please try again.","ERROR!");
+                            + "CASUAL will now exit.  Please try again.", "ERROR!");
                     System.exit(0);
                 }
             }
             counter++;
-            filenumber="-"+Integer.toString(counter);
+            filenumber = "-" + Integer.toString(counter);
         }
-        String downloadURL=prop.getProperty(system+arch);
+        String downloadURL = prop.getProperty(system + arch);
         String downloadBasename = new File(downloadURL).getName();
-        return Statics.TempFolder+downloadBasename;
-            
+        return Statics.TempFolder + downloadBasename;
+
     }
-    
-    
-    Runnable gatherInfo=new Runnable(){
+    Runnable gatherInfo = new Runnable() {
         @Override
         public void run() {
-        arch = Statics.is64bitSystem() ? "64" : "32";
-        system = Statics.isWindows() ? "win": system;
-        system = Statics.isLinux() ? "linux": system;
-        system = Statics.isMac() ? "mac": system;
+            arch = Statics.is64bitSystem() ? "64" : "32";
+            system = Statics.isWindows() ? "win" : system;
+            system = Statics.isLinux() ? "linux" : system;
+            system = Statics.isMac() ? "mac" : system;
 
         }
     };
-
 }

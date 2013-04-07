@@ -350,11 +350,11 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
             n = new CASUALInteraction().showUserCancelOption(line);
             if (n == 0) {
-                    log.level0Error(ScriptName + " canceled at user request");
-                    ScriptContinue = false;
-                    return "";
+                log.level0Error(ScriptName + " canceled at user request");
+                ScriptContinue = false;
+                return "";
             }
-            return  "";
+            return "";
 
 
 
@@ -598,6 +598,4 @@ public class CASUALLanguage {
         }
 
     }
-
-
 }

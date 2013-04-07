@@ -52,11 +52,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
         log.level4Debug("OMFGWOOT GUI running!");
-        if (fileOperations.verifyResource(Statics.ScriptLocation + "-Overview.txt")) log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt"));
+        if (fileOperations.verifyResource(Statics.ScriptLocation + "-Overview.txt")) {
+            log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt"));
+        }
 
 
         log.level4Debug("Searching for scripts");
-        
+
         for (String script : Statics.scriptNames) {
             comboBoxScriptSelectorAddNewItem(script);
         }
@@ -76,7 +78,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             setWindowBannerText(CASUALapplicationData.bannerText);
         }
         Statics.lockGUIformPrep = false;
-        if (Statics.dumbTerminalGUI)setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        if (Statics.dumbTerminalGUI) {
+            setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        }
     }
 
     /*
@@ -419,14 +423,16 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }
 
     private void comboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorActionPerformed
-        if (!Statics.dumbTerminalGUI) Statics.TargetScriptIsResource = true;
+        if (!Statics.dumbTerminalGUI) {
+            Statics.TargetScriptIsResource = true;
+        }
 
     }//GEN-LAST:event_comboBoxScriptSelectorActionPerformed
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
         log.level4Debug("hiding script selector TargetScript: " + comboBoxScriptSelector.getSelectedItem().toString());
-        
-        if ( (!Statics.dumbTerminalGUI) && comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
+
+        if ((!Statics.dumbTerminalGUI) && comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
             Statics.TargetScriptIsResource = false;
         } else {
             Statics.TargetScriptIsResource = true;
@@ -459,9 +465,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         log.level2Information("From Resource: " + Statics.TargetScriptIsResource);
         log.level2Information("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
         if (Statics.TargetScriptIsResource) {
-            if (! Statics.dumbTerminalGUI) log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            if (!Statics.dumbTerminalGUI) {
+                log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            }
         } else {
-            if (!Statics.dumbTerminalGUI) log.level2Information(fileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            if (!Statics.dumbTerminalGUI) {
+                log.level2Information(fileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
+            }
         }
         Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString();
         //set the ZipResource
@@ -532,8 +542,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             return null;
         }
     }
-
-
 
     private String getFilenameWithoutExtension(String FileName) {
 

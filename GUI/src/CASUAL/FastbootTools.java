@@ -65,7 +65,7 @@ public class FastbootTools {
         ShellCommand.addAll(new ShellTools().parseCommandLine(line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
         new Log().level3Verbose("Performing elevated Fastboot command" + line);
-        return Shell.liveShellCommand(StringCommand,true);
+        return Shell.liveShellCommand(StringCommand, true);
     }
 
     public String doElevatedFastbootShellCommand(String line) {

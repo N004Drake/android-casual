@@ -20,10 +20,6 @@
  */
 package CASUAL;
 
-import javax.swing.Timer;
-
-
-
 /**
  *
  * @author adam
@@ -116,13 +112,13 @@ public class HeimdallInstall {
             update.downloadFileFromInternet(Statics.heimdallMacURL, installScript, "Downloading Heimdall Installation file");
             new FileOperations().setExecutableBit(installScript);
 
-            String title="Exiting CASUAL";
-            String message="CASUAL will now launch Heimdall Installer.\n  Hit cancel if asked to set up any network interfaces.\n"
+            String title = "Exiting CASUAL";
+            String message = "CASUAL will now launch Heimdall Installer.\n  Hit cancel if asked to set up any network interfaces.\n"
                     + "You must install Heimdall in order to continue";
             new CASUALInteraction().showErrorDialog(message, title);
             shell.elevateSimpleCommand(new String[]{installScript});
-            
-            
+
+
             new CASUALInteraction().showErrorDialog("In order to continue, you must unplug the device and\n"
                     + "then it back in.  Use a GOOD port, in the back, not\n"
                     + "in the front.  Use a good cable too.", "Unplug it and then plug it back in");
@@ -132,18 +128,13 @@ public class HeimdallInstall {
     }
 
     public void installWindowsVCRedist() {
-        //download 
-        CASUALUpdates updater = new CASUALUpdates();
         new Log().Level1Interaction("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
         String installVCResults = "CritERROR!!!";
-        
-        
-        String exec="";
+        String exec = "";
         try {
             exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/vcredist.properties");
-        } catch( Exception ex ){
+        } catch (Exception ex) {
             log.errorHandler(ex);
-            
         }
         new Shell().liveShellCommand(new String[]{exec}, true);
         if (installVCResults.contains("CritERROR!!!")) {
@@ -156,27 +147,20 @@ public class HeimdallInstall {
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
         log.level0Error("Installing drivers");
-        new Log().level0Error("Driver Problems suck. Lemme make it easy.\n"
-                + "1. Check that your device is download mode and connected up.\n"
-                + "2. Select the one that says ---Gadget Serial--- in the main window\n"
-                + "3. Click ---install driver---.\n"
-                + "4. Close out zadig and use CASUAL."
-                + "Note: the USB port which you install this driver will be converted\n"
-                + "to use Heimdall instead of Odin for download mode.  It only affects\n"
-                + "ONE usb port.");
-       
-              
+        new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
+                + "We're going to install drivers now.  Lets do it.");
+
+
         //TODO: verify if driver is in the resources at /CASUAL/resources/heimdall/ before downloading else deploy and execute
-        String exec="";
+        String exec = "";
         try {
             exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
-        } catch( Exception ex ){
-            
+        } catch (Exception ex) {
         }
         //verify MD5
 
-        log.level2Information(new Shell().sendShellCommand(new String[]{"cmd.exe","/C",exec}));
-        
+        log.level2Information(new Shell().sendShellCommand(new String[]{exec}));
+
 
     }
 
@@ -187,7 +171,6 @@ public class HeimdallInstall {
                     + "Please log in as a System Administrator  and rerun the command or use the console: \n"
                     + "runas /user:Administrator java -jar " + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString(), //Display Message
                     "Permissions Error");
-            //WindowsProblem.start();
         }
         System.exit(0);
     }
@@ -196,7 +179,7 @@ public class HeimdallInstall {
         installWindowsVCRedist();
         installWindowsDrivers();
         new Log().level0Error("done.");
-        
+
     }
 
     public boolean checkHeimdallVersion() {
