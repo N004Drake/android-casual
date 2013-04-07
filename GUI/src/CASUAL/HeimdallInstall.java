@@ -167,24 +167,19 @@ public class HeimdallInstall {
         CASUALUpdates updater = new CASUALUpdates();
        
         //TODO: verify if driver is in the resources at /CASUAL/resources/heimdall/ before downloading else deploy and execute
-        String driverName=new MD5sum().splitMD5String(Statics.WinDriverInRepoMD5)[1];
-        //download driver
+        String exec="";
         try {
-            updater.downloadFileFromInternet(updater.stringToFormattedURL(Statics.WinDriverInRepo), Statics.TempFolder + driverName, "CADI- CASUAL Automated Driver Installer");
-        } catch (MalformedURLException ex) {
-            log.errorHandler(ex);
-        } catch (URISyntaxException ex) {
-            log.errorHandler(ex);
+            exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
+        } catch( Exception ex ){
+            
         }
         //verify MD5
-        new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{Statics.WinDriverInRepoMD5}, new String[]{Statics.TempFolder + driverName});
-        //execute
-        String installZadigResults = shell.elevateSimpleCommand(new String[]{Statics.TempFolder + driverName});
-        log.level3Verbose(installZadigResults);
-        if (installZadigResults.contains("CritERROR!!!")) {
+        String returnval= new Shell().sendShellCommand(new String[]{exec});
+        log.level3Verbose(returnval);
+        if (returnval.contains("CritERROR!!!")) {
             displayWindowsPermissionsMessageAndExit();
         }
-        //HID.dispose();
+        
 
     }
 

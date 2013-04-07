@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -243,4 +244,76 @@ public class CASUALUpdates {
         }
         return 1;//no update available
     }
+    
+    /*
+     * String Properties File
+     * Returns location of first downloaded file
+     */
+    static String arch="";
+    static String system="";
+    public String CASUALRepoDownload(String propertiesFileInCASUALOnlineRepo) throws FileNotFoundException, IOException, InterruptedException{
+        Thread gather=new Thread(gatherInfo);
+        String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
+        //download location, md5, and version information
+        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.TempFolder+basename, "locating files");
+        //Set properties file
+        Properties prop = new Properties();
+        prop.load(new FileInputStream(Statics.TempFolder+basename));
+        // get information from properties file
+        int counter=1;
+        String filenumber="";
+
+        //wait for system information if it hasn't finished
+        gather.join();
+        /*
+         * This loop uses the filenumber as a blank the first time through
+         * after that filenumber turns to "2", so it will look for 
+         * eg. "win32" property then "win32-2" property
+         * 
+         * It will download the applicable files in the properties file. then
+         * MD5sum against the value in the properties file.
+         */
+        while (! (prop.getProperty(system+arch+filenumber)).equals("")){
+            String downloadURL=prop.getProperty(system+arch+filenumber);
+            String downloadBasename = new File(downloadURL).getName();
+            String availableVersion=prop.getProperty(system+arch+filenumber+"version");
+            String downloadedFile=Statics.TempFolder+downloadBasename;
+            //download update based on information available.
+            downloadFileFromInternet(downloadURL, downloadedFile, downloadBasename + " ver"+ availableVersion );
+
+            //get expected MD5
+            String expectedMD5=new MD5sum().getMD5fromLinuxMD5String(prop.getProperty(system+arch+"md5"));
+            //verify  we have an MD5
+            if (expectedMD5.length()>=31){
+                //if MD5 does not match
+                if (! new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)){
+                    //show message and exit
+                    new CASUALInteraction().showErrorDialog("ERROR!", "During update a bad file was downlaoded.\n"
+                            + "Please check your internet connection and try again.\n"
+                            + "If the problem persists, report it.\n"
+                            + "CASUAL will now exit.  Please try again.");
+                    System.exit(0);
+                }
+            }
+            counter++;
+            filenumber="-"+Integer.toString(counter);
+        }
+        String downloadURL=prop.getProperty(system+arch);
+        String downloadBasename = new File(downloadURL).getName();
+        return Statics.TempFolder+downloadBasename;
+            
+    }
+    
+    
+    Runnable gatherInfo=new Runnable(){
+        @Override
+        public void run() {
+        arch = Statics.is64bitSystem() ? "64" : "32";
+        system = Statics.isWindows() ? "win": system;
+        system = Statics.isLinux() ? "linux": system;
+        system = Statics.isMac() ? "mac": system;
+
+        }
+    };
+
 }

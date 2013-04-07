@@ -64,13 +64,7 @@ public class Statics {
     public static CASPACData localInformation;
     public static CASPACData webInformation;
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe";
-    final public static String WinVCRedis64tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x64.exe";
-    final public static String WinVCRedist2010InRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x862010.exe";
-    final public static String WinVCRedis32tInRepoMD5 = "a8d5962623206751bdd4416d140ae7c5  vcredist_x86.exe";
-    final public static String WinVCRedis64tInRepoMD5 = "ba2c17a20b2b1d8a30f96d53e2632a68  vcredist_x64.exe";
-    final public static String WinVCRedis201064tInRepoMD5 = "b88228d5fef4b6dc019d69d4471f23ec  vcredist_x862010.exe";
     final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe";
-    final public static String WinDriverInRepoMD5 = "99573ed55e1d052b712632685c3b0160  CADI.exe";
     static String heimdallMacURL = "https://android-casual.googlecode.com/svn/trunk/repo/Heimdall_1.4.1_compressed.dmg.sh";
     //Form data
     public static boolean TargetScriptIsResource = true;
@@ -341,9 +335,21 @@ public class Statics {
             }
         }
     }
+    
+    public static boolean is64bitSystem(){
+        if (isWindows()){
+            return isWindows64Arch();
+        } else {
+            return isMacLinux64Arch();
+        }
+    }
 
-    public static boolean isWindows64Arch() {
+    private static boolean isWindows64Arch() {
         return (System.getenv("ProgramFiles(x86)") != null);
+    }
+    private static boolean isMacLinux64Arch() {
+            String[] CommandArch = {"arch"};
+            return new Shell().silentShellCommand(CommandArch).contains("64");
     }
 
     public static void checkLinuxArch() {
