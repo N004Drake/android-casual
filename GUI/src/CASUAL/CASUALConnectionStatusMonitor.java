@@ -36,6 +36,7 @@ public class CASUALConnectionStatusMonitor {
     
     /*
      * Starts and stops the ADB timer
+     * reference with Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
      */
     public Timer DeviceCheck = new Timer(timerInterval, new ActionListener() {
         @Override
@@ -80,7 +81,7 @@ public class CASUALConnectionStatusMonitor {
                     if (DeviceList.contains("offline")) {
                         CASUALInteraction CASUALUserInteraction = new CASUALInteraction();
                         String[] ok = {"All set and done!"};
-                        Statics.DeviceMonitor.DeviceCheck.stop();
+                        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                         new CASUALInteraction().showTimeoutDialog(60, null, "It would appear that the connected device is not paired properly.\n"
                                 + "Please disconnect the device, then reconnect it.\n"
                                 + "Next unlock the device and check for a message onscreen.\n"
@@ -88,11 +89,12 @@ public class CASUALConnectionStatusMonitor {
                                 "Device Not Paired", CASUALUserInteraction.OK_OPTION, 2, ok, 0);
                         Log.level0Error("Disconnect and reconnect your device.  Check the device for instructions.");
                         DeviceList = Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
-                        Statics.DeviceMonitor.DeviceCheck.start();
+                        Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                     }
                     //insufficient permissions
 
                     if (DeviceList.contains("????????????") && (!Statics.isWindows())) {
+                        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                         Log.level4Debug("sleeping for 4 seconds.  Device list: " + DeviceList);
                         try {
                             Thread.sleep(4000);
@@ -104,8 +106,7 @@ public class CASUALConnectionStatusMonitor {
 
                         //Linux and mac only.
                         if (DeviceList.contains("????????????")) {
-                            DeviceCheck.stop();
-                            Log.level0Error("Insufficient permissions on server detected.");
+                            Log.level0Error("Insufficient permissions detected.");
                             String cmd[] = {Statics.AdbDeployed, "kill-server"}; //kill the server
                             Log.level2Information("killing server and requesting elevated permissions.");
                             Shell.sendShellCommand(cmd); //send the command
@@ -124,12 +125,12 @@ public class CASUALConnectionStatusMonitor {
                                 Log.level4Debug(DeviceList);
                                 Log.level2Information("Permissions problem corrected");
                                 stateSwitcher(1);
-                                DeviceCheck.start();
                                 //devices still not properly recognized.  Log it.
                             } else {
                                 Log.level0Error("Unrecognized device detected\nIf you continue to experience problems, please report this issue");
                             }
                         }
+                        Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                     }
 
                 }

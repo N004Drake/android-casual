@@ -59,7 +59,7 @@ public final class CASUALMain {
         for (int i = 0; i < args.length; i++) {
             if (args[i].contains("--execute") || args[i].contains("-e")) {
                 i++;
-                Statics.DeviceMonitor.DeviceCheck.stop();
+                Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                 new CASUALScriptParser().executeOneShotCommand(args[i]);
             } else {
                 System.out.println("Unrecogized command");

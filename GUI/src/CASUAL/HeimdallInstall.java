@@ -20,6 +20,8 @@
  */
 package CASUAL;
 
+import javax.swing.Timer;
+
 
 
 /**
@@ -172,11 +174,9 @@ public class HeimdallInstall {
             
         }
         //verify MD5
-        String returnval= new Shell().liveShellCommand(new String[]{exec},true);
-        log.level3Verbose(returnval);
-        if (returnval.contains("CritERROR!!!")) {
-            displayWindowsPermissionsMessageAndExit();
-        }
+        Timer t=new Timer(){          
+        };
+        new Shell().elevateSimpleCommand(new String[]{exec});
         
 
     }

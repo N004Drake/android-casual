@@ -124,6 +124,7 @@ public class Shell implements Runnable {
              } catch (InterruptedException ex) {
              log.errorHandler(ex);
              }*/
+            log.level0Error(STDOUT.readLine());
             while ((line = STDOUT.readLine()) != null) {
                 AllText = AllText + line + "\n";
             }
@@ -182,7 +183,20 @@ public class Shell implements Runnable {
         }
 
     }
+    public void fireShellCommand(String[] cmd) {
+        try {
+            Process process = new ProcessBuilder(cmd).start();
+            try {
+                process.waitFor();
+            } catch (InterruptedException ex) {
+                log.errorHandler(ex);
+            }
 
+        } catch (IOException ex) {
+            log.errorHandler(ex);
+        }
+
+    }
     public String arrayToString(String[] stringarray) {
         String str = " ";
         for (int i = 0; i < stringarray.length; i++) {

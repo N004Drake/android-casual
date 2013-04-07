@@ -16,14 +16,18 @@
  */
 package CASUAL;
 
+import static CASUAL.CASUALapplicationData.buildProperties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -42,9 +46,9 @@ public class CASUALTools {
 
     public void startStopADBDeviceCheckTimer(boolean StateCommanded) {
         if (StateCommanded && !DeviceTimerState) {
-            Statics.DeviceMonitor.DeviceCheck.start();
+            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
         } else if (!StateCommanded && DeviceTimerState) {
-            Statics.DeviceMonitor.DeviceCheck.start();
+            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
         }
     }
 
@@ -74,7 +78,8 @@ public class CASUALTools {
             }
 
             if (Count == 0) {
-                new CASUALTools().md5sumTestScripts();
+                Thread t = new Thread(updateMD5s);
+                t.start();
                 log.level0Error("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
                 //Statics.scriptLocations = new String[]{""};
                 Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
@@ -85,7 +90,7 @@ public class CASUALTools {
 
     public void md5sumTestScripts() {
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
-
+        incrementBuildNumber();
         String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "src" + Statics.Slash + "SCRIPTS" + Statics.Slash;
         final File folder = new File(scriptsPath);
         for (final File fileEntry : folder.listFiles()) {
@@ -218,6 +223,13 @@ public class CASUALTools {
         }
     };
 
+    private Runnable updateMD5s = new Runnable(){
+        @Override
+        public void run() {
+            new CASUALTools().md5sumTestScripts();
+        }
+    };
+    
     void rewriteMD5OnCASPAC(File CASPAC, CASPACHandler caspacHandler) {
         System.out.println("Writing new CASUAL Package Data!");
         ArrayList list;
@@ -274,6 +286,21 @@ public class CASUALTools {
             Zip.addFilesToExistingZip(CASPAC, caspacHandler.meta);
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void incrementBuildNumber() throws NumberFormatException {
+        Properties prop=new Properties();
+        try {
+            prop.load(new FileInputStream(System.getProperty("user.dir")+"/src/CASUAL/resources/CASUALApp.properties"));
+            int x=Integer.parseInt(prop.getProperty("Application.buildnumber").replace(",", ""));
+            x++;
+            prop.setProperty("Application.buildnumber", Integer.toString(x));
+            prop.setProperty("Application.buildnumber", Integer.toString(x));
+         
+            prop.store(new FileOutputStream(System.getProperty("user.dir")+"/src/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber="+x);
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

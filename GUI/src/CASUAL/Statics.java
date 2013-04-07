@@ -83,7 +83,7 @@ public class Statics {
         ProgressDoc = ProgressPane.getStyledDocument();
     }
     //Folders
-    public static CASUALConnectionStatusMonitor DeviceMonitor = new CASUALConnectionStatusMonitor();
+    public static CASUALConnectionStatusMonitor casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
     public static String ScriptLocation = "/SCRIPTS/";
     private static String TempF = null;
     //TempFolder is the folder used for file operations
@@ -134,8 +134,8 @@ public class Statics {
         }
         return Linux32ADB;  //defautlt to 32bit ADB
     }
-    final public static String Linux32ADB = "/CASUAL/resources/ADB/adb-linux32";
-    final public static String Linux64ADB = "/CASUAL/resources/ADB/adb-linux64";
+    final private static String Linux32ADB = "/CASUAL/resources/ADB/adb-linux32";
+    final private static String Linux64ADB = "/CASUAL/resources/ADB/adb-linux64";
     final public static String LinuxARMv6ADB = "/CASUAL/resources/ADB/adb-linuxARMv6";
     final public static String MacADB = "/CASUAL/resources/ADB/adb-mac";
     final public static String WinADB = "/CASUAL/resources/ADB/adb.exe";
