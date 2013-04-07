@@ -125,7 +125,7 @@ public class CASUALScriptParser {
                 if (Statics.useGUI) {
                     Statics.GUI.enableControls(true);
                 }
-                Statics.DeviceMonitor.DeviceCheck.start();
+                Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                 try {
                     DATAIN.close();
                 } catch (IOException ex) {

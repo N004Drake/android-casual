@@ -56,7 +56,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
 
         log.level4Debug("Searching for scripts");
-        prepareScripts();
+        
         for (String script : Statics.scriptNames) {
             comboBoxScriptSelectorAddNewItem(script);
         }
@@ -311,7 +311,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         log.level4Debug("StartButtonActionPerformed() Script Activated");
         log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
 
-        Statics.DeviceMonitor.DeviceCheck.stop();
+        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
         enableControls(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
         String diskLocation;
@@ -533,19 +533,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         }
     }
 
-    private void prepareScripts() {
-        try {
-            while (!CASUALapplicationData.ScriptsHaveBeenRecognized) {
-            }
-            new CASUALTools().listScripts();
-            Statics.lockGUIformPrep = false;
-        } catch (IOException ex) {
-            log.level0Error("ListScripts() could not find any entries");
-            log.errorHandler(ex);
-        }
 
-
-    }
 
     private String getFilenameWithoutExtension(String FileName) {
 

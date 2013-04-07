@@ -80,7 +80,7 @@ public class CASPACHandler {
 
             Thread t = new Thread(activateScript);
             t.start();
-            Statics.DeviceMonitor.DeviceCheck.stop();
+            Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
             //do communications here
             try {
                 t.join();
