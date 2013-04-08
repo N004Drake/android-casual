@@ -67,16 +67,12 @@ public class HeimdallInstall {
     Log log = new Log();
     Shell shell = new Shell();
 
-    public static boolean checkAndDeployHeimdall() {
+    public static boolean installHeimdall() {
         //if ( installedHeimdallVersion.length==2 && REGEX FOR STRING NUMBERS ONLY){ isHeimdallDeployed=true;
-
         if (Statics.isHeimdallDeployed) { //if heimdall is installed, return true
-
             return true;
         } else { //attempt to correct the issue
-
             if (Statics.isLinux()) {
-
                 return new HeimdallInstall().installLinuxHeimdall();
             } else if (Statics.isWindows()) {
                 if (new HeimdallInstall().checkHeimdallVersion()) {
@@ -92,12 +88,16 @@ public class HeimdallInstall {
 
                 //Mac          
             } else if (Statics.isMac()) {
-                Statics.heimdallResource = Statics.heimdallMac;
-                new HeimdallInstall().installHeimdallMac();
-                Statics.heimdallDeployed = "heimdall";
-                if (Statics.checkAndDeployHeimdall()) {
+                
+                Statics.heimdallDeployed = HeimdallTools.getHeimdallCommand();
+                String retval=new Shell().silentShellCommand(new String[]{(Statics.heimdallDeployed)});
+                if (retval.contains("CritError!!!")){
+                    new HeimdallInstall().installHeimdallMac();
+                }
+                if (new HeimdallInstall().checkHeimdallVersion()) {
                     return true;
                 } else {
+                    Statics.heimdallDeployed = "";
                     return false;
                 }
             }
@@ -108,22 +108,16 @@ public class HeimdallInstall {
     private void installHeimdallMac() {
         if (Statics.isMac()) {
             CASUALUpdates update = new CASUALUpdates();
-            String installScript = Statics.TempFolder + "installer.sh";
-            update.downloadFileFromInternet(Statics.heimdallMacURL, installScript, "Downloading Heimdall Installation file");
-            new FileOperations().setExecutableBit(installScript);
-
-            String title = "Exiting CASUAL";
-            String message = "CASUAL will now launch Heimdall Installer.\n  Hit cancel if asked to set up any network interfaces.\n"
-                    + "You must install Heimdall in order to continue";
-            new CASUALInteraction().showErrorDialog(message, title);
-            shell.elevateSimpleCommand(new String[]{installScript});
-
-
+            String exec = "";
+            try {
+                exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
+            } catch (Exception ex) {
+                log.errorHandler(ex);
+            }
+            new Shell().liveShellCommand(new String[]{"open", "-W",exec}, true);
             new CASUALInteraction().showErrorDialog("In order to continue, you must unplug the device and\n"
                     + "then it back in.  Use a GOOD port, in the back, not\n"
                     + "in the front.  Use a good cable too.", "Unplug it and then plug it back in");
-
-
         }
     }
 
@@ -186,7 +180,7 @@ public class HeimdallInstall {
     public boolean checkHeimdallVersion() {
         String heimdallCommand;
         if (Statics.heimdallDeployed.equals("")) {
-            heimdallCommand = "heimdall";
+            heimdallCommand = HeimdallTools.getHeimdallCommand();
         } else {
             heimdallCommand = Statics.heimdallDeployed;
         }

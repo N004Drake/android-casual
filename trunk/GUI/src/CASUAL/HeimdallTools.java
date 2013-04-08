@@ -90,6 +90,37 @@ public class HeimdallTools {
         return returnRead;
     }
 
+    public static String getHeimdallCommand(){
+        if (Statics.isMac()){
+            Shell shell = new Shell();
+            String check=shell.silentShellCommand(new String[]{"which", "heimdall"});
+            if (check.equals("")){
+                String cmd="/usr/bin/heimdall";
+                check=shell.silentShellCommand(new String[]{cmd});
+                if (check.equals("CritError!!!")){
+                    cmd="/bin/heimdall";
+                    check=shell.silentShellCommand(new String[]{cmd});
+                    if (check.equals("CritError!!!")){
+                        cmd="/usr/local/bin/heimdall";
+                        check=shell.silentShellCommand(new String[]{cmd});
+                        if (check.equals("CritError!!!")) return "";
+                            return cmd;
+                    }
+                    return cmd;
+                }
+                return cmd;
+            }
+            return "";
+        } else {
+            if (Statics.heimdallDeployed.equals("")){
+                return "heimdall";
+            } else{
+                return Statics.heimdallDeployed;    
+            }
+            
+        }
+    }
+
     private void sleepForOneSecond() {
         try {
             Thread.sleep(1000);
