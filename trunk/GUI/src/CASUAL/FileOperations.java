@@ -17,6 +17,7 @@
 package CASUAL;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -400,25 +401,17 @@ public class FileOperations {
 
     /**
      * takes a string resource name returns result if it exists
-     *
      * @param Res
      * @return true if resource exists
      */
-    public boolean verifyResource(String Res) {
-        boolean Result;
-        //this.statusAnimationLabel.setText(Res);
-        Log.progress("Uncompressing " + Res + ".... ");
-        deleteFile(Res);
-        Result = copyFromResourceToFile(setRes(Res), setDest(Res));
-        //Log.level3("Unpacking " + setDest(Res) + " Performed correctly: " + Result ); 
-        if (Result) {
-            Log.progress("Uncompressed\n");
+    public boolean verifyResource(String res) {
+        if ((getClass().getClassLoader().getResource(res))==null) {
+            return false;
         } else {
-            Log.progress("FAILED!!!!\n");
+            return true;
         }
-        return Result;
     }
-
+    
     private String setDest(String FileName) {
         return Statics.TempFolder + FileName;
     }

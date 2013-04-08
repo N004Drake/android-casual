@@ -52,8 +52,15 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
         log.level4Debug("OMFGWOOT GUI running!");
-        if (fileOperations.verifyResource(Statics.ScriptLocation + "-Overview.txt")) {
-            log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt"));
+
+       if (Statics.TargetScriptIsResource) {
+            if (!Statics.dumbTerminalGUI) {
+                log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt") + "\n");
+            }
+        } else {
+            if (!Statics.dumbTerminalGUI) {
+                log.level2Information(fileOperations.readFile("-Overview.txt") + "\n");
+            }
         }
 
 
