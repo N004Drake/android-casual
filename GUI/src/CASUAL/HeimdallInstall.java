@@ -140,7 +140,7 @@ public class HeimdallInstall {
         //install drivers
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
-        log.level0Error("Installing drivers");
+        log.level0Error("\nInstalling drivers"); //Add Newline
         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
                 + "We're going to install drivers now.  Lets do it.");
 

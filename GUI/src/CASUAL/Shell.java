@@ -125,11 +125,23 @@ public class Shell implements Runnable {
              log.errorHandler(ex);
              }*/
             log.level0Error(STDOUT.readLine());
+            int y = 0;
             while ((line = STDOUT.readLine()) != null) {
-                AllText = AllText + line + "\n";
+                if(y == 0) {
+                    AllText = AllText + "\n" + line + "\n"; //Sloppy Fix, ensures first line of STDOUT is written to a newline
+                } else {
+                    AllText = AllText + line + "\n";
+                }
+                y++;
             }
+            y = 0;
             while ((line = STDERR.readLine()) != null && !line.equals("")) {
-                AllText = AllText + line;
+                if(y == 0) {
+                    AllText = AllText + "\n" + line + "\n"; //Sloppy Fix, ensures first line of STDERR is written to a newline
+                } else {
+                    AllText = AllText + line + "\n";
+                }
+                y++;
             }
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
@@ -174,6 +186,7 @@ public class Shell implements Runnable {
                 log.errorHandler(ex);
             }
             while ((line = STDOUT.readLine()) != null) {
+                
                 AllText = AllText + "\n" + line;
 
             }
