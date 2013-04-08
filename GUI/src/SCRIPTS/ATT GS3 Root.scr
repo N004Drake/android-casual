@@ -1,7 +1,7 @@
 $ECHO Checking device
 
 #  $IFCONTAINS "string string" $INCOMMAND "$ADB command to execute" $DO "CASUAL COMMAND"
-$#IFNOTCONTAINS d2att $INCOMMAND shell "cat /system/build.prop" $DO $GOTO #baddevice
+$IFNOTCONTAINS d2att $INCOMMAND shell "cat /system/build.prop" $DO $GOTO #baddevice
 
 $ECHO Rebooting into download mode
 #This will work the same as though you had typed $ADB reboot download
