@@ -292,10 +292,11 @@ public class Statics {
                 }
 //handling for Linux/mac
             } else {
-                if ((isHeimdallDeployed) || (new HeimdallInstall().checkHeimdallVersion())) {
+                
+                if (new HeimdallInstall().checkHeimdallVersion()) {
                     return true;
                 } else { //shell returned error
-                    if (HeimdallInstall.checkAndDeployHeimdall()) {
+                    if (HeimdallInstall.installHeimdall()) {
                         return true;
                     }
                     return false;
