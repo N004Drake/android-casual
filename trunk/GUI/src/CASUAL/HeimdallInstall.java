@@ -175,7 +175,12 @@ public class HeimdallInstall {
         //TODO: verify if driver is in the resources at /CASUAL/resources/heimdall/ before downloading else deploy and execute
         String exec = "";
         try {
-            exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
+            if (new FileOperations().verifyResource(Statics.WinDriverResource)){
+                exec=Statics.TempFolder+"CADI.exe";
+                new FileOperations().copyFromResourceToFile(Statics.WinDriverResource, exec);
+            } else {
+                exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
+            }
         } catch (Exception ex) {
             log.level0Error("There was a problem while accessing the online repository.");
         }
