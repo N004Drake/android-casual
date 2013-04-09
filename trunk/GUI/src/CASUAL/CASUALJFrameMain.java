@@ -104,7 +104,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox<String>();
+        comboBoxScriptSelector = new javax.swing.JComboBox<>();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();

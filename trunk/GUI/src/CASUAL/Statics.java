@@ -52,7 +52,7 @@ public class Statics {
      */
     static Shell shellCommand;
     static Log Log = new Log();
-    public static ArrayList<String> LiveSendCommand = new ArrayList<String>();
+    public static ArrayList<String> LiveSendCommand = new ArrayList<>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by log class
     public static CASUALConnectionStatusMonitor casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
@@ -163,7 +163,7 @@ public class Statics {
     public static boolean lockGUIformPrep = true;
     public static boolean lockGUIunzip = false;
     public static boolean lockGUIdeviceConnectionStatus = false;
-    public static ArrayList<String> runnableMD5list = new ArrayList<String>();
+    public static ArrayList<String> runnableMD5list = new ArrayList<>();
     /*
      * Determines if Linux, Mac or Windows
      */
@@ -216,8 +216,8 @@ public class Statics {
     }
 
     //script data
-    public static ArrayList<String> ActionEvents = new ArrayList<String>(); //Action events for $ON command. set by script
-    public static ArrayList<String> ReactionEvents = new ArrayList<String>(); //Reactions for $ON command. . set by script
+    public static ArrayList<String> ActionEvents = new ArrayList<>(); //Action events for $ON command. set by script
+    public static ArrayList<String> ReactionEvents = new ArrayList<>(); //Reactions for $ON command. . set by script
     public static String[] scriptNames = {""};//list of all scripts in package. set on runtime
     public static String[] scriptLocations = {""}; //All scripts in package. set on runtime
 

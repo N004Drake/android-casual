@@ -60,7 +60,7 @@ public class FastbootTools {
         line = StringOperations.removeLeadingSpaces(line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
@@ -71,7 +71,7 @@ public class FastbootTools {
     public String doElevatedFastbootShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));

@@ -208,7 +208,7 @@ public class CASUALUpdates {
         String[] md5lines = StringOperations.convertArrayListToStringArray(webInformation.md5s);
 
         try {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             String localfile = Statics.TempFolder + scriptname;
             String ext;
             for (int n = 0; n < md5lines.length; n++) {

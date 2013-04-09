@@ -20,6 +20,8 @@
  */
 package CASUAL;
 
+import java.io.IOException;
+
 /**
  *
  * @author adam
@@ -138,7 +140,7 @@ public class HeimdallInstall {
             String exec = "";
             try {
                 exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
-            } catch (Exception ex) {
+            } catch (IOException | InterruptedException ex) {
                 log.errorHandler(ex);
             }
             new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
@@ -154,7 +156,7 @@ public class HeimdallInstall {
         String exec = "";
         try {
             exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/vcredist.properties");
-        } catch (Exception ex) {
+        } catch (IOException | InterruptedException ex) {
             log.errorHandler(ex);
         }
         new Shell().liveShellCommand(new String[]{exec}, true);
@@ -181,7 +183,7 @@ public class HeimdallInstall {
             } else {
                 exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
             }
-        } catch (Exception ex) {
+        } catch (IOException | InterruptedException ex) {
             log.level0Error("There was a problem while accessing the online repository.");
         }
         //verify MD5

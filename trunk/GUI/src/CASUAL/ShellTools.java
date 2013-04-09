@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class ShellTools {
 
     public ArrayList<String> parseCommandLine(String Line) {
-        ArrayList<String> List = new ArrayList<String>();
+        ArrayList<String> List = new ArrayList<>();
         Boolean SingleQuoteOn = false;
         Boolean DoubleQuoteOn = false;
         String Word = "";
