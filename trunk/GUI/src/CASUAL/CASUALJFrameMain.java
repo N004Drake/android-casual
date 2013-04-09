@@ -43,7 +43,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         initComponents();
         enableControls(false);
-        Statics.GUI.progressBar = this.progressBar;
+        
 
         ProgressArea.setContentType("text/html");
         Statics.ProgressPane = CASUALJFrameMain.ProgressArea;
