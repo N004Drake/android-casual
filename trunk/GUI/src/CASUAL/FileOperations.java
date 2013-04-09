@@ -17,7 +17,6 @@
 package CASUAL;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -405,7 +404,7 @@ public class FileOperations {
      * @return true if resource exists
      */
     public boolean verifyResource(String res) {
-        if ((getClass().getClassLoader().getResource(res))==null) {
+        if ((getClass().getResource(res))==null) {
             return false;
         } else {
             return true;
