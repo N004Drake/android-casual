@@ -33,18 +33,23 @@ public class HeimdallInstall {
         Statics.heimdallResource = Statics.heimdallWin;
         Statics.heimdallDeployed = Statics.TempFolder + "heimdall.exe";
         fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
-        String x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"});
+        String x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"}); //try without msredist
         if (!x.equals("")) {
             Statics.isHeimdallDeployed = true;
             return true;
+        } 
+        fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.TempFolder+"msvcp110.dll"); 
+        fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.TempFolder+"msvcr110.dll");
+        if (!(new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"}).equals(""))){ //try with redist files
+            Statics.isHeimdallDeployed = true;
+            return true;
+        }
+        new HeimdallInstall().installWindowsVCRedist();
+        x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"}); //deploy full
+        if (x.contains("")) {
+            return false;
         } else {
-            new HeimdallInstall().installWindowsVCRedist();
-            x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"});
-            if (x.contains("CritError!!!")) {
-                return false;
-            } else {
-                return true;
-            }
+            return true;
         }
     }
 
