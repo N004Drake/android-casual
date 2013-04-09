@@ -82,11 +82,6 @@ public class CASUALScriptParser {
      *
      */
     public String executeOneShotCommand(String Line) {
-        //$LINE is a reference to the last line received in the shell            
-        if (Line.contains("$LINE")) {
-            Line = Line.replace("$LINE", Statics.LastLineReceived);
-            log.level4Debug("Executing Reaction - $LINE: " + Line);
-        }
         return new CASUALLanguage(this.ScriptName, this.ScriptTempFolder).commandHandler(Line);
     }
 
@@ -119,7 +114,7 @@ public class CASUALScriptParser {
                 }
 
                 if (Statics.useGUI) {
-                    Statics.ProgressBar.setMaximum(LinesInScript);
+                    Statics.GUI.setProgressBarMax(LinesInScript);
                 }
                 log.level4Debug("Reading datastream" + DATAIN);
                 new CASUALLanguage(script, scriptFolder).beginScriptingHandler(DATAIN);

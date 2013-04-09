@@ -85,11 +85,7 @@ public class CASPACHandler {
                 t.join();
             } catch (InterruptedException ex) {
                 new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted" + ex));
-
             }
-
-
-
         } catch (ZipException ex) {
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack unzip failed" + ex));
             new Log().level0Error("Zip File is corrupt. cannot continue.");
@@ -117,7 +113,6 @@ public class CASPACHandler {
             if (Statics.useGUI) { //only display overview if using GUI.
                 System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
                 new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation + entry);
-
             }
         } else if (entry.toString().endsWith(".meta")) {
             CASUALapplicationData.meta = entry.toString();

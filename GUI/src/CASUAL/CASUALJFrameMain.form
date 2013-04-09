@@ -207,7 +207,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="StatusLabel" min="-2" pref="300" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ProgressBar" max="32767" attributes="0"/>
+                          <Component id="progressBar" max="32767" attributes="0"/>
                       </Group>
                       <Component id="jSeparator1" alignment="0" pref="511" max="32767" attributes="0"/>
                   </Group>
@@ -222,7 +222,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="StatusLabel" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="ProgressBar" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="progressBar" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -230,7 +230,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JProgressBar" name="ProgressBar">
+        <Component class="javax.swing.JProgressBar" name="progressBar">
         </Component>
         <Component class="javax.swing.JLabel" name="StatusLabel">
           <Properties>
