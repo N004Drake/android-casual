@@ -31,7 +31,7 @@ public class HeimdallTools {
 
     public void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
         String stringCommand[] = (StringOperations.convertArrayListToStringArray(shellCommand));
@@ -62,7 +62,7 @@ public class HeimdallTools {
     public String doElevatedHeimdallShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(new ShellTools().parseCommandLine(line));
         log.level3Verbose("Performing elevated Heimdall command" + line);
@@ -74,7 +74,7 @@ public class HeimdallTools {
     public String doHeimdallShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList();
+        ArrayList<String> shellCommand = new ArrayList<String>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(new ShellTools().parseCommandLine(line));
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);

@@ -147,7 +147,7 @@ public class CASPACHandler {
      * @throws IOException
      */
     public ArrayList getMD5sfromCASPAC(Enumeration zippedFiles, String pack, String CASUALMeta) throws IOException {
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<String>();
         Unzip unzip = new Unzip();
         File f = new File(pack);
         MD5sum md5sum = new MD5sum();

@@ -104,7 +104,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox();
+        comboBoxScriptSelector = new javax.swing.JComboBox<String>();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -144,12 +144,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         comboBoxScriptSelector.setEnabled(false);
         comboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         comboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
@@ -532,7 +532,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox comboBoxScriptSelector;
+    private javax.swing.JComboBox<String> comboBoxScriptSelector;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

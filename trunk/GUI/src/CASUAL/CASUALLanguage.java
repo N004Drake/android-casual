@@ -218,8 +218,8 @@ public class CASUALLanguage {
 
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList();
-            Statics.ReactionEvents = new ArrayList();
+            Statics.ActionEvents = new ArrayList<String>();
+            Statics.ReactionEvents = new ArrayList<String>();
             log.level4Debug("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return "";
         }
@@ -581,7 +581,7 @@ public class CASUALLanguage {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.AdbDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(Line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
