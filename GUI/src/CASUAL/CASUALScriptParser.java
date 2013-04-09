@@ -91,8 +91,8 @@ public class CASUALScriptParser {
     DataInputStream DATAIN;
 
     private void executeSelectedScript(DataInputStream DIS, final String scriptFolder, final String script, boolean startThreaded) {
-        Statics.ReactionEvents = new ArrayList();
-        Statics.ActionEvents = new ArrayList();
+        Statics.ReactionEvents = new ArrayList<String>();
+        Statics.ActionEvents = new ArrayList<String>();
         ScriptContinue = true;
         DATAIN = DIS;
         log.level4Debug("Executing Scripted Datastream" + DIS.toString());

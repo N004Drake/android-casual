@@ -33,7 +33,7 @@ public class CASPACData {
     public String uniqueIdentifier;
     public String supportURL;
     public String updateMessage;
-    public ArrayList md5s = new ArrayList();
+    public ArrayList<String> md5s = new ArrayList<String>();
 
     CASPACData(BufferedInputStream BIS) {
         String packdata = "";
