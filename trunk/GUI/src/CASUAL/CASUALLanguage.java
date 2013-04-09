@@ -51,7 +51,7 @@ public class CASUALLanguage {
             while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
                 CurrentLine++;
                 if (Statics.useGUI) {
-                    Statics.ProgressBar.setValue(CurrentLine);
+                    Statics.GUI.setProgressBar(CurrentLine);
                 }
                 if (!GOTO.equals("")) {
 

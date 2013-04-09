@@ -78,33 +78,32 @@ public class HeimdallTools {
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.addAll(new ShellTools().parseCommandLine(line));
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
-        Statics.ExectingHeimdallCommand = true;
         log.level3Verbose("Performing standard Heimdall command" + line);
         String returnRead = Shell.liveShellCommand(stringCommand2, true);
         if (returnRead.contains("libusb error: -3") && Statics.isLinux()) {
             log.level0Error("#A permissions error was detected.  Elevating permissions.");
             this.doElevatedHeimdallShellCommand(line);
         }
-
-        Statics.ExectingHeimdallCommand = false;
         return returnRead;
     }
 
-    public static String getHeimdallCommand(){
-        if (Statics.isMac()){
+    public static String getHeimdallCommand() {
+        if (Statics.isMac()) {
             Shell shell = new Shell();
-            String check=shell.silentShellCommand(new String[]{"which", "heimdall"});
-            if (check.equals("")){
-                String cmd="/usr/bin/heimdall";
-                check=shell.silentShellCommand(new String[]{cmd});
-                if (check.equals("CritError!!!")){
-                    cmd="/bin/heimdall";
-                    check=shell.silentShellCommand(new String[]{cmd});
-                    if (check.equals("CritError!!!")){
-                        cmd="/usr/local/bin/heimdall";
-                        check=shell.silentShellCommand(new String[]{cmd});
-                        if (check.equals("CritError!!!")) return "";
-                            return cmd;
+            String check = shell.silentShellCommand(new String[]{"which", "heimdall"});
+            if (check.equals("")) {
+                String cmd = "/usr/bin/heimdall";
+                check = shell.silentShellCommand(new String[]{cmd});
+                if (check.equals("CritError!!!")) {
+                    cmd = "/bin/heimdall";
+                    check = shell.silentShellCommand(new String[]{cmd});
+                    if (check.equals("CritError!!!")) {
+                        cmd = "/usr/local/bin/heimdall";
+                        check = shell.silentShellCommand(new String[]{cmd});
+                        if (check.equals("CritError!!!")) {
+                            return "";
+                        }
+                        return cmd;
                     }
                     return cmd;
                 }
@@ -112,12 +111,12 @@ public class HeimdallTools {
             }
             return "";
         } else {
-            if (Statics.heimdallDeployed.equals("")){
+            if (Statics.heimdallDeployed.equals("")) {
                 return "heimdall";
-            } else{
-                return Statics.heimdallDeployed;    
+            } else {
+                return Statics.heimdallDeployed;
             }
-            
+
         }
     }
 

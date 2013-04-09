@@ -35,9 +35,9 @@ import javax.swing.text.StyledDocument;
 public class Statics {
 
     public static final String BUILDPROPERTIES = "SCRIPTS/-build";
-    public static boolean GUIIsAvailable = false;
-    public static boolean useGUI = false;
-    public static boolean dumbTerminalGUI = false;
+    public static boolean GUIIsAvailable = false; //used to tell if the GUI is up yet.
+    public static boolean useGUI = false; //used by CASPAC mode to use terminal only
+    public static boolean dumbTerminalGUI = false; //used by CASPAC mode
 
     public Statics() {
     }
@@ -56,38 +56,35 @@ public class Statics {
     public static ArrayList<String> LiveSendCommand = new ArrayList();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by log class
-    public static String[] DeviceTracker;
-    public static String LastLineReceived;
+    public static CASUALConnectionStatusMonitor casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
+    public static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
+
     //web information
     final public static String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/GUI/src";
     public static CASPACData localInformation;
     public static CASPACData webInformation;
-    final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe";
-    final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe";
-    static String heimdallMacURL = "https://android-casual.googlecode.com/svn/trunk/repo/Heimdall_1.4.1_compressed.dmg.sh";
+    final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
+    final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
+    
     //Form data
-    public static boolean TargetScriptIsResource = true;
-    public static CASUALJFrameMain GUI;
+    public static boolean TargetScriptIsResource = true;  //true if resource, false if file
+    public static CASUALJFrameMain GUI; //Static reference to GUI input/output device
     public static JTextPane ProgressPane = new JTextPane(); //used by log to update Progress
-    final public static String Slash = System.getProperty("file.separator");
+    final public static String Slash = System.getProperty("file.separator"); //file separator for system \ or /
     /**
      * ProgressDoc provides a static reference to the program output
      */
-    public static String PreProgress = "";
-    public static JProgressBar ProgressBar;
-    public static StyledDocument ProgressDoc;
+    public static String PreProgress = "";  //place to log data before GUI comes up
+    public static StyledDocument ProgressDoc; //anything in here is displayed to GUI. this is main output device.
 
     public static void initDocument() {
         ProgressPane.setContentType("text/html");
         ProgressDoc = ProgressPane.getStyledDocument();
     }
     //Folders
-    public static CASUALConnectionStatusMonitor casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
-    public static String ScriptLocation = "/SCRIPTS/";
-    private static String TempF = null;
-    //TempFolder is the folder used for file operations
+    public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
+    private static String TempF = null; //TempFolder is the actual tempfolder, it's served by getTempFolder
     final public static String TempFolder = getTempFolder();
-
     private static String getTempFolder() {
 
         if (TempF == null) {
@@ -117,13 +114,12 @@ public class Statics {
     }
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     //Cross-Platform data storage
-    public static String AdbDeployed;
-    public static String OSName = System.getProperty("os.name");
-    public static String SelectedScriptFolder;
-    public static String WinElevatorInTempFolder = TempFolder + "Elevate.exe";
-    final public static String CASUALSCRIPT = "/SCRIPTS/";
-    //ADB
+    public static String AdbDeployed; //location of ADB after deployment
+    public static String OSName = System.getProperty("os.name"); //windows, linux, mac....
+    public static String SelectedScriptFolder;//Used for script locations on disk
+    public static String WinElevatorInTempFolder = TempFolder + "Elevate.exe"; //location of elevate.exe after deployed
 
+    //ADB
     public static String LinuxADB() {
         if (Statics.arch.equals("x86_64")) {
             return Linux64ADB;
@@ -148,6 +144,9 @@ public class Statics {
     final public static String heimdallMac = "/CASUAL/resources/heimdall/heimdall-mac.dmg";
     final public static String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
     final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
+    final public static String msvcp110dll = "/CASUAL/resources/heimdall/msvcp110.dll";
+    final public static String msvcr110dll = "/CASUAL/resources/heimdall/msvcr110.dll";
+    final public static String WinDriverResource = "/CASUAL/resources/heimdall/CADI.exe";  //win driver in CASUAL
     //Fastboot
     final public static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
     final public static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
@@ -216,12 +215,12 @@ public class Statics {
             System.exit(1);
         }
     }
-    //restart app
+
     //script data
-    public static ArrayList<String> ActionEvents = new ArrayList();
-    public static ArrayList<String> ReactionEvents = new ArrayList();
-    public static String[] scriptNames = {""};
-    public static String[] scriptLocations = {""};
+    public static ArrayList<String> ActionEvents = new ArrayList(); //Action events for $ON command. set by script
+    public static ArrayList<String> ReactionEvents = new ArrayList(); //Reactions for $ON command. . set by script
+    public static String[] scriptNames = {""};//list of all scripts in package. set on runtime
+    public static String[] scriptLocations = {""}; //All scripts in package. set on runtime
 
     public static String getScriptLocationOnDisk(String name) {
         for (int n = 0; n < scriptNames.length; n++) {
@@ -241,56 +240,33 @@ public class Statics {
         for (int n = 0; n < scriptNames.length; n++) {
             if (name.equals(scriptNames[n])) {
                 Log.level4Debug("Associated Script " + name + " with #" + n + scriptNames[n]);
-
                 scriptLocations[n] = location;
             }
         }
 
     }
+    
     //fastboot
-    static boolean isFastbootDeployed = false;
-    public static String fastbootResource = "";
-    public static String fastbootDeployed = TempFolder + "fastboot";
-    //heimdall 
-    static boolean isHeimdallDeployed = false;
-    static boolean ExectingHeimdallCommand = false;
-    static String heimdallResource = "";
-    static String arch = "";
-    //public static String heimdallResource2 = "";
-    static String heimdallStaging = TempFolder + "heimdallStage";
-    static String heimdallDeployed = "";
+    static boolean isFastbootDeployed = false;  // if fastboot has been deployed
+    public static String fastbootResource = ""; //location to fastboot set from final values above
+    public static String fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
+    //heimdall  
+    static boolean isHeimdallDeployed = false; //if fastboot has been deployed
+    static String heimdallResource = ""; //location to heimdall set from final values above
+    static String heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
+    static String heimdallDeployed = ""; //location of heimdall once deployed
     static String[] resourceHeimdallVersion;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
     public static boolean checkAndDeployHeimdall() {
-//handling for Windows
 
+        //deploys heimdall for Windows, launches checks for all other OS's. 
+        
         if (isHeimdallDeployed) {
             return true;
         } else {
             if (Statics.isWindows()) {
-                FileOperations fo = new FileOperations();  //Windows must deploy heimdall every startup.
-                Statics.heimdallResource = Statics.heimdallWin2;
-                fo.copyFromResourceToFile(Statics.heimdallResource, Statics.TempFolder + "libusb-1.0.dll");
-                Statics.heimdallResource = Statics.heimdallWin;
-                Statics.heimdallDeployed = Statics.TempFolder + "heimdall.exe";
-
-                fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
-                String x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"});
-                if (!x.equals("")) {
-                    Statics.isHeimdallDeployed = true;
-                    return true;
-                } else {
-                    new HeimdallInstall().installWindowsVCRedist();
-                    x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"});
-                    if (x.contains("CritError!!!")) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-
-                }
-//handling for Linux/mac
+                return new HeimdallInstall().deployHeimdallForWindows();
             } else {
                 
                 if (new HeimdallInstall().checkHeimdallVersion()) {
@@ -323,6 +299,7 @@ public class Statics {
         return new Shell().silentShellCommand(CommandArch).contains("64");
     }
 
+    static String arch = ""; //system archetecture.
     public static void checkLinuxArch() {
         Shell shell = new Shell();
         String[] Command = {"dpkg", "--help"};

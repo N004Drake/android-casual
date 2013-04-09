@@ -26,6 +26,28 @@ package CASUAL;
  */
 public class HeimdallInstall {
 
+    public boolean deployHeimdallForWindows() {
+        FileOperations fo = new FileOperations();
+        Statics.heimdallResource = Statics.heimdallWin2;
+        fo.copyFromResourceToFile(Statics.heimdallResource, Statics.TempFolder + "libusb-1.0.dll");
+        Statics.heimdallResource = Statics.heimdallWin;
+        Statics.heimdallDeployed = Statics.TempFolder + "heimdall.exe";
+        fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
+        String x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"});
+        if (!x.equals("")) {
+            Statics.isHeimdallDeployed = true;
+            return true;
+        } else {
+            new HeimdallInstall().installWindowsVCRedist();
+            x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"});
+            if (x.contains("CritError!!!")) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
     private boolean installLinuxHeimdall() {
 
         FileOperations fo = new FileOperations();
@@ -88,10 +110,10 @@ public class HeimdallInstall {
 
                 //Mac          
             } else if (Statics.isMac()) {
-                
+
                 Statics.heimdallDeployed = HeimdallTools.getHeimdallCommand();
-                String retval=new Shell().silentShellCommand(new String[]{(Statics.heimdallDeployed)});
-                if (retval.contains("CritError!!!")){
+                String retval = new Shell().silentShellCommand(new String[]{(Statics.heimdallDeployed)});
+                if (retval.contains("CritError!!!")) {
                     new HeimdallInstall().installHeimdallMac();
                 }
                 if (new HeimdallInstall().checkHeimdallVersion()) {
@@ -114,7 +136,7 @@ public class HeimdallInstall {
             } catch (Exception ex) {
                 log.errorHandler(ex);
             }
-            new Shell().liveShellCommand(new String[]{"open", "-W",exec}, true);
+            new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
             new CASUALInteraction().showErrorDialog("In order to continue, you must unplug the device and\n"
                     + "then it back in.  Use a GOOD port, in the back, not\n"
                     + "in the front.  Use a good cable too.", "Unplug it and then plug it back in");
@@ -154,7 +176,7 @@ public class HeimdallInstall {
         }
         //verify MD5
 
-        log.level2Information(new Shell().sendShellCommand(new String[]{"cmd.exe","/C",exec}));
+        log.level2Information(new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", exec}));
 
 
     }

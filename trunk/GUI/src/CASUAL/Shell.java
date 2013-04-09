@@ -241,10 +241,6 @@ public class Shell implements Runnable {
                 if (!Statics.ActionEvents.isEmpty() && ((LineRead.contains("\n") || LineRead.contains("\r")))) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
                         if (Statics.ActionEvents != null && LineRead.contains((String) Statics.ActionEvents.get(i))) {
-
-                            String LastLine = StringOperations.replaceLast(LineRead, "\n", "");
-                            LastLine = StringOperations.replaceLast(LastLine, "\r", "");
-                            Statics.LastLineReceived = LastLine;
                             new CASUALScriptParser().executeOneShotCommand((String) Statics.ReactionEvents.get(i));
                         }
                     }
