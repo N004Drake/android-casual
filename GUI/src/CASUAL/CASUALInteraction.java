@@ -18,8 +18,11 @@ package CASUAL;
 
 import java.awt.Component;
 import java.awt.HeadlessException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -36,54 +39,49 @@ public class CASUALInteraction extends JOptionPane {
         } else {
             new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + message);
             String s = getCommandLineInput();
-            return 0;
+            return 1;
 
         }
     }
 
-    private String getCommandLineInput() {
-        System.out.println(message);
+    public String getCommandLineInput() {
         try {
-            char x = 0;
-            //new Log().Level1Interaction(message);
-            while (x < 1) {
-                x = (char) new InputStreamReader(System.in).read();
-            }
-            return String.valueOf(x);
-        } catch (IOException e) {
-            return "0";
+            String input;
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            return in.readLine();
+                
+                
+        } catch (IOException ex) {
+            return "";
         }
-    }
 
+    }
     //TODO: this is broken
+
     private int getCommandLineInputNumber() {
-        System.out.println(message);
-        try {
-            char x = 0;
-            //new Log().Level1Interaction(message);
-            while (x < 1) {
-                x = (char) new InputStreamReader(System.in).read();
-            }
-            return x;
-        } catch (IOException e) {
-            return 0;
-        }
+       String x=getCommandLineInput();
+       int retval=Integer.parseInt(x);
+       if (retval<10){
+           return retval;
+       } else {
+           retval=getCommandLineInputNumber();
+           return retval;
+       }
     }
 
     private void waitForStandardInputBeforeContinuing() {
-        int x = 0;
-        while (x < 1) {
-            try {
-                x = (char) new InputStreamReader(System.in).read();
-            } catch (IOException ex) {
-                Logger.getLogger(CASUALInteraction.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        getCommandLineInput();
     }
 
     public String inputDialog(String[] Message) throws HeadlessException {
-        String InputBoxText = JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
-        return InputBoxText;
+        if (Statics.useGUI) {
+            return JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
+        } else {
+            new Log().Level1Interaction(Message[0] + Message[1]+"\n input:");
+            return getCommandLineInput();
+        }
+            
+         
     }
 
     public int showActionRequiredDialog(String instructionalMessage) throws HeadlessException {
@@ -134,8 +132,12 @@ public class CASUALInteraction extends JOptionPane {
                         JOptionPane.YES_NO_OPTION);
             }
         } else {
-            new Log().Level1Interaction("[CANCELOPTION]" + Message[0] + "\n" + Message[1]);
-            n = getCommandLineInputNumber();
+            new Log().Level1Interaction("[CANCELOPTION]" + Message[0] + "\n" + Message[1]+"\npress Q to quit");
+            String s=this.getCommandLineInput();
+            if (s.equals("q")||s.equals("Q")){
+                return 0;
+            }
+            return 1;
         }
         return n;
     }
