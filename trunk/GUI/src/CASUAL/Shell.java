@@ -259,13 +259,12 @@ public class Shell implements Runnable {
             log.level4Debug(LogRead);
 
             //
+            //TODO: lets try to handle this outside of Shell which is a non-project specific class.  Handle this from return from caller by reading return String for this. 
             if (LogRead.contains("libusb error:")) {
                 if (Statics.isWindows()) {
                     new HeimdallInstall().installWindowsDrivers();
-                } else {
-                    new CASUALInteraction().showTimeoutDialog(600, null, "Install LibUSB drivers!", "LibUSB not found", CASUALInteraction.OK_CANCEL_OPTION, CASUALInteraction.ERROR, new String[]{"OK"}, "OK");
-                }
-                liveShellCommand(params, true);
+                    liveShellCommand(params, true);
+                } 
             }
         } catch (RuntimeException ex) {
             return LogRead;

@@ -26,16 +26,17 @@ public class CASUALApp {
     /**
      *
      */
-    final public static String defaultPackage = "Test Script_2"; //note this will be used for IDE only.
+    final public static String defaultPackage = "Test Script"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     //final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
-    final private static String[] overrideArguments = new String[]{"-g", "--caspac", "/home/adam/Desktop/casualpack/testPak.zip"};
+    final private static String[] overrideArguments = new String[]{"--caspac", "/home/adam/Desktop/casualpack/testPak.zip"};
     String[] arguments;
 
     /**
      * At startup create and show the main frame of the application.
      */
     void startup(String[] args) {
+          
         new CASUALMain().startup(args);
     }
 
