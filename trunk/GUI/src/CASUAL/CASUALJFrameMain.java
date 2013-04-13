@@ -16,11 +16,10 @@
  */
 package CASUAL;
 
+import java.awt.Toolkit;
+import java.awt.Dimension;
 import java.io.File;
-
 import java.io.IOException;
-
-
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
@@ -52,7 +51,10 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
         log.level4Debug("OMFGWOOT GUI running!");
-
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
+        this.setLocation(x, y);
        if (Statics.TargetScriptIsResource) {
             if (!Statics.dumbTerminalGUI) {
                 log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt") + "\n");
@@ -364,6 +366,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     private void MenuItemOpenScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenScriptActionPerformed
 
         String FileName;
+        FileChooser1.setDialogTitle("Select a CASUAL \"scr\" file");
+        FileChooser1.setFileFilter(new SCRCustomFilter());
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {

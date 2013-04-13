@@ -16,9 +16,19 @@
  */
 package CASUAL;
 
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;  
+
 
 /**
  *
@@ -31,6 +41,10 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
      */
     public CASUALJFrameLog() {
         initComponents();
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
+        this.setLocation(x, y);
         refreshLog();
     }
 
@@ -47,6 +61,7 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
+        jPastebinSubmit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("CASUAL Log");
@@ -70,6 +85,13 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
             }
         });
 
+        jPastebinSubmit.setText("Submit To Pastebin");
+        jPastebinSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPastebinSubmitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -80,7 +102,9 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 219, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                        .addComponent(jPastebinSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -92,9 +116,12 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jPastebinSubmit))
                 .addGap(12, 12, 12))
         );
+
+        jPastebinSubmit.getAccessibleContext().setAccessibleDescription("Automatically Submit to pastebin");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -108,7 +135,28 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
         StringSelection stringSelection = new StringSelection(selection);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
+        JOptionPane.showMessageDialog(this.getRootPane(), "Log Contents Copied to Clipboard");
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jPastebinSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPastebinSubmitActionPerformed
+            String selection = this.jTextArea1.getText();
+            StringSelection stringSelection = new StringSelection(selection);
+            Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+            cb.setContents(stringSelection, null);
+            Transferable contents = cb.getContents(null);
+            boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+            String email = JOptionPane.showInputDialog(this.getRootPane(), "Please Enter Your Email Address");
+            if(!(email.contains("@"))) {return;}
+            if (hasTransferableText) {
+                try {
+                    String result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                    Pastebin.Post(result, email);
+                    JOptionPane.showMessageDialog(this.getRootPane(), "URL Copied to Clipboard");
+                } catch (UnsupportedFlavorException | IOException | URISyntaxException ex) {
+                    Logger.getLogger(CASUALJFrameLog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }           
+    }//GEN-LAST:event_jPastebinSubmitActionPerformed
 
     public static void initializeAsMain() {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -121,6 +169,7 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jPastebinSubmit;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
