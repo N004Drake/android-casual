@@ -60,7 +60,7 @@ public class CASUALApp {
         CASUALapplicationData.CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         CASUALapplicationData.CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
         new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
-                + "CASUAL Cross-platform ADB Scripting Universal Android Loader\nRevision:" + CASUALapplicationData.CASUALSVNRevision + " build:" + CASUALapplicationData.CASUALBuildNumber + "\n"
+                + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALapplicationData.CASUALSVNRevision + " build:" + CASUALapplicationData.CASUALBuildNumber + "\n"
                 + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
                 + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
                 + "    and you are welcome to redistribute it, under certain conditions; run\n"
