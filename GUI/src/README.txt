@@ -7,7 +7,7 @@ CASUAL package layout:
 
 
 About:
-CASUAL is a Cross-platform ADB Scripting, Universal Android Loader. CASUAL is a Scripting language and a package deployment system.  It works with all android devices which can communicate with ADB.
+CASUAL is a Cross-platform Android Scripting and Unified Auxiliary Loader. CASUAL is a Scripting language and a package deployment system.  It works with all android devices which can communicate with ADB.
 
 Copyright (C) 2012  Adam Outler.
 
