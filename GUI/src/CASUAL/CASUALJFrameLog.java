@@ -101,11 +101,11 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
-                        .addComponent(jPastebinSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPastebinSubmit, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -145,11 +145,14 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
             cb.setContents(stringSelection, null);
             Transferable contents = cb.getContents(null);
             boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
-            String email = JOptionPane.showInputDialog(this.getRootPane(), "Please Enter Your Email Address");
+            String email = new CASUALInteraction().inputDialog(new String[]{"Submission Form","Please Enter Your username for identification."});
             if(!(email.contains("@"))) {return;}
             if (hasTransferableText) {
                 try {
-                    String result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                    String result="";
+                    if (contents!=null){
+                        result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                    }
                     Pastebin.Post(result, email);
                     JOptionPane.showMessageDialog(this.getRootPane(), "URL Copied to Clipboard");
                 } catch (UnsupportedFlavorException | IOException | URISyntaxException ex) {
