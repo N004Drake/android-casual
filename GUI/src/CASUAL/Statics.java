@@ -222,6 +222,7 @@ public class Statics {
     public static String[] scriptLocations = {""}; //All scripts in package. set on runtime
 
     public static String getScriptLocationOnDisk(String name) {
+        if (Statics.TargetScriptIsResource) return "";
         for (int n = 0; n < scriptNames.length; n++) {
             if (name.equals(scriptNames[n])) {
                 Log.level4Debug("Script " + name + " returned #" + n + scriptNames[n]);

@@ -20,6 +20,8 @@ import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
@@ -125,11 +127,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         MenuItemShowAboutBox = new javax.swing.JMenuItem();
 
         FileChooser1.setDialogTitle("Select a CASUAL \"scr\" file");
-        FileChooser1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FileChooser1ActionPerformed(evt);
-            }
-        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -152,11 +149,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
-            }
-        });
-        comboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboBoxScriptSelectorActionPerformed(evt);
             }
         });
 
@@ -304,7 +296,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -330,7 +322,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         String diskLocation;
         diskLocation = Statics.getScriptLocationOnDisk(script);
 
-
+       
+        log.level4Debug("disk location for script resources "+diskLocation);
         //check for updates
         if (!(diskLocation.length() == 0)) {
             Statics.TargetScriptIsResource = false;
@@ -339,8 +332,10 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         //execute
         if (Statics.TargetScriptIsResource) {
+            log.level4Debug("Loading internal resource: "+script);
             new CASUALScriptParser().loadResourceAndExecute(script, true);
         } else {
+            log.level4Debug("Loading from file: "+script);
             new CASUALScriptParser().loadFileAndExecute(nonResourceFileName, script, true);
         }
 
@@ -371,6 +366,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
+                this.enableControls(false);
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
                 log.level2Information("Description for " + nonResourceFileName);
@@ -387,6 +383,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 comboBoxScriptSelector.setSelectedItem(ComboBoxValue);
                 comboBoxScriptSelector.setEditable(false);
                 Statics.TargetScriptIsResource = false;
+                this.enableControls(true);
 
             } catch (IOException ex) {
                 log.errorHandler(ex);
@@ -400,15 +397,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         CASUALJFrameAboutBox CAB = new CASUALJFrameAboutBox();
         CAB.setVisible(true);
     }//GEN-LAST:event_MenuItemShowAboutBoxActionPerformed
-
-    private void FileChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FileChooser1ActionPerformed
-        /*
-         * Log.level1("Description for " +
-         * jComboBox1.getSelectedItem().toString());
-         * Log.level1(FileOperations.readTextFromResource(Statics.ScriptLocation+jComboBox1.getSelectedItem().toString()+".txt"));
-         * Statics.SelectedScriptFolder=Statics.TempFolder+jComboBox1.getSelectedItem().toString();
-         */
-    }//GEN-LAST:event_FileChooser1ActionPerformed
 
     private void MenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemExitActionPerformed
         System.exit(0);
@@ -442,14 +430,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         comboBoxScriptSelector.addItem(item);
     }
 
-    private void comboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorActionPerformed
-        if (!Statics.dumbTerminalGUI) {
-            Statics.TargetScriptIsResource = true;
-        }
-
-    }//GEN-LAST:event_comboBoxScriptSelectorActionPerformed
-
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
+
+
         log.level4Debug("hiding script selector TargetScript: " + comboBoxScriptSelector.getSelectedItem().toString());
 
         if ((!Statics.dumbTerminalGUI) && comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
@@ -458,7 +441,17 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             Statics.TargetScriptIsResource = true;
 
         }
-        updateSelectedFromGUI();
+        this.enableControls(false);
+        Statics.lockGUIunzip=true;
+        Thread t=updateSelectedFromGUI();
+        try {
+            t.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALJFrameMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Statics.lockGUIunzip=false;
+        this.enableControls(true);
+
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -481,7 +474,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
     }//GEN-LAST:event_startButtonMouseExited
-    public void updateSelectedFromGUI() {
+    public Thread updateSelectedFromGUI() {
         log.level2Information("From Resource: " + Statics.TargetScriptIsResource);
         log.level2Information("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
         if (Statics.TargetScriptIsResource) {
@@ -493,10 +486,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 log.level2Information(fileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
             }
         }
-        Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString();
+        Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString()+Statics.Slash;
         //set the ZipResource
-        final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip") : (comboBoxScriptSelector.getSelectedItem().toString() + ".zip");
-        new CASUALTools().prepareCurrentScript(comboBoxScriptSelector.getSelectedItem().toString());
+        //final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip") : (comboBoxScriptSelector.getSelectedItem().toString() + ".zip");
+        
+        return new CASUALTools().prepareCurrentScript(comboBoxScriptSelector.getSelectedItem().toString());
     }
 
     private void StatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseClicked
