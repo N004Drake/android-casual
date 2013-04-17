@@ -372,7 +372,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 log.level2Information("Description for " + nonResourceFileName);
                 log.level2Information(fileOperations.readFile(nonResourceFileName + ".txt"));
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
-                Statics.SelectedScriptFolder = Statics.TempFolder + new File(nonResourceFileName).getName();
+                Statics.SelectedScriptFolder = Statics.TempFolder + new File(nonResourceFileName).getName()+Statics.Slash;
                 log.level0Error("Delete this debug line in MenuItemOpenScriptActionPerformed()");
                 if (new FileOperations().verifyFileExists(nonResourceFileName.toString() + ".zip")) {
                     new Unzip().unzipFile(nonResourceFileName.toString() + ".zip", Statics.SelectedScriptFolder);
