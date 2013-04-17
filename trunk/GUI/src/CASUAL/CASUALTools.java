@@ -121,11 +121,12 @@ public class CASUALTools {
         }
     }
 
-    public void prepareCurrentScript(String scriptName) {
+    public Thread prepareCurrentScript(String scriptName) {
         Statics.SelectedScriptFolder = Statics.TempFolder + scriptName;
         //set the ZipResource
-        final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + scriptName + ".zip") : (scriptName + ".zip");
+        final String ZipResource = Statics.TargetScriptIsResource ? (Statics.SelectedScriptFolder + scriptName + ".zip") : (scriptName + ".zip");
 
+        log.level4Debug("Created zipResource at "+ZipResource);
 
         Thread t;
         t = new Thread() {
@@ -155,6 +156,7 @@ public class CASUALTools {
         t.start();
 
         log.level4Debug("Exiting comboBoxUpdate()");
+        return t;
     }
 
     public boolean getIDEMode() {
