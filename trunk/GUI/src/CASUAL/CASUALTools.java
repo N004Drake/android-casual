@@ -89,7 +89,7 @@ public class CASUALTools {
     public void md5sumTestScripts() {
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
         incrementBuildNumber();
-        String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "src" + Statics.Slash + "SCRIPTS" + Statics.Slash;
+        String scriptsPath = System.getProperty("user.dir") +  Statics.Slash + "SCRIPTS" + Statics.Slash;
         final File folder = new File(scriptsPath);
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.toString().endsWith(".meta")) {
@@ -122,9 +122,9 @@ public class CASUALTools {
     }
 
     public Thread prepareCurrentScript(String scriptName) {
-        Statics.SelectedScriptFolder = Statics.TempFolder + scriptName;
+        Statics.SelectedScriptFolder = Statics.TempFolder +Statics.Slash+ scriptName;
         //set the ZipResource
-        final String ZipResource = Statics.TargetScriptIsResource ? (Statics.SelectedScriptFolder + scriptName + ".zip") : (scriptName + ".zip");
+        final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + scriptName + ".zip") : (scriptName + ".zip");
 
         log.level4Debug("Created zipResource at "+ZipResource);
 
@@ -138,12 +138,13 @@ public class CASUALTools {
                     log.level4Debug("attempted to lock controls but controls are not availble yet");
                 }
                 Statics.lockGUIunzip = true;
+                if (! new FileOperations().verifyExists(Statics.SelectedScriptFolder)) new FileOperations().makeFolder(Statics.SelectedScriptFolder);
+                log.level4Debug("Extracting archive....");
+                Unzip unzip = new Unzip();
                 if (getClass().getResource(ZipResource) != null) {
-                    log.level4Debug("Extracting archive....");
-
-                    Unzip Unzip = new Unzip();
+                    log.level4Debug("Target Script Is resource");
                     try {
-                        Unzip.unZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
+                        unzip.unZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
                     } catch (FileNotFoundException ex) {
                         log.errorHandler(ex);
                     } catch (IOException ex) {
@@ -291,13 +292,13 @@ public class CASUALTools {
     private void incrementBuildNumber() throws NumberFormatException {
         Properties prop = new Properties();
         try {
-            prop.load(new FileInputStream(System.getProperty("user.dir") + "/src/CASUAL/resources/CASUALApp.properties"));
+            prop.load(new FileInputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"));
             int x = Integer.parseInt(prop.getProperty("Application.buildnumber").replace(",", ""));
             x++;
             prop.setProperty("Application.buildnumber", Integer.toString(x));
             prop.setProperty("Application.buildnumber", Integer.toString(x));
 
-            prop.store(new FileOutputStream(System.getProperty("user.dir") + "/src/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber=" + x);
+            prop.store(new FileOutputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber=" + x);
         } catch (IOException ex) {
             Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
         }

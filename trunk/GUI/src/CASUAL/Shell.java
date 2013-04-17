@@ -76,7 +76,7 @@ public class Shell implements Runnable {
             FileOperations.setExecutableBit(ScriptFile);
             log.level4Debug("###Elevating Command: " + Command + " ###");
             if (message == null) {
-                Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
+                Result = Shell.liveShellCommand(new String[]{"gksudo","-k", "-D", "CASUAL", ScriptFile}, true);
             } else {
                 Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile}, true);
             }
@@ -221,10 +221,11 @@ public class Shell implements Runnable {
     public String liveShellCommand(String[] params, boolean display) {
         String LogRead = "";
         try {
-            Process process = new ProcessBuilder(params).start();
+            ProcessBuilder p=new ProcessBuilder(params);
+            p.redirectErrorStream(true);
+            Process process = p.start();
             log.level4Debug("\n###executing real-time command: " + params[0] + "###");
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             String LineRead = "";
             String CharRead;
 
@@ -248,14 +249,7 @@ public class Shell implements Runnable {
 
                 }
             }
-            while ((LineRead = STDERR.readLine()) != null) {
-
-                if (!LineRead.equals("")) {
-                    log.progress(LineRead);
-                    LogRead = LogRead + LineRead;
-                }
-
-            }
+           
             log.level4Debug(LogRead);
 
             //
