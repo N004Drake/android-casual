@@ -44,7 +44,7 @@ public class Pastebin {
     
     private static String devKey = "027c63663a6023d774b5392f380e5923";
     
-    public static void Post(String pasteData, String strHash) throws IOException,URISyntaxException {
+    public static void doPosting(String pasteData, String strHash) throws IOException,URISyntaxException {
             
         API paste = new API(devKey);
         Log log = new Log();

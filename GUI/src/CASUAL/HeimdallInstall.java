@@ -204,7 +204,7 @@ public class HeimdallInstall {
         System.exit(0);
     }
 
-    void runWinHeimdallInstallationProcedure() {
+    void runWinHeimdallInstallationProcedure() { //TODO: This method is never called
         installWindowsVCRedist();
         installWindowsDrivers();
         new Log().level0Error("done.");

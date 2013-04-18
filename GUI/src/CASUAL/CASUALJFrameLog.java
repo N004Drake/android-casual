@@ -146,14 +146,13 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
             Transferable contents = cb.getContents(null);
             boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
             String email = new CASUALInteraction().inputDialog(new String[]{"Submission Form","Please Enter Your username for identification."});
-            if(!(email.contains("@"))) {return;}
             if (hasTransferableText) {
                 try {
                     String result="";
                     if (contents!=null){
                         result = (String) contents.getTransferData(DataFlavor.stringFlavor);
                     }
-                    Pastebin.Post(result, email);
+                    Pastebin.doPosting(result, email);
                     JOptionPane.showMessageDialog(this.getRootPane(), "URL Copied to Clipboard");
                 } catch (UnsupportedFlavorException | IOException | URISyntaxException ex) {
                     Logger.getLogger(CASUALJFrameLog.class.getName()).log(Level.SEVERE, null, ex);

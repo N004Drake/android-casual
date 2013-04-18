@@ -68,6 +68,10 @@ public class HeimdallTools {
         log.level3Verbose("Performing elevated Heimdall command" + line);
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         String returnval = Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
+        String result = HeimdallTools.handleHeimdallError(returnval, stringCommand2);
+        if (!result.equals("")) {
+            log.level0Error(result);
+        }
         return returnval;
     }
 
@@ -80,11 +84,158 @@ public class HeimdallTools {
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         log.level3Verbose("Performing standard Heimdall command" + line);
         String returnRead = Shell.liveShellCommand(stringCommand2, true);
-        if (returnRead.contains("libusb error: -3") && Statics.isLinux()) {
-            log.level0Error("#A permissions error was detected.  Elevating permissions.");
-            this.doElevatedHeimdallShellCommand(line);
+        String result = HeimdallTools.handleHeimdallError(returnRead, stringCommand2);
+        if (!result.equals("")) {
+            log.level0Error(result);
+        }
+        if (result.equals("'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue")) {
+            if(Statics.isLinux()) {
+                log.level0Error("#A permissions error was detected.  Elevating permissions.");
+                this.doElevatedHeimdallShellCommand(line);
+            } else if(Statics.isWindows()) {
+                returnRead = Shell.liveShellCommand(stringCommand2, true);
+                result = HeimdallTools.handleHeimdallError(returnRead, stringCommand2);
+                if (!result.equals("")) {
+                    log.level0Error(result);
+                }
+            }
+            
         }
         return returnRead;
+    }
+    
+    public static String handleHeimdallError(String stdErrLog, String line[]) {
+
+        for(int x = 0; x != 60; x++) {
+            if(stdErrLog.contains(errFail[x])) {
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                return "Heimdall uncontinuable error; Script halted"; 
+            }
+        }
+        
+        for(int x = 0; x != 3; x++) {
+            if(stdErrLog.contains(errNotFail[x])) { return "Heimdall continuable error; Attempting to continue"; } 
+        }
+        
+        if(stdErrLog.contains(" failed!")) {
+            if(stdErrLog.contains("Claiming interface failed!")) {
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                return "Heimdall failed to claim interface; Script halted"; 
+            }
+            
+            if(stdErrLog.contains("Setting up interface failed!")) {
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                return "Heimdall failed to setup an interface; Script halted"; 
+            }
+            
+            if(stdErrLog.contains("Protocol initialisation failed!")) {
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                return "Heimdall failed to initialize protocol; Script halted"; 
+            }
+            
+            if(stdErrLog.contains("upload failed!")) {
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                return "Heimdall failed to upload; Script halted"; 
+            }
+        }
+        
+        if(stdErrLog.contains("Flash aborted!")) {
+            CASUALScriptParser cLang = new CASUALScriptParser();
+            cLang.executeOneShotCommand("$HALT $SENDLOG");
+            return "Heimdall aborted flash; Script halted"; 
+        }
+        
+        if (stdErrLog.contains("libusb error")) {
+            int startIndex = stdErrLog.lastIndexOf("libusb error");
+            if(stdErrLog.charAt(startIndex + 1) == ':') {
+                startIndex =+ 3;
+            }
+            while(stdErrLog.charAt(startIndex) != '\n'){
+                if(stdErrLog.charAt(startIndex) == '-') {
+                    switch(stdErrLog.charAt(startIndex + 1)){
+                        case '1': {
+                            switch(stdErrLog.charAt(startIndex + 2)) {
+                                case '0': {// -10
+                                    CASUALScriptParser cLang = new CASUALScriptParser();
+                                    cLang.executeOneShotCommand("$HALT $SENDLOG");
+                                    return "'LIBUSB_ERROR_INTERRUPTED' Error not handled; Script halted";
+                                }
+                                case '1': {// -11
+                                    CASUALScriptParser cLang = new CASUALScriptParser();
+                                    cLang.executeOneShotCommand("$HALT $SENDLOG");
+                                    return "'LIBUSB_ERROR_NO_MEM' Error not handled; Script halted";
+                                }
+                                case '2': {// -12
+                                    if (Statics.isWindows()) {
+                                        new HeimdallInstall().installWindowsDrivers();
+                                    } 
+                                    return "'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue";
+                                }
+                                default: {// -1
+                                    CASUALScriptParser cLang = new CASUALScriptParser();
+                                    cLang.executeOneShotCommand("$HALT $SENDLOG");
+                                    return "'LIBUSB_ERROR_IO' Error not Handled; Script halted";
+                                }
+                            }
+                        }
+                        case '2': {// -2
+                            CASUALScriptParser cLang = new CASUALScriptParser();
+                            cLang.executeOneShotCommand("$HALT $SENDLOG");
+                            return "'LIBUSB_ERROR_INVALID_PARAM' Error not handled; Script halted";
+                        }
+                        case '3': {// -3
+                            CASUALScriptParser cLang = new CASUALScriptParser();
+                            cLang.executeOneShotCommand("$HALT $SENDLOG");
+                            return "'LIBUSB_ERROR_ACCESS' Error not handled; Script halted";
+                        }
+                        case '4': {// -4
+                            CASUALScriptParser cLang = new CASUALScriptParser();
+                            cLang.executeOneShotCommand("$HALT $SENDLOG");
+                            return "'LIBUSB_ERROR_NO_DEVICE' Error not handled; Script halted";
+                        }
+                        case '5': {// -5
+                            CASUALScriptParser cLang = new CASUALScriptParser();
+                            cLang.executeOneShotCommand("$HALT $SENDLOG");
+                            return "'LIBUSB_ERROR_NOT_FOUND' Error not handled; Script halted";
+                        }
+                        case '6': {// -6
+                            CASUALScriptParser cLang = new CASUALScriptParser();
+                            cLang.executeOneShotCommand("$HALT $SENDLOG");
+                            return "'LIBUSB_ERROR_BUSY' Error not handled; Script halted";
+                        }
+                        case '7': {// -7
+                            return "'LIBUSB_ERROR_TIMEOUT'; Attempting to continue";
+                        }
+                        case '8': {// -8
+                            CASUALScriptParser cLang = new CASUALScriptParser();
+                            cLang.executeOneShotCommand("$HALT $SENDLOG");
+                            return "'LIBUSB_ERROR_OVERFLOW' Error not handled; Script halted";
+                        }
+                        case '9': {
+                            if(stdErrLog.charAt(startIndex + 2) == 9) {// -99
+                                CASUALScriptParser cLang = new CASUALScriptParser();
+                                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                                return "'LIBUSB_ERROR_OTHER' Error not handled; Script halted";
+                            } else {//-9
+                                return "'LIBUSB_ERROR_PIPE'; Attempting to continue";
+                            }
+                        }
+                        default: {
+                            CASUALScriptParser cLang = new CASUALScriptParser();
+                            cLang.executeOneShotCommand("$HALT $SENDLOG");
+                            return "'LIBUSB_ERROR_OTHER' Error not handled; Script halted";
+                        }
+                    }
+                }
+                startIndex++;
+            }
+        }
+        return "";
     }
 
     public static String getHeimdallCommand() {
@@ -119,7 +270,7 @@ public class HeimdallTools {
 
         }
     }
-
+    
     private void sleepForOneSecond() {
         try {
             Thread.sleep(1000);
@@ -128,4 +279,73 @@ public class HeimdallTools {
             log.errorHandler(ex);
         }
     }
+    
+    //TODO - Move this Array into Resources in a CSV file
+    protected static String[] errFail = {   "Failed to end phone file transfer sequence!",//FAIL
+                                            "Failed to end modem file transfer sequence!",//FAIL
+                                            "Failed to confirm end of file transfer sequence!",//FAIL
+                                            "Failed to request dump!",//FAIL
+                                            "Failed to receive dump size!",//FAIL
+                                            "Failed to request dump part ",//FAIL
+                                            "Failed to receive dump part ",//FAIL
+                                            "Failed to send request to end dump transfer!",//FAIL
+                                            "Failed to receive end dump transfer verification!",//FAIL
+                                            "Failed to initialise file transfer!",//FAIL
+                                            "Failed to begin file transfer sequence!",//FAIL
+                                            "Failed to confirm beginning of file transfer sequence!",//FAIL
+                                            "Failed to send file part packet!",//FAIL
+                                            "Failed to request device info packet!",//FAIL
+                                            "Failed to initialise PIT file transfer!",//FAIL
+                                            "Failed to confirm transfer initialisation!",//FAIL
+                                            "Failed to send PIT file part information!",//FAIL
+                                            "Failed to confirm sending of PIT file part information!",//FAIL
+                                            "Failed to send file part packet!",//FAIL
+                                            "Failed to receive PIT file part response!",//FAIL
+                                            "Failed to send end PIT file transfer packet!",//FAIL
+                                            "Failed to confirm end of PIT file transfer!",//FAIL
+                                            "Failed to request receival of PIT file!",//FAIL
+                                            "Failed to receive PIT file size!",//FAIL
+                                            "Failed to request PIT file part ",//FAIL
+                                            "Failed to receive PIT file part ",//FAIL
+                                            "Failed to send request to end PIT file transfer!",//FAIL
+                                            "Failed to receive end PIT file transfer verification!",//FAIL
+                                            "Failed to download PIT file!",//FAIL
+                                            "Failed to send end session packet!",//FAIL
+                                            "Failed to receive session end confirmation!",//FAIL
+                                            "Failed to send reboot device packet!",//FAIL
+                                            "Failed to receive reboot confirmation!",//FAIL
+                                            "Failed to begin session!",//FAIL
+                                            "Failed to send file part size packet!",//FAIL
+                                            "Failed to send data: ",//FAIL
+                                            "Failed to send data!",//FAIL
+                                            "Failed to complete sending of data: ",//FAIL
+                                            "Failed to complete sending of data!",//FAIL
+                                            "Failed to detect compatible download-mode device.",//FAIL
+                                            "Failed to unpack device's PIT file!",//FAIL
+                                            "Failed to retrieve device description",//FAIL
+                                            "Failed to retrieve config descriptor",//FAIL
+                                            "Failed to find correct interface configuration",//FAIL
+                                            "Failed to read PIT file.",//FAIL
+                                            "Failed to open output file ",//FAIL
+                                            "Failed to write PIT data to output file.",//FAIL
+                                            "Failed to open file ",//FAIL
+                                            "Failed to send total bytes device info packet!",//FAIL
+                                            "Failed to receive device info response!",//FAIL
+                                            "Expected file part index: ",//FAIL
+                                            "Expected file part index: ",//FAIL
+                                            "No partition with identifier ",//FAIL
+                                            "Could not identify the PIT partition within the specified PIT file.",//FAIL
+                                            "Unexpected file part size response!",//FAIL
+                                            "Unexpected device info response!",//FAIL
+                                            "Attempted to send file to unknown destination!",//FAIL
+                                            "The modem file does not have an identifier!",//FAIL			
+                                            "Incorrect packet size received - expected size = ",//FAIL
+                                            "does not exist in the specified PIT.",//FAIL
+                                            "Partition name for "};//FAIL
+    
+    //TODO - Move this Array into Resources in a CSV file
+    protected static String[] errNotFail = {    "Failed to receive file part response!",//NO FAIL
+                                                "Failed to unpack received packet.",//NO FAIL
+                                                "Unexpected handshake response!",//NO FAIL
+                                                "Failed to receive handshake response."};//NO FAIL
 }

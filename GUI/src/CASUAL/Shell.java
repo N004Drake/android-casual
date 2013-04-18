@@ -249,21 +249,12 @@ public class Shell implements Runnable {
 
                 }
             }
-           
+            
             log.level4Debug(LogRead);
-
-            //
-            //TODO: lets try to handle this outside of Shell which is a non-project specific class.  Handle this from return from caller by reading return String for this. 
-            if (LogRead.contains("libusb error:")) {
-                if (Statics.isWindows()) {
-                    new HeimdallInstall().installWindowsDrivers();
-                    liveShellCommand(params, true);
-                } 
-            }
-        } catch (RuntimeException ex) {
-            return LogRead;
-        } catch (IOException ex) {
+            
+        } catch (RuntimeException | IOException ex) {
             log.errorHandler(ex);
+            return LogRead;
         }
         return LogRead;
     }
