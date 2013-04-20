@@ -250,7 +250,7 @@ public class Shell implements Runnable {
                 }
             }
             
-            log.level4Debug(LogRead);
+            //log.level4Debug(LogRead);
             
         } catch (RuntimeException | IOException ex) {
             log.errorHandler(ex);
