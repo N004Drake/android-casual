@@ -68,9 +68,22 @@ public class HeimdallTools {
         log.level3Verbose("Performing elevated Heimdall command" + line);
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         String returnval = Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
-        String result = HeimdallTools.handleHeimdallError(returnval, stringCommand2);
+        String result = new HeimdallTools().didHeimdallError(returnval);
         if (!result.equals("")) {
-            log.level0Error(result);
+            if(result.contains("Script halted")) {
+                log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                return returnval;
+            } else if (result.contains("Attempting to continue")) {
+                result = result.replace("Attempting to continue", "Script Halted");
+                log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                return returnval;
+            }
+        } else if (result.equals("")) {
+            log.level2Information("\n[Heimdall Success]\n\n");
         }
         return returnval;
     }
@@ -84,69 +97,70 @@ public class HeimdallTools {
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         log.level3Verbose("Performing standard Heimdall command" + line);
         String returnRead = Shell.liveShellCommand(stringCommand2, true);
-        String result = HeimdallTools.handleHeimdallError(returnRead, stringCommand2);
+        String result = new HeimdallTools().didHeimdallError(returnRead);
         if (!result.equals("")) {
-            log.level0Error(result);
+            if(result.contains("Script halted")) {
+                log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                return returnRead;
+            }
+            log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+        } else if (result.contains("")) {
+            log.level2Information("\n[Heimdall Success]\n\n");
         }
-        if (result.equals("'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue")) {
+        if (result.contains("Attempting to continue")) {
             if(Statics.isLinux()) {
                 log.level0Error("#A permissions error was detected.  Elevating permissions.");
                 this.doElevatedHeimdallShellCommand(line);
-            } else if(Statics.isWindows()) {
-                returnRead = Shell.liveShellCommand(stringCommand2, true);
-                result = HeimdallTools.handleHeimdallError(returnRead, stringCommand2);
-                if (!result.equals("")) {
-                    log.level0Error(result);
-                }
+            } else if (Statics.isWindows()) {
+                this.doHeimdallShellCommand(line);
             }
-            
         }
         return returnRead;
     }
     
-    public static String handleHeimdallError(String stdErrLog, String line[]) {
+    
+     /**
+     * .
+     * 
+     * @param String CASUAL log output
+     * @param String previously executed Heimdall command array
+     * 
+     * @author  Jeremy Loper    jrloper@gmail.com
+     */
+    public String didHeimdallError(String stdErrLog) {
 
         for(int x = 0; x != 60; x++) {
             if(stdErrLog.contains(errFail[x])) {
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return "Heimdall uncontinuable error; Script halted"; 
             }
         }
         
         for(int x = 0; x != 3; x++) {
-            if(stdErrLog.contains(errNotFail[x])) { return "Heimdall continuable error; Attempting to continue"; } 
+            if(stdErrLog.contains(errNotFail[x])) { 
+                return "Heimdall continuable error; Attempting to continue"; } 
         }
         
         if(stdErrLog.contains(" failed!")) {
             if(stdErrLog.contains("Claiming interface failed!")) {
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return "Heimdall failed to claim interface; Script halted"; 
             }
             
             if(stdErrLog.contains("Setting up interface failed!")) {
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return "Heimdall failed to setup an interface; Script halted"; 
             }
             
             if(stdErrLog.contains("Protocol initialisation failed!")) {
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return "Heimdall failed to initialize protocol; Script halted"; 
             }
             
             if(stdErrLog.contains("upload failed!")) {
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return "Heimdall failed to upload; Script halted"; 
             }
         }
         
         if(stdErrLog.contains("Flash aborted!")) {
-            CASUALScriptParser cLang = new CASUALScriptParser();
-            cLang.executeOneShotCommand("$HALT $SENDLOG");
             return "Heimdall aborted flash; Script halted"; 
         }
         
@@ -161,73 +175,51 @@ public class HeimdallTools {
                         case '1': {
                             switch(stdErrLog.charAt(startIndex + 2)) {
                                 case '0': {// -10
-                                    CASUALScriptParser cLang = new CASUALScriptParser();
-                                    cLang.executeOneShotCommand("$HALT $SENDLOG");
                                     return "'LIBUSB_ERROR_INTERRUPTED' Error not handled; Script halted";
                                 }
                                 case '1': {// -11
-                                    CASUALScriptParser cLang = new CASUALScriptParser();
-                                    cLang.executeOneShotCommand("$HALT $SENDLOG");
                                     return "'LIBUSB_ERROR_NO_MEM' Error not handled; Script halted";
                                 }
-                                case '2': {// -12
+                                case '2': {// -12 
                                     if (Statics.isWindows()) {
                                         new HeimdallInstall().installWindowsDrivers();
-                                    } 
+                                    }
                                     return "'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue";
                                 }
                                 default: {// -1
-                                    CASUALScriptParser cLang = new CASUALScriptParser();
-                                    cLang.executeOneShotCommand("$HALT $SENDLOG");
                                     return "'LIBUSB_ERROR_IO' Error not Handled; Script halted";
                                 }
                             }
                         }
                         case '2': {// -2
-                            CASUALScriptParser cLang = new CASUALScriptParser();
-                            cLang.executeOneShotCommand("$HALT $SENDLOG");
                             return "'LIBUSB_ERROR_INVALID_PARAM' Error not handled; Script halted";
                         }
                         case '3': {// -3
-                            CASUALScriptParser cLang = new CASUALScriptParser();
-                            cLang.executeOneShotCommand("$HALT $SENDLOG");
                             return "'LIBUSB_ERROR_ACCESS' Error not handled; Script halted";
                         }
                         case '4': {// -4
-                            CASUALScriptParser cLang = new CASUALScriptParser();
-                            cLang.executeOneShotCommand("$HALT $SENDLOG");
                             return "'LIBUSB_ERROR_NO_DEVICE' Error not handled; Script halted";
                         }
                         case '5': {// -5
-                            CASUALScriptParser cLang = new CASUALScriptParser();
-                            cLang.executeOneShotCommand("$HALT $SENDLOG");
                             return "'LIBUSB_ERROR_NOT_FOUND' Error not handled; Script halted";
                         }
                         case '6': {// -6
-                            CASUALScriptParser cLang = new CASUALScriptParser();
-                            cLang.executeOneShotCommand("$HALT $SENDLOG");
                             return "'LIBUSB_ERROR_BUSY' Error not handled; Script halted";
                         }
                         case '7': {// -7
                             return "'LIBUSB_ERROR_TIMEOUT'; Attempting to continue";
                         }
                         case '8': {// -8
-                            CASUALScriptParser cLang = new CASUALScriptParser();
-                            cLang.executeOneShotCommand("$HALT $SENDLOG");
                             return "'LIBUSB_ERROR_OVERFLOW' Error not handled; Script halted";
                         }
                         case '9': {
                             if(stdErrLog.charAt(startIndex + 2) == 9) {// -99
-                                CASUALScriptParser cLang = new CASUALScriptParser();
-                                cLang.executeOneShotCommand("$HALT $SENDLOG");
                                 return "'LIBUSB_ERROR_OTHER' Error not handled; Script halted";
                             } else {//-9
                                 return "'LIBUSB_ERROR_PIPE'; Attempting to continue";
                             }
                         }
                         default: {
-                            CASUALScriptParser cLang = new CASUALScriptParser();
-                            cLang.executeOneShotCommand("$HALT $SENDLOG");
                             return "'LIBUSB_ERROR_OTHER' Error not handled; Script halted";
                         }
                     }
