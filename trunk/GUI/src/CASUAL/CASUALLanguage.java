@@ -22,6 +22,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -194,8 +195,12 @@ public class CASUALLanguage {
             } else {
                 log.level4Debug("Sendlog Command Issued!\nFinishing remaining commands:" + line);
             }
-            CASUALJFrameLog CASUALLogJFrame = new CASUALJFrameLog();
-            CASUALLogJFrame.setVisible(true);
+            try {
+                Pastebin.doPosting();
+            } catch (IOException | URISyntaxException ex) {
+                Log logThis = new Log();
+                logThis.errorHandler(ex);
+            }
             return "";
         }
         
