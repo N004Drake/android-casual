@@ -139,25 +139,12 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jPastebinSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPastebinSubmitActionPerformed
-            String selection = this.jTextArea1.getText();
-            StringSelection stringSelection = new StringSelection(selection);
-            Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
-            cb.setContents(stringSelection, null);
-            Transferable contents = cb.getContents(null);
-            boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
-            String email = new CASUALInteraction().inputDialog(new String[]{"Submission Form","Please Enter Your username for identification."});
-            if (hasTransferableText) {
-                try {
-                    String result="";
-                    if (contents!=null){
-                        result = (String) contents.getTransferData(DataFlavor.stringFlavor);
-                    }
-                    Pastebin.doPosting(result, email);
-                    JOptionPane.showMessageDialog(this.getRootPane(), "URL Copied to Clipboard");
-                } catch (UnsupportedFlavorException | IOException | URISyntaxException ex) {
-                    Logger.getLogger(CASUALJFrameLog.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }           
+        try {
+            Pastebin.doPosting();
+        } catch (IOException | URISyntaxException ex) {
+            Log logThis = new Log();
+            logThis.errorHandler(ex);
+        }          
     }//GEN-LAST:event_jPastebinSubmitActionPerformed
 
     public static void initializeAsMain() {

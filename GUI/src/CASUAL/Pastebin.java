@@ -33,77 +33,130 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+
 /**
- * @author Jeremy
+ * @author  Jeremy Loper    jrloper@gmail.com
+ * 
  * Modified From: https://code.google.com/p/pastebin-click/
  * Originally released under the MIT license (http://www.opensource.org/licenses/mit-license.php)
- * 2013-04-11 Initial Conversion
  */
-
 public class Pastebin {
     
+    /**
+     * 
+     * Pastebin User DEV API Key
+     * 
+     */
     private static String devKey = "027c63663a6023d774b5392f380e5923";
     
-    public static void doPosting(String pasteData, String strHash) throws IOException,URISyntaxException {
-            
-        API paste = new API(devKey);
-        Log log = new Log();
-        String user = "CASUAL-Automated";
-        String passwd = "2J2y7SK172p46m1";
-        String token = "";
-        String format = "text";
-        if (!(user.equals("")) && !(passwd.equals(""))) 
-        {
-            String lResult = paste.login(user, passwd);
-            if (lResult.equals("false"))
+    /**
+     * Automatically prompts the user for their XDA username and submits a 
+     * pasting to Pastebin
+     * 
+     */
+    public static void doPosting() throws IOException,URISyntaxException {
+        
+        String xdaUsername = new CASUALInteraction().inputDialog(new String[]{"An Error Has Occured!", "This is an automated prompt to sumbit a CASUAL log to Pastebin.\n\nPlease enter your XDA-Developers username and click 'Ok', click 'Cancel' to cancel"});
+        if(xdaUsername != null) {//CANCEL_OPTION will rerturn a null String
+            API paste = new API(devKey);
+            Log log = new Log();
+            String user = "CASUAL-Automated";
+            String passwd = "2J2y7SK172p46m1";
+            String token = "";
+            String format = "text";
+            if (!(user.equals("")) && !(passwd.equals(""))) 
             {
-                log.level4Debug("Pastebin Login Failed");
-            } else {
-                    paste.setToken(token);
-                    log.level4Debug("Pastebin Login Successful");
-            }
-            String output = paste.makePaste(pasteData, "CASUAL r" + CASUALapplicationData.CASUALSVNRevision + "-" + strHash, format);
-            if (!output.substring(0, 4).equals("http")) {
-                log.level4Debug(output);
-            } else {
-                    String[] sUrl = output.split("[/]");
-                    String key = sUrl[sUrl.length - 1].replace("%0D", "");
-                    URI url = new URI("http", "pastebin.com", "/" + key, null);
-                    try {
-                        java.awt.Desktop.getDesktop().browse(url);
-                    }
-                        catch (java.io.IOException e) {
-                        log.level0Error(e.getMessage());
-                    }
-                    StringSelection stringSelection = new StringSelection(url.toString());
-                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                    clipboard.setContents(stringSelection, null);
-                    log.level4Debug(url.toString());
+                String lResult = paste.login(user, passwd);
+                if (lResult.equals("false"))
+                {
+                    log.level4Debug("Pastebin Login Failed");
+                } else {
+                        paste.setToken(token);
+                        log.level4Debug("Pastebin Login Successful");
+                }
+                String pasteData = new FileOperations().readFile(Statics.TempFolder + "log.txt");
+
+                String output = paste.makePaste(pasteData, "CASUAL r" + CASUALapplicationData.CASUALSVNRevision + "-" + xdaUsername, format);
+                if (output.substring(0, 4).equals("http")) {
+                        String[] sUrl = output.split("[/]");
+                        String key = sUrl[sUrl.length - 1].replace("%0D", "");
+                        URI url = new URI("http", "pastebin.com", "/" + key, null);
+                        try {
+                            java.awt.Desktop.getDesktop().browse(url);
+                        }
+                            catch (java.io.IOException e) {
+                            log.level0Error(e.getMessage());
+                        }
+                        StringSelection stringSelection = new StringSelection(url.toString());
+                        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                        clipboard.setContents(stringSelection, null);
+                        new CASUALInteraction().showInformationMessage("Pastebin URL Copied to Clipboard\n\nPlease Submit it in the appropriate forum thread", "Thank You!");
+                        log.level4Debug(url.toString());
+                } else {
+                    log.level4Debug(output);
+                }
             }
         }
     }
              
-    /***************************************************************************************************
-     *  NESTED CLASS API
-     **************************************************************************************************/
+    /**
+     * TODO - Javadoc
+     * 
+     */
     static class API
     {
+       /**
+        * TODO - Javadoc
+        * 
+        */
         private Log log = new Log();
+        
+       /**
+        * TODO - Javadoc
+        * 
+        */        
         private String token;
+        
+       /**
+        * TODO - Javadoc
+        * 
+        */
         private String devkey;
+        
+       /**
+        * TODO - Javadoc
+        * 
+        */
         private String loginURL = "http://www.pastebin.com/api/api_login.php";
+        
+       /**
+        * TODO - Javadoc
+        * 
+        */
         private String pasteURL = "http://www.pastebin.com/api/api_post.php";
 
+       /**
+        * TODO - Javadoc
+        * 
+        */
         private API(String devkey) {
                 this.devkey = devkey;
         }
-
+        
+       /**
+        * TODO - Javadoc
+        * 
+        */
         private String checkResponse(String response) {
                 if (response.substring(0, 15).equals("Bad API request"))
                         return response.substring(17);
                 return "";
         }
 
+       /**
+        * TODO - Javadoc
+        * 
+        */
         public String login(String username, String password) throws UnsupportedEncodingException {
                 String api_user_name = URLEncoder.encode(username, "UTF-8");
                 String api_user_password = URLEncoder.encode(password, "UTF-8");
@@ -121,7 +174,11 @@ public class Pastebin {
                 this.token = response;
                 return response;
         }
-
+        
+       /**
+        * TODO - Javadoc
+        * 
+        */
         public String makePaste(String code, String name, String format) throws UnsupportedEncodingException {
                 String content = URLEncoder.encode(code, "UTF-8");
                 String title = URLEncoder.encode(name, "UTF-8");
@@ -146,6 +203,10 @@ public class Pastebin {
                 return response;
         }
 
+       /**
+        * TODO - Javadoc
+        * 
+        */
         public String page(String uri, String urlParameters) {
                 URL url;
                 HttpURLConnection connection = null;
@@ -185,6 +246,11 @@ public class Pastebin {
                     }
                 }
         }
+        
+       /**
+        * TODO - Javadoc
+        * 
+        */
         public void setToken(String token) {
                 this.token = token;
         }
