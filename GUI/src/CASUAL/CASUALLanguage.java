@@ -67,7 +67,7 @@ public class CASUALLanguage {
             }
             //Close the input stream
             dataIn.close();
-            log.level0Error("done");
+            log.level2Information("done");
         } catch (Exception e) {//Catch exception if any
             log.errorHandler(e);
             log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));

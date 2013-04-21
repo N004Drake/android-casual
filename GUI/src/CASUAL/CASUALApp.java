@@ -29,7 +29,8 @@ public class CASUALApp {
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     //final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
-    final private static String[] overrideArguments = new String[]{"--caspac", "/home/adam/Desktop/casualpack/testPak.zip"};
+    
+    final private static String[] overrideArguments = new String[]{"--caspac", "C:\\Users\\adam\\Desktop\\testpak.zip"};
     String[] arguments;
 
     /**
@@ -92,7 +93,7 @@ public class CASUALApp {
                 System.exit(0);
             }
             if (args[i].equals("--license")) {
-                System.out.println("\n"
+                new Log().level2Information("\n"
                         + "    This program is free software: you can redistribute it and/or modify\n"
                         + "    it under the terms of the GNU General Public License as published by\n"
                         + "    the Free Software Foundation, either version 3 of the License, or\n"
@@ -102,7 +103,7 @@ public class CASUALApp {
                         + "    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
                         + "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
                         + "    GNU General Public License for more details.");
-                System.exit(0);
+                return;
             }
             if (args[i].contains("--caspac") || args[i].contains("-c")) {
                 i++;

@@ -18,6 +18,7 @@ package CASUAL;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
@@ -35,7 +36,8 @@ import javax.swing.text.BadLocationException;
  */
 public class Log {
 
-    public static PrintWriter out=new PrintWriter(System.out);
+    public static PrintStream out = new PrintStream(System.out);
+
     public Log() {
     }
 
