@@ -18,6 +18,7 @@ package CASUAL;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -136,7 +137,7 @@ public class FileOperations {
         File Check = new File(PathToSearch);
         File[] c = Check.listFiles();
         if (Check.exists()) {
-            Log.level2Information("Searching for file in folder:" + PathToSearch.toString());
+            Log.level3Verbose("Searching for file in folder:" + PathToSearch.toString());
             for (File file : c) {
                 String x = file.getName();
                 if (file.isDirectory()) {
@@ -160,6 +161,33 @@ public class FileOperations {
             }
         }
         return null;
+    }
+
+    /**
+     * takes a path and a name returns qualified path to file
+     *
+     * @param PathToSearch
+     * @param FileName
+     * @return absolute path to folder
+     */
+    public ArrayList listFoldersTwoDeep(String PathToSearch) {
+        ArrayList al = new ArrayList();
+        File rootFolder = new File(PathToSearch);
+        File[] c = rootFolder.listFiles();
+        if (rootFolder.exists()) {
+            for (File file : c) {
+                if (file.isDirectory()) {
+                    File[] subdir1 = file.listFiles();
+                    for (File subdir2 : subdir1) {
+                        if (subdir2.isDirectory()) {
+                            al.add(new String[]{file.getPath(), subdir2.toString()});
+                        }
+                    }
+
+                }
+            }
+        }
+         return al;
     }
 
     /**
@@ -400,17 +428,18 @@ public class FileOperations {
 
     /**
      * takes a string resource name returns result if it exists
+     *
      * @param Res
      * @return true if resource exists
      */
     public boolean verifyResource(String res) {
-        if ((getClass().getResource(res))==null) {
+        if ((getClass().getResource(res)) == null) {
             return false;
         } else {
             return true;
         }
     }
-    
+
     private String setDest(String FileName) {
         return Statics.TempFolder + FileName;
     }
