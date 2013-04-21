@@ -88,7 +88,8 @@ public class CASUALTools {
 
     public void md5sumTestScripts() {
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
-        if (CASUAL.CASUALApp.class.getResource("CASUAL/resources/CASUALApp.properties") != null) {
+        String x=CASUAL.CASUALApp.class.getResource("resources"+Statics.Slash+"CASUALApp.properties").toString();
+        if (CASUAL.CASUALApp.class.getResource("resources"+Statics.Slash+"CASUALApp.properties") != null) {
             incrementBuildNumber();
 
             String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "SCRIPTS" + Statics.Slash;
