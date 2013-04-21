@@ -35,6 +35,7 @@ import javax.swing.text.BadLocationException;
  */
 public class Log {
 
+    public static PrintWriter out=new PrintWriter(System.out);
     public Log() {
     }
 
@@ -77,7 +78,7 @@ public class Log {
 
         }
         if (Statics.CommandLineVerboseLevel >= 0) {
-            System.out.println("[ERROR]" + data);
+            out.println("[ERROR]" + data);
 
         }
     }
@@ -93,7 +94,7 @@ public class Log {
             sendToGUI(data);
         }
         if (Statics.CommandLineVerboseLevel >= 1) {
-            System.out.println("[INTERACTION]" + data);
+            out.println("[INTERACTION]" + data);
 
         }
 
@@ -111,7 +112,7 @@ public class Log {
             sendToGUI(data);
         }
         if (Statics.CommandLineVerboseLevel >= 2) {
-            System.out.println("[INFO]" + data);
+            out.println("[INFO]" + data);
         }
     }
 
@@ -126,7 +127,7 @@ public class Log {
             sendToGUI(data);
         }
         if (Statics.CommandLineVerboseLevel >= 3) {
-            System.out.println("[VERBOSE]" + data);
+            out.println("[VERBOSE]" + data);
         }
     }
 
@@ -137,7 +138,7 @@ public class Log {
             sendToGUI(data);
         }
         if (Statics.CommandLineVerboseLevel >= 4) {
-            System.out.println("[DEBUG]" + data);
+            out.println("[DEBUG]" + data);
         }
     }
 
@@ -150,7 +151,7 @@ public class Log {
         try {
             WriteFile = new FileWriter(Statics.TempFolder + "log.txt", true);
         } catch (IOException ex) {
-            System.out.println("Attempted to write to log but could not.");
+            out.println("Attempted to write to log but could not.");
         }
 
         PrintWriter out = new PrintWriter(WriteFile);
@@ -191,13 +192,13 @@ public class Log {
                 lastNewLine = Statics.ProgressPane.getCaretPosition();
             }
         } else {
-            System.out.print(data);
+            out.print(data);
         }
 
     }
 
     public void LiveUpdate(String data) {
-        System.out.println(data);
+        out.println(data);
         if (Statics.useGUI) {
             try {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
@@ -213,7 +214,7 @@ public class Log {
      * begins a new line
      */
     public void beginLine() {
-        System.out.println();
+        out.println();
         if (Statics.useGUI) {
             progress("\n");
         }
