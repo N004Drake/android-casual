@@ -88,45 +88,48 @@ public class CASUALTools {
 
     public void md5sumTestScripts() {
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
-        incrementBuildNumber();
-        String scriptsPath = System.getProperty("user.dir") +  Statics.Slash + "SCRIPTS" + Statics.Slash;
-        final File folder = new File(scriptsPath);
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.toString().endsWith(".meta")) {
-                String meta = fileEntry.toString();
-                System.out.println("Updating meta: " + meta);
-                String fileContents = new FileOperations().readFile(meta);
-                String[] fileLines = fileContents.split("\\n");
-                String writeOut = "";
-                for (int i = 0; i < fileLines.length; i++) {
-                    String line = StringOperations.removeLeadingSpaces(fileLines[i]);
-                    if (line.matches("(\\S{31,})(\\s\\s)(.*\\..*)")) {
-                        System.out.println(line);
-                        String[] md5File = line.split("  ");
-                        log.level4Debug("Old MD5: " + md5File[0]);
-                        String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
-                        log.level4Debug("New MD5 " + newMD5);
-                        writeOut = writeOut + newMD5 + "  " + md5File[1] + "\n";
-                    } else {
-                        writeOut = writeOut + line + "\n";
-                    }
+        if (CASUAL.CASUALApp.class.getResource("CASUAL/resources/CASUALApp.properties") != null) {
+            incrementBuildNumber();
 
-                }
-                try {
-                    new FileOperations().overwriteFile(writeOut, meta);
-                } catch (IOException ex) {
-                    log.errorHandler(ex);
+            String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "SCRIPTS" + Statics.Slash;
+            final File folder = new File(scriptsPath);
+            for (final File fileEntry : folder.listFiles()) {
+                if (fileEntry.toString().endsWith(".meta")) {
+                    String meta = fileEntry.toString();
+                    System.out.println("Updating meta: " + meta);
+                    String fileContents = new FileOperations().readFile(meta);
+                    String[] fileLines = fileContents.split("\\n");
+                    String writeOut = "";
+                    for (int i = 0; i < fileLines.length; i++) {
+                        String line = StringOperations.removeLeadingSpaces(fileLines[i]);
+                        if (line.matches("(\\S{31,})(\\s\\s)(.*\\..*)")) {
+                            System.out.println(line);
+                            String[] md5File = line.split("  ");
+                            log.level4Debug("Old MD5: " + md5File[0]);
+                            String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
+                            log.level4Debug("New MD5 " + newMD5);
+                            writeOut = writeOut + newMD5 + "  " + md5File[1] + "\n";
+                        } else {
+                            writeOut = writeOut + line + "\n";
+                        }
+
+                    }
+                    try {
+                        new FileOperations().overwriteFile(writeOut, meta);
+                    } catch (IOException ex) {
+                        log.errorHandler(ex);
+                    }
                 }
             }
         }
     }
 
     public Thread prepareCurrentScript(String scriptName) {
-        Statics.SelectedScriptFolder = Statics.TempFolder +Statics.Slash+ scriptName;
+        Statics.SelectedScriptFolder = Statics.TempFolder + Statics.Slash + scriptName;
         //set the ZipResource
         final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + scriptName + ".zip") : (scriptName + ".zip");
 
-        log.level4Debug("Created zipResource at "+ZipResource);
+        log.level4Debug("Created zipResource at " + ZipResource);
 
         Thread t;
         t = new Thread() {
@@ -138,7 +141,9 @@ public class CASUALTools {
                     log.level4Debug("attempted to lock controls but controls are not availble yet");
                 }
                 Statics.lockGUIunzip = true;
-                if (! new FileOperations().verifyExists(Statics.SelectedScriptFolder)) new FileOperations().makeFolder(Statics.SelectedScriptFolder);
+                if (!new FileOperations().verifyExists(Statics.SelectedScriptFolder)) {
+                    new FileOperations().makeFolder(Statics.SelectedScriptFolder);
+                }
                 log.level4Debug("Extracting archive....");
                 Unzip unzip = new Unzip();
                 if (getClass().getResource(ZipResource) != null) {
