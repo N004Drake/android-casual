@@ -107,6 +107,13 @@
             <manifest>
                 <attribute name="Main-Class" value="CASUAL.CASUALApp"/>
             </manifest>
+            <fileset dir="src/" includes="SCRIPTS/-Overview.txt" />
+            <fileset dir="src/" includes="SCRIPTS/-build.properties" />
+            <fileset dir="src/" includes="SCRIPTS/-logo.png" />
+            <fileset dir="src/" includes="SCRIPTS/TestScript.scr" />
+            <fileset dir="src/" includes="SCRIPTS/TestScript.txt" />
+            <fileset dir="src/" includes="SCRIPTS/TestScript.zip" />
+            <fileset dir="src/" includes="SCRIPTS/TestScript.meta" />
         </jar>
     </target>
 </project>
