@@ -89,7 +89,7 @@ public class Shell implements Runnable {
                         + "export bar=" + Command + " ;\n"
                         + "for i in \"$@\"; do export bar=\"$bar '${i}'\";done;\n"
                         + "osascript -e \'do shell script \"$bar\" with administrator privileges\'", ScriptFile);
-                log.level0Error(ScriptFile);
+                log.level3Verbose(ScriptFile);
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
@@ -124,7 +124,7 @@ public class Shell implements Runnable {
              } catch (InterruptedException ex) {
              log.errorHandler(ex);
              }*/
-            log.level0Error(STDOUT.readLine());
+            log.level3Verbose(STDOUT.readLine());
             int y = 0;
             while ((line = STDOUT.readLine()) != null) {
                 if(y == 0) {

@@ -38,7 +38,7 @@ public class Unzip {
     int BUFFER = 4096;
 
     public void unzipFile(String zipFile, String outputFolder) throws ZipException, IOException {
-        System.out.println(zipFile);
+        new Log().level4Debug(zipFile);
 
         File file = new File(zipFile);
         ZipFile zip = new ZipFile(file);
@@ -57,10 +57,10 @@ public class Unzip {
             // create the parent directory structure if needed
             destinationParent.mkdirs();
             if (!entry.isDirectory()) {
-                System.out.println("unzipping " + entry.toString());
+                new Log().level3Verbose("unzipping " + entry.toString());
                 writeFromZipToFile(zip, entry, newPath);
             } else if (entry.isDirectory()) {
-                System.out.println(newPath + entry.getName());
+                new Log().level4Debug(newPath + entry.getName());
                 new File(newPath + entry.getName()).mkdirs();
             }
             if (currentEntry.endsWith(".zip")) {
@@ -81,7 +81,7 @@ public class Unzip {
         ZipInput = new ZipInputStream(ZStream);
         ZipEntry ZipEntryInstance;
         while ((ZipEntryInstance = ZipInput.getNextEntry()) != null) {
-            System.out.println("Unzipping " + ZipEntryInstance.getName());
+            new Log().level3Verbose("Unzipping " + ZipEntryInstance.getName());
             File EntryFile = new File(outputFolder + System.getProperty("file.separator") + ZipEntryInstance.getName());
             if (ZipEntryInstance.isDirectory()) {
                 EntryFile.mkdirs();
@@ -107,7 +107,7 @@ public class Unzip {
             Destination.close();
         }
         ZipInput.close();
-        System.out.println("Unzip Complete");
+        new Log().level3Verbose("Unzip Complete");
     }
 
     public Enumeration getZipFileEntries(File f) throws ZipException, IOException {
