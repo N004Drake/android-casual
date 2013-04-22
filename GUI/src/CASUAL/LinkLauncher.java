@@ -49,9 +49,9 @@ public class LinkLauncher implements Runnable {
                 uri = new URI(Link);
                 desktop.browse(uri);
             } catch (IOException ioe) {
-                System.out.println("Attempted to open" + Link + " Failed with IO error");
+                new Log().level4Debug("Attempted to open" + Link + " Failed with IO error");
             } catch (URISyntaxException use) {
-                System.out.println("Attempted to open" + Link + " Failed with URI Syntax error");
+                new Log().level4Debug("Attempted to open" + Link + " Failed with URI Syntax error");
 
             }
         } else {

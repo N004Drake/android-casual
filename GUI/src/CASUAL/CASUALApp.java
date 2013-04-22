@@ -80,16 +80,16 @@ public class CASUALApp {
         for (int i = 0; i < args.length; i++) {
 
             if (args[i].equals("--help") || args[i].equals("-v?")) {
-                System.out.println("\n"
+                new Log().level2Information("\n"
                         + " Usage: casual.jar [optional parameters]\n"
                         + " without arguments - Launch the GUI\n"
                         + " [--help] shows this message and exits\n"
                         + " [--license] -shows license and exits\n"
                         + " [--execute/-e \"command\"]-executes any CASUAL command and exits. Launch CASUAL GUI to read about commands"
                         + " [--caspac/-c path_to" + Statics.Slash + "CASPACzip] -launches CASUAL with a CASPAC"
-                        + " [--gui/-g)] - performs actions with a GUI");
+                        + " [--gui/-g)] - performs actions with a GUI\n");
 
-                System.out.println("");
+                
                 System.exit(0);
             }
             if (args[i].equals("--license")) {
@@ -108,7 +108,7 @@ public class CASUALApp {
             if (args[i].contains("--caspac") || args[i].contains("-c")) {
                 i++;
                 new CASPACHandler().loadCASUALPack(args[i]);
-                System.out.println("CASPAC completed.");
+                new Log().level2Information("CASPAC completed.");
                 System.exit(0);
             }
             if (args[i].contains("--gui") || args[i].contains("-g")) {

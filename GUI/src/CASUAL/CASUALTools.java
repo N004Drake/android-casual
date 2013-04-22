@@ -100,14 +100,14 @@ public class CASUALTools {
             for (final File fileEntry : folder.listFiles()) {
                 if (fileEntry.toString().endsWith(".meta")) {
                     String meta = fileEntry.toString();
-                    System.out.println("Updating meta: " + meta);
+                    new Log().level3Verbose("Updating meta: " + meta);
                     String fileContents = new FileOperations().readFile(meta);
                     String[] fileLines = fileContents.split("\\n");
                     String writeOut = "";
                     for (int i = 0; i < fileLines.length; i++) {
                         String line = StringOperations.removeLeadingSpaces(fileLines[i]);
                         if (line.matches("(\\S{31,})(\\s\\s)(.*\\..*)")) {
-                            System.out.println(line);
+                            new Log().level3Verbose(line);
                             String[] md5File = line.split("  ");
                             log.level4Debug("Old MD5: " + md5File[0]);
                             String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
@@ -240,7 +240,7 @@ public class CASUALTools {
     };
 
     void rewriteMD5OnCASPAC(File CASPAC, CASPACHandler caspacHandler) {
-        System.out.println("Writing new CASUAL Package Data!");
+        new Log().level3Verbose("Writing new CASUAL Package Data!");
         incrementBuildNumber();
         ArrayList list;
         Enumeration zippedFiles;
@@ -261,10 +261,10 @@ public class CASUALTools {
             }
             list = caspacHandler.getMD5sfromCASPAC(CASPAC.toString(), CASUALMeta);
         } catch (ZipException ex) {
-            System.out.println("Could not read meta");
+            new Log().level3Verbose("Could not read meta");
             return;
         } catch (IOException ex) {
-            System.out.println("Could not read meta");
+            new Log().level3Verbose("Could not read meta");
             return;
         }
         try {
@@ -277,13 +277,13 @@ public class CASUALTools {
 
                 if (md5sum.lineContainsMD5(line)) {
                     unzip = new Unzip(CASPAC);
-                    System.out.println("MD5" + line);
+                    new Log().level3Verbose("MD5" + line);
                     String mdstring = md5sum.pickNewMD5fromArrayList(list, line);
                     String filetocheck = mdstring.split("  ")[1];
                     Enumeration entries = unzip.zipFileEntries;
                     while (entries.hasMoreElements()) {
                         Object e = entries.nextElement();
-                        System.out.println(e.toString());
+                        new Log().level3Verbose(e.toString());
                         if (filetocheck.contains(e.toString())) {
                             String newMD5 = new MD5sum().md5sum(new Unzip().streamFileFromZip(CASPAC, e));
                             output = output + new MD5sum().makeMD5String(newMD5, e.toString() + "\n");
@@ -294,7 +294,7 @@ public class CASUALTools {
                 }
             }
             new FileOperations().overwriteFile(output, CASUALMeta);
-            System.out.println(output);
+            new Log().level3Verbose(output);
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -311,6 +311,7 @@ public class CASUALTools {
     private void incrementBuildNumber() throws NumberFormatException {
         Properties prop = new Properties();
         try {
+            if (new File(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties").exists()){
             prop.load(new FileInputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"));
             int x = Integer.parseInt(prop.getProperty("Application.buildnumber").replace(",", ""));
             x++;
@@ -318,6 +319,7 @@ public class CASUALTools {
             prop.setProperty("Application.buildnumber", Integer.toString(x));
 
             prop.store(new FileOutputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber=" + x);
+            }
         } catch (IOException ex) {
             Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
         }

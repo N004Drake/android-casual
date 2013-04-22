@@ -61,7 +61,7 @@ public final class CASUALMain {
                 Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                 new CASUALScriptParser().executeOneShotCommand(args[i]);
             } else {
-                System.out.println("Unrecogized command");
+                new Log().level0Error("Unrecogized command");
             }
 
         }

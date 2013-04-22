@@ -117,8 +117,6 @@ public class Unzip {
     Unzip(File f) throws ZipException, IOException {
         this.zip = new ZipFile(f);
         this.zipFileEntries = zip.entries();
-        //todo remove this
-        System.out.println();
     }
     Unzip(){
         
