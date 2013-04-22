@@ -82,12 +82,12 @@ public class CASUALapplicationData {
         donationLink = properties.getProperty("Developer.DonateLink");
         packageDataHasBeenSet = true;
 
-        System.out.println("-----CASUAL PACKAGE-----");
-        System.out.println("" + title + "\n by:" + developerName + "");
+        new Log().level3Verbose("-----CASUAL PACKAGE-----");
+        new Log().level3Verbose("" + title + "\n by:" + developerName + "");
         if (!donationLink.equals("")) {
-            System.out.println(" Donate:" + donationLink);
+            new Log().level3Verbose(" Donate:" + donationLink);
         }
-        System.out.println("-----CASUAL PACKAGE-----");
+        new Log().level3Verbose("-----CASUAL PACKAGE-----");
 
 
     }
