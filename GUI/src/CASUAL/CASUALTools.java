@@ -16,10 +16,12 @@
  */
 package CASUAL;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
@@ -66,7 +68,7 @@ public class CASUALTools {
                     list.add(EntryName);
                 }
             }
-            //Statics.scriptLocations = new String[list.size()];
+            
             Statics.scriptNames = new String[list.size()];
             for (int n = 0; n < list.size(); n++) {
                 String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
@@ -83,6 +85,7 @@ public class CASUALTools {
                 Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
             }
             CASUALapplicationData.ScriptsHaveBeenRecognized = true;
+            Zip.close();
         }
     }
 
@@ -241,13 +244,21 @@ public class CASUALTools {
         ArrayList list;
         Enumeration zippedFiles;
         String CASUALMeta;
+        Unzip unzip=new Unzip();
         try {
-            zippedFiles = new Unzip().getZipFileEntries(CASPAC);
+            unzip = new Unzip(CASPAC);
+        } catch (ZipException ex) {
+            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            zippedFiles = unzip.zipFileEntries;
             CASUALMeta = Statics.TempFolder + caspacHandler.getMetaName(zippedFiles);
             if (CASUALMeta == null) {
                 return;
             }
-            list = caspacHandler.getMD5sfromCASPAC(new Unzip().getZipFileEntries(CASPAC), CASPAC.toString(), CASUALMeta);
+            list = caspacHandler.getMD5sfromCASPAC( CASPAC.toString(), CASUALMeta);
         } catch (ZipException ex) {
             System.out.println("Could not read meta");
             return;
@@ -255,20 +266,20 @@ public class CASUALTools {
             System.out.println("Could not read meta");
             return;
         }
-        FileInputStream buildfile;
         try {
+            BufferedReader buildfile;
             String line = "";
             String output = "";
-            buildfile = new FileInputStream(CASUALMeta);
+            buildfile = new BufferedReader(new FileReader(CASUALMeta));
             MD5sum md5sum = new MD5sum();
-            while (buildfile.available() > 0) {
-                line = line + (char) buildfile.read();
-                if (line.contains("\n")) {
+            while ((line=buildfile.readLine())!=null) {
+                
                     if (md5sum.lineContainsMD5(line)) {
+                        unzip = new Unzip(CASPAC);
                         System.out.println("MD5" + line);
                         String mdstring = md5sum.pickNewMD5fromArrayList(list, line);
                         String filetocheck = mdstring.split("  ")[1];
-                        Enumeration entries = new Unzip().getZipFileEntries(CASPAC);
+                        Enumeration entries = unzip.zipFileEntries;
                         while (entries.hasMoreElements()) {
                             Object e = entries.nextElement();
                             System.out.println(e.toString());
@@ -278,17 +289,19 @@ public class CASUALTools {
                             }
                         }
                     } else {
-                        output = output + line;
+                        output = output + line+"\n";
                     }
                     line = "";
                 }
-            }
             new FileOperations().overwriteFile(output, CASUALMeta);
             System.out.println(output);
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            unzip.closeZip();
         }
         try {
+
             Zip.addFilesToExistingZip(CASPAC, caspacHandler.meta);
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
