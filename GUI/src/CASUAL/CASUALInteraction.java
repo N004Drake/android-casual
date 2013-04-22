@@ -59,14 +59,21 @@ public class CASUALInteraction extends JOptionPane {
     //TODO: this is broken
 
     private int getCommandLineInputNumber() {
-       String x=getCommandLineInput();
-       int retval=Integer.parseInt(x);
-       if (retval<10){
+        String x;
+        int retval;
+        try {
+        x=getCommandLineInput();
+        retval=Integer.parseInt(x);
+        if (retval<10){
            return retval;
        } else {
            retval=getCommandLineInputNumber();
            return retval;
        }
+       } catch (NumberFormatException ex){
+         return 9999;
+       }
+
     }
 
     private void waitForStandardInputBeforeContinuing() {
@@ -77,7 +84,7 @@ public class CASUALInteraction extends JOptionPane {
         if (Statics.useGUI) {
             return JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
         } else {
-            new Log().Level1Interaction(Message[0] + Message[1]+"\n input:");
+            new Log().Level1Interaction("[INPUT][ANY]"+ Message[0] + Message[1]+"\n input:");
             return getCommandLineInput();
         }
             
@@ -85,11 +92,11 @@ public class CASUALInteraction extends JOptionPane {
     }
 
     public int showActionRequiredDialog(String instructionalMessage) throws HeadlessException {
-        int n;
+        int n=9999;
         if (Statics.useGUI) {
 
             Object[] Options = {"I didn't do it", "I did it"};
-            instructionalMessage = "<html>" + instructionalMessage.replace("\\n", "<BR>") + "</html>";
+            instructionalMessage = "<html>" + instructionalMessage.replace("\n", "<BR>") + "</html>";
             n = JOptionPane.showOptionDialog(
                     null,
                     instructionalMessage,
@@ -100,8 +107,19 @@ public class CASUALInteraction extends JOptionPane {
                     Options,
                     Options[1]);
         } else {
-            new Log().Level1Interaction("[USERTASK][CRITICAL][PRESS ANY KEY]" + instructionalMessage);
-            n = getCommandLineInputNumber();
+            new Log().Level1Interaction("[USERTASK][Q or RETURN][CRITICAL]" + instructionalMessage +"<BR> press  to quit");
+            while (n != 0 && n != 1){
+                String retval =getCommandLineInput();
+                if (!retval.equals("q") && !retval.equals("Q")&& !retval.equals("")){
+                    n=showActionRequiredDialog(instructionalMessage);
+                } else if (retval.equals("Q") || retval.equals("q")){
+                    n=0;
+                } else {
+                    n=1;
+                }
+                
+            }
+              
         }
 
         return n;
@@ -132,7 +150,7 @@ public class CASUALInteraction extends JOptionPane {
                         JOptionPane.YES_NO_OPTION);
             }
         } else {
-            new Log().Level1Interaction("[CANCELOPTION]" + Message[0] + "\n" + Message[1]+"\npress Q to quit");
+            new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\n" + Message[1]+"\npress Q to quit");
             String s=this.getCommandLineInput();
             if (s.equals("q")||s.equals("Q")){
                 return 0;
@@ -159,7 +177,7 @@ public class CASUALInteraction extends JOptionPane {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            new Log().Level1Interaction("[NOTIFICATION]" + Message[0] + "\n" + Message[1] + "  Press any key to continue.");
+            new Log().Level1Interaction("[NOTIFICATION][RETURN]" + Message[0] + "\n" + Message[1] + "  Press any key to continue.");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -170,7 +188,7 @@ public class CASUALInteraction extends JOptionPane {
                     message, title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
-            new Log().Level1Interaction("[INFOMESSAGE]" + title + "\n" + message + "  Press any key to continue.");
+            new Log().Level1Interaction("[INFOMESSAGE][RETURN]" + title + "\n" + message + "  Press any key to continue.");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -181,7 +199,7 @@ public class CASUALInteraction extends JOptionPane {
             JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 
         } else {
-            new Log().Level1Interaction("[ERRORMESSAGE]" + title + "\n" + message + "  Press any key to continue.");
+            new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + message + "  Press any key to continue.");
             waitForStandardInputBeforeContinuing();
         }
     }
