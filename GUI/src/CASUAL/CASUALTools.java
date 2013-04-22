@@ -41,6 +41,7 @@ import java.util.zip.ZipInputStream;
 public class CASUALTools {
     //final public String defaultPackage="ATT GS3 Root";
 
+    public static boolean IDEMode = false;
     Log log = new Log();
     private boolean DeviceTimerState = false;
 
@@ -58,43 +59,42 @@ public class CASUALTools {
         ArrayList<String> list = new ArrayList<>();
         if (Src != null) {
             URL jar = Src.getLocation();
-            ZipInputStream Zip = new ZipInputStream(jar.openStream());
-            ZipEntry ZEntry;
-            log.level4Debug("Picking Jar File:" + jar.getFile());
-            while ((ZEntry = Zip.getNextEntry()) != null) {
+            try (ZipInputStream Zip = new ZipInputStream(jar.openStream())) {
+                ZipEntry ZEntry;
+                log.level4Debug("Picking Jar File:" + jar.getFile());
+                while ((ZEntry = Zip.getNextEntry()) != null) {
 
-                String EntryName = ZEntry.getName();
-                if (EntryName.endsWith(".scr")) {
-                    list.add(EntryName);
+                    String EntryName = ZEntry.getName();
+                    if (EntryName.endsWith(".scr")) {
+                        list.add(EntryName);
+                    }
                 }
-            }
-            
-            Statics.scriptNames = new String[list.size()];
-            for (int n = 0; n < list.size(); n++) {
-                String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
-                log.level4Debug("Found: " + EntryName);
-                Statics.scriptNames[n] = EntryName;
-                Count++;
-            }
 
-            if (Count == 0) {
-                Thread t = new Thread(updateMD5s);
-                t.start();
-                log.level0Error("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
-                //Statics.scriptLocations = new String[]{""};
-                Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
+                Statics.scriptNames = new String[list.size()];
+                for (int n = 0; n < list.size(); n++) {
+                    String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
+                    log.level4Debug("Found: " + EntryName);
+                    Statics.scriptNames[n] = EntryName;
+                    Count++;
+                }
+
+                if (Count == 0) {
+                    Thread t = new Thread(updateMD5s);
+                    t.start();
+                    log.level0Error("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
+                    //Statics.scriptLocations = new String[]{""};
+                    Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
+                }
+                CASUALapplicationData.ScriptsHaveBeenRecognized = true;
             }
-            CASUALapplicationData.ScriptsHaveBeenRecognized = true;
-            Zip.close();
         }
     }
 
     public void md5sumTestScripts() {
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
-        String x=CASUAL.CASUALApp.class.getResource("resources"+Statics.Slash+"CASUALApp.properties").toString();
-        if (CASUAL.CASUALApp.class.getResource("resources"+Statics.Slash+"CASUALApp.properties") != null) {
-            incrementBuildNumber();
-
+        String x = CASUAL.CASUALApp.class.getResource("resources" + Statics.Slash + "CASUALApp.properties").toString();
+        incrementBuildNumber();
+        if (getIDEMode()) {
             String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "SCRIPTS" + Statics.Slash;
             final File folder = new File(scriptsPath);
             for (final File fileEntry : folder.listFiles()) {
@@ -241,10 +241,11 @@ public class CASUALTools {
 
     void rewriteMD5OnCASPAC(File CASPAC, CASPACHandler caspacHandler) {
         System.out.println("Writing new CASUAL Package Data!");
+        incrementBuildNumber();
         ArrayList list;
         Enumeration zippedFiles;
         String CASUALMeta;
-        Unzip unzip=new Unzip();
+        Unzip unzip = new Unzip();
         try {
             unzip = new Unzip(CASPAC);
         } catch (ZipException ex) {
@@ -258,7 +259,7 @@ public class CASUALTools {
             if (CASUALMeta == null) {
                 return;
             }
-            list = caspacHandler.getMD5sfromCASPAC( CASPAC.toString(), CASUALMeta);
+            list = caspacHandler.getMD5sfromCASPAC(CASPAC.toString(), CASUALMeta);
         } catch (ZipException ex) {
             System.out.println("Could not read meta");
             return;
@@ -268,36 +269,35 @@ public class CASUALTools {
         }
         try {
             BufferedReader buildfile;
-            String line = "";
+            String line;
             String output = "";
             buildfile = new BufferedReader(new FileReader(CASUALMeta));
             MD5sum md5sum = new MD5sum();
-            while ((line=buildfile.readLine())!=null) {
-                
-                    if (md5sum.lineContainsMD5(line)) {
-                        unzip = new Unzip(CASPAC);
-                        System.out.println("MD5" + line);
-                        String mdstring = md5sum.pickNewMD5fromArrayList(list, line);
-                        String filetocheck = mdstring.split("  ")[1];
-                        Enumeration entries = unzip.zipFileEntries;
-                        while (entries.hasMoreElements()) {
-                            Object e = entries.nextElement();
-                            System.out.println(e.toString());
-                            if (filetocheck.contains(e.toString())) {
-                                String newMD5 = new MD5sum().md5sum(new Unzip().streamFileFromZip(CASPAC, e));
-                                output = output + new MD5sum().makeMD5String(newMD5, e.toString() + "\n");
-                            }
+            while ((line = buildfile.readLine()) != null) {
+
+                if (md5sum.lineContainsMD5(line)) {
+                    unzip = new Unzip(CASPAC);
+                    System.out.println("MD5" + line);
+                    String mdstring = md5sum.pickNewMD5fromArrayList(list, line);
+                    String filetocheck = mdstring.split("  ")[1];
+                    Enumeration entries = unzip.zipFileEntries;
+                    while (entries.hasMoreElements()) {
+                        Object e = entries.nextElement();
+                        System.out.println(e.toString());
+                        if (filetocheck.contains(e.toString())) {
+                            String newMD5 = new MD5sum().md5sum(new Unzip().streamFileFromZip(CASPAC, e));
+                            output = output + new MD5sum().makeMD5String(newMD5, e.toString() + "\n");
                         }
-                    } else {
-                        output = output + line+"\n";
                     }
-                    line = "";
+                } else {
+                    output = output + line + "\n";
                 }
+            }
             new FileOperations().overwriteFile(output, CASUALMeta);
             System.out.println(output);
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             unzip.closeZip();
         }
         try {
