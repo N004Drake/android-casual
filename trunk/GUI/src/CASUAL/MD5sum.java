@@ -36,7 +36,7 @@ public class MD5sum {
     }
 
     public String md5sum(InputStream is) {
-        return md5sumStream(is);//TODO: return stream
+        return md5sumStream(is);
     }
 
     public String md5sum(File f) {

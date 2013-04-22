@@ -100,7 +100,7 @@ public class CASUALInteraction extends JOptionPane {
                     Options,
                     Options[1]);
         } else {
-            new Log().Level1Interaction("[USERTASK][CRITICAL]" + instructionalMessage);
+            new Log().Level1Interaction("[USERTASK][CRITICAL][PRESS ANY KEY]" + instructionalMessage);
             n = getCommandLineInputNumber();
         }
 

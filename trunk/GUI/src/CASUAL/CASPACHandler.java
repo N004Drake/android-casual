@@ -50,13 +50,13 @@ public class CASPACHandler {
             }
             System.out.println("-----CASPAC MODE-----\nCASPAC: " + CASPAC.getAbsolutePath());
             //begin unziping and analyzing CASPAC
-            Enumeration zippedFiles = unzip.getZipFileEntries(CASPAC);
-            cd = processCASPAC(zippedFiles, CASPAC);
-
+            unzip = new Unzip(CASPAC);
+            cd = processCASPAC(unzip.zipFileEntries, CASPAC);
+            
             //get ADB ready
             try {
                 adb.join();
-                zip.join();
+                if (zip!=null)zip.join();
             } catch (InterruptedException ex) {
                 new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted" + ex));
             }
@@ -64,7 +64,10 @@ public class CASPACHandler {
                 new Log().level2Information("Verifying CASPAC metainfo and MD5s");
                 exitIfSVNRevisionIsNotHighEnough(); //halts if SVN does not match 
                 if (new CASUALTools().getIDEMode()) {
-                    new CASUALTools().rewriteMD5OnCASPAC(CASPAC, this);
+                    unzip.closeZip();
+                    CASPAC=null;
+                    new CASUALTools().rewriteMD5OnCASPAC(new File(pack), this);
+                    unzip = new Unzip(new File(pack));
                 }
                 verifyMD5s();
             }
@@ -94,7 +97,10 @@ public class CASPACHandler {
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
             new Log().level0Error("There was a problem reading the file.");
             System.exit(1);
+        } finally {
+            unzip.closeZip();
         }
+        
 
         System.out.println();
     }
@@ -118,6 +124,7 @@ public class CASPACHandler {
             CASUALapplicationData.meta = entry.toString();
             meta = Statics.TempFolder + entry.toString();
             unzip.deployFileFromZip(f, entry, Statics.TempFolder);
+
             return new CASPACData(new FileOperations().readFile(meta));
         } else if (entry.toString().endsWith(".scr")) {
             String scriptBasename = StringOperations.replaceLast(entry.toString(), ".scr", "");
@@ -146,13 +153,13 @@ public class CASPACHandler {
      * @return
      * @throws IOException
      */
-    public ArrayList getMD5sfromCASPAC(Enumeration zippedFiles, String pack, String CASUALMeta) throws IOException {
+    public ArrayList getMD5sfromCASPAC(String pack, String CASUALMeta) throws IOException {
         ArrayList<String> list = new ArrayList<>();
-        Unzip unzip = new Unzip();
+        Unzip unzip = new Unzip(new File(pack));
         File f = new File(pack);
         MD5sum md5sum = new MD5sum();
-        while (zippedFiles.hasMoreElements()) {
-            Object entry = zippedFiles.nextElement(); //get the object and begin examination
+        while (unzip.zipFileEntries.hasMoreElements()) {
+            Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
             if (entry.toString().endsWith(".meta")) {
                 new FileOperations().overwriteFile(StringOperations.convertStreamToString(unzip.streamFileFromZip(f, entry)), CASUALMeta);
             } else {
@@ -162,6 +169,7 @@ public class CASPACHandler {
             // System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
             //DONE with extraction and preparation of zip
         }
+
         return list;
     }
 
@@ -183,13 +191,15 @@ public class CASPACHandler {
 
     private CASPACData processCASPAC(Enumeration zippedFiles, File f) throws IOException {
         CASPACData returnCASPAC = null;
+        
         while (zippedFiles.hasMoreElements()) {
             Object entry = zippedFiles.nextElement(); //get the object and begin examination
-            CASPACData test;
+            CASPACData test;    
             test = handleCASPACFiles(entry, f);
             if (test != null) {
                 cd = test;
             }
+            
         }
         return cd;
     }

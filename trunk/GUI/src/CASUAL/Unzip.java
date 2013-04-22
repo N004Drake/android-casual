@@ -24,6 +24,8 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -110,16 +112,30 @@ public class Unzip {
         new Log().level3Verbose("Unzip Complete");
     }
 
-    public Enumeration getZipFileEntries(File f) throws ZipException, IOException {
-        ZipFile zip = new ZipFile(f);
-        Enumeration zipFileEntries = zip.entries();
-        return zipFileEntries;
+    ZipFile zip;
+    Enumeration zipFileEntries;
+    Unzip(File f) throws ZipException, IOException {
+        this.zip = new ZipFile(f);
+        this.zipFileEntries = zip.entries();
+        //todo remove this
+        System.out.println();
+    }
+    Unzip(){
+        
     }
 
+    public void closeZip(){
+        try {
+            zip.close();
+        } catch (IOException ex) {
+          
+        }
+    }
     public String deployFileFromZip(File zipFile, Object entry, String outputFolder) throws ZipException, IOException {
         ZipFile zip = new ZipFile(zipFile);
         ZipEntry zipEntry = new ZipEntry((ZipEntry) entry);
         writeFromZipToFile(zip, zipEntry, outputFolder);
+        zip.close();
         return outputFolder + entry.toString();
     }
 
