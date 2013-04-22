@@ -48,7 +48,7 @@ public class CASPACHandler {
                 new Log().level0Error("File Not Found " + pack);
                 System.exit(1);
             }
-            System.out.println("-----CASPAC MODE-----\nCASPAC: " + CASPAC.getAbsolutePath());
+            new Log().level3Verbose("-----CASPAC MODE-----\nCASPAC: " + CASPAC.getAbsolutePath());
             //begin unziping and analyzing CASPAC
             unzip = new Unzip(CASPAC);
             cd = processCASPAC(unzip.zipFileEntries, CASPAC);
@@ -65,7 +65,6 @@ public class CASPACHandler {
                 exitIfSVNRevisionIsNotHighEnough(); //halts if SVN does not match 
                 if (new CASUALTools().getIDEMode()) {
                     unzip.closeZip();
-                    CASPAC=null;
                     new CASUALTools().rewriteMD5OnCASPAC(new File(pack), this);
                     unzip = new Unzip(new File(pack));
                 }
@@ -100,9 +99,6 @@ public class CASPACHandler {
         } finally {
             unzip.closeZip();
         }
-        
-
-        System.out.println();
     }
     Runnable activateScript = new Runnable() {
         @Override
@@ -117,7 +113,7 @@ public class CASPACHandler {
             new CASUALapplicationData().setPropertiesFromInputStream(unzip.streamFileFromZip(f, entry));
         } else if (entry.toString().equals("-Overview.txt")) {
             if (Statics.useGUI) { //only display overview if using GUI.
-                System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
+                new Log().level2Information("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
                 new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation + entry);
             }
         } else if (entry.toString().endsWith(".meta")) {
@@ -139,7 +135,7 @@ public class CASPACHandler {
             unzip.unZipInputStream(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation);
             zip = new Thread(new MD5sumRunnable(unzip.streamFileFromZip(f, entry), entry.toString()));
         } else if (entry.toString().endsWith(".txt")) {
-            System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
+            new Log().level2Information("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
         }
         return null;
         //DONE with extraction and preparation of zip
@@ -166,8 +162,6 @@ public class CASPACHandler {
                 list.add(md5sum.makeMD5String(md5sum.md5sum(unzip.streamFileFromZip(f, entry)), entry.toString()));
             }
 
-            // System.out.print("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
-            //DONE with extraction and preparation of zip
         }
 
         return list;
@@ -212,15 +206,15 @@ public class CASPACHandler {
             if (scriptSVNRevision > 0 && minSVNRevision > 0) {
                 //do the check
                 if (scriptSVNRevision < minSVNRevision) {
-                    System.out.println("FAILURE!  CASUAL MUST BE UPDATED TO RUN THIS!");
+                    new Log().level4Debug("FAILURE!  CASUAL MUST BE UPDATED TO RUN THIS!");
                     System.exit(1);
                 } else {
-                    System.out.println("Application Revision Check Passed");
+                    new Log().level4Debug("Application Revision Check Passed");
                 }
 
             }
         } catch (NumberFormatException E) {
-            System.out.println("WARNING: could not parse SVN revision.. Continuing");
+            new Log().level4Debug("WARNING: could not parse SVN revision.. Continuing");
 
         }
         //TODO: go online check ID and revision (should we use these for CASPAC or should it implement a file naming)?
@@ -231,7 +225,7 @@ public class CASPACHandler {
         //we are in IDE mode
         for (Object md5 : Statics.runnableMD5list.toArray()) {
 
-            System.out.println(md5.toString());
+            new Log().level3Verbose(md5.toString());
             boolean md5Matches = false;
             for (Object expectedMD5 : cd.md5s.toArray()) {
                 if (expectedMD5.toString().equals(md5.toString())) {
@@ -240,12 +234,12 @@ public class CASPACHandler {
             }
 
             if (!md5Matches) {
-                System.out.println("Expected ");
-                System.out.println("ERROR: Package is corrupt. Cannot continue.");
+                new Log().level0Error("Expected ");
+                new Log().level0Error("ERROR: Package is corrupt. Cannot continue.");
                 System.exit(0);
             }
         }
-        System.out.println("File Integrity Verification Check passed.");
+        new Log().level3Verbose("File Integrity Verification Check passed.");
     }
 
     private void startDumbTerminalGUI() {
