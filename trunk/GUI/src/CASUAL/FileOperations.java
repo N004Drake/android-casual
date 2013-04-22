@@ -43,15 +43,15 @@ public class FileOperations {
      */
     public boolean copyFromResourceToFile(String Resource, String toFile) {
         try {
-            InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
-            try {
+            try (InputStream resourceAsStream = getClass().getResourceAsStream(Resource)) {
                 if (resourceAsStream.available() >= 1) {
                     File Destination = new File(toFile);
                     writeInputStreamToFile(resourceAsStream, Destination);
                     if (Destination.length() >= 1) {
+                        resourceAsStream.close();
                         return true;
                     } else {
-
+                        resourceAsStream.close();
                         Log.level0Error("Failed to write file");
                         return false;
                     }
