@@ -89,12 +89,13 @@ public class CASPACHandler {
                 new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted" + ex));
             }
         } catch (ZipException ex) {
-            new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack unzip failed" + ex));
             new Log().level0Error("Zip File is corrupt. cannot continue.");
+
+            new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack unzip failed" + ex));
             System.exit(1);
         } catch (IOException ex) {
-            new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
             new Log().level0Error("There was a problem reading the file.");
+            new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
             System.exit(1);
         } finally {
             unzip.closeZip();
