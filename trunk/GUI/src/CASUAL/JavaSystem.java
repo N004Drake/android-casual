@@ -38,6 +38,6 @@ public class JavaSystem {
             cmd.append(arg).append(" ");
         }
         Runtime.getRuntime().exec(cmd.toString());
-        System.exit(0);
+        CASUALApp.shutdown(0);
     }
 }

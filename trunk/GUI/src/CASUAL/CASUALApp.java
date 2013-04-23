@@ -27,19 +27,32 @@ public class CASUALApp {
      *
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
-    final private static boolean useOverrideArgs = false; // this will use overrideArguments.
-    //final private static String[] overrideArguments=new String[]{"--execute", "$HEIMDALL print-pit --no-reboot"};
+    final private static boolean useOverrideArgs = true; // this will use overrideArguments.
+    final private static boolean useTestFramework = true; // this will begin an automated test without notifications
     
-    final private static String[] overrideArguments = new String[]{"--caspac", "C:\\Users\\adam\\Desktop\\testpak.zip"};
+    final private static String[] overrideArguments = new String[]{"--caspac", "SCRIPTS/testpak.zip"};
+
+    public static void beginCASUAL(String[] args) {
+        CASUALapplicationData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
+        CASUALapplicationData.CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+        CASUALapplicationData.CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
+        new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
+                + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALapplicationData.CASUALSVNRevision + " build:" + CASUALapplicationData.CASUALBuildNumber + "\n"
+                + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
+                + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
+                + "    and you are welcome to redistribute it, under certain conditions; run\n"
+                + "    '" + CASUALapplicationData.CASUALFileName + " --license'\n"
+                + "    for details. http://android-casual.googlecode.com for source.");
+
+       
+        checkEarlyArgs(args);
+        new CASUALMain().startup(args);
+    }
     String[] arguments;
 
     /**
      * At startup create and show the main frame of the application.
      */
-    void startup(String[] args) {
-          
-        new CASUALMain().startup(args);
-    }
 
     /**
      * This method is to initialize the specified window by injecting resources.
@@ -57,22 +70,23 @@ public class CASUALApp {
      * @param args
      */
     public static void main(String[] args) {
-        CASUALapplicationData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
-        CASUALapplicationData.CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
-        CASUALapplicationData.CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
-        new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
-                + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALapplicationData.CASUALSVNRevision + " build:" + CASUALapplicationData.CASUALBuildNumber + "\n"
-                + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
-                + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
-                + "    and you are welcome to redistribute it, under certain conditions; run\n"
-                + "    '" + CASUALapplicationData.CASUALFileName + " --license'\n"
-                + "    for details. http://android-casual.googlecode.com for source.");
-
-        if (useOverrideArgs) {
+         if (useOverrideArgs) { //overrides command line input
             args = overrideArguments;
         }
-        checkEarlyArgs(args);
-        new CASUALApp().startup(args);
+        if (useTestFramework){ //automates CASUAL to test for errors
+            CASUALTest.args=args;
+            //Statics.GUI=new CASUALJFrameMain();
+            Statics.useGUI=false;
+            try {
+            new CASUALTest(args).instantiateCASUAL();
+            return;
+            } catch (Exception e){
+                new Log().errorHandler(e);
+                //CASUALApp.shutdown(0);
+            } 
+            //CASUALApp.shutdown(0);
+        }
+        beginCASUAL(args);
     }
 
     private static void checkEarlyArgs(String args[]) {
@@ -90,7 +104,7 @@ public class CASUALApp {
                         + " [--gui/-g)] - performs actions with a GUI\n");
 
                 
-                System.exit(0);
+                CASUALApp.shutdown(0);
             }
             if (args[i].equals("--license")) {
                 new Log().level2Information("\n"
@@ -109,11 +123,17 @@ public class CASUALApp {
                 i++;
                 new CASPACHandler().loadCASUALPack(args[i]);
                 new Log().level2Information("CASPAC completed.");
-                System.exit(0);
+                CASUALApp.shutdown(0);
             }
             if (args[i].contains("--gui") || args[i].contains("-g")) {
                 Statics.useGUI = true;
             }
         }
     }
+    
+    public static void shutdown(int i){
+        Log.out.flush();
+        System.exit(i);
+    }
+    
 }

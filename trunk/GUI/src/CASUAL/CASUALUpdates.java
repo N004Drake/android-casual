@@ -296,7 +296,7 @@ public class CASUALUpdates {
                             + "Please check your internet connection and try again.\n"
                             + "If the problem persists, report it.\n"
                             + "CASUAL will now exit.  Please try again.", "ERROR!");
-                    System.exit(0);
+                    CASUALApp.shutdown(0);
                 }
             }
             counter++;

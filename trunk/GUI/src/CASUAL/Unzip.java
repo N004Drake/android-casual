@@ -116,7 +116,11 @@ public class Unzip {
     Enumeration zipFileEntries;
     Unzip(File f) throws ZipException, IOException {
         this.zip = new ZipFile(f);
-        this.zipFileEntries = zip.entries();
+        try {
+            this.zipFileEntries = zip.entries();
+        } catch (Exception e){
+            new Log().errorHandler(e);
+        }
     }
     Unzip(){
         

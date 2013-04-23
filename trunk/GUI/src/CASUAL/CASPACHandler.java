@@ -46,7 +46,7 @@ public class CASPACHandler {
             File CASPAC = new File(pack);
             if (!CASPAC.exists()) { //verify this is a valid caspac
                 new Log().level0Error("File Not Found " + pack);
-                System.exit(1);
+                CASUALApp.shutdown(1);
             }
             new Log().level3Verbose("-----CASPAC MODE-----\nCASPAC: " + CASPAC.getAbsolutePath());
             //begin unziping and analyzing CASPAC
@@ -92,11 +92,11 @@ public class CASPACHandler {
             new Log().level0Error("Zip File is corrupt. cannot continue.");
 
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack unzip failed" + ex));
-            System.exit(1);
+            CASUALApp.shutdown(1);
         } catch (IOException ex) {
             new Log().level0Error("There was a problem reading the file.");
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
-            System.exit(1);
+            CASUALApp.shutdown(1);
         } finally {
             unzip.closeZip();
         }
@@ -208,7 +208,7 @@ public class CASPACHandler {
                 //do the check
                 if (scriptSVNRevision < minSVNRevision) {
                     new Log().level4Debug("FAILURE!  CASUAL MUST BE UPDATED TO RUN THIS!");
-                    System.exit(1);
+                    CASUALApp.shutdown(1);
                 } else {
                     new Log().level4Debug("Application Revision Check Passed");
                 }
@@ -237,7 +237,7 @@ public class CASPACHandler {
             if (!md5Matches) {
                 new Log().level0Error("Expected ");
                 new Log().level0Error("ERROR: Package is corrupt. Cannot continue.");
-                System.exit(0);
+                CASUALApp.shutdown(0);
             }
         }
         new Log().level3Verbose("File Integrity Verification Check passed.");
