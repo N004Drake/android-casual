@@ -164,7 +164,7 @@ public class CASUALScriptParser {
                                 log.level0Error("CASUAL has been kill-switched due to critical updates.  Please read the above message");
                                 new CASUALInteraction().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.webInformation.updateMessage + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                 new LinkLauncher().launchLink(Statics.webInformation.supportURL);
-                                System.exit(0);
+                                CASUALApp.shutdown(0);
                                 return true;
                             //download error
                             case 4:

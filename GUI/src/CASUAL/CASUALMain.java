@@ -65,7 +65,7 @@ public final class CASUALMain {
             }
 
         }
-        //   System.exit(0);
+        //   CASUALApp.shutdown(0);
     }
 
     private void doGUIStartup() {

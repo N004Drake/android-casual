@@ -399,7 +399,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemShowAboutBoxActionPerformed
 
     private void MenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemExitActionPerformed
-        System.exit(0);
+        CASUALApp.shutdown(0);
     }//GEN-LAST:event_MenuItemExitActionPerformed
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed

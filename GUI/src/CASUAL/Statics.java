@@ -211,7 +211,7 @@ public class Statics {
                 new String[]{"Continue At Your Own Risk!!"}, // option buttons
                 "Quit"); //Default{
         if (dResult != 0) {
-            System.exit(1);
+            CASUALApp.shutdown(1);
         }
     }
 

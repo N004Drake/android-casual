@@ -201,7 +201,7 @@ public class HeimdallInstall {
                     + "runas /user:Administrator java -jar " + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString(), //Display Message
                     "Permissions Error");
         }
-        System.exit(0);
+        CASUALApp.shutdown(0);
     }
 
     void runWinHeimdallInstallationProcedure() { //TODO: This method is never called

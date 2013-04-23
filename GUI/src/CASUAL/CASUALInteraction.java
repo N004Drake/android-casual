@@ -19,7 +19,6 @@ package CASUAL;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import javax.swing.JOptionPane;
@@ -32,7 +31,7 @@ public class CASUALInteraction extends JOptionPane {
     public static BufferedReader in =new BufferedReader(new InputStreamReader(System.in));
 
     public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType, int messageType, Object[] options, final Object initialValue) {
-        if (Statics.useGUI) {
+        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             return new TimeOutOptionPane().timeoutDialog(PRESET_TIME, parentComponent, message, title, optionType, messageType, options, initialValue);
         } else {
             new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + message);
@@ -80,7 +79,7 @@ public class CASUALInteraction extends JOptionPane {
     }
 
     public String inputDialog(String[] Message) throws HeadlessException {
-        if (Statics.useGUI) {
+        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             return JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
         } else {
             new Log().Level1Interaction("[INPUT][ANY]"+ Message[0] + Message[1]+"\n input:");
@@ -92,7 +91,7 @@ public class CASUALInteraction extends JOptionPane {
 
     public int showActionRequiredDialog(String instructionalMessage) throws HeadlessException {
         int n=9999;
-        if (Statics.useGUI) {
+        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
 
             Object[] Options = {"I didn't do it", "I did it"};
             instructionalMessage = "<html>" + instructionalMessage.replace("\n", "<BR>") + "</html>";
@@ -128,7 +127,7 @@ public class CASUALInteraction extends JOptionPane {
         int n;
         String[] Message = CASUALStringCommand.split(",");
         Object[] Options = {"Stop", "Continue"};
-        if (Statics.useGUI) {
+        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
 
             if (CASUALStringCommand.contains(",")) {
 
@@ -162,7 +161,7 @@ public class CASUALInteraction extends JOptionPane {
     public void showUserNotification(String CASUALStringCommand) throws HeadlessException {
         CASUALStringCommand = StringOperations.removeLeadingSpaces(CASUALStringCommand);
         String[] Message = CASUALStringCommand.split(",");
-        if (Statics.useGUI) {
+        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             if (CASUALStringCommand.contains(",")) {
 
                 JOptionPane.showMessageDialog(null,
@@ -182,7 +181,7 @@ public class CASUALInteraction extends JOptionPane {
     }
 
     public void showInformationMessage(String message, String title) throws HeadlessException {
-        if (Statics.useGUI) {
+        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog(null,
                     message, title,
                     JOptionPane.INFORMATION_MESSAGE);
@@ -193,7 +192,7 @@ public class CASUALInteraction extends JOptionPane {
     }
 
     public void showErrorDialog(String message, String title) throws HeadlessException {
-        if (Statics.useGUI) {
+        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
 
             JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 
