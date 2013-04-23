@@ -19,6 +19,7 @@ package CASUAL;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import javax.swing.JOptionPane;
@@ -41,11 +42,16 @@ public class CASUALInteraction extends JOptionPane {
         }
     }
 
+    static String cmdlineinput="";
     public String getCommandLineInput() {
         try {
-            return in.readLine();
+            Log.out.flush();
+            String s = in.readLine();
+            return s;
         } catch (IOException ex) {
+            System.out.print(ex);
             return "";
+            
         }
 
     }
