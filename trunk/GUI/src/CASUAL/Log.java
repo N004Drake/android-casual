@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -184,7 +182,7 @@ public class Log {
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
 
             } catch (BadLocationException ex) {
-                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             } catch (NullPointerException e) {
                 level0Error(data + e.toString());
             }
@@ -206,7 +204,7 @@ public class Log {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
             } catch (BadLocationException ex) {
-                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             }
         }
 
@@ -232,7 +230,7 @@ public class Log {
                 Statics.ProgressDoc.insertString(position, data, null);
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
             } catch (BadLocationException ex) {
-                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             }
         }
     }

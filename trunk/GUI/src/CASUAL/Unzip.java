@@ -24,8 +24,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -44,7 +43,7 @@ public class Unzip {
 
         File file = new File(zipFile);
         ZipFile zip = new ZipFile(file);
-
+//TODO: remove this and use the constructor instead below.
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
         Enumeration zipFileEntries = zip.entries();
@@ -111,28 +110,29 @@ public class Unzip {
         ZipInput.close();
         new Log().level3Verbose("Unzip Complete");
     }
-
     ZipFile zip;
     Enumeration zipFileEntries;
+
     Unzip(File f) throws ZipException, IOException {
         this.zip = new ZipFile(f);
         try {
             this.zipFileEntries = zip.entries();
-        } catch (Exception e){
+        } catch (Exception e) {
             new Log().errorHandler(e);
         }
     }
-    Unzip(){
-        
+
+    Unzip() {
     }
 
-    public void closeZip(){
+    public void closeZip() {
         try {
             zip.close();
         } catch (IOException ex) {
-          
+            new Log().errorHandler(ex);
         }
     }
+
     public String deployFileFromZip(File zipFile, Object entry, String outputFolder) throws ZipException, IOException {
         ZipFile zip = new ZipFile(zipFile);
         ZipEntry zipEntry = new ZipEntry((ZipEntry) entry);

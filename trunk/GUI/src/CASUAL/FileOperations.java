@@ -506,9 +506,11 @@ public class FileOperations {
             }
         } catch (FileNotFoundException ex) {
             Log.level0Error("File Not Found Error: " + FileOnDisk);
+            new Log().errorHandler(ex);
 
         } catch (IOException ex) {
             Log.level0Error("Permission Error: " + FileOnDisk);
+            new Log().errorHandler(ex);
         }
         EntireFile = EntireFile.replaceFirst("\n", "");
         return EntireFile;

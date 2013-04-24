@@ -485,12 +485,14 @@ public class CASUALLanguage {
         } else if (line.startsWith("$HEIMDALL")) {
             line = line.replace("$HEIMDALL", "");
             line = StringOperations.removeLeadingSpaces(line);
-
+            log.level4Debug("Received Command: "+line);
+            log.level4Debug("verifying Heimdall deployment.");
             if (Statics.checkAndDeployHeimdall()) {
                 new HeimdallTools().doHeimdallWaitForDevice();
                 /* if (Statics.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
                  }*/
+                log.level2Information("Executing Heimdall command.");
                 return new HeimdallTools().doHeimdallShellCommand(line);
             } else {
                 return new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
@@ -499,8 +501,12 @@ public class CASUALLanguage {
         } else if (line.startsWith("$FASTBOOT")) {
             line = line.replace("$FASTBOOT", "");
             line = StringOperations.removeLeadingSpaces(line);
+            log.level4Debug("received fastbot command.");
+            log.level4Debug("deploying fastboot.");
             FastbootTools.checkAndDeployFastboot();
+            log.level2Information("Waiting for Download Mode Device");
             if (Statics.isLinux()) {
+                log.level2Information("elevating permissions for Linux.");
                 if (CASUALapplicationData.useSound) {
                     AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 }
@@ -509,6 +515,7 @@ public class CASUALLanguage {
                     return returnValue;
                 }
             }
+            
             return new FastbootTools().doFastbootShellCommand(line);
 
             // if Fastboot, Send to fastboot shell command
@@ -579,15 +586,15 @@ public class CASUALLanguage {
     }
 
     private String doShellCommandWithReturnIgnoreError(String Line, String ReplaceThis, String WithThis) {
-        return executeShellCommand(Line, ReplaceThis, WithThis, false);
+        return executeADBCommand(Line, ReplaceThis, WithThis, false);
     }
 
     private String doShellCommand(String Line, String ReplaceThis, String WithThis) {
-        return executeShellCommand(Line, ReplaceThis, WithThis, true);
+        return executeADBCommand(Line, ReplaceThis, WithThis, true);
     }
 
     private String doShellCommandWithReturn(String Line, String ReplaceThis, String WithThis) {
-        return executeShellCommand(Line, ReplaceThis, WithThis, true);
+        return executeADBCommand(Line, ReplaceThis, WithThis, true);
     }
 
     /*
@@ -595,9 +602,13 @@ public class CASUALLanguage {
      * WithThis allows for a last-minute insertion of commands by default
      * ReplaceThis should be null.
      */
-    private String executeShellCommand(String Line, String ReplaceThis, String WithThis, boolean parseError) {
+    private String executeADBCommand(String Line, String ReplaceThis, String WithThis, boolean parseError) {
         Line = StringOperations.removeLeadingSpaces(Line);
 
+        if (Line.startsWith("wait-for")){
+            log.level2Information("waiting for ADB device connection...");
+        }
+            
         Shell Shell = new Shell();
         ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.AdbDeployed);

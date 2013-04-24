@@ -53,23 +53,26 @@ public class TimeOutOptionPane extends JOptionPane {
         new Thread() {
             @Override
             public void run() {
-                try {
-                    for (int i = PRESET_TIME; i >= 0; i--) {
-                        doSleep();
-                        if (dialog.isVisible() && i < 300) {
-                            dialog.setTitle(title + "  (" + i + " seconds before auto \"" + initialValue + "\")");
-                        }
+
+                for (int i = PRESET_TIME; i >= 0; i--) {
+                    doSleep();
+                    if (dialog.isVisible() && i < 300) {
+                        dialog.setTitle(title + "  (" + i + " seconds before auto \"" + initialValue + "\")");
                     }
-                    if (dialog.isVisible()) {
-                        dialog.setVisible(false);
-                    }
-                } catch (Throwable t) {
-//ok - ugly I know!
                 }
+                if (dialog.isVisible()) {
+                    dialog.setVisible(false);
+                }
+
             }
 
-            void doSleep() throws InterruptedException {
-                Thread.sleep(1000);
+            void doSleep() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    new Log().errorHandler(ex);
+
+                }
             }
         }.start();
         dialog.setVisible(true);

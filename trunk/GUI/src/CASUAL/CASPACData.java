@@ -19,8 +19,6 @@ package CASUAL;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -42,7 +40,8 @@ public class CASPACData {
                 packdata = packdata + (char) BIS.read();
             }
         } catch (IOException ex) {
-            Logger.getLogger(CASPACData.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
+
         }
         setValues(packdata);
     }
