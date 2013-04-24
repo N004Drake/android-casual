@@ -18,8 +18,10 @@ package CASUAL;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
@@ -41,7 +43,6 @@ public class CASUALTest {
     PipedInputStream toAppPipedInputStream;
     
     BufferedReader readFromCASUAL;
-    BufferedOutputStream fromAppOutputStream;
     PipedOutputStream fromAppPipedOutputStream;
     PipedInputStream fromAppPipedInputStream;
 
@@ -51,9 +52,9 @@ public class CASUALTest {
         
            try { 
                 fromAppPipedInputStream = new PipedInputStream(BUFFER);
-                fromAppOutputStream=new BufferedOutputStream(new PipedOutputStream(fromAppPipedInputStream));
+                fromAppPipedOutputStream=new PipedOutputStream(fromAppPipedInputStream);
                 readFromCASUAL=new BufferedReader(new InputStreamReader(fromAppPipedInputStream));
-                Log.out = new PrintStream(fromAppOutputStream);
+                Log.out = new PrintStream(fromAppPipedOutputStream);
                 
                 toAppPipedInputStream = new PipedInputStream(BUFFER);
                 writeToCASUAL=new PipedOutputStream(toAppPipedInputStream);
@@ -101,7 +102,7 @@ public class CASUALTest {
 
         private void doCasualOuputHandling(String line) {
             try {
-                 //System.out.println(line);
+                 System.out.println(line);
 
                 if (line.contains("ERROR")) {
                 } else if (line.contains("[INPUT][ANY]")) {
