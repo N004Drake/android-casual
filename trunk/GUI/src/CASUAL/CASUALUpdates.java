@@ -60,7 +60,7 @@ public class CASUALUpdates {
 
         Log.level4Debug("***WEB VERSION***\nIDString:" + webInformation.uniqueIdentifier + "\nSVNRevision:" + webInformation.minSVNRevision + "\nScriptRevision:" + webInformation.scriptRevision + "\nsupportURL:" + webInformation.supportURL + "updateMessage" + webInformation.updateMessage);
 
-
+        try {
         if (localInformation.uniqueIdentifier.equals(webInformation.uniqueIdentifier)) {
             if (checkVersionInformation(webInformation.minSVNRevision, localInformation.minSVNRevision)) {
                 //update SVN
@@ -84,6 +84,10 @@ public class CASUALUpdates {
             }
         }
         return 0;
+        } catch (NullPointerException ex){
+            Log.level0Error("there was a problem with the online metadata.  please inform the developer");
+            return 0;
+        }
     }
     /*
      * used to check CASUAL Version Information returns true if update is

@@ -171,7 +171,7 @@ public class FileOperations {
      * @return absolute path to folder
      */
     public ArrayList listFoldersTwoDeep(String PathToSearch) {
-        ArrayList al = new ArrayList();
+        ArrayList<String[]> al = new ArrayList<>();
         File rootFolder = new File(PathToSearch);
         File[] c = rootFolder.listFiles();
         if (rootFolder.exists()) {

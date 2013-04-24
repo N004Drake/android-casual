@@ -27,8 +27,8 @@ public class CASUALApp {
      *
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
-    final private static boolean useOverrideArgs = true; // this will use overrideArguments.
-    final private static boolean useTestFramework = true; // this will begin an automated test without notifications
+    final private static boolean useOverrideArgs = false; // this will use overrideArguments.
+    final private static boolean useTestFramework = false; // this will begin an automated test without notifications
     
     final private static String[] overrideArguments = new String[]{"--caspac", "SCRIPTS/testpak.zip"};
 
