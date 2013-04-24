@@ -28,8 +28,6 @@ import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -228,7 +226,7 @@ public class CASUALTools {
             try {
                 new CASUALTools().listScripts();
             } catch (IOException ex) {
-                Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             }
         }
     };
@@ -249,9 +247,9 @@ public class CASUALTools {
         try {
             unzip = new Unzip(CASPAC);
         } catch (ZipException ex) {
-            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         } catch (IOException ex) {
-            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
         try {
             zippedFiles = unzip.zipFileEntries;
@@ -296,7 +294,7 @@ public class CASUALTools {
             new FileOperations().overwriteFile(output, CASUALMeta);
             new Log().level3Verbose(output);
         } catch (IOException ex) {
-            Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         } finally {
             unzip.closeZip();
         }
@@ -304,24 +302,24 @@ public class CASUALTools {
 
             Zip.addFilesToExistingZip(CASPAC, caspacHandler.meta);
         } catch (IOException ex) {
-            Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
     }
 
     private void incrementBuildNumber() throws NumberFormatException {
         Properties prop = new Properties();
         try {
-            if (new File(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties").exists()){
-            prop.load(new FileInputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"));
-            int x = Integer.parseInt(prop.getProperty("Application.buildnumber").replace(",", ""));
-            x++;
-            prop.setProperty("Application.buildnumber", Integer.toString(x));
-            prop.setProperty("Application.buildnumber", Integer.toString(x));
+            if (new File(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties").exists()) {
+                prop.load(new FileInputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"));
+                int x = Integer.parseInt(prop.getProperty("Application.buildnumber").replace(",", ""));
+                x++;
+                prop.setProperty("Application.buildnumber", Integer.toString(x));
+                prop.setProperty("Application.buildnumber", Integer.toString(x));
 
-            prop.store(new FileOutputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber=" + x);
+                prop.store(new FileOutputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber=" + x);
             }
         } catch (IOException ex) {
-            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
     }
 }

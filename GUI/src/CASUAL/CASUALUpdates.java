@@ -227,8 +227,10 @@ public class CASUALUpdates {
                         list.add(Statics.TempFolder + scriptname + ext);
                     }
                 } catch (ArrayIndexOutOfBoundsException ex) {
+                    Log.level0Error("Arrray Index Out Of Bounds Exception in downloadUpdates. Please Report this");
                     continue; //TODO should this be handled better?
                 } catch (NullPointerException ex) {
+                    Log.level0Error("Null Pointer Exception in downloadUpdates.  Please report this");
                     continue; //TODO shoudl this be handled better?
                 }
 
@@ -260,9 +262,11 @@ public class CASUALUpdates {
         system = Statics.isWindows() ? "win" : system;
         system = Statics.isLinux() ? "linux" : system;
         system = Statics.isMac() ? "mac" : system;
+        Log.level3Verbose("Found "+system+" "+ arch +"computer");
         String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
         //download location, md5, and version information
         downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.TempFolder + basename, "locating files");
+        Log.level3Verbose("downloaded"+ propertiesFileInCASUALOnlineRepo);
         //Set properties file
         Properties prop = new Properties();
         prop.load(new FileInputStream(Statics.TempFolder + basename));
@@ -280,7 +284,7 @@ public class CASUALUpdates {
          */
         while (prop.getProperty(system + arch + filenumber) != null) {
             String downloadURL = prop.getProperty(system + arch + filenumber);
-
+            Log.level3Verbose("based on information, we need to download: "+downloadURL);
 
             String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/') + 1, downloadURL.length());
             String availableVersion = prop.getProperty(system + arch + filenumber + "version");
@@ -311,14 +315,4 @@ public class CASUALUpdates {
         return Statics.TempFolder + downloadBasename;
 
     }
-    Runnable gatherInfo = new Runnable() {
-        @Override
-        public void run() {
-            arch = Statics.is64bitSystem() ? "64" : "32";
-            system = Statics.isWindows() ? "win" : system;
-            system = Statics.isLinux() ? "linux" : system;
-            system = Statics.isMac() ? "mac" : system;
-
-        }
-    };
 }

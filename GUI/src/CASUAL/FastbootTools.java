@@ -48,11 +48,14 @@ public class FastbootTools {
 
     public static String fastbootLinux() {
         if (Statics.arch.equals("x86_64")) {
+            new Log().level3Verbose("found x86-64 bit arch");
             return Statics.fastbootLinux64;
         }
         if (Statics.arch.equals("ARMv6")) {
+            new Log().level3Verbose("found ARMv6 arch");
             return Statics.fastbootLinuxARMv6;
         }
+        new Log().level3Verbose("found x86-32 bit arch");
         return Statics.fastbootLinux32;
     }
 
@@ -64,7 +67,7 @@ public class FastbootTools {
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(line));
         String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
-        new Log().level3Verbose("Performing elevated Fastboot command" + line);
+        new Log().level3Verbose("Performing standard fastboot command" + line);
         return Shell.liveShellCommand(StringCommand, true);
     }
 

@@ -76,7 +76,7 @@ public class Shell implements Runnable {
             FileOperations.setExecutableBit(ScriptFile);
             log.level4Debug("###Elevating Command: " + Command + " ###");
             if (message == null) {
-                Result = Shell.liveShellCommand(new String[]{"gksudo","-k", "-D", "CASUAL", ScriptFile}, true);
+                Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
             } else {
                 Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile}, true);
             }
@@ -127,7 +127,7 @@ public class Shell implements Runnable {
             log.level3Verbose(STDOUT.readLine());
             int y = 0;
             while ((line = STDOUT.readLine()) != null) {
-                if(y == 0) {
+                if (y == 0) {
                     AllText = AllText + "\n" + line + "\n"; //Sloppy Fix, ensures first line of STDOUT is written to a newline
                 } else {
                     AllText = AllText + line + "\n";
@@ -136,7 +136,7 @@ public class Shell implements Runnable {
             }
             y = 0;
             while ((line = STDERR.readLine()) != null && !line.equals("")) {
-                if(y == 0) {
+                if (y == 0) {
                     AllText = AllText + "\n" + line + "\n"; //Sloppy Fix, ensures first line of STDERR is written to a newline
                 } else {
                     AllText = AllText + line + "\n";
@@ -167,7 +167,7 @@ public class Shell implements Runnable {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level2Information("Problem while executing" + arrayToString(cmd)
+            log.level0Error("Problem while executing" + arrayToString(cmd)
                     + " in Shell.sendShellCommand() Received " + AllText);
             return "CritERROR!!!";
         }
@@ -186,7 +186,7 @@ public class Shell implements Runnable {
                 log.errorHandler(ex);
             }
             while ((line = STDOUT.readLine()) != null) {
-                
+
                 AllText = AllText + "\n" + line;
 
             }
@@ -221,7 +221,7 @@ public class Shell implements Runnable {
     public String liveShellCommand(String[] params, boolean display) {
         String LogRead = "";
         try {
-            ProcessBuilder p=new ProcessBuilder(params);
+            ProcessBuilder p = new ProcessBuilder(params);
             p.redirectErrorStream(true);
             Process process = p.start();
             log.level4Debug("\n###executing real-time command: " + params[0] + "###");
@@ -249,9 +249,9 @@ public class Shell implements Runnable {
 
                 }
             }
-            
+
             //log.level4Debug(LogRead);
-            
+
         } catch (RuntimeException | IOException ex) {
             log.errorHandler(ex);
             return LogRead;
@@ -342,7 +342,7 @@ public class Shell implements Runnable {
 
                 } catch (IOException ex) {
                     String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    log.level2Information("Problem while executing" + ArrayList
+                    log.level0Error("Problem while executing" + ArrayList
                             + " in Shell.liveShellCommand()");
                     Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
                 }

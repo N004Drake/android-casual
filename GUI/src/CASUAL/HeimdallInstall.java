@@ -39,10 +39,10 @@ public class HeimdallInstall {
         if (!x.equals("")) {
             Statics.isHeimdallDeployed = true;
             return true;
-        } 
-        fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.TempFolder+"msvcp110.dll"); 
-        fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.TempFolder+"msvcr110.dll");
-        if (!(new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"}).equals(""))){ //try with redist files
+        }
+        fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.TempFolder + "msvcp110.dll");
+        fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.TempFolder + "msvcr110.dll");
+        if (!(new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"}).equals(""))) { //try with redist files
             Statics.isHeimdallDeployed = true;
             return true;
         }
@@ -136,7 +136,6 @@ public class HeimdallInstall {
 
     private void installHeimdallMac() {
         if (Statics.isMac()) {
-            CASUALUpdates update = new CASUALUpdates();
             String exec = "";
             try {
                 exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
@@ -177,8 +176,8 @@ public class HeimdallInstall {
         //TODO: verify if driver is in the resources at /CASUAL/resources/heimdall/ before downloading else deploy and execute
         String exec = "";
         try {
-            if (new FileOperations().verifyResource(Statics.WinDriverResource)){
-                exec=Statics.TempFolder+"CADI.exe";
+            if (new FileOperations().verifyResource(Statics.WinDriverResource)) {
+                exec = Statics.TempFolder + "CADI.exe";
                 new FileOperations().copyFromResourceToFile(Statics.WinDriverResource, exec);
             } else {
                 exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");

@@ -112,28 +112,24 @@ public class MD5sum {
         int COLUMNS = 2;
         final String[][] NameMD5 = new String[ROWS][COLUMNS];
         for (int n = 0; n < ROWS; n++) {
-            try {
-                if (idStrings[n].contains("  ")) {
-                    String[] splitID = idStrings[n].split("  ");
-                    if (splitID.length == 2) {
-                        if ((splitID[0] != null) && (splitID[1] != null)) {
-                            NameMD5[n][0] = splitID[0];
-                            NameMD5[n][1] = splitID[1];
-                            //this is a valid MD5 split
-                        } else {
-                            //spoof empty string
-                            NameMD5[n][0] = "";
-                            NameMD5[n][1] = "";
-                        }
-
+            if (idStrings[n].contains("  ")) {
+                String[] splitID = idStrings[n].split("  ");
+                if (splitID.length == 2) {
+                    if ((splitID[0] != null) && (splitID[1] != null)) {
+                        NameMD5[n][0] = splitID[0];
+                        NameMD5[n][1] = splitID[1];
+                        //this is a valid MD5 split
                     } else {
-                        //spoof empty string;
+                        //spoof empty string
                         NameMD5[n][0] = "";
                         NameMD5[n][1] = "";
                     }
+
+                } else {
+                    //spoof empty string;
+                    NameMD5[n][0] = "";
+                    NameMD5[n][1] = "";
                 }
-            } catch (NullPointerException e) {
-                continue;
             }
         }
         return NameMD5;

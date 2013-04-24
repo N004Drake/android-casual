@@ -28,8 +28,9 @@ import javax.swing.JOptionPane;
  * @author adam
  */
 public class CASUALInteraction extends JOptionPane {
-    public static BufferedReader in =new BufferedReader(new InputStreamReader(System.in));
-
+    
+    public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    
     public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType, int messageType, Object[] options, final Object initialValue) {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             return new TimeOutOptionPane().timeoutDialog(PRESET_TIME, parentComponent, message, title, optionType, messageType, options, initialValue);
@@ -37,22 +38,22 @@ public class CASUALInteraction extends JOptionPane {
             new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + message);
             String s = getCommandLineInput();
             return 1;
-
+            
         }
     }
-
-    static String cmdlineinput="";
+    static String cmdlineinput = "";
+    
     public String getCommandLineInput() {
         try {
             Log.out.flush();
             String s = in.readLine();
             return s;
         } catch (IOException ex) {
-            System.out.print(ex);
+            new Log().errorHandler(ex);
             return "";
             
         }
-
+        
     }
     //TODO: this is broken
 
@@ -60,39 +61,39 @@ public class CASUALInteraction extends JOptionPane {
         String x;
         int retval;
         try {
-        x=getCommandLineInput();
-        retval=Integer.parseInt(x);
-        if (retval<10){
-           return retval;
-       } else {
-           retval=getCommandLineInputNumber();
-           return retval;
-       }
-       } catch (NumberFormatException ex){
-         return 9999;
-       }
-
+            x = getCommandLineInput();
+            retval = Integer.parseInt(x);
+            if (retval < 10) {
+                return retval;
+            } else {
+                retval = getCommandLineInputNumber();
+                return retval;
+            }
+        } catch (NumberFormatException ex) {
+            return 9999;
+        }
+        
     }
-
+    
     private void waitForStandardInputBeforeContinuing() {
         getCommandLineInput();
     }
-
+    
     public String inputDialog(String[] Message) throws HeadlessException {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             return JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
         } else {
-            new Log().Level1Interaction("[INPUT][ANY]"+ Message[0] + Message[1]+"\n input:");
+            new Log().Level1Interaction("[INPUT][ANY]" + Message[0] + Message[1] + "\n input:");
             return getCommandLineInput();
         }
-            
-         
+        
+        
     }
-
+    
     public int showActionRequiredDialog(String instructionalMessage) throws HeadlessException {
-        int n=9999;
+        int n = 9999;
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-
+            
             Object[] Options = {"I didn't do it", "I did it"};
             instructionalMessage = "<html>" + instructionalMessage.replace("\n", "<BR>") + "</html>";
             n = JOptionPane.showOptionDialog(
@@ -105,32 +106,32 @@ public class CASUALInteraction extends JOptionPane {
                     Options,
                     Options[1]);
         } else {
-            new Log().Level1Interaction("[USERTASK][Q or RETURN][CRITICAL]" + instructionalMessage +"<BR> press  to quit");
-            while (n != 0 && n != 1){
-                String retval =getCommandLineInput();
-                if (!retval.equals("q") && !retval.equals("Q")&& !retval.equals("")){
-                    n=showActionRequiredDialog(instructionalMessage);
-                } else if (retval.equals("Q") || retval.equals("q")){
-                    n=0;
+            new Log().Level1Interaction("[USERTASK][Q or RETURN][CRITICAL]" + instructionalMessage + "<BR> press  to quit");
+            while (n != 0 && n != 1) {
+                String retval = getCommandLineInput();
+                if (!retval.equals("q") && !retval.equals("Q") && !retval.equals("")) {
+                    n = showActionRequiredDialog(instructionalMessage);
+                } else if (retval.equals("Q") || retval.equals("q")) {
+                    n = 0;
                 } else {
-                    n=1;
+                    n = 1;
                 }
                 
             }
-              
+            
         }
-
+        
         return n;
     }
-
+    
     public int showUserCancelOption(String CASUALStringCommand) throws HeadlessException {
         int n;
         String[] Message = CASUALStringCommand.split(",");
         Object[] Options = {"Stop", "Continue"};
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-
+            
             if (CASUALStringCommand.contains(",")) {
-
+                
                 n = JOptionPane.showOptionDialog(
                         null,
                         Message[1],
@@ -148,22 +149,22 @@ public class CASUALInteraction extends JOptionPane {
                         JOptionPane.YES_NO_OPTION);
             }
         } else {
-            new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\n" + Message[1]+"\npress Q to quit");
-            String s=this.getCommandLineInput();
-            if (s.equals("q")||s.equals("Q")){
+            new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\n" + Message[1] + "\npress Q to quit");
+            String s = this.getCommandLineInput();
+            if (s.equals("q") || s.equals("Q")) {
                 return 0;
             }
             return 1;
         }
         return n;
     }
-
+    
     public void showUserNotification(String CASUALStringCommand) throws HeadlessException {
         CASUALStringCommand = StringOperations.removeLeadingSpaces(CASUALStringCommand);
         String[] Message = CASUALStringCommand.split(",");
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             if (CASUALStringCommand.contains(",")) {
-
+                
                 JOptionPane.showMessageDialog(null,
                         Message[1],
                         Message[0],
@@ -179,7 +180,7 @@ public class CASUALInteraction extends JOptionPane {
             waitForStandardInputBeforeContinuing();
         }
     }
-
+    
     public void showInformationMessage(String message, String title) throws HeadlessException {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog(null,
@@ -190,12 +191,12 @@ public class CASUALInteraction extends JOptionPane {
             waitForStandardInputBeforeContinuing();
         }
     }
-
+    
     public void showErrorDialog(String message, String title) throws HeadlessException {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-
+            
             JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
-
+            
         } else {
             new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + message + "  Press any key to continue.");
             waitForStandardInputBeforeContinuing();
