@@ -90,6 +90,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         if (Statics.dumbTerminalGUI) {
             setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         }
+        Statics.GUIIsAvailable=true;
     }
 
     /*
@@ -568,8 +569,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         this.StatusLabel.setText(text);
     }
 
-    //for use in IDE only
-    public void enableControls(boolean status) {
+    
+    public boolean getControlStatus(){
+        return (startButton.isEnabled() && comboBoxScriptSelector.isEnabled());
+    }
+    public boolean enableControls(boolean status) {
         if (!Statics.lockGUIformPrep && !Statics.lockGUIunzip) {
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
@@ -577,8 +581,21 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         } else {
             log.level4Debug("Control Change requested but Statics.MasterLock is set.");
         }
+        return (checkGUIStatus(status)) ? true: false;
     }
-
+    private boolean checkGUIStatus(boolean expectedStatus){
+        if (Statics.GUIIsAvailable) { 
+            if (expectedStatus == Statics.GUI.getControlStatus()){
+                return true; //expected true = actually true;
+            } else {
+                return false; 
+            }
+        } else if (Statics.useGUI) {  //if gui is not available yet
+            return false; 
+        }
+        return true; //gui is not used for this CASUAL.
+        
+    }
     public void setWindowBannerText(String text) {
         windowBanner.setText(text);
     }

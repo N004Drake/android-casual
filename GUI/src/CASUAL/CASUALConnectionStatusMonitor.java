@@ -33,6 +33,7 @@ public class CASUALConnectionStatusMonitor {
     private static int timerInterval = 1000;
     private static int cycles = 0;
     private static boolean hasConnected = false;
+    private static boolean mainFormControls=false;
     /*
      * Starts and stops the ADB timer
      * reference with Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
@@ -139,22 +140,24 @@ public class CASUALConnectionStatusMonitor {
         }
     };
 
+    
     private void stateSwitcher(int State) {
+        boolean stateSwitchWasSucessful=false; //try again later.
         if (LastState != State) {
             Log.level4Debug("State Change Detected, The new state is: " + State);
             switch (State) {
                 case 0:
-                    Log.level4Debug("State Disconnected");
-                    Statics.GUI.enableControls(false);
+                    Log.level4Debug("State Disconnected commanded");
+                    stateSwitchWasSucessful=Statics.GUI.enableControls(false);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                     AudioHandler.playSound("/CASUAL/resources/sounds/Disconnected.wav");
                     break;
                 case 1:
-                    Log.level4Debug("State Connected");
+                    Log.level4Debug("State Connected commanded");
+                    stateSwitchWasSucessful=Statics.GUI.enableControls(true);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
                     Statics.GUI.setStatusMessageLabel("Target Acquired");
                     AudioHandler.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
-                    Statics.GUI.enableControls(true);
                     break;
                 default:
 
@@ -165,14 +168,14 @@ public class CASUALConnectionStatusMonitor {
                     }
 
                     Log.level4Debug("State Multiple Devices Number of devices" + State);
-                    Statics.GUI.enableControls(false);
+                    stateSwitchWasSucessful=Statics.GUI.enableControls(false);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/TooManyDevices.png", "Target Acquired");
                     String[] URLs = {"/CASUAL/resources/sounds/" + String.valueOf(State) + ".wav", "/CASUAL/resources/sounds/DevicesDetected.wav"};
                     AudioHandler.playMultipleInputStreams(URLs);
                     break;
 
             }
-            LastState = State;
+            if (stateSwitchWasSucessful)LastState = State;
         }
     }
 
