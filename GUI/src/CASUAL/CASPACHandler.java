@@ -51,7 +51,12 @@ public class CASPACHandler {
             new Log().level3Verbose("-----CASPAC MODE-----\nCASPAC: " + CASPAC.getAbsolutePath());
             //begin unziping and analyzing CASPAC
             unzip = new Unzip(CASPAC);
-            cd = processCASPAC(unzip.zipFileEntries, CASPAC);
+            try {
+                cd = processCASPAC(unzip.zipFileEntries, CASPAC);
+            } catch (NullPointerException ex ){
+                new Log().level0Error("There is a problem with the online metadata for this script.  Please inform the developer.");
+                return;
+            }
             
             //get ADB ready
             try {
