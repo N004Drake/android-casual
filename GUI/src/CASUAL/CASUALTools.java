@@ -192,8 +192,8 @@ public class CASUALTools {
     public Runnable setCASUALPackageDataFromScriptsFolder = new Runnable() {
         @Override
         public void run() {
-            CASUALapplicationData casualPackageData = new CASUALapplicationData();
-            casualPackageData.setProperties();
+            CASUALapplicationData ca = new CASUALapplicationData();
+            
         }
     };
     /**

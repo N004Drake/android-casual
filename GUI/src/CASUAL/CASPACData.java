@@ -26,11 +26,11 @@ import java.util.ArrayList;
  */
 public class CASPACData {
 
-    public String minSVNRevision;
-    public String scriptRevision;
-    public String uniqueIdentifier;
-    public String supportURL;
-    public String updateMessage;
+    public String minSVNRevision="0";
+    public String scriptRevision="0";
+    public String uniqueIdentifier="0";
+    public String supportURL="";
+    public String updateMessage="";
     public ArrayList<String> md5s = new ArrayList<>();
 
     CASPACData(BufferedInputStream BIS) {

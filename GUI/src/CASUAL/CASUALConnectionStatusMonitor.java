@@ -20,20 +20,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
+
 /**
  *
  * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALConnectionStatusMonitor {
 
-    AudioHandler CAS = new AudioHandler();
-    private static int LastState = 0;
     Log Log = new Log();
     Shell Shell = new Shell();
+    AudioHandler CAS = new AudioHandler(); 
+
+    private static int LastState = 0;  //last state detected
     private static int timerInterval = 1000;
-    private static int cycles = 0;
-    private static boolean hasConnected = false;
-    private static boolean mainFormControls=false;
+    private static int cycles = 0; //number of cycles
+    private static boolean hasConnected = false; //device was detected since startup
+    CASUALConnectionStatusMonitor(){
+        //GETDEVICECOMMAND = new String[]{Statics.AdbDeployed, "devices"};
+    }
     /*
      * Starts and stops the ADB timer
      * reference with Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
@@ -49,15 +53,15 @@ public class CASUALConnectionStatusMonitor {
         @Override
         public void run() {
 
-            if ((Statics.GUIIsAvailable) && (Statics.lockGUIformPrep || Statics.lockGUIunzip)) {
+            //setup initial state
+            if ((Statics.GUIIsAvailable) && (Statics.lockGUIformPrep || Statics.lockGUIunzip)) { 
                 Statics.GUI.enableControls(false);
                 Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                 LastState = 0;
                 return;
             }
-            String DeviceCommand[] = {Statics.AdbDeployed, "devices"};
             try {
-                String DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
+                String DeviceList = getConnectedDevices();
                 Statics.DeviceTracker = DeviceList.split("device");
 
 
@@ -71,7 +75,7 @@ public class CASUALConnectionStatusMonitor {
                         messageUser();
                     }
                     //One device detected
-                } else if (!Statics.DeviceTracker[0].isEmpty()) {
+                } else if (! Statics.DeviceTracker[0].isEmpty()) {
                     hasConnected = true;
                     stateSwitcher(1);
 
@@ -79,29 +83,31 @@ public class CASUALConnectionStatusMonitor {
                     //Check and handle abnormalities
                     // pairing problem with 4.2+
                     if (DeviceList.contains("offline")) {
-                        CASUALInteraction CASUALUserInteraction = new CASUALInteraction();
-                        String[] ok = {"All set and done!"};
                         Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
-                        new CASUALInteraction().showTimeoutDialog(60, null, "It would appear that the connected device is not paired properly.\n"
-                                + "Please disconnect the device, then reconnect it.\n"
-                                + "Next unlock the device and check for a message onscreen.\n"
-                                + "Select \"Always allow from this computer\" then press OK.\n",
-                                "Device Not Paired", CASUALInteraction.OK_OPTION, 2, ok, 0);
-                        Log.level0Error("Disconnect and reconnect your device.  Check the device for instructions.");
-                        DeviceList = Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
-                        Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                        sleepForFourSeconds(); //give the device a chance to come online
+                            DeviceList=getConnectedDevices();
+                            if (DeviceList.contains("offline")){
+                            String[] ok = {"All set and done!"};
+                            new CASUALInteraction().showTimeoutDialog(120, null, "It would appear that the connected device is not paired properly.\n"
+                                    + "Your device is \"offline\", this can occour for a few reasons.\n"
+                                    + "-Please disconnect the device, then reconnect it.\n"
+                                    + "Next unlock the device and check for a message onscreen.\n"
+                                    + "Select \"Always allow from this computer\" then press OK.\n"
+                                    + "-if that doesn't work then reboot *everything*...\n"
+                                    + "reboot the computer and reboot the computer.",
+                                    "Your device is detected offline", CASUALInteraction.OK_OPTION, 2, ok, 0);
+                            Log.level0Error("Disconnect and reconnect your device.  Check the device for instructions.");
+                            DeviceList = Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
+                            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                        }
                     }
                     //insufficient permissions
 
                     if (DeviceList.contains("????????????") && (!Statics.isWindows())) {
                         Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                         Log.level4Debug("sleeping for 4 seconds.  Device list: " + DeviceList);
-                        try {
-                            Thread.sleep(4000);
-                        } catch (InterruptedException ex) {
-                            Log.errorHandler(ex);
-                        }
-                        DeviceList = Shell.silentShellCommand(DeviceCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
+                        sleepForFourSeconds();
+                        DeviceList = getConnectedDevices();
                         Statics.DeviceTracker = DeviceList.split("device");
 
                         //Linux and mac only.
@@ -119,7 +125,8 @@ public class CASUALConnectionStatusMonitor {
                                     + "with the device.  As a work-around we\n"
                                     + "will attempt to elevate permissions \n"
                                     + "to access the device properly.", "Insufficient Permissions", CASUALInteraction.OK_OPTION, 2, ok, 0);
-                            DeviceList = Shell.elevateSimpleCommand(DeviceCommand);
+                            String[] getDevicesCommand= new String[]{Statics.AdbDeployed, "devices"};
+                            DeviceList = Shell.elevateSimpleCommand(getDevicesCommand);
                             // if permissions elevation was sucessful
                             if (!DeviceList.contains("????????????")) {
                                 Log.level4Debug(DeviceList);
@@ -136,6 +143,14 @@ public class CASUALConnectionStatusMonitor {
                 }
             } catch (NullPointerException E) {
                 //unreported because there's no reason to report there are no devices.
+            }
+        }
+
+        private void sleepForFourSeconds() {
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException ex) {
+                Log.errorHandler(ex);
             }
         }
     };
@@ -193,4 +208,12 @@ public class CASUALConnectionStatusMonitor {
         }
 
     }
+    
+    private String getConnectedDevices(){
+       String[] getDevicesCommand= new String[]{Statics.AdbDeployed, "devices"};
+       String devices= Shell.silentShellCommand(getDevicesCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
+       return devices;
+                
+    }
+    
 }

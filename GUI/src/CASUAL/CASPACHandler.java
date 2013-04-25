@@ -86,7 +86,6 @@ public class CASPACHandler {
 
             Thread t = new Thread(activateScript);
             t.start();
-            Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
             //do communications here
             try {
                 t.join();
@@ -116,7 +115,7 @@ public class CASPACHandler {
     private CASPACData handleCASPACFiles(Object entry, File f) throws IOException {
         Unzip unzip = new Unzip();
         if (entry.toString().equals("-build.properties")) {
-            new CASUALapplicationData().setPropertiesFromInputStream(unzip.streamFileFromZip(f, entry));
+            CASUALapplicationData ca= new CASUALapplicationData(unzip.streamFileFromZip(f, entry));
         } else if (entry.toString().equals("-Overview.txt")) {
             if (Statics.useGUI) { //only display overview if using GUI.
                 new Log().level2Information("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
