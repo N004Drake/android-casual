@@ -157,6 +157,7 @@ public class CASUALScriptParser {
                                 break;
                             //script update performed
                             case 2:
+                                Statics.TargetScriptIsResource=false;
                                 Statics.setScriptLocationOnDisk(script, Statics.TempFolder + "SCRIPTS" + Statics.Slash + script);
                                 updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
                                 break;
