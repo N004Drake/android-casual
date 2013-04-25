@@ -219,12 +219,13 @@ public class CASUALUpdates {
                 //get download extension from md5sum;
 
                 try {
-
                     String[] md5 = md5lines[n].split("  ");
+                    if (md5.length==2){
                     String fileName = md5[1];
                     ext = "." + fileName.split("\\.")[1];
                     if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
                         list.add(Statics.TempFolder + scriptname + ext);
+                    }
                     }
                 } catch (ArrayIndexOutOfBoundsException ex) {
                     Log.level0Error("Arrray Index Out Of Bounds Exception in downloadUpdates. Please Report this");
