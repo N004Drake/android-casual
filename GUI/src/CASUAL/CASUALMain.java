@@ -43,9 +43,8 @@ public final class CASUALMain {
         } catch (InterruptedException ex) {
             new Log().errorHandler(ex);
         }
-        new CASUALTools().startStopADBDeviceCheckTimer(true); //start device scanning
-
-
+        Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+        
         if (args.length != 0 && !Statics.useGUI) {
             doConsoleStartup();  //use command line args
         } else {
