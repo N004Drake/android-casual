@@ -43,13 +43,6 @@ public class CASUALTools {
     Log log = new Log();
     private boolean DeviceTimerState = false;
 
-    public void startStopADBDeviceCheckTimer(boolean StateCommanded) {
-        if (StateCommanded && !DeviceTimerState) {
-            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
-        } else if (!StateCommanded && DeviceTimerState) {
-            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
-        }
-    }
 
     public void listScripts() throws IOException {
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();

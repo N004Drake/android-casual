@@ -132,9 +132,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                stopADB(evt);
-            }
         });
 
         windowBanner.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
@@ -295,7 +292,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -458,12 +455,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         CASUALLogJFrame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void stopADB(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_stopADB
-        new CASUALTools().startStopADBDeviceCheckTimer(false);
-    }//GEN-LAST:event_stopADB
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        new CASUALTools().startStopADBDeviceCheckTimer(false);
+        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
         new Shell().sendShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
 
     }//GEN-LAST:event_formWindowClosing

@@ -94,4 +94,4 @@ $FASTBOOT reboot
 $ECHO rebooting into android
 
 
-$HALT $ECHO $HALT [PASS] If your device was in download mode, ALL TESTS PASSED!!!!!!!!!!!!. 
+$HALT $ECHO $HALT [PASS] If your device rebooted twice, ALL TESTS PASSED!!!!!!!!!!!!. 
