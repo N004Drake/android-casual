@@ -81,7 +81,7 @@ public class CASUALInteraction extends JOptionPane {
     
     public String inputDialog(String[] Message) throws HeadlessException {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-            return JOptionPane.showInputDialog(null, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
+            return JOptionPane.showInputDialog(Statics.GUI, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
         } else {
             new Log().Level1Interaction("[INPUT][ANY]" + Message[0] + Message[1] + "\n input:");
             return getCommandLineInput();
@@ -97,7 +97,7 @@ public class CASUALInteraction extends JOptionPane {
             Object[] Options = {"I didn't do it", "I did it"};
             instructionalMessage = "<html>" + instructionalMessage.replace("\n", "<BR>") + "</html>";
             n = JOptionPane.showOptionDialog(
-                    null,
+                    Statics.GUI,
                     instructionalMessage,
                     "Dont click through this!",
                     JOptionPane.YES_NO_OPTION,
@@ -133,7 +133,7 @@ public class CASUALInteraction extends JOptionPane {
             if (CASUALStringCommand.contains(",")) {
                 
                 n = JOptionPane.showOptionDialog(
-                        null,
+                        Statics.GUI,
                         Message[1],
                         Message[0],
                         JOptionPane.YES_NO_OPTION,
@@ -165,12 +165,12 @@ public class CASUALInteraction extends JOptionPane {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             if (CASUALStringCommand.contains(",")) {
                 
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(Statics.GUI,
                         Message[1],
                         Message[0],
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(Statics.GUI,
                         CASUALStringCommand,
                         "Information",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -183,7 +183,7 @@ public class CASUALInteraction extends JOptionPane {
     
     public void showInformationMessage(String message, String title) throws HeadlessException {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(Statics.GUI,
                     message, title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -195,7 +195,7 @@ public class CASUALInteraction extends JOptionPane {
     public void showErrorDialog(String message, String title) throws HeadlessException {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             
-            JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Statics.GUI, message, title, JOptionPane.ERROR_MESSAGE);
             
         } else {
             new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + message + "  Press any key to continue.");
