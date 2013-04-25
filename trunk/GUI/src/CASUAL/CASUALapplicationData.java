@@ -17,9 +17,7 @@
 package CASUAL;
 
 import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 /**
@@ -47,7 +45,7 @@ public class CASUALapplicationData {
     public static String CASUALFileName;
     public static String meta;
 
-    public void setProperties() {
+    CASUALapplicationData() {
         buildProperties = Statics.BUILDPROPERTIES;
         usePictureForBanner = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.UsePictureForBanner").contains("rue");
         developerDonateLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
@@ -63,32 +61,33 @@ public class CASUALapplicationData {
         packageDataHasBeenSet = true;
     }
 
-    public void setPropertiesFromInputStream(BufferedInputStream in) throws FileNotFoundException, UnsupportedEncodingException, IOException {
-        Properties properties = new Properties();
-        properties.load(in);
-        //properties.list(System.out);
-        in.close();
-        buildProperties = null;
-        usePictureForBanner = properties.getProperty("Window.UsePictureForBanner").contains("rue");
-        developerDonateLink = properties.getProperty("Developer.DonateLink");
-        useSound = properties.getProperty("Audio.Enabled").contains("rue");
-        donateButtonName = properties.getProperty("Developer.DonateToButtonText");
-        developerName = properties.getProperty("Developer.Name");
-        buttonText = properties.getProperty("Window.ExecuteButtonText");
-        title = properties.getProperty("Window.Title") + " - " + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
-        bannerText = properties.getProperty("Window.BannerText");
-        bannerPic = properties.getProperty("Window.BannerPic");
-        donateButtonName = properties.getProperty("Developer.DonateToButtonText");
-        donationLink = properties.getProperty("Developer.DonateLink");
-        packageDataHasBeenSet = true;
+    CASUALapplicationData(BufferedInputStream in) throws IOException {
+       
+            Properties properties = new Properties();
+            properties.load(in);
+            //properties.list(System.out);
+            in.close();
+            buildProperties = null;
+            usePictureForBanner = properties.getProperty("Window.UsePictureForBanner").contains("rue");
+            developerDonateLink = properties.getProperty("Developer.DonateLink");
+            useSound = properties.getProperty("Audio.Enabled").contains("rue");
+            donateButtonName = properties.getProperty("Developer.DonateToButtonText");
+            developerName = properties.getProperty("Developer.Name");
+            buttonText = properties.getProperty("Window.ExecuteButtonText");
+            title = properties.getProperty("Window.Title") + " - " + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+            bannerText = properties.getProperty("Window.BannerText");
+            bannerPic = properties.getProperty("Window.BannerPic");
+            donateButtonName = properties.getProperty("Developer.DonateToButtonText");
+            donationLink = properties.getProperty("Developer.DonateLink");
+            packageDataHasBeenSet = true;
 
-        new Log().level3Verbose("-----CASUAL PACKAGE-----");
-        new Log().level3Verbose("" + title + "\n by:" + developerName + "");
-        if (!donationLink.equals("")) {
-            new Log().level3Verbose(" Donate:" + donationLink);
+            new Log().level3Verbose("-----CASUAL PACKAGE-----");
+            new Log().level3Verbose("" + title + "\n by:" + developerName + "");
+            if (!donationLink.equals("")) {
+                new Log().level3Verbose(" Donate:" + donationLink);
         }
-        new Log().level3Verbose("-----CASUAL PACKAGE-----");
-
-
     }
+
+
+  
 }

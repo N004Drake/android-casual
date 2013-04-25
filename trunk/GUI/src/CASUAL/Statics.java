@@ -160,9 +160,9 @@ public class Statics {
     /*
      * Project properties
      */
+    public static boolean scriptRunLock = false;
     public static boolean lockGUIformPrep = true;
     public static boolean lockGUIunzip = false;
-    public static boolean lockGUIdeviceConnectionStatus = false;
     public static ArrayList<String> runnableMD5list = new ArrayList<>();
     /*
      * Determines if Linux, Mac or Windows

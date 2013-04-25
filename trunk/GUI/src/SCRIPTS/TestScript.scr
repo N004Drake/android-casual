@@ -69,7 +69,6 @@ $MAKEDIR $HOMEFOLDERfoo
 
 $ECHO This is a LISTDIR on HOMEFOLDER and you should see something in there.
 $LISTDIR /
-$ADB reboot download
 $ECHO USERNOTIFICATION
 $USERNOTIFICATION notification, This is a \n notification and tests new lines too.
 $ECHO USERCANCELOPTION
@@ -78,8 +77,21 @@ $ECHO ACTIONREQUIRED
 $ACTIONREQUIRED you have to do something dummy,  In order to continue you have do\n this!
 $ECHO USERINPUTBOX
 $USERINPUTBOX type something, I will repeat what\nyou type., $ECHO [PASS] $USERINPUT
-$HEIMDALL close-pc-screen
+$ECHO Waiting for device
 wait-for-device
+$ECHO Rebooting into Download Mode
+$ADB reboot download
+$ECHO You must have a SAMSUNG connected!
+$ECHO Rebooting into ADB Mode mode
+$HEIMDALL close-pc-screen
+$ECHO Waiting for device to automatically reboot
+
+$ECHO Connect a nexus device now.
+wait-for-device
+$ECHO Rebooting into bootloader
+$ADB reboot bootloader
+$FASTBOOT reboot
+$ECHO rebooting into android
 
 
 $HALT $ECHO $HALT [PASS] If your device was in download mode, ALL TESTS PASSED!!!!!!!!!!!!. 

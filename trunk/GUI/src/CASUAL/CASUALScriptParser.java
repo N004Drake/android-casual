@@ -91,6 +91,7 @@ public class CASUALScriptParser {
     DataInputStream DATAIN;
 
     private void executeSelectedScript(DataInputStream DIS, final String scriptFolder, final String script, boolean startThreaded) {
+        Statics.scriptRunLock=true;
         Statics.ReactionEvents = new ArrayList<>();
         Statics.ActionEvents = new ArrayList<>();
         ScriptContinue = true;
@@ -127,6 +128,7 @@ public class CASUALScriptParser {
                 } catch (IOException ex) {
                     Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                Statics.scriptRunLock=false;
 
             }
 

@@ -574,7 +574,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         return (startButton.isEnabled() && comboBoxScriptSelector.isEnabled());
     }
     public boolean enableControls(boolean status) {
-        if (!Statics.lockGUIformPrep && !Statics.lockGUIunzip) {
+        if (!Statics.lockGUIformPrep && !Statics.lockGUIunzip && !Statics.scriptRunLock) {
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
             log.level4Debug("Controls Enabled status: " + status);
