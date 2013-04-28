@@ -29,6 +29,8 @@ import javax.swing.JFileChooser;
  */
 public final class CASUALJFrameMain extends javax.swing.JFrame {
 
+    
+    //TODO: integrate How to enable development mode for Jelly Bean  and other devices
     private int busyIconIndex = 0;
     String nonResourceFileName;
     Log log = new Log();
@@ -467,7 +469,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
     }//GEN-LAST:event_startButtonMouseExited
     public Thread updateSelectedFromGUI() {
-        log.level2Information("From Resource: " + Statics.TargetScriptIsResource);
+        log.level3Verbose("From Resource: " + Statics.TargetScriptIsResource);
         log.level2Information("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
         if (Statics.TargetScriptIsResource) {
             if (!Statics.dumbTerminalGUI) {

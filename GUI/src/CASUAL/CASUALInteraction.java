@@ -142,11 +142,15 @@ public class CASUALInteraction extends JOptionPane {
                         Options,
                         Options[1]);
             } else {
-                n = JOptionPane.showConfirmDialog(
+                n = JOptionPane.showOptionDialog(
                         Statics.GUI,
-                        CASUALStringCommand,
+                        Message[1],
                         "Do you wish to continue?",
-                        JOptionPane.YES_NO_OPTION);
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        Options,
+                        Options[1]);
             }
         } else {
             new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\n" + Message[1] + "\npress Q to quit");
