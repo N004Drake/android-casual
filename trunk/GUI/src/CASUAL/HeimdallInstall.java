@@ -168,7 +168,7 @@ public class HeimdallInstall {
         //install drivers
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
-        log.level0Error("\nInstalling drivers"); //Add Newline
+        log.level0Error("\nDrivers are Required Launching CADI.\nCASUAL Automated Driver Installer by jrloper.\nInstalling Drivers now"); //Add Newline
         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
                 + "We're going to install drivers now.  Lets do it.");
 
