@@ -84,19 +84,21 @@ public class StringOperations {
      * 
      * @author  Jeremy Loper    jrloper@gmail.com
      */
-    public static String[] convertStringToArray(String arrSource) { //TODO - Use in HeimdallTools Error String Loading
-        StringOperations.removeLeadingAndTrailingSpaces(arrSource);
-        String[] strArray = {};
-        int y = 0, k = 0, i = 0;
-        for (; i <= arrSource.length(); i++, y = arrSource.indexOf("\",", y)) {
-            if (arrSource.length() != y) {
-                strArray[i] = arrSource.substring(k, (y - 1));
-                k = y++;
+    public static String[] convertStringToArray(String inputString) { //TODO - Use in HeimdallTools Error String Loading
+        StringOperations.removeLeadingAndTrailingSpaces(inputString);
+        String[] outputArray = {};
+        int currentQuotePosition = 0;
+        int lastQuotePosition = 0;
+
+        for (int i=0; i <= inputString.length(); i++, currentQuotePosition = inputString.indexOf("\",", currentQuotePosition)) {
+            if (inputString.length() != currentQuotePosition) {
+                outputArray[i] = inputString.substring(lastQuotePosition, (currentQuotePosition - 1));
+                lastQuotePosition = currentQuotePosition++;
             } else {
-                strArray[i] = arrSource.substring(k, y);
+                outputArray[i] = inputString.substring(lastQuotePosition, currentQuotePosition);
                 break;
             }
         }
-        return strArray;
+        return outputArray;
     }
 }
