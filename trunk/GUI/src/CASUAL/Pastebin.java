@@ -40,17 +40,12 @@ import java.net.URLEncoder;
  */
 public class Pastebin {
 
-    /**
-     *
-     * Pastebin User DEV API Key
-     *
-     */
+    //Pastebin User DEV API Key
     private static String devKey = "027c63663a6023d774b5392f380e5923";
 
     /**
      * Automatically prompts the user for their XDA username and submits a
      * pasting to Pastebin
-     *
      */
     public static void doPosting() throws IOException, URISyntaxException {
 
@@ -95,60 +90,25 @@ public class Pastebin {
     }
 
     /**
-     * TODO - Javadoc
+     * This is the API for Pastebin
      *
      */
     static class API {
 
-        /**
-         * TODO - Javadoc
-         *
-         */
         private Log log = new Log();
-        /**
-         * TODO - Javadoc
-         *
-         */
-        private String token;
-        /**
-         * TODO - Javadoc
-         *
-         */
-        private String devkey;
-        /**
-         * TODO - Javadoc
-         *
-         */
+        private String token; //used for instance
+        private String devkey; //used for our program
         private String loginURL = "http://www.pastebin.com/api/api_login.php";
-        /**
-         * TODO - Javadoc
-         *
-         */
         private String pasteURL = "http://www.pastebin.com/api/api_post.php";
-
-        /**
-         * TODO - Javadoc
-         *
-         */
         private API(String devkey) {
             this.devkey = devkey;
         }
-
-        /**
-         * TODO - Javadoc
-         *
-         */
         private String checkResponse(String response) {
             if (response.substring(0, 15).equals("Bad API request")) {
                 return response.substring(17);
             }
             return "";
         }
-
-        /**
-         * TODO - Javadoc
-         *
-         */
         public String login(String username, String password) throws UnsupportedEncodingException {
             String api_user_name = URLEncoder.encode(username, "UTF-8");
             String api_user_password = URLEncoder.encode(password, "UTF-8");
@@ -167,10 +127,7 @@ public class Pastebin {
             return response;
         }
 
-        /**
-         * TODO - Javadoc
-         *
-         */
+
         public String makePaste(String code, String name, String format) throws UnsupportedEncodingException {
             String content = URLEncoder.encode(code, "UTF-8");
             String title = URLEncoder.encode(name, "UTF-8");
@@ -195,10 +152,7 @@ public class Pastebin {
             return response;
         }
 
-        /**
-         * TODO - Javadoc
-         *
-         */
+
         public String page(String uri, String urlParameters) {
             URL url;
             HttpURLConnection connection = null;
@@ -239,10 +193,6 @@ public class Pastebin {
             }
         }
 
-        /**
-         * TODO - Javadoc
-         *
-         */
         public void setToken(String token) {
             this.token = token;
         }

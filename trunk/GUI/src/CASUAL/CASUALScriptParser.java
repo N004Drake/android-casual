@@ -183,7 +183,6 @@ public class CASUALScriptParser {
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                //TODO stop and reset script to stock... possibly delete temp folder and restart CASUAL
                                 //HALT script
                                 return true;
                             default: //unknown error do nothing

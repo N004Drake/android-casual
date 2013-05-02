@@ -59,6 +59,7 @@ public class Shell implements Runnable {
         String[] newCmd;
         if (Statics.isLinux()) {
             //TODO: better testing for GKSU
+            //TODO: possibly switch to pkexec
             String[] TestGKSudo = {"which", "gksudo"};
             String TestReturn = Shell.sendShellCommand(TestGKSudo);
             if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))) {
@@ -147,7 +148,6 @@ public class Shell implements Runnable {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            //todo: is this an error or do we handle it appropriately?
             log.level0Error("Problem while executing" + arrayToString(cmd)
                     + " in Shell.sendShellCommand() Received " + AllText);
             return "CritERROR!!!";

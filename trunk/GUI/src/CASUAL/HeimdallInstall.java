@@ -173,7 +173,6 @@ public class HeimdallInstall {
                 + "We're going to install drivers now.  Lets do it.");
 
 
-        //TODO: verify if driver is in the resources at /CASUAL/resources/heimdall/ before downloading else deploy and execute
         String exec = "";
         try {
             if (new FileOperations().verifyResource(Statics.WinDriverResource)) {
