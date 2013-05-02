@@ -195,7 +195,7 @@ public class HeimdallTools {
                             return "'LIBUSB_ERROR_INVALID_PARAM' Error not handled; Script halted";
                         }
                         case '3': {// -3
-                            return "'LIBUSB_ERROR_ACCESS' Error not handled; Script halted";
+                            return "'LIBUSB_ERROR_ACCESS' Error not handled; Attempting to continue";
                         }
                         case '4': {// -4
                             return "'LIBUSB_ERROR_NO_DEVICE' Error not handled; Script halted";
