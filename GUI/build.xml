@@ -103,7 +103,7 @@
             <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
         </propertyfile>  
         <jar jarfile="dist/CASUAL-Revision${svna.version}b.jar">
-            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="${dist.jar}" excludes="META-INF/*"/>
             <manifest>
                 <attribute name="Main-Class" value="CASUAL.CASUALApp"/>
             </manifest>

@@ -58,6 +58,7 @@ public class Shell implements Runnable {
 
         String[] newCmd;
         if (Statics.isLinux()) {
+            //TODO: better testing for GKSU
             String[] TestGKSudo = {"which", "gksudo"};
             String TestReturn = Shell.sendShellCommand(TestGKSudo);
             if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))) {
