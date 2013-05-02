@@ -85,8 +85,6 @@ public class CASUALTest {
                     doQuarterSecondSleep();
                 } catch (IOException ex) {
                     //no need to report this. its fine
-                    //TODO remove logging
-                    new Log().errorHandler(ex);
 
                 }
             }
@@ -142,10 +140,11 @@ public class CASUALTest {
         }
 
         private void doQuarterSecondSleep() {
-            /*try {
-             //TODO this will save processor Thread.sleep(250);
+            try {
+                 Thread.sleep(250);
              } catch (InterruptedException ex) {
-             }*/
+                 //don't care program will continue on
+             }
         }
     };
     Runnable launchCASUAL = new Runnable() {

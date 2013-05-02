@@ -222,7 +222,6 @@ public class CASPACHandler {
             new Log().level4Debug("WARNING: could not parse SVN revision.. Continuing");
 
         }
-        //TODO: go online check ID and revision (should we use these for CASPAC or should it implement a file naming)?
         //TODO: possible: PackageNameR2.CASPAC.zip
     }
 

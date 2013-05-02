@@ -55,7 +55,6 @@ public class CASUALInteraction extends JOptionPane {
         }
         
     }
-    //TODO: this is broken
 
     private int getCommandLineInputNumber() {
         String x;

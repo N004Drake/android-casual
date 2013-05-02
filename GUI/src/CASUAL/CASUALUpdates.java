@@ -228,11 +228,11 @@ public class CASUALUpdates {
                     }
                     }
                 } catch (ArrayIndexOutOfBoundsException ex) {
-                    Log.level0Error("Arrray Index Out Of Bounds Exception in downloadUpdates. Please Report this");
-                    continue; //TODO should this be handled better?
+                    Log.level0Error("Invalid MD5 string");
+                    continue; 
                 } catch (NullPointerException ex) {
-                    Log.level0Error("Null Pointer Exception in downloadUpdates.  Please report this");
-                    continue; //TODO shoudl this be handled better?
+                    Log.level0Error("invalid MD5 string");
+                    continue; 
                 }
 
 

@@ -405,7 +405,6 @@ public class CASUALLanguage {
 
             log.level4Debug(InputBoxText);
 
-            //TODO: this is limited to userinput right now. 
             String command = Message[2].replace("$USERINPUT", InputBoxText);
             new CASUALScriptParser().executeOneShotCommand(command);
 

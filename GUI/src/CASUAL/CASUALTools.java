@@ -161,7 +161,6 @@ public class CASUALTools {
     }
 
     public boolean getIDEMode() {
-        //TODO: move this to CASUAL tools
         String className = this.getClass().getName().replace('.', '/');
         String classJar = this.getClass().getResource("/" + className + ".class").toString();
         if (classJar.startsWith("jar:")) {
