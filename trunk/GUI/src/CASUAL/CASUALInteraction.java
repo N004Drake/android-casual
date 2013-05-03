@@ -152,7 +152,11 @@ public class CASUALInteraction extends JOptionPane {
                         Options[1]);
             }
         } else {
-            new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\n" + Message[1] + "\npress Q to quit");
+            if (Message.length==2){
+                new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\n" + Message[1] + "\npress Q to quit");
+            } else {
+                new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\npress Q to quit");
+            }
             String s = this.getCommandLineInput();
             if (s.equals("q") || s.equals("Q")) {
                 return 0;
