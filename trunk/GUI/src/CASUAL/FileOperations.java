@@ -515,4 +515,108 @@ public class FileOperations {
         EntireFile = EntireFile.replaceFirst("\n", "");
         return EntireFile;
     }
+    
+    /**
+     * 
+     * @param fname
+     * @param useFullPath
+     * @return 
+     */
+    public String[] listFolderFiles(String folder, boolean useFullPath){
+        File dir = new File(folder);
+        if(!dir.isDirectory()) {
+            new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
+            return null;           
+        }
+        String[] childOf = {};
+        File[] list = dir.listFiles();
+        for(int x = 0; list.length > x ; x++) {
+            if(useFullPath) {
+                childOf[x] = list[x].getAbsolutePath() + Statics.Slash + list[x].getName();
+            } else {
+                childOf[x] = list[x].getName();
+            }
+        }
+        return childOf;
+    }
+    
+    /**
+     *
+     * @param fname
+     * @param useFullPath
+     * @return
+     */
+    public String[] recursiveListFolderFiles(String folder, boolean useFullPath) {
+        File dir = new File(folder);
+        if(!dir.exists()) return null;
+        String[] childOf = {}, childChildOf = {};
+        File[] list = dir.listFiles();
+        if(!dir.isDirectory()) {
+            new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
+            return null;           
+        }
+        int x = 0, y = list.length - 1;
+        while(true) {
+            if(!list[x].isDirectory()) {
+                if(useFullPath) {
+                    childOf[x] = list[x].getAbsolutePath() + Statics.Slash + list[x].getName();
+                } else {
+                    childOf[x] = list[x].getName();
+                }
+            } else {
+                if(useFullPath) {
+                    childOf[x] = list[x].getAbsolutePath() + Statics.Slash + list[x].getName();
+                } else {
+                    childOf[x] = list[x].getName();
+                }
+                childChildOf = recursiveListFolderFiles(list[x].getAbsolutePath(), useFullPath);
+                for(int j = 0; childChildOf.length > j; y++, j++, x++) {
+                    childOf[x] = childChildOf[j];
+                }
+            }
+            x++;
+            if(y <= x) break;
+        }
+        return childOf;
+    } 
+    
+    /**
+     * 
+     * @param sourceFile
+     * @param destFile
+     * @throws IOException 
+     */
+    public boolean moveFile(File sourceFile, File destFile) throws IOException {
+        Log log = new Log();
+        FileOperations fO = new FileOperations();
+        if(fO.copyFile(sourceFile.toString(), destFile.toString())) {
+            if(fO.deleteFile(sourceFile.toString())) {
+                log.level4Debug("[moveFile()]File moved successfully");
+                return true;
+            } else {
+                log.level4Debug("[moveFile()]File copied, unable to remove source");
+                return false;
+            }
+        } else {
+            log.level4Debug("[moveFile()]Unable to copy from source");
+            return false;
+        }
+    }
+    
+        public boolean moveFile(String sourceFile, String destFile) throws IOException {
+        Log log = new Log();
+        FileOperations fO = new FileOperations();
+        if(fO.copyFile(sourceFile, destFile)) {
+            if(fO.deleteFile(sourceFile)) {
+                log.level4Debug("[moveFile()]File moved successfully");
+                return true;
+            } else {
+                log.level4Debug("[moveFile()]File copied, unable to remove source");
+                return false;
+            }
+        } else {
+            log.level4Debug("[moveFile()]Unable to copy from source");
+            return false;
+        }
+    }
 }
