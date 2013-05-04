@@ -113,7 +113,7 @@ public class Unzip {
     ZipFile zip;
     Enumeration zipFileEntries;
 
-    Unzip(File f) throws ZipException, IOException {
+    public Unzip(File f) throws ZipException, IOException {
         this.zip = new ZipFile(f);
         try {
             this.zipFileEntries = zip.entries();
@@ -122,7 +122,7 @@ public class Unzip {
         }
     }
 
-    Unzip() {
+    public Unzip() {
     }
 
     public void closeZip() {
