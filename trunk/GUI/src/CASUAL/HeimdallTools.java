@@ -71,13 +71,13 @@ public class HeimdallTools {
         String result = new HeimdallTools().didHeimdallError(returnval);
         if (!result.equals("")) {
             if(result.contains("Script halted")) {
-                log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+                log.level0Error("[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnval;
             } else if (result.contains("Attempting to continue")) {
                 result = result.replace("Attempting to continue", "Script Halted");
-                log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+                log.level0Error("[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnval;
@@ -105,13 +105,13 @@ public class HeimdallTools {
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnRead;
             }
-            log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+            log.level2Information("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n"); //not an error, generally requires permissions
         } else if (result.contains("")) {
             log.level2Information("\n[Heimdall Success]\n\n");
         }
         if (result.contains("Attempting to continue")) {
             if(Statics.isLinux()) {
-                log.level0Error("#A permissions error was detected.  Elevating permissions.");
+                log.level2Information("A permissions problem was detected.  Elevating permissions.");
                 this.doElevatedHeimdallShellCommand(line);
             } else if (Statics.isWindows()) {
                 this.doHeimdallShellCommand(line);

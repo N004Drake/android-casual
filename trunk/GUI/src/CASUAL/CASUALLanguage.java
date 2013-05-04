@@ -82,7 +82,6 @@ public class CASUALLanguage {
             //log.level4Debug("received blank line");
             return "";
         }
-        log.level4Debug("new command: " + line);//log line
         /*OPERATING SYSTEM COMMANDS
          * $WINDOWS/$LINUX/$MAC
          * checks if the operating system is Windows, Linux Or Mac
