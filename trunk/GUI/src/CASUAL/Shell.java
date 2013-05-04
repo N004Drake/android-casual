@@ -114,7 +114,7 @@ public class Shell implements Runnable {
     }
 
     public String sendShellCommand(String[] cmd) {
-        log.level4Debug("\n###executing: " + cmd[0] + "###");
+        log.level4Debug("###executing: " + cmd[0] + "###");
         String AllText = "";
         try {
             String line;
@@ -225,7 +225,7 @@ public class Shell implements Runnable {
             ProcessBuilder p = new ProcessBuilder(params);
             p.redirectErrorStream(true);
             Process process = p.start();
-            log.level4Debug("\n###executing real-time command: " + params[0] + "###");
+            log.level4Debug("###executing real-time command: " + params[0] + "###");
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String LineRead = "";
             String CharRead;
@@ -269,7 +269,7 @@ public class Shell implements Runnable {
                 boolean LinkLaunched = false;
                 try {
                     String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    log.level4Debug("\n###executing real-time background command: " + params[0] + "###");
+                    log.level4Debug("###executing real-time background command: " + params[0] + "###");
                     Process process = new ProcessBuilder(params).start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));

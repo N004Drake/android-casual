@@ -189,7 +189,7 @@ public class Log {
             if (data.contains("\n")) {
                 writeToLogFile(progressBuffer);
                 progressBuffer = "";
-                lastNewLine = Statics.ProgressPane.getCaretPosition();
+                lastNewLine = Statics.ProgressPane.getCaretPosition()-1;
             }
         } else {
             out.print(data);
