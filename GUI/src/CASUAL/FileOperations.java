@@ -522,20 +522,16 @@ public class FileOperations {
      * @param useFullPath
      * @return 
      */
-    public String[] listFolderFiles(String folder, boolean useFullPath){
+    public String[] listFolderFiles(String folder){
         File dir = new File(folder);
         if(!dir.isDirectory()) {
             new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
             return null;           
         }
-        String[] childOf = {};
+        String[] childOf = new String[1024];
         File[] list = dir.listFiles();
         for(int x = 0; list.length > x ; x++) {
-            if(useFullPath) {
-                childOf[x] = list[x].getAbsolutePath() + Statics.Slash + list[x].getName();
-            } else {
                 childOf[x] = list[x].getName();
-            }
         }
         return childOf;
     }
@@ -546,7 +542,7 @@ public class FileOperations {
      * @param useFullPath
      * @return
      */
-    public String[] recursiveListFolderFiles(String folder, boolean useFullPath) {
+    public String[] recursiveListFolderFiles(String folder) {
         File dir = new File(folder);
         if(!dir.exists()) return null;
         String[] childOf = {}, childChildOf = {};
@@ -558,20 +554,12 @@ public class FileOperations {
         int x = 0, y = list.length - 1;
         while(true) {
             if(!list[x].isDirectory()) {
-                if(useFullPath) {
-                    childOf[x] = list[x].getAbsolutePath() + Statics.Slash + list[x].getName();
-                } else {
-                    childOf[x] = list[x].getName();
-                }
+                childOf[x] = list[x].getName();
             } else {
-                if(useFullPath) {
-                    childOf[x] = list[x].getAbsolutePath() + Statics.Slash + list[x].getName();
-                } else {
-                    childOf[x] = list[x].getName();
-                }
-                childChildOf = recursiveListFolderFiles(list[x].getAbsolutePath(), useFullPath);
+                childOf[x] = list[x].getName();
+                childChildOf = recursiveListFolderFiles(list[x].getAbsolutePath());
                 for(int j = 0; childChildOf.length > j; y++, j++, x++) {
-                    childOf[x] = childChildOf[j];
+                    childOf[x] = list[x].getName() + Statics.Slash + childChildOf[j];
                 }
             }
             x++;
