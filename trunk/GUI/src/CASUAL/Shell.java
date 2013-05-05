@@ -102,6 +102,12 @@ public class Shell implements Runnable {
             newCmd = new String[cmd.length + 2];
             newCmd[0] = Statics.WinElevatorInTempFolder;
             newCmd[1] = "-wait";
+            
+            //check if a virus scanner trashed CASUAL's Elevate.exe file. 
+            if (! new FileOperations().verifyExists(Statics.WinElevatorInTempFolder)){
+                new CASUALInteraction().showUserCancelOption("It has been detected that CASUAL's\nconsistancy has been compromised.\nThis is likely the work of a virus\nscanner.  It is recommended to disable\nvirus scanners and redownload CASUAL.");
+            }
+            
             for (int i = 2; i < cmd.length + 2; i++) {
                 newCmd[i] = cmd[i - 2] + " ";
             }
