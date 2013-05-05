@@ -42,7 +42,7 @@ $ECHO [x]Ready for exploit
 #Verify Device is proper
 $IFNOTCONTAINS 3.0.31-414933 $INCOMMAND shell "cat /proc/version" $DO $USERCANCELOPTION Improper kernel, I have detected an unsupported kernel\n  You may continue if you are rooted. Otherwise click stop\n and restart the procedure.
 $ON noroot, $HALT $ECHO WHAT THE HELL ARE YOU DOING?  I EVEN GAVE YOU A DAMN WARNING.. DEVICE IS NOT ROOTED! ROOT YOUR DEVICE OR INSTALL THE KERNEL! Install any VRALJB kernel and disable any exploit killers --Adam Outler
-shell 'su -c "ls 2>&1 >/dev/null && echo [x]Found rooted device || echo noroot"'
+shell "su -c 'ls 2>&1 >/dev/null && echo [x]Found rooted device || echo noroot'"
 $CLEARON 
 
 $ECHO [x]Device Verification Checks Complete
