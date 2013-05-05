@@ -44,61 +44,75 @@ public class PackagerMain {
     /***************************************************************************
      * 
      **************************************************************************/
-    private static Log log = new CASUAL.Log();
+    private static String caspacWithPath = "";
     
     /***************************************************************************
      * 
      **************************************************************************/
-    private static FileOperations caspacIO = new FileOperations();
+    private static String caspacNoPath = "";
+    
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static Log log = new Log();;
+    
+    /***************************************************************************
+     * 
+     **************************************************************************/
+    private static FileOperations caspacIO = new FileOperations();;
     
     /***************************************************************************
      * @param args the command line arguments
      **************************************************************************/
-    public int main(String[] args) {
-        String caspac = processCommandline(args);
-        if(doCASPACWork(caspac)) {
+    public static void main(String[] args) {
+        args = new String[] {"C:\\Users\\Jeremy\\Desktop\\CASUAL\\CASPACS\\backatchaverizon.zip"};
+        processCommandline(args);
+        if(doCASPACWork()) {
             if(doCASUALWork()) {
-                if(doCASPACCASUALMerge(caspac)){
+                if(doCASPACCASUALMerge()){
                     doCleanUp();
-                    return 0;
                 }
-                return 1;
             }
-            return 2;
         }
-        return 3;
+    }
+    
+    /***************************************************************************
+     * processCommandline
+     * @param args String array of arguments passed at runtime
+     **************************************************************************/
+    private static void processCommandline(String[] args) {
+        if(args.length > 0) {
+            caspacWithPath = args[0];
+            caspacWithPath = StringOperations.removeLeadingAndTrailingSpaces(args[0]);
+            if(caspacWithPath.endsWith(".zip") || caspacWithPath.endsWith(".jar") || caspacWithPath.endsWith(".caspac")) {
+                //log.level4Debug("[processCommandline()]File type is known based on extension");
+                caspacNoPath = caspacWithPath;
+                //log.level4Debug("[processCommandline()]Removing file extension");
+                if(caspacNoPath.endsWith(".zip")) {
+                    caspacNoPath = caspacNoPath.replace(".zip", "");
+                } else if(caspacNoPath.endsWith(".jar")) {
+                    caspacNoPath = caspacNoPath.replace(".jar", "");
+                } else if(caspacNoPath.endsWith(".caspac")) {
+                    caspacNoPath = caspacNoPath.replace(".caspac", "");
+                }
+                //log.level4Debug("[processCommandline()]Removing file path");
+                caspacNoPath = caspacNoPath.substring(caspacNoPath.lastIndexOf(Statics.Slash) + 1, caspacNoPath.length() - 1);
+            }
+            //log.level0Error("[processCommandline()]File type is unknown based on extention");
+            return;
+        }
+        //log.level0Error("[processCommandline()]No file specified");
     }
     
     /***************************************************************************
      * 
-     * @param args
-     * @return 
+     * @return Success = True, Failure = False 
      **************************************************************************/
-    private static String processCommandline(String[] args) {
-        if(args.length > 0 && args[0] != null) {
-            if(args[0].contains(".zip") || args[0].contains(".jar") || args[0].contains(".caspac")) {
-                log.level4Debug("[processCommandline()]File type is known based on extention");
-                return StringOperations.removeLeadingAndTrailingSpaces(args[0]);
-            }
-            log.level0Error("[processCommandline()]File type is unknown based on extention");
-            return null;
-        }
-        log.level0Error("[processCommandline()]No file specified");
-        return null;
-    }
-    
-    /***************************************************************************
-     * 
-     * @param caspac
-     * @return 
-     **************************************************************************/
-    private static boolean doCASPACWork(String caspac) {
+    private static boolean doCASPACWork() {
         try {
-            if(caspac == null) {
-                log.level0Error("[doCASPACWork()]No file or unknown file type specified.");
-                return false;
-            }
-            new Unzip().unzipFile(caspac, Statics.TempFolder + "CASPAC");
+            if(!caspacIO.makeFolder(Statics.TempFolder + "CASPAC")) return false;
+            log.level4Debug("[doCASUALWork()]Created folder " + Statics.TempFolder + "CASPAC");
+            new Unzip().unzipFile(caspacWithPath, Statics.TempFolder + "CASPAC");
             log.level4Debug("[doCASPACWork()]CASPAC unzipped to " + Statics.TempFolder + "CASPAC");
             return true;
         } catch (ZipException ex) {
@@ -111,20 +125,23 @@ public class PackagerMain {
     
     /***************************************************************************
      * 
-     * @return 
+     * @return Success = True, Failure = False
      **************************************************************************/
     private static boolean doCASUALWork() {
         try {
             if(!caspacIO.makeFolder(Statics.TempFolder + "CASUAL")) return false;
             log.level4Debug("[doCASUALWork()]Created folder " + Statics.TempFolder + "CASUAL");
-            new Unzip().unZipResource("/resouce/CASUAL.jar", Statics.TempFolder + "CASUAL" );
+            caspacIO.copyFromResourceToFile("/Packager/resources/CASUAL.jar", Statics.TempFolder + "CASUAL.zip");
+            new Unzip().unzipFile(Statics.TempFolder + "CASUAL.zip", Statics.TempFolder + "CASUAL" + Statics.Slash);
             log.level4Debug("[doCASUALWork()]Unzipping CASUAL.jar from PACKAGER.jar's resources");
-            String[] cleanUp = caspacIO.listFolderFiles(Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS", true);
+            String[] cleanUp = caspacIO.listFolderFiles(Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash);
             log.level4Debug("[doCASUALWork()]Getting /SCRIPTS folder contents list");
-            if(cleanUp.length > 0)  {
+            int x = 0;
+            if(cleanUp[x] != null)  {
                 log.level4Debug("[doCASUALWork()]Folder is not empty, deleting files");
-                for(int x = 0; cleanUp.length > x; x++) {
+                while(cleanUp[x] != null) {
                     if(!caspacIO.deleteFile(cleanUp[x])) return false;
+                    x++;
                 }
                 log.level4Debug("[doCASUALWork()]Folder is empty");
                 log.level4Debug("[doCASUALWork()]Operation Complete");
@@ -142,36 +159,33 @@ public class PackagerMain {
     }
     
     /***************************************************************************
-     * 
-     * @return 
+     * doCASPACCASUALMerge merges the extracted CASPAC and extracted CASUAL.jar
+     * into a new caspac-CASUAL.jar
+     * @return Success = True, Failure = False
      **************************************************************************/
-    private static boolean doCASPACCASUALMerge(String caspac) {
-        String[] files = caspacIO.listFolderFiles(Statics.TempFolder + "CASPAC", true);
-        if(files.length == 0) {
+    private static boolean doCASPACCASUALMerge() {
+        String[] files = caspacIO.listFolderFiles(Statics.TempFolder + "CASPAC" + Statics.Slash);
+        int x = 0;
+        if(files[x] == null) {
             log.level0Error("[doCASPACCASUALMerge()]CASPAC contained no files.");
             return false;
         }
-        for(int x = 0; files.length > x; x++) {
+        while(files[x] != null) {
             try {
-                caspacIO.moveFile(files[x], Statics.TempFolder + "CASPAC" + Statics.Slash);
+                caspacIO.moveFile(Statics.TempFolder + "CASPAC" + Statics.Slash + files[x], Statics.TempFolder + "CASUAL" + Statics.Slash + files[x]);
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
+            x++;
         }
         log.level4Debug("[doCASPACCASUALMerge()]File bases merged");
-        String temp = caspac.replace(".jar", "");
-        if(temp == null) {
-            temp = caspac.replace(".zip", "");
-            if(temp == null) {
-                caspac = caspac.replace(".caspac", "");
-            }
-        }
-        try {
-            Zip.addFilesToExistingZip(temp + "-CASUAL.jar", files);
-            log.level4Debug("[doCASPACCASUALMerge()] " + temp + "-CASUAL.jar created");
-        } catch (IOException ex) {
-            log.errorHandler(ex);
-        }
+        //try {
+            //Zip.addFilesToExistingZip(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", files);
+            //caspacIO.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", getProperty()); //TODO Create new CASUAL.jar, move it somewhere, done.
+            //log.level4Debug("[doCASPACCASUALMerge()] " + caspacNoPath + "-CASUAL.jar created");
+        //} catch (IOException ex) {
+            //log.errorHandler(ex);
+        //}
         return true;
     }
     
