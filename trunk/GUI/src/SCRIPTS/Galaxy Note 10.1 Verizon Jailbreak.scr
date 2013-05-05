@@ -26,7 +26,7 @@ shell "chmod 777 /data/local/tmp/busybox"
 $ECHO [x]Device Verification Checks Complete
 
 $ECHO Injecting Code 
-shell 'su -C "dd if=/data/local/tmp/exploit of=/dev/block/mmcblk0 bs=512 seek=34 count=16"'
+shell "su -c 'dd if=/data/local/tmp/exploit of=/dev/block/mmcblk0 bs=512 seek=34 count=16'"
 $ECHO [x]Exploit Injection Done.
 reboot download
 
