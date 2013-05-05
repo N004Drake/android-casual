@@ -38,7 +38,7 @@ public class Unzip {
 
     int BUFFER = 4096;
 
-    public void unzipFile(String zipFile, String outputFolder) throws ZipException, IOException {
+    public void recursiveUnzipFile(String zipFile, String outputFolder) throws ZipException, IOException {
         new Log().level4Debug(zipFile);
 
         File file = new File(zipFile);
@@ -71,6 +71,35 @@ public class Unzip {
         }
     }
 
+        public void unzipFile(String zipFile, String outputFolder) throws ZipException, IOException {
+        new Log().level4Debug(zipFile);
+
+        File file = new File(zipFile);
+        ZipFile zip = new ZipFile(file);
+//TODO: remove this and use the constructor instead below.
+        String newPath = outputFolder + System.getProperty("file.separator");
+        new File(newPath).mkdir();
+        Enumeration zipFileEntries = zip.entries();
+        // Process each entry
+        while (zipFileEntries.hasMoreElements()) {
+            // grab a zip file entry
+            ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+            String currentEntry = entry.getName();
+            File destFile = new File(newPath, currentEntry);
+            //destFile = new File(newPath, destFile.getName());
+            File destinationParent = destFile.getParentFile();
+            // create the parent directory structure if needed
+            destinationParent.mkdirs();
+            if (!entry.isDirectory()) {
+                new Log().level3Verbose("unzipping " + entry.toString());
+                writeFromZipToFile(zip, entry, newPath);
+            } else if (entry.isDirectory()) {
+                new Log().level4Debug(newPath + entry.getName());
+                new File(newPath + entry.getName()).mkdirs();
+            }
+        }
+    }
+    
     public void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
         InputStream ZStream = getClass().getResourceAsStream(zipResource);
         unZipInputStream(ZStream, outputFolder);
