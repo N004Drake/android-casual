@@ -41,6 +41,8 @@ public class PackagerMain {
         //NADA
     }
     
+    public static String outputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
+    
     /***************************************************************************
      * 
      **************************************************************************/
@@ -65,7 +67,7 @@ public class PackagerMain {
      * @param args the command line arguments
      **************************************************************************/
     public static void main(String[] args) {
-        args = new String[] {"C:\\Users\\Jeremy\\Desktop\\CASUAL\\CASPACS\\backatchaverizon.zip"};
+        //args = new String[] {"C:\\Users\\Jeremy\\Desktop\\CASUAL\\CASPACS\\backatchaverizon.zip"};
         processCommandline(args);
         if(doCASPACWork()) {
             if(doCASUALWork()) {
@@ -85,9 +87,9 @@ public class PackagerMain {
             caspacWithPath = args[0];
             caspacWithPath = StringOperations.removeLeadingAndTrailingSpaces(args[0]);
             if(caspacWithPath.endsWith(".zip") || caspacWithPath.endsWith(".jar") || caspacWithPath.endsWith(".caspac")) {
-                //log.level4Debug("[processCommandline()]File type is known based on extension");
+                log.level4Debug("[processCommandline()]File type is known based on extension");
                 caspacNoPath = caspacWithPath;
-                //log.level4Debug("[processCommandline()]Removing file extension");
+                log.level4Debug("[processCommandline()]Removing file extension");
                 if(caspacNoPath.endsWith(".zip")) {
                     caspacNoPath = caspacNoPath.replace(".zip", "");
                 } else if(caspacNoPath.endsWith(".jar")) {
@@ -95,13 +97,13 @@ public class PackagerMain {
                 } else if(caspacNoPath.endsWith(".caspac")) {
                     caspacNoPath = caspacNoPath.replace(".caspac", "");
                 }
-                //log.level4Debug("[processCommandline()]Removing file path");
+                log.level4Debug("[processCommandline()]Removing file path");
                 caspacNoPath = caspacNoPath.substring(caspacNoPath.lastIndexOf(Statics.Slash) + 1, caspacNoPath.length() - 1);
             }
-            //log.level0Error("[processCommandline()]File type is unknown based on extention");
+            log.level0Error("[processCommandline()]File type is unknown based on extention");
             return;
         }
-        //log.level0Error("[processCommandline()]No file specified");
+        log.level0Error("[processCommandline()]No file specified");
     }
     
     /***************************************************************************
@@ -172,20 +174,21 @@ public class PackagerMain {
         }
         while(files[x] != null) {
             try {
-                caspacIO.moveFile(Statics.TempFolder + "CASPAC" + Statics.Slash + files[x], Statics.TempFolder + "CASUAL" + Statics.Slash + files[x]);
+                caspacIO.moveFile(Statics.TempFolder + "CASPAC" + Statics.Slash + files[x], Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash + files[x]);
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
             x++;
         }
         log.level4Debug("[doCASPACCASUALMerge()]File bases merged");
-        //try {
-            //Zip.addFilesToExistingZip(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", files);
-            //caspacIO.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", getProperty()); //TODO Create new CASUAL.jar, move it somewhere, done.
-            //log.level4Debug("[doCASPACCASUALMerge()] " + caspacNoPath + "-CASUAL.jar created");
-        //} catch (IOException ex) {
-            //log.errorHandler(ex);
-        //}
+        try {
+            new Zip().addFilesToNewZip(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", Statics.TempFolder + "CASUAL" + Statics.Slash);
+            caspacIO.makeFolder(outputDir);
+            caspacIO.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", outputDir + caspacNoPath + "-CASUAL.jar");
+            log.level4Debug("[doCASPACCASUALMerge()] " + caspacNoPath + "-CASUAL.jar created");
+        } catch (Exception ex) {
+            log.errorHandler(ex);
+        }
         return true;
     }
     
