@@ -537,38 +537,6 @@ public class FileOperations {
     }
     
     /**
-     *
-     * @param fname
-     * @param useFullPath
-     * @return
-     */
-    public String[] recursiveListFolderFiles(String folder) {
-        File dir = new File(folder);
-        if(!dir.exists()) return null;
-        String[] childOf = {}, childChildOf = {};
-        File[] list = dir.listFiles();
-        if(!dir.isDirectory()) {
-            new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
-            return null;           
-        }
-        int x = 0, y = list.length - 1;
-        while(true) {
-            if(!list[x].isDirectory()) {
-                childOf[x] = list[x].getName();
-            } else {
-                childOf[x] = list[x].getName();
-                childChildOf = recursiveListFolderFiles(list[x].getAbsolutePath());
-                for(int j = 0; childChildOf.length > j; y++, j++, x++) {
-                    childOf[x] = list[x].getName() + Statics.Slash + childChildOf[j];
-                }
-            }
-            x++;
-            if(y <= x) break;
-        }
-        return childOf;
-    } 
-    
-    /**
      * 
      * @param sourceFile
      * @param destFile
@@ -594,6 +562,11 @@ public class FileOperations {
         public boolean moveFile(String sourceFile, String destFile) throws IOException {
         Log log = new Log();
         FileOperations fO = new FileOperations();
+        if(!fO.verifyExists(sourceFile)) {
+            log.level4Debug("[moveFile()] Source doesn't exist");
+            return false;
+        }
+        if(fO.verifyExists(destFile)) fO.deleteFile(destFile);
         if(fO.copyFile(sourceFile, destFile)) {
             if(fO.deleteFile(sourceFile)) {
                 log.level4Debug("[moveFile()]File moved successfully");
@@ -603,7 +576,7 @@ public class FileOperations {
                 return false;
             }
         } else {
-            log.level4Debug("[moveFile()]Unable to copy from source");
+            log.level4Debug("[moveFile()]Unable to copy source to destination");
             return false;
         }
     }
