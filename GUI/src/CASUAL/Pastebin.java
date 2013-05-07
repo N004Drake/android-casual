@@ -72,11 +72,7 @@ public class Pastebin {
                     String[] sUrl = output.split("[/]");
                     String key = sUrl[sUrl.length - 1].replace("%0D", "");
                     URI url = new URI("http", "pastebin.com", "/" + key, null);
-                    try {
-                        java.awt.Desktop.getDesktop().browse(url);
-                    } catch (java.io.IOException e) {
-                        log.level0Error(e.getMessage());
-                    }
+                    new LinkLauncher().launchLink(url.toString());
                     StringSelection stringSelection = new StringSelection(url.toString());
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
