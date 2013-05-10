@@ -120,6 +120,15 @@ public class HeimdallTools {
         return returnRead;
     }
     
+    public static boolean didCADIError(String stdErrLog) {
+        if((stdErrLog.contains("cadi:error [CADI] General Failure")) && !(stdErrLog.contains("cadi:info [CADI] Success"))) {
+            if (stdErrLog.contains("more recent driver was found")) return true;
+            return true;
+        }
+        else if (!(stdErrLog.contains("cadi:error [CADI] General Failure")) && (stdErrLog.contains("cadi:info [CADI] Success")))return false;
+        else if (stdErrLog.length() < 9) return true;
+        else return false;
+    }
     
      /**
      * .
@@ -272,7 +281,6 @@ public class HeimdallTools {
         }
     }
     
-    //TODO - Move this Array into Resources in a CSV file
     protected static String[] errFail = {   "Failed to end phone file transfer sequence!",//FAIL
                                             "Failed to end modem file transfer sequence!",//FAIL
                                             "Failed to confirm end of file transfer sequence!",//FAIL
@@ -335,7 +343,6 @@ public class HeimdallTools {
                                             "does not exist in the specified PIT.",//FAIL
                                             "Partition name for "};//FAIL
     
-    //TODO - Move this Array into Resources in a CSV file
     protected static String[] errNotFail = {    "Failed to receive file part response!",//NO FAIL
                                                 "Failed to unpack received packet.",//NO FAIL
                                                 "Unexpected handshake response!",//NO FAIL
