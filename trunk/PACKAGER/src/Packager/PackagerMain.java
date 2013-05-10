@@ -34,48 +34,22 @@ import java.util.zip.ZipException;
  **************************************************************************/
 public class PackagerMain {
 
-     /*************************************************************************
-     * PackagerMain
-     * default constructor
-     **************************************************************************/
     public PackagerMain(){
         //NADA
     }
+
+    protected static String userOutputDir = null;
     
-     /***************************************************************************
-     * defaultOutputDir
-     **************************************************************************/
-    public static String userOutputDir = null;
+    final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
     
-    /***************************************************************************
-     * defaultOutputDir
-     **************************************************************************/
-    public static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
-    
-    /***************************************************************************
-     * caspacWithPath
-     **************************************************************************/
     private static String caspacWithPath = null;
     
-    /***************************************************************************
-     * caspacNoPath
-     **************************************************************************/
     private static String caspacNoPath = null;
     
-    /***************************************************************************
-     * log
-     **************************************************************************/
     private static Log log = new Log();;
     
-    /***************************************************************************
-     * caspacIO
-     **************************************************************************/
     private static FileOperations caspacIO = new FileOperations();;
     
-    /***************************************************************************
-     * main
-     * @param args the command line arguments
-     **************************************************************************/
     public static void main(String[] args) {
         processCommandline(args);
         
@@ -113,7 +87,7 @@ public class PackagerMain {
                 caspacNoPath = caspacNoPath.substring(caspacNoPath.lastIndexOf(Statics.Slash) + 1, caspacNoPath.length() - 1);
             }
             
-        //log.level0Error("[processCommandline()]File type is unknown based on extention");
+        log.level0Error("[processCommandline()]File type is unknown based on extention");
         return;
         }
         
@@ -211,7 +185,7 @@ public class PackagerMain {
         int x = 0;
         
         if(files[x] == null) {
-            //log.level0Error("[doCASPACCASUALMerge()]CASPAC contained no files.");
+            log.level0Error("[doCASPACCASUALMerge()]CASPAC contained no files.");
             return false;
         }
         
