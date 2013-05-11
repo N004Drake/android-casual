@@ -136,6 +136,7 @@ public class CASUALScriptParser {
                 DATAIN = getDataStreamFromFile(script);
             }
 
+            //TODO: remove idStringFile
             private boolean checkForUpdates(String TestString, String idStringFile) {
                 int updateStatus;
                 if ((TestString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
