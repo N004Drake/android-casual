@@ -105,6 +105,9 @@ public class HeimdallTools {
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnRead;
             }
+            else if (result.contains("; Stopping")){
+                return returnRead;
+            }
             log.level2Information("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n"); //not an error, generally requires permissions
         } else if (result.contains("")) {
             log.level2Information("\n[Heimdall Success]\n\n");
@@ -151,7 +154,9 @@ public class HeimdallTools {
             }
             
             if(stdErrLog.contains("Protocol initialisation failed!")) {
-                return "Heimdall failed to initialize protocol; Script halted"; 
+                CASUALScriptParser cLang = new CASUALScriptParser();
+                cLang.executeOneShotCommand("$HALT $ECHO A random error occurred while attempting initial communications with the device.\nYou will need disconnect USB and pull your battery out to restart your device.\nDo the same for CASUAL.");
+                return "Heimdall failed to initialize protocol; Stopping"; 
             }
             
             if(stdErrLog.contains("upload failed!")) {
