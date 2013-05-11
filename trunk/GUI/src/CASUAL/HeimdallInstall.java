@@ -169,12 +169,6 @@ public class HeimdallInstall {
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
         
-        if(Statics.driverInstallCount >= 10) {
-            log.level2Information("Auto cancelling continuation.");
-            CASUALScriptParser cLang = new CASUALScriptParser();
-            cLang.executeOneShotCommand("$HALT $SENDLOG");
-        }
-        
         log.level0Error("\nDrivers are Required Launching CADI.\nCASUAL Automated Driver Installer by jrloper.\nInstalling Drivers now"); //Add Newline
         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
                 + "We're going to install drivers now.  Lets do it.\n" 
@@ -194,18 +188,7 @@ public class HeimdallInstall {
         }
         //verify MD5
 
-        String stdoutlog = null;
-        log.level2Information(stdoutlog = new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", exec}));
-        Statics.driverInstallCount++;
-        if(HeimdallTools.didCADIError(stdoutlog)){
-            if((new CASUALInteraction().showUserCancelOption("CADI has failed to install the device driver needed\n\nRetry the installer?")) == 0) {
-                log.level2Information("User cancelled continuation.");
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
-            }
-            else log.level2Information(new Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "START", "/WAIT", "/B", exec}, true));
-            Statics.driverInstallCount++;
-        }
+        log.level2Information(new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", exec}));
 
     }
 

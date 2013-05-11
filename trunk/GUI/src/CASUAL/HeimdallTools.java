@@ -120,16 +120,6 @@ public class HeimdallTools {
         return returnRead;
     }
     
-    public static boolean didCADIError(String stdErrLog) {
-        if((stdErrLog.contains("cadi:error [CADI] General Failure")) && !(stdErrLog.contains("cadi:info [CADI] Success"))) {
-            if (stdErrLog.contains("more recent driver was found")) return true;
-            return true;
-        }
-        else if (!(stdErrLog.contains("cadi:error [CADI] General Failure")) && (stdErrLog.contains("cadi:info [CADI] Success")))return false;
-        else if (stdErrLog.length() < 9) return true;
-        else return false;
-    }
-    
      /**
      * .
      * 
