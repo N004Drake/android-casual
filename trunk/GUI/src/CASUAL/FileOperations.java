@@ -504,6 +504,7 @@ public class FileOperations {
                 //Log.level3(Line);  
                 EntireFile = EntireFile + "\n" + Line;
             }
+            BROriginal.close();
         } catch (FileNotFoundException ex) {
             Log.level0Error("File Not Found Error: " + FileOnDisk);
             new Log().errorHandler(ex);

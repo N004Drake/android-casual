@@ -32,14 +32,14 @@ public class DiffTextFiles {
     public String diffResourceVersusFile(String TestIStream, String OriginalFile) {
 
         String Difference = "";
-        InputStream ResourceAsStream = getClass().getResourceAsStream(TestIStream);
-        BufferedReader TestStream = new BufferedReader(new InputStreamReader(ResourceAsStream));
-        File Original = new File(OriginalFile);
+        InputStream resourceAsStream = getClass().getResourceAsStream(TestIStream);
+        BufferedReader testStream = new BufferedReader(new InputStreamReader(resourceAsStream));
+        File original = new File(OriginalFile);
         String TestStreamLine = "";
         String OriginalFileLine;
         try {
-            while ((TestStreamLine = TestStream.readLine()) != null) {
-                BufferedReader OriginalReader = new BufferedReader(new FileReader(Original));
+            while ((TestStreamLine = testStream.readLine()) != null) {
+                BufferedReader OriginalReader = new BufferedReader(new FileReader(original));
                 OriginalReader.mark(0);
 
                 boolean LineExists = false;
@@ -54,11 +54,13 @@ public class DiffTextFiles {
                     Difference = Difference + "\n" + TestStreamLine;
                 }
             }
+            resourceAsStream.close();
+            testStream.close();
         } catch (IOException ex) {
 
             Difference = TestStreamLine + "\n";
             try {
-                while ((TestStreamLine = TestStream.readLine()) != null) {
+                while ((TestStreamLine = testStream.readLine()) != null) {
                     Difference = Difference + TestStreamLine + "\n";
                 }
             } catch (IOException ex1) {
@@ -104,6 +106,7 @@ public class DiffTextFiles {
                     DifferenceFromFile1 = DifferenceFromFile1 + "\n" + line;
                 }
             }
+            BROriginal.close();
         } catch (IOException e) {
             new Log().errorHandler(e);
         }
@@ -148,6 +151,8 @@ public class DiffTextFiles {
                 new PrintStream(FileOut).println(currentString);
             }
             new PrintStream(FileOut).println(Diff);
+            FR.close();
+            FileOut.close();
         } catch (IOException ex) {
             Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
 

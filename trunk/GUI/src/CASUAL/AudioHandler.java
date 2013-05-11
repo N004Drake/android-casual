@@ -57,6 +57,7 @@ public class AudioHandler {
                         }
                         line.drain();
                         line.close();
+                        IS.close();
                     } catch (UnsupportedAudioFileException ex) {
                         Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -98,6 +99,7 @@ public class AudioHandler {
                             if (CurrentURL == URLEndPosition) {
                                 line.drain(); // wait for the buffer to empty before closing the line
                                 line.close();
+                                IS.close();
                             }
                         } catch (UnsupportedAudioFileException ex) {
                             Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);

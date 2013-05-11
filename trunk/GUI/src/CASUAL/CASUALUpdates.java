@@ -187,6 +187,7 @@ public class CASUALUpdates {
                 webData = webData + (new String(new byte[]{b}));
             }
         }
+        rbc.close();
         return webData;
     }
 
