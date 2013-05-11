@@ -607,7 +607,7 @@ public class CASUALLanguage {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         if (Line.startsWith("wait-for")) {
-            log.level2Information("Waiting ADB device connection.  When " + Statics.OSName + " recognizes the device we will continue.  Don't touch anything.");
+            log.level2Information("Waiting for ADB device connection.  When " + Statics.OSName + " recognizes the device, we will continue.  Don't touch anything.");
         }
 
         Shell Shell = new Shell();
