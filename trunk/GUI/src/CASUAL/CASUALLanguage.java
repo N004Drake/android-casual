@@ -400,10 +400,10 @@ public class CASUALLanguage {
             Message[1] = "<html>" + Message[1].replace("\\n", "<BR>") + "</html>";
 
             String inputBoxText = new CASUALInteraction().inputDialog(Message);
-            inputBoxText = returnSafeCharacters(inputBoxText);
             if (inputBoxText==null){
                 inputBoxText="";
             }
+            inputBoxText = returnSafeCharacters(inputBoxText);
 
             log.level4Debug(inputBoxText);
 
