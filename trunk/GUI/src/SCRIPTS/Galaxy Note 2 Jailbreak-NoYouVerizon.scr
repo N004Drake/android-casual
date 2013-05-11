@@ -2,12 +2,7 @@ $USERCANCELOPTION Are you sure?, This is your only warning.\n You will be Unlock
 
 $ECHO Rebooting into download mode
 $ADB reboot download
-$HEIMDALL flash --pit "$ZIPFILEsch-i605-16gb.pit" --repartition --RECOVERY "$ZIPFILErecovery.img" --8 "$ZIPFILEboot.img" --BOOTLOADER "$ZIPFILEsboot.bin"
-
-
-
-
-
+$HEIMDALL flash --pit "$ZIPFILEsch-i605-16gb.pit" --repartition --BOOTLOADER "$ZIPFILEsboot.bin" --8 "$ZIPFILEboot.img"
 
 
 
