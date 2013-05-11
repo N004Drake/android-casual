@@ -42,7 +42,7 @@ public class CASUALLanguage {
     Log log = new Log();
     static String GOTO = "";
     int CurrentLine = 1;
-    
+
     public void beginScriptingHandler(DataInputStream dataIn) {
         String strLine = "";
         try {
@@ -178,7 +178,7 @@ public class CASUALLanguage {
         if (line.startsWith("$HALT")) {
             ScriptContinue = false;
 
-        //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
+            //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
             log.level4Debug("HALT RECEIVED");
             line = StringOperations.removeLeadingSpaces(line);
@@ -189,7 +189,7 @@ public class CASUALLanguage {
         if (line.startsWith("$SENDLOG")) {
             line = line.replace("$SENDLOG", "");
             line = StringOperations.removeLeadingSpaces(line);
-            if(StringOperations.removeLeadingAndTrailingSpaces(line).equals("")) {
+            if (StringOperations.removeLeadingAndTrailingSpaces(line).equals("")) {
                 log.level4Debug("Sendlog Command Issued!\nNo remaining commands");
             } else {
                 log.level4Debug("Sendlog Command Issued!\nFinishing remaining commands:" + line);
@@ -202,7 +202,7 @@ public class CASUALLanguage {
             }
             return "";
         }
-        
+
         if (line.startsWith("$GOTO")) {
             line = line.replace("$GOTO", "");
             GOTO = StringOperations.removeLeadingAndTrailingSpaces(line);
@@ -400,8 +400,8 @@ public class CASUALLanguage {
             Message[1] = "<html>" + Message[1].replace("\\n", "<BR>") + "</html>";
 
             String inputBoxText = new CASUALInteraction().inputDialog(Message);
-            if (inputBoxText==null){
-                inputBoxText="";
+            if (inputBoxText == null) {
+                inputBoxText = "";
             }
             inputBoxText = returnSafeCharacters(inputBoxText);
 
@@ -486,7 +486,7 @@ public class CASUALLanguage {
         } else if (line.startsWith("$HEIMDALL")) {
             line = line.replace("$HEIMDALL", "");
             line = StringOperations.removeLeadingSpaces(line);
-            log.level4Debug("Received Command: "+line);
+            log.level4Debug("Received Command: " + line);
             log.level4Debug("verifying Heimdall deployment.");
             if (Statics.checkAndDeployHeimdall()) {
                 new HeimdallTools().doHeimdallWaitForDevice();
@@ -516,7 +516,7 @@ public class CASUALLanguage {
                     return returnValue;
                 }
             }
-            
+
             return new FastbootTools().doFastbootShellCommand(line);
 
             // if Fastboot, Send to fastboot shell command
@@ -606,10 +606,10 @@ public class CASUALLanguage {
     private String executeADBCommand(String Line, String ReplaceThis, String WithThis, boolean parseError) {
         Line = StringOperations.removeLeadingSpaces(Line);
 
-        if (Line.startsWith("wait-for")){
-            log.level2Information("waiting for ADB device connection...");
+        if (Line.startsWith("wait-for")) {
+            log.level2Information("Waiting ADB device connection.  When " + Statics.OSName + " recognizes the device we will continue.  Don't touch anything.");
         }
-            
+
         Shell Shell = new Shell();
         ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.AdbDeployed);
