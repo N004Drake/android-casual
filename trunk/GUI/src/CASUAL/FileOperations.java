@@ -207,23 +207,15 @@ public class FileOperations {
      * @return true if folder was created
      */
     public boolean makeFolder(String Folder) {
-        Boolean CreatedFolder;
+        if (Folder==null) return false;
         File folder = new File(Folder);
-
+        folder.mkdirs();
         if (folder.exists()) {
-            return false;
+            return true;
         } else {
-            CreatedFolder = folder.mkdirs();
-        }
-        if (CreatedFolder) {
-            //Log.level3Verbose("Created Folder:" + Folder);
-        } else {
-
-            CreatedFolder = false;
             Log.level0Error("Could not create temp folder in " + Folder);
+            return false;
         }
-
-        return CreatedFolder;
     }
 
     public void writeStreamToFile(BufferedInputStream stream, String destination) throws FileNotFoundException, IOException {
