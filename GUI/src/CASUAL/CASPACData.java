@@ -64,6 +64,7 @@ public class CASPACData {
                 scriptRevision = splitID[1].replaceAll(" ", "");
             } else if (scriptIdentificationString[n].startsWith("CASUAL") || splitID[0].startsWith("SVN")) { // CASUAL revision 
                 minSVNRevision = splitID[1].replaceAll(" ", "");
+                this.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(minSVNRevision));
             } else if (scriptIdentificationString[n].startsWith("URL")) { //Support URL
                 String URL = StringOperations.removeLeadingSpaces(scriptIdentificationString[n].replaceFirst("URL", ""));
                 supportURL = URL;
@@ -76,5 +77,30 @@ public class CASPACData {
             }
 
         }
+    }
+    
+    //TODO: remove CASUAL Webversion versus LocalVersion checks from CASPACHandler. 
+    //    private void exitIfSVNRevisionIsNotHighEnough() {
+    // this is no longer needed
+    
+    /**
+     * isOurSVNHighEnoughToRunThisScript 
+     * @param thisVerison
+     * @return True if SVN is greater than required by script. 
+     */
+    public boolean isOurSVNHighEnoughToRunThisScript(int scriptVersion){
+       
+        int mySVNVersion = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
+        new Log().level3Verbose("Checking my revision:" +mySVNVersion +" against Script:"+scriptVersion +" to verify we are compatible to run.");
+        if (mySVNVersion < scriptVersion){
+            new Log().level0Error("Improper version detected CASUAL cannot continue\n CASUAL Revison " + mySVNVersion + " is not new enough to run\nthis script which requires Revision "+scriptVersion );
+            new CASUALInteraction().showActionRequiredDialog("CASUAL cannot continue and must be updated.\n");
+            // System.exit(0);
+            return false;
+        } else {
+            new Log().level3Verbose("Revision check passed.");
+            return true;
+        }
+
     }
 }

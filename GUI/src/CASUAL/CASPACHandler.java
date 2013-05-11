@@ -66,8 +66,8 @@ public class CASPACHandler {
                 new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted" + ex));
             }
             if (cd != null) {
-                new Log().level2Information("Verifying CASPAC metainfo and MD5s");
-                exitIfSVNRevisionIsNotHighEnough(); //halts if SVN does not match 
+                new Log().level2Information("Verifying CASPAC metainfo and MD5s"); //TODO: remove
+                exitIfSVNRevisionIsNotHighEnough(); //this should be checked when the data is processed
                 if (new CASUALTools().getIDEMode()) {
                     unzip.closeZip();
                     new CASUALTools().rewriteMD5OnCASPAC(new File(pack), this);
@@ -189,8 +189,6 @@ public class CASPACHandler {
     }
 
     private CASPACData processCASPAC(Enumeration zippedFiles, File f) throws IOException {
-        CASPACData returnCASPAC = null;
-        
         while (zippedFiles.hasMoreElements()) {
             Object entry = zippedFiles.nextElement(); //get the object and begin examination
             CASPACData test;    
@@ -203,6 +201,10 @@ public class CASPACHandler {
         return cd;
     }
 
+    /**
+     * 
+     * @deprecated 
+     */
     private void exitIfSVNRevisionIsNotHighEnough() {
         try {
             int scriptSVNRevision = (Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")));

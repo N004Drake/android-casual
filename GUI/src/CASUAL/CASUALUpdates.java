@@ -42,6 +42,7 @@ public class CASUALUpdates {
      */
     Log Log = new Log();
 
+    //TODO: pass in pre-made CASPACData.  Don't make it here.  pass it in. 
     public int checkOfficialRepo(String script, String localIdentificationString) throws MalformedURLException, IOException {
         //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
 
