@@ -38,18 +38,24 @@ public final class CASUALMain {
         try {
             pData.join(); //wait for properties
             cSound.start();  //do startup sound
-            scriptPrep.join(); //wait for embedded scripts scan
-            adb.join(); //wait for adb deployment
-        } catch (InterruptedException ex) {
-            new Log().errorHandler(ex);
-        }
-        Statics.casualConnectionStatusMonitor.DeviceCheck.start();
-        
+            
+            
+
+            
         if (args.length != 0 && !Statics.useGUI) {
+            adb.join(); //wait for adb deployment
+            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+            scriptPrep.join(); //wait for embedded scripts scan
             doConsoleStartup();  //use command line args
         } else {
             Statics.useGUI = true;
             doGUIStartup(); //bring up GUI and wait for user to click start
+            adb.join(); //wait for adb deployment
+            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+            scriptPrep.join(); //wait for embedded scripts scan
+        }
+        } catch (InterruptedException ex) {
+            new Log().errorHandler(ex);
         }
     }
 
