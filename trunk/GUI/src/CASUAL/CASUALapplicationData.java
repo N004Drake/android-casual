@@ -27,22 +27,23 @@ import java.util.Properties;
 public class CASUALapplicationData {
 
     public static boolean packageDataHasBeenSet = false;
-    public static boolean ScriptsHaveBeenRecognized = false;
-    public static String CASUALSVNRevision;
-    public static String CASUALBuildNumber;
-    public static String buildProperties;
-    public static String buttonText;
-    public static String title;
-    public static String bannerText;
-    public static String bannerPic;
-    public static boolean usePictureForBanner;
-    public static String developerName;
-    public static String donateButtonName;
-    public static boolean useSound;
-    public static String developerDonateLink;
-    public static String DontateButtonText;
-    public static String donationLink;
-    public static String CASUALFileName;
+    public static boolean scriptsHaveBeenRecognized = false;
+    public static String CASUALSVNRevision="0";
+    public static String CASUALBuildNumber="0";
+    public static String buildProperties="";
+    public static String buttonText="Do It!";
+    public static String title="";
+    public static String bannerText="CASUAL";
+    public static String bannerPic="";
+    public static boolean usePictureForBanner=false;
+    public static String developerName="";
+    public static String donateButtonName="";
+    public static boolean useSound=false;
+    public static String developerDonateLink="";
+    public static String DontateButtonText="";
+    public static String donationLink="";
+    public static String CASUALFileName="";
+    public static boolean AlwaysEnableControls=true;
     public static String meta;
 
     CASUALapplicationData() {
@@ -58,6 +59,7 @@ public class CASUALapplicationData {
         bannerPic = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.BannerPic");
         donateButtonName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateToButtonText");
         donationLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
+        AlwaysEnableControls=java.util.ResourceBundle.getBundle(buildProperties).getString("Application.AlwaysEnableControls").contains("rue");
         packageDataHasBeenSet = true;
     }
 

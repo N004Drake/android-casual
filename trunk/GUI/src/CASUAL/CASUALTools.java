@@ -76,7 +76,7 @@ public class CASUALTools {
                     //Statics.scriptLocations = new String[]{""};
                     Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
                 }
-                CASUALapplicationData.ScriptsHaveBeenRecognized = true;
+                CASUALapplicationData.scriptsHaveBeenRecognized = true;
             }
         }
     }

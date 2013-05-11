@@ -92,7 +92,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         if (Statics.dumbTerminalGUI) {
             setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         }
+        if (!CASUALapplicationData.AlwaysEnableControls){
+            enableControls(true);
+        }
         Statics.GUIIsAvailable=true;
+
     }
 
     /*
@@ -569,7 +573,15 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         return (startButton.isEnabled() && comboBoxScriptSelector.isEnabled());
     }
     public boolean enableControls(boolean status) {
-        if (!Statics.lockGUIformPrep && !Statics.lockGUIunzip && !Statics.scriptRunLock) {
+        //LockOnADBDisconnect tells CASUAL to disregard ADB status.
+        boolean bypassLock= CASUALapplicationData.AlwaysEnableControls;
+        if ( bypassLock ) {
+            status=true; //if LockOnADBDisconnect is false then just enable controls
+            startButton.setEnabled(status);
+            comboBoxScriptSelector.setEnabled(status);
+            return true;
+        }
+        if  (!Statics.lockGUIformPrep && !Statics.lockGUIunzip && !Statics.scriptRunLock) {
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
             log.level4Debug("Controls Enabled status: " + status);
