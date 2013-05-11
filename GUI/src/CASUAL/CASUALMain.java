@@ -39,9 +39,6 @@ public final class CASUALMain {
             pData.join(); //wait for properties
             cSound.start();  //do startup sound
             
-            
-
-            
         if (args.length != 0 && !Statics.useGUI) {
             adb.join(); //wait for adb deployment
             Statics.casualConnectionStatusMonitor.DeviceCheck.start();
@@ -51,8 +48,8 @@ public final class CASUALMain {
             Statics.useGUI = true;
             doGUIStartup(); //bring up GUI and wait for user to click start
             adb.join(); //wait for adb deployment
-            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
             scriptPrep.join(); //wait for embedded scripts scan
+            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
         }
         } catch (InterruptedException ex) {
             new Log().errorHandler(ex);
