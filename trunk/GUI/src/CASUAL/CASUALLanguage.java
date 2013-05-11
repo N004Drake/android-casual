@@ -399,12 +399,15 @@ public class CASUALLanguage {
             String[] Message = line.replace("$USERINPUTBOX", "").split(",");
             Message[1] = "<html>" + Message[1].replace("\\n", "<BR>") + "</html>";
 
-            String InputBoxText = new CASUALInteraction().inputDialog(Message);
-            InputBoxText = returnSafeCharacters(InputBoxText);
+            String inputBoxText = new CASUALInteraction().inputDialog(Message);
+            inputBoxText = returnSafeCharacters(inputBoxText);
+            if (inputBoxText==null){
+                inputBoxText="";
+            }
 
-            log.level4Debug(InputBoxText);
+            log.level4Debug(inputBoxText);
 
-            String command = Message[2].replace("$USERINPUT", InputBoxText);
+            String command = Message[2].replace("$USERINPUT", inputBoxText);
             new CASUALScriptParser().executeOneShotCommand(command);
 
             return "";
