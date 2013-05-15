@@ -115,6 +115,7 @@
             <fileset dir="src/" includes="SCRIPTS/TestScript.zip" />
             <fileset dir="src/" includes="SCRIPTS/TestScript.meta" />
         </jar>
+        <copy file="dist/CASUAL-Revision${svna.version}b.jar" tofile="dist/CASUALstatic.jar"/> 
     </target>
 </project>
 
