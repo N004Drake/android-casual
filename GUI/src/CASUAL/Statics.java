@@ -38,6 +38,7 @@ public class Statics {
     public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
 
+    public static String currentStatus="working";
     public Statics() {
     }
 

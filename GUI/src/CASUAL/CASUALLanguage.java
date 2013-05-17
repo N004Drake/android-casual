@@ -292,6 +292,21 @@ public class CASUALLanguage {
         }
 //$ZIPFILE is a reference to the Script's .zip file
         if (line.contains("$ZIPFILE")) {
+            //break commandline into an array of arguments
+            String[] arguments=StringOperations.convertArrayListToStringArray(new ShellTools().parseCommandLine(line));
+            for (String arg : arguments){ //parse
+                //if arg contains zipfile and is not merged with another parameter
+                if (arg.contains("$ZIPFILE") && (! arg.startsWith("-") && (!arg.contains("=")))){ 
+                    //repalce to make it a file and strip off " and '
+                    arg=arg.replace("$ZIPFILE", ScriptTempFolder).replace("'", "").replace("\"", "");
+                    if (new FileOperations().verifyExists(arg)){ //exists
+                        log.level3Verbose("verified "+arg+ " exists");
+                    } else { //file not exists
+                        new CASUALInteraction().showUserCancelOption("It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL");
+                    }
+                }
+            }
+            
             line = line.replace("$ZIPFILE", ScriptTempFolder);
             log.level4Debug("Expanded $ZIPFILE: " + line);
         }
