@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  */
 public class CASUALScriptParser {
 
-    static boolean ScriptContinue = true;
+    public static boolean ScriptContinue = true;
     Log log = new Log();
     int LinesInScript = 0;
     String ScriptTempFolder = "";
