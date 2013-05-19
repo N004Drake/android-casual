@@ -36,20 +36,7 @@ public class CASUALConnectionStatusMonitor {
     private static int cycles = 0; //number of cycles
     private static boolean hasConnected = false; //device was detected since startup
     CASUALConnectionStatusMonitor(){
-        //GETDEVICECOMMAND = new String[]{Statics.AdbDeployed, "devices"};
-    }
-    /*
-     * Starts and stops the ADB timer
-     * reference with Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
-     */
-    public Timer DeviceCheck = new Timer(timerInterval, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            Thread t = new Thread(r);
-            t.start();
-        }
-    });
-    Runnable r = new Runnable() {
+        this.r = new Runnable() {
         @Override
         public void run() {
 
@@ -154,6 +141,20 @@ public class CASUALConnectionStatusMonitor {
             }
         }
     };
+        //GETDEVICECOMMAND = new String[]{Statics.AdbDeployed, "devices"};
+    }
+    /*
+     * Starts and stops the ADB timer
+     * reference with Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
+     */
+    public Timer DeviceCheck = new Timer(timerInterval, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            Thread t = new Thread(r);
+            t.start();
+        }
+    });
+    Runnable r;
 
     
     private void stateSwitcher(int State) {
