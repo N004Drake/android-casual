@@ -82,7 +82,8 @@ public class CASUALScriptParser {
      *
      */
     public String executeOneShotCommand(String Line) {
-        return new CASUALLanguage(this.ScriptName, this.ScriptTempFolder).commandHandler(Line);
+        String x = new CASUALLanguage(this.ScriptName, this.ScriptTempFolder).commandHandler(Line);
+        return x;
     }
 
     /*
@@ -122,13 +123,19 @@ public class CASUALScriptParser {
                 if (Statics.useGUI) {
                     Statics.GUI.enableControls(true);
                 }
-                Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                if (Statics.useGUI){
+                    Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                } else {
+                    Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+                }
                 try {
                     DATAIN.close();
                 } catch (IOException ex) {
                     Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 Statics.scriptRunLock=false;
+                Statics.currentStatus="Script Complete";
+                log.level2Information("Script Complete");
 
             }
 
@@ -206,6 +213,7 @@ public class CASUALScriptParser {
             ExecuteScript.start();
         } else {
             r.run();
+
         }
     }
 }

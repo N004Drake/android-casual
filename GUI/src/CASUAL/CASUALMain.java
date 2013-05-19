@@ -61,8 +61,12 @@ public final class CASUALMain {
             if (args[i].contains("--execute") || args[i].contains("-e")) {
                 i++;
                 Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
-                new CASUALScriptParser().executeOneShotCommand(args[i]);
+                CASUALScriptParser csp=new CASUALScriptParser();
+                String s= csp.executeOneShotCommand(args[i]);
+                Statics.currentStatus="Script Complete";
+                new Log().level2Information("Script Complete");
             } else {
+                Statics.currentStatus="Script Complete";
                 new Log().level0Error("Unrecogized command");
             }
 
