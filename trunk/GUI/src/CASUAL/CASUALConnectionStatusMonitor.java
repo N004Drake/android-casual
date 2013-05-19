@@ -31,6 +31,7 @@ public class CASUALConnectionStatusMonitor {
     Shell Shell = new Shell();
     AudioHandler CAS = new AudioHandler(); 
 
+    
     private static int LastState = 0;  //last state detected
     private static int timerInterval = 1000;
     private static int cycles = 0; //number of cycles
