@@ -28,16 +28,17 @@ public class JavaSystem {
 
     public static void restart(String[] args) throws IOException, InterruptedException {
         StringBuilder cmd = new StringBuilder();
-        cmd.append(System.getProperty("java.home")).append(File.separator).append("bin").append(File.separator).append("java ");
+        
+        cmd.append("\"").append(System.getProperty("java.home")).append(File.separator).append("bin").append(File.separator).append("java").append("\"").append(" ");
         for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-            cmd.append(jvmArg).append(" ");
+            cmd.append("\"").append(jvmArg).append("\"").append(" ");
         }
-        cmd.append("-cp ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-        cmd.append(JavaSystem.class.getName()).append(" ");
+        cmd.append("-cp ").append("\"").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append("\"").append(" ");
+        cmd.append("\"").append(JavaSystem.class.getName()).append("\"").append(" ");
         for (String arg : args) {
-            cmd.append(arg).append(" ");
+            cmd.append("\"").append(arg).append("\"").append(" ");
         }
         Runtime.getRuntime().exec(cmd.toString());
-        CASUALApp.shutdown(0);
+
     }
 }
