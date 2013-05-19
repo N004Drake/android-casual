@@ -112,6 +112,10 @@ public class Statics {
         }
         return TempF;
     }
+    public static String setTempFolder(String folder){
+        TempF=folder;
+        return TempF;
+    }
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     //Cross-Platform data storage
     public static String AdbDeployed; //location of ADB after deployment
