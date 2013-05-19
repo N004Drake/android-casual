@@ -45,7 +45,10 @@ public class JUnitTest  {
         assertEquals(false, new CASUAL.FileOperations().makeFolder(null));
         assertEquals(true, new CASUAL.FileOperations().verifyExists(CASUAL.Statics.TempFolder+"new"+CASUAL.Statics.Slash));
         assertEquals(false, new CASUAL.FileOperations().verifyExists(CASUAL.Statics.TempFolder+"asfdadfasfd"+CASUAL.Statics.Slash));
-        
+        if (CASUAL.Statics.isWindows()){
+            assertEquals(true, new CASUAL.HeimdallInstall().deployHeimdallForWindows());
+            assertEquals(true, new CASUAL.HeimdallInstall().installWindowsDrivers());
+        }
         
         
         
