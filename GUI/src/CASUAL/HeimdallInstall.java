@@ -164,7 +164,7 @@ public class HeimdallInstall {
         }
     }
 
-    public void installWindowsDrivers() {
+    public boolean installWindowsDrivers() {
         //install drivers
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
@@ -187,9 +187,13 @@ public class HeimdallInstall {
             log.level0Error("There was a problem while accessing the online repository.");
         }
         //verify MD5
-
-        log.level2Information(new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" +exec + "\"" }));
-
+        String driverreturn=new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" +exec + "\"" });
+        log.level2Information(driverreturn);
+        if (driverreturn.contains("CritError")){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void displayWindowsPermissionsMessageAndExit() {
