@@ -101,7 +101,9 @@ public class Pastebin {
         }
         private String checkResponse(String response) {
             if (response.substring(0, 15).equals("Bad API request")) {
-                return response.substring(17);
+                if (response.substring(17)!= null){
+                    return response.substring(17);
+                }
             }
             return "";
         }
@@ -119,9 +121,7 @@ public class Pastebin {
             if (!check.equals("")) {
                 return "false";
             }
-            if (response==null){
-                response = "";
-            }
+
             this.token = response;
             return response;
         }
