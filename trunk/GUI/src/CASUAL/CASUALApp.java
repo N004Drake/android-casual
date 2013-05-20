@@ -70,6 +70,7 @@ public class CASUALApp {
      * @param args
      */
     public static void main(String[] args) {
+        Statics.initializeStatics();
          if (useOverrideArgs) { //overrides command line input
             args = overrideArguments;
         }

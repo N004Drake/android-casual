@@ -30,7 +30,7 @@ public class TimeOutOptionPane extends JOptionPane {
     public TimeOutOptionPane() {
         super();
     }
-    static int PRESET_TIME = 335;
+    final static int PRESET_TIME = 335;
     /*
      * int showTimeoutDialog = timeOutOptionPane.showTimeoutDialog( 5, //timeout
      * null, //parentComponent "My Message", //Display Message "My Title",

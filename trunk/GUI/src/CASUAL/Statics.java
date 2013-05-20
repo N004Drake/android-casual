@@ -329,4 +329,83 @@ public class Statics {
             Statics.arch = "Linux";
         }
     }
+    
+    public static void initializeStatics(){
+        GUIIsAvailable = false;
+        useGUI = false;
+        dumbTerminalGUI = false;
+        currentStatus="working";
+        GUIVerboseLevel = 2;
+        CommandLineVerboseLevel = 4;
+        shellCommand = null;
+        LiveSendCommand = new ArrayList<>();
+        OutFile=null;
+        LogCreated = false;
+        casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
+        DeviceTracker=null;
+        localInformation=null;
+        webInformation=null;
+        TargetScriptIsResource = true;  
+        GUI=null; 
+        ProgressPane = new JTextPane(); 
+        PreProgress = "";
+        ProgressDoc=null;
+        TempF = null;
+        CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
+        AdbDeployed=null;
+        OSName = System.getProperty("os.name");
+        SelectedScriptFolder="";
+        WinElevatorInTempFolder = TempFolder + "Elevate.exe";
+        scriptRunLock = false;
+        lockGUIformPrep = true;
+        lockGUIunzip = false;
+        runnableMD5list = new ArrayList<>();
+        ActionEvents = new ArrayList<>();
+        ReactionEvents = new ArrayList<>();
+        scriptNames = new String[]{""};
+        scriptLocations = new String[]{""};
+        isFastbootDeployed = false;  // if fastboot has been deployed
+        fastbootResource = ""; //location to fastboot set from final values above
+        fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
+        isHeimdallDeployed = false; //if fastboot has been deployed
+        heimdallResource = ""; //location to heimdall set from final values above
+        heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
+        heimdallDeployed = ""; //location of heimdall once deployed
+        resourceHeimdallVersion=null;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
+        installedHeimdallVersion=null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
+        arch = "";
+        CASUALLanguage.GOTO = "";
+        CASUALScriptParser.ScriptContinue = true;
+        CASUALTools.IDEMode = false;
+        CASUALapplicationData.packageDataHasBeenSet = false;
+        CASUALapplicationData.scriptsHaveBeenRecognized = false;
+        CASUALapplicationData.CASUALSVNRevision="0";
+        CASUALapplicationData.CASUALBuildNumber="0";
+        CASUALapplicationData.buildProperties="";
+        CASUALapplicationData.buttonText="Do It!";
+        CASUALapplicationData.title="";
+        CASUALapplicationData.bannerText="CASUAL";
+        CASUALapplicationData.bannerPic="";
+        CASUALapplicationData.usePictureForBanner=false;
+        CASUALapplicationData.developerName="";
+        CASUALapplicationData.donateButtonName="";
+        CASUALapplicationData.useSound=false;
+        CASUALapplicationData.developerDonateLink="";
+        CASUALapplicationData.DontateButtonText="";
+        CASUALapplicationData.donationLink="";
+        CASUALapplicationData.CASUALFileName="";
+        CASUALapplicationData.AlwaysEnableControls=true;
+        CASUALapplicationData.meta=null;
+        Log.initialize();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
