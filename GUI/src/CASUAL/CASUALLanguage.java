@@ -16,7 +16,7 @@
  */
 package CASUAL;
 
-import static CASUAL.CASUALScriptParser.ScriptContinue;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -49,7 +49,7 @@ public class CASUALLanguage {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
 
             bReader.mark(1);
-            while (((strLine = bReader.readLine()) != null) && (ScriptContinue)) {
+            while (((strLine = bReader.readLine()) != null) && (CASUALScriptParser.ScriptContinue)) {
                 CurrentLine++;
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBar(CurrentLine);
@@ -176,7 +176,7 @@ public class CASUALLanguage {
          }
          */
         if (line.startsWith("$HALT")) {
-            ScriptContinue = false;
+            CASUALScriptParser.ScriptContinue = false;
 
             //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
@@ -383,7 +383,7 @@ public class CASUALLanguage {
             n = new CASUALInteraction().showUserCancelOption(line);
             if (n == 0) {
                 log.level0Error(ScriptName + " canceled at user request");
-                ScriptContinue = false;
+                CASUALScriptParser.ScriptContinue = false;
                 return "";
             }
             return "";
@@ -400,7 +400,7 @@ public class CASUALLanguage {
             int n = new CASUALInteraction().showActionRequiredDialog(line);
             if (n == 0) {
                 log.level0Error(ScriptName + " Halted.  Perform the required actions to continue.");
-                ScriptContinue = false;
+                CASUALScriptParser.ScriptContinue = false;
                 return "";
             }
             return "";

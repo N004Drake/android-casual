@@ -41,7 +41,6 @@ public class CASUALTools {
 
     public static boolean IDEMode = false;
     Log log = new Log();
-    private boolean DeviceTimerState = false;
 
 
     public void listScripts() throws IOException {

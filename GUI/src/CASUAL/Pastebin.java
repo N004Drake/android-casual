@@ -41,7 +41,7 @@ import java.net.URLEncoder;
 public class Pastebin {
 
     //Pastebin User DEV API Key
-    private static String devKey = "027c63663a6023d774b5392f380e5923";
+    final private static String devKey = "027c63663a6023d774b5392f380e5923";
 
     /**
      * Automatically prompts the user for their XDA username and submits a
@@ -118,6 +118,9 @@ public class Pastebin {
             String check = this.checkResponse(response);
             if (!check.equals("")) {
                 return "false";
+            }
+            if (response==null){
+                response = "";
             }
             this.token = response;
             return response;
