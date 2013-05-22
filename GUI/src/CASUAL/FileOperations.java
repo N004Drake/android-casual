@@ -324,6 +324,21 @@ public class FileOperations {
         }
         return Deleted;
     }
+    
+    
+    public boolean deleteStringArrayOfFiles(String[] cleanUp) {
+        int x=0;
+        if (cleanUp[x] != null) {
+            //log.level4Debug("[doCASUALWork()]Folder is not empty, deleting files");
+            while (cleanUp[x] != null) {
+                if (! deleteFile(cleanUp[x])){
+                    return false;
+                }
+                x++;
+            }
+        }
+        return true;
+    }
 
     /**
      * copies a file from a source to a destination
