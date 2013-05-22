@@ -109,7 +109,10 @@ public class PackagerMain {
             try {
                 userOutputDir = caspacWithPath;
                 userOutputDir=new File(userOutputDir).getCanonicalPath().toString();
-                userOutputDir=userOutputDir.substring(0, userOutputDir.lastIndexOf(Statics.Slash))+Statics.Slash;
+                userOutputDir=userOutputDir.substring(0, userOutputDir.lastIndexOf(Statics.Slash))+Statics.Slash+"CASUAL"+Statics.Slash;
+                if (!fileOperations.verifyExists(userOutputDir)){
+                    fileOperations.makeFolder(userOutputDir);
+                }
                 log.level2Information("Set output folder to default: " + userOutputDir);
             } catch (IOException ex) {
                 Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
