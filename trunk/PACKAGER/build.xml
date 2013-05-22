@@ -10,6 +10,12 @@
 <project name="PACKAGER" default="default" basedir=".">
     <description>Builds, tests, and runs the project PACKAGER.</description>
     <import file="nbproject/build-impl.xml"/>
+
+    <target name="-pre-init">
+        <copy file="$DIST../../../GUI/dist/CASUALstatic.jar" tofile="src/Packager/resources/CASUAL.jar"/>
+         
+    </target>
+
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -71,4 +77,15 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-post-jar">
+    
+         <jar jarfile="dist/PackagerDist.jar">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*"/>
+            <manifest>
+                <attribute name="Main-Class" value="Packager.PackagerMain"/>
+            </manifest>
+            <zipfileset src="dist/lib/CASUAL.jar" excludes="META-INF/*" /> 
+            
+        </jar>
+    </target>
 </project>
