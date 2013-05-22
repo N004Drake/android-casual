@@ -38,6 +38,8 @@ import java.util.zip.ZipException;
  **************************************************************************/
 public class PackagerMain {
 
+
+
     public PackagerMain(){
         //NADA
     }
@@ -171,17 +173,11 @@ public class PackagerMain {
         }
         
         //log.level4Debug("[doCASUALWork()]Unzipping CASUAL.jar from PACKAGER.jar's resources");
-        String[] cleanUp = fileOperations.listFolderFiles(Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash);
-        //log.level4Debug("[doCASUALWork()]Getting /SCRIPTS folder contents list");
-        int x = 0;
         
-        if(cleanUp[x] != null)  {
-            //log.level4Debug("[doCASUALWork()]Folder is not empty, deleting files");
-            while(cleanUp[x] != null) {
-                if(!fileOperations.deleteFile(cleanUp[x])) return false;
-                x++;
-            }
-        }
+        String folderToDelete=Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash;
+        //log.level4Debug("[doCASUALWork()]Getting /SCRIPTS folder contents list");
+
+        if(fileOperations.deleteStringArrayOfFiles(fileOperations.listFolderFiles(folderToDelete)))  return false;
         
         //log.level4Debug("[doCASUALWork()]Folder is empty");
         //log.level4Debug("[doCASUALWork()]Operation Complete");
