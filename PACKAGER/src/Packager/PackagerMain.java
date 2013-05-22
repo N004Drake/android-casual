@@ -44,8 +44,8 @@ public class PackagerMain {
         //NADA
     }
 
-    private static boolean useOverrideArgs=true;
-    private static String[] overrideArgs={"../CASPACS/backatchaverizon.zip"};
+    private static boolean useOverrideArgs=false;
+    private static String[] overrideArgs={"../CASPACS/"};
     
     protected static String userOutputDir = "";
     
@@ -85,6 +85,7 @@ public class PackagerMain {
      * @param args String array of arguments passed at runtime
      **************************************************************************/
     private static void processCommandline(String[] args) {
+        
         if(args.length > 0) {
             caspacWithPath = args[0];
             caspacWithPath = StringOperations.removeLeadingAndTrailingSpaces(args[0]);
@@ -107,13 +108,21 @@ public class PackagerMain {
             } 
         } else {
             try {
-                userOutputDir = caspacWithPath;
-                userOutputDir=new File(userOutputDir).getCanonicalPath().toString();
-                userOutputDir=userOutputDir.substring(0, userOutputDir.lastIndexOf(Statics.Slash))+Statics.Slash+"CASUAL"+Statics.Slash;
-                if (!fileOperations.verifyExists(userOutputDir)){
-                    fileOperations.makeFolder(userOutputDir);
-                }
-                log.level2Information("Set output folder to default: " + userOutputDir);
+                if (args[0].endsWith(Statics.Slash)){
+                    String[] filesToProcess=fileOperations.listFolderFilesCannonically(args[0]);
+                    useOverrideArgs=false;
+                    for (String file:filesToProcess){
+                        main(new String[]{file});
+                    }
+                } else {
+                    userOutputDir = caspacWithPath;
+                    userOutputDir=new File(userOutputDir).getCanonicalPath().toString();
+                    userOutputDir=userOutputDir.substring(0, userOutputDir.lastIndexOf(Statics.Slash))+Statics.Slash+"CASUAL"+Statics.Slash;
+                    if (!fileOperations.verifyExists(userOutputDir)){
+                        fileOperations.makeFolder(userOutputDir);
+                    }
+                    log.level2Information("Set output folder to default: " + userOutputDir);
+                } 
             } catch (IOException ex) {
                 Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
             }
