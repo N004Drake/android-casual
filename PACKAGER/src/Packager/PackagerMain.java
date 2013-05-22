@@ -172,16 +172,20 @@ public class PackagerMain {
             return false;
         }
         
-        //log.level4Debug("[doCASUALWork()]Unzipping CASUAL.jar from PACKAGER.jar's resources");
+        
         
         String folderToDelete=Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash;
+        //log.level4Debug("[doCASUALWork()]Unzipping CASUAL.jar from PACKAGER.jar's resources");
         //log.level4Debug("[doCASUALWork()]Getting /SCRIPTS folder contents list");
 
-        if(fileOperations.deleteStringArrayOfFiles(fileOperations.listFolderFiles(folderToDelete)))  return false;
+        if(fileOperations.deleteStringArrayOfFiles(fileOperations.listFolderFilesCannonically(folderToDelete))){
+            fileOperations.makeFolder(Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash);
+            return true;
+        }
         
         //log.level4Debug("[doCASUALWork()]Folder is empty");
         //log.level4Debug("[doCASUALWork()]Operation Complete");
-        return true;
+        return false;
     }
     
     /***************************************************************************
@@ -198,28 +202,16 @@ public class PackagerMain {
             return false;
         }
         
-        while(files[x] != null) {
-            try {
+        try {
+            while(files[x] != null) {
                 fileOperations.moveFile(Statics.TempFolder + "CASPAC" + Statics.Slash + files[x], Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash + files[x]);
-            } catch (IOException ex) {
-                log.errorHandler(ex);
-                return false;
+                x++;
             }
-            x++;
-        }
-        
-        //log.level4Debug("[doCASPACCASUALMerge()]File bases merged");
-        
-        try {
+            //log.level4Debug("[doCASPACCASUALMerge()]File bases merged");
             new Zip().addFilesToNewZip(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", Statics.TempFolder + "CASUAL" + Statics.Slash);
-        } catch (Exception ex) {
-            log.errorHandler(ex);
-            return false;
-        }
-        
-        fileOperations.makeFolder(defaultOutputDir);
-        String output;
-        try {
+            fileOperations.makeFolder(defaultOutputDir);
+            String output;
+
             if (userOutputDir.equals("")) {
                 output=defaultOutputDir + caspacNoPath + "-CASUAL.jar";
                 fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar",defaultOutputDir);
@@ -228,11 +220,10 @@ public class PackagerMain {
                 fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar",userOutputDir + caspacNoPath + "-CASUAL.jar");
             }
             fileOperations.setExecutableBit(output);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             log.errorHandler(ex);
             return false;
-        }
-        
+        }      
         //log.level4Debug("[doCASPACCASUALMerge()] " + caspacNoPath + "-CASUAL.jar created");
         
         return true;
