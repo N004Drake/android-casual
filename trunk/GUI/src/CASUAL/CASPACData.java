@@ -103,4 +103,7 @@ public class CASPACData {
         }
 
     }
+    public static String getSVNRevision(){
+        return java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+    }
 }

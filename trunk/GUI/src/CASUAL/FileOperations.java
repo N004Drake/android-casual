@@ -543,7 +543,23 @@ public class FileOperations {
         }
         return childOf;
     }
-    
+    public String[] listFolderFilesCannonically(String folder){
+        File dir = new File(folder);
+        if(!dir.isDirectory()) {
+            new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
+            return null;           
+        }
+        String[] childOf = new String[1024];
+        File[] list = dir.listFiles();
+        for(int x = 0; list.length > x ; x++) {
+            try {
+                childOf[x] = list[x].getCanonicalFile().toString();
+            } catch (IOException ex) {
+                Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return childOf;
+    }
     /**
      * 
      * @param sourceFile
