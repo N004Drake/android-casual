@@ -144,6 +144,14 @@ public class HeimdallTools {
                 return "Heimdall continuable error; Attempting to continue"; } 
         }
         
+        if(stdErrLog.contains("Failed to detect compatible download-mode device")) {
+            if(new CASUALInteraction().showUserCancelOption("Heimdall is unable to detect your phone in Odin/Download Mode\n" 
+                                                            + "Recheck your cable connections, click Continue when ready") == 0) {
+                return "Heimdall uncontinuable error; Script halted";
+            }
+            return "Heimdall continuable error; Attempting to continue";
+        }
+        
         if(stdErrLog.contains(" failed!")) {
             if(stdErrLog.contains("Claiming interface failed!")) {
                 return "Heimdall failed to claim interface; Script halted"; 
@@ -315,7 +323,6 @@ public class HeimdallTools {
                                             "Failed to send data!",//FAIL
                                             "Failed to complete sending of data: ",//FAIL
                                             "Failed to complete sending of data!",//FAIL
-                                            "Failed to detect compatible download-mode device.",//FAIL
                                             "Failed to unpack device's PIT file!",//FAIL
                                             "Failed to retrieve device description",//FAIL
                                             "Failed to retrieve config descriptor",//FAIL
