@@ -43,8 +43,8 @@ public class PackagerMain {
     public PackagerMain() {
         //NADA
     }
-    private static boolean useOverrideArgs = true;
-    private static String[] overrideArgs = {"../CASPACS/"};
+    private static boolean useOverrideArgs = false;
+    private static String[] overrideArgs = {"/home/adam/code/android-casual/trunk/CASPAC/"};
     protected static String userOutputDir = "";
     final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
     private static String caspacWithPath = null;
@@ -112,7 +112,9 @@ public class PackagerMain {
                     String[] filesToProcess = fileOperations.listFolderFilesCannonically(args[0]);
                     useOverrideArgs = false;
                     for (String file : filesToProcess) {
-                        if (!file.endsWith(Statics.Slash)) {
+                        if ( (file != null) && 
+                                (!new File(file).isDirectory()) && 
+                                (!file.endsWith(Statics.Slash)) ) {
                             main(new String[]{file});
                         }
                     }

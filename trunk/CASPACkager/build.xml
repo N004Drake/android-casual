@@ -11,8 +11,8 @@
     <description>Builds, tests, and runs the project PACKAGER.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <target name="-pre-init">
-        <copy file="$DIST../../../GUI/dist/CASUALstatic.jar" tofile="src/Packager/resources/CASUAL.jar"/>
+    <target name="-pre-compile">
+        <copy file="$DIST../../../CASUALcore/dist/CASUALstatic.jar" tofile="src/Packager/resources/CASUAL.jar"/>
          
     </target>
 
