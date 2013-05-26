@@ -29,6 +29,7 @@ class CASUALDeployADB {
         DiffTextFiles DTF = new DiffTextFiles();
 
 
+        //TODO: If adb_usb.ini is updated, then we need to restart server
         if (Statics.isLinux()) {
             Log.level4Debug("Found Linux Computer");
             //add our lines to the current adbini
@@ -40,6 +41,7 @@ class CASUALDeployADB {
             Log.level4Debug("Found Mac Computer");
             //add our lines to the current adbini
             String addToADBUSB = DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac);
+            //TODO if addToADBUSB !="" (execute $ADB restart server)
             DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, addToADBUSB);
             Statics.AdbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
