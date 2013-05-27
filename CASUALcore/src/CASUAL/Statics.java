@@ -60,7 +60,7 @@ public class Statics {
     public static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
 
     //web information
-    final public static String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/";
+    final public static String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/CASUALcore/src";
     public static CASPACData localInformation;
     public static CASPACData webInformation;
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
