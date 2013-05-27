@@ -302,7 +302,12 @@ public class CASUALLanguage {
                     if (new FileOperations().verifyExists(arg)){ //exists
                         log.level3Verbose("verified "+arg+ " exists");
                     } else { //file not exists
-                        new CASUALInteraction().showUserCancelOption("It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL");
+                        int n=new CASUALInteraction().showUserCancelOption("It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL");
+                        if (n == 0) {
+                            log.level0Error(ScriptName + " canceled at user request due to comprimised packages");
+                            CASUALScriptParser.ScriptContinue = false;
+                            return "";
+                        }
                     }
                 }
             }
