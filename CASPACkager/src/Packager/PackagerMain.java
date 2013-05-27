@@ -58,12 +58,7 @@ public class PackagerMain {
     
     public static void main(String[] args) {
         if (useOverrideArgs) {
-            try {
-                String current = new java.io.File(".").getCanonicalPath();
-                args = overrideArgs;
-            } catch (IOException ex) {
-                Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            args = overrideArgs;
         }
         processCommandline(args);
         if (args.length > 0 && args[0].length() != 0) {
