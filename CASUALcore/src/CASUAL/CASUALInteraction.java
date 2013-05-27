@@ -141,7 +141,7 @@ public class CASUALInteraction extends JOptionPane {
                         Options,
                         Options[1]);
             } else {
-                n = JOptionPane.showOptionDialog(
+                n = JOptionPane.showOptionDialog( // TODO: Null pointer error at message[1] if title is not specified
                         Statics.GUI,
                         Message[1],
                         "Do you wish to continue?",
