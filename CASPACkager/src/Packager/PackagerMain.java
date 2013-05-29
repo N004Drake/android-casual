@@ -243,16 +243,19 @@ public class PackagerMain {
             //log.level4Debug("[doCASPACCASUALMerge()]File bases merged");
             new Zip().addFilesToNewZip(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", Statics.TempFolder + "CASUAL" + Statics.Slash);
             fileOperations.makeFolder(defaultOutputDir);
-            String output;
+            String output= caspacNoPath + "-CASUAL-R"+CASUAL.CASPACData.getSVNRevision()+"b.jar";;
 
             if (userOutputDir.equals("")) {
-                output = defaultOutputDir + caspacNoPath + "-CASUAL.jar";
+                output = defaultOutputDir + output;
                 fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", defaultOutputDir);
             } else {
-                output = userOutputDir + caspacNoPath + "-CASUAL.jar";
-                fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", userOutputDir + caspacNoPath + "-CASUAL.jar");
+                output = userOutputDir + caspacNoPath+ output;
+                fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", output);
             }
             fileOperations.setExecutableBit(output);
+            log.Level1Interaction("CREATED NEW FILE");
+            log.Level1Interaction(output);
+            
         } catch (Exception ex) {
             log.errorHandler(ex);
             return false;
