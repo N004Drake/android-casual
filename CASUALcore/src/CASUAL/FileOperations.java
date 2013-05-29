@@ -91,11 +91,10 @@ public class FileOperations {
     public void recursiveDelete(File path) {
         File[] c = path.listFiles();
         if (path.exists()) {
-            Log.level2Information("Cleaning up folder:" + path.toString());
+            Log.level2Information("Removing folder and contents:" + path.toString());
 
             for (File file : c) {
                 if (file.isDirectory()) {
-                    Log.level4Debug("Deleting " + file.toString());
                     recursiveDelete(file);
                     file.delete();
                 } else {
