@@ -346,7 +346,7 @@ public class Statics {
         localInformation=null;
         webInformation=null;
         TargetScriptIsResource = true;  
-        GUI=null; 
+       
         ProgressPane = new JTextPane(); 
         PreProgress = "";
         ProgressDoc=null;
