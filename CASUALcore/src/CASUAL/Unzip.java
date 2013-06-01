@@ -120,8 +120,7 @@ public class Unzip {
     }
     
     public static void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
-        Unzip unzip=new Unzip(zipResource); //bogus constructor for resource
-        InputStream ZStream = unzip.getClass().getResourceAsStream(zipResource);
+        InputStream ZStream = new CASUALApp().getClass().getResourceAsStream(zipResource);
         unZipInputStream(ZStream, outputFolder);
     }
 
