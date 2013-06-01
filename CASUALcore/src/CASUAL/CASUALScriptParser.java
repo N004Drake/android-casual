@@ -111,7 +111,7 @@ public class CASUALScriptParser {
                 } catch (NullPointerException ex) {
                     log.level4Debug("NO METADATA FOUND\nNO METADATA FOUND\n");
                 }
-                if (checkForUpdates(TestString, idStringFile)) {
+                if (checkForUpdates(TestString)) {
                     return;
                 }
 
@@ -144,7 +144,7 @@ public class CASUALScriptParser {
             }
 
             //TODO: remove idStringFile
-            private boolean checkForUpdates(String TestString, String idStringFile) {
+            private boolean checkForUpdates(String TestString) {
                 int updateStatus;
                 if ((TestString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
                     try {
