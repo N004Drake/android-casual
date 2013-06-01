@@ -96,7 +96,6 @@ public class Unzip {
 
         File file = new File(zipFile);
         ZipFile zip = new ZipFile(file);
-//TODO: remove this and use the constructor instead below.
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
         Enumeration zipFileEntries = zip.entries();
