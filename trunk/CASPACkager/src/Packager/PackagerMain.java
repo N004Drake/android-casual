@@ -249,7 +249,7 @@ public class PackagerMain {
                 output = defaultOutputDir + output;
                 fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", defaultOutputDir);
             } else {
-                output = userOutputDir + caspacNoPath+ output;
+                output = userOutputDir + output;
                 fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", output);
             }
             fileOperations.setExecutableBit(output);
