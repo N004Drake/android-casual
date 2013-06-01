@@ -59,7 +59,6 @@ public class Unzip {
 
     public void recursiveUnzipFile(String outputFolder) throws ZipException, IOException {
 
-        //TODO: remove this and use the constructor instead below.
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
         Enumeration zipFileEntries = zip.entries();
