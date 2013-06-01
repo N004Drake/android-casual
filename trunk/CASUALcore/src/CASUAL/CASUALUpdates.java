@@ -42,8 +42,7 @@ public class CASUALUpdates {
      */
     Log Log = new Log();
 
-    //TODO: pass in pre-made CASPACData.  Don't make it here.  pass it in. 
-    public int checkOfficialRepo(String script, String localIdentificationString) throws MalformedURLException, IOException {
+    public int checkOfficialRepo(String script, CASPACData localInformation) throws MalformedURLException, IOException {
         //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
 
         CASPACData webInformation;
@@ -56,9 +55,6 @@ public class CASUALUpdates {
             Log.level4Debug(script + " not found in repository.");
             return 1;
         }
-        //This is where we hold the local information to be compared to the update
-        CASPACData localInformation = new CASPACData(localIdentificationString);
-
         Log.level4Debug("***WEB VERSION***\nIDString:" + webInformation.uniqueIdentifier + "\nSVNRevision:" + webInformation.minSVNRevision + "\nScriptRevision:" + webInformation.scriptRevision + "\nsupportURL:" + webInformation.supportURL + "updateMessage" + webInformation.updateMessage);
 
         try {

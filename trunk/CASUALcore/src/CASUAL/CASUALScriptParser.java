@@ -143,13 +143,16 @@ public class CASUALScriptParser {
                 DATAIN = getDataStreamFromFile(script);
             }
 
-            //TODO: remove idStringFile
-            private boolean checkForUpdates(String TestString) {
+
+            private boolean checkForUpdates(String testString) {
                 int updateStatus;
-                if ((TestString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
+                if ((testString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
                     try {
                         //String[] IDStrings = CASUALIDString.split("\n");
-                        updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, TestString);
+                                //This is where we hold the local information to be compared to the update
+                        CASPACData localInformation = new CASPACData(testString);
+
+                        updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, localInformation);
                         /*
                          * checks for updates returns: 0=no updates found
                          * 1=random error 2=Script Update Required 3=CASUAL
