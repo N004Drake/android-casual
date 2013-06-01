@@ -165,7 +165,7 @@ public class PackagerMain {
         //log.level4Debug("[doCASUALWork()]Created folder " + Statics.TempFolder + "CASPAC");
 
         try {
-            new Unzip().unzipFile(caspacWithPath, Statics.TempFolder + "CASPAC");
+           Unzip.unzipFile(caspacWithPath, Statics.TempFolder + "CASPAC");
         } catch (ZipException ex) {
             log.errorHandler(ex);
             return false;
@@ -193,7 +193,7 @@ public class PackagerMain {
         fileOperations.copyFromResourceToFile("/Packager/resources/CASUAL.jar", Statics.TempFolder + "CASUAL.zip");
 
         try {
-            new Unzip().unzipFile(Statics.TempFolder + "CASUAL.zip", Statics.TempFolder + "CASUAL" + Statics.Slash);
+             Unzip.unzipFile(Statics.TempFolder + "CASUAL.zip",Statics.TempFolder + "CASUAL" + Statics.Slash);
         } catch (FileNotFoundException ex) {
             log.errorHandler(ex);
             return false;
@@ -243,7 +243,7 @@ public class PackagerMain {
             //log.level4Debug("[doCASPACCASUALMerge()]File bases merged");
             new Zip().addFilesToNewZip(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", Statics.TempFolder + "CASUAL" + Statics.Slash);
             fileOperations.makeFolder(defaultOutputDir);
-            String output= caspacNoPath + "-CASUAL-R"+CASUAL.CASPACData.getSVNRevision()+"b.jar";;
+            String output= caspacNoPath + "-CASUAL-R"+CASUAL.CASPACData.getSVNRevision()+"b.jar";
 
             if (userOutputDir.equals("")) {
                 output = defaultOutputDir + output;
