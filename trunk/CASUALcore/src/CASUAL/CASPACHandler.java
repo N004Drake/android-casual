@@ -207,6 +207,7 @@ public class CASPACHandler {
 
     private void verifyMD5s() {
         //we are in IDE mode
+        if (cd.md5s.size()==0) return;
         for (Object md5 : Statics.runnableMD5list.toArray()) {
 
             new Log().level3Verbose(md5.toString());
