@@ -28,6 +28,8 @@ import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -139,11 +141,10 @@ public class CASUALTools {
                     new FileOperations().makeFolder(Statics.SelectedScriptFolder);
                 }
                 log.level4Debug("Extracting archive....");
-                Unzip unzip = new Unzip();
                 if (getClass().getResource(ZipResource) != null) {
                     log.level4Debug("Target Script Is resource");
                     try {
-                        unzip.unZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
+                        Unzip.unZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
                     } catch (FileNotFoundException ex) {
                         log.errorHandler(ex);
                     } catch (IOException ex) {
@@ -234,15 +235,9 @@ public class CASUALTools {
         ArrayList list;
         Enumeration zippedFiles;
         String CASUALMeta;
-        Unzip unzip = new Unzip();
+        Unzip unzip;
         try {
             unzip = new Unzip(CASPAC);
-        } catch (ZipException ex) {
-            new Log().errorHandler(ex);
-        } catch (IOException ex) {
-            new Log().errorHandler(ex);
-        }
-        try {
             zippedFiles = unzip.zipFileEntries;
             CASUALMeta = Statics.TempFolder + caspacHandler.getMetaName(zippedFiles);
             if (CASUALMeta == null) {
@@ -274,7 +269,7 @@ public class CASUALTools {
                         Object e = entries.nextElement();
                         new Log().level3Verbose(e.toString());
                         if (filetocheck.contains(e.toString())) {
-                            String newMD5 = new MD5sum().md5sum(new Unzip().streamFileFromZip(CASPAC, e));
+                            String newMD5 = new MD5sum().md5sum(Unzip.streamFileFromZip(CASPAC, e));
                             output = output + new MD5sum().makeMD5String(newMD5, e.toString() + "\n");
                         }
                     }
