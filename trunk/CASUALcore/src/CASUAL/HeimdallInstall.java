@@ -188,6 +188,20 @@ public class HeimdallInstall {
         }
         //verify MD5
         String driverreturn=new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" +exec + "\"" });
+        /*
+         * 
+         * TODO: Here we need to parse return from CADI
+         * 
+         * Access is denied is likely a non-priviliged account otherwise access would be granted.
+         * 
+         * [DEBUG]Attempting to write C:\Users\William\AppData\Local\Temp\WilliamTEMPCASUALD13E68C1\CADI.exe
+         * [DEBUG]File verified.
+         * [DEBUG]###executing: cmd.exe###
+         * [VERBOSE]null
+         * [INFO]
+         * Access is denied.         * 
+         * 
+         */
         log.level2Information(driverreturn);
         if (driverreturn.contains("CritError")){
             return false;
