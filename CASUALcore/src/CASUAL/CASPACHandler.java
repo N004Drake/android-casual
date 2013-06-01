@@ -66,7 +66,7 @@ public class CASPACHandler {
                 new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted" + ex));
             }
             if (cd != null) {
-                new Log().level2Information("Verifying CASPAC metainfo and MD5s"); //TODO: remove
+                new Log().level3Verbose("Verifying CASPAC metainfo and MD5s");
                 cd.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")));
 
                 if (new CASUALTools().getIDEMode()) {
