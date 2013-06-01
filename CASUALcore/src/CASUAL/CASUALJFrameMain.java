@@ -29,8 +29,6 @@ import javax.swing.JFileChooser;
  */
 public final class CASUALJFrameMain extends javax.swing.JFrame {
 
-    
-    //TODO: integrate How to enable development mode for Jelly Bean  and other devices
     private int busyIconIndex = 0;
     String nonResourceFileName;
     Log log = new Log();
