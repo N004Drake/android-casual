@@ -72,7 +72,6 @@ public class CASPACHandler {
                 if (new CASUALTools().getIDEMode()) {
                     unzip.closeZip();
                     new CASUALTools().rewriteMD5OnCASPAC(new File(pack), this);
-                    unzip = new Unzip(new File(pack)); //TODO: what is this supposed to do?
                 }
                 verifyMD5s();
             }
@@ -161,9 +160,9 @@ public class CASPACHandler {
         while (unzip.zipFileEntries.hasMoreElements()) {
             Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
             if (entry.toString().endsWith(".meta")) {
-                new FileOperations().overwriteFile(StringOperations.convertStreamToString(unzip.streamFileFromZip(f, entry)), CASUALMeta);
+                new FileOperations().overwriteFile(StringOperations.convertStreamToString(Unzip.streamFileFromZip(f, entry)), CASUALMeta);
             } else {
-                list.add(md5sum.makeMD5String(md5sum.md5sum(unzip.streamFileFromZip(f, entry)), entry.toString()));
+                list.add(md5sum.makeMD5String(md5sum.md5sum(Unzip.streamFileFromZip(f, entry)), entry.toString()));
             }
 
         }
@@ -207,7 +206,7 @@ public class CASPACHandler {
 
     private void verifyMD5s() {
         //we are in IDE mode
-        if (cd.md5s.size()==0) return;
+        if (cd.md5s.isEmpty()) return;
         for (Object md5 : Statics.runnableMD5list.toArray()) {
 
             new Log().level3Verbose(md5.toString());
