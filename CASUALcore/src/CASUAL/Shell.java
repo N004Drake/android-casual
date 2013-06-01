@@ -58,13 +58,17 @@ public class Shell implements Runnable {
 
         String[] newCmd;
         if (Statics.isLinux()) {
-            //TODO: better testing for GKSU
-            //TODO: possibly switch to pkexec
-            String[] TestGKSudo = {"which", "gksudo"};
-            String TestReturn = Shell.sendShellCommand(TestGKSudo);
-            if ((TestReturn.contains("CritERROR!!!") || (TestReturn.equals("")))) {
-                CASUALInteraction TO = new CASUALInteraction();
-                TO.showTimeoutDialog(60, null, "Please install package 'gksudo'", "GKSUDO NOT FOUND", CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
+            boolean useGKSU = true;
+            String[] testGKSudo = {"which", "gksudo"};
+            String testReturn = Shell.silentShellCommand(testGKSudo);
+            if ((testReturn.contains("CritERROR!!!") || (testReturn.equals("\n") || (testReturn.equals(""))))) {
+                useGKSU = false;
+                String[] testPKexec = {"which", "pkexec"};
+                testReturn = Shell.silentShellCommand(testPKexec);
+                if ((testReturn.contains("CritERROR!!!") || (testReturn.equals("\n") || (testReturn.equals(""))))) {
+                    CASUALInteraction TO = new CASUALInteraction();
+                    TO.showTimeoutDialog(60, null, "Please install package 'gksu' or 'pkexec' ", "PERMISSIONS NOT FOUND", CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
+                }
             }
 
 
@@ -77,10 +81,24 @@ public class Shell implements Runnable {
             }
             FileOperations.setExecutableBit(ScriptFile);
             log.level4Debug("###Elevating Command: " + Command + " ###");
-            if (message == null) {
-                Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
+            if (useGKSU) {
+                if (message == null) {
+                    Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
+                } else {
+                    Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile}, true);
+                }
             } else {
-                Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile}, true);
+                int i = 0;
+                //give the user 3 retries for password
+                while ((Result.equals("")) || (Result.contains("Error executing command as another user"))) {
+                    Result = Shell.liveShellCommand(new String[]{"pkexec", ScriptFile}, true);
+                    i++;
+                    if (i >= 3) {
+                        log.level2Information("Failed password 3 times, attempting with normal permissions");
+                        Shell.liveShellCommand(new String[]{ScriptFile}, true);
+                        break;
+                    }
+                }
             }
 
         } else if (Statics.isMac()) {
@@ -102,12 +120,12 @@ public class Shell implements Runnable {
             newCmd = new String[cmd.length + 2];
             newCmd[0] = Statics.WinElevatorInTempFolder;
             newCmd[1] = "-wait";
-            
+
             //check if a virus scanner trashed CASUAL's Elevate.exe file. 
-            if (! new FileOperations().verifyExists(Statics.WinElevatorInTempFolder)){
+            if (!new FileOperations().verifyExists(Statics.WinElevatorInTempFolder)) {
                 new CASUALInteraction().showUserCancelOption("It has been detected that CASUAL's\nconsistancy has been compromised.\nThis is likely the work of a virus\nscanner.  It is recommended to disable\nvirus scanners and redownload CASUAL.");
             }
-            
+
             for (int i = 2; i < cmd.length + 2; i++) {
                 newCmd[i] = cmd[i - 2] + " ";
             }
@@ -132,7 +150,7 @@ public class Shell implements Runnable {
              } catch (InterruptedException ex) {
              log.errorHandler(ex);
              }*/
-            log.level3Verbose(STDOUT.readLine());
+            //log.level3Verbose(STDOUT.readLine());
             int y = 0;
             while ((line = STDOUT.readLine()) != null) {
                 if (y == 0) {
