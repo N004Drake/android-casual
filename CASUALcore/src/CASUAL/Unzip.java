@@ -35,15 +35,31 @@ import java.util.zip.ZipInputStream;
  * @author adam
  */
 public class Unzip {
+    static int BUFFER = 4096;
+    ZipFile zip;
+    Enumeration zipFileEntries;
 
-    int BUFFER = 4096;
+    public Unzip(File f) throws ZipException, IOException {
+        this.zip = new ZipFile(f);
+        try {
+            this.zipFileEntries = zip.entries();
+        } catch (Exception e) {
+            new Log().errorHandler(e);
+        }
+    }
+    public Unzip(String f) throws ZipException, IOException {
+        this.zip = new ZipFile(new File(f));
+        try {
+            this.zipFileEntries = zip.entries();
+        } catch (Exception e) {
+            new Log().errorHandler(e);
+        }
+    }
+        
 
-    public void recursiveUnzipFile(String zipFile, String outputFolder) throws ZipException, IOException {
-        new Log().level4Debug(zipFile);
+    public void recursiveUnzipFile(String outputFolder) throws ZipException, IOException {
 
-        File file = new File(zipFile);
-        ZipFile zip = new ZipFile(file);
-//TODO: remove this and use the constructor instead below.
+        //TODO: remove this and use the constructor instead below.
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
         Enumeration zipFileEntries = zip.entries();
@@ -66,12 +82,17 @@ public class Unzip {
             }
             if (currentEntry.endsWith(".zip")) {
                 // found a zip file, try to open
-                unzipFile(destFile.getAbsolutePath(), outputFolder + System.getProperty("file.separator") + destFile.getAbsolutePath() + System.getProperty("file.separator"));
+                unzipFileToFolder(destFile.getAbsolutePath(), outputFolder + System.getProperty("file.separator") + destFile.getAbsolutePath() + System.getProperty("file.separator"));
             }
         }
     }
 
-        public void unzipFile(String zipFile, String outputFolder) throws ZipException, IOException {
+    
+    public static void unzipFile(String zipFile, String outputFolder) throws ZipException, IOException{
+        new Unzip(zipFile).unzipFileToFolder(zipFile,outputFolder);
+    }
+    
+    private void unzipFileToFolder(String zipFile, String outputFolder) throws ZipException, IOException {
         new Log().level4Debug(zipFile);
 
         File file = new File(zipFile);
@@ -100,13 +121,14 @@ public class Unzip {
         }
     }
     
-    public void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
-        InputStream ZStream = getClass().getResourceAsStream(zipResource);
+    public static void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
+        Unzip unzip=new Unzip(zipResource); //bogus constructor for resource
+        InputStream ZStream = unzip.getClass().getResourceAsStream(zipResource);
         unZipInputStream(ZStream, outputFolder);
     }
 
-    public void unZipInputStream(InputStream ZStream, String outputFolder) throws FileNotFoundException, IOException {
-        //InputStream ZStream = getClass().getResourceAsStream(zipResource);
+    public static void unZipInputStream(InputStream ZStream, String outputFolder) throws FileNotFoundException, IOException {
+        
         ZipInputStream ZipInput;
         ZipInput = new ZipInputStream(ZStream);
         ZipEntry ZipEntryInstance;
@@ -139,20 +161,7 @@ public class Unzip {
         ZipInput.close();
         new Log().level3Verbose("Unzip Complete");
     }
-    ZipFile zip;
-    Enumeration zipFileEntries;
 
-    public Unzip(File f) throws ZipException, IOException {
-        this.zip = new ZipFile(f);
-        try {
-            this.zipFileEntries = zip.entries();
-        } catch (Exception e) {
-            new Log().errorHandler(e);
-        }
-    }
-
-    public Unzip() {
-    }
 
     public void closeZip() {
         try {
@@ -162,15 +171,15 @@ public class Unzip {
         }
     }
 
-    public String deployFileFromZip(File zipFile, Object entry, String outputFolder) throws ZipException, IOException {
-        ZipFile zip = new ZipFile(zipFile);
+    public String deployFileFromZip( Object entry, String outputFolder) throws ZipException, IOException {
+        
         ZipEntry zipEntry = new ZipEntry((ZipEntry) entry);
         writeFromZipToFile(zip, zipEntry, outputFolder);
         zip.close();
         return outputFolder + entry.toString();
     }
 
-    public BufferedInputStream streamFileFromZip(File zipFile, Object entry) throws ZipException, IOException {
+    public static BufferedInputStream streamFileFromZip(File zipFile, Object entry) throws ZipException, IOException {
         ZipFile zip = new ZipFile(zipFile);
         return new BufferedInputStream(zip.getInputStream((ZipEntry) entry));
     }

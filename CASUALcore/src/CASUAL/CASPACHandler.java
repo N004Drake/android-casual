@@ -39,7 +39,7 @@ public class CASPACHandler {
      * @param pack Launches a CASPAC
      */
     public void loadCASUALPack(String pack) {
-        Unzip unzip = new Unzip();
+        
         try {
             Thread adb = new Thread(new CASUALTools().adbDeployment);
             adb.start();
@@ -50,7 +50,7 @@ public class CASPACHandler {
             }
             new Log().level3Verbose("-----CASPAC MODE-----\nCASPAC: " + CASPAC.getAbsolutePath());
             //begin unziping and analyzing CASPAC
-            unzip = new Unzip(CASPAC);
+            Unzip unzip = new Unzip(CASPAC);
             try {
                 cd = processCASPAC(unzip.zipFileEntries, CASPAC);
             } catch (NullPointerException ex ){
@@ -72,7 +72,7 @@ public class CASPACHandler {
                 if (new CASUALTools().getIDEMode()) {
                     unzip.closeZip();
                     new CASUALTools().rewriteMD5OnCASPAC(new File(pack), this);
-                    unzip = new Unzip(new File(pack));
+                    unzip = new Unzip(new File(pack)); //TODO: what is this supposed to do?
                 }
                 verifyMD5s();
             }
@@ -102,9 +102,7 @@ public class CASPACHandler {
             new Log().level0Error("There was a problem reading the file.");
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
             CASUALApp.shutdown(1);
-        } finally {
-            unzip.closeZip();
-        }
+        } 
     }
     Runnable activateScript = new Runnable() {
         @Override
@@ -114,18 +112,18 @@ public class CASPACHandler {
     };
 
     private CASPACData handleCASPACFiles(Object entry, File f) throws IOException {
-        Unzip unzip = new Unzip();
+
         if (entry.toString().equals("-build.properties")) {
-            CASUALapplicationData ca= new CASUALapplicationData(unzip.streamFileFromZip(f, entry));
+            CASUALapplicationData ca= new CASUALapplicationData(Unzip.streamFileFromZip(f, entry));
         } else if (entry.toString().equals("-Overview.txt")) {
             if (Statics.useGUI) { //only display overview if using GUI.
-                new Log().level2Information("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
-                new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation + entry);
+                new Log().level2Information("\n" + new FileOperations().readTextFromStream(Unzip.streamFileFromZip(f, entry)) + "\n");
+                new FileOperations().writeStreamToFile(Unzip.streamFileFromZip(f, entry), Statics.ScriptLocation + entry);
             }
         } else if (entry.toString().endsWith(".meta")) {
             CASUALapplicationData.meta = entry.toString();
             meta = Statics.TempFolder + entry.toString();
-            unzip.deployFileFromZip(f, entry, Statics.TempFolder);
+            new Unzip(f).deployFileFromZip( entry, Statics.TempFolder);
 
             return new CASPACData(new FileOperations().readFile(meta));
         } else if (entry.toString().endsWith(".scr")) {
@@ -133,15 +131,15 @@ public class CASPACHandler {
             Statics.ScriptLocation = Statics.TempFolder + scriptBasename + Statics.Slash;
             activeScript = Statics.ScriptLocation + scriptBasename;
             new FileOperations().makeFolder(Statics.ScriptLocation);
-            new FileOperations().writeStreamToFile(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation + entry);
-            new MD5sumRunnable(unzip.streamFileFromZip(f, entry), entry.toString()).run();
+            new FileOperations().writeStreamToFile(Unzip.streamFileFromZip(f, entry), Statics.ScriptLocation + entry);
+            new MD5sumRunnable(Unzip.streamFileFromZip(f, entry), entry.toString()).run();
         } else if (entry.toString().endsWith(".zip")) {
             Statics.ScriptLocation = StringOperations.replaceLast(Statics.TempFolder + entry.toString(), ".zip", "") + Statics.Slash;
             new FileOperations().makeFolder(Statics.ScriptLocation);
-            unzip.unZipInputStream(unzip.streamFileFromZip(f, entry), Statics.ScriptLocation);
-            zip = new Thread(new MD5sumRunnable(unzip.streamFileFromZip(f, entry), entry.toString()));
+            Unzip.unZipInputStream(Unzip.streamFileFromZip(f, entry), Statics.ScriptLocation);
+            zip = new Thread(new MD5sumRunnable(Unzip.streamFileFromZip(f, entry), entry.toString()));
         } else if (entry.toString().endsWith(".txt")) {
-            new Log().level2Information("\n" + new FileOperations().readTextFromStream(unzip.streamFileFromZip(f, entry)) + "\n");
+            new Log().level2Information("\n" + new FileOperations().readTextFromStream(Unzip.streamFileFromZip(f, entry)) + "\n");
         }
         return null;
         //DONE with extraction and preparation of zip
