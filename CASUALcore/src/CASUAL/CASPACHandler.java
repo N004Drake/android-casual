@@ -67,7 +67,8 @@ public class CASPACHandler {
             }
             if (cd != null) {
                 new Log().level2Information("Verifying CASPAC metainfo and MD5s"); //TODO: remove
-                exitIfSVNRevisionIsNotHighEnough(); //this should be checked when the data is processed
+                cd.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")));
+
                 if (new CASUALTools().getIDEMode()) {
                     unzip.closeZip();
                     new CASUALTools().rewriteMD5OnCASPAC(new File(pack), this);
@@ -205,27 +206,6 @@ public class CASPACHandler {
      * 
      * @deprecated 
      */
-    private void exitIfSVNRevisionIsNotHighEnough() {
-        try {
-            int scriptSVNRevision = (Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")));
-            int minSVNRevision = Integer.parseInt(cd.minSVNRevision);
-            //verify it's an integer
-            if (scriptSVNRevision > 0 && minSVNRevision > 0) {
-                //do the check
-                if (scriptSVNRevision < minSVNRevision) {
-                    new Log().level4Debug("FAILURE!  CASUAL MUST BE UPDATED TO RUN THIS!");
-                    CASUALApp.shutdown(1);
-                } else {
-                    new Log().level4Debug("Application Revision Check Passed");
-                }
-
-            }
-        } catch (NumberFormatException E) {
-            new Log().level4Debug("WARNING: could not parse SVN revision.. Continuing");
-
-        }
-        //TODO: possible: PackageNameR2.CASPAC.zip
-    }
 
     private void verifyMD5s() {
         //we are in IDE mode
