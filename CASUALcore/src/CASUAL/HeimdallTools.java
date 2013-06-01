@@ -163,6 +163,9 @@ public class HeimdallTools {
         
         if(stdErrLog.contains(" failed!")) {
             if(stdErrLog.contains("Claiming interface failed!")) {
+                
+                //TODO: inform user to turn off device and put it back into download mode, then continue and redo.
+                
                 return "Heimdall failed to claim interface; Script halted"; 
             }
             
