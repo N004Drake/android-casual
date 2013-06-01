@@ -27,6 +27,7 @@ import javax.swing.Timer;
  */
 public class HeimdallTools {
 
+    static int cyclicErrors=0;
     Log log = new Log();
 
     public void doHeimdallWaitForDevice() {
@@ -113,12 +114,20 @@ public class HeimdallTools {
             log.level2Information("\n[Heimdall Success]\n\n");
         }
         if (result.contains("Attempting to continue")) {
-            if(Statics.isLinux()) {
+            cyclicErrors++;
+            if(Statics.isLinux() || Statics.isMac()) {
                 log.level2Information("A permissions problem was detected.  Elevating permissions.");
                 this.doElevatedHeimdallShellCommand(line);
             } else if (Statics.isWindows()) {
-                this.doHeimdallShellCommand(line);
+                if (cyclicErrors<5){
+                    this.doHeimdallShellCommand(line);
+                } else {
+                    log.level0Error("Maximum retries exceeded. Shutting down CASUAL Parser.");
+                    //TODO: uninstall drivers, reinstall with CADI and try once more.
+                    new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO cyclic error.");
+                }
             }
+            cyclicErrors=0;
         }
         return returnRead;
     }
