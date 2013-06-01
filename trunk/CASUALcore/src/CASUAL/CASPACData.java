@@ -79,10 +79,6 @@ public class CASPACData {
         }
     }
     
-    //TODO: remove CASUAL Webversion versus LocalVersion checks from CASPACHandler. 
-    //    private void exitIfSVNRevisionIsNotHighEnough() {
-    // this is no longer needed
-    
     /**
      * isOurSVNHighEnoughToRunThisScript 
      * @param thisVerison
