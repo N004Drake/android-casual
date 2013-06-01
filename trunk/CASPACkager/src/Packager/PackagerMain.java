@@ -90,7 +90,7 @@ public class PackagerMain {
                 caspacNoPath = caspacWithPath;
                 //log.level4Debug("[processCommandline()]Removing file path");
                 caspacNoPath = new File(caspacNoPath).getName();
-                caspacNoPath = caspacNoPath.substring(0, caspacNoPath.indexOf("."));
+                caspacNoPath = caspacNoPath.substring(0, caspacNoPath.lastIndexOf("."));
             }
             log.level0Error("[processCommandline()]File type is unknown based on extention");
         }
