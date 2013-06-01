@@ -26,38 +26,22 @@ class CASUALDeployADB {
     Log Log = new Log();
 
     public void deployADB() {
-        DiffTextFiles DTF = new DiffTextFiles();
-
 
         if (Statics.isLinux()) {
-            //todo fix adb_usb.ini.
             Log.level4Debug("Found Linux Computer");
-            //add our lines to the current adbini
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac));
+            updateADBini();
             Statics.AdbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.LinuxADB(), Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isMac()) {
             Log.level4Debug("Found Mac Computer");
-            //add our lines to the current adbini
-            String adbiniDiff = DTF.diffResourceVersusFile(Statics.ADBini, Statics.FilesystemAdbIniLocationLinuxMac);
-            if (! StringOperations.removeLeadingAndTrailingSpaces(adbiniDiff).equals("")){
-                this.restartADBserver(); //restart adb if changes made to adb.ini
-            }
-            
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationLinuxMac, adbiniDiff);
+            updateADBini();
             Statics.AdbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
             FileOperations.setExecutableBit(Statics.AdbDeployed);
         } else if (Statics.isWindows()) {
             Log.level4Debug("Found Windows Computer");
-            
-            String adbiniDiff=DTF.diffResourceVersusFile(Statics.ADBini,Statics.FilesystemAdbIniLocationWindows);
-            DTF.appendDiffToFile(Statics.FilesystemAdbIniLocationWindows, adbiniDiff);
-            if (! StringOperations.removeLeadingAndTrailingSpaces(adbiniDiff).equals("")){
-                this.restartADBserver(); //restart adb if changes made to adb.ini
-            }
-            
+            updateADBini();
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.AdbDeployed = Statics.TempFolder + "adb.exe";
             FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
@@ -72,12 +56,13 @@ class CASUALDeployADB {
             } catch (InterruptedException ex) {
                 //no catch needed for sleep interruption
             }
+
         } else {
             Log.level0Error("Your system is not supported");
         }
-
-        FileOperations.copyFromResourceToFile(Statics.ADBini, Statics.TempFolder + "adb_usb.ini");
+        
         Shell Shell = new Shell();
+        killADBserver();
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
         Statics.LiveSendCommand.add(Statics.AdbDeployed);
         Statics.LiveSendCommand.add("get-state");
@@ -121,12 +106,35 @@ class CASUALDeployADB {
         } else {
         }
     }
+    
+    private void updateADBini(){
+        FileOperations fo=new FileOperations();
+        String adbIniDeployed="";
+        if (Statics.isLinux()||Statics.isMac()) adbIniDeployed=Statics.FilesystemAdbIniLocationLinuxMac;
+        if (Statics.isWindows()) adbIniDeployed=Statics.FilesystemAdbIniLocationWindows;
+        if (! fo.verifyExists(adbIniDeployed)){  
+            //deploy a new copy
+            FileOperations.copyFromResourceToFile(Statics.ADBini, adbIniDeployed);
+        } else {
+            //see what's missing and add new entries
+            DiffTextFiles DTF=new DiffTextFiles();
+            DTF.appendDiffToFile(adbIniDeployed, DTF.diffResourceVersusFile(Statics.ADBini, adbIniDeployed));
+        }
+    }
+    
+    
     private void restartADBserver(){
         Log.level2Information("Restarting ADB after system update");
         Shell shell=new Shell();
-        String[] restartCmd = {Statics.AdbDeployed, "kill-server"};
-        shell.silentShellCommand(restartCmd);
+        String[] killCmd = {Statics.AdbDeployed, "kill-server"};
+        shell.silentShellCommand(killCmd);
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
         shell.silentShellCommand(devicesCmd);
+    }
+    private void killADBserver(){
+        Log.level2Information("Restarting ADB after system update");
+        Shell shell=new Shell();
+        String[] killCmd = {Statics.AdbDeployed, "kill-server"};
+        shell.silentShellCommand(killCmd);
     }
 }
