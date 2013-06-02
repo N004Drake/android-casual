@@ -87,7 +87,7 @@ public class PackagerMain {
 
         for (int i = 0; i < args.length; i++) {
             if (args[i].contains("--type") || args[i].contains("-t")) {
-                appendToName = "-" + args[++i];
+                appendToName = args[++i];
             } else if (args[i].contains("--CASPAC") || args[i].contains("-c")) {
                 caspacWithPath = args[++i];
             } else if (args[i].contains("--output") || args[i].contains("-o")) {
