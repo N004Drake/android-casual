@@ -1,9 +1,9 @@
 $ECHO Testing ALL CASUAL commands. Connect your device
-$FASTBOOT reboot
+
 #$ADB wait-for-device
-$LINUXMAC $ECHO LINUXMAC This is a Linux or Mac Computer.
-$LINUXWINDOWS $ECHO LINUXWINDOWS This is a Linux or Windows Computer.
-$WINDOWSMAC $ECHO WINDOWSMAC This is a Windows or Mac Computer.
+$LINUXMAC $ECHO This is a Linux or Mac Computer.
+$LINUXWINDOWS $ECHO This is a Linux or Windows Computer.
+$WINDOWSMAC $ECHO This is a Windows or Mac Computer.
 $LINUX $GOTO #for LiN
 $WINDOWS $GOTO #for MaC
 $MAC $GOTO #for WiN
