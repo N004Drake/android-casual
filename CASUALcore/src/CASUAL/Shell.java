@@ -75,12 +75,13 @@ public class Shell implements Runnable {
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
             FileOperations.deleteFile(ScriptFile);
             try {
-                FileOperations.writeToFile(Command, ScriptFile);
+                FileOperations.writeToFile("#!/bin/sh\n"+Command, ScriptFile);
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
             log.level4Debug("###Elevating Command: " + Command + " ###");
+            Result="";
             if (useGKSU) {
                 if (message == null) {
                     Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
@@ -93,7 +94,7 @@ public class Shell implements Runnable {
                 while ((Result.equals("")) || (Result.contains("Error executing command as another user"))) {
                     Result = Shell.liveShellCommand(new String[]{"pkexec", ScriptFile}, true);
                     i++;
-                    if (i >= 3) {
+                    if (Result.contains("Error executing command as another user:") && i >= 3) {
                         log.level2Information("Failed password 3 times, attempting with normal permissions");
                         Shell.liveShellCommand(new String[]{ScriptFile}, true);
                         break;
