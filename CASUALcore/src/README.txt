@@ -5,6 +5,18 @@ CASUAL package layout:
 /META-INF < Don't modify this
 /CASUAL < Stay out of here. 
 
+
+Building from source: 
+This application is designed using NetBeans.  This program will build from source from the command line using Java 7 JDK (OpenJDK or OracleJDK). 
+To use Oracle JDK under Netbeans--
+Right-click CASUAL
+Click Libraries
+Click Manage Platforms
+Click Add Platform
+Navigate to your Java JDK folder (C:\Program Files\Java\jdk...) and then click Open
+Name the platform "JDK_7" and CASUAL will build/run properly after that.
+
+
 About:
 CASUAL is a Cross-platform Android Scripting and Unified Auxiliary Loader. CASUAL is a Scripting language and a package deployment system.  It works with all android devices which can communicate with ADB.
 
