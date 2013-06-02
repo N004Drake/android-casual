@@ -87,8 +87,12 @@
             </redirector>
         </exec> 
         <echo>revision after svnversion command: ${svna.version}</echo>
-        
         <loadproperties srcfile="src/CASUAL/resources/CASUALApp.properties"/>
+        <condition property="svna.version" value=""> 
+            <not>
+                <isset property="Application.revision" />
+            </not>
+        </condition>
         <property name="svna.version" value="${Application.revision}"/>
         <echo>Loaded property value: ${svna.version}</echo>
         <echo>revision after loaded property: ${svna.version}</echo>
