@@ -72,7 +72,7 @@
     nbproject/build-impl.xml file. 
 
     -->
-    <target name="-pre-init" description="Sets the buildversion for the current build">
+    <target name="-pre-compile" description="Sets the buildversion for the current build">
 
   
         <exec outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
