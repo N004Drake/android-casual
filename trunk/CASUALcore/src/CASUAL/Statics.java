@@ -396,7 +396,6 @@ public class Statics {
         CASUALapplicationData.CASUALFileName="";
         CASUALapplicationData.AlwaysEnableControls=true;
         CASUALapplicationData.meta=null;
-        Log.initialize();
     }
     
     
