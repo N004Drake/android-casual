@@ -35,26 +35,32 @@ public class HeimdallInstall {
         Statics.heimdallResource = Statics.heimdallWin;
         Statics.heimdallDeployed = Statics.TempFolder + "heimdall.exe";
         fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
-        String x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"}); //try without msredist
-        if (!x.equals("")) {
-            Statics.isHeimdallDeployed = true;
-            return true;
-        }
         fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.TempFolder + "msvcp110.dll");
         fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.TempFolder + "msvcr110.dll");
-        if (!(new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"}).equals(""))) { //try with redist files
+        
+        log.level4Debug("verifying Heimdall deployment");
+        if ( checkHeimdall()) { //try with redist files
             Statics.isHeimdallDeployed = true;
+            log.level4Debug("heimdall install sucessful");
             return true;
+        } else {
+           log.level2Information("Additional Files are required in order to continue.. Downloading");
+           new HeimdallInstall().installWindowsVCRedist();
         }
-        new HeimdallInstall().installWindowsVCRedist();
-        x = new Shell().silentShellCommand(new String[]{Statics.heimdallDeployed, "version"}); //deploy full
-        if (x.contains("")) {
+        
+        log.level4Debug("Verifying Heimdall deployment after Visual C++ Redistributable installation");
+        if (checkHeimdall()) {
+            log.level0Error("There was a problem deploying installing heimdall");
             return false;
         } else {
+            log.level4Debug("heimdall install sucessful");
             return true;
         }
     }
-
+    public boolean checkHeimdall(){
+        //TODO: put this back to silentShellCommand -- this was changed for debugging XP
+        return new Shell().sendShellCommand(new String[]{Statics.heimdallDeployed, "version"}).equals("");
+    }
     private boolean installLinuxHeimdall() {
 
         FileOperations fo = new FileOperations();
@@ -150,7 +156,7 @@ public class HeimdallInstall {
     }
 
     public void installWindowsVCRedist() {
-        new Log().Level1Interaction("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
+        new Log().level2Information("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
         String installVCResults = "CritERROR!!!";
         String exec = "";
         try {
