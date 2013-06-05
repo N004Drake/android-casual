@@ -73,8 +73,6 @@
 
     -->
     <target name="-pre-compile" description="Sets the buildversion for the current build">
-
-  
         <exec outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
             <arg value="-c" />
             <redirector>
@@ -96,8 +94,9 @@
         <property name="svna.version" value="${Application.revision}"/>
         <echo>Loaded property value: ${svna.version}</echo>
         <echo>revision after loaded property: ${svna.version}</echo>
-
-
+        <propertyfile file="src/CASUAL/resources/CASUALApp.properties">
+          <entry  key="Application.revision" value="${svna.version}"/>
+        </propertyfile>
     </target>
      
 
