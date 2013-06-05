@@ -642,6 +642,27 @@ public class CASUALLanguage {
         }
         log.level4Debug("sending");
         if (parseError) {
+            
+            // TODO Windows 8 and XP experience problems at the next line
+            /*Windows 8 log  -- Every time
+             * [ERROR][CRITICAL]Cannot run program "C:\Users\Kirtan\AppData\Local\Temp\KirtanTEMPCASUALFA2EAA6C\adb.exe": CreateProcess error=5, Access is denied
+Cannot run program "C:\Users\Kirtan\AppData\Local\Temp\KirtanTEMPCASUALFA2EAA6C\adb.exe": CreateProcess error=5, Access is denied
+java.io.IOException: Cannot run program "C:\Users\Kirtan\AppData\Local\Temp\KirtanTEMPCASUALFA2EAA6C\adb.exe": CreateProcess error=5, Access is denied
+ 
+java.io.IOException: Cannot run program "C:\Users\Kirtan\AppData\Local\Temp\KirtanTEMPCASUALFA2EAA6C\adb.exe": CreateProcess error=5, Access is denied
+        at java.lang.ProcessBuilder.start(Unknown Source)
+        at CASUAL.Shell.liveShellCommand(Shell.java:233)
+        at CASUAL.CASUALLanguage.executeADBCommand(CASUALLanguage.java:645)
+        at CASUAL.CASUALLanguage.doShellCommand(CASUALLanguage.java:614)
+        at CASUAL.CASUALLanguage.commandHandler(CASUALLanguage.java:546)
+        at CASUAL.CASUALLanguage.beginScriptingHandler(CASUALLanguage.java:66)
+        at CASUAL.CASUALScriptParser$1.run(CASUALScriptParser.java:122)
+        at java.lang.Thread.run(Unknown Source)
+Caused by: java.io.IOException: CreateProcess error=5, Access is denied
+        at java.lang.ProcessImpl.create(Native Method)
+        at java.lang.ProcessImpl.<init>(Unknown Source)
+        at java.lang.ProcessImpl.start(Unknown Source)
+        ... 8 more*/
             return Shell.liveShellCommand(StringCommand, true);
         } else {
             return Shell.sendShellCommandIgnoreError(StringCommand);
