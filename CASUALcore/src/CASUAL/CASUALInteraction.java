@@ -125,7 +125,11 @@ public class CASUALInteraction extends JOptionPane {
     
     public int showUserCancelOption(String CASUALStringCommand) throws HeadlessException {
         int n;
-        String[] Message = CASUALStringCommand.split(",");
+        String[] Message = new String[2];
+        
+        if(CASUALStringCommand.contains(",")) Message =  CASUALStringCommand.split(",");
+        else Message[0] = CASUALStringCommand;
+        
         Object[] Options = {"Stop", "Continue"};
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             
