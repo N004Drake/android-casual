@@ -59,7 +59,8 @@ public class HeimdallInstall {
     }
     public boolean checkHeimdall(){
         //TODO: put this back to silentShellCommand -- this was changed for debugging XP
-        return new Shell().sendShellCommand(new String[]{Statics.heimdallDeployed, "version"}).equals("");
+        boolean retval = ! new Shell().sendShellCommand(new String[]{Statics.heimdallDeployed, "version"}).equals("");
+        return retval;
     }
     private boolean installLinuxHeimdall() {
 
