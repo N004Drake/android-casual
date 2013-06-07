@@ -71,7 +71,18 @@ public class CASUALApp {
      */
     public static void main(String[] args) {
         Statics.initializeStatics();
-         if (useOverrideArgs) { //overrides command line input
+        if(Statics.isWindows()) {
+            ElevateUAC uac = new ElevateUAC();
+            if(uac.checkForUAC()) { 
+                // UAC is on we must attempt elevation
+                uac.doElevate();
+                System.exit(0);
+            } else {  
+                // UAC is not on -OR- we are already elevated
+            }
+        }
+    
+        if (useOverrideArgs) { //overrides command line input
             args = overrideArguments;
         }
         if (useTestFramework){ //automates CASUAL to test for errors
