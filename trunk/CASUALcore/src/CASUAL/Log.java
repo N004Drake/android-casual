@@ -187,7 +187,7 @@ public class Log {
                 level0Error(data + e.toString());
             }
             if (data.contains("\n")) {
-                writeToLogFile(progressBuffer);
+                writeToLogFile(progressBuffer.replace("\n",""));
                 progressBuffer = "";
                 lastNewLine = Statics.ProgressPane.getCaretPosition()-1;
             }
