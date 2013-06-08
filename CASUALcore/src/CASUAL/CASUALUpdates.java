@@ -286,7 +286,7 @@ public class CASUALUpdates {
             Log.level3Verbose("based on information, we need to download: "+downloadURL);
 
             String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/') + 1, downloadURL.length());
-            String availableVersion = prop.getProperty(system + arch + filenumber + "version");
+            String availableVersion = prop.getProperty(system + arch + filenumber + "Version");
             String downloadedFile = Statics.TempFolder + downloadBasename;
             //download update based on information available.
 
