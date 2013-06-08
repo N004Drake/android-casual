@@ -59,7 +59,7 @@ public class HeimdallInstall {
     }
     public boolean checkHeimdall(){
         //TODO: put this back to silentShellCommand -- this was changed for debugging XP
-        boolean retval = ! new Shell().sendShellCommand(new String[]{Statics.heimdallDeployed, "version"}).equals("");
+        boolean retval = ! new Shell().sendShellCommand(new String[]{HeimdallTools.getHeimdallCommand(), "version"}).equals("");
         return retval;
     }
     private boolean installLinuxHeimdall() {
@@ -126,7 +126,7 @@ public class HeimdallInstall {
             } else if (Statics.isMac()) {
 
                 Statics.heimdallDeployed = HeimdallTools.getHeimdallCommand();
-                String retval = new Shell().silentShellCommand(new String[]{(Statics.heimdallDeployed)});
+                String retval = new Shell().silentShellCommand(new String[]{HeimdallTools.getHeimdallCommand()});
                 if (retval.contains("CritError!!!")) {
                     new HeimdallInstall().installHeimdallMac();
                 }

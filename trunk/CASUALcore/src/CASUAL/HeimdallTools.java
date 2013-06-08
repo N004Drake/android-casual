@@ -128,7 +128,7 @@ public class HeimdallTools {
                 if (permissionEscillationAttempt<5){
                     doHeimdallShellCommand();
                 } else {
-                    log.level0Error("Maximum retries exceeded. Shutting down CASUAL Parser.");
+                    log.level0Error("Maximum retries exceeded. Shutting down Parser.");
                     //TODO: uninstall drivers, reinstall with CADI and try once more.
                     new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO cyclic error.");
                 }
@@ -274,9 +274,10 @@ public class HeimdallTools {
     public static String getHeimdallCommand() {
         if (Statics.isMac()) {
             Shell shell = new Shell();
-            String check = shell.silentShellCommand(new String[]{"/usr/local/bin/heimdall"});
+            String cmd="/usr/local/bin/heimdall";
+            String check = shell.silentShellCommand(new String[]{cmd});
             if (check.equals("")) {
-                String cmd = "/usr/bin/heimdall";
+                cmd = "/usr/bin/heimdall";
                 check = shell.silentShellCommand(new String[]{cmd});
                 if (check.equals("CritError!!!")) {
                     cmd = "/bin/heimdall";
@@ -293,7 +294,7 @@ public class HeimdallTools {
                 }
                 return cmd;
             }
-            return "";
+            return cmd;
         } else {
             if (Statics.heimdallDeployed.equals("")) {
                 return "heimdall";
