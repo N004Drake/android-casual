@@ -3,6 +3,11 @@
  * and open the template in the editor.
  */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -49,9 +54,64 @@ public class JUnitTest  {
             assertEquals(true, new CASUAL.HeimdallInstall().deployHeimdallForWindows());
             assertEquals(true, new CASUAL.HeimdallInstall().installWindowsDrivers());
         }
+    }
+    
+    private void setContinue(){
+        String string = "\n";
+        InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
+        CASUAL.CASUALInteraction.in=new BufferedReader(new InputStreamReader(stringStream));
+    }
+    private void setQuit(){
+        String string = "q";
+        InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
+        CASUAL.CASUALInteraction.in=new BufferedReader(new InputStreamReader(stringStream));
+    }
+    
+    @Test
+    public void testCASUALInteractions(){
+        String title="Testing Title";
+        String message="Testing Message";
+        String string = "aaa";
+        InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
         
         
+        CASUAL.CASUALInteraction ci= new CASUAL.CASUALInteraction(title, message);
+        setContinue();
+        assertEquals("",ci.inputDialog());  
+        setQuit();
+        assertEquals("q",ci.inputDialog());  
         
+        setQuit();
+        assertEquals(0,ci.showActionRequiredDialog());
+        setContinue();
+        assertEquals(1,ci.showActionRequiredDialog());
+        ci.showErrorDialog();
+        ci.showInformationMessage();
+        setQuit();
+        assertEquals(0,ci.showUserCancelOption());
+        setContinue();
+        assertEquals(1,ci.showUserCancelOption());
+        ci.showUserNotification();
+        CASUAL.Statics.useGUI=true;
+        int x= new CASUAL.CASUALInteraction("testing","Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(5, ci, 1, 1, new String[]{"ok","cancel"}, "cancel");
+        if (x==0){
+            ci= new CASUAL.CASUALInteraction("Text Input", "Press\n1");
+            assertEquals("1",ci.inputDialog());            
+            ci= new CASUAL.CASUALInteraction("Action Required", "Select\nI didn't do it!");
+            assertEquals(0,ci.showActionRequiredDialog());
+            ci= new CASUAL.CASUALInteraction("Action Required", "Select\nI did it!");
+            assertEquals(1,ci.showActionRequiredDialog());
+            ci= new CASUAL.CASUALInteraction("Cancel Option", "hit\nStop!");
+            assertEquals(0,ci.showUserCancelOption());
+            ci= new CASUAL.CASUALInteraction("Cancel Option ", "hit\nContinue!");
+            assertEquals(1,ci.showUserCancelOption());
+            ci= new CASUAL.CASUALInteraction("Error Dialog", "hit\nOK!");
+            ci.showErrorDialog();
+            ci= new CASUAL.CASUALInteraction("Information Dialog", "hit\nOK!");
+            ci.showInformationMessage();
+            ci= new CASUAL.CASUALInteraction("Notification Dialog", "hit OK!");
+            ci.showUserNotification(); 
+        }
     }
 
     // The methods must be annotated with annotation @Test. For example:
