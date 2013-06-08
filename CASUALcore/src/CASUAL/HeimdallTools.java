@@ -26,16 +26,16 @@ import javax.swing.Timer;
  * @author adam
  */
 public class HeimdallTools {
+
     Log log = new Log();
-    int permissionEscillationAttempt=0;
-    int heimdallRetries=0;
+    int permissionEscillationAttempt = 0;
+    int heimdallRetries = 0;
     String line;
-    
-    HeimdallTools(String line){
-        this.line=line;
+
+    HeimdallTools(String line) {
+        this.line = line;
     }
-    
-    
+
     public void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
         ArrayList<String> shellCommand = new ArrayList<>();
@@ -47,12 +47,11 @@ public class HeimdallTools {
         Timer connectionTimer = new Timer(60000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                new CASUALInteraction().showTimeoutDialog(60, null, "It would appear that the connected device is not recognized.\n"
+                new CASUALInteraction("I don't see the device", "It would appear that the connected device is not recognized.\n"
                         + "The device should be in download mode.. Is it?.\n\n"
                         + "If it's download mode, use a different USB port.\n"
                         + "Don't use a USB hub.  Also, the USB ports behind\n"
-                        + "the computer are better than the front.\n",
-                        "I don't see the device", CASUALInteraction.OK_OPTION, 2, new String[]{"I did it"}, 0);
+                        + "the computer are better than the front.\n").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, new String[]{"I did it"}, 0);
             }
         });
         connectionTimer.start();
@@ -78,14 +77,14 @@ public class HeimdallTools {
         String returnval = Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
         String result = didHeimdallError(returnval);
         if (!result.equals("")) {
-            if(result.contains("Script halted")) {
+            if (result.contains("Script halted")) {
                 log.level0Error("[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnval;
             } else if (result.contains("Attempting to continue")) {
                 log.level2Information("A permissions problem was detected.  Elevating permissions.");
-                returnval=doElevatedHeimdallShellCommand();
+                returnval = doElevatedHeimdallShellCommand();
                 return returnval;
             }
         } else {
@@ -105,13 +104,12 @@ public class HeimdallTools {
         String returnRead = Shell.liveShellCommand(stringCommand2, true);
         String result = didHeimdallError(returnRead);
         if (!result.equals("")) {
-            if(result.contains("Script halted")) {
+            if (result.contains("Script halted")) {
                 log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnRead;
-            }
-            else if (result.contains("; Stopping")){
+            } else if (result.contains("; Stopping")) {
                 return returnRead;
             }
             log.level2Information("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n"); //not an error, generally requires permissions
@@ -120,11 +118,11 @@ public class HeimdallTools {
         }
         if (result.contains("Attempting to continue")) {
             permissionEscillationAttempt++;
-            if(Statics.isLinux()) {
+            if (Statics.isLinux()) {
                 log.level2Information("A permissions problem was detected.  Elevating permissions.");
                 doElevatedHeimdallShellCommand();
-            } else if (Statics.isWindows()|| Statics.isMac()) {
-                if (permissionEscillationAttempt<5){
+            } else if (Statics.isWindows() || Statics.isMac()) {
+                if (permissionEscillationAttempt < 5) {
                     doHeimdallShellCommand();
                 } else {
                     log.level0Error("Maximum retries exceeded. Shutting down Parser.");
@@ -132,88 +130,88 @@ public class HeimdallTools {
                     new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO cyclic error.");
                 }
             }
-            permissionEscillationAttempt=0;
+            permissionEscillationAttempt = 0;
         }
         return returnRead;
     }
-    
-     /**
+
+    /**
      * .
-     * 
+     *
      * @param String CASUAL log output
      * @param String previously executed Heimdall command array
-     * 
-     * @author  Jeremy Loper    jrloper@gmail.com
+     *
+     * @author Jeremy Loper jrloper@gmail.com
      */
     public String didHeimdallError(String stdErrLog) {
-        
-        for (String code : epicFailures){
+
+        for (String code : epicFailures) {
             if (stdErrLog.contains(code)) {
                 return "Heimdall uncontinuable error; Script halted";
-            } 
+            }
         }
-        
+
         //Critical Failure, stop
-        for(String code : errFail) { //halt
-            if(stdErrLog.contains(code)) { 
-                if (heimdallRetries <= 3){  //only loop thrice
-                    new CASUALInteraction().showActionRequiredDialog("You must restart your device and put it back into download mode.\nThis is usually accompilished by pulling the battery\nthen holding Volume down + home while pressing power.\nIf you do not have a home button, press volume down\n while inserting the USB cable.");
+        for (String code : errFail) { //halt
+            if (stdErrLog.contains(code)) {
+                if (heimdallRetries <= 3) {  //only loop thrice
+                    new CASUALInteraction("You must restart your device and put it back into download mode.\nThis is usually accompilished by pulling the battery\nthen holding Volume down + home while pressing power.\nIf you do not have a home button, press volume down\n while inserting the USB cable.").showActionRequiredDialog();
                     return "Heimdall continuable error; Attempting to continue";
                 } else {
-                    return "Heimdall uncontinuable error; Script halted"; 
+                    return "Heimdall uncontinuable error; Script halted";
                 }
-            } 
-            
+            }
+
         }
-        
 
 
-        
-        if(stdErrLog.contains("Failed to detect compatible download-mode device")) {
-            if(new CASUALInteraction().showUserCancelOption("Heimdall is unable to detect your phone in Odin/Download Mode\n" 
-                                                            + "Recheck your cable connections, click Continue when ready") == 0) {
+
+
+        if (stdErrLog.contains("Failed to detect compatible download-mode device")) {
+            if (new CASUALInteraction("Heimdall is unable to detect your phone in Odin/Download Mode\n"
+                    + "Recheck your cable connections, click Continue when ready").showUserCancelOption() == 0) {
                 return "Heimdall uncontinuable error; Script halted";
             }
             return "Heimdall continuable error; Attempting to continue";
         }
-        
-        if(stdErrLog.contains(" failed!")) {
-            if(stdErrLog.contains("Claiming interface failed!")) {
-                
+
+        if (stdErrLog.contains(" failed!")) {
+            if (stdErrLog.contains("Claiming interface failed!")) {
+
                 //TODO: inform user to turn off device and put it back into download mode, then continue and redo.
-                
-                return "Heimdall failed to claim interface; Attempting to continue"; 
+
+                return "Heimdall failed to claim interface; Attempting to continue";
             }
-            
-            if(stdErrLog.contains("Setting up interface failed!")) {
-                return "Heimdall failed to setup an interface; Attempting to continue"; 
+
+            if (stdErrLog.contains("Setting up interface failed!")) {
+                return "Heimdall failed to setup an interface; Attempting to continue";
             }
-            
-            if(stdErrLog.contains("Protocol initialisation failed!")) {
+
+            if (stdErrLog.contains("Protocol initialisation failed!")) {
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $ECHO A random error occurred while attempting initial communications with the device.\nYou will need disconnect USB and pull your battery out to restart your device.\nDo the same for CASUAL.");
-                return "Heimdall failed to initialize protocol; Attempting to continue"; 
+                return "Heimdall failed to initialize protocol; Attempting to continue";
             }
-            
-            if(stdErrLog.contains("upload failed!")) {
-                return "Heimdall failed to upload; Attempting to continue"; 
+
+            if (stdErrLog.contains("upload failed!")) {
+                return "Heimdall failed to upload; Attempting to continue";
             }
         }
-        
-        if(stdErrLog.contains("Flash aborted!")) {
-            return "Heimdall aborted flash; Attempting to continue"; 
+
+        if (stdErrLog.contains("Flash aborted!")) {
+            return "Heimdall aborted flash; Attempting to continue";
         }
-        
+
         if (stdErrLog.contains("libusb error")) {
             int startIndex = stdErrLog.lastIndexOf("libusb error");
-            if(stdErrLog.charAt(startIndex + 1) == ':') {
-                startIndex =+ 3;
+            if (stdErrLog.charAt(startIndex + 1) == ':') {
+                startIndex = +3;
             }
-            while(stdErrLog.charAt(startIndex) != '\n'){
-                if(stdErrLog.charAt(startIndex) == '-') {
-                    switch(stdErrLog.charAt(startIndex + 1)){
+            while (stdErrLog.charAt(startIndex) != '\n') {
+                if (stdErrLog.charAt(startIndex) == '-') {
+                    switch (stdErrLog.charAt(startIndex + 1)) {
                         case '1': {
-                            switch(stdErrLog.charAt(startIndex + 2)) {
+                            switch (stdErrLog.charAt(startIndex + 2)) {
                                 case '0': {// -10
                                     return "'LIBUSB_ERROR_INTERRUPTED' Error not handled; Attempting to continue";
                                 }
@@ -253,7 +251,7 @@ public class HeimdallTools {
                             return "'LIBUSB_ERROR_OVERFLOW' Error not handled; Attempting to continue";
                         }
                         case '9': {
-                            if(stdErrLog.charAt(startIndex + 2) == 9) {// -99
+                            if (stdErrLog.charAt(startIndex + 2) == 9) {// -99
                                 return "'LIBUSB_ERROR_OTHER' Error not handled; Attempting to continue";
                             } else {//-9
                                 return "'LIBUSB_ERROR_PIPE'; Attempting to continue";
@@ -273,7 +271,7 @@ public class HeimdallTools {
     public static String getHeimdallCommand() {
         if (Statics.isMac()) {
             Shell shell = new Shell();
-            String cmd="/usr/local/bin/heimdall";
+            String cmd = "/usr/local/bin/heimdall";
             String check = shell.silentShellCommand(new String[]{cmd});
             if (check.equals("")) {
                 cmd = "/usr/bin/heimdall";
@@ -303,7 +301,7 @@ public class HeimdallTools {
 
         }
     }
-    
+
     private void sleepForOneSecond() {
         try {
             Thread.sleep(1000);
@@ -312,73 +310,71 @@ public class HeimdallTools {
             log.errorHandler(ex);
         }
     }
-    
-    final static String[] errFail = {   "Failed to end phone file transfer sequence!",//FAIL
-                                            "Failed to end modem file transfer sequence!",//FAIL
-                                            "Failed to confirm end of file transfer sequence!",//FAIL
-                                            "Failed to request dump!",//FAIL
-                                            "Failed to receive dump size!",//FAIL
-                                            "Failed to request dump part ",//FAIL
-                                            "Failed to receive dump part ",//FAIL
-                                            "Failed to send request to end dump transfer!",//FAIL
-                                            "Failed to receive end dump transfer verification!",//FAIL
-                                            "Failed to initialise file transfer!",//FAIL
-                                            "Failed to begin file transfer sequence!",//FAIL
-                                            "Failed to confirm beginning of file transfer sequence!",//FAIL
-                                            "Failed to send file part packet!",//FAIL
-                                            "Failed to request device info packet!",//FAIL
-                                            "Failed to initialise PIT file transfer!",//FAIL
-                                            "Failed to confirm transfer initialisation!",//FAIL
-                                            "Failed to send PIT file part information!",//FAIL
-                                            "Failed to confirm sending of PIT file part information!",//FAIL
-                                            "Failed to send file part packet!",//FAIL
-                                            "Failed to receive PIT file part response!",//FAIL
-                                            "Failed to send end PIT file transfer packet!",//FAIL
-                                            "Failed to confirm end of PIT file transfer!",//FAIL
-                                            "Failed to request receival of PIT file!",//FAIL
-                                            "Failed to receive PIT file size!",//FAIL
-                                            "Failed to request PIT file part ",//FAIL
-                                            "Failed to receive PIT file part ",//FAIL
-                                            "Failed to send request to end PIT file transfer!",//FAIL
-                                            "Failed to receive end PIT file transfer verification!",//FAIL
-                                            "Failed to download PIT file!",//FAIL
-                                            "Failed to send end session packet!",//FAIL
-                                            "Failed to receive session end confirmation!",//FAIL
-                                            "Failed to send reboot device packet!",//FAIL
-                                            "Failed to receive reboot confirmation!",//FAIL
-                                            "Failed to begin session!",//FAIL
-                                            "Failed to send file part size packet!",//FAIL
-                                            "Failed to complete sending of data: ",//FAIL
-                                            "Failed to complete sending of data!",//FAIL
-                                            "Failed to unpack device's PIT file!",//FAIL
-                                            "Failed to retrieve device description",//FAIL
-                                            "Failed to retrieve config descriptor",//FAIL
-                                            "Failed to find correct interface configuration",//FAIL
-                                            "Failed to read PIT file.",//FAIL
-                                            "Failed to open output file ",//FAIL
-                                            "Failed to write PIT data to output file.",//FAIL
-                                            "Failed to open file ",//FAIL
-                                            "Failed to send total bytes device info packet!",//FAIL
-                                            "Failed to receive device info response!",//FAIL
-                                            "Expected file part index: ",//FAIL
-                                            "Expected file part index: ",//FAIL
-                                            "No partition with identifier ",//FAIL
-                                            "Could not identify the PIT partition within the specified PIT file.",//FAIL
-                                            "Unexpected file part size response!",//FAIL
-                                            "Unexpected device info response!",//FAIL
-                                            "Attempted to send file to unknown destination!",//FAIL
-                                            "The modem file does not have an identifier!",//FAIL			
-                                            "Incorrect packet size received - expected size = ",//FAIL
-                                            "does not exist in the specified PIT.",//FAIL
-                                            "Partition name for ",
-                                            "Failed to send data: ",//FAIL
-                                            "Failed to send data!",
-                                            "Failed to receive file part response!",//NO FAIL
-                                            "Failed to unpack received packet.",//NO FAIL
-                                            "Unexpected handshake response!",//NO FAIL
-                                            "Failed to receive handshake response."
+    final static String[] errFail = {"Failed to end phone file transfer sequence!",//FAIL
+        "Failed to end modem file transfer sequence!",//FAIL
+        "Failed to confirm end of file transfer sequence!",//FAIL
+        "Failed to request dump!",//FAIL
+        "Failed to receive dump size!",//FAIL
+        "Failed to request dump part ",//FAIL
+        "Failed to receive dump part ",//FAIL
+        "Failed to send request to end dump transfer!",//FAIL
+        "Failed to receive end dump transfer verification!",//FAIL
+        "Failed to initialise file transfer!",//FAIL
+        "Failed to begin file transfer sequence!",//FAIL
+        "Failed to confirm beginning of file transfer sequence!",//FAIL
+        "Failed to send file part packet!",//FAIL
+        "Failed to request device info packet!",//FAIL
+        "Failed to initialise PIT file transfer!",//FAIL
+        "Failed to confirm transfer initialisation!",//FAIL
+        "Failed to send PIT file part information!",//FAIL
+        "Failed to confirm sending of PIT file part information!",//FAIL
+        "Failed to send file part packet!",//FAIL
+        "Failed to receive PIT file part response!",//FAIL
+        "Failed to send end PIT file transfer packet!",//FAIL
+        "Failed to confirm end of PIT file transfer!",//FAIL
+        "Failed to request receival of PIT file!",//FAIL
+        "Failed to receive PIT file size!",//FAIL
+        "Failed to request PIT file part ",//FAIL
+        "Failed to receive PIT file part ",//FAIL
+        "Failed to send request to end PIT file transfer!",//FAIL
+        "Failed to receive end PIT file transfer verification!",//FAIL
+        "Failed to download PIT file!",//FAIL
+        "Failed to send end session packet!",//FAIL
+        "Failed to receive session end confirmation!",//FAIL
+        "Failed to send reboot device packet!",//FAIL
+        "Failed to receive reboot confirmation!",//FAIL
+        "Failed to begin session!",//FAIL
+        "Failed to send file part size packet!",//FAIL
+        "Failed to complete sending of data: ",//FAIL
+        "Failed to complete sending of data!",//FAIL
+        "Failed to unpack device's PIT file!",//FAIL
+        "Failed to retrieve device description",//FAIL
+        "Failed to retrieve config descriptor",//FAIL
+        "Failed to find correct interface configuration",//FAIL
+        "Failed to read PIT file.",//FAIL
+        "Failed to open output file ",//FAIL
+        "Failed to write PIT data to output file.",//FAIL
+        "Failed to open file ",//FAIL
+        "Failed to send total bytes device info packet!",//FAIL
+        "Failed to receive device info response!",//FAIL
+        "Expected file part index: ",//FAIL
+        "Expected file part index: ",//FAIL
+        "No partition with identifier ",//FAIL
+        "Could not identify the PIT partition within the specified PIT file.",//FAIL
+        "Unexpected file part size response!",//FAIL
+        "Unexpected device info response!",//FAIL
+        "Attempted to send file to unknown destination!",//FAIL
+        "The modem file does not have an identifier!",//FAIL			
+        "Incorrect packet size received - expected size = ",//FAIL
+        "does not exist in the specified PIT.",//FAIL
+        "Partition name for ",
+        "Failed to send data: ",//FAIL
+        "Failed to send data!",
+        "Failed to receive file part response!",//NO FAIL
+        "Failed to unpack received packet.",//NO FAIL
+        "Unexpected handshake response!",//NO FAIL
+        "Failed to receive handshake response."
     };
-    
-    final static String[] epicFailures= {   "ERROR: No partition with identifier"
+    final static String[] epicFailures = {"ERROR: No partition with identifier"
     };
 }

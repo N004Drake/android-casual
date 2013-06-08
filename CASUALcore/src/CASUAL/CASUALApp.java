@@ -22,7 +22,7 @@ import java.io.File;
  * The main class of the application.
  */
 public class CASUALApp {
-
+//TODO: convert android-casual to Maven so it works better cross-platform
     /**
      *
      */

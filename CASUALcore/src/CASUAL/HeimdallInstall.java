@@ -150,9 +150,9 @@ public class HeimdallInstall {
                 log.errorHandler(ex);
             }
             new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
-            new CASUALInteraction().showErrorDialog("In order to continue, you must unplug the device and\n"
+            new CASUALInteraction("Unplug it and then plug it back in","In order to continue, you must unplug the device and\n"
                     + "then it back in.  Use a GOOD port, in the back, not\n"
-                    + "in the front.  Use a good cable too.", "Unplug it and then plug it back in");
+                    + "in the front.  Use a good cable too.").showErrorDialog();
         }
     }
 
@@ -219,11 +219,10 @@ public class HeimdallInstall {
 
     public void displayWindowsPermissionsMessageAndExit() {
         if (Statics.isWindows()) {
-            new CASUALInteraction().showErrorDialog(""
-                    + "Administrative permissions are required to continue.\n"
+            new CASUALInteraction("Permissions Error","Administrative permissions are required to continue.\n"
                     + "Please log in as a System Administrator  and rerun the command or use the console: \n"
-                    + "runas /user:Administrator java -jar " + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString(), //Display Message
-                    "Permissions Error");
+                    + "runas /user:Administrator java -jar " + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString() //Display Message
+                    ).showErrorDialog();
         }
         CASUALApp.shutdown(0);
     }

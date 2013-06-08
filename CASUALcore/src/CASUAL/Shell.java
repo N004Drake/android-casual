@@ -66,8 +66,7 @@ public class Shell implements Runnable {
                 String[] testPKexec = {"which", "pkexec"};
                 testReturn = Shell.silentShellCommand(testPKexec);
                 if ((testReturn.contains("CritERROR!!!") || (testReturn.equals("\n") || (testReturn.equals(""))))) {
-                    CASUALInteraction TO = new CASUALInteraction();
-                    TO.showTimeoutDialog(60, null, "Please install package 'gksu' or 'pkexec' ", "PERMISSIONS NOT FOUND", CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
+                    new CASUALInteraction("PERMISSIONS NOT FOUND","Please install package 'gksu' or 'pkexec' " ).showTimeoutDialog(60, null,  CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
                 }
             }
 
@@ -124,7 +123,7 @@ public class Shell implements Runnable {
 
             //check if a virus scanner trashed CASUAL's Elevate.exe file. 
             if (!new FileOperations().verifyExists(Statics.WinElevatorInTempFolder)) {
-                new CASUALInteraction().showUserCancelOption("It has been detected that CASUAL's\nconsistancy has been compromised.\nThis is likely the work of a virus\nscanner.  It is recommended to disable\nvirus scanners and redownload CASUAL.");
+                new CASUALInteraction("It has been detected that CASUAL's\nconsistancy has been compromised.\nThis is likely the work of a virus\nscanner.  It is recommended to disable\nvirus scanners and redownload CASUAL.").showUserCancelOption();
             }
 
             for (int i = 2; i < cmd.length + 2; i++) {

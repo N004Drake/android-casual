@@ -37,7 +37,6 @@ public class Statics {
     public static boolean GUIIsAvailable = false; //used to tell if the GUI is up yet.
     public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
-
     public static String currentStatus="working";
     public Statics() {
     }
@@ -202,15 +201,14 @@ public class Statics {
     }
 
     public static void displayWindowsXPDiscontinued() {
-        int dResult = new CASUALInteraction().showTimeoutDialog(
-                60, //timeout
-                null, //parentComponent
-                "Windows XP is a " + (Calendar.getInstance().get(Calendar.YEAR) - 2001) + " year old Operating system.\n"
+        int dResult = new CASUALInteraction("Your Operating System is Not Fully Supported", "Windows XP is a " + (Calendar.getInstance().get(Calendar.YEAR) - 2001) + " year old Operating system.\n"
                 + "CASUAL is not able to handle problems caused by this.\n"
                 + "Certain critial operations may not work. Please run as\n"
                 + "an Administrator if you wish to continue.... However,\n"
-                + "I recommend letting this window timeout, quit CASUAL and upgrade.\n",
-                "Your Operating System is Not Supported", //DisplayTitle
+                + "I recommend letting this window timeout, quit CASUAL and upgrade.\n"
+                 ).showTimeoutDialog(
+                60, //timeout
+                null, //parentComponent
                 CASUALInteraction.OK_OPTION, // Options buttons
                 CASUALInteraction.INFORMATION_MESSAGE, //Icon
                 new String[]{"Continue At Your Own Risk!!"}, // option buttons
