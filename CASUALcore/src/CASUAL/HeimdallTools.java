@@ -120,11 +120,10 @@ public class HeimdallTools {
         }
         if (result.contains("Attempting to continue")) {
             permissionEscillationAttempt++;
-            if(Statics.isLinux() || Statics.isMac()) {
+            if(Statics.isLinux()) {
                 log.level2Information("A permissions problem was detected.  Elevating permissions.");
                 doElevatedHeimdallShellCommand();
-            } else if (Statics.isWindows()) {
-                ++heimdallRetries;
+            } else if (Statics.isWindows()|| Statics.isMac()) {
                 if (permissionEscillationAttempt<5){
                     doHeimdallShellCommand();
                 } else {
@@ -183,26 +182,26 @@ public class HeimdallTools {
                 
                 //TODO: inform user to turn off device and put it back into download mode, then continue and redo.
                 
-                return "Heimdall failed to claim interface; Script halted"; 
+                return "Heimdall failed to claim interface; Attempting to continue"; 
             }
             
             if(stdErrLog.contains("Setting up interface failed!")) {
-                return "Heimdall failed to setup an interface; Script halted"; 
+                return "Heimdall failed to setup an interface; Attempting to continue"; 
             }
             
             if(stdErrLog.contains("Protocol initialisation failed!")) {
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $ECHO A random error occurred while attempting initial communications with the device.\nYou will need disconnect USB and pull your battery out to restart your device.\nDo the same for CASUAL.");
-                return "Heimdall failed to initialize protocol; Stopping"; 
+                return "Heimdall failed to initialize protocol; Attempting to continue"; 
             }
             
             if(stdErrLog.contains("upload failed!")) {
-                return "Heimdall failed to upload; Script halted"; 
+                return "Heimdall failed to upload; Attempting to continue"; 
             }
         }
         
         if(stdErrLog.contains("Flash aborted!")) {
-            return "Heimdall aborted flash; Script halted"; 
+            return "Heimdall aborted flash; Attempting to continue"; 
         }
         
         if (stdErrLog.contains("libusb error")) {
@@ -216,10 +215,10 @@ public class HeimdallTools {
                         case '1': {
                             switch(stdErrLog.charAt(startIndex + 2)) {
                                 case '0': {// -10
-                                    return "'LIBUSB_ERROR_INTERRUPTED' Error not handled; Script halted";
+                                    return "'LIBUSB_ERROR_INTERRUPTED' Error not handled; Attempting to continue";
                                 }
                                 case '1': {// -11
-                                    return "'LIBUSB_ERROR_NO_MEM' Error not handled; Script halted";
+                                    return "'LIBUSB_ERROR_NO_MEM' Error not handled; Attempting to continue";
                                 }
                                 case '2': {// -12 
                                     if (Statics.isWindows()) {
@@ -228,34 +227,34 @@ public class HeimdallTools {
                                     return "'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue";
                                 }
                                 default: {// -1
-                                    return "'LIBUSB_ERROR_IO' Error not Handled; Script halted";
+                                    return "'LIBUSB_ERROR_IO' Error not Handled; Attempting to continue";
                                 }
                             }
                         }
                         case '2': {// -2
-                            return "'LIBUSB_ERROR_INVALID_PARAM' Error not handled; Script halted";
+                            return "'LIBUSB_ERROR_INVALID_PARAM' Error not handled; Attempting to continue";
                         }
                         case '3': {// -3
                             return "'LIBUSB_ERROR_ACCESS' Error not handled; Attempting to continue";
                         }
                         case '4': {// -4
-                            return "'LIBUSB_ERROR_NO_DEVICE' Error not handled; Script halted";
+                            return "'LIBUSB_ERROR_NO_DEVICE' Error not handled; Attempting to continue";
                         }
                         case '5': {// -5
-                            return "'LIBUSB_ERROR_NOT_FOUND' Error not handled; Script halted";
+                            return "'LIBUSB_ERROR_NOT_FOUND' Error not handled; Attempting to continue";
                         }
                         case '6': {// -6
-                            return "'LIBUSB_ERROR_BUSY' Error not handled; Script halted";
+                            return "'LIBUSB_ERROR_BUSY' Error not handled; Attempting to continue";
                         }
                         case '7': {// -7
                             return "'LIBUSB_ERROR_TIMEOUT'; Attempting to continue";
                         }
                         case '8': {// -8
-                            return "'LIBUSB_ERROR_OVERFLOW' Error not handled; Script halted";
+                            return "'LIBUSB_ERROR_OVERFLOW' Error not handled; Attempting to continue";
                         }
                         case '9': {
                             if(stdErrLog.charAt(startIndex + 2) == 9) {// -99
-                                return "'LIBUSB_ERROR_OTHER' Error not handled; Script halted";
+                                return "'LIBUSB_ERROR_OTHER' Error not handled; Attempting to continue";
                             } else {//-9
                                 return "'LIBUSB_ERROR_PIPE'; Attempting to continue";
                             }
