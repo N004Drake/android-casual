@@ -38,7 +38,7 @@ public class AudioHandler {
      * playSound plays sounds
      */
     public static synchronized void playSound(final String URL) {
-        new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
+        new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override
             public void run() {
                 if (CASUALapplicationData.useSound) {
@@ -58,12 +58,15 @@ public class AudioHandler {
                         line.drain();
                         line.close();
                         IS.close();
+                        //Don't worry about autio exceptions.  Just turn off audio
+                    } catch (IllegalArgumentException ex) {
+                        CASUALapplicationData.useSound = false;
                     } catch (UnsupportedAudioFileException ex) {
-                        Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        CASUALapplicationData.useSound = false;
                     } catch (IOException ex) {
-                        Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        CASUALapplicationData.useSound = false;
                     } catch (LineUnavailableException ex) {
-                        Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        CASUALapplicationData.useSound = false;
                     }
                 }
             }
@@ -74,7 +77,7 @@ public class AudioHandler {
      */
 
     public static synchronized void playMultipleInputStreams(final String[] URLs) {
-        new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
+        new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override
             public void run() {
                 if (CASUALapplicationData.useSound) {
@@ -101,16 +104,17 @@ public class AudioHandler {
                                 line.close();
                                 IS.close();
                             }
+                            //Don't worry about autio exceptions.  Just turn off audio
+                        } catch (IllegalArgumentException ex) {
+                            CASUALapplicationData.useSound = false;
                         } catch (UnsupportedAudioFileException ex) {
-                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            CASUALapplicationData.useSound = false;
                         } catch (IOException ex) {
-                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            CASUALapplicationData.useSound = false;
                         } catch (LineUnavailableException ex) {
-                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            CASUALapplicationData.useSound = false;
                         }
-
                     }
-
                 }
             }
         }).start();
