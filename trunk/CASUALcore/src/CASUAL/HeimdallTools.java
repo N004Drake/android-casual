@@ -274,7 +274,7 @@ public class HeimdallTools {
     public static String getHeimdallCommand() {
         if (Statics.isMac()) {
             Shell shell = new Shell();
-            String check = shell.silentShellCommand(new String[]{"which", "heimdall"});
+            String check = shell.silentShellCommand(new String[]{"/usr/local/bin/heimdall"});
             if (check.equals("")) {
                 String cmd = "/usr/bin/heimdall";
                 check = shell.silentShellCommand(new String[]{cmd});
@@ -282,7 +282,7 @@ public class HeimdallTools {
                     cmd = "/bin/heimdall";
                     check = shell.silentShellCommand(new String[]{cmd});
                     if (check.equals("CritError!!!")) {
-                        cmd = "/usr/local/bin/heimdall";
+                        cmd = "heimdall";
                         check = shell.silentShellCommand(new String[]{cmd});
                         if (check.equals("CritError!!!")) {
                             return "";
