@@ -99,7 +99,7 @@ public class CASUALInteraction extends JOptionPane {
         int n = 9999;
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             Object[] Options = {"I didn't do it", "I did it"};
-            instructionalMessage = "<html>" + instructionalMessage.replace("\\n", "<BR>") + "</html>";
+            instructionalMessage = "<html>" + instructionalMessage.replace("\\n", "<BR>") ;
             n = JOptionPane.showOptionDialog(
                     Statics.GUI,
                     instructionalMessage,
