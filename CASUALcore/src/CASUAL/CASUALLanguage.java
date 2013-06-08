@@ -509,12 +509,12 @@ public class CASUALLanguage {
             log.level4Debug("Received Command: " + line);
             log.level4Debug("verifying Heimdall deployment.");
             if (Statics.checkAndDeployHeimdall()) {
-                new HeimdallTools().doHeimdallWaitForDevice();
+                new HeimdallTools("").doHeimdallWaitForDevice();
                 /* if (Statics.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
                  }*/
                 log.level2Information("Executing Heimdall command.");
-                return new HeimdallTools().doHeimdallShellCommand(line);
+                return new HeimdallTools(line).doHeimdallShellCommand();
             } else {
                 return new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
             }
