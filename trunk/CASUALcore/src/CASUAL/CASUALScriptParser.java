@@ -176,7 +176,7 @@ public class CASUALScriptParser {
                             case 3:
                                 log.level0Error(Statics.webInformation.updateMessage);
                                 log.level0Error("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                                new CASUALInteraction().showTimeoutDialog(60, null, "CASUAL Cannot continue due to kill-switch activation.\n" + Statics.webInformation.updateMessage + "\n CASUAL will now take you to the supporting webpage.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                new CASUALInteraction( "CRITICAL ERROR!", "CASUAL Cannot continue due to kill-switch activation.\n"+ "\n CASUAL will now take you to the supporting webpage." + Statics.webInformation.updateMessage ).showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                 new LinkLauncher().launchLink(Statics.webInformation.supportURL);
                                 CASUALApp.shutdown(0);
                                 return true;
@@ -188,7 +188,7 @@ public class CASUALScriptParser {
                             case 5:
                                 log.level0Error("Problem downloading file from internet, please try again");
                                 log.level0Error("Problem downloading file from internet, please try again");
-                                new CASUALInteraction().showTimeoutDialog(60, null, "Download Failure.  CASUAL will now restart.", "CRITICAL ERROR!", CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
+                                new CASUALInteraction("CRITICAL ERROR!","Download Failure.  CASUAL will now restart.").showTimeoutDialog(60, null,  CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
                                 try {
                                     JavaSystem.restart(new String[]{""});
                                 } catch (InterruptedException ex) {

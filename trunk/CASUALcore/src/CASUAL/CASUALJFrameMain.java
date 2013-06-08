@@ -404,13 +404,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
         setWindowBannerImage("SCRIPTS/" + CASUALapplicationData.bannerPic, CASUALapplicationData.bannerText);
-        CASUALInteraction timeOutOptionPane = new CASUALInteraction();
-        int DResult = timeOutOptionPane.showTimeoutDialog(
+        int DResult = new CASUALInteraction("Donate to the developers","This application was developed by " + CASUALapplicationData.developerName + " using CASUAL framework.\n"
+                + "Donations give developers a tangeble reason to continue quality software development\n").showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
-                "This application was developed by " + CASUALapplicationData.developerName + " using CASUAL framework.\n"
-                + "Donations give developers a tangeble reason to continue quality software development\n",
-                "Donate to the developers", //DisplayTitle
+                 //DisplayTitle
                 CASUALInteraction.OK_OPTION, // Options buttons
                 CASUALInteraction.INFORMATION_MESSAGE, //Icon
                 new String[]{"Donate To CASUAL", "Donate To " + CASUALapplicationData.DontateButtonText}, // option buttons

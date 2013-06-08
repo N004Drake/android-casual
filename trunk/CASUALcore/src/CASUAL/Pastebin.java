@@ -49,7 +49,7 @@ public class Pastebin {
      */
     public static void doPosting() throws IOException, URISyntaxException {
 
-        String xdaUsername = new CASUALInteraction().inputDialog(new String[]{"An Error Has Occured!", "This is an automated prompt to sumbit a CASUAL log to Pastebin.\n\nPlease enter your XDA-Developers username and click 'Ok', click 'Cancel' to cancel"});
+        String xdaUsername = new CASUALInteraction(new String[]{"An Error Has Occured!", "This is an automated prompt to sumbit a CASUAL log to Pastebin.\n\nPlease enter your XDA-Developers username and click 'Ok', click 'Cancel' to cancel"}).inputDialog();
         if (xdaUsername != null) {//CANCEL_OPTION will rerturn a null String
             API paste = new API(devKey);
             Log log = new Log();
@@ -76,7 +76,7 @@ public class Pastebin {
                     StringSelection stringSelection = new StringSelection(url.toString());
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
-                    new CASUALInteraction().showInformationMessage("Pastebin URL Copied to Clipboard\n\nPlease Submit it in the appropriate forum thread", "Thank You!");
+                    new CASUALInteraction("Thank You!","Pastebin URL Copied to Clipboard\n\nPlease Submit it in the appropriate forum thread").showInformationMessage();
                     log.level4Debug(url.toString());
                 } else {
                     log.level4Debug(output);

@@ -90,7 +90,7 @@ public class CASPACData {
         new Log().level3Verbose("Checking my revision:" +mySVNVersion +" against Script:"+scriptVersion +" to verify we are compatible to run.");
         if (mySVNVersion < scriptVersion){
             new Log().level0Error("Improper version detected CASUAL cannot continue\n CASUAL Revison " + mySVNVersion + " is not new enough to run\nthis script which requires Revision "+scriptVersion );
-            new CASUALInteraction().showActionRequiredDialog("CASUAL cannot continue and must be updated.\n");
+            new CASUALInteraction("CASUAL cannot continue and must be updated.\n").showActionRequiredDialog();
             // System.exit(0);
             return false;
         } else {

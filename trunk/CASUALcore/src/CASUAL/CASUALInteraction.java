@@ -29,9 +29,32 @@ import javax.swing.JOptionPane;
  */
 public class CASUALInteraction extends JOptionPane {
     
+    String message;
+    String title;
+
+
+    public CASUALInteraction(String message){
+        this.title=null;
+        this.message=message;
+    }
+    public CASUALInteraction(String title, String message){
+        this.title=title;
+        this.message=message;
+    }
+    public CASUALInteraction(String[] messageArray){
+        if (messageArray.length>1){
+            title=messageArray[0];
+            message=messageArray[1];
+        } else {
+            title=null;
+            message=messageArray[0];
+        }
+    }
+    
+    
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     
-    public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType, int messageType, Object[] options, final Object initialValue) {
+    public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, int optionType, int messageType, Object[] options, final Object initialValue) {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             return new TimeOutOptionPane().timeoutDialog(PRESET_TIME, parentComponent, message, title, optionType, messageType, options, initialValue);
         } else {
@@ -75,34 +98,35 @@ public class CASUALInteraction extends JOptionPane {
         getCommandLineInput();
     }
     
-    public String inputDialog(String[] Message) throws HeadlessException {
-        new Log().level4Debug("Requesting User Input:" +Message[0]);
+    public String inputDialog() throws HeadlessException {
+        new Log().level4Debug("Requesting User Input.. Title:"+ title + " -message:" +message);
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-            if (Message.length>1){
-                return JOptionPane.showInputDialog(Statics.GUI, Message[1], Message[0], JOptionPane.QUESTION_MESSAGE);
+            if (title ==null){
+                return JOptionPane.showInputDialog(Statics.GUI, message, "Input Required", JOptionPane.QUESTION_MESSAGE);
             } else {
-                return JOptionPane.showInputDialog(Statics.GUI, Message[1], "Input Required", JOptionPane.QUESTION_MESSAGE);
+                return JOptionPane.showInputDialog(Statics.GUI, message, title, JOptionPane.QUESTION_MESSAGE);
             }
         } else {
-            if (Message.length>1){
-                new Log().Level1Interaction("[INPUT][ANY]" + Message[0] + Message[1] + "\n input:");
-                return getCommandLineInput();    
-            } else {
-                new Log().Level1Interaction("[INPUT][ANY]" + Message[0] + "\n input:");
+            if (title ==null){
+                new Log().Level1Interaction("[INPUT][ANY]" + message + "\n input:");
                 return getCommandLineInput();                    
+            } else {
+                new Log().Level1Interaction("[INPUT][ANY]" + message + title + "\n input:");
+                return getCommandLineInput();    
             }
         }
     }
     
-    public int showActionRequiredDialog(String instructionalMessage) throws HeadlessException {
-        new Log().level4Debug("Displaying Action Is Required Dialog:" +instructionalMessage);
+    public int showActionRequiredDialog() throws HeadlessException {
+        new Log().level4Debug("Displaying Action Is Required Dialog:" +message);
         int n = 9999;
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             Object[] Options = {"I didn't do it", "I did it"};
-            instructionalMessage = "<html>" + instructionalMessage.replace("\\n", "<BR>") ;
+            message = "<html>" + message.replace("\\n", "<BR>");
+
             n = JOptionPane.showOptionDialog(
                     Statics.GUI,
-                    instructionalMessage,
+                    message,
                     "Dont click through this!",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
@@ -110,11 +134,11 @@ public class CASUALInteraction extends JOptionPane {
                     Options,
                     Options[1]);
         } else {
-            new Log().Level1Interaction("[USERTASK][Q or RETURN][CRITICAL]" + instructionalMessage + "<BR> press  to quit");
+            new Log().Level1Interaction("[USERTASK][Q or RETURN][CRITICAL]" + message + "<BR> press  to quit");
             while (n != 0 && n != 1) {
                 String retval = getCommandLineInput();
                 if (!retval.equals("q") && !retval.equals("Q") && !retval.equals("")) {
-                    n = showActionRequiredDialog(instructionalMessage);
+                    n = new CASUALInteraction(message).showActionRequiredDialog();
                 } else if (retval.equals("Q") || retval.equals("q")) {
                     n = 0;
                 } else {
@@ -125,19 +149,17 @@ public class CASUALInteraction extends JOptionPane {
         return n;
     }
     
-    public int showUserCancelOption(String CASUALStringCommand) throws HeadlessException {
-        new Log().level4Debug("Displaying User Cancel Option Dialog: "+CASUALStringCommand);
+    public int showUserCancelOption() {
+        new Log().level4Debug("Displaying User Cancel Option Dialog title: "+title + " message: "+message);
+
         int n;
-        String[] Message = new String[2];
-        if(CASUALStringCommand.contains(",")) Message =  CASUALStringCommand.split(",");
-        else Message[0] = CASUALStringCommand;
         Object[] Options = {"Stop", "Continue"};
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-            if (Message.length>1) {
+            if (title==null) {
                 n = JOptionPane.showOptionDialog(
                         Statics.GUI,
-                        Message[1],
-                        Message[0],
+                        message,
+                        "Do you wish to continue?",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE,
                         null,
@@ -146,8 +168,8 @@ public class CASUALInteraction extends JOptionPane {
             } else {
                 n = JOptionPane.showOptionDialog( 
                         Statics.GUI,
-                        Message[0],
-                        "Do you wish to continue?",
+                        message,
+                        title,
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE,
                         null,
@@ -155,10 +177,10 @@ public class CASUALInteraction extends JOptionPane {
                         Options[1]);
             }
         } else {
-            if (Message.length>1){
-                new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\n" + Message[1] + "\npress Q to quit");
+            if (title==null){
+                new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + message + "\npress Q to quit");
             } else {
-                new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + Message[0] + "\npress Q to quit");
+                new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + title + "\n" + message + "\npress Q to quit");
             }
             String s = this.getCommandLineInput();
             if (s.equals("q") || s.equals("Q")) {
@@ -169,29 +191,32 @@ public class CASUALInteraction extends JOptionPane {
         return n;
     }
     
-    public void showUserNotification(String CASUALStringCommand) throws HeadlessException {
-        new Log().level4Debug("Showing User Notification Dialog:" + CASUALStringCommand);
-        CASUALStringCommand = StringOperations.removeLeadingSpaces(CASUALStringCommand);
-        String[] Message = CASUALStringCommand.split(",");
+    public void showUserNotification() throws HeadlessException {
+        new Log().level4Debug("Showing User Notification Dialog -Title:"+title+" -message:"+message);
+
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-            if (Message.length>1) {
+            if (title!=null) {
                 JOptionPane.showMessageDialog(Statics.GUI,
-                        Message[1],
-                        Message[0],
+                        title,
+                        message,
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(Statics.GUI,
-                        CASUALStringCommand,
+                        message,
                         "Information",
                         JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            new Log().Level1Interaction("[NOTIFICATION][RETURN]" + Message[0] + "\n" + Message[1] + "  Press any key to continue.");
+            if (title !=null){
+                new Log().Level1Interaction("[NOTIFICATION][RETURN]" + title + "\n" + message + "  Press any key to continue.");
+            } else {
+                new Log().Level1Interaction("[NOTIFICATION][RETURN]" + message + "  Press any key to continue.");
+            }
             waitForStandardInputBeforeContinuing();
         }
     }
     
-    public void showInformationMessage(String message, String title) throws HeadlessException {
+    public void showInformationMessage() throws HeadlessException {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog(Statics.GUI,
                     message, title,
@@ -202,7 +227,7 @@ public class CASUALInteraction extends JOptionPane {
         }
     }
     
-    public void showErrorDialog(String message, String title) throws HeadlessException {
+    public void showErrorDialog() throws HeadlessException {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog(Statics.GUI, message, title, JOptionPane.ERROR_MESSAGE);
         } else {

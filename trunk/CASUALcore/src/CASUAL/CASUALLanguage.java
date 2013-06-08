@@ -302,7 +302,7 @@ public class CASUALLanguage {
                     if (new FileOperations().verifyExists(arg)){ //exists
                         log.level3Verbose("verified "+arg+ " exists");
                     } else { //file not exists
-                        int n=new CASUALInteraction().showUserCancelOption("It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL");
+                        int n=new CASUALInteraction("Missing File","It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL").showUserCancelOption();
                         if (n == 0) {
                             log.level0Error(ScriptName + " canceled at user request due to comprimised packages");
                             CASUALScriptParser.ScriptContinue = false;
@@ -372,7 +372,7 @@ public class CASUALLanguage {
                 AudioHandler.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
             line = line.replace("$USERNOTIFICATION", "");
-            new CASUALInteraction().showUserNotification(line);
+            new CASUALInteraction(line.split(",")).showUserNotification();
             return "";
 
 // $USERCANCELOPTION will give the user the option to halt the script
@@ -385,7 +385,7 @@ public class CASUALLanguage {
             }
             int n;
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
-            n = new CASUALInteraction().showUserCancelOption(line);
+            n = new CASUALInteraction(line.split(",")).showUserCancelOption();
             if (n == 0) {
                 log.level0Error(ScriptName + " canceled at user request");
                 CASUALScriptParser.ScriptContinue = false;
@@ -402,7 +402,7 @@ public class CASUALLanguage {
                 AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             }
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
-            int n = new CASUALInteraction().showActionRequiredDialog(line);
+            int n = new CASUALInteraction(line.split(",")).showActionRequiredDialog();
             if (n == 0) {
                 log.level0Error(ScriptName + " Halted.  Perform the required actions to continue.");
                 CASUALScriptParser.ScriptContinue = false;
@@ -417,9 +417,7 @@ public class CASUALLanguage {
             AudioHandler.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             //line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",");
-            Message[1] = "<html>" + Message[1].replace("\\n", "<BR>") + "</html>";
-
-            String inputBoxText = new CASUALInteraction().inputDialog(Message);
+            String inputBoxText = new CASUALInteraction(Message).inputDialog();
             if (inputBoxText == null) {
                 inputBoxText = "";
             }

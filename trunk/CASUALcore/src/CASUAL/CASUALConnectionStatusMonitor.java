@@ -76,14 +76,14 @@ public class CASUALConnectionStatusMonitor {
                             DeviceList=getConnectedDevices();
                             if (DeviceList.contains("offline")){
                             String[] ok = {"All set and done!"};
-                            new CASUALInteraction().showTimeoutDialog(120, null, "It would appear that the connected device is not paired properly.\n"
+                            new CASUALInteraction("Your device is detected offline","It would appear that the connected device is not paired properly.\n"
                                     + "Your device is \"offline\", this can occour for a few reasons.\n"
                                     + "-Please disconnect the device, then reconnect it.\n"
                                     + "Next unlock the device and check for a message onscreen.\n"
                                     + "Select \"Always allow from this computer\" then press OK.\n"
                                     + "-if that doesn't work then reboot *everything*...\n"
-                                    + "reboot the computer and reboot the computer.",
-                                    "Your device is detected offline", CASUALInteraction.OK_OPTION, 2, ok, 0);
+                                    + "reboot the computer and reboot the computer."
+                                    ).showTimeoutDialog(120, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
                             Log.level0Error("Disconnect and reconnect your device.  Check the device for instructions.");
                             DeviceList = Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
                             Statics.casualConnectionStatusMonitor.DeviceCheck.start();
@@ -105,14 +105,13 @@ public class CASUALConnectionStatusMonitor {
                             Log.level2Information("killing server and requesting elevated permissions.");
                             Shell.sendShellCommand(cmd); //send the command
                             //notify user that permissions will be requested and what they are used for
-                            CASUALInteraction CASUALUserInteraction = new CASUALInteraction();
                             String[] ok = {"ok"};
                             AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-                            CASUALUserInteraction.showTimeoutDialog(60, null, "It would appear that this computer\n"
+                            new CASUALInteraction( "Insufficient Permissions","It would appear that this computer\n"
                                     + "is not set up properly to communicate\n"
                                     + "with the device.  As a work-around we\n"
                                     + "will attempt to elevate permissions \n"
-                                    + "to access the device properly.", "Insufficient Permissions", CASUALInteraction.OK_OPTION, 2, ok, 0);
+                                    + "to access the device properly.").showTimeoutDialog(60, null , CASUALInteraction.OK_OPTION, 2, ok, 0);
                             String[] getDevicesCommand= new String[]{Statics.AdbDeployed, "devices"};
                             DeviceList = Shell.elevateSimpleCommand(getDevicesCommand);
                             // if permissions elevation was sucessful
@@ -200,11 +199,11 @@ public class CASUALConnectionStatusMonitor {
         cycles++;
         if (cycles == 30) {
             if (Statics.isWindows()) {
-                new CASUALInteraction().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install drivers\nGoogle \"windows driver *your device*\" for more.", "Device not detected", CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                new CASUALInteraction("Device not detected","I have not detected your device connect.\nIt is possible that you need to install drivers\nGoogle \"windows driver *your device*\" for more." ).showTimeoutDialog(60, null,  CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
             } else if (Statics.isLinux()) {
-                new CASUALInteraction().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install libusb \nGoogle \"using adb Linux *your device*\" for more.", "Device not detected", CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                new CASUALInteraction("Device not detected","I have not detected your device connect.\nIt is possible that you need to install libusb \nGoogle \"using adb Linux *your device*\" for more." ).showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
             } else if (Statics.isMac()) {
-                new CASUALInteraction().showTimeoutDialog(60, null, "I have not detected your device connect.\nIt is possible that you need to install a kext\nGoogle \"kext *your device*\" for more", "Device not detected", CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                new CASUALInteraction("Device not detected","I have not detected your device connect.\nIt is possible that you need to install a kext\nGoogle \"kext *your device*\" for more" ).showTimeoutDialog(60, null,  CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
             }
             hasConnected = true;
         }
