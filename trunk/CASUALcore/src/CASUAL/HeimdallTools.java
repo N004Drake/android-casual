@@ -26,10 +26,16 @@ import javax.swing.Timer;
  * @author adam
  */
 public class HeimdallTools {
-
-    static int cyclicErrors=0;
     Log log = new Log();
-
+    int permissionEscillationAttempt=0;
+    int heimdallRetries=0;
+    String line;
+    
+    HeimdallTools(String line){
+        this.line=line;
+    }
+    
+    
     public void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
         ArrayList<String> shellCommand = new ArrayList<>();
@@ -60,7 +66,8 @@ public class HeimdallTools {
         log.level3Verbose("detected!");
     }
 
-    public String doElevatedHeimdallShellCommand(String line) {
+    public String doElevatedHeimdallShellCommand() {
+        ++heimdallRetries;
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
         ArrayList<String> shellCommand = new ArrayList<>();
@@ -69,7 +76,7 @@ public class HeimdallTools {
         log.level3Verbose("Performing elevated Heimdall command" + line);
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         String returnval = Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
-        String result = new HeimdallTools().didHeimdallError(returnval);
+        String result = didHeimdallError(returnval);
         if (!result.equals("")) {
             if(result.contains("Script halted")) {
                 log.level0Error("[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
@@ -77,19 +84,17 @@ public class HeimdallTools {
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnval;
             } else if (result.contains("Attempting to continue")) {
-                result = result.replace("Attempting to continue", "Script Halted");
-                log.level0Error("[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                log.level2Information("A permissions problem was detected.  Elevating permissions.");
+                returnval=doElevatedHeimdallShellCommand();
                 return returnval;
             }
-        } else if (result.equals("")) {
+        } else {
             log.level2Information("\n[Heimdall Success]\n\n");
         }
         return returnval;
     }
 
-    public String doHeimdallShellCommand(String line) {
+    public String doHeimdallShellCommand() {
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
         ArrayList<String> shellCommand = new ArrayList<>();
@@ -98,7 +103,7 @@ public class HeimdallTools {
         String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
         log.level3Verbose("Performing standard Heimdall command" + line);
         String returnRead = Shell.liveShellCommand(stringCommand2, true);
-        String result = new HeimdallTools().didHeimdallError(returnRead);
+        String result = didHeimdallError(returnRead);
         if (!result.equals("")) {
             if(result.contains("Script halted")) {
                 log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
@@ -114,20 +119,21 @@ public class HeimdallTools {
             log.level2Information("\n[Heimdall Success]\n\n");
         }
         if (result.contains("Attempting to continue")) {
-            cyclicErrors++;
+            permissionEscillationAttempt++;
             if(Statics.isLinux() || Statics.isMac()) {
                 log.level2Information("A permissions problem was detected.  Elevating permissions.");
-                this.doElevatedHeimdallShellCommand(line);
+                doElevatedHeimdallShellCommand();
             } else if (Statics.isWindows()) {
-                if (cyclicErrors<5){
-                    this.doHeimdallShellCommand(line);
+                ++heimdallRetries;
+                if (permissionEscillationAttempt<5){
+                    doHeimdallShellCommand();
                 } else {
                     log.level0Error("Maximum retries exceeded. Shutting down CASUAL Parser.");
                     //TODO: uninstall drivers, reinstall with CADI and try once more.
                     new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO cyclic error.");
                 }
             }
-            cyclicErrors=0;
+            permissionEscillationAttempt=0;
         }
         return returnRead;
     }
@@ -141,17 +147,28 @@ public class HeimdallTools {
      * @author  Jeremy Loper    jrloper@gmail.com
      */
     public String didHeimdallError(String stdErrLog) {
-
-        for(int x = 0; x != 60; x++) {
-            if(stdErrLog.contains(errFail[x])) {
-                return "Heimdall uncontinuable error; Script halted"; 
-            }
+        
+        for (String code : epicFailures){
+            if (stdErrLog.contains(code)) {
+                return "Heimdall uncontinuable error; Script halted";
+            } 
         }
         
-        for(int x = 0; x != 3; x++) {
-            if(stdErrLog.contains(errNotFail[x])) { 
-                return "Heimdall continuable error; Attempting to continue"; } 
+        //Critical Failure, stop
+        for(String code : errFail) { //halt
+            if(stdErrLog.contains(code)) { 
+                if (heimdallRetries <= 3){  //only loop thrice
+                    new CASUALInteraction().showActionRequiredDialog("You must restart your device and put it back into download mode.\nThis is usually accompilished by pulling the battery\nthen holding Volume down + home while pressing power.\nIf you do not have a home button, press volume down\n while inserting the USB cable.");
+                    return "Heimdall continuable error; Attempting to continue";
+                } else {
+                    return "Heimdall uncontinuable error; Script halted"; 
+                }
+            } 
+            
         }
+        
+
+
         
         if(stdErrLog.contains("Failed to detect compatible download-mode device")) {
             if(new CASUALInteraction().showUserCancelOption("Heimdall is unable to detect your phone in Odin/Download Mode\n" 
@@ -296,7 +313,7 @@ public class HeimdallTools {
         }
     }
     
-    protected static String[] errFail = {   "Failed to end phone file transfer sequence!",//FAIL
+    final static String[] errFail = {   "Failed to end phone file transfer sequence!",//FAIL
                                             "Failed to end modem file transfer sequence!",//FAIL
                                             "Failed to confirm end of file transfer sequence!",//FAIL
                                             "Failed to request dump!",//FAIL
@@ -331,8 +348,6 @@ public class HeimdallTools {
                                             "Failed to receive reboot confirmation!",//FAIL
                                             "Failed to begin session!",//FAIL
                                             "Failed to send file part size packet!",//FAIL
-                                            "Failed to send data: ",//FAIL
-                                            "Failed to send data!",//FAIL
                                             "Failed to complete sending of data: ",//FAIL
                                             "Failed to complete sending of data!",//FAIL
                                             "Failed to unpack device's PIT file!",//FAIL
@@ -355,10 +370,15 @@ public class HeimdallTools {
                                             "The modem file does not have an identifier!",//FAIL			
                                             "Incorrect packet size received - expected size = ",//FAIL
                                             "does not exist in the specified PIT.",//FAIL
-                                            "Partition name for "};//FAIL
+                                            "Partition name for ",
+                                            "Failed to send data: ",//FAIL
+                                            "Failed to send data!",
+                                            "Failed to receive file part response!",//NO FAIL
+                                            "Failed to unpack received packet.",//NO FAIL
+                                            "Unexpected handshake response!",//NO FAIL
+                                            "Failed to receive handshake response."
+    };
     
-    protected static String[] errNotFail = {    "Failed to receive file part response!",//NO FAIL
-                                                "Failed to unpack received packet.",//NO FAIL
-                                                "Unexpected handshake response!",//NO FAIL
-                                                "Failed to receive handshake response."};//NO FAIL
+    final static String[] epicFailures= {   "ERROR: No partition with identifier"
+    };
 }
