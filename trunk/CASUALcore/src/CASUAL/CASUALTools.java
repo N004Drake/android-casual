@@ -28,8 +28,6 @@ import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -41,10 +39,19 @@ import java.util.zip.ZipInputStream;
 public class CASUALTools {
     //final public String defaultPackage="ATT GS3 Root";
 
+    /**
+     *
+     */
     public static boolean IDEMode = false;
     Log log = new Log();
 
 
+    
+    /**listScripts scans the CASUAL for scripts
+     * -results are stored in Statics.scriptNames
+     * -In IDE mode an MD5 refresh is triggered
+     * @throws IOException
+     */
     public void listScripts() throws IOException {
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
@@ -82,7 +89,10 @@ public class CASUALTools {
         }
     }
 
-    public void md5sumTestScripts() {
+    /**md5sumTestScript
+     * Refreshes the MD5s on the scripts in the /SCRIPTS folder
+     */
+    private void md5sumTestScripts() {
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
         String x = CASUAL.CASUALApp.class.getResource("resources" + Statics.Slash + "CASUALApp.properties").toString();
         incrementBuildNumber();
@@ -120,6 +130,11 @@ public class CASUALTools {
         }
     }
 
+    /**
+     * prepares the script for execution by setting up environment
+     * @param scriptName
+     * @return
+     */
     public Thread prepareCurrentScript(String scriptName) {
         Statics.SelectedScriptFolder = Statics.TempFolder + Statics.Slash + scriptName;
         //set the ZipResource
@@ -160,6 +175,10 @@ public class CASUALTools {
         return t;
     }
 
+    /**
+     * tells if CASUAL is running in Development or Execution mode 
+     * @return true if in IDE mode
+     */
     public boolean getIDEMode() {
         String className = this.getClass().getName().replace('.', '/');
         String classJar = this.getClass().getResource("/" + className + ".class").toString();
@@ -225,10 +244,11 @@ public class CASUALTools {
     private Runnable updateMD5s = new Runnable() {
         @Override
         public void run() {
-            new CASUALTools().md5sumTestScripts();
+            md5sumTestScripts();
         }
     };
 
+    //This is only used in IDE mode for development
     void rewriteMD5OnCASPAC(File CASPAC, CASPACHandler caspacHandler) {
         new Log().level3Verbose("Writing new CASUAL Package Data!");
         incrementBuildNumber();
@@ -292,6 +312,7 @@ public class CASUALTools {
         }
     }
 
+    //This is only used in IDE mode for development
     private void incrementBuildNumber() throws NumberFormatException {
         Properties prop = new Properties();
         try {
