@@ -95,7 +95,7 @@ public class Shell implements Runnable {
                     i++;
                     if (Result.contains("Error executing command as another user:") && i >= 3) {
                         log.level2Information("Failed password 3 times, attempting with normal permissions");
-                        Shell.liveShellCommand(new String[]{ScriptFile}, true);
+                        Result=Shell.liveShellCommand(new String[]{ScriptFile}, true);
                         break;
                     }
                 }

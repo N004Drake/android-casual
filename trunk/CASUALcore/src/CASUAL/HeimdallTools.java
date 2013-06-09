@@ -120,10 +120,10 @@ public class HeimdallTools {
             permissionEscillationAttempt++;
             if (Statics.isLinux()) {
                 log.level2Information("A permissions problem was detected.  Elevating permissions.");
-                doElevatedHeimdallShellCommand();
+                returnRead=returnRead+doElevatedHeimdallShellCommand();
             } else if (Statics.isWindows() || Statics.isMac()) {
                 if (permissionEscillationAttempt < 5) {
-                    doHeimdallShellCommand();
+                    returnRead=returnRead+doHeimdallShellCommand();
                 } else {
                     log.level0Error("Maximum retries exceeded. Shutting down Parser.");
                     //TODO: uninstall drivers, reinstall with CADI and try once more.
