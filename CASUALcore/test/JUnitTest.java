@@ -93,7 +93,7 @@ public class JUnitTest  {
         assertEquals(1,ci.showUserCancelOption());
         ci.showUserNotification();
         CASUAL.Statics.useGUI=true;
-        int x= new CASUAL.CASUALInteraction("testing","Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(5, ci, 1, 1, new String[]{"ok","cancel"}, "cancel");
+        int x= new CASUAL.CASUALInteraction("testing","Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok","cancel"}, "cancel");
         if (x==0){
             ci= new CASUAL.CASUALInteraction("Text Input", "Press\n1");
             assertEquals("1",ci.inputDialog());            
@@ -111,6 +111,51 @@ public class JUnitTest  {
             ci.showInformationMessage();
             ci= new CASUAL.CASUALInteraction("Notification Dialog", "hit OK!");
             ci.showUserNotification(); 
+        }
+    }
+    
+    @Test
+    public void testCasualCore(){
+        int choice= new CASUAL.CASUALInteraction("testing","Do you want to perform the full array of CASUAL tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok","cancel"}, "cancel");
+        if (choice==0){
+            
+            boolean result;
+            String returnval;
+
+            
+            //run CASUAL to set environmental values
+            CASUAL.CASUALApp.main(new String[]{"-e","$ADB devices"});
+            //Testing ADB reboot download
+            CASUAL.Statics.useGUI=true;
+            if (new CASUAL.CASUALInteraction("Testing Heimdall","Connect an ODIN capable device in ADB mode").showUserCancelOption()==1){
+                returnval=new CASUAL.CASUALScriptParser().executeOneShotCommand("$ADB reboot download");
+                assert returnval.equals("") || returnval.equals("\n ");
+            }
+            
+            //Testing Heimdall close-pc-screen
+            CASUAL.Statics.useGUI=true;
+            if (new CASUAL.CASUALInteraction("Testing Heimdall","Connect a device in ODIN mode").showUserCancelOption()==1) {
+                returnval=new CASUAL.CASUALScriptParser().executeOneShotCommand("$HEIMDALL close-pc-screen");
+                assert returnval.contains("Attempt complete");
+            }
+            
+            //testing ADB reboot bootloader
+            CASUAL.Statics.useGUI=true;
+            if (new CASUAL.CASUALInteraction("Testing Fastboot","Connect a FASTBOOT capable device in ADB mode").showUserCancelOption()==1){
+                returnval=new CASUAL.CASUALScriptParser().executeOneShotCommand("$ADB reboot bootloader");
+                assert returnval.equals("") || returnval.equals("\n");
+            }
+            
+            //testing Fastboot reboot
+            CASUAL.Statics.useGUI=true;
+            if (new CASUAL.CASUALInteraction("Testing Fastboot","Connect a device in FASTBOOT mode").showUserCancelOption()==1){
+                returnval=new CASUAL.CASUALScriptParser().executeOneShotCommand("$FASTBOOT reboot");
+                assert returnval.contains("rebooting...");
+            }
+   
+            CASUAL.Statics.useGUI=true;
+            if (new CASUAL.CASUALInteraction("Overall Test","Connect a device in ADB mode").showUserCancelOption()==1)
+                         CASUAL.CASUALApp.main(new String[]{"-e","$ADB reboot download"});
         }
     }
 
