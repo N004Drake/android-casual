@@ -48,6 +48,7 @@ public class CASUALapplicationData {
 
     CASUALapplicationData() {
         buildProperties = Statics.BUILDPROPERTIES;
+        try {
         usePictureForBanner = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.UsePictureForBanner").contains("rue");
         developerDonateLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
         useSound = java.util.ResourceBundle.getBundle(buildProperties).getString("Audio.Enabled").contains("rue");
@@ -61,6 +62,9 @@ public class CASUALapplicationData {
         donationLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
         AlwaysEnableControls=java.util.ResourceBundle.getBundle(buildProperties).getString("Application.AlwaysEnableControls").contains("rue");
         packageDataHasBeenSet = true;
+        } catch (java.util.MissingResourceException ex){
+            //nothing to do.  bundle is missing. use defaults
+        }
     }
 
     CASUALapplicationData(BufferedInputStream in) throws IOException {
