@@ -264,8 +264,7 @@ public class CASUALLanguage {
         // $IFNOTCONTAINS value $INCOMMAND command $DO $ANY CASUAL COMMAND
         if (line.startsWith("$IFCONTAINS ")) {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
-            doIfContainsReturnResults(line, true);
-            return "";
+            return doIfContainsReturnResults(line, true);
         }
         /*
          * $IFNOTCONTAINS takes:
@@ -278,8 +277,7 @@ public class CASUALLanguage {
         // $IFNOTCONTAINS value $INCOMMAND command $DO $ANY CASUAL COMMAND
         if (line.startsWith("$IFNOTCONTAINS ")) {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
-            doIfContainsReturnResults(line, false);
-            return "";
+            return doIfContainsReturnResults(line, false);
         }
         /*
          * Environmental variables
@@ -339,7 +337,7 @@ public class CASUALLanguage {
             line = line.replace("$ECHO", "");
             line = StringOperations.removeLeadingSpaces(line);
             log.level2Information(line);
-            return "";
+            return line;
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
         } else if (line.startsWith("$LISTDIR")) {
             line = line.replace("$LISTDIR", "");
@@ -572,15 +570,15 @@ public class CASUALLanguage {
     }
 
     //split the string from $IFCONTAINS "string string" $INCOMMAND "$ADB command to execute" $DO "CASUAL COMMAND"
-    private void doIfContainsReturnResults(String line, boolean ifContains) {
+    private String doIfContainsReturnResults(String line, boolean ifContains) {
         if (line.startsWith("$IFCONTAINS")) {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFCONTAINS", ""));
         } else if (line.startsWith("$IFNOTCONTAINS")) {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFNOTCONTAINS", ""));
         }
-        String[] checkValueSplit = line.split("\\$INCOMMAND");
+        String[] checkValueSplit = line.split("\\$INCOMMAND",2);
         String checkValue = StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line)); //value to check
-        String[] commandSplit = checkValueSplit[1].split("\\$DO");
+        String[] commandSplit = checkValueSplit[1].split("\\$DO",2);
         String command = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);//command to check
         String casualCommand = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);// command to execute if true
         if (command.startsWith("$ADB")) {
@@ -590,11 +588,13 @@ public class CASUALLanguage {
         log.level4Debug("requesting " + command);
         String returnValue = new CASUALScriptParser().executeOneShotCommand(command);
         log.level4Debug("got " + returnValue);
+        String cmdValue="";
         if ((returnValue.contains(checkValue) == ifContains)) {
-            new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
+           cmdValue= cmdValue+new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
         }
+        return cmdValue;
     }
-
+    static String cmdValue="";
     private void sleepForOneSecond() {
         try {
             Thread.sleep(1000);
