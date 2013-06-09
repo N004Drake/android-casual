@@ -4,10 +4,8 @@
  */
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,6 +23,8 @@ public class JUnitTest  {
     
     @BeforeClass
     public static void setUpClass() {
+        //launch CASUAL to set values
+        CASUAL.CASUALApp.main(new String[]{"-e","$ADB devices"});
     }
     
     @AfterClass
@@ -67,6 +67,14 @@ public class JUnitTest  {
         CASUAL.CASUALInteraction.in=new BufferedReader(new InputStreamReader(stringStream));
     }
     
+    @Test 
+    public void testCASUALLanguage(){
+        String x= new CASUAL.CASUALScriptParser().executeOneShotCommand("$IFNOTCONTAINS d2cafdan $INCOMMAND shell \"cat /system/build.prop\" $DO $IFNOTCONTAINS d2asdfgtt $INCOMMAND shell \"cat /system/build.prop\" $DO $ECHO hi");
+        assert x.contains("hi");
+    }   
+    
+    
+    
     @Test
     public void testCASUALInteractions(){
         String title="Testing Title";
@@ -74,7 +82,7 @@ public class JUnitTest  {
         String string = "aaa";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
         
-        
+        CASUAL.Statics.useGUI=false;
         CASUAL.CASUALInteraction ci= new CASUAL.CASUALInteraction(title, message);
         setContinue();
         assertEquals("",ci.inputDialog());  
