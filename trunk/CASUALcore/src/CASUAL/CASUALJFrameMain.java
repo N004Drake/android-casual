@@ -20,6 +20,8 @@ import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
@@ -67,7 +69,10 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
 
         log.level4Debug("Searching for scripts");
-
+        try {
+            CASUALMain.scriptPrep.join();
+        } catch (InterruptedException ex) {
+        }
         for (String script : Statics.scriptNames) {
             comboBoxScriptSelectorAddNewItem(script);
         }

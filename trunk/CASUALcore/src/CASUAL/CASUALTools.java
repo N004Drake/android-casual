@@ -65,14 +65,15 @@ public class CASUALTools {
 
                     String EntryName = ZEntry.getName();
                     if (EntryName.endsWith(".scr")) {
+
                         list.add(EntryName);
                     }
                 }
-
+                log.level4Debug("Found " + list.size() + " CASUAL scripts");
                 Statics.scriptNames = new String[list.size()];
                 for (int n = 0; n < list.size(); n++) {
                     String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
-                    log.level4Debug("Found: " + EntryName);
+                    log.level4Debug("Found script: " + EntryName);
                     Statics.scriptNames[n] = EntryName;
                     Count++;
                 }

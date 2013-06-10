@@ -119,6 +119,9 @@
             <fileset dir="src/" includes="SCRIPTS/TestScript.meta" />
         </jar>
         <copy file="dist/CASUAL-Revision${svna.version}b.jar" tofile="dist/CASUALstatic.jar"/> 
+        <chmod file="${dist.jar}" perm="755"/>
+        <chmod file="dist/CASUAL-Revision${svna.version}b.jar" perm="755"/>
+        <chmod file="dist/CASUALstatic.jar" perm="755"/>
     </target>
 </project>
 
