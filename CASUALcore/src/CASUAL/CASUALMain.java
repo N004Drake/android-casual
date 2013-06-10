@@ -23,14 +23,15 @@ package CASUAL;
 public final class CASUALMain {
 
     String[] args;
-
+    static Thread scriptPrep;
+    
     public void startup(String[] cmd) {
         args = cmd;
         new FileOperations().makeFolder(Statics.TempFolder);
         Thread adb = new Thread(new CASUALTools().adbDeployment);
         adb.start(); //start ADB deployment
         Statics.lockGUIformPrep = true;
-        Thread scriptPrep = new Thread(new CASUALTools().prepScripts);
+        scriptPrep = new Thread(new CASUALTools().prepScripts);
         scriptPrep.start(); //scan self for embedded scripts
         Thread pData = new Thread(new CASUALTools().setCASUALPackageDataFromScriptsFolder);
         pData.start(); // scan self and set package properties

@@ -58,6 +58,12 @@ public class Shell implements Runnable {
 
         String[] newCmd;
         if (Statics.isLinux()) {
+            //TODO: elevate shell and make static reference to it to have commands passed in
+            // elevate "sh" and pass scripts into it to be executed
+            //If elevated shell exists, use it
+            // else create elevated shell
+            // This solves fastboot issues of having multiple password entries to perform several tasks
+            
             boolean useGKSU = true;
             String[] testGKSudo = {"which", "gksudo"};
             String testReturn = Shell.silentShellCommand(testGKSudo);
