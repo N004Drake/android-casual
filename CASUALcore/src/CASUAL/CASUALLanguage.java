@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -67,6 +69,10 @@ public class CASUALLanguage {
             }
             //Close the input stream
             dataIn.close();
+            /*if(WindowsDrivers.driverRemoveOnDone) {
+                log.level2Information("Removing generic USB driver as requested");
+                WindowsDrivers.removeDriver();
+            }*/
             log.level2Information("done");
         } catch (Exception e) {//Catch exception if any
             log.errorHandler(e);
@@ -282,7 +288,21 @@ public class CASUALLanguage {
         /*
          * Environmental variables
          */
-
+        if (line.contains("$VID")) {
+            Pattern vid = Pattern.compile("(?=[$VID])[0-9a-fA-F]{4}");
+            Matcher match = vid.matcher(line);
+            Statics.VID = match.group(0);
+            line = line.replace("$VID" + Statics.VID, "");
+            if(Statics.isWindows())log.level4Debug("VID specified for generic driver install" + Statics.VID);
+        }
+        
+        if (line.contains("$PID")) {
+            Pattern vid = Pattern.compile("(?=[$PID])[0-9a-fA-F]{4}");
+            Matcher match = vid.matcher(line);
+            Statics.PID = match.group(0);
+            line = line.replace("$PID" + Statics.PID, "");
+            if(Statics.isWindows())log.level4Debug("PID specified for generic driver install" + Statics.PID);
+        }
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
             line = line.replace("$SLASH", Statics.Slash);

@@ -46,10 +46,24 @@ public class Statics {
      */
     public static int GUIVerboseLevel = 2; //userdata is output to console
     public static int CommandLineVerboseLevel = 4; //all logs are output to file
+  
+    /* WindowsDrivers variables
+     * VID - Legend
+     * 18D1 Google
+     * 04E8 Samsung
+     * 0B05 Asus
+     * 0BB4 HTC
+     * 22B8 Motorola
+     * 054C Sony
+     * 2080 B&N
+     */
+    public static String VID = "";
+    public static String PID = "";
+    final public static String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
 
     /*
      * miscellanious variables
-     */
+     */    
     static Shell shellCommand;
     static Log Log = new Log();
     public static ArrayList<String> LiveSendCommand = new ArrayList<>();
@@ -150,6 +164,7 @@ public class Statics {
     final public static String msvcp110dll = "/CASUAL/resources/heimdall/msvcp110.dll";
     final public static String msvcr110dll = "/CASUAL/resources/heimdall/msvcr110.dll";
     final public static String WinDriverResource = "/CASUAL/resources/heimdall/CADI.exe";  //win driver in CASUAL
+    //final public static String WinDriverResource = "/CASUAL/resources/heimdall/CADI.zip";  //win driver in CASUAL
     //Fastboot
     final public static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
     final public static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
