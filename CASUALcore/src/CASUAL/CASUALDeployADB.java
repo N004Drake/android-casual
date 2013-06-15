@@ -62,11 +62,13 @@ class CASUALDeployADB {
         }
         
         Shell Shell = new Shell();
-        killADBserver();
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
         Statics.LiveSendCommand.add(Statics.AdbDeployed);
         Statics.LiveSendCommand.add("get-state");
         new Shell().silentBackgroundShellCommand();
+        if (Statics.isWindows()){
+            
+        }
         String DeviceList = Shell.sendShellCommand(devicesCmd);
 
 

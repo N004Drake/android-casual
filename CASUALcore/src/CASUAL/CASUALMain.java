@@ -45,9 +45,12 @@ public final class CASUALMain {
             cSound.start();  //do startup sound
             
         if (args.length != 0 && !Statics.useGUI) {
+            Statics.setStatus("waiting for ADB");
             adb.join(); //wait for adb deployment
             Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+            Statics.setStatus("Preparing scripts");
             scriptPrep.join(); //wait for embedded scripts scan
+            Statics.setStatus("Warming Up");
             doConsoleStartup();  //use command line args
         } else {
             Statics.useGUI = true;
@@ -63,15 +66,16 @@ public final class CASUALMain {
 
     private void doConsoleStartup() {
         for (int i = 0; i < args.length; i++) {
+            Statics.setStatus("parsing");
             if (args[i].contains("--execute") || args[i].contains("-e")) {
                 i++;
                 Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                 CASUALScriptParser csp=new CASUALScriptParser();
                 String s= csp.executeOneShotCommand(args[i]);
-                Statics.currentStatus="Script Complete";
+                Statics.setStatus("Complete");
                 new Log().level2Information("Script Complete");
             } else {
-                Statics.currentStatus="Script Complete";
+                Statics.setStatus("Invalid commands");
                 new Log().level0Error("Unrecogized command");
             }
 
@@ -81,7 +85,8 @@ public final class CASUALMain {
 
     private void doGUIStartup() {
         Thread startGUI = new Thread(new CASUALTools().GUI);
-        startGUI.setName("Graphical User Interface");
+        startGUI.setName("GUI");
+        Statics.setStatus("launching GUI");
         startGUI.start();
     }
 }

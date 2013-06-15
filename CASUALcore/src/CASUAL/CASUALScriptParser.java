@@ -38,6 +38,7 @@ public class CASUALScriptParser {
      * Executes a selected script as a resource reports to Log class.
      */
     public void loadResourceAndExecute(final String script, boolean multiThreaded) {
+        Statics.setStatus("Loading resources");
         log.level4Debug("Selected resource" + script);
         ScriptName = script;
         CountLines CountLines = new CountLines();
@@ -51,6 +52,7 @@ public class CASUALScriptParser {
     }
 
     public void loadFileAndExecute(String File, String script, boolean multiThreaded) {
+        Statics.setStatus("Loading from file");
         DataInputStream DIS = getDataStreamFromFile(File);
         executeSelectedScript(DIS, ScriptTempFolder, script, multiThreaded);
     }
@@ -82,6 +84,7 @@ public class CASUALScriptParser {
      *
      */
     public String executeOneShotCommand(String Line) {
+        Statics.setStatus("Executing");
         String x = new CASUALLanguage(this.ScriptName, this.ScriptTempFolder).commandHandler(Line);
         return x;
     }
@@ -145,6 +148,7 @@ public class CASUALScriptParser {
 
 
             private boolean checkForUpdates(String testString) {
+                Statics.setStatus("Checking for Updates");
                 int updateStatus;
                 if ((testString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
                     try {
@@ -213,6 +217,7 @@ public class CASUALScriptParser {
         };
         if (startThreaded) {
             Thread ExecuteScript = new Thread(r);
+            Statics.setStatus("Executing");
             ExecuteScript.setName("CASUAL Script Executor");
             ExecuteScript.start();
         } else {
