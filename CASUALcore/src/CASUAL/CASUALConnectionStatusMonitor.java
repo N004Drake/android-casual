@@ -151,6 +151,7 @@ public class CASUALConnectionStatusMonitor {
         @Override
         public void actionPerformed(ActionEvent evt) {
             Thread t = new Thread(r);
+            t.setName("Device Monitor");
             t.start();
         }
     });

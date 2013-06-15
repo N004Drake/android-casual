@@ -213,6 +213,7 @@ public class CASUALScriptParser {
         };
         if (startThreaded) {
             Thread ExecuteScript = new Thread(r);
+            ExecuteScript.setName("CASUAL Script Executor");
             ExecuteScript.start();
         } else {
             r.run();

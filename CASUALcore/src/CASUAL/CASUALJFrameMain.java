@@ -447,6 +447,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         this.enableControls(false);
         Statics.lockGUIunzip = true;
         Thread t = updateSelectedFromGUI();
+        t.setName("Updating Selected Script");
+        t.start();
         try {
             t.join();
         } catch (InterruptedException ex) {
