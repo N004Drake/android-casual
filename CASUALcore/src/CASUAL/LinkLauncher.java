@@ -25,49 +25,61 @@ import java.net.URISyntaxException;
  *
  * @author adam
  */
-public class LinkLauncher implements Runnable {
+public class LinkLauncher {
 
-    private static String Link = "";
-    /*
+    final String link;
+    
+    /**
      * launches a browser with a link
+     * 
+     * @param link link to launch
      */
+    public LinkLauncher(String link) {
+        this.link = link;
+    }
 
-    public void launchLink(String link) {
-        Link = link;
-        Runnable runnable = new LinkLauncher();
-        Thread thread = new Thread(runnable);
+    /**
+     *launches the link commanded in constructor
+     */
+    public void launch() {
+        Thread thread = new Thread(launcher);
         thread.start();
     }
+    
+    
+    
+    private Runnable launcher = new Runnable() {
+        @Override
+        public void run() {
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop;
+                desktop = Desktop.getDesktop();
+                URI uri;
+                try {
+                    uri = new URI(link);
+                    desktop.browse(uri);
+                } catch (IOException ioe) {
+                    new Log().level4Debug("Attempted to open" + link + " Failed with IO error");
+                } catch (URISyntaxException use) {
+                    new Log().level4Debug("Attempted to open" + link + " Failed with URI Syntax error");
 
-    @Override
-    public void run() {
-        if (Desktop.isDesktopSupported()) {
-            Desktop desktop;
-            desktop = Desktop.getDesktop();
-            URI uri;
-            try {
-                uri = new URI(Link);
-                desktop.browse(uri);
-            } catch (IOException ioe) {
-                new Log().level4Debug("Attempted to open" + Link + " Failed with IO error");
-            } catch (URISyntaxException use) {
-                new Log().level4Debug("Attempted to open" + Link + " Failed with URI Syntax error");
-
-            }
-        } else {
-            Shell Shell = new Shell();
-            String Cmd[] = {"firefox", Link};
-            String LaunchRes = Shell.sendShellCommand(Cmd);
-            if (LaunchRes.contains("CritERROR!!!")) {
-                String MCmd[] = {"open", Link};
-                String MLaunchRes = Shell.sendShellCommand(MCmd);
-                if (MLaunchRes.contains("CritERROR!!!")) {
-                    String WCmd[] = {"explorer", Link};
-                    String WLaunchRes = Shell.sendShellCommand(WCmd);
-                    if (WLaunchRes.contains("CritERROR!!!")) {
+                }
+            } else {
+                Shell Shell = new Shell();
+                String Cmd[] = {"firefox", link};
+                String LaunchRes = Shell.sendShellCommand(Cmd);
+                if (LaunchRes.contains("CritERROR!!!")) {
+                    String MCmd[] = {"open", link};
+                    String MLaunchRes = Shell.sendShellCommand(MCmd);
+                    if (MLaunchRes.contains("CritERROR!!!")) {
+                        String WCmd[] = {"explorer", link};
+                        String WLaunchRes = Shell.sendShellCommand(WCmd);
+                        if (WLaunchRes.contains("CritERROR!!!")) {
+                        }
                     }
                 }
+
             }
         }
-    }
+    };
 }

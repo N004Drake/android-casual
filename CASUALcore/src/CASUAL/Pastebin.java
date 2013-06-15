@@ -69,7 +69,7 @@ public class Pastebin {
 
                 String output = paste.makePaste(pasteData, "CASUAL r" + CASUALapplicationData.CASUALSVNRevision + "-" + xdaUsername, format);
                 if (output.substring(0, 4).equals("http")) {
-                    new LinkLauncher().launchLink(output);
+                    new LinkLauncher(output).launch();
                     StringSelection stringSelection = new StringSelection(output);
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);

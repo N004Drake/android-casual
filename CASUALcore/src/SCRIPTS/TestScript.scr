@@ -1,5 +1,5 @@
 $ECHO Testing ALL CASUAL commands. Connect your device
-
+$ADB push $ZIPFILEwafaf /asfd
 #$ADB wait-for-device
 $LINUXMAC $ECHO This is a Linux or Mac Computer.
 $LINUXWINDOWS $ECHO This is a Linux or Windows Computer.
