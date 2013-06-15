@@ -514,8 +514,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }//GEN-LAST:event_StatusLabelMouseExited
 
     private static void launchLink(String Link) {
-        LinkLauncher LinkLauncher = new LinkLauncher();
-        LinkLauncher.launchLink(Link);
+        new LinkLauncher(Link).launch();
     }
     /**
      * @param args the command line arguments
