@@ -58,7 +58,8 @@ class CASUALDeployADB {
             }
 
         } else {
-            Log.level0Error("Your system is not supported");
+            Log.level0Error("Your system is not supported attempting to use system ADB.");
+            Statics.AdbDeployed="adb";
         }
         
         Shell Shell = new Shell();
@@ -126,7 +127,7 @@ class CASUALDeployADB {
     
     
     private void restartADBserver(){
-        Log.level2Information("Restarting ADB after system update");
+        Log.level3Verbose("Restarting ADB");
         Shell shell=new Shell();
         String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         shell.silentShellCommand(killCmd);
@@ -134,7 +135,7 @@ class CASUALDeployADB {
         shell.silentShellCommand(devicesCmd);
     }
     private void killADBserver(){
-        Log.level2Information("Restarting ADB after system update");
+        Log.level3Verbose("Restarting ADB after system update");
         Shell shell=new Shell();
         String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         shell.silentShellCommand(killCmd);
