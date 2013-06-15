@@ -27,7 +27,7 @@ import java.net.URISyntaxException;
  */
 public class LinkLauncher implements Runnable {
 
-    String Link;
+    private static String Link = "";
     /*
      * launches a browser with a link
      */

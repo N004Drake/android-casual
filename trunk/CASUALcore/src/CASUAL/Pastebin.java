@@ -62,22 +62,19 @@ public class Pastebin {
                 if (lResult.equals("false")) {
                     log.level4Debug("Pastebin Login Failed");
                 } else {
-                    paste.setToken(token);
+                    paste.setToken(lResult);
                     log.level4Debug("Pastebin Login Successful");
                 }
                 String pasteData = new FileOperations().readFile(Statics.TempFolder + "log.txt");
 
                 String output = paste.makePaste(pasteData, "CASUAL r" + CASUALapplicationData.CASUALSVNRevision + "-" + xdaUsername, format);
                 if (output.substring(0, 4).equals("http")) {
-                    String[] sUrl = output.split("[/]");
-                    String key = sUrl[sUrl.length - 1].replace("%0D", "");
-                    URI url = new URI("http", "pastebin.com", "/" + key, null);
-                    new LinkLauncher().launchLink(url.toString());
-                    StringSelection stringSelection = new StringSelection(url.toString());
+                    new LinkLauncher().launchLink(output);
+                    StringSelection stringSelection = new StringSelection(output);
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
                     new CASUALInteraction("Thank You!","Pastebin URL Copied to Clipboard\n\nPlease Submit it in the appropriate forum thread").showInformationMessage();
-                    log.level4Debug(url.toString());
+                    log.level4Debug(output);
                 } else {
                     log.level4Debug(output);
                 }
@@ -110,12 +107,7 @@ public class Pastebin {
         public String login(String username, String password) throws UnsupportedEncodingException {
             String api_user_name = URLEncoder.encode(username, "UTF-8");
             String api_user_password = URLEncoder.encode(password, "UTF-8");
-            String data = "api_dev_key="
-                    + this.devkey
-                    + "&api_user_name="
-                    + api_user_name
-                    + "&api_user_password="
-                    + api_user_password;
+            String data = "api_dev_key=" + this.devkey + "&api_user_name=" + api_user_name + "&api_user_password=" + api_user_password;
             String response = this.page(this.loginURL, data);
             String check = this.checkResponse(response);
             if (!check.equals("")) {
@@ -130,19 +122,7 @@ public class Pastebin {
         public String makePaste(String code, String name, String format) throws UnsupportedEncodingException {
             String content = URLEncoder.encode(code, "UTF-8");
             String title = URLEncoder.encode(name, "UTF-8");
-            String data = "api_option=paste"
-                    + "&api_user_key="
-                    + this.token + //User Token
-                    "&api_paste_private=0" + //Public Post
-                    "&api_paste_name="
-                    + title
-                    + "&api_paste_expire_date=N" + //Never Expires
-                    "&api_paste_format="
-                    + format
-                    + "&api_dev_key="
-                    + this.devkey + //Developer Key
-                    "&api_paste_code="
-                    + content;
+            String data = "api_option=paste&api_user_key=" + this.token + "&api_paste_private=0&api_paste_name=" + title + "&api_paste_expire_date=N&api_paste_format=" + format + "&api_dev_key=" + this.devkey + "&api_paste_code=" + content;
             String response = this.page(this.pasteURL, data);
             String check = this.checkResponse(response);
             if (!check.equals("")) {
