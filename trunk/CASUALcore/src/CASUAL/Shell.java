@@ -151,11 +151,11 @@ public class Shell implements Runnable {
             Process process = new ProcessBuilder(cmd).start();
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            /*try {
+            try {
              process.waitFor();
              } catch (InterruptedException ex) {
              log.errorHandler(ex);
-             }*/
+             }
             //log.level3Verbose(STDOUT.readLine());
             int y = 0;
             while ((line = STDOUT.readLine()) != null) {

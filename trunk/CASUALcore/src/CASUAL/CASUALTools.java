@@ -95,6 +95,7 @@ public class CASUALTools {
      * Refreshes the MD5s on the scripts in the /SCRIPTS folder
      */
     private void md5sumTestScripts() {
+        Statics.setStatus("Setting MD5s");
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
         String x = CASUAL.CASUALApp.class.getResource("resources" + Statics.Slash + "CASUALApp.properties").toString();
         incrementBuildNumber();

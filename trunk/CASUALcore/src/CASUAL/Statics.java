@@ -411,7 +411,9 @@ public class Statics {
         CASUALapplicationData.meta=null;
     }
     
-    
+    public static void setStatus(String status){
+        Statics.currentStatus=status;
+    }
     
     
     
