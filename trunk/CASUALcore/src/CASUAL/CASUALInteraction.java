@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.YES_OPTION;
 
 /**
  *
@@ -235,4 +236,38 @@ public class CASUALInteraction extends JOptionPane {
             waitForStandardInputBeforeContinuing();
         }
     }
+    
+    public boolean showYesNoOption() {
+        new Log().level4Debug("Displaying Yes/No Dialog: "+title + " message: "+message);
+
+        Object[] Options = {"Yes", "No"};
+        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
+            if (title==null) {
+                title="Yes or No";
+            }
+            boolean retval= (
+                JOptionPane.showConfirmDialog(
+                Statics.GUI, 
+                message, 
+                title,
+                JOptionPane.YES_NO_OPTION
+                ) ==YES_OPTION ) ? true : false;
+            return retval;
+        } else {
+            if (title==null){
+                title="";
+            } else {
+                title=title+"\n";
+            }
+            //display the message
+            new Log().Level1Interaction("[YESNOOPTION][RETURN or n]" + title + "\n" + message + "\npress N for no");
+            String s = this.getCommandLineInput();
+            if (s.equals("n") || s.equals("N")) {
+                return false;
+            }
+            return true;
+        }
+    }
+    
+    
 }

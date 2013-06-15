@@ -44,21 +44,11 @@ public class WindowsDrivers {
     
     public WindowsDrivers() {
         log.level4Debug("WindowsDrivers() Initialized");
-        driverRemoveOnDone = promptRemoveOnDone();
-    }
-    
-    /***************************************************************************
-     * 
-     ***************************************************************************/
-    private boolean promptRemoveOnDone() {
-        Object[] Options = {"Yes", "No"};
-        if(JOptionPane.showOptionDialog(
-            Statics.GUI, 
-            "CASUAL will now install a generic USB driver." 
+        driverRemoveOnDone = new CASUALInteraction("CADI",
+                "CASUAL will now install a generic USB driver." 
             + "\n\nThis will allow communications between CASUAL and your device" 
-            + "\n\nWould you like CASUAL to remove this generic driver when the operation has completed?", 
-            "C.A.D.I.", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, Options, Options[1]) == 0) return true;
-        return false;
+            + "\n\nWould you like CASUAL to remove this generic driver when the"
+                + " operation has completed?").showYesNoOption();
     }
     
     /***************************************************************************
