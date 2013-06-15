@@ -80,6 +80,7 @@ public class CASUALTools {
 
                 if (Count == 0) {
                     Thread t = new Thread(updateMD5s);
+                    t.setName("Updating MD5s");
                     t.start();
                     log.level0Error("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
                     //Statics.scriptLocations = new String[]{""};
@@ -170,6 +171,7 @@ public class CASUALTools {
                 Statics.lockGUIunzip = false;
             }
         };
+        t.setName("Script Preparation");
         t.start();
 
         log.level4Debug("Exiting comboBoxUpdate()");

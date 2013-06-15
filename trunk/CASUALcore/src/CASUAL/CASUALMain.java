@@ -29,13 +29,17 @@ public final class CASUALMain {
         args = cmd;
         new FileOperations().makeFolder(Statics.TempFolder);
         Thread adb = new Thread(new CASUALTools().adbDeployment);
+        adb.setName("ADB Deployment");
         adb.start(); //start ADB deployment
         Statics.lockGUIformPrep = true;
         scriptPrep = new Thread(new CASUALTools().prepScripts);
+        scriptPrep.setName("Preparing Scripts");
         scriptPrep.start(); //scan self for embedded scripts
         Thread pData = new Thread(new CASUALTools().setCASUALPackageDataFromScriptsFolder);
+        pData.setName("Setting Up CASUAL Package");
         pData.start(); // scan self and set package properties
         Thread cSound = new Thread(new CASUALTools().casualSound);
+        cSound.setName("CASUAL Sound");
         try {
             pData.join(); //wait for properties
             cSound.start();  //do startup sound
@@ -77,6 +81,7 @@ public final class CASUALMain {
 
     private void doGUIStartup() {
         Thread startGUI = new Thread(new CASUALTools().GUI);
+        startGUI.setName("Graphical User Interface");
         startGUI.start();
     }
 }

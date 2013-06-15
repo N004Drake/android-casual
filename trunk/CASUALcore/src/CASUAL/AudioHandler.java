@@ -36,7 +36,7 @@ public class AudioHandler {
      * playSound plays sounds
      */
     public static synchronized void playSound(final String URL) {
-        new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
+        Thread t= new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override
             public void run() {
                 if (CASUALapplicationData.useSound) {
@@ -68,14 +68,16 @@ public class AudioHandler {
                     }
                 }
             }
-        }).start();
+        });
+        t.setName("Audio");
+        t.start();
     }
     /*
      * plays multiple sounds
      */
 
     public static synchronized void playMultipleInputStreams(final String[] URLs) {
-        new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
+        Thread t = new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override
             public void run() {
                 if (CASUALapplicationData.useSound) {
@@ -115,6 +117,8 @@ public class AudioHandler {
                     }
                 }
             }
-        }).start();
+        });
+        t.setName("AudioStream");
+        t.start();
     }
 }

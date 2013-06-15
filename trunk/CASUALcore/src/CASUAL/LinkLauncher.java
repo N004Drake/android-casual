@@ -43,6 +43,7 @@ public class LinkLauncher {
      */
     public void launch() {
         Thread thread = new Thread(launcher);
+        thread.setName("Link Launcher Thread");
         thread.start();
     }
     

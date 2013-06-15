@@ -42,6 +42,7 @@ public class CASPACHandler {
         
         try {
             Thread adb = new Thread(new CASUALTools().adbDeployment);
+            adb.setName("ADB Deployment");
             adb.start();
             File CASPAC = new File(pack);
             if (!CASPAC.exists()) { //verify this is a valid caspac
@@ -85,6 +86,7 @@ public class CASPACHandler {
             //Launch script
 
             Thread t = new Thread(activateScript);
+            t.setName("CASUAL Script");
             t.start();
             //do communications here
             try {
@@ -137,6 +139,7 @@ public class CASPACHandler {
             new FileOperations().makeFolder(Statics.ScriptLocation);
             Unzip.unZipInputStream(Unzip.streamFileFromZip(f, entry), Statics.ScriptLocation);
             zip = new Thread(new MD5sumRunnable(Unzip.streamFileFromZip(f, entry), entry.toString()));
+            zip.setName("Unzip Operation");
         } else if (entry.toString().endsWith(".txt")) {
             new Log().level2Information("\n" + new FileOperations().readTextFromStream(Unzip.streamFileFromZip(f, entry)) + "\n");
         }

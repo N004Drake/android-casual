@@ -332,6 +332,7 @@ public class Shell implements Runnable {
             }
         };
         Thread t = new Thread(r);
+        t.setName("liveBackgroundShellCommand");
         t.start();
     }
 
@@ -380,6 +381,7 @@ public class Shell implements Runnable {
             }
         };
         Thread t = new Thread(r);
+        t.setName("Silent Background Shell Command");
         t.start();
     }
 

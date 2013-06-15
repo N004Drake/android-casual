@@ -50,7 +50,7 @@ public class TimeOutOptionPane extends JOptionPane {
         final JDialog dialog = pane.createDialog(parentComponent, title);
 
         pane.selectInitialValue();
-        new Thread() {
+        Thread t= new Thread() {
             @Override
             public void run() {
 
@@ -74,7 +74,9 @@ public class TimeOutOptionPane extends JOptionPane {
 
                 }
             }
-        }.start();
+        };
+        t.setName("Time Out Dialog");
+        t.start();
         dialog.setVisible(true);
 
         Object selectedValue = pane.getValue();
