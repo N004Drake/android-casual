@@ -147,11 +147,12 @@ public class Log {
     }
 
     private void writeOutToLog(String data) {
-        FileWriter WriteFile = null;
+        FileWriter WriteFile;
         try {
             WriteFile = new FileWriter(Statics.TempFolder + "log.txt", true);
         } catch (IOException ex) {
             out.println("Attempted to write to log but could not.");
+            return;
         }
 
         PrintWriter out = new PrintWriter(WriteFile);
@@ -168,7 +169,7 @@ public class Log {
 
     public void progress(String data) {
         progressBuffer = progressBuffer + data;
-        if (Statics.useGUI) {
+        if (Statics.useGUI && Statics.ProgressDoc!=null) {
             try {
 
                 if (data.contains("\b")) {
