@@ -177,9 +177,7 @@ public class HeimdallTools {
 
         if (stdErrLog.contains(" failed!")) {
             if (stdErrLog.contains("Claiming interface failed!")) {
-
-                //TODO: inform user to turn off device and put it back into download mode, then continue and redo.
-
+                new CASUALInteraction(null,"Turn Off your Device and put it back into Odin Mode").showActionRequiredDialog();
                 return "Heimdall failed to claim interface; Attempting to continue";
             }
 

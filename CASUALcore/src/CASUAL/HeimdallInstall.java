@@ -27,7 +27,11 @@ import java.io.IOException;
  * @author adam
  */
 public class HeimdallInstall {
-
+    final String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
+    public String VID = "";
+    public String PID = "";
+    
+    
     public boolean deployHeimdallForWindows() {
         FileOperations fo = new FileOperations();
         Statics.heimdallResource = Statics.heimdallWin2;
@@ -58,8 +62,7 @@ public class HeimdallInstall {
         }
     }
     public boolean checkHeimdall(){
-        //TODO: put this back to silentShellCommand -- this was changed for debugging XP
-        boolean retval = ! new Shell().sendShellCommand(new String[]{HeimdallTools.getHeimdallCommand(), "version"}).equals("");
+        boolean retval = ! new Shell().silentShellCommand(new String[]{HeimdallTools.getHeimdallCommand(), "version"}).equals("");
         return retval;
     }
     private boolean installLinuxHeimdall() {

@@ -26,6 +26,7 @@ import javax.swing.Timer;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALConnectionStatusMonitor {
+    public static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
 
     Log Log = new Log();
     Shell Shell = new Shell();
@@ -50,20 +51,20 @@ public class CASUALConnectionStatusMonitor {
             }
             try {
                 String DeviceList = getConnectedDevices();
-                Statics.DeviceTracker = DeviceList.split("device");
+                CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
 
 
                 //Multiple devices detected
-                if (Statics.DeviceTracker.length > 1 && (!DeviceList.contains("offline"))) {
-                    stateSwitcher(Statics.DeviceTracker.length);
+                if (CASUALConnectionStatusMonitor.DeviceTracker.length > 1 && (!DeviceList.contains("offline"))) {
+                    stateSwitcher(CASUALConnectionStatusMonitor.DeviceTracker.length);
                     //No devices detected
-                } else if (Statics.DeviceTracker[0].isEmpty()) {
+                } else if (CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
                     stateSwitcher(0);
                     if (!hasConnected) {
                         messageUser();
                     }
                     //One device detected
-                } else if (! Statics.DeviceTracker[0].isEmpty()) {
+                } else if (! CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
                     hasConnected = true;
                     stateSwitcher(1);
 
@@ -96,7 +97,7 @@ public class CASUALConnectionStatusMonitor {
                         Log.level4Debug("sleeping for 4 seconds.  Device list: " + DeviceList);
                         sleepForFourSeconds();
                         DeviceList = getConnectedDevices();
-                        Statics.DeviceTracker = DeviceList.split("device");
+                        CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
 
                         //Linux and mac only.
                         if (DeviceList.contains("????????????")) {

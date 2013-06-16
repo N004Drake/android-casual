@@ -143,6 +143,7 @@ public class CASUALApp {
                 window.dispose();
             }
         }
+        new Shell().silentShellCommand(new String[]{Statics.AdbDeployed,"kill-server"});
         Statics.initializeStatics();
     }    
 }
