@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import java.awt.Window;
 import java.io.File;
 
 /**
@@ -134,8 +135,14 @@ public class CASUALApp {
     }
     
     public static void shutdown(int i){
+        new Log().level4Debug("Shutting Down");
         Log.out.flush();
-        System.exit(i);
-    }
-    
+        Window windows[] = Window.getWindows();
+        if (windows[0]!=null){
+            for (Window window:windows){
+                window.dispose();
+            }
+        }
+        Statics.initializeStatics();
+    }    
 }

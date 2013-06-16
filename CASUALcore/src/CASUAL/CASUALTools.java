@@ -155,7 +155,7 @@ public class CASUALTools {
             }
         }
     }
-
+    public static Thread t;
     /**
      * prepares the script for execution by setting up environment
      * @param scriptName
@@ -168,7 +168,7 @@ public class CASUALTools {
         
         log.level4Debug("Created zipResource at " + ZipResource);
 
-        Thread t;
+        
         t = new Thread() {
             @Override
             public void run() {

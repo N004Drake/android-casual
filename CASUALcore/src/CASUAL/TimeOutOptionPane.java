@@ -41,6 +41,7 @@ public class TimeOutOptionPane extends JOptionPane {
      *
      */
 
+    private boolean isSelected=false;
     public int timeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType,
             int messageType, Object[] options, final Object initialValue) {
         JOptionPane pane = new JOptionPane(message, messageType, optionType, null, options, initialValue);
@@ -55,6 +56,7 @@ public class TimeOutOptionPane extends JOptionPane {
             public void run() {
 
                 for (int i = PRESET_TIME; i >= 0; i--) {
+                    if (isSelected) break;
                     doSleep();
                     if (dialog.isVisible() && i < 300) {
                         dialog.setTitle(title + "  (" + i + " seconds before auto \"" + initialValue + "\")");
@@ -62,6 +64,7 @@ public class TimeOutOptionPane extends JOptionPane {
                 }
                 if (dialog.isVisible()) {
                     dialog.setVisible(false);
+                    dialog.dispose();
                 }
 
             }
@@ -76,10 +79,13 @@ public class TimeOutOptionPane extends JOptionPane {
             }
         };
         t.setName("Time Out Dialog");
+        t.setDaemon(true);
         t.start();
         dialog.setVisible(true);
-
         Object selectedValue = pane.getValue();
+        isSelected=true;
+        dialog.dispose();
+
         if (selectedValue.equals("uninitializedValue")) {
             selectedValue = initialValue;
         }
