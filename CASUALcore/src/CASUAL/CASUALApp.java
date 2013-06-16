@@ -28,10 +28,10 @@ public class CASUALApp {
      *
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
-    final private static boolean useOverrideArgs = false; // this will use overrideArguments.
+    final private static boolean useOverrideArgs = true; // this will use overrideArguments.
     final private static boolean useTestFramework = false; // this will begin an automated test without notifications
     
-    final private static String[] overrideArguments = new String[]{"--caspac", "/home/adam/Desktop/CASPACS/Root and Recovery for ATT-TMO GS4.zip"};
+    final private static String[] overrideArguments = new String[]{"--caspac", "../../CASPAC/testpak.zip"};
 
     public static void beginCASUAL(String[] args) {
         CASUALapplicationData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
@@ -138,7 +138,7 @@ public class CASUALApp {
         new Log().level4Debug("Shutting Down");
         Log.out.flush();
         Window windows[] = Window.getWindows();
-        if (windows[0]!=null){
+        if (windows!=null){
             for (Window window:windows){
                 window.dispose();
             }

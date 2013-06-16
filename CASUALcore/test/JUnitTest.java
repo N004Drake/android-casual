@@ -7,6 +7,8 @@ import CASUAL.CASUALApp;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,6 +57,30 @@ public class JUnitTest  {
             assertEquals(true, new CASUAL.HeimdallInstall().deployHeimdallForWindows());
             assertEquals(true, new CASUAL.HeimdallInstall().installWindowsDrivers());
         }
+    }
+    
+    @Test
+    public void testCASPACOperations(){
+        CASUAL.Statics.useGUI=true;
+         int x= new CASUAL.CASUALInteraction("testing","Do you want to test CASPAC functionality?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok","cancel"}, "cancel");
+         if (x==0){
+    
+             CASUAL.CASUALApp.main(new String[]{"-CASPAC","../../CASPAC/testpak.zip"});
+             CASUAL.Statics.useGUI=true;
+             x= new CASUAL.CASUALInteraction("testing","Do you want to loop on CASPAC forever?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok","cancel"}, "cancel");
+             if (x==0){
+                 while (true ){
+                     CASUAL.CASUALApp.main(new String[]{"-CASPAC","../../CASPAC/testpak.zip"});
+                     try {
+                         Thread.sleep(10000);
+                     } catch (InterruptedException ex) {
+                         Logger.getLogger(JUnitTest.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                     CASUAL.CASUALApp.shutdown(0);
+                 }    
+             }
+         
+         }
     }
     
     private void setContinue(){
