@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+import CASUAL.CASUALApp;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -143,15 +144,15 @@ public class JUnitTest  {
             //Testing Heimdall close-pc-screen
             CASUAL.Statics.useGUI=true;
             if (new CASUAL.CASUALInteraction("Testing Heimdall","Connect a device in ODIN mode").showUserCancelOption()==1) {
-                returnval=new CASUAL.CASUALScriptParser().executeOneShotCommand("$HEIMDALL close-pc-screen");
-                assert returnval.contains("Attempt complete");
+                CASUAL.CASUALApp.main(new String[]{"-e","$HEIMDALL close-pc-screen"});
+
             }
             
             //testing ADB reboot bootloader
             CASUAL.Statics.useGUI=true;
             if (new CASUAL.CASUALInteraction("Testing Fastboot","Connect a FASTBOOT capable device in ADB mode").showUserCancelOption()==1){
-                returnval=new CASUAL.CASUALScriptParser().executeOneShotCommand("$ADB reboot bootloader");
-                assert returnval.equals("") || returnval.equals("\n");
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB reboot bootloader"});
+                
             }
             
             //testing Fastboot reboot
@@ -161,9 +162,31 @@ public class JUnitTest  {
                 assert returnval.contains("rebooting...");
             }
    
+            CASUALApp.shutdown(0);
             CASUAL.Statics.useGUI=true;
-            if (new CASUAL.CASUALInteraction("Overall Test","Connect a device in ADB mode").showUserCancelOption()==1)
-                         CASUAL.CASUALApp.main(new String[]{"-e","$ADB reboot download"});
+            if (new CASUAL.CASUALInteraction("Overall Test","Connect a device in ADB mode").showUserCancelOption()==1){
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);                
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);                
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);                
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);                
+                CASUAL.CASUALApp.main(new String[]{"-e","$ADB shell \"echo hi\""});
+                CASUAL.CASUALApp.shutdown(0);
+            }
+                           
         }
     }
 

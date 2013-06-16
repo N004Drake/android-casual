@@ -50,6 +50,7 @@ public class DiffTextFiles {
                         break;
                     }
                 }
+                OriginalReader.close();
                 if (!LineExists) {
                     Difference = Difference + "\n" + TestStreamLine;
                 }
@@ -106,6 +107,7 @@ public class DiffTextFiles {
                     DifferenceFromFile1 = DifferenceFromFile1 + "\n" + line;
                 }
             }
+            BRTestDiff.close();
             BROriginal.close();
         } catch (IOException e) {
             new Log().errorHandler(e);
