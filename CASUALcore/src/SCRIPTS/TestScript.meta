@@ -1,7 +1,7 @@
-CASUAL.minSVN=400
+CASUAL.minSVN=800
 Script.Revision=50
 Script.ID=VERIZON GNOTE2 UNLOCK
-Script.SupportURL=http://xda-developers.com
+Script.SupportURL=http\://xda-developers.com
 Script.UpdateMessage=OMFG  TESTING meta information
 Script.KillSwitchMessage=this has been killed because I say so
 Script.MD5[0]=96e59ab98dc651b6d4b41e4dbca25fe9  TestScript.scr
