@@ -112,7 +112,7 @@ public class CASUALTools {
                     InputStream in = null;
                     try {
                         //load each meta file into a properties file
-                        new Log().level3Verbose("Updating meta: " +fileEntry.toString());
+                        new Log().level3Verbose("Verifying meta: " +fileEntry.toString());
                         LinkedProperties prop = new LinkedProperties();
                         in = new FileInputStream(fileEntry);
                         prop.load(in);
@@ -120,19 +120,26 @@ public class CASUALTools {
                         //Identify and store the new MD5s
                         String md5;
                         int pos=0;
+                        boolean md5Changed=false;
                         while ((md5=prop.getProperty("Script.MD5["+pos+"]"))!=null){
                             String entry="Script.MD5["+pos+"]";
                             String[] md5File = md5.split("  ");
                             log.level4Debug("Old MD5: " + md5File[0]);
                             String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
+                            if (! newMD5.equals(newMD5)){
+                                md5Changed=true;
+                            }
                             prop.setProperty(entry, newMD5+ "  "+md5File[1]);
                             log.level4Debug("New Property Update: "+ prop.getProperty(entry));
-                            
                             pos++;
                         }
-                        FileOutputStream fos= new FileOutputStream(fileEntry);
-                        prop.store(fos,null);
-                        fos.close();
+                        if (md5Changed){
+                            new Log().level4Debug("MD5s for "+fileEntry+" changed. Updating...");
+                            try (FileOutputStream fos = new FileOutputStream(fileEntry)) {
+                                prop.store(fos,null);
+                                fos.close();
+                            }
+                        }
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null,ex);
                     } catch (IOException ex) {
