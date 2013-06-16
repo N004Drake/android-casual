@@ -85,7 +85,7 @@ public final class CASUALMain {
 
     private void doGUIStartup() {
         Thread startGUI = new Thread(new CASUALTools().GUI);
-        startGUI.setName("GUI");
+        startGUI.setName("CASUAL GUI");
         Statics.setStatus("launching GUI");
         startGUI.start();
     }

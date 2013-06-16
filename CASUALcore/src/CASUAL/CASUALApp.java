@@ -26,7 +26,7 @@ public class CASUALApp {
     /**
      *
      */
-    final public static String defaultPackage = "ATT GS3 Root"; //note this will be used for IDE only.
+    final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static boolean useTestFramework = false; // this will begin an automated test without notifications
     

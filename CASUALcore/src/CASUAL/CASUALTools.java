@@ -23,11 +23,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -94,39 +97,52 @@ public class CASUALTools {
     /**md5sumTestScript
      * Refreshes the MD5s on the scripts in the /SCRIPTS folder
      */
+    //TODO: fix this for CASPACData upgrade
     private void md5sumTestScripts() {
         Statics.setStatus("Setting MD5s");
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
-        String x = CASUAL.CASUALApp.class.getResource("resources" + Statics.Slash + "CASUALApp.properties").toString();
         incrementBuildNumber();
-        if (getIDEMode()) {
+        
+        if (getIDEMode()) { //if we are in development mode
+            //Set up scripts path
             String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "SCRIPTS" + Statics.Slash;
-            final File folder = new File(scriptsPath);
+            final File folder = new File(scriptsPath); 
             for (final File fileEntry : folder.listFiles()) {
                 if (fileEntry.toString().endsWith(".meta")) {
-                    String meta = fileEntry.toString();
-                    new Log().level3Verbose("Updating meta: " + meta);
-                    String fileContents = new FileOperations().readFile(meta);
-                    String[] fileLines = fileContents.split("\\n");
-                    String writeOut = "";
-                    for (int i = 0; i < fileLines.length; i++) {
-                        String line = StringOperations.removeLeadingSpaces(fileLines[i]);
-                        if (line.matches("(\\S{31,})(\\s\\s)(.*\\..*)")) {
-                            new Log().level3Verbose(line);
-                            String[] md5File = line.split("  ");
+                    InputStream in = null;
+                    try {
+                        //load each meta file into a properties file
+                        new Log().level3Verbose("Updating meta: " +fileEntry.toString());
+                        LinkedProperties prop = new LinkedProperties();
+                        in = new FileInputStream(fileEntry);
+                        prop.load(in);
+                        in.close();
+                        //Identify and store the new MD5s
+                        String md5;
+                        int pos=0;
+                        while ((md5=prop.getProperty("Script.MD5["+pos+"]"))!=null){
+                            String entry="Script.MD5["+pos+"]";
+                            String[] md5File = md5.split("  ");
                             log.level4Debug("Old MD5: " + md5File[0]);
                             String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
-                            log.level4Debug("New MD5 " + newMD5);
-                            writeOut = writeOut + newMD5 + "  " + md5File[1] + "\n";
-                        } else {
-                            writeOut = writeOut + line + "\n";
+                            prop.setProperty(entry, newMD5+ "  "+md5File[1]);
+                            log.level4Debug("New Property Update: "+ prop.getProperty(entry));
+                            
+                            pos++;
                         }
-
-                    }
-                    try {
-                        new FileOperations().overwriteFile(writeOut, meta);
+                        FileOutputStream fos= new FileOutputStream(fileEntry);
+                        prop.store(fos,null);
+                        fos.close();
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null,ex);
                     } catch (IOException ex) {
-                        log.errorHandler(ex);
+                        Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            in.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
@@ -142,7 +158,7 @@ public class CASUALTools {
         Statics.SelectedScriptFolder = Statics.TempFolder + Statics.Slash + scriptName;
         //set the ZipResource
         final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + scriptName + ".zip") : (scriptName + ".zip");
-
+        
         log.level4Debug("Created zipResource at " + ZipResource);
 
         Thread t;
