@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import static CASUAL.Statics.ProgressDoc;
+import static CASUAL.Statics.ProgressPane;
 import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
@@ -47,18 +49,14 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         initComponents();
         enableControls(false);
 
-
+        //set up place to log to for GUI
         ProgressArea.setContentType("text/html");
         Statics.ProgressPane = CASUALJFrameMain.ProgressArea;
-        Statics.initDocument();
-
+        Statics.ProgressPane.setContentType("text/html");
+        Statics.ProgressDoc = Statics.ProgressPane.getStyledDocument();
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
         log.level4Debug("OMFGWOOT GUI running!");
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
-        int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
-        this.setLocation(x, y);
         if (Statics.TargetScriptIsResource) {
             if (!Statics.dumbTerminalGUI) {
                 log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt") + "\n");

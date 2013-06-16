@@ -97,7 +97,6 @@ public class CASUALTools {
     /**md5sumTestScript
      * Refreshes the MD5s on the scripts in the /SCRIPTS folder
      */
-    //TODO: fix this for CASPACData upgrade
     private void md5sumTestScripts() {
         Statics.setStatus("Setting MD5s");
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
@@ -124,13 +123,13 @@ public class CASUALTools {
                         while ((md5=prop.getProperty("Script.MD5["+pos+"]"))!=null){
                             String entry="Script.MD5["+pos+"]";
                             String[] md5File = md5.split("  ");
-                            log.level4Debug("Old MD5: " + md5File[0]);
                             String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
-                            if (! newMD5.equals(newMD5)){
+                            if (! md5.contains(newMD5)){
                                 md5Changed=true;
+                                log.level4Debug("Old MD5: " + md5);
+                                log.level4Debug("New MD5: "+ prop.getProperty(entry));
                             }
                             prop.setProperty(entry, newMD5+ "  "+md5File[1]);
-                            log.level4Debug("New Property Update: "+ prop.getProperty(entry));
                             pos++;
                         }
                         if (md5Changed){

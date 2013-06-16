@@ -103,7 +103,6 @@ class CASUALDeployADB {
                 Log.errorHandler(ex);
             }
             DeviceList = Shell.silentShellCommand(devicesCmd).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
-            Statics.DeviceTracker = DeviceList.split("device");
             if (DeviceList.contains("????????????") || (DeviceList.contains("**************"))) {
             }
         } else {

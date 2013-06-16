@@ -34,6 +34,7 @@ import java.util.logging.Logger;
  * @author adam
  */
 public class CASUALUpdates {
+    public final String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/CASUALcore/src";
 
     /*
      * checks for updates returns: 0=no updates found 1=random error 2=Script
@@ -47,7 +48,7 @@ public class CASUALUpdates {
 
         CASPACData webInformation;
         try {
-            webInformation = new CASPACData(getWebData(Statics.CASUALRepo + script + ".meta"));
+            webInformation = new CASPACData(getWebData(CASUALRepo + script + ".meta"));
         } catch (URISyntaxException ex) {
             return 1;
 
@@ -198,12 +199,12 @@ public class CASUALUpdates {
     private int downloadUpdates(String scriptname, CASPACData webInformation, String localPath) {
         URL url;
         try {
-            url = stringToFormattedURL(Statics.CASUALRepo + scriptname);
+            url = stringToFormattedURL(CASUALRepo + scriptname);
         } catch (MalformedURLException ex) {
-            Log.level4Debug("malformedURL exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo + scriptname);
+            Log.level4Debug("malformedURL exception while CASUALUpdates.downloadUpdates() " + CASUALRepo + scriptname);
             return 1;
         } catch (URISyntaxException ex) {
-            Log.level4Debug("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + Statics.CASUALRepo + scriptname);
+            Log.level4Debug("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + CASUALRepo + scriptname);
             return 1;
         }
         Log.level0Error("Downloading Updates");

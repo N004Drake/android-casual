@@ -76,6 +76,10 @@ public class CASPACHandler {
                     unzip.closeZip();
                     new CASUALTools().rewriteMD5OnCASPAC(new File(pack), this);
                 }
+                unzip = new Unzip(CASPAC);
+                Enumeration zippedFiles = unzip.zipFileEntries;
+                ArrayList md5sfromCASPAC = getMD5sfromCASPAC(pack, getMetaName(zippedFiles));
+                
                 verifyMD5s();
             }
 

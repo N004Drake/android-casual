@@ -59,10 +59,11 @@ public class Shell implements Runnable {
         String[] newCmd;
         if (Statics.isLinux()) {
             //TODO: elevate shell and make static reference to it to have commands passed in
-            // elevate "sh" and pass scripts into it to be executed
-            //If elevated shell exists, use it
-            // else create elevated shell
-            // This solves fastboot issues of having multiple password entries to perform several tasks
+            //      elevate "sh" and pass scripts into it to be executed
+            //      ensure monitoring so that we stop blocking after a certain keyword... like um.. "HOLY-GUACAMOLI-SPELLINGERROR"
+            //      If elevated shell exists, use it
+            //         else create elevated shell
+            //      This solves fastboot issues of having multiple password entries to perform several tasks
             
             boolean useGKSU = true;
             String[] testGKSudo = {"which", "gksudo"};
@@ -122,7 +123,7 @@ public class Shell implements Runnable {
             FileOperations.setExecutableBit(ScriptFile);
             String[] MacCommand = {ScriptFile};
             Result = liveShellCommand(MacCommand, true);
-        } else if (!Statics.OSName.equals("Windows XP")) {
+        } else if (!Statics.OSName().equals("Windows XP")) {
             newCmd = new String[cmd.length + 2];
             newCmd[0] = Statics.WinElevatorInTempFolder;
             newCmd[1] = "-wait";

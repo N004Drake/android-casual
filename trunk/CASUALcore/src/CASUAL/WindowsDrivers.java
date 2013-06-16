@@ -94,7 +94,7 @@ public class WindowsDrivers {
         }
         String[] dList = getDeviceList(VID);
         for(int x = 0; x < dList.length; x++){
-            if(Statics.OSName.contains("Windows XP")) {
+            if(Statics.OSName().contains("Windows XP")) {
                 devconCommand("updateni", Statics.TempFolder + "CADI" + Statics.Slash + "xp" + Statics.Slash + "cadixp.inf", dList[x]);
             } else {
                 devconCommand("updateni", Statics.TempFolder + "CADI" + Statics.Slash + "cadiV78.inf", dList[x]);
@@ -112,7 +112,7 @@ public class WindowsDrivers {
         log.level4Debug("removeDriver() Removing installed devices");
         String[] dList = getDeviceList(VID, PID);
         for(int x = 0; x < dList.length; x++){
-            if(Statics.OSName.contains("Windows XP")) {
+            if(Statics.OSName().contains("Windows XP")) {
                 devconCommand("updateni", Statics.TempFolder + "CADI" + Statics.Slash + "xp" + Statics.Slash + "cadixp.inf", dList[x]);
             } else {
                 devconCommand("updateni", Statics.TempFolder + "CADI" + Statics.Slash + "cadiV78.inf", dList[x]);

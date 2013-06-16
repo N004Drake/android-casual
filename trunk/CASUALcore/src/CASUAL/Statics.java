@@ -57,28 +57,20 @@ public class Statics {
      * 054C Sony
      * 2080 B&N
      */
-    public static String VID = "";
-    public static String PID = "";
-    final public static String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
+
 
     /*
      * miscellanious variables
      */    
-    static Shell shellCommand;
     static Log Log = new Log();
     public static ArrayList<String> LiveSendCommand = new ArrayList<>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by log class
     public static CASUALConnectionStatusMonitor casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
-    public static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
-
-    //web information
-    final public static String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/CASUALcore/src";
     public static CASPACData localInformation;
     public static CASPACData webInformation;
-    final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
-    final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
-    
+    public static ArrayList<String> runnableMD5list = new ArrayList<>();
+
     //Form data
     public static boolean TargetScriptIsResource = true;  //true if resource, false if file
     public static CASUALJFrameMain GUI; //Static reference to GUI input/output device
@@ -90,14 +82,10 @@ public class Statics {
     public static String PreProgress = "";  //place to log data before GUI comes up
     public static StyledDocument ProgressDoc; //anything in here is displayed to GUI. this is main output device.
 
-    public static void initDocument() {
-        ProgressPane.setContentType("text/html");
-        ProgressDoc = ProgressPane.getStyledDocument();
-    }
     //Folders
     public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
     private static String TempF = null; //TempFolder is the actual tempfolder, it's served by getTempFolder
-    final public static String TempFolder = getTempFolder();
+    final public static String TempFolder = (TempF==null)?getTempFolder():TempF;
     private static String getTempFolder() {
 
         if (TempF == null) {
@@ -129,10 +117,8 @@ public class Statics {
         TempF=folder;
         return TempF;
     }
-    public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     //Cross-Platform data storage
     public static String AdbDeployed; //location of ADB after deployment
-    public static String OSName = System.getProperty("os.name"); //windows, linux, mac....
     public static String SelectedScriptFolder;//Used for script locations on disk
     public static String WinElevatorInTempFolder = TempFolder + "Elevate.exe"; //location of elevate.exe after deployed
 
@@ -176,13 +162,18 @@ public class Statics {
     final public static String ADBini = "/CASUAL/resources/ADB/adb_usb.ini";
     final public static String FilesystemAdbIniLocationLinuxMac = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
     final public static String FilesystemAdbIniLocationWindows = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
+    //Windows Visual C++ redist --not always required
+    final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
+    //CADI location by Jeremy Loper
+    final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
+    
+    
     /*
      * Project properties
      */
     public static boolean scriptRunLock = false;
     public static boolean lockGUIformPrep = true;
     public static boolean lockGUIunzip = false;
-    public static ArrayList<String> runnableMD5list = new ArrayList<>();
     /*
      * Determines if Linux, Mac or Windows
      */
@@ -342,7 +333,9 @@ public class Statics {
             Statics.arch = "Linux";
         }
     }
-    
+    public static String OSName(){//windows, linux, mac....
+        return System.getProperty("os.name");
+    } 
     public static void initializeStatics(){
         GUIIsAvailable = false;
         useGUI = false;
@@ -350,12 +343,11 @@ public class Statics {
         currentStatus="working";
         GUIVerboseLevel = 2;
         CommandLineVerboseLevel = 4;
-        shellCommand = null;
+
         LiveSendCommand = new ArrayList<>();
         OutFile=null;
         LogCreated = false;
         casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
-        DeviceTracker=null;
         localInformation=null;
         webInformation=null;
         TargetScriptIsResource = true;  
@@ -364,9 +356,7 @@ public class Statics {
         PreProgress = "";
         ProgressDoc=null;
         TempF = null;
-        CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
         AdbDeployed=null;
-        OSName = System.getProperty("os.name");
         SelectedScriptFolder="";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         scriptRunLock = false;

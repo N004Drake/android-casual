@@ -37,6 +37,9 @@ public class CASUALLanguage {
     String ScriptName;
     private String ScriptTempFolder;
 
+    final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
+
+    
     public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
         this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
@@ -288,21 +291,6 @@ public class CASUALLanguage {
         /*
          * Environmental variables
          */
-        if (line.contains("$VID")) {
-            Pattern vid = Pattern.compile("(?=[$VID])[0-9a-fA-F]{4}");
-            Matcher match = vid.matcher(line);
-            Statics.VID = match.group(0);
-            line = line.replace("$VID" + Statics.VID, "");
-            if(Statics.isWindows())log.level4Debug("VID specified for generic driver install" + Statics.VID);
-        }
-        
-        if (line.contains("$PID")) {
-            Pattern vid = Pattern.compile("(?=[$PID])[0-9a-fA-F]{4}");
-            Matcher match = vid.matcher(line);
-            Statics.PID = match.group(0);
-            line = line.replace("$PID" + Statics.PID, "");
-            if(Statics.isWindows())log.level4Debug("PID specified for generic driver install" + Statics.PID);
-        }
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
             line = line.replace("$SLASH", Statics.Slash);
@@ -339,10 +327,10 @@ public class CASUALLanguage {
         }
 //$HOMEFOLDER will reference the user's home folder on the system        
         if (line.contains("$HOMEFOLDER")) {
-            if (!new FileOperations().verifyExists(Statics.CASUALHome)) {
-                new FileOperations().makeFolder(Statics.CASUALHome);
+            if (!new FileOperations().verifyExists(CASUALHOME)) {
+                new FileOperations().makeFolder(CASUALHOME);
             }
-            line = line.replace("$HOMEFOLDER", Statics.CASUALHome);
+            line = line.replace("$HOMEFOLDER", CASUALHOME);
             log.level4Debug("Expanded $HOMEFOLDER" + line);
         }
 
@@ -645,7 +633,7 @@ public class CASUALLanguage {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         if (Line.startsWith("wait-for")) {
-            log.level2Information("Waiting for ADB device connection.  When " + Statics.OSName + " recognizes the device, we will continue.  Don't touch anything.");
+            log.level2Information("Waiting for ADB device connection.  When " + Statics.OSName() + " recognizes the device, we will continue.  Don't touch anything.");
         }
 
         Shell Shell = new Shell();
@@ -660,27 +648,6 @@ public class CASUALLanguage {
         }
         log.level4Debug("sending");
         if (parseError) {
-            
-            // TODO Windows 8 and XP experience problems at the next line
-            /*Windows 8 log  -- Every time
-             * [ERROR][CRITICAL]Cannot run program "C:\Users\Kirtan\AppData\Local\Temp\KirtanTEMPCASUALFA2EAA6C\adb.exe": CreateProcess error=5, Access is denied
-Cannot run program "C:\Users\Kirtan\AppData\Local\Temp\KirtanTEMPCASUALFA2EAA6C\adb.exe": CreateProcess error=5, Access is denied
-java.io.IOException: Cannot run program "C:\Users\Kirtan\AppData\Local\Temp\KirtanTEMPCASUALFA2EAA6C\adb.exe": CreateProcess error=5, Access is denied
- 
-java.io.IOException: Cannot run program "C:\Users\Kirtan\AppData\Local\Temp\KirtanTEMPCASUALFA2EAA6C\adb.exe": CreateProcess error=5, Access is denied
-        at java.lang.ProcessBuilder.start(Unknown Source)
-        at CASUAL.Shell.liveShellCommand(Shell.java:233)
-        at CASUAL.CASUALLanguage.executeADBCommand(CASUALLanguage.java:645)
-        at CASUAL.CASUALLanguage.doShellCommand(CASUALLanguage.java:614)
-        at CASUAL.CASUALLanguage.commandHandler(CASUALLanguage.java:546)
-        at CASUAL.CASUALLanguage.beginScriptingHandler(CASUALLanguage.java:66)
-        at CASUAL.CASUALScriptParser$1.run(CASUALScriptParser.java:122)
-        at java.lang.Thread.run(Unknown Source)
-Caused by: java.io.IOException: CreateProcess error=5, Access is denied
-        at java.lang.ProcessImpl.create(Native Method)
-        at java.lang.ProcessImpl.<init>(Unknown Source)
-        at java.lang.ProcessImpl.start(Unknown Source)
-        ... 8 more*/
             return Shell.liveShellCommand(StringCommand, true);
         } else {
             return Shell.sendShellCommandIgnoreError(StringCommand);
