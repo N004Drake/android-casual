@@ -1,10 +1,9 @@
-
-CASUAL 400
-Revision 50
-ID VERIZON GNOTE2 UNLOCK
-URL http://xda-developers.com
-Message OMFG  TESTING meta information
-Killswitchmessage this has been killed because I say so
-96e59ab98dc651b6d4b41e4dbca25fe9  TestScript.scr
-414ac6d725a4048c591f1aeefdc48591  TestScript.zip
-45f8b252c6872be9ba3c3f462559ec87  TestScript.txt
+CASUAL.minSVN=400
+Script.Revision=50
+Script.ID=VERIZON GNOTE2 UNLOCK
+Script.SupportURL=http://xda-developers.com
+Script.UpdateMessage=OMFG  TESTING meta information
+Script.KillSwitchMessage=this has been killed because I say so
+Script.MD5[0]=96e59ab98dc651b6d4b41e4dbca25fe9  TestScript.scr
+Script.MD5[1]=414ac6d725a4048c591f1aeefdc48591  TestScript.zip
+Script.MD5[2]=45f8b252c6872be9ba3c3f462559ec87  TestScript.txt
