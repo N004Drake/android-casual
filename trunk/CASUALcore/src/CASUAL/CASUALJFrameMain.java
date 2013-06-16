@@ -18,6 +18,8 @@ package CASUAL;
 
 import java.awt.Toolkit;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -92,13 +94,21 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             setWindowBannerText(CASUALapplicationData.bannerText);
         }
         Statics.lockGUIformPrep = false;
-        if (Statics.dumbTerminalGUI) {
-            setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        }
+
+       setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+       addWindowListener( new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                
+               CASUALApp.shutdown(0);
+                    }
+                } );
+        
         if (!CASUALapplicationData.AlwaysEnableControls){
             enableControls(true);
         }
         Statics.GUIIsAvailable=true;
+        
 
     }
 
@@ -136,7 +146,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         FileChooser1.setDialogTitle("Select a CASUAL \"scr\" file");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -148,12 +158,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         comboBoxScriptSelector.setEnabled(false);
         comboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
 
@@ -301,7 +311,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -324,10 +334,10 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
         enableControls(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
+        
+        //this belongs here because GUI is the only provision for opening a file from disk. 
         String diskLocation;
         diskLocation = Statics.getScriptLocationOnDisk(script);
-
-
         log.level4Debug("disk location for script resources " + diskLocation);
         //check for updates
         if (!(diskLocation.length() == 0)) {
@@ -616,5 +626,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     public void setWindowBannerImage(String icon, String text) {
         windowBanner.setIcon(new ImageIcon(getClass().getResource(icon), ""));
 
+    }
+    public void windowCosing(WindowEvent e) {
+        CASUALApp.shutdown(0);
     }
 }

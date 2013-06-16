@@ -56,15 +56,15 @@ public class CASUALUpdates {
             return 1;
         }
         Log.level4Debug("***WEB VERSION***\nIDString:" + webInformation.uniqueIdentifier + "\nSVNRevision:" + webInformation.minSVNRevision + "\nScriptRevision:" + webInformation.scriptRevision + "\nsupportURL:" + webInformation.supportURL + "updateMessage" + webInformation.updateMessage);
-
+        Statics.webInformation=webInformation;
         try {
         if (localInformation.uniqueIdentifier.equals(webInformation.uniqueIdentifier)) {
-            if (checkVersionInformation(webInformation.minSVNRevision, localInformation.minSVNRevision)) {
+            if (! webInformation.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(localInformation.minSVNRevision))){
                 //update SVN
                 Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.supportURL + " for more information. ");
                 //Log.level0(webInformation[4]);
                 return 3;
-            }
+            } 
             if (checkVersionInformation(webInformation.scriptRevision, localInformation.scriptRevision)) {
                 Log.level0Error("Current Version " + localInformation.scriptRevision + " requires update to version " + webInformation.scriptRevision);
                 Log.level0Error("Script is out of date. See " + webInformation.supportURL + " for more information.  Updating.");

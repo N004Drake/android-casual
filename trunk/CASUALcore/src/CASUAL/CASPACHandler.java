@@ -68,7 +68,9 @@ public class CASPACHandler {
             }
             if (cd != null) {
                 new Log().level3Verbose("Verifying CASPAC metainfo and MD5s");
-                cd.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")));
+                if (! cd.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")))){
+                    return;
+                }
 
                 if (new CASUALTools().getIDEMode()) {
                     unzip.closeZip();
