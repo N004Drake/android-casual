@@ -1,5 +1,6 @@
-CASUAL 459
-Revision 1
-ID VERIZONGNOTE10.1UNLOCK
-URL 
-Message UPDATE: Initial release
+CASUAL.minSVN=459
+Script.Revision=1
+Script.ID=VERIZONGNOTE10.1UNLOCK
+Script.SupportURL=
+Script.UpdateMessage=UPDATE: Initial release
+Script.KillSwitchMessage=
