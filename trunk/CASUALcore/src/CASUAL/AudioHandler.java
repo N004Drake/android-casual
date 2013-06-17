@@ -36,7 +36,7 @@ public class AudioHandler {
      * playSound plays sounds
      */
     public static synchronized void playSound(final String URL) {
-        Thread t= new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
+        Thread t = new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override
             public void run() {
                 if (CASUALapplicationData.useSound) {

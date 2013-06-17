@@ -28,7 +28,7 @@ public class JavaSystem {
 
     public static void restart(String[] args) throws IOException, InterruptedException {
         StringBuilder cmd = new StringBuilder();
-        
+
         cmd.append("\"").append(System.getProperty("java.home")).append(File.separator).append("bin").append(File.separator).append("java").append("\"").append(" ");
         for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
             cmd.append("\"").append(jvmArg).append("\"").append(" ");

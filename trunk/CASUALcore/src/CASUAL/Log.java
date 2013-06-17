@@ -154,22 +154,21 @@ public class Log {
             out.println("Attempted to write to log but could not.");
             return;
         }
+        try (PrintWriter output = new PrintWriter(WriteFile)) {
+            output.write(data + "\n");
 
-        PrintWriter out = new PrintWriter(WriteFile);
-        out.write(data + "\n");
-
-        Statics.OutFile = out;
-        if (Statics.OutFile != null) {
-            Statics.LogCreated = true;
+            Statics.OutFile = output;
+            if (Statics.OutFile != null) {
+                Statics.LogCreated = true;
+            }
         }
-        out.close();
     }
     private static String progressBuffer = "";
     int lastNewLine = 100;
 
     public void progress(String data) {
         progressBuffer = progressBuffer + data;
-        if (Statics.useGUI && Statics.ProgressDoc!=null) {
+        if (Statics.useGUI && Statics.ProgressDoc != null) {
             try {
 
                 if (data.contains("\b")) {
@@ -188,9 +187,9 @@ public class Log {
                 level0Error(data + e.toString());
             }
             if (data.contains("\n")) {
-                writeToLogFile(progressBuffer.replace("\n",""));
+                writeToLogFile(progressBuffer.replace("\n", ""));
                 progressBuffer = "";
-                lastNewLine = Statics.ProgressPane.getCaretPosition()-1;
+                lastNewLine = Statics.ProgressPane.getCaretPosition() - 1;
             }
         } else {
             out.print(data);
@@ -248,6 +247,6 @@ public class Log {
     }
 
     void initialize() {
-        out=new PrintStream(System.out);
+        out = new PrintStream(System.out);
     }
 }

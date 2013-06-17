@@ -34,6 +34,7 @@ import java.util.logging.Logger;
  * @author adam
  */
 public class CASUALUpdates {
+
     public final String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/CASUALcore/src";
 
     /*
@@ -57,32 +58,32 @@ public class CASUALUpdates {
             return 1;
         }
         Log.level4Debug("***WEB VERSION***\nIDString:" + webInformation.uniqueIdentifier + "\nSVNRevision:" + webInformation.minSVNRevision + "\nScriptRevision:" + webInformation.scriptRevision + "\nsupportURL:" + webInformation.supportURL + "updateMessage" + webInformation.updateMessage);
-        Statics.webInformation=webInformation;
+        Statics.webInformation = webInformation;
         try {
-        if (localInformation.uniqueIdentifier.equals(webInformation.uniqueIdentifier)) {
-            if (! webInformation.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(localInformation.minSVNRevision))){
-                //update SVN
-                Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.supportURL + " for more information. ");
-                //Log.level0(webInformation[4]);
-                return 3;
-            } 
-            if (checkVersionInformation(webInformation.scriptRevision, localInformation.scriptRevision)) {
-                Log.level0Error("Current Version " + localInformation.scriptRevision + " requires update to version " + webInformation.scriptRevision);
-                Log.level0Error("Script is out of date. See " + webInformation.supportURL + " for more information.  Updating.");
-                Log.level0Error(webInformation.updateMessage);
-                //ugly code dealing with /SCRIPTS/ folder on computer.
-                new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
-                int status = downloadUpdates(script, webInformation, Statics.TempFolder);
-                if (status == 0) {
-                    Log.level0Error("... Update Sucessful! MD5s verified!");
-                    return 2;
-                } else {
-                    return 4;
+            if (localInformation.uniqueIdentifier.equals(webInformation.uniqueIdentifier)) {
+                if (!webInformation.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(localInformation.minSVNRevision))) {
+                    //update SVN
+                    Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.supportURL + " for more information. ");
+                    //Log.level0(webInformation[4]);
+                    return 3;
+                }
+                if (checkVersionInformation(webInformation.scriptRevision, localInformation.scriptRevision)) {
+                    Log.level0Error("Current Version " + localInformation.scriptRevision + " requires update to version " + webInformation.scriptRevision);
+                    Log.level0Error("Script is out of date. See " + webInformation.supportURL + " for more information.  Updating.");
+                    Log.level0Error(webInformation.updateMessage);
+                    //ugly code dealing with /SCRIPTS/ folder on computer.
+                    new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
+                    int status = downloadUpdates(script, webInformation, Statics.TempFolder);
+                    if (status == 0) {
+                        Log.level0Error("... Update Sucessful! MD5s verified!");
+                        return 2;
+                    } else {
+                        return 4;
+                    }
                 }
             }
-        }
-        return 0;
-        } catch (NullPointerException ex){
+            return 0;
+        } catch (NullPointerException ex) {
             Log.level0Error("there was a problem with the online metadata.  please inform the developer");
             return 0;
         }
@@ -172,20 +173,21 @@ public class CASUALUpdates {
 
     private String getWebData(String script) throws MalformedURLException, IOException, URISyntaxException {
         URL url = stringToFormattedURL(script);
-        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        ByteBuffer buf = ByteBuffer.allocateDirect(10);
-        String webData = "";
-        int numRead = 0;
-        while (numRead >= 0) {
-            buf.rewind();
-            numRead = rbc.read(buf);
-            buf.rewind();
-            for (int i = 0; i < numRead; i++) {
-                byte b = buf.get();
-                webData = webData + (new String(new byte[]{b}));
+        String webData;
+        try (ReadableByteChannel rbc = Channels.newChannel(url.openStream())) {
+            ByteBuffer buf = ByteBuffer.allocateDirect(10);
+            webData = "";
+            int numRead = 0;
+            while (numRead >= 0) {
+                buf.rewind();
+                numRead = rbc.read(buf);
+                buf.rewind();
+                for (int i = 0; i < numRead; i++) {
+                    byte b = buf.get();
+                    webData = webData + (new String(new byte[]{b}));
+                }
             }
         }
-        rbc.close();
         return webData;
     }
 
@@ -219,19 +221,19 @@ public class CASUALUpdates {
 
                 try {
                     String[] md5 = md5lines[n].split("  ");
-                    if (md5.length==2){
-                    String fileName = md5[1];
-                    ext = "." + fileName.split("\\.")[1];
-                    if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
-                        list.add(Statics.TempFolder + scriptname + ext);
-                    }
+                    if (md5.length == 2) {
+                        String fileName = md5[1];
+                        ext = "." + fileName.split("\\.")[1];
+                        if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
+                            list.add(Statics.TempFolder + scriptname + ext);
+                        }
                     }
                 } catch (ArrayIndexOutOfBoundsException ex) {
                     Log.level0Error("Invalid MD5 string");
-                    continue; 
+                    continue;
                 } catch (NullPointerException ex) {
                     Log.level0Error("invalid MD5 string");
-                    continue; 
+                    continue;
                 }
 
 
@@ -262,11 +264,11 @@ public class CASUALUpdates {
         system = Statics.isWindows() ? "win" : system;
         system = Statics.isLinux() ? "linux" : system;
         system = Statics.isMac() ? "mac" : system;
-        Log.level3Verbose("Found "+system+" "+ arch +"computer");
+        Log.level3Verbose("Found " + system + " " + arch + "computer");
         String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
         //download location, md5, and version information
         downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.TempFolder + basename, "locating files");
-        Log.level3Verbose("downloaded"+ propertiesFileInCASUALOnlineRepo);
+        Log.level3Verbose("downloaded" + propertiesFileInCASUALOnlineRepo);
         //Set properties file
         Properties prop = new Properties();
         prop.load(new FileInputStream(Statics.TempFolder + basename));
@@ -284,7 +286,7 @@ public class CASUALUpdates {
          */
         while (prop.getProperty(system + arch + filenumber) != null) {
             String downloadURL = prop.getProperty(system + arch + filenumber);
-            Log.level3Verbose("based on information, we need to download: "+downloadURL);
+            Log.level3Verbose("based on information, we need to download: " + downloadURL);
 
             String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/') + 1, downloadURL.length());
             String availableVersion = prop.getProperty(system + arch + filenumber + "Version");
@@ -300,7 +302,7 @@ public class CASUALUpdates {
                 //if MD5 does not match
                 if (!new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)) {
                     //show message and exit
-                    new CASUALInteraction( "ERROR!","During update a bad file was downlaoded.\n"
+                    new CASUALInteraction("ERROR!", "During update a bad file was downlaoded.\n"
                             + "Please check your internet connection and try again.\n"
                             + "If the problem persists, report it.\n"
                             + "CASUAL will now exit.  Please try again.").showErrorDialog();

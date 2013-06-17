@@ -64,7 +64,7 @@ public class Shell implements Runnable {
             //      If elevated shell exists, use it
             //         else create elevated shell
             //      This solves fastboot issues of having multiple password entries to perform several tasks
-            
+
             boolean useGKSU = true;
             String[] testGKSudo = {"which", "gksudo"};
             String testReturn = Shell.silentShellCommand(testGKSudo);
@@ -73,7 +73,7 @@ public class Shell implements Runnable {
                 String[] testPKexec = {"which", "pkexec"};
                 testReturn = Shell.silentShellCommand(testPKexec);
                 if ((testReturn.contains("CritERROR!!!") || (testReturn.equals("\n") || (testReturn.equals(""))))) {
-                    new CASUALInteraction("PERMISSIONS NOT FOUND","Please install package 'gksu' or 'pkexec' " ).showTimeoutDialog(60, null,  CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
+                    new CASUALInteraction("PERMISSIONS NOT FOUND", "Please install package 'gksu' or 'pkexec' ").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
                 }
             }
 
@@ -81,13 +81,13 @@ public class Shell implements Runnable {
             String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
             FileOperations.deleteFile(ScriptFile);
             try {
-                FileOperations.writeToFile("#!/bin/sh\n"+Command, ScriptFile);
+                FileOperations.writeToFile("#!/bin/sh\n" + Command, ScriptFile);
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
             log.level4Debug("###Elevating Command: " + Command + " ###");
-            Result="";
+            Result = "";
             if (useGKSU) {
                 if (message == null) {
                     Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
@@ -102,7 +102,7 @@ public class Shell implements Runnable {
                     i++;
                     if (Result.contains("Error executing command as another user:") && i >= 3) {
                         log.level2Information("Failed password 3 times, attempting with normal permissions");
-                        Result=Shell.liveShellCommand(new String[]{ScriptFile}, true);
+                        Result = Shell.liveShellCommand(new String[]{ScriptFile}, true);
                         break;
                     }
                 }
@@ -153,10 +153,10 @@ public class Shell implements Runnable {
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             try {
-             process.waitFor();
-             } catch (InterruptedException ex) {
-             log.errorHandler(ex);
-             }
+                process.waitFor();
+            } catch (InterruptedException ex) {
+                log.errorHandler(ex);
+            }
             //log.level3Verbose(STDOUT.readLine());
             int y = 0;
             while ((line = STDOUT.readLine()) != null) {
@@ -236,18 +236,6 @@ public class Shell implements Runnable {
         }
         log.level4Debug("arrayToString " + stringarray + " expanded to: " + str);
         return str;
-    }
-
-    private boolean testForException(Process process) {
-
-        if (process.exitValue() >= 0) {
-
-            return false;
-        } else {
-            return true;
-        }
-
-
     }
 
     public String liveShellCommand(String[] params, boolean display) {

@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -30,16 +29,16 @@ import java.util.logging.Logger;
  */
 public class CASPACData {
 
-    public String minSVNRevision="0";
-    public String scriptRevision="0";
-    public String uniqueIdentifier="0";
-    public String supportURL="";
-    public String updateMessage="";
+    public String minSVNRevision = "0";
+    public String scriptRevision = "0";
+    public String uniqueIdentifier = "0";
+    public String supportURL = "";
+    public String updateMessage = "";
     public ArrayList<String> md5s = new ArrayList<>();
-
     Properties prop;
+
     CASPACData(String propString) {
-        prop= load(propString);
+        prop = load(propString);
         setValues();
     }
 
@@ -49,33 +48,37 @@ public class CASPACData {
         uniqueIdentifier = prop.getProperty("Script.ID");
         supportURL = prop.getProperty("Script.SupportURL");
         updateMessage = prop.getProperty("Script.UpdateMessage");
-        int md5ArrayPosition=0;
-        System.out.print("Script.MD5["+md5ArrayPosition+"]");
+        int md5ArrayPosition = 0;
+        System.out.print("Script.MD5[" + md5ArrayPosition + "]");
         String md5;
-        while ((md5=prop.getProperty("Script.MD5["+md5ArrayPosition+"]"))!=null){
+        while ((md5 = prop.getProperty("Script.MD5[" + md5ArrayPosition + "]")) != null) {
             md5s.add(md5);
             md5ArrayPosition++;
         }
     }
 
-    /**Gets the SVN revision
+    /**
+     * Gets the SVN revision
      *
      * @return SVN representation of the SVN revision
      */
-    public static String getSVNRevision(){
+    public static String getSVNRevision() {
         return java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
     }
-    
-    /** Checks to verify that SVN revision is high enough to run this script
-     * isOurSVNHighEnoughToRunThisScript 
-     * @param scriptVersion is the MINSVN required from the script attempting to load
-     * @return True if SVN is greater than required by script. 
+
+    /**
+     * Checks to verify that SVN revision is high enough to run this script
+     * isOurSVNHighEnoughToRunThisScript
+     *
+     * @param scriptVersion is the MINSVN required from the script attempting to
+     * load
+     * @return True if SVN is greater than required by script.
      */
-    public boolean isOurSVNHighEnoughToRunThisScript(int scriptVersion){
+    public boolean isOurSVNHighEnoughToRunThisScript(int scriptVersion) {
         int mySVNVersion = Integer.parseInt(getSVNRevision());
-        new Log().level3Verbose("Checking my revision:" +mySVNVersion +" against Script:"+scriptVersion +" to verify we are compatible to run.");
-        if (mySVNVersion < scriptVersion){
-            new Log().level0Error("Improper version detected CASUAL cannot continue\n CASUAL Revison " + mySVNVersion + " is not new enough to run\nthis script which requires Revision "+scriptVersion );
+        new Log().level3Verbose("Checking my revision:" + mySVNVersion + " against Script:" + scriptVersion + " to verify we are compatible to run.");
+        if (mySVNVersion < scriptVersion) {
+            new Log().level0Error("Improper version detected CASUAL cannot continue\n CASUAL Revison " + mySVNVersion + " is not new enough to run\nthis script which requires Revision " + scriptVersion);
             return false;
         } else {
             new Log().level3Verbose("Revision check passed.");
@@ -84,7 +87,9 @@ public class CASPACData {
 
     }
 
-    /** loads properties from a string 
+    /**
+     * loads properties from a string
+     *
      * @param propertiesString string containing properties
      * @return Properties object
      */

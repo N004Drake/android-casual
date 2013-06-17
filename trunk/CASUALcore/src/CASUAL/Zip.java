@@ -68,19 +68,19 @@ public class Zip {
     public static void addFilesToExistingZip(File zipFile, File[] files) throws IOException {
         byte[] buf = new byte[4096];
 
- 
+
         // get a temp file
         File tempFile = File.createTempFile(zipFile.getName(), null);
         // delete it, otherwise you cannot rename your existing zip to it.
         tempFile.delete();
         //try rename
         boolean renameOk = zipFile.renameTo(tempFile);
-        boolean copyOk=false;
+        boolean copyOk = false;
         //if rename fails, make copy
-        
+
         if (!renameOk) {
-           tempFile.delete();
-           tempFile.createNewFile();
+            tempFile.delete();
+            tempFile.createNewFile();
             FileOutputStream out;
             try (FileInputStream in = new FileInputStream(zipFile)) {
                 out = new FileOutputStream(tempFile);
@@ -90,11 +90,11 @@ public class Zip {
                 }
             }
             out.close();
-            copyOk=true;
+            copyOk = true;
         }
         if (!renameOk) {
-            if (!copyOk){
-            throw new RuntimeException("could not rename or copy the file " + zipFile.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
+            if (!copyOk) {
+                throw new RuntimeException("could not rename or copy the file " + zipFile.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
             }
         }
         ZipOutputStream out;
@@ -139,7 +139,7 @@ public class Zip {
         out.close();
         tempFile.delete();
     }
-    
+
     public void addFilesToNewZip(String newZip, String ToBeZipped) throws Exception {
         File directory = new File(ToBeZipped);
         URI base = directory.toURI();
@@ -148,54 +148,51 @@ public class Zip {
         OutputStream out = new FileOutputStream(newZip);
         Closeable res = out;
         try {
-          ZipOutputStream zout = new ZipOutputStream(out);
-          res = zout;
-          while (!queue.isEmpty()) {
-            directory = queue.pop();
-            for (File kid : directory.listFiles()) {
-              String name = base.relativize(kid.toURI()).getPath();
-              if (kid.isDirectory()) {
-                queue.push(kid);
-                name = name.endsWith("/") ? name : name + "/";
-                zout.putNextEntry(new ZipEntry(name));
-              } else {
-                zout.putNextEntry(new ZipEntry(name));
-                copy(kid, zout);
-                zout.closeEntry();
-              }
+            ZipOutputStream zout = new ZipOutputStream(out);
+            res = zout;
+            while (!queue.isEmpty()) {
+                directory = queue.pop();
+                for (File kid : directory.listFiles()) {
+                    String name = base.relativize(kid.toURI()).getPath();
+                    if (kid.isDirectory()) {
+                        queue.push(kid);
+                        name = name.endsWith("/") ? name : name + "/";
+                        zout.putNextEntry(new ZipEntry(name));
+                    } else {
+                        zout.putNextEntry(new ZipEntry(name));
+                        copy(kid, zout);
+                        zout.closeEntry();
+                    }
+                }
             }
-          }
         } finally {
-          res.close();
-        }
-    }
-    
-    private static void copy(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        while (true) {
-          int readCount = in.read(buffer);
-          if (readCount < 0) {
-            break;
-          }
-          out.write(buffer, 0, readCount);
+            out.close();
+            res.close();
         }
     }
 
+    private static void copy(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        while (true) {
+            int readCount = in.read(buffer);
+            if (readCount < 0) {
+                break;
+            }
+            out.write(buffer, 0, readCount);
+        }
+        in.close();
+        out.close();
+    }
+
     private static void copy(File file, OutputStream out) throws IOException {
-        InputStream in = new FileInputStream(file);
-        try {
-          copy(in, out);
-        } finally {
-          in.close();
+        try (InputStream in = new FileInputStream(file)) {
+            copy(in, out);
         }
     }
 
     private static void copy(InputStream in, File file) throws IOException {
-        OutputStream out = new FileOutputStream(file);
-        try {
-          copy(in, out);
-        } finally {
-          out.close();
+        try (OutputStream out = new FileOutputStream(file)) {
+            copy(in, out);
         }
     }
 }

@@ -78,11 +78,11 @@ public class StringOperations {
 
     /**
      * Returns an array of Strings from a source String.
-     * 
-     * @param String contains comma delimited collection
-     * of strings each surrounded by quotations.
-     * 
-     * @author  Jeremy Loper    jrloper@gmail.com
+     *
+     * @param String contains comma delimited collection of strings each
+     * surrounded by quotations.
+     *
+     * @author Jeremy Loper jrloper@gmail.com
      */
     public static String[] convertStringToArray(String inputString) { //TODO - Use in HeimdallTools Error String Loading
         StringOperations.removeLeadingAndTrailingSpaces(inputString);
@@ -90,7 +90,7 @@ public class StringOperations {
         int currentQuotePosition = 0;
         int lastQuotePosition = 0;
 
-        for (int i=0; i <= inputString.length(); i++, currentQuotePosition = inputString.indexOf("\",", currentQuotePosition)) {
+        for (int i = 0; i <= inputString.length(); i++, currentQuotePosition = inputString.indexOf("\",", currentQuotePosition)) {
             if (inputString.length() != currentQuotePosition) {
                 outputArray[i] = inputString.substring(lastQuotePosition, (currentQuotePosition - 1));
                 lastQuotePosition = currentQuotePosition++;

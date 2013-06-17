@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -25,8 +24,6 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -36,10 +33,8 @@ public class CASUALLanguage {
 
     String ScriptName;
     private String ScriptTempFolder;
-
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
 
-    
     public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
         this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
@@ -73,9 +68,9 @@ public class CASUALLanguage {
             //Close the input stream
             dataIn.close();
             /*if(WindowsDrivers.driverRemoveOnDone) {
-                log.level2Information("Removing generic USB driver as requested");
-                WindowsDrivers.removeDriver();
-            }*/
+             log.level2Information("Removing generic USB driver as requested");
+             WindowsDrivers.removeDriver();
+             }*/
             log.level2Information("done");
         } catch (Exception e) {//Catch exception if any
             log.errorHandler(e);
@@ -244,8 +239,8 @@ public class CASUALLanguage {
 
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList<String>();
-            Statics.ReactionEvents = new ArrayList<String>();
+            Statics.ActionEvents = new ArrayList<>();
+            Statics.ReactionEvents = new ArrayList<>();
             log.level4Debug("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return "";
         }
@@ -299,16 +294,16 @@ public class CASUALLanguage {
 //$ZIPFILE is a reference to the Script's .zip file
         if (line.contains("$ZIPFILE")) {
             //break commandline into an array of arguments
-            String[] arguments=StringOperations.convertArrayListToStringArray(new ShellTools().parseCommandLine(line));
-            for (String arg : arguments){ //parse
+            String[] arguments = StringOperations.convertArrayListToStringArray(new ShellTools().parseCommandLine(line));
+            for (String arg : arguments) { //parse
                 //if arg contains zipfile and is not merged with another parameter
-                if (arg.contains("$ZIPFILE") && (! arg.startsWith("-") && (!arg.contains("=")))){ 
+                if (arg.contains("$ZIPFILE") && (!arg.startsWith("-") && (!arg.contains("=")))) {
                     //repalce to make it a file and strip off " and '
-                    arg=arg.replace("$ZIPFILE", ScriptTempFolder).replace("'", "").replace("\"", "");
-                    if (new FileOperations().verifyExists(arg)){ //exists
-                        log.level3Verbose("verified "+arg+ " exists");
+                    arg = arg.replace("$ZIPFILE", ScriptTempFolder).replace("'", "").replace("\"", "");
+                    if (new FileOperations().verifyExists(arg)) { //exists
+                        log.level3Verbose("verified " + arg + " exists");
                     } else { //file not exists
-                        int n=new CASUALInteraction("Missing File","It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL").showUserCancelOption();
+                        int n = new CASUALInteraction("Missing File", "It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL").showUserCancelOption();
                         if (n == 0) {
                             log.level0Error(ScriptName + " canceled at user request due to comprimised packages");
                             CASUALScriptParser.ScriptContinue = false;
@@ -317,7 +312,7 @@ public class CASUALLanguage {
                     }
                 }
             }
-            
+
             line = line.replace("$ZIPFILE", ScriptTempFolder);
             log.level4Debug("Expanded $ZIPFILE: " + line);
         }
@@ -511,7 +506,7 @@ public class CASUALLanguage {
             line = line.replace("$HEIMDALL", "");
             line = StringOperations.removeLeadingSpaces(line);
             log.level4Debug("Received Command: " + line);
-            log.level4Debug("verifying Heimdall deployment.");
+            log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
             if (Statics.checkAndDeployHeimdall()) {
                 new HeimdallTools("").doHeimdallWaitForDevice();
                 /* if (Statics.isLinux()) {   //Is this needed?
@@ -584,9 +579,9 @@ public class CASUALLanguage {
         } else if (line.startsWith("$IFNOTCONTAINS")) {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFNOTCONTAINS", ""));
         }
-        String[] checkValueSplit = line.split("\\$INCOMMAND",2);
+        String[] checkValueSplit = line.split("\\$INCOMMAND", 2);
         String checkValue = StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line)); //value to check
-        String[] commandSplit = checkValueSplit[1].split("\\$DO",2);
+        String[] commandSplit = checkValueSplit[1].split("\\$DO", 2);
         String command = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);//command to check
         String casualCommand = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);// command to execute if true
         if (command.startsWith("$ADB")) {
@@ -596,33 +591,17 @@ public class CASUALLanguage {
         log.level4Debug("requesting " + command);
         String returnValue = new CASUALScriptParser().executeOneShotCommand(command);
         log.level4Debug("got " + returnValue);
-        String cmdValue="";
-        if ((returnValue.contains(checkValue) == ifContains)) {
-           cmdValue= cmdValue+new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
+        String retValue = "";
+        if (returnValue.contains(checkValue) == ifContains) {
+            retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
         }
-        return cmdValue;
-    }
-    static String cmdValue="";
-    private void sleepForOneSecond() {
-        try {
-            Thread.sleep(1000);
-            log.progress(".");
-        } catch (InterruptedException ex) {
-            log.errorHandler(ex);
-        }
-    }
-
-    private String doShellCommandWithReturnIgnoreError(String Line, String ReplaceThis, String WithThis) {
-        return executeADBCommand(Line, ReplaceThis, WithThis, false);
+        return retValue;
     }
 
     private String doShellCommand(String Line, String ReplaceThis, String WithThis) {
         return executeADBCommand(Line, ReplaceThis, WithThis, true);
     }
 
-    private String doShellCommandWithReturn(String Line, String ReplaceThis, String WithThis) {
-        return executeADBCommand(Line, ReplaceThis, WithThis, true);
-    }
 
     /*
      * doShellCommand is the point where the shell is activated ReplaceThis
@@ -637,10 +616,10 @@ public class CASUALLanguage {
         }
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<String>();
+        ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.AdbDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(Line));
-        String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
+        String StringCommand[] = StringOperations.convertArrayListToStringArray(ShellCommand);
         if (ReplaceThis != null) {
             for (int i = 0; i < StringCommand.length; i++) {
                 StringCommand[i] = StringCommand[i].replace(ReplaceThis, WithThis);

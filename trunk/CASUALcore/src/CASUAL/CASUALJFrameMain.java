@@ -16,16 +16,10 @@
  */
 package CASUAL;
 
-import static CASUAL.Statics.ProgressDoc;
-import static CASUAL.Statics.ProgressPane;
-import java.awt.Toolkit;
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
@@ -93,20 +87,20 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         }
         Statics.lockGUIformPrep = false;
 
-       setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-       addWindowListener( new WindowAdapter() {
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
-                
-               CASUALApp.shutdown(0);
-                    }
-                } );
-        
-        if (!CASUALapplicationData.AlwaysEnableControls){
+
+                CASUALApp.shutdown(0);
+            }
+        });
+
+        if (!CASUALapplicationData.AlwaysEnableControls) {
             enableControls(true);
         }
-        Statics.GUIIsAvailable=true;
-        
+        Statics.GUIIsAvailable = true;
+
 
     }
 
@@ -332,7 +326,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
         enableControls(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
-        
+
         //this belongs here because GUI is the only provision for opening a file from disk. 
         String diskLocation;
         diskLocation = Statics.getScriptLocationOnDisk(script);
@@ -388,7 +382,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 Statics.SelectedScriptFolder = Statics.TempFolder + new File(nonResourceFileName).getName() + Statics.Slash;
                 log.level0Error("Delete this debug line in MenuItemOpenScriptActionPerformed()");
                 if (new FileOperations().verifyFileExists(nonResourceFileName.toString() + ".zip")) {
-                    Unzip.unzipFile(nonResourceFileName.toString() + ".zip", Statics.SelectedScriptFolder);
+                    new Unzip(nonResourceFileName.toString() + ".zip").unzipFile(Statics.SelectedScriptFolder);
                 }
                 Statics.ScriptLocation = Statics.SelectedScriptFolder;
                 comboBoxScriptSelector.setEditable(true);
@@ -417,11 +411,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
         setWindowBannerImage("SCRIPTS/" + CASUALapplicationData.bannerPic, CASUALapplicationData.bannerText);
-        int DResult = new CASUALInteraction("Donate to the developers","This application was developed by " + CASUALapplicationData.developerName + " using CASUAL framework.\n"
+        int DResult = new CASUALInteraction("Donate to the developers", "This application was developed by " + CASUALapplicationData.developerName + " using CASUAL framework.\n"
                 + "Donations give developers a tangeble reason to continue quality software development\n").showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
-                 //DisplayTitle
+                //DisplayTitle
                 CASUALInteraction.OK_OPTION, // Options buttons
                 CASUALInteraction.INFORMATION_MESSAGE, //Icon
                 new String[]{"Donate To CASUAL", "Donate To " + CASUALapplicationData.DontateButtonText}, // option buttons
@@ -578,41 +572,43 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         this.StatusLabel.setText(text);
     }
 
-    
-    public boolean getControlStatus(){
+    public boolean getControlStatus() {
         return (startButton.isEnabled() && comboBoxScriptSelector.isEnabled());
     }
+
     public boolean enableControls(boolean status) {
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
-        boolean bypassLock= CASUALapplicationData.AlwaysEnableControls;
-        if ( bypassLock ) {
-            status=true; //if LockOnADBDisconnect is false then just enable controls
+        boolean bypassLock = CASUALapplicationData.AlwaysEnableControls;
+        if (bypassLock) {
+            status = true; //if LockOnADBDisconnect is false then just enable controls
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
             return true;
         }
-        if  (!Statics.lockGUIformPrep && !Statics.lockGUIunzip && !Statics.scriptRunLock) {
+        if (!Statics.lockGUIformPrep && !Statics.lockGUIunzip && !Statics.scriptRunLock) {
             startButton.setEnabled(status);
             comboBoxScriptSelector.setEnabled(status);
             log.level4Debug("Controls Enabled status: " + status);
         } else {
             log.level4Debug("Control Change requested but Statics.MasterLock is set.");
         }
-        return (checkGUIStatus(status)) ? true: false;
+        return (checkGUIStatus(status)) ? true : false;
     }
-    private boolean checkGUIStatus(boolean expectedStatus){
-        if (Statics.GUIIsAvailable) { 
-            if (expectedStatus == Statics.GUI.getControlStatus()){
+
+    private boolean checkGUIStatus(boolean expectedStatus) {
+        if (Statics.GUIIsAvailable) {
+            if (expectedStatus == Statics.GUI.getControlStatus()) {
                 return true; //expected true = actually true;
             } else {
-                return false; 
+                return false;
             }
         } else if (Statics.useGUI) {  //if gui is not available yet
-            return false; 
+            return false;
         }
         return true; //gui is not used for this CASUAL.
-        
+
     }
+
     public void setWindowBannerText(String text) {
         windowBanner.setText(text);
     }
@@ -625,6 +621,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         windowBanner.setIcon(new ImageIcon(getClass().getResource(icon), ""));
 
     }
+
     public void windowCosing(WindowEvent e) {
         CASUALApp.shutdown(0);
     }

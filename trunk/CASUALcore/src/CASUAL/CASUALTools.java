@@ -48,11 +48,10 @@ public class CASUALTools {
     public static boolean IDEMode = false;
     Log log = new Log();
 
-
-    
-    /**listScripts scans the CASUAL for scripts
-     * -results are stored in Statics.scriptNames
-     * -In IDE mode an MD5 refresh is triggered
+    /**
+     * listScripts scans the CASUAL for scripts -results are stored in
+     * Statics.scriptNames -In IDE mode an MD5 refresh is triggered
+     *
      * @throws IOException
      */
     public void listScripts() throws IOException {
@@ -82,9 +81,9 @@ public class CASUALTools {
                 }
 
                 if (Count == 0) {
-                    Thread t = new Thread(updateMD5s);
-                    t.setName("Updating MD5s");
-                    t.start();
+                    Thread update = new Thread(updateMD5s);
+                    update.setName("Updating MD5s");
+                    update.start();
                     log.level0Error("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
                     //Statics.scriptLocations = new String[]{""};
                     Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
@@ -94,58 +93,60 @@ public class CASUALTools {
         }
     }
 
-    /**md5sumTestScript
-     * Refreshes the MD5s on the scripts in the /SCRIPTS folder
+    /**
+     * md5sumTestScript Refreshes the MD5s on the scripts in the /SCRIPTS folder
      */
     private void md5sumTestScripts() {
         Statics.setStatus("Setting MD5s");
         log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
         incrementBuildNumber();
-        
+
         if (getIDEMode()) { //if we are in development mode
             //Set up scripts path
             String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "SCRIPTS" + Statics.Slash;
-            final File folder = new File(scriptsPath); 
+            final File folder = new File(scriptsPath);
             for (final File fileEntry : folder.listFiles()) {
                 if (fileEntry.toString().endsWith(".meta")) {
                     InputStream in = null;
                     try {
                         //load each meta file into a properties file
-                        new Log().level3Verbose("Verifying meta: " +fileEntry.toString());
+                        new Log().level3Verbose("Verifying meta: " + fileEntry.toString());
                         LinkedProperties prop = new LinkedProperties();
                         in = new FileInputStream(fileEntry);
                         prop.load(in);
                         in.close();
                         //Identify and store the new MD5s
                         String md5;
-                        int pos=0;
-                        boolean md5Changed=false;
-                        while ((md5=prop.getProperty("Script.MD5["+pos+"]"))!=null){
-                            String entry="Script.MD5["+pos+"]";
+                        int pos = 0;
+                        boolean md5Changed = false;
+                        while ((md5 = prop.getProperty("Script.MD5[" + pos + "]")) != null) {
+                            String entry = "Script.MD5[" + pos + "]";
                             String[] md5File = md5.split("  ");
                             String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
-                            if (! md5.contains(newMD5)){
-                                md5Changed=true;
+                            if (!md5.contains(newMD5)) {
+                                md5Changed = true;
                                 log.level4Debug("Old MD5: " + md5);
-                                log.level4Debug("New MD5: "+ prop.getProperty(entry));
+                                log.level4Debug("New MD5: " + prop.getProperty(entry));
                             }
-                            prop.setProperty(entry, newMD5+ "  "+md5File[1]);
+                            prop.setProperty(entry, newMD5 + "  " + md5File[1]);
                             pos++;
                         }
-                        if (md5Changed){
-                            new Log().level4Debug("MD5s for "+fileEntry+" changed. Updating...");
+                        if (md5Changed) {
+                            new Log().level4Debug("MD5s for " + fileEntry + " changed. Updating...");
                             try (FileOutputStream fos = new FileOutputStream(fileEntry)) {
-                                prop.store(fos,null);
+                                prop.store(fos, null);
                                 fos.close();
                             }
                         }
                     } catch (FileNotFoundException ex) {
-                        Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null,ex);
+                        Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
                         Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {
                         try {
-                            in.close();
+                            if (in != null) {
+                                in.close();
+                            }
                         } catch (IOException ex) {
                             Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -154,21 +155,23 @@ public class CASUALTools {
             }
         }
     }
-    public static Thread t;
+    public static Thread scriptPrep;
+
     /**
      * prepares the script for execution by setting up environment
+     *
      * @param scriptName
      * @return
      */
     public Thread prepareCurrentScript(String scriptName) {
         Statics.SelectedScriptFolder = Statics.TempFolder + Statics.Slash + scriptName;
         //set the ZipResource
-        final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + scriptName + ".zip") : (scriptName + ".zip");
-        
+        final String ZipResource = Statics.TargetScriptIsResource ? Statics.ScriptLocation + scriptName + ".zip" : scriptName + ".zip";
+
         log.level4Debug("Created zipResource at " + ZipResource);
 
-        
-        t = new Thread() {
+
+        scriptPrep = new Thread() {
             @Override
             public void run() {
                 try {
@@ -194,15 +197,16 @@ public class CASUALTools {
                 Statics.lockGUIunzip = false;
             }
         };
-        t.setName("Script Preparation");
-        t.start();
+        scriptPrep.setName("Script Preparation");
+        scriptPrep.start();
 
         log.level4Debug("Exiting comboBoxUpdate()");
-        return t;
+        return scriptPrep;
     }
 
     /**
-     * tells if CASUAL is running in Development or Execution mode 
+     * tells if CASUAL is running in Development or Execution mode
+     *
      * @return true if in IDE mode
      */
     public boolean getIDEMode() {
@@ -229,8 +233,8 @@ public class CASUALTools {
     public Runnable setCASUALPackageDataFromScriptsFolder = new Runnable() {
         @Override
         public void run() {
-            CASUALapplicationData ca = new CASUALapplicationData();
-            
+            new CASUALapplicationData().initialize();
+
         }
     };
     /**

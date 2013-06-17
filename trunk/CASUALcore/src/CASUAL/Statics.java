@@ -85,6 +85,8 @@ public class Statics {
     //Folders
     public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
     private static String TempF = null; //TempFolder is the actual tempfolder, it's served by getTempFolder
+    
+    //TODO: figure out a better way to not use static non-final variable during initialization. as reported by Netbeans
     final public static String TempFolder = (TempF==null)?getTempFolder():TempF;
     private static String getTempFolder() {
 
@@ -404,12 +406,5 @@ public class Statics {
     public static void setStatus(String status){
         Statics.currentStatus=status;
     }
-    
-    
-    
-    
-    
-    
-    
-    
+ 
 }

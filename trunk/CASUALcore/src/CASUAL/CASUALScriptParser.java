@@ -95,7 +95,7 @@ public class CASUALScriptParser {
     DataInputStream DATAIN;
 
     private void executeSelectedScript(DataInputStream DIS, final String scriptFolder, final String script, boolean startThreaded) {
-        Statics.scriptRunLock=true;
+        Statics.scriptRunLock = true;
         Statics.ReactionEvents = new ArrayList<>();
         Statics.ActionEvents = new ArrayList<>();
         ScriptContinue = true;
@@ -106,7 +106,7 @@ public class CASUALScriptParser {
             public void run() {
                 //int updateStatus;
                 log.level4Debug("CASUAL has initiated a multithreaded execution environment");
-                String idStringFile = "";
+                String idStringFile;
                 String TestString = "";
                 try {
                     idStringFile = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta")));
@@ -126,7 +126,7 @@ public class CASUALScriptParser {
                 if (Statics.useGUI) {
                     Statics.GUI.enableControls(true);
                 }
-                if (Statics.useGUI){
+                if (Statics.useGUI) {
                     Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                 } else {
                     Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
@@ -136,8 +136,8 @@ public class CASUALScriptParser {
                 } catch (IOException ex) {
                     Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                Statics.scriptRunLock=false;
-                Statics.currentStatus="Script Complete";
+                Statics.scriptRunLock = false;
+                Statics.currentStatus = "Script Complete";
                 log.level2Information("Script Complete");
 
             }
@@ -146,14 +146,13 @@ public class CASUALScriptParser {
                 DATAIN = getDataStreamFromFile(script);
             }
 
-
             private boolean checkForUpdates(String testString) {
                 Statics.setStatus("Checking for Updates");
                 int updateStatus;
-                if ((testString != null) && (Statics.getScriptLocationOnDisk(script).equals(""))) {
+                if (testString != null && Statics.getScriptLocationOnDisk(script).equals("")) {
                     try {
                         //String[] IDStrings = CASUALIDString.split("\n");
-                                //This is where we hold the local information to be compared to the update
+                        //This is where we hold the local information to be compared to the update
                         CASPACData localInformation = new CASPACData(testString);
 
                         updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, localInformation);
@@ -172,7 +171,7 @@ public class CASUALScriptParser {
                                 break;
                             //script update performed
                             case 2:
-                                Statics.TargetScriptIsResource=false;
+                                Statics.TargetScriptIsResource = false;
                                 Statics.setScriptLocationOnDisk(script, Statics.TempFolder + "SCRIPTS" + Statics.Slash + script);
                                 updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
                                 break;
@@ -180,7 +179,7 @@ public class CASUALScriptParser {
                             case 3:
                                 log.level0Error(Statics.webInformation.updateMessage);
                                 log.level0Error("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                                new CASUALInteraction( "CRITICAL ERROR!", "CASUAL Cannot continue due to kill-switch activation.\n"+ "\n CASUAL will now take you to the supporting webpage." + Statics.webInformation.updateMessage ).showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                new CASUALInteraction("CRITICAL ERROR!", "CASUAL Cannot continue due to kill-switch activation.\n" + "\n CASUAL will now take you to the supporting webpage." + Statics.webInformation.updateMessage).showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                 new LinkLauncher(Statics.webInformation.supportURL).launch();
                                 CASUALApp.shutdown(0);
                                 return true;
@@ -192,7 +191,7 @@ public class CASUALScriptParser {
                             case 5:
                                 log.level0Error("Problem downloading file from internet, please try again");
                                 log.level0Error("Problem downloading file from internet, please try again");
-                                new CASUALInteraction("CRITICAL ERROR!","Download Failure.  CASUAL will now restart.").showTimeoutDialog(60, null,  CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
+                                new CASUALInteraction("CRITICAL ERROR!", "Download Failure.  CASUAL will now restart.").showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
                                 try {
                                     JavaSystem.restart(new String[]{""});
                                 } catch (InterruptedException ex) {

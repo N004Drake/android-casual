@@ -24,14 +24,14 @@ import java.io.File;
  */
 public class CASUALApp {
 //TODO: convert android-casual to Maven so it works better cross-platform
+
     /**
      *
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static boolean useTestFramework = false; // this will begin an automated test without notifications
-    
-    final private static String[] overrideArguments = new String[]{"-e","\"$HEIMDALL close-pc-screen\""};
+    final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
 
     public static void beginCASUAL(String[] args) {
         CASUALapplicationData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
@@ -45,7 +45,7 @@ public class CASUALApp {
                 + "    '" + CASUALapplicationData.CASUALFileName + " --license'\n"
                 + "    for details. http://android-casual.googlecode.com for source.");
 
-       
+
         checkEarlyArgs(args);
         new CASUALMain().startup(args);
     }
@@ -54,7 +54,6 @@ public class CASUALApp {
     /**
      * At startup create and show the main frame of the application.
      */
-
     /**
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
@@ -72,21 +71,21 @@ public class CASUALApp {
      */
     public static void main(String[] args) {
         Statics.initializeStatics();
-    
+
         if (useOverrideArgs) { //overrides command line input
             args = overrideArguments;
         }
-        if (useTestFramework){ //automates CASUAL to test for errors
-            CASUALTest.args=args;
+        if (useTestFramework) { //automates CASUAL to test for errors
+            CASUALTest.args = args;
             //Statics.GUI=new CASUALJFrameMain();
-            Statics.useGUI=false;
+            Statics.useGUI = false;
             try {
-            new CASUALTest(args).instantiateCASUAL();
-            return;
-            } catch (Exception e){
+                new CASUALTest(args).instantiateCASUAL();
+                return;
+            } catch (Exception e) {
                 new Log().errorHandler(e);
                 //CASUALApp.shutdown(0);
-            } 
+            }
             //CASUALApp.shutdown(0);
         }
         beginCASUAL(args);
@@ -106,7 +105,7 @@ public class CASUALApp {
                         + " [--caspac/-c path_to" + Statics.Slash + "CASPACzip] -launches CASUAL with a CASPAC"
                         + " [--gui/-g)] - performs actions with a GUI\n");
 
-                
+
                 CASUALApp.shutdown(0);
             }
             if (args[i].equals("--license")) {
@@ -133,17 +132,17 @@ public class CASUALApp {
             }
         }
     }
-    
-    public static void shutdown(int i){
+
+    public static void shutdown(int i) {
         new Log().level4Debug("Shutting Down");
         Log.out.flush();
         Window windows[] = Window.getWindows();
-        if (windows!=null){
-            for (Window window:windows){
+        if (windows != null) {
+            for (Window window : windows) {
                 window.dispose();
             }
         }
-        new Shell().silentShellCommand(new String[]{Statics.AdbDeployed,"kill-server"});
+        new Shell().silentShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
         Statics.initializeStatics();
-    }    
+    }
 }
