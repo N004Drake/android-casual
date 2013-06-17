@@ -59,16 +59,15 @@ class CASUALDeployADB {
 
         } else {
             Log.level0Error("Your system is not supported attempting to use system ADB.");
-            Statics.AdbDeployed="adb";
+            Statics.AdbDeployed = "adb";
         }
-        
+
         Shell Shell = new Shell();
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
         Statics.LiveSendCommand.add(Statics.AdbDeployed);
         Statics.LiveSendCommand.add("get-state");
         new Shell().silentBackgroundShellCommand();
-        if (Statics.isWindows()){
-            
+        if (Statics.isWindows()) {
         }
         String DeviceList = Shell.sendShellCommand(devicesCmd);
 
@@ -86,20 +85,20 @@ class CASUALDeployADB {
         }
 
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
-            new CASUALInteraction("ELFCLASS64 error!","Could not execute ADB. 'Wrong ELF class' error\n"
+            new CASUALInteraction("ELFCLASS64 error!", "Could not execute ADB. 'Wrong ELF class' error\n"
                     + "This can be resolved by installation of ia32-libs"
                     + "eg.. sudo apt-get install ia32-libs\n"
                     + "ie.. sudo YourPackageManger install ia32-libs").showInformationMessage();
 
         }
 
-
+        //TODO: implement this as an error handler for ADB. in a centralized manner. 
         Log.level4Debug("Device List:" + DeviceList);
-        if ( DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon") ) {
+        if (DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
             Log.level4Debug(" Device list: " + DeviceList + " Restarting server slowly");
             restartADBserver();
             DeviceList = Shell.silentShellCommand(devicesCmd).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
-            if (!Statics.isWindows() && DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon") ) {
+            if (!Statics.isWindows() && DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
                 Log.level4Debug(" Device list: " + DeviceList + " \n Elevated Permissions Required to properly start ADB server");
                 killADBserver();
                 elevateADBserver();
@@ -109,26 +108,29 @@ class CASUALDeployADB {
             restartADBserver();
         }
     }
-    
-    private void updateADBini(){
-        FileOperations fo=new FileOperations();
-        String adbIniDeployed="";
-        if (Statics.isLinux()||Statics.isMac()) adbIniDeployed=Statics.FilesystemAdbIniLocationLinuxMac;
-        if (Statics.isWindows()) adbIniDeployed=Statics.FilesystemAdbIniLocationWindows;
-        if (! fo.verifyExists(adbIniDeployed)){  
+
+    private void updateADBini() {
+        FileOperations fo = new FileOperations();
+        String adbIniDeployed = "";
+        if (Statics.isLinux() || Statics.isMac()) {
+            adbIniDeployed = Statics.FilesystemAdbIniLocationLinuxMac;
+        }
+        if (Statics.isWindows()) {
+            adbIniDeployed = Statics.FilesystemAdbIniLocationWindows;
+        }
+        if (!fo.verifyExists(adbIniDeployed)) {
             //deploy a new copy
             FileOperations.copyFromResourceToFile(Statics.ADBini, adbIniDeployed);
         } else {
             //see what's missing and add new entries
-            DiffTextFiles DTF=new DiffTextFiles();
+            DiffTextFiles DTF = new DiffTextFiles();
             DTF.appendDiffToFile(adbIniDeployed, DTF.diffResourceVersusFile(Statics.ADBini, adbIniDeployed));
         }
     }
-    
-    
-    private void restartADBserver(){
+
+    private void restartADBserver() {
         Log.level3Verbose("Restarting ADB");
-        Shell shell=new Shell();
+        Shell shell = new Shell();
         String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         shell.silentShellCommand(killCmd);
         try {
@@ -144,17 +146,19 @@ class CASUALDeployADB {
             Log.errorHandler(ex);
         }
     }
-    private void elevateADBserver(){
+
+    private void elevateADBserver() {
         Log.level3Verbose("Restarting ADB");
-        Shell shell=new Shell();
+        Shell shell = new Shell();
         String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         shell.silentShellCommand(killCmd);
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
         shell.elevateSimpleCommand(devicesCmd);
-    }    
-    private void killADBserver(){
+    }
+
+    private void killADBserver() {
         Log.level3Verbose("Restarting ADB after system update");
-        Shell shell=new Shell();
+        Shell shell = new Shell();
         String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         shell.silentShellCommand(killCmd);
     }

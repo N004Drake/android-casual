@@ -15,45 +15,42 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-
 package CASUAL;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 
-/****************************************************************************
+/**
+ * **************************************************************************
  *
- * @author Jeremy Loper     jrloper@gmail.com
- ***************************************************************************/
+ * @author Jeremy Loper jrloper@gmail.com
+ * *************************************************************************
+ */
 public class WindowsDrivers {
-    
+
     private static Log log = new Log();
-    
     private static Shell shell = new Shell();
-    
     private static boolean Extracted;
-    
     public static boolean driverRemoveOnDone;
-    
-    private static final String regexPatternHwid = "^USB\\VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:)";
-    
-    private static final String regexPatternInf = "[o|Oe|Em|M]{3}[0-9]*\\.inf(?=.?[Provider:\\slibusbK]?.?[Class:\\sCASUAL's\\sUSB\\sDevices]?)";
-    
+
+    //converted to method final private String regexPatternHwid = "^USB\\VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:)";
+    //converted to method final private static String regexPatternInf = "[o|Oe|Em|M]{3}[0-9]*\\.inf(?=.?[Provider:\\slibusbK]?.?[Class:\\sCASUAL's\\sUSB\\sDevices]?)";
     public WindowsDrivers() {
         log.level4Debug("WindowsDrivers() Initialized");
         driverRemoveOnDone = new CASUALInteraction("CADI",
-                "CASUAL will now install a generic USB driver." 
-            + "\n\nThis will allow communications between CASUAL and your device" 
-            + "\n\nWould you like CASUAL to remove this generic driver when the"
+                "CASUAL will now install a generic USB driver."
+                + "\n\nThis will allow communications between CASUAL and your device"
+                + "\n\nWould you like CASUAL to remove this generic driver when the"
                 + " operation has completed?").showYesNoOption();
     }
-    
-    /***************************************************************************
-     * 
-     ***************************************************************************/
+
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
     private static boolean driverExtract() {
         new FileOperations().makeFolder(Statics.TempFolder + "CADI/");
         try {
@@ -68,10 +65,12 @@ public class WindowsDrivers {
         }
         return true;
     }
-    
-    /***************************************************************************
-     * 
-     ***************************************************************************/
+
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
     private static void driverCleanup() {
         FileOperations fO = new FileOperations();
         log.level4Debug("driverCleanup() Emptying folder: " + Statics.TempFolder + "CADI" + Statics.Slash + "xp" + Statics.Slash);
@@ -84,47 +83,53 @@ public class WindowsDrivers {
         fO.deleteFile(Statics.TempFolder + "CADI");
         log.level4Debug("driverCleanup() Cleanup complete");
     }
-    
-    /***************************************************************************
-     * 
-     ***************************************************************************/
+
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
     public void installDriver(String VID) {
-        if(!Extracted) {
+        if (!Extracted) {
             Extracted = driverExtract();
         }
         String[] dList = getDeviceList(VID);
-        for(int x = 0; x < dList.length; x++){
-            if(Statics.OSName().contains("Windows XP")) {
+        for (int x = 0; x < dList.length; x++) {
+            if (Statics.OSName().contains("Windows XP")) {
                 devconCommand("updateni", Statics.TempFolder + "CADI" + Statics.Slash + "xp" + Statics.Slash + "cadixp.inf", dList[x]);
             } else {
                 devconCommand("updateni", Statics.TempFolder + "CADI" + Statics.Slash + "cadiV78.inf", dList[x]);
             }
         }
     }
-    
-    /***************************************************************************
-     * 
-     ***************************************************************************/
+
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
     public void installDriver(String VID, String PID) {
-        if(!Extracted) {
+        if (!Extracted) {
             Extracted = driverExtract();
         }
         log.level4Debug("removeDriver() Removing installed devices");
         String[] dList = getDeviceList(VID, PID);
-        for(int x = 0; x < dList.length; x++){
-            if(Statics.OSName().contains("Windows XP")) {
+        for (int x = 0; x < dList.length; x++) {
+            if (Statics.OSName().contains("Windows XP")) {
                 devconCommand("updateni", Statics.TempFolder + "CADI" + Statics.Slash + "xp" + Statics.Slash + "cadixp.inf", dList[x]);
             } else {
                 devconCommand("updateni", Statics.TempFolder + "CADI" + Statics.Slash + "cadiV78.inf", dList[x]);
             }
         }
     }
-    
-    /***************************************************************************
-     * 
-     ***************************************************************************/
-    public static void removeDriver() {
-        if(!Extracted) {
+
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
+    public void removeDriver() {
+        if (!Extracted) {
             Extracted = driverExtract();
         }
         log.level4Debug("removeDriver() Removing installed devices");
@@ -135,57 +140,75 @@ public class WindowsDrivers {
         driverCleanup();
     }
 
-    /***************************************************************************
-     * 
-     ***************************************************************************/
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
     private String[] getDeviceList(String VID) {
         String[] dList = null;
-        Pattern pattern = Pattern.compile(regexPatternHwid);
+        Pattern pattern = regexPatternHwid();
         log.level4Debug("getDeviceList() Getting device list for: \"*USB\\VID_" + VID + "&PID_" + "*\"");
         Matcher matcher = pattern.matcher(devconCommand("find", "*USB\\VID_" + VID + "&PID_*", ""));
         int x = 0;
-        while(matcher.find()) {
+        while (matcher.find()) {
             dList[x] = matcher.group(x);
             x++;
         }
         return dList;
     }
-    
-    /***************************************************************************
-     * 
-     ***************************************************************************/
+
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
     private String[] getDeviceList(String VID, String PID) {
         String[] dList = null;
-        Pattern pattern = Pattern.compile(regexPatternHwid);
+        Pattern pattern = regexPatternHwid();
         log.level4Debug("getDeviceList() Getting device list for: \"*USB\\VID_" + VID + "&PID_" + PID + "*\"");
         String result = devconCommand("find", "*USB\\VID_" + VID + "&PID_" + PID + "*", "");
         Matcher matcher = pattern.matcher(result);
         int x = 0;
-        while(matcher.find()) {
+        while (matcher.find()) {
             dList[x] = matcher.group(x);
             x++;
         }
         return dList;
     }
-   
-    /***************************************************************************
-     * 
-     ***************************************************************************/
-    private static String getOemInfName() {
-        String[] infKeywords = {"Provider: libusbK", "Class: CASUAL's USB Devices"};
-        Pattern pattern = Pattern.compile(regexPatternInf);
+
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
+    private String getOemInfName() {
+        //unused String[] infKeywords = {"Provider: libusbK", "Class: CASUAL's USB Devices"};
+        Pattern pattern = regexPatternInf();
         log.level4Debug("getOemInfName() Enumerating installed driver packages");
         Matcher matcher = pattern.matcher(devconCommand("dp_enum", "", ""));
         log.level4Debug("getOemInfName() " + matcher.group(0) + "located");
         return matcher.group(0);
     }
-    
-    /***************************************************************************
-     * 
-     ***************************************************************************/
-    private static String devconCommand(String Cmd, String Arg1, String Arg2) {
+
+    /**
+     * *************************************************************************
+     *
+     **************************************************************************
+     */
+    private String devconCommand(String Cmd, String Arg1, String Arg2) {
         String[] exec = {Statics.TempFolder + "CADI" + Statics.Slash + (Statics.is64bitSystem() ? "devcon_x64.exe" : "devcon_x86.exe"), Cmd, Arg1, Arg2};
         log.level4Debug("devconCommand() " + shell.arrayToString(exec));
         return shell.silentShellCommand(exec);
+    }
+
+    private Pattern regexPatternHwid() {
+        Pattern pattern = Pattern.compile("^USB\\VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:)");
+        return pattern;
+    }
+
+    private Pattern regexPatternInf() {
+        Pattern pattern = Pattern.compile("[o|Oe|Em|M]{3}[0-9]*\\.inf(?=.?[Provider:\\slibusbK]?.?[Class:\\sCASUAL's\\sUSB\\sDevices]?)");
+        return pattern;
     }
 }

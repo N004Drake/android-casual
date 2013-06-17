@@ -39,7 +39,7 @@ public class CASPACHandler {
      * @param pack Launches a CASPAC
      */
     public void loadCASUALPack(String pack) {
-        
+
         try {
             Thread adb = new Thread(new CASUALTools().adbDeployment);
             adb.setName("ADB Deployment");
@@ -54,21 +54,23 @@ public class CASPACHandler {
             Unzip unzip = new Unzip(CASPAC);
             try {
                 cd = processCASPAC(unzip.zipFileEntries, CASPAC);
-            } catch (NullPointerException ex ){
+            } catch (NullPointerException ex) {
                 new Log().level0Error("There is a problem with the online metadata for this script.  Please inform the developer.");
                 return;
             }
-            
+
             //get ADB ready
             try {
                 adb.join();
-                if (zip!=null)zip.join();
+                if (zip != null) {
+                    zip.join();
+                }
             } catch (InterruptedException ex) {
                 new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted" + ex));
             }
             if (cd != null) {
                 new Log().level3Verbose("Verifying CASPAC metainfo and MD5s");
-                if (! cd.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")))){
+                if (!cd.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision")))) {
                     return;
                 }
 
@@ -79,7 +81,7 @@ public class CASPACHandler {
                 unzip = new Unzip(CASPAC);
                 Enumeration zippedFiles = unzip.zipFileEntries;
                 ArrayList md5sfromCASPAC = getMD5sfromCASPAC(pack, getMetaName(zippedFiles));
-                
+
                 verifyMD5s();
             }
 
@@ -109,7 +111,7 @@ public class CASPACHandler {
             new Log().level0Error("There was a problem reading the file.");
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
             CASUALApp.shutdown(1);
-        } 
+        }
     }
     Runnable activateScript = new Runnable() {
         @Override
@@ -121,7 +123,7 @@ public class CASPACHandler {
     private CASPACData handleCASPACFiles(Object entry, File f) throws IOException {
 
         if (entry.toString().equals("-build.properties")) {
-            CASUALapplicationData ca= new CASUALapplicationData(Unzip.streamFileFromZip(f, entry));
+            CASUALapplicationData ca = new CASUALapplicationData(Unzip.streamFileFromZip(f, entry));
         } else if (entry.toString().equals("-Overview.txt")) {
             if (Statics.useGUI) { //only display overview if using GUI.
                 new Log().level2Information("\n" + new FileOperations().readTextFromStream(Unzip.streamFileFromZip(f, entry)) + "\n");
@@ -130,7 +132,7 @@ public class CASPACHandler {
         } else if (entry.toString().endsWith(".meta")) {
             CASUALapplicationData.meta = entry.toString();
             meta = Statics.TempFolder + entry.toString();
-            new Unzip(f).deployFileFromZip( entry, Statics.TempFolder);
+            new Unzip(f).deployFileFromZip(entry, Statics.TempFolder);
 
             return new CASPACData(new FileOperations().readFile(meta));
         } else if (entry.toString().endsWith(".scr")) {
@@ -198,24 +200,25 @@ public class CASPACHandler {
     private CASPACData processCASPAC(Enumeration zippedFiles, File f) throws IOException {
         while (zippedFiles.hasMoreElements()) {
             Object entry = zippedFiles.nextElement(); //get the object and begin examination
-            CASPACData test;    
+            CASPACData test;
             test = handleCASPACFiles(entry, f);
             if (test != null) {
                 cd = test;
             }
-            
+
         }
         return cd;
     }
 
     /**
-     * 
-     * @deprecated 
+     *
+     * @deprecated
      */
-
     private void verifyMD5s() {
         //we are in IDE mode
-        if (cd.md5s.isEmpty()) return;
+        if (cd.md5s.isEmpty()) {
+            return;
+        }
         for (Object md5 : Statics.runnableMD5list.toArray()) {
 
             new Log().level3Verbose(md5.toString());

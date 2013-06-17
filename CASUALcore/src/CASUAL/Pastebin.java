@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -55,7 +54,7 @@ public class Pastebin {
             Log log = new Log();
             String user = "CASUAL-Automated";
             String passwd = "2J2y7SK172p46m1";
-            String token = "";
+            // unused String token = "";
             String format = "text";
             if (!(user.equals("")) && !(passwd.equals(""))) {
                 String lResult = paste.login(user, passwd);
@@ -73,7 +72,7 @@ public class Pastebin {
                     StringSelection stringSelection = new StringSelection(output);
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
-                    new CASUALInteraction("Thank You!","Pastebin URL Copied to Clipboard\n\nPlease Submit it in the appropriate forum thread").showInformationMessage();
+                    new CASUALInteraction("Thank You!", "Pastebin URL Copied to Clipboard\n\nPlease Submit it in the appropriate forum thread").showInformationMessage();
                     log.level4Debug(output);
                 } else {
                     log.level4Debug(output);
@@ -93,17 +92,18 @@ public class Pastebin {
         private String devkey; //used for our program
         private String loginURL = "http://www.pastebin.com/api/api_login.php";
         private String pasteURL = "http://www.pastebin.com/api/api_post.php";
+
         private API(String devkey) {
             this.devkey = devkey;
         }
+
         private String checkResponse(String response) {
-            if (response.substring(0, 15).equals("Bad API request")) {
-                if (response.substring(17)!= null){
-                    return response.substring(17);
-                }
+            if (response.substring(0, 15).equals("Bad API request") && response.substring(17) != null) {
+                return response.substring(17);
             }
             return "";
         }
+
         public String login(String username, String password) throws UnsupportedEncodingException {
             String api_user_name = URLEncoder.encode(username, "UTF-8");
             String api_user_password = URLEncoder.encode(password, "UTF-8");
@@ -118,7 +118,6 @@ public class Pastebin {
             return response;
         }
 
-
         public String makePaste(String code, String name, String format) throws UnsupportedEncodingException {
             String content = URLEncoder.encode(code, "UTF-8");
             String title = URLEncoder.encode(name, "UTF-8");
@@ -130,7 +129,6 @@ public class Pastebin {
             }
             return response;
         }
-
 
         public String page(String uri, String urlParameters) {
             URL url;

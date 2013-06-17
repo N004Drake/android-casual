@@ -35,6 +35,7 @@ import java.util.zip.ZipInputStream;
  * @author adam
  */
 public class Unzip {
+
     static int BUFFER = 4096;
     ZipFile zip;
     Enumeration zipFileEntries;
@@ -47,6 +48,7 @@ public class Unzip {
             new Log().errorHandler(e);
         }
     }
+
     public Unzip(String f) throws ZipException, IOException {
         this.zip = new ZipFile(new File(f));
         try {
@@ -55,17 +57,16 @@ public class Unzip {
             new Log().errorHandler(e);
         }
     }
-        
 
     public void recursiveUnzipFile(String outputFolder) throws ZipException, IOException {
 
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
-        Enumeration zipFileEntries = zip.entries();
+        Enumeration zfEntries = zip.entries();
         // Process each entry
-        while (zipFileEntries.hasMoreElements()) {
+        while (zfEntries.hasMoreElements()) {
             // grab a zip file entry
-            ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+            ZipEntry entry = (ZipEntry) zfEntries.nextElement();
             String currentEntry = entry.getName();
             File destFile = new File(newPath, currentEntry);
             //destFile = new File(newPath, destFile.getName());
@@ -81,24 +82,21 @@ public class Unzip {
             }
             if (currentEntry.endsWith(".zip")) {
                 // found a zip file, try to open
-                unzipFileToFolder(destFile.getAbsolutePath(), outputFolder + System.getProperty("file.separator") + destFile.getAbsolutePath() + System.getProperty("file.separator"));
+                unzipFileToFolder(outputFolder + System.getProperty("file.separator") + destFile.getAbsolutePath() + System.getProperty("file.separator"));
             }
         }
     }
 
-    
-    public static void unzipFile(String zipFile, String outputFolder) throws ZipException, IOException{
-        new Unzip(zipFile).unzipFileToFolder(zipFile,outputFolder);
+    public void unzipFile(String outputFolder) throws ZipException, IOException {
+        unzipFileToFolder(outputFolder);
     }
-    
-    private void unzipFileToFolder(String zipFile, String outputFolder) throws ZipException, IOException {
-        new Log().level4Debug(zipFile);
 
-        File file = new File(zipFile);
-        ZipFile zip = new ZipFile(file);
+    private void unzipFileToFolder(String outputFolder) throws ZipException, IOException {
+        new Log().level4Debug("Unzipping " + zip.toString());
+
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
-        Enumeration zipFileEntries = zip.entries();
+        zipFileEntries = zip.entries();
         // Process each entry
         while (zipFileEntries.hasMoreElements()) {
             // grab a zip file entry
@@ -118,14 +116,14 @@ public class Unzip {
             }
         }
     }
-    
+
     public static void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
         InputStream ZStream = new CASUALApp().getClass().getResourceAsStream(zipResource);
         unZipInputStream(ZStream, outputFolder);
     }
 
     public static void unZipInputStream(InputStream ZStream, String outputFolder) throws FileNotFoundException, IOException {
-        
+
         ZipInputStream ZipInput;
         ZipInput = new ZipInputStream(ZStream);
         ZipEntry ZipEntryInstance;
@@ -159,7 +157,6 @@ public class Unzip {
         new Log().level3Verbose("Unzip Complete");
     }
 
-
     public void closeZip() {
         try {
             zip.close();
@@ -168,8 +165,8 @@ public class Unzip {
         }
     }
 
-    public String deployFileFromZip( Object entry, String outputFolder) throws ZipException, IOException {
-        
+    public String deployFileFromZip(Object entry, String outputFolder) throws ZipException, IOException {
+
         ZipEntry zipEntry = new ZipEntry((ZipEntry) entry);
         writeFromZipToFile(zip, zipEntry, outputFolder);
         zip.close();
@@ -181,7 +178,7 @@ public class Unzip {
         return new BufferedInputStream(zip.getInputStream((ZipEntry) entry));
     }
 
-    private void writeFromZipToFile(ZipFile zip, ZipEntry entry, String newPath) throws IOException, FileNotFoundException {
+    private void writeFromZipToFile(ZipFile zip, ZipEntry entry, String filePathToWrite) throws IOException, FileNotFoundException {
         //if (Static)
         BufferedInputStream is;
         is = new BufferedInputStream(zip.getInputStream(entry));
@@ -189,7 +186,7 @@ public class Unzip {
         // establish buffer for writing file
         byte data[] = new byte[BUFFER];
         // write the current file to disk
-        FileOutputStream fos = new FileOutputStream(new File(newPath + entry));
+        FileOutputStream fos = new FileOutputStream(new File(filePathToWrite + entry));
         BufferedOutputStream dest;
         dest = new BufferedOutputStream(fos, BUFFER);
         // read and write until last byte is encountered

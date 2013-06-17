@@ -85,7 +85,6 @@ public class CASUALTest {
                     doQuarterSecondSleep();
                 } catch (IOException ex) {
                     //no need to report this. its fine
-
                 }
             }
 
@@ -97,10 +96,10 @@ public class CASUALTest {
                 System.out.println(line);
 
                 if (line.contains("ERROR")) {
+                    System.out.println(line); //error
                 } else if (line.contains("[INPUT][ANY]")) {
                     System.out.println(line);//get textual input  
 
-                    System.out.println(line);
                     writeToCASUAL.write(13);
                 } else if (line.contains("[USERTASK][Q or RETURN][CRITICAL]")) {
                     System.out.println(line);
@@ -141,10 +140,10 @@ public class CASUALTest {
 
         private void doQuarterSecondSleep() {
             try {
-                 Thread.sleep(250);
-             } catch (InterruptedException ex) {
-                 //don't care program will continue on
-             }
+                Thread.sleep(250);
+            } catch (InterruptedException ex) {
+                //don't care program will continue on
+            }
         }
     };
     Runnable launchCASUAL = new Runnable() {

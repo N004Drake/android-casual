@@ -186,7 +186,7 @@ public class FileOperations {
                 }
             }
         }
-         return al;
+        return al;
     }
 
     /**
@@ -206,7 +206,9 @@ public class FileOperations {
      * @return true if folder was created
      */
     public boolean makeFolder(String Folder) {
-        if (Folder==null) return false;
+        if (Folder == null) {
+            return false;
+        }
         File folder = new File(Folder);
         folder.mkdirs();
         if (folder.exists()) {
@@ -323,14 +325,13 @@ public class FileOperations {
         }
         return Deleted;
     }
-    
-    
+
     public boolean deleteStringArrayOfFiles(String[] cleanUp) {
-        int x=0;
+        int x = 0;
         if (cleanUp[x] != null) {
             //log.level4Debug("[doCASUALWork()]Folder is not empty, deleting files");
             while (cleanUp[x] != null) {
-                if (! deleteFile(cleanUp[x])){
+                if (!deleteFile(cleanUp[x])) {
                     return false;
                 }
                 x++;
@@ -505,12 +506,12 @@ public class FileOperations {
         String EntireFile = "";
         try {
             String Line;
-            BufferedReader BROriginal = new BufferedReader(new FileReader(FileOnDisk));
-            while ((Line = BROriginal.readLine()) != null) {
-                //Log.level3(Line);  
-                EntireFile = EntireFile + "\n" + Line;
+            try (BufferedReader BROriginal = new BufferedReader(new FileReader(FileOnDisk))) {
+                while ((Line = BROriginal.readLine()) != null) {
+                    //Log.level3(Line);  
+                    EntireFile = EntireFile + "\n" + Line;
+                }
             }
-            BROriginal.close();
         } catch (FileNotFoundException ex) {
             Log.level0Error("File Not Found Error: " + FileOnDisk);
             new Log().errorHandler(ex);
@@ -522,35 +523,36 @@ public class FileOperations {
         EntireFile = EntireFile.replaceFirst("\n", "");
         return EntireFile;
     }
-    
+
     /**
-     * 
+     *
      * @param fname
      * @param useFullPath
-     * @return 
+     * @return
      */
-    public String[] listFolderFiles(String folder){
+    public String[] listFolderFiles(String folder) {
         File dir = new File(folder);
-        if(!dir.isDirectory()) {
+        if (!dir.isDirectory()) {
             new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
-            return null;           
+            return null;
         }
         String[] childOf = new String[1024];
         File[] list = dir.listFiles();
-        for(int x = 0; list.length > x ; x++) {
-                childOf[x] = list[x].getName();
+        for (int x = 0; list.length > x; x++) {
+            childOf[x] = list[x].getName();
         }
         return childOf;
     }
-    public String[] listFolderFilesCannonically(String folder){
+
+    public String[] listFolderFilesCannonically(String folder) {
         File dir = new File(folder);
-        if(!dir.isDirectory()) {
+        if (!dir.isDirectory()) {
             new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
-            return null;           
+            return null;
         }
         String[] childOf = new String[1024];
         File[] list = dir.listFiles();
-        for(int x = 0; list.length > x ; x++) {
+        for (int x = 0; list.length > x; x++) {
             try {
                 childOf[x] = list[x].getCanonicalFile().toString();
             } catch (IOException ex) {
@@ -559,17 +561,18 @@ public class FileOperations {
         }
         return childOf;
     }
+
     /**
-     * 
+     *
      * @param sourceFile
      * @param destFile
-     * @throws IOException 
+     * @throws IOException
      */
     public boolean moveFile(File sourceFile, File destFile) throws IOException {
         Log log = new Log();
         FileOperations fO = new FileOperations();
-        if(fO.copyFile(sourceFile.toString(), destFile.toString())) {
-            if(fO.deleteFile(sourceFile.toString())) {
+        if (fO.copyFile(sourceFile.toString(), destFile.toString())) {
+            if (fO.deleteFile(sourceFile.toString())) {
                 log.level4Debug("[moveFile()]File moved successfully");
                 return true;
             } else {
@@ -581,17 +584,19 @@ public class FileOperations {
             return false;
         }
     }
-    
-        public boolean moveFile(String sourceFile, String destFile) throws IOException {
+
+    public boolean moveFile(String sourceFile, String destFile) throws IOException {
         Log log = new Log();
         FileOperations fO = new FileOperations();
-        if(!fO.verifyExists(sourceFile)) {
+        if (!fO.verifyExists(sourceFile)) {
             log.level4Debug("[moveFile()] Source doesn't exist");
             return false;
         }
-        if(fO.verifyExists(destFile)) fO.deleteFile(destFile);
-        if(fO.copyFile(sourceFile, destFile)) {
-            if(fO.deleteFile(sourceFile)) {
+        if (fO.verifyExists(destFile)) {
+            fO.deleteFile(destFile);
+        }
+        if (fO.copyFile(sourceFile, destFile)) {
+            if (fO.deleteFile(sourceFile)) {
                 log.level4Debug("[moveFile()]File moved successfully");
                 return true;
             } else {

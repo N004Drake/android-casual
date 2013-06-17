@@ -28,15 +28,15 @@ class LinkedProperties extends Properties {
         keys.add(key);
         return super.put(key, value);
     }
+
     @Override
     public Set<String> stringPropertyNames() {
-    Set<String> set = new LinkedHashSet<>();
+        Set<String> set = new LinkedHashSet<>();
 
-    for (Object key : this.keys) {
-        set.add((String)key);
+        for (Object key : this.keys) {
+            set.add((String) key);
+        }
+
+        return set;
     }
-
-    return set;
-}
-    
 }

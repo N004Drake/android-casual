@@ -28,10 +28,10 @@ import java.net.URISyntaxException;
 public class LinkLauncher {
 
     final String link;
-    
+
     /**
      * launches a browser with a link
-     * 
+     *
      * @param link link to launch
      */
     public LinkLauncher(String link) {
@@ -39,16 +39,13 @@ public class LinkLauncher {
     }
 
     /**
-     *launches the link commanded in constructor
+     * launches the link commanded in constructor
      */
     public void launch() {
         Thread thread = new Thread(launcher);
         thread.setName("Link Launcher Thread");
         thread.start();
     }
-    
-    
-    
     private Runnable launcher = new Runnable() {
         @Override
         public void run() {

@@ -120,10 +120,10 @@ public class HeimdallTools {
             permissionEscillationAttempt++;
             if (Statics.isLinux()) {
                 log.level2Information("A permissions problem was detected.  Elevating permissions.");
-                returnRead=returnRead+doElevatedHeimdallShellCommand();
+                returnRead = returnRead + doElevatedHeimdallShellCommand();
             } else if (Statics.isWindows() || Statics.isMac()) {
                 if (permissionEscillationAttempt < 5) {
-                    returnRead=returnRead+doHeimdallShellCommand();
+                    returnRead = returnRead + doHeimdallShellCommand();
                 } else {
                     log.level0Error("Maximum retries exceeded. Shutting down Parser.");
                     //TODO: uninstall drivers, reinstall with CADI and try once more.
@@ -177,7 +177,7 @@ public class HeimdallTools {
 
         if (stdErrLog.contains(" failed!")) {
             if (stdErrLog.contains("Claiming interface failed!")) {
-                new CASUALInteraction(null,"Turn Off your Device and put it back into Odin Mode").showActionRequiredDialog();
+                new CASUALInteraction(null, "Turn Off your Device and put it back into Odin Mode").showActionRequiredDialog();
                 return "Heimdall failed to claim interface; Attempting to continue";
             }
 

@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package CASUAL;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,9 +13,8 @@ import java.io.IOException;
  * @author Jeremy
  */
 public class ElevateUAC {
-    
-    private static Log log = new Log();
 
+    private static Log log = new Log();
     public static String batName = "elevate.bat";
 
     public static boolean checkForUAC() {
@@ -67,5 +67,4 @@ public class ElevateUAC {
             log.errorHandler(ex);
         }
     }
-    
 }

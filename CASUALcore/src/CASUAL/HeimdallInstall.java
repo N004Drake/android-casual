@@ -27,11 +27,11 @@ import java.io.IOException;
  * @author adam
  */
 public class HeimdallInstall {
+
     final String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
     public String VID = "";
     public String PID = "";
-    
-    
+
     public boolean deployHeimdallForWindows() {
         FileOperations fo = new FileOperations();
         Statics.heimdallResource = Statics.heimdallWin2;
@@ -41,17 +41,17 @@ public class HeimdallInstall {
         fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
         fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.TempFolder + "msvcp110.dll");
         fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.TempFolder + "msvcr110.dll");
-        
-        log.level4Debug("verifying Heimdall deployment");
-        if ( checkHeimdall()) { //try with redist files
+
+        log.level4Debug("deployHeimdallForWindows- verifying Heimdall deployment");
+        if (checkHeimdall()) { //try with redist files
             Statics.isHeimdallDeployed = true;
             log.level4Debug("heimdall install sucessful");
             return true;
         } else {
-           log.level2Information("Additional Files are required in order to continue.. Downloading");
-           new HeimdallInstall().installWindowsVCRedist();
+            log.level2Information("Additional Files are required in order to continue.. Downloading");
+            new HeimdallInstall().installWindowsVCRedist();
         }
-        
+
         log.level4Debug("Verifying Heimdall deployment after Visual C++ Redistributable installation");
         if (checkHeimdall()) {
             log.level0Error("There was a problem deploying installing heimdall");
@@ -61,10 +61,12 @@ public class HeimdallInstall {
             return true;
         }
     }
-    public boolean checkHeimdall(){
-        boolean retval = ! new Shell().silentShellCommand(new String[]{HeimdallTools.getHeimdallCommand(), "version"}).equals("");
+
+    public boolean checkHeimdall() {
+        boolean retval = !new Shell().silentShellCommand(new String[]{HeimdallTools.getHeimdallCommand(), "version"}).equals("");
         return retval;
     }
+
     private boolean installLinuxHeimdall() {
 
         FileOperations fo = new FileOperations();
@@ -153,7 +155,7 @@ public class HeimdallInstall {
                 log.errorHandler(ex);
             }
             new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
-            new CASUALInteraction("Unplug it and then plug it back in","In order to continue, you must unplug the device and\n"
+            new CASUALInteraction("Unplug it and then plug it back in", "In order to continue, you must unplug the device and\n"
                     + "then it back in.  Use a GOOD port, in the back, not\n"
                     + "in the front.  Use a good cable too.").showErrorDialog();
         }
@@ -179,16 +181,16 @@ public class HeimdallInstall {
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
         /*WindowsDrivers wd = new WindowsDrivers();
-        if(Statics.VID == "") {
-            for(int x = 0; Statics.WindowsDriverBlanket.length > x; x++) wd.installDriver(Statics.WindowsDriverBlanket[x]);
-        } else if((Statics.VID != "") && (Statics.PID == "")) {
-            wd.installDriver(Statics.VID);
-        } else {
-            wd.installDriver(Statics.VID, Statics.PID);
-        }*/
+         if(Statics.VID == "") {
+         for(int x = 0; Statics.WindowsDriverBlanket.length > x; x++) wd.installDriver(Statics.WindowsDriverBlanket[x]);
+         } else if((Statics.VID != "") && (Statics.PID == "")) {
+         wd.installDriver(Statics.VID);
+         } else {
+         wd.installDriver(Statics.VID, Statics.PID);
+         }*/
         log.level0Error("\nDrivers are Required Launching CADI.\nCASUAL Automated Driver Installer by jrloper.\nInstalling Drivers now"); //Add Newline
         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
-                + "We're going to install drivers now.  Lets do it.\n" 
+                + "We're going to install drivers now.  Lets do it.\n"
                 + "THIS PROCESS CAN TAKE UP TO 5 MINTUES.\nDURING THIS TIME YOU WILL NOT SEE ANYTHING.\nBE PATIENT!");
 
 
@@ -204,7 +206,7 @@ public class HeimdallInstall {
             log.level0Error("There was a problem while accessing the online repository.");
         }
         //verify MD5
-        String driverreturn=new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" +exec + "\"" });
+        String driverreturn = new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});
         /*
          * 
          * TODO: Here we need to parse return from CADI
@@ -220,7 +222,7 @@ public class HeimdallInstall {
          * 
          */
         log.level2Information(driverreturn);
-        if (driverreturn.contains("CritError")){
+        if (driverreturn.contains("CritError")) {
             return false;
         } else {
             return true;
@@ -229,7 +231,7 @@ public class HeimdallInstall {
 
     public void displayWindowsPermissionsMessageAndExit() {
         if (Statics.isWindows()) {
-            new CASUALInteraction("Permissions Error","Administrative permissions are required to continue.\n"
+            new CASUALInteraction("Permissions Error", "Administrative permissions are required to continue.\n"
                     + "Please log in as a System Administrator  and rerun the command or use the console: \n"
                     + "runas /user:Administrator java -jar " + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString() //Display Message
                     ).showErrorDialog();

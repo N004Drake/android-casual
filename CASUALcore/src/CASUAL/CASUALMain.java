@@ -24,7 +24,7 @@ public final class CASUALMain {
 
     String[] args;
     static Thread scriptPrep;
-    
+
     public void startup(String[] cmd) {
         args = cmd;
         new FileOperations().makeFolder(Statics.TempFolder);
@@ -43,22 +43,22 @@ public final class CASUALMain {
         try {
             pData.join(); //wait for properties
             cSound.start();  //do startup sound
-            
-        if (args.length != 0 && !Statics.useGUI) {
-            Statics.setStatus("waiting for ADB");
-            adb.join(); //wait for adb deployment
-            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
-            Statics.setStatus("Preparing scripts");
-            scriptPrep.join(); //wait for embedded scripts scan
-            Statics.setStatus("Warming Up");
-            doConsoleStartup();  //use command line args
-        } else {
-            Statics.useGUI = true;
-            doGUIStartup(); //bring up GUI and wait for user to click start
-            adb.join(); //wait for adb deployment
-            scriptPrep.join(); //wait for embedded scripts scan
-            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
-        }
+
+            if (args.length != 0 && !Statics.useGUI) {
+                Statics.setStatus("waiting for ADB");
+                adb.join(); //wait for adb deployment
+                Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                Statics.setStatus("Preparing scripts");
+                scriptPrep.join(); //wait for embedded scripts scan
+                Statics.setStatus("Warming Up");
+                doConsoleStartup();  //use command line args
+            } else {
+                Statics.useGUI = true;
+                doGUIStartup(); //bring up GUI and wait for user to click start
+                adb.join(); //wait for adb deployment
+                scriptPrep.join(); //wait for embedded scripts scan
+                Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+            }
         } catch (InterruptedException ex) {
             new Log().errorHandler(ex);
         }
@@ -70,8 +70,8 @@ public final class CASUALMain {
             if (args[i].contains("--execute") || args[i].contains("-e")) {
                 i++;
                 Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
-                CASUALScriptParser csp=new CASUALScriptParser();
-                String s= csp.executeOneShotCommand(args[i]);
+                CASUALScriptParser csp = new CASUALScriptParser();
+                String executeOneShotCommand = csp.executeOneShotCommand(args[i]);
                 Statics.setStatus("Complete");
                 new Log().level2Information("Script Complete");
             } else {
