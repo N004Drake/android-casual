@@ -95,17 +95,18 @@ class CASUALDeployADB {
 
 
         Log.level4Debug("Device List:" + DeviceList);
-        if ((!Statics.isWindows()) && ((DeviceList.contains("????????????") || (DeviceList.contains("**************")) || (DeviceList.contains("error: cannot connect to daemon"))))) {
-            Log.level4Debug("sleeping for 4 seconds.  Device list: " + DeviceList);
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException ex) {
-                Log.errorHandler(ex);
-            }
+        if ( DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon") ) {
+            Log.level4Debug(" Device list: " + DeviceList + " Restarting server slowly");
+            restartADBserver();
             DeviceList = Shell.silentShellCommand(devicesCmd).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
-            if (DeviceList.contains("????????????") || (DeviceList.contains("**************"))) {
+            if (!Statics.isWindows() && DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon") ) {
+                Log.level4Debug(" Device list: " + DeviceList + " \n Elevated Permissions Required to properly start ADB server");
+                killADBserver();
+                elevateADBserver();
             }
         } else {
+            Log.level4Debug(" Device list: " + DeviceList + " Restarting server slowly");
+            restartADBserver();
         }
     }
     
@@ -130,9 +131,27 @@ class CASUALDeployADB {
         Shell shell=new Shell();
         String[] killCmd = {Statics.AdbDeployed, "kill-server"};
         shell.silentShellCommand(killCmd);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Log.errorHandler(ex);
+        }
         String[] devicesCmd = {Statics.AdbDeployed, "devices"};
         shell.silentShellCommand(devicesCmd);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Log.errorHandler(ex);
+        }
     }
+    private void elevateADBserver(){
+        Log.level3Verbose("Restarting ADB");
+        Shell shell=new Shell();
+        String[] killCmd = {Statics.AdbDeployed, "kill-server"};
+        shell.silentShellCommand(killCmd);
+        String[] devicesCmd = {Statics.AdbDeployed, "devices"};
+        shell.elevateSimpleCommand(devicesCmd);
+    }    
     private void killADBserver(){
         Log.level3Verbose("Restarting ADB after system update");
         Shell shell=new Shell();
