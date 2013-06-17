@@ -51,11 +51,6 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
         jTextArea12 = new javax.swing.JTextArea();
         jScrollPane16 = new javax.swing.JScrollPane();
         jTextArea16 = new javax.swing.JTextArea();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
-        jScrollPane17 = new javax.swing.JScrollPane();
-        jTextArea17 = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea6 = new javax.swing.JTextArea();
@@ -85,8 +80,10 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
         jScrollPane14.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 
         jTextArea14.setColumns(20);
+        jTextArea14.setLineWrap(true);
         jTextArea14.setRows(5);
-        jTextArea14.setText("Your overview.txt file should contain:\n The name of the target device\nDirections on how to put the\ntarget device into download mode, \nA brief introduction. ");
+        jTextArea14.setText("The -Overview.txt file gives an overview of what this CASUAL is intended to do.  Place your credits, intended device, and initial startup conditions here.");
+        jTextArea14.setWrapStyleWord(true);
         jTextArea14.setBorder(null);
         jScrollPane14.setViewportView(jTextArea14);
 
@@ -94,7 +91,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea15.setColumns(20);
         jTextArea15.setRows(5);
-        jTextArea15.setText("This application is intended for the \nSony Ericsson Hero Incredible X S G1 Z 4G+ \nPut your device into develompent mode Settings>Applications>Developer Options....\nThis application does stuff and things.  Select the script you wish to perform. \n");
+        jTextArea15.setText("This application is intended for the :\nSony Ericsson Hero Incredible X S G1 Z 4G+ \nPut your device into develompent mode Settings>Applications>Developer Options....\nThis application does stuff and things.  Select the script you wish to perform. \n");
         jScrollPane15.setViewportView(jTextArea15);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -114,11 +111,11 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
 
-        jTabbedPane1.addTab("Overview.txt", jPanel1);
+        jTabbedPane1.addTab("-Overview.txt", jPanel1);
 
         jScrollPane12.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 
@@ -134,7 +131,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea16.setColumns(20);
         jTextArea16.setRows(5);
-        jTextArea16.setText("#Developer Name\nDeveloper.Name=Adam Outler\n#Donation link button title\nDeveloper.DonateToButtonText= XDA-Developers\n#Link for donate button\nDeveloper.DonateLink= http://forum.xda-developers.com/donations.php\n#This is the window title\nWindow.Title=CASUAL TEST SCRIPTS\n#If true, BannerPic will be used for the main window banner decoration\nWindow.UsePictureForBanner=True\n#The main window banner\nWindow.BannerPic=logo.png\n#If UsePictureForBanner is false this text will be displayed in large format\nWindow.BannerText=Do It!\n#text for main button\nWindow.ExecuteButtonText=Do It\n#\"true\" or \"True\" to enable\nAudio.Enabled=true \n");
+        jTextArea16.setText("#Developer Name\nDeveloper.Name=Adam Outler\n#Donation link button title\nDeveloper.DonateToButtonText=Adam Outler\n#Link for donate button\nDeveloper.DonateLink=http://my-Link.com\n#This is the window title\nWindow.Title=My CASUAL\n#If true, BannerPic will be used for the main window banner decoration\nWindow.UsePictureForBanner=true\n#The main window banner\nWindow.BannerPic=-logo.png\n#If UsePictureForBanner is false this text will be displayed in large format\nWindow.BannerText=Big Banner Text\n#text for main button\nWindow.ExecuteButtonText=Do It\n#\"true\" or \"True\" to enable\nAudio.Enabled=true \n#Enable Connection/Disconnection control locks\nApplication.AlwaysEnableControls=false;");
         jScrollPane16.setViewportView(jTextArea16);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -144,8 +141,8 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
-                    .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE)
+                    .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -154,55 +151,19 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("build.properties", jPanel2);
-
-        jScrollPane4.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
-
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jTextArea4.setText("The adb_usb.ini file contains instructions  for ADB to look at  non-standard  device \n types.  Generally this will not be needed.  If you're using a  normally  unsupported  \ndevice (Nook Tablet) you will  need to specify the USB  manufacturer code.\n Be careful  when modifying this file. ");
-        jTextArea4.setBorder(null);
-        jScrollPane4.setViewportView(jTextArea4);
-
-        jScrollPane17.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Example"));
-
-        jTextArea17.setColumns(20);
-        jTextArea17.setRows(5);
-        jTextArea17.setText("# ANDROID 3RD PARTY USB VENDOR ID LIST -- DO NOT EDIT.\n# USE 'android update adb' TO GENERATE.\n# 1 USB VENDOR ID PER LINE.\n0x2080");
-        jScrollPane17.setViewportView(jTextArea17);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane17, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane17, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab("adb_usb.ini", jPanel3);
+        jTabbedPane1.addTab("-build.properties", jPanel2);
 
         jScrollPane6.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 
         jTextArea6.setColumns(20);
+        jTextArea6.setLineWrap(true);
         jTextArea6.setRows(5);
-        jTextArea6.setText("A Script.scr may be named any name and include spaces.  This will be the name the user\nsees.  The Script.scr is the master file.  Script.txt supports it with a description and \nScript.zip   supports it with files.  The Script.scr controls how the selected program\noperates. Below you will find an example containing all Script.scr commands.");
+        jTextArea6.setText("A Script.scr may be named any name and include spaces.  This will be the name the user sees.  The Script.scr is the master file.  Script.txt supports it with a description and Script.zip   supports it with files.  The Script.scr controls how the selected program operates. Below you will find an example containing all Script.scr commands.");
+        jTextArea6.setWrapStyleWord(true);
         jTextArea6.setBorder(null);
         jScrollPane6.setViewportView(jTextArea6);
 
@@ -210,7 +171,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea18.setColumns(20);
         jTextArea18.setRows(5);
-        jTextArea18.setText("#This is a comment\n#The next line will display an input box, then send a shell to echo the input\n$USERINPUTBOX Box Title, Box Message, shell echo $USERINPUT \n$USERNOTIFICATION Notification Title testing, This is a Notification  with a filename $ZIPFILE\n$USERCANCELOPTION This is the option to cancel, do you wish to cancel?\n#The commands $ZIPFILE and $SLASH  may be placed anywhere\n#$ZIPFILE is for a reference to the script's .zip file\n#SLASH is the reference to the system file separator\n#This will set up an action/reaction listener. \n#When the shell returns ERROR, the $HALT command will be executed\n$ON ERROR, $HALT $ECHO stopping because of error\n#$ECHO will display something to the user\n$ECHO I will now execute \"adb commands\".\ndevices\npush \"$ZIPFILEMyFile.txt\" /sdcard\nshell ls /data\n#$HALT will execute any command on the same line and then end the script\n$HALT $ECHO I will not execute any further comands becaue $HALT was issued\nshell echo hi");
+        jTextArea18.setText("#This is the CASUAL Test Script.  It tests all functions of CASUAL\n$ECHO Testing ALL CASUAL commands. Connect your device\n$ADB push $ZIPFILEwafaf /asfd\n#$ADB wait-for-device\n$LINUXMAC $ECHO This is a Linux or Mac Computer.\n$LINUXWINDOWS $ECHO This is a Linux or Windows Computer.\n$WINDOWSMAC $ECHO This is a Windows or Mac Computer.\n$LINUX $GOTO #for LiN\n$WINDOWS $GOTO #for MaC\n$MAC $GOTO #for WiN\n\n#for LiNuX\n$ECHO [PASS] LINUX This is a Linux computer.\n$GOTO #THIS IS A COMMEN\n$HALT $ECHO GOTO command failed \n\n\n#for MaC\n$ECHO [PASS] MAC This is a Mac Computer.\n$GOTO #THIS IS A COMMEN\n$HALT $ECHO GOTO command failed \n\n\n#for WiNdOwS\n$ECHO [PASS] WINDOWS This is a Windows Computer.\n$GOTO #THIS IS A COMMEN\n$HALT $ECHO GOTO command failed \n\n\n#THIS IS A COMMENT and it's a target for $GOTO\n$ECHO Testing On\n$ON woot, $GOTO #PASS ON command test\n$ADB shell \"echo woot\"\n$HALT $ECHO GOTO command failed \n\n$HALT $ECHO $ON Failure!\n$GOTO #Done with ON\n\n\n#PASS ON command test\n$ECHO \n#Done with ON\n$ECHO [PASS] done with ON testing.\n\n\n#this is just in case I want to use the word woot again while writing this.\n$CLEARON\n\n$IFCONTAINS foo $INCOMMAND $ADB shell \"echo woot `pwd`\" $DO $HALT $ECHO Failure\n$IFCONTAINS foo $INCOMMAND $ADB shell \"echo foo\" $DO $ECHO [PASS] IFCONTAINS\n$IFNOTCONTAINS woot $INCOMMAND $ADB shell \"echo woot `pwd`\" $DO $HALT $ECHO Failure\n$IFNOTCONTAINS foo $INCOMMAND $ADB shell \"echo woot `pwd`\" $DO $ECHO [PASS] IFNOTCONTAINS\n\n$ECHO This is ZIPFILE reference $ZIPFILE.\n$ADB shell \"echo $ZIPFILE\"\n\n$ECHO This is SLASH reference $SLASH.\n\n$ECHO This is HOMEFOLDER reference.\n$ADB shell \"echo [PASS] $HOMEFOLDER\"\n\n$ECHO Making a folder in HOMEFOLDER called foo.\n$MAKEDIR $HOMEFOLDERfoo\n\n#$ECHO Downloading a file into foo\n#do we need this? $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java, $HOMEFOLDERfoo,  a file from CASUAL rep/\n#Same for $EXECUTE\n#$ECHO attempting to execute 'ls' command\n#$EXECUTE ls\n\n\n$ECHO This is a LISTDIR on HOMEFOLDER and you should see something in there.\n$LISTDIR /\n$ECHO USERNOTIFICATION\n$USERNOTIFICATION notification, This is a \\n notification and tests new lines too.\n$ECHO USERCANCELOPTION\n$USERCANCELOPTION want to quit?, If you want to quit\\n hit stop.\n$ECHO ACTIONREQUIRED\n$ACTIONREQUIRED you have to do something dummy,  In order to continue you have do\\n this!\n$ECHO USERINPUTBOX\n$USERINPUTBOX type something, I will repeat what\\nyou type., $ECHO [PASS] $USERINPUT\n$ECHO Waiting for device\nwait-for-device\n$ECHO Rebooting into Download Mode\n$ADB reboot download\n$ECHO You must have a SAMSUNG connected!\n$ECHO Rebooting into ADB Mode mode\n$HEIMDALL close-pc-screen\n$ECHO Waiting for device to automatically reboot\n\n$ECHO Connect a nexus device now.\nwait-for-device\n$ECHO Rebooting into bootloader\n$ADB reboot bootloader\n$FASTBOOT reboot\n$ECHO rebooting into android\n\n\n$HALT $ECHO $HALT [PASS] If your device rebooted twice, ALL TESTS PASSED!!!!!!!!!!!!. ");
         jScrollPane18.setViewportView(jTextArea18);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -221,7 +182,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
-                    .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE))
+                    .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -229,7 +190,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
                 .addGap(24, 24, 24))
         );
 
@@ -238,8 +199,10 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
         jScrollPane8.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 
         jTextArea8.setColumns(20);
+        jTextArea8.setLineWrap(true);
         jTextArea8.setRows(5);
         jTextArea8.setText("The script.txt file describes the currently selected item from the dropdown box");
+        jTextArea8.setWrapStyleWord(true);
         jTextArea8.setBorder(null);
         jScrollPane8.setViewportView(jTextArea8);
 
@@ -247,7 +210,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea19.setColumns(20);
         jTextArea19.setRows(5);
-        jTextArea19.setText("This gives the user a helpful message before they click the button. ie...\n  \n Ensure you are rooted or this will fail. credits to me.");
+        jTextArea19.setText("This gives the user a helpful message before they click the button. ie...\n  \n Ensure you are rooted or this will fail. Credits to Developer.");
         jScrollPane19.setViewportView(jTextArea19);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -257,7 +220,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
+                    .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE)
                     .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -267,7 +230,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -276,8 +239,10 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
         jScrollPane10.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 
         jTextArea10.setColumns(20);
+        jTextArea10.setLineWrap(true);
         jTextArea10.setRows(5);
-        jTextArea10.setText("The Script.zip should be used to store files to be pushed to a device for Script.scr.  A \nScript.zip may be referenced by the Script.scr with the command $ZIPFILE.  \n ");
+        jTextArea10.setText("The Script.zip should be used to store files to be pushed to a device for Script.scr.  A Script.zip may be referenced by the Script.scr with the command $ZIPFILE.  \n ");
+        jTextArea10.setWrapStyleWord(true);
         jTextArea10.setBorder(null);
         jScrollPane10.setViewportView(jTextArea10);
 
@@ -296,7 +261,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
-                    .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE))
+                    .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -305,7 +270,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(jScrollPane20, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -314,8 +279,10 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
         jScrollPane11.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
 
         jTextArea11.setColumns(20);
+        jTextArea11.setLineWrap(true);
         jTextArea11.setRows(5);
-        jTextArea11.setText("A CASUAL meta is used for killswitch and auto-update. this must be present upon\ndeployment of CASUAL in order to make use of it.  Meta consists of the following:\n*Minimum CASUAL revision required or killswitch will be active and user will be \nbrought to a support page.\n*Minimum script revision required or update will occur automatically.\n*Anti-collision ID which must match in the repository what is in the script or meta\nwill be deactivated.\n*Update/Killswitch message will be displayed to the user when update or killswitch\noccurs\n*MD5sum and filename in the repository version of a meta instructs CASUAL to \ndownload the particular file and perform an MD5.  This is only used for updates.");
+        jTextArea11.setText("A CASUAL meta is used for killswitch and auto-update. this must be present upon deployment of CASUAL in order to make use of it.  Meta consists of the following:\nCASUAL.MinSVN must be higher than CASUAL's SVN or killswitch will be active and user will be brought to the SupportURL page.\nScript.ID is used to identify the proper script in the online update repo.\nScript.Revision must be equal to or higher than the web version or update will occur automatically.\nScript.UpdateMessage/Script.KillSwitchMessage will be displayed to the user when update or killswitch occurs \nScript.MD5sum Instructs CASUAL of the filename to download and perform an MD5.  MD5s are updated automatically in the development IDE after initial addition.  MD5s are optional and irrelevant if not present.");
+        jTextArea11.setWrapStyleWord(true);
         jTextArea11.setBorder(null);
         jScrollPane11.setViewportView(jTextArea11);
 
@@ -323,7 +290,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
 
         jTextArea21.setColumns(20);
         jTextArea21.setRows(5);
-        jTextArea21.setText("CASUAL 216\nRevision 9001\nID MY UNIQUE SCRIPT IDENTIFIER\nURL http://forum.xda-developers.com/showthread.php\nMessage  YOUR MESSAGE HERE \n41685fb7827d6d0e1054e466dc55554b  Script.scr");
+        jTextArea21.setText("CASUAL.minSVN=600\nScript.Revision=50\nScript.ID=My Unique ID For This Script\nScript.SupportURL=http://xda-developers.com\nScript.UpdateMessage=Update: I incremented teh revision\nScript.KillSwitchMessage=this has been killed because I say so\nScript.MD5[0]=96e59ab98dc651b6d4b41e4dbca25fe9  TestScript.scr\nScript.MD5[1]=414ac6d725a4048c591f1aeefdc48591  TestScript.zip\nScript.MD5[2]=45f8b252c6872be9ba3c3f462559ec87  TestScript.txt\n");
         jScrollPane21.setViewportView(jTextArea21);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -333,7 +300,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE)
                     .addComponent(jScrollPane21, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -343,7 +310,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane21, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addComponent(jScrollPane21, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -433,7 +400,6 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
@@ -444,12 +410,10 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane14;
     private javax.swing.JScrollPane jScrollPane15;
     private javax.swing.JScrollPane jScrollPane16;
-    private javax.swing.JScrollPane jScrollPane17;
     private javax.swing.JScrollPane jScrollPane18;
     private javax.swing.JScrollPane jScrollPane19;
     private javax.swing.JScrollPane jScrollPane20;
     private javax.swing.JScrollPane jScrollPane21;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -460,12 +424,10 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea14;
     private javax.swing.JTextArea jTextArea15;
     private javax.swing.JTextArea jTextArea16;
-    private javax.swing.JTextArea jTextArea17;
     private javax.swing.JTextArea jTextArea18;
     private javax.swing.JTextArea jTextArea19;
     private javax.swing.JTextArea jTextArea20;
     private javax.swing.JTextArea jTextArea21;
-    private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea6;
     private javax.swing.JTextArea jTextArea8;
     // End of variables declaration//GEN-END:variables
