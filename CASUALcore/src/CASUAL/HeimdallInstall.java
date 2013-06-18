@@ -180,20 +180,13 @@ public class HeimdallInstall {
         //install drivers
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
-        /*WindowsDrivers wd = new WindowsDrivers();
-         if(Statics.VID == "") {
-         for(int x = 0; Statics.WindowsDriverBlanket.length > x; x++) wd.installDriver(Statics.WindowsDriverBlanket[x]);
-         } else if((Statics.VID != "") && (Statics.PID == "")) {
-         wd.installDriver(Statics.VID);
-         } else {
-         wd.installDriver(Statics.VID, Statics.PID);
-         }*/
+        
         log.level0Error("\nDrivers are Required Launching CADI.\nCASUAL Automated Driver Installer by jrloper.\nInstalling Drivers now"); //Add Newline
         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
                 + "We're going to install drivers now.  Lets do it.\n"
                 + "THIS PROCESS CAN TAKE UP TO 5 MINTUES.\nDURING THIS TIME YOU WILL NOT SEE ANYTHING.\nBE PATIENT!");
 
-
+        //new WindowsDrivers().installDriverBlanket();
         String exec = "";
         try {
             if (new FileOperations().verifyResource(Statics.WinDriverResource)) {
