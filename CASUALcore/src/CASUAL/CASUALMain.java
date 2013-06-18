@@ -25,6 +25,10 @@ public final class CASUALMain {
     String[] args;
     static Thread scriptPrep;
 
+    /**
+     * startup is where CASUAL starts its normal routines for both 
+     * @param cmd 
+     */
     public void startup(String[] cmd) {
         args = cmd;
         new FileOperations().makeFolder(Statics.TempFolder);

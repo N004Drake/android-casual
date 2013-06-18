@@ -468,7 +468,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
-        new Shell().sendShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
+        new Shell().sendShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
 
     }//GEN-LAST:event_formWindowClosing
     boolean buttonEnableStage = false;

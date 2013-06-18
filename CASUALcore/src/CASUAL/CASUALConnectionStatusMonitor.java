@@ -83,7 +83,7 @@ public class CASUALConnectionStatusMonitor {
                                         + "-if that doesn't work then reboot *everything*...\n"
                                         + "reboot the computer and reboot the computer.").showTimeoutDialog(120, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
                                 Log.level0Error("Disconnect and reconnect your device.  Check the device for instructions.");
-                                DeviceList = Shell.sendShellCommand(new String[]{Statics.AdbDeployed, "wait-for-device"});
+                                DeviceList = Shell.sendShellCommand(new String[]{Statics.adbDeployed, "wait-for-device"});
                                 Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                             }
                         }
@@ -99,7 +99,7 @@ public class CASUALConnectionStatusMonitor {
                             //Linux and mac only.
                             if (DeviceList.contains("????????????")) {
                                 Log.level0Error("Insufficient permissions detected.");
-                                String cmd[] = {Statics.AdbDeployed, "kill-server"}; //kill the server
+                                String cmd[] = {Statics.adbDeployed, "kill-server"}; //kill the server
                                 Log.level2Information("killing server and requesting elevated permissions.");
                                 Shell.sendShellCommand(cmd); //send the command
                                 //notify user that permissions will be requested and what they are used for
@@ -110,7 +110,7 @@ public class CASUALConnectionStatusMonitor {
                                         + "with the device.  As a work-around we\n"
                                         + "will attempt to elevate permissions \n"
                                         + "to access the device properly.").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
-                                String[] getDevicesCommand = new String[]{Statics.AdbDeployed, "devices"};
+                                String[] getDevicesCommand = new String[]{Statics.adbDeployed, "devices"};
                                 DeviceList = Shell.elevateSimpleCommand(getDevicesCommand);
                                 // if permissions elevation was sucessful
                                 if (!DeviceList.contains("????????????")) {
@@ -139,7 +139,7 @@ public class CASUALConnectionStatusMonitor {
                 }
             }
         };
-        //GETDEVICECOMMAND = new String[]{Statics.AdbDeployed, "devices"};
+        //GETDEVICECOMMAND = new String[]{Statics.adbDeployed, "devices"};
     }
     /*
      * Starts and stops the ADB timer
@@ -211,7 +211,7 @@ public class CASUALConnectionStatusMonitor {
     }
 
     private String getConnectedDevices() {
-        String[] getDevicesCommand = new String[]{Statics.AdbDeployed, "devices"};
+        String[] getDevicesCommand = new String[]{Statics.adbDeployed, "devices"};
         String devices = Shell.silentShellCommand(getDevicesCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
         return devices;
 

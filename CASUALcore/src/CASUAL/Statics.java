@@ -108,7 +108,7 @@ public class Statics {
         return TempF;
     }
     //Cross-Platform data storage
-    public static String AdbDeployed; //location of ADB after deployment
+    public static String adbDeployed; //location of ADB after deployment
     public static String SelectedScriptFolder;//Used for script locations on disk
     public static String WinElevatorInTempFolder = TempFolder + "Elevate.exe"; //location of elevate.exe after deployed
 
@@ -346,7 +346,7 @@ public class Statics {
         PreProgress = "";
         ProgressDoc=null;
         TempF = null;
-        AdbDeployed=null;
+        adbDeployed=null;
         SelectedScriptFolder="";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         scriptRunLock = false;

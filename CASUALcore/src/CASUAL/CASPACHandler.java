@@ -35,8 +35,8 @@ public class CASPACHandler {
     String meta = "";
 
     /**
-     *
-     * @param pack Launches a CASPAC
+     *Launches a CASPAC
+     * @param pack 
      */
     public void loadCASUALPack(String pack) {
 

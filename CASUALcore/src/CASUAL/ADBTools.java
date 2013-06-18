@@ -16,22 +16,22 @@ import java.util.logging.Logger;
 public class ADBTools {
     Log log=new Log();
     public static String[] devicesCmd(){
-        return new String[]{Statics.AdbDeployed, "devices"}; 
+        return new String[]{Statics.adbDeployed, "devices"}; 
     };
     public static String[] startServer(){
-        return new String[] {Statics.AdbDeployed, "start-server"};
+        return new String[] {Statics.adbDeployed, "start-server"};
     }
     public static String[] killServer(){
-        return new String[]{Statics.AdbDeployed, "kill-server"};
+        return new String[]{Statics.adbDeployed, "kill-server"};
     }
     
     public void restartADBserverSlowly() {
         try {
             log.level3Verbose("Restarting ADB slowly");
             Shell shell = new Shell();
-            shell.timeOutShellCommand(killServer(),500);
+            shell.timeoutShellCommand(killServer(),500);
             sleepForMillis(1000);
-            shell.timeOutShellCommand(devicesCmd(), 3000);
+            shell.timeoutShellCommand(devicesCmd(), 3000);
         } catch (TimeoutException ex) {
             //Do nothing  This is windows being a PITA and not returning. 
         }
@@ -63,7 +63,7 @@ public class ADBTools {
         if ((Statics.isLinux()) && (DeviceList.contains("ERROR-3"))) { //Don't know how to handle this yet
             Shell shell = new Shell();
             log.level0Error("Permissions problem detected. Killing and requesting permissions escillation.");
-            shell.silentShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
+            shell.silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
             shell.elevateSimpleCommandWithMessage(devicesCmd(), "Device permissions problem detected");
         }
 
