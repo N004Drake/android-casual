@@ -362,14 +362,32 @@ public class Shell {
         }
     };
 
-    public String timeOutShellCommand(final String[] cmd, int timeout) throws TimeoutException {
-
-        FutureTask<String> future =
-                new FutureTask<>(new Callable<String>() {
+    
+    /**
+     * timeoutShellCommand is a multi-threaded method and reports to 
+     * the TimeOutString class.  The value contained within  the 
+     * TimeOutString class is reported after the timeout elapses
+     * if the task locks up.
+     * 
+     * @param cmd cmd to be executed
+     * @param timeout in millis
+     * @return any text from the command
+     * @throws TimeoutException 
+     */
+    public String timeoutShellCommand(final String[] cmd, int timeout) throws TimeoutException {
+      
+        //Class object to be made final so it can be passed into the runnable
+        class TimeoutString{
+            public String AllText = "";
+        };
+        //final object for runnable to write out to.
+        final TimeoutString tos = new TimeoutString();
+ 
+        //Runnable executes in the background
+        Runnable runCommand = new Runnable(){
             @Override
-            public String call() {
+            public void run() {
                 log.level4Debug("\n###executing: " + cmd[0] + "###");
-                String AllText = "";
                 try {
                     String line;
                     ProcessBuilder p=new ProcessBuilder(cmd);
@@ -378,36 +396,33 @@ public class Shell {
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     
                     while ((line = STDOUT.readLine()) != null) {
-                        AllText = AllText + line + "\n";
+                        tos.AllText = tos.AllText + line + "\n";
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
-                    return AllText + "\n";
                 } catch (Exception ex) {
                     log.level0Error("Problem while executing" + arrayToString(cmd)
-                            + " in Shell.sendShellCommand() Received " + AllText);
-                    return "CritERROR!!!";
+                            + " in Shell.sendShellCommand() Received " + tos.AllText);
                 }
-
             }
-        });
-        Thread t;
-        t = new Thread(future);
+        };
+        //t executes the runnable on a different thread
+        Thread t = new Thread(runCommand);
         t.start();
-        Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
-        calendar.add(Calendar.SECOND, 5);
-        System.out.println(calendar.getTime());
-        if (Calendar.getInstance().getTimeInMillis() >calendar.getTimeInMillis()) {
-            throw new TimeoutException();
+        
+        //set up timeout with calendar time in millis
+        Calendar endTime = Calendar.getInstance();
+        endTime.add(Calendar.MILLISECOND, timeout);
+        log.level4Debug("Executing timeoutShellCommand");
+        log.level4Debug("The current time is: "+Calendar.getInstance().getTimeInMillis());
+        log.level4Debug("The thread will end at: "+endTime.getTimeInMillis());
+        //loop while not timeout and halt if thread dies. 
+        while (Calendar.getInstance().getTimeInMillis()<endTime.getTimeInMillis()) {
+            if (! t.isAlive()) break;
         }
-        String retval;
-        try {
-            retval = future.get();
-        } catch (InterruptedException ex) {
-            return "CritError!!!";
-        } catch (ExecutionException ex) {
-            return "CritError!!!";
-        }
-        return retval;
+        //return values logged from TimeoutString class above
+        return tos.AllText;
         
     }
+    
+
 }

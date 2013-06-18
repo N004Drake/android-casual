@@ -32,23 +32,8 @@ public class CASUALApp {
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
 
-    public static void beginCASUAL(String[] args) {
-        CASUALapplicationData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
-        CASUALapplicationData.CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
-        CASUALapplicationData.CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
-        new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
-                + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALapplicationData.CASUALSVNRevision + " build:" + CASUALapplicationData.CASUALBuildNumber + "\n"
-                + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
-                + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
-                + "    and you are welcome to redistribute it, under certain conditions; run\n"
-                + "    '" + CASUALapplicationData.CASUALFileName + " --license'\n"
-                + "    for details. http://android-casual.googlecode.com for source.");
-
-
-        checkEarlyArgs(args);
-        new CASUALMain().startup(args);
-    }
-    String[] arguments;
+   
+    static String[] arguments;
 
     /**
      * At startup create and show the main frame of the application.
@@ -69,15 +54,46 @@ public class CASUALApp {
      * @param args
      */
     public static void main(String[] args) {
+        arguments=args;
+        //Initialize statics
         Statics.initializeStatics();
 
-        if (useOverrideArgs) { //overrides command line input
+        //Override args for test modes
+        if (useOverrideArgs) { 
             args = overrideArguments;
         }
         beginCASUAL(args);
-    }
+     } 
 
-    private static void checkEarlyArgs(String args[]) {
+     /**
+      * Begins actual CASUAL modes this can be called as a reset for CASUAL
+      * without losing args[] in case of a problem
+      * @param args 
+      */
+     public static void beginCASUAL(String[] args) {
+        CASUALapplicationData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
+        CASUALapplicationData.CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+        CASUALapplicationData.CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
+        new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
+                + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALapplicationData.CASUALSVNRevision + " build:" + CASUALapplicationData.CASUALBuildNumber + "\n"
+                + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
+                + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
+                + "    and you are welcome to redistribute it, under certain conditions; run\n"
+                + "    '" + CASUALapplicationData.CASUALFileName + " --license'\n"
+                + "    for details. http://android-casual.googlecode.com for source.");
+
+
+        checkModeSwitchArgs(args);
+        new CASUALMain().startup(args);
+    }
+    
+    /**
+     * checkModeSwitchArgs is a primary switch before any real
+     * actions happen.  Here we check for switches that will either
+     * change the mode of CASUAL or display something quick and exit.
+     * @param args 
+     */
+    private static void checkModeSwitchArgs(String args[]) {
 
         for (int i = 0; i < args.length; i++) {
 
@@ -128,7 +144,7 @@ public class CASUALApp {
                 window.dispose();
             }
         }
-        new Shell().silentShellCommand(new String[]{Statics.AdbDeployed, "kill-server"});
+        new Shell().silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
         Statics.initializeStatics();
     }
 }

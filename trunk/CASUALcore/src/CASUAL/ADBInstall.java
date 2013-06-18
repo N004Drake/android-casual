@@ -17,8 +17,7 @@
 package CASUAL;
 
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 
 /**
@@ -32,35 +31,33 @@ class ADBInstall {
 
     public void deployADB() {
 
+        int adbTimeout=0;
         if (Statics.isLinux()) {
             Log.level4Debug("Found Linux Computer");
-            updateADBini();
-            Statics.AdbDeployed = Statics.TempFolder + "adb";
-            FileOperations.copyFromResourceToFile(Statics.LinuxADB(), Statics.AdbDeployed);
-            FileOperations.setExecutableBit(Statics.AdbDeployed);
+            Statics.adbDeployed = Statics.TempFolder + "adb";
+            FileOperations.copyFromResourceToFile(Statics.LinuxADB(), Statics.adbDeployed);
         } else if (Statics.isMac()) {
             Log.level4Debug("Found Mac Computer");
-            updateADBini();
-            Statics.AdbDeployed = Statics.TempFolder + "adb";
-            FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.AdbDeployed);
-            FileOperations.setExecutableBit(Statics.AdbDeployed);
+            Statics.adbDeployed = Statics.TempFolder + "adb";
+            FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.adbDeployed);
         } else if (Statics.isWindows()) {
             Log.level4Debug("Found Windows Computer");
-            updateADBini();
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
-            Statics.AdbDeployed = Statics.TempFolder + "adb.exe";
-            FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.AdbDeployed);
+            Statics.adbDeployed = Statics.TempFolder + "adb.exe";
+            FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.adbDeployed);
             FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
             FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
+            adbTimeout=3000;
         } else {
             new CASUALInteraction("Warning","Your system is not natively supported,\nplease install ADB manually.\nAttempting to continue").showInformationMessage();
-            Statics.AdbDeployed = "adb";
+            Statics.adbDeployed = "adb";
         }
 
-        
+        updateADBini();
+        FileOperations.setExecutableBit(Statics.adbDeployed); //for *nix.
         String DeviceList;
         try {
-            DeviceList = new Shell().timeOutShellCommand(ADBTools.devicesCmd(), 3000);
+            DeviceList = new Shell().timeoutShellCommand(ADBTools.devicesCmd(), adbTimeout);
         } catch (TimeoutException ex) {
             DeviceList="";
         }
