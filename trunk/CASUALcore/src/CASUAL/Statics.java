@@ -47,18 +47,6 @@ public class Statics {
     public static int GUIVerboseLevel = 2; //userdata is output to console
     public static int CommandLineVerboseLevel = 4; //all logs are output to file
   
-    /* WindowsDrivers variables
-     * VID - Legend
-     * 18D1 Google
-     * 04E8 Samsung
-     * 0B05 Asus
-     * 0BB4 HTC
-     * 22B8 Motorola
-     * 054C Sony
-     * 2080 B&N
-     */
-
-
     /*
      * miscellanious variables
      */    
