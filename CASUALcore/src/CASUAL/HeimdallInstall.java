@@ -206,12 +206,58 @@ public class HeimdallInstall {
          * 
          * Access is denied is likely a non-priviliged account otherwise access would be granted.
          * 
-         * [DEBUG]Attempting to write C:\Users\William\AppData\Local\Temp\WilliamTEMPCASUALD13E68C1\CADI.exe
-         * [DEBUG]File verified.
-         * [DEBUG]###executing: cmd.exe###
-         * [VERBOSE]null
-         * [INFO]
-         * Access is denied.         * 
+         * 
+         * UNSUPPORTED DEVICE for Galaxy S1  Loops forever   Why is GS1 not supported?
+[DEBUG]deployHeimdallForWindows- verifying Heimdall deployment
+[DEBUG]heimdall install sucessful
+Waiting for Downoad Mode device...[VERBOSE]detected!
+[INFO]Executing Heimdall command.
+[VERBOSE]Performing standard Heimdall commandclose-pc-screen
+[DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
+Heimdall v1.4.0
+
+Copyright (c) 2010-2013, Benjamin Dobell, Glass Echidna
+http://www.glassechidna.com.au/
+
+This software is provided free of charge. Copying and redistribution is
+encouraged.
+
+If you appreciate this software and you would like to support future
+development please consider donating:
+http://www.glassechidna.com.au/donate/
+
+Initialising connection...
+Detecting device...
+ERROR: Failed to access device. libusb error: -12
+[ERROR]
+Drivers are Required Launching CADI.
+CASUAL Automated Driver Installer by jrloper.
+Installing Drivers now
+[VERBOSE]Driver Problems suck. Lemme make it easy.
+We're going to install drivers now.  Lets do it.
+THIS PROCESS CAN TAKE UP TO 5 MINTUES.
+DURING THIS TIME YOU WILL NOT SEE ANYTHING.
+BE PATIENT!
+[DEBUG]Attempting to write C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\CADI.exe
+[DEBUG]File verified.
+[DEBUG]###executing: cmd.exe###
+[INFO]
+
+[INFO]
+[Heimdall Error Report] Detected:
+'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue
+[/Heimdall Error Report]
+
+
+[VERBOSE]Performing standard Heimdall commandclose-pc-screen
+[DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
+Heimdall v1.4.0
+....
+* ...
+* ...
+
+[ERROR]Maximum retries exceeded. Shutting down Parser.
+[DEBUG]HALT RECEIVED    * 
          * 
          */
         log.level2Information(driverreturn);

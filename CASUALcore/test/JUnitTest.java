@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+import CASUAL.CASUALTest;
 import CASUAL.CASUALApp;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -189,7 +190,7 @@ public class JUnitTest {
             if (new CASUAL.CASUALInteraction("Overall Test", "Connect a device in ADB mode").showUserCancelOption() == 1) {
                 String[] cmd=new String[]{"-e", "$ADB shell \"echo hi\""};
                 String[] checks=new String[]{"hi"};
-                new CASUALTest(checks,cmd).checkTestPoints();
+                new CASUAL.CASUALTest(checks,cmd).checkTestPoints();
             }
 
         }

@@ -1,3 +1,5 @@
+package CASUAL;
+
 /*CASUALTest provides an automation framework for CASUAL
  *Copyright (C) 2013  Adam Outler
  *
@@ -44,7 +46,7 @@ public class CASUALTest {
     final String[] loggingParams;
     private boolean[] loggingResults;
     /* constructor sets up logging and parameters */
-    CASUALTest( String[] CASUALLaunchCommand,String[] valuesToCheckDuringRun) {
+    public CASUALTest( String[] CASUALLaunchCommand,String[] valuesToCheckDuringRun) {
         loggingParams=valuesToCheckDuringRun;
         loggingResults=new boolean[loggingParams.length];
         Arrays.fill(loggingResults,Boolean.FALSE);
