@@ -179,6 +179,7 @@ public class JUnitTest {
             //testing Fastboot reboot
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Testing Fastboot", "Connect a device in FASTBOOT mode").showUserCancelOption() == 1) {
+                
                 String returnval = new CASUAL.CASUALScriptParser().executeOneShotCommand("$FASTBOOT reboot");
                 assert returnval.contains("rebooting...");
             }
@@ -186,26 +187,9 @@ public class JUnitTest {
             CASUALApp.shutdown(0);
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Overall Test", "Connect a device in ADB mode").showUserCancelOption() == 1) {
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
-                CASUAL.CASUALApp.main(new String[]{"-e", "$ADB shell \"echo hi\""});
-                CASUAL.CASUALApp.shutdown(0);
+                String[] cmd=new String[]{"-e", "$ADB shell \"echo hi\""};
+                String[] checks=new String[]{"hi"};
+                new CASUALTest(checks,cmd).checkTestPoints();
             }
 
         }
@@ -214,4 +198,24 @@ public class JUnitTest {
     //
     // @Test
     // public void hello() {}
+    
+    private void setTestPoints(String[] readStrings){
+        
+    }
+    private boolean checkTestPoints(){
+        if (checkPassed !=null && checkPassed.length>0){
+            for (boolean check : checkPassed){
+                if (!check) return false;
+            }
+        }
+        return true;
+    }
+    
+    static String[] testpoints;
+    static Boolean[] checkPassed;
+
+    
+    
+
+
 }

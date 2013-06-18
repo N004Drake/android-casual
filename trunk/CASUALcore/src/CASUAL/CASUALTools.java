@@ -224,7 +224,7 @@ public class CASUALTools {
     public Runnable adbDeployment = new Runnable() {
         @Override
         public void run() {
-            new CASUALDeployADB().deployADB();
+            new ADBInstall().deployADB();
         }
     };
     /**

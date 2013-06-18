@@ -30,7 +30,6 @@ public class CASUALApp {
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
-    final private static boolean useTestFramework = false; // this will begin an automated test without notifications
     final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
 
     public static void beginCASUAL(String[] args) {
@@ -74,19 +73,6 @@ public class CASUALApp {
 
         if (useOverrideArgs) { //overrides command line input
             args = overrideArguments;
-        }
-        if (useTestFramework) { //automates CASUAL to test for errors
-            CASUALTest.args = args;
-            //Statics.GUI=new CASUALJFrameMain();
-            Statics.useGUI = false;
-            try {
-                new CASUALTest(args).instantiateCASUAL();
-                return;
-            } catch (Exception e) {
-                new Log().errorHandler(e);
-                //CASUALApp.shutdown(0);
-            }
-            //CASUALApp.shutdown(0);
         }
         beginCASUAL(args);
     }
