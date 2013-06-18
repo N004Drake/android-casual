@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +22,9 @@ import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,22 +41,29 @@ public class CASUALTest {
     PipedOutputStream fromAppPipedOutputStream;
     PipedInputStream fromAppPipedInputStream;
 
+    final String[] loggingParams;
+    private boolean[] loggingResults;
     /* constructor sets up logging and parameters */
-    CASUALTest(final String[] CASUALLaunchCommand) {
-
+    CASUALTest( String[] CASUALLaunchCommand,String[] valuesToCheckDuringRun) {
+        loggingParams=valuesToCheckDuringRun;
+        loggingResults=new boolean[loggingParams.length];
+        Arrays.fill(loggingResults,Boolean.FALSE);
+        
+        
+        
         try {
             fromAppPipedInputStream = new PipedInputStream(BUFFER);
             fromAppPipedOutputStream = new PipedOutputStream(fromAppPipedInputStream);
             readFromCASUAL = new BufferedReader(new InputStreamReader(fromAppPipedInputStream));
-            Log.out = new PrintStream(fromAppPipedOutputStream);
+            CASUAL.Log.out = new PrintStream(fromAppPipedOutputStream);
 
             toAppPipedInputStream = new PipedInputStream(BUFFER);
             writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
-            CASUALInteraction.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
+            CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
 
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            new CASUAL.Log().errorHandler(ex);
         }
 
 
@@ -63,12 +73,18 @@ public class CASUALTest {
     }
     StringBuilder sb = new StringBuilder();
 
-    public void instantiateCASUAL() {
+    private void instantiateCASUAL() {
         //Runnable launchCASUAL=new CASUALTest();
         Thread launch = new Thread(launchCASUAL);
         launch.start();
         Thread read = new Thread(readReactToCASUAL);
         read.start();
+        try {
+            launch.join();
+            read.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     Runnable readReactToCASUAL = new Runnable() {
         @Override
@@ -80,9 +96,12 @@ public class CASUALTest {
                     String line;
                     while ((line = readFromCASUAL.readLine()) != null) {
                         doCasualOuputHandling(line);
+                        if (line.contains("[DEBUG]Shutting Down")) break;
                     }
-                    //nothing came out of CASUAL's log, so lets sleep.
+                    if (line.contains("[DEBUG]Shutting Down")) break;
+                    //nothing came out of CASUAL's Log, so lets sleep.
                     doQuarterSecondSleep();
+                    
                 } catch (IOException ex) {
                     //no need to report this. its fine
                 }
@@ -94,6 +113,7 @@ public class CASUALTest {
         private void doCasualOuputHandling(String line) {
             try {
                 System.out.println(line);
+                validateLine(line);
 
                 if (line.contains("ERROR")) {
                     System.out.println(line); //error
@@ -131,7 +151,7 @@ public class CASUALTest {
                     writeToCASUAL.write(13);
                 }
             } catch (IOException ex) {
-                new Log().errorHandler(ex);
+                new CASUAL.Log().errorHandler(ex);
 
             }
 
@@ -152,7 +172,32 @@ public class CASUALTest {
 
             CASUAL.CASUALApp.beginCASUAL(args);
             shutdown = true;
-            CASUALApp.shutdown(BUFFER);
+            CASUAL.CASUALApp.shutdown(BUFFER);
         }
     };
+    
+        private void setTestPoints(String[] readStrings){
+        
+    }
+    private void validateLine(String line){
+        for (int i=0; i<loggingParams.length;i++){
+            if (line.contains(loggingParams[i])){
+               loggingResults[i]=true;
+            }
+        }
+    }
+    public boolean checkTestPoints(){
+        instantiateCASUAL();
+        if (loggingResults !=null && loggingResults.length>0){
+            for (boolean check : loggingResults){
+                if (!check) return false;
+            }
+        }
+        return true;
+    }
+    
+
+
+    
+    
 }

@@ -19,6 +19,13 @@ package CASUAL;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Calendar;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +34,7 @@ import java.util.logging.Logger;
  * @author adam
  */
 //define <output and input> to this abstract class
-public class Shell implements Runnable {
+public class Shell {
 
     //for internal access
     public Shell() {
@@ -285,7 +292,7 @@ public class Shell implements Runnable {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                boolean LinkLaunched = false;
+
                 try {
                     String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
                     log.level4Debug("###executing real-time background command: " + params[0] + "###");
@@ -326,56 +333,81 @@ public class Shell implements Runnable {
     }
 
     public void silentBackgroundShellCommand() {
-
-
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                boolean LinkLaunched = false;
-                try {
-                    String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    ProcessBuilder pb = new ProcessBuilder(params);
-                    pb.redirectErrorStream(true);
-                    Process process = pb.start();
-                    BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String LineRead = null;
-                    String CharRead;
-                    String LogData = "";
-                    boolean ResetLine = false;
-                    int c;
-                    try {
-                        process.waitFor();
-                    } catch (InterruptedException ex) {
-                        log.errorHandler(ex);
-                    }
-                    while ((c = STDOUT.read()) > -1) {
-                        if (ResetLine) {
-                            log.beginLine();
-                            ResetLine = !ResetLine;
-                        }
-                        CharRead = Character.toString((char) c);
-                        LineRead = LineRead + CharRead;
-                        //log.level3(CharRead);
-                        LogData = LogData + CharRead.toString();
-                    }
-
-                    new Log().level4Debug(LogData);
-
-                } catch (IOException ex) {
-                    String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    log.level0Error("Problem while executing" + ArrayList
-                            + " in Shell.liveShellCommand()");
-                    Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
-        Thread t = new Thread(r);
+        Thread t = new Thread(shell);
         t.setName("Silent Background Shell Command");
         t.start();
-    }
 
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    Runnable shell = new Runnable() {
+        public String woot;
+
+        @Override
+        public void run() {
+            try {
+                String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
+                ProcessBuilder pb = new ProcessBuilder(params);
+                pb.redirectErrorStream(true);
+                Process process = pb.start();
+                try {
+                    process.waitFor();
+                } catch (InterruptedException ex) {
+                    log.errorHandler(ex);
+                }
+            } catch (IOException ex) {
+                String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
+                log.level0Error("Problem while executing" + ArrayList
+                        + " in Shell.liveShellCommand()");
+                Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    };
+
+    public String timeOutShellCommand(final String[] cmd, int timeout) throws TimeoutException {
+
+        FutureTask<String> future =
+                new FutureTask<>(new Callable<String>() {
+            @Override
+            public String call() {
+                log.level4Debug("\n###executing: " + cmd[0] + "###");
+                String AllText = "";
+                try {
+                    String line;
+                    ProcessBuilder p=new ProcessBuilder(cmd);
+                    p.redirectError();
+                    Process process = p.start();
+                    BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    
+                    while ((line = STDOUT.readLine()) != null) {
+                        AllText = AllText + line + "\n";
+                    }
+                    //log.level0(cmd[0]+"\":"+AllText);
+                    return AllText + "\n";
+                } catch (Exception ex) {
+                    log.level0Error("Problem while executing" + arrayToString(cmd)
+                            + " in Shell.sendShellCommand() Received " + AllText);
+                    return "CritERROR!!!";
+                }
+
+            }
+        });
+        Thread t;
+        t = new Thread(future);
+        t.start();
+        Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
+        calendar.add(Calendar.SECOND, 5);
+        System.out.println(calendar.getTime());
+        if (Calendar.getInstance().getTimeInMillis() >calendar.getTimeInMillis()) {
+            throw new TimeoutException();
+        }
+        String retval;
+        try {
+            retval = future.get();
+        } catch (InterruptedException ex) {
+            return "CritError!!!";
+        } catch (ExecutionException ex) {
+            return "CritError!!!";
+        }
+        return retval;
+        
     }
 }

@@ -53,7 +53,7 @@ public class Statics {
     static Log Log = new Log();
     public static ArrayList<String> LiveSendCommand = new ArrayList<>();
     public static PrintWriter OutFile; //used by log class
-    public static boolean LogCreated = false; //used by log class
+    public static boolean LogCreated = false; //used by Log class
     public static CASUALConnectionStatusMonitor casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
     public static CASPACData localInformation;
     public static CASPACData webInformation;
