@@ -449,7 +449,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         this.enableControls(false);
         Statics.lockGUIunzip = true;
         updateSelectedFromGUI();
-        CASUALTools.zipPrep = new CASUALTools().prepareCurrentScriptZipfile(comboBoxScriptSelector.getSelectedItem().toString());
+        new CASUALTools().startZipPrepThreadOnZipFile(comboBoxScriptSelector.getSelectedItem().toString());
         log.Level1Interaction(comboBoxScriptSelector.getSelectedItem().toString());
         
         try {

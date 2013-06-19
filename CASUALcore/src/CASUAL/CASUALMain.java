@@ -49,7 +49,7 @@ public final class CASUALMain {
         try {
             pData.join(); //wait for properties
             scriptPrep.join();
-            new CASUALTools().prepareCurrentScriptZipfile(Statics.scriptNames[0]);
+            new CASUALTools().startZipPrepThreadOnZipFile(Statics.scriptNames[0]);
 
             cSound.start();  //do startup sound
 

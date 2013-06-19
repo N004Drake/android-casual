@@ -155,6 +155,10 @@ public class CASUALTools {
             }
         }
     }
+    
+    
+    //TODO: this is kinda ugly.  possibly needs to be moved to a new class. 
+    //CASUALZipPrep
     public static Thread zipPrep;
 
     /**
@@ -163,7 +167,7 @@ public class CASUALTools {
      * @param scriptName
      * @return
      */
-    public Thread prepareCurrentScriptZipfile(String scriptName) {
+    public void startZipPrepThreadOnZipFile(String scriptName) {
         Statics.SelectedScriptFolder = Statics.TempFolder + Statics.Slash + scriptName;
         //set the ZipResource
         final String ZipResource = Statics.TargetScriptIsResource ? Statics.ScriptLocation + scriptName + ".zip" : scriptName + ".zip";
@@ -200,9 +204,6 @@ public class CASUALTools {
         };
         zipPrep.setName("Script Preparation");
         zipPrep.start();
-
-        log.level4Debug("Exiting comboBoxUpdate()");
-        return zipPrep;
     }
 
     /**
