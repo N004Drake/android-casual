@@ -46,8 +46,8 @@ public class PackagerMain {
     public PackagerMain() {
         //NADA
     }
-    private static boolean useOverrideArgs = false;
-    private static String[] overrideArgs = {"--fullauto" ,"/home/adam/code/android-casual/trunk/CASPAC/", "--type" ,"nightly"};
+    private static boolean useOverrideArgs = true;
+    private static String[] overrideArgs = {"--fullauto" ,"..\\CASPAC\\", "--type" ,"nightly"};
     protected static String userOutputDir = "";
     final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
     private static String caspacWithPath = "";
@@ -220,7 +220,7 @@ public class PackagerMain {
         //log.level4Debug("[doCASUALWork()]Created folder " + Statics.TempFolder + "CASPAC");
 
         try {
-            Unzip.unzipFile(caspacWithPath, Statics.TempFolder + "CASPAC");
+            new Unzip(caspacWithPath).unzipFile(Statics.TempFolder + "CASPAC");
         } catch (ZipException ex) {
             letCASUALLog(true);
             log.errorHandler(ex);
@@ -231,7 +231,7 @@ public class PackagerMain {
             return false;
         }
 
-        //log.level4Debug("[doCASPACWork()]CASPAC unzipped to " + Statics.TempFolder + "CASPAC");
+        log.level4Debug("[doCASPACWork()]CASPAC unzipped to " + Statics.TempFolder + "CASPAC");
         return true;
     }
 
@@ -251,7 +251,7 @@ public class PackagerMain {
 
         try {
             letCASUALLog(false);
-            Unzip.unzipFile(Statics.TempFolder + "CASUAL.zip", Statics.TempFolder + "CASUAL" + Statics.Slash);
+            new Unzip(Statics.TempFolder + "CASUAL.zip").unzipFile(Statics.TempFolder + "CASUAL" + Statics.Slash);
             letCASUALLog(true);
         } catch (FileNotFoundException ex) {
             letCASUALLog(true);
@@ -289,18 +289,16 @@ public class PackagerMain {
      */
     private static boolean doCASPACCASUALMerge() {
         String[] files = fileOperations.listFolderFiles(Statics.TempFolder + "CASPAC" + Statics.Slash);
-        int x = 0;
 
-        if (files[x] == null) {
+        if (files[0] == null) {
             log.level0Error("[doCASPACCASUALMerge()]CASPAC contained no files.");
             return false;
         }
 
         try {
             letCASUALLog(false);
-            while (files[x] != null) {
-                fileOperations.moveFile(Statics.TempFolder + "CASPAC" + Statics.Slash + files[x], Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash + files[x]);
-                x++;
+            for (String file: files) {
+                fileOperations.moveFile(Statics.TempFolder + "CASPAC" + Statics.Slash + file, Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash + file);
             }
             letCASUALLog(true);
             log.level4Debug("[doCASPACCASUALMerge()]File bases merged");

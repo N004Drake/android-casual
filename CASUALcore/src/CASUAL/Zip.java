@@ -166,7 +166,6 @@ public class Zip {
                 }
             }
         } finally {
-            out.close();
             res.close();
         }
     }
@@ -180,8 +179,7 @@ public class Zip {
             }
             out.write(buffer, 0, readCount);
         }
-        in.close();
-        out.close();
+
     }
 
     private static void copy(File file, OutputStream out) throws IOException {

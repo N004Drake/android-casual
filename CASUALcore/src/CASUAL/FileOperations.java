@@ -19,6 +19,8 @@ package CASUAL;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -536,12 +538,12 @@ public class FileOperations {
             new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
             return null;
         }
-        String[] childOf = new String[1024];
+        ArrayList<String> files = new ArrayList<String>();
         File[] list = dir.listFiles();
         for (int x = 0; list.length > x; x++) {
-            childOf[x] = list[x].getName();
+           files.add(list[x].getName());
         }
-        return childOf;
+        return StringOperations.convertArrayListToStringArray(files);
     }
 
     public String[] listFolderFilesCannonically(String folder) {
