@@ -46,7 +46,7 @@ public class PackagerMain {
     public PackagerMain() {
         //NADA
     }
-    private static boolean useOverrideArgs = true;
+    private static boolean useOverrideArgs = false;
     private static String[] overrideArgs = {"--fullauto" ,"..\\CASPAC\\", "--type" ,"nightly"};
     protected static String userOutputDir = "";
     final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
