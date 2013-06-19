@@ -11,11 +11,6 @@
     <description>Builds, tests, and runs the project PACKAGER.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <target name="-pre-jar">
-        <copy file="$DIST../../../CASUALcore/dist/CASUALstatic.jar" tofile="src/Packager/resources/CASUAL.jar"/>
-         
-    </target>
-
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -77,6 +72,13 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+    <target name="-pre-jar">
+        <copy file="$DIST../../../CASUALcore/dist/CASUAL.jar" tofile="src/Packager/resources/CASUAL.jar"/>
+         
+    </target>
+    
+    
     <target name="-post-jar">
     
          <jar jarfile="dist/PackagerDist.jar">
