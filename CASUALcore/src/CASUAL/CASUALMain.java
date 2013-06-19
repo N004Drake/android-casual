@@ -44,8 +44,13 @@ public final class CASUALMain {
         pData.start(); // scan self and set package properties
         Thread cSound = new Thread(new CASUALTools().casualSound);
         cSound.setName("CASUAL Sound");
+        
+        
         try {
             pData.join(); //wait for properties
+            scriptPrep.join();
+            new CASUALTools().prepareCurrentScriptZipfile(Statics.scriptNames[0]);
+
             cSound.start();  //do startup sound
 
             if (args.length != 0 && !Statics.useGUI) {
@@ -58,9 +63,8 @@ public final class CASUALMain {
                 doConsoleStartup();  //use command line args
             } else {
                 Statics.useGUI = true;
+                //CASUALTools().zipPrep is joined inside doGUIStartup();
                 doGUIStartup(); //bring up GUI and wait for user to click start
-                adb.join(); //wait for adb deployment
-                scriptPrep.join(); //wait for embedded scripts scan
                 Statics.casualConnectionStatusMonitor.DeviceCheck.start();
             }
         } catch (InterruptedException ex) {

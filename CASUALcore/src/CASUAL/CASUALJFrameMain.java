@@ -64,7 +64,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         log.level4Debug("Searching for scripts");
         try {
-            CASUALMain.scriptPrep.join();
+            CASUALTools.zipPrep.join();
         } catch (InterruptedException ex) {
         }
         for (String script : Statics.scriptNames) {
@@ -448,11 +448,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         }
         this.enableControls(false);
         Statics.lockGUIunzip = true;
-        Thread t = updateSelectedFromGUI();
-        t.setName("Updating Selected Script");
-        t.start();
+        updateSelectedFromGUI();
+        CASUALTools.zipPrep = new CASUALTools().prepareCurrentScriptZipfile(comboBoxScriptSelector.getSelectedItem().toString());
+        log.Level1Interaction(comboBoxScriptSelector.getSelectedItem().toString());
+        
         try {
-            t.join();
+            CASUALTools.zipPrep.join();
         } catch (InterruptedException ex) {
             new Log().errorHandler(ex);
         }
@@ -477,7 +478,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
     }//GEN-LAST:event_startButtonMouseExited
-    public Thread updateSelectedFromGUI() {
+    public void updateSelectedFromGUI() {
         log.level3Verbose("From Resource: " + Statics.TargetScriptIsResource);
         log.level2Information("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
         if (Statics.TargetScriptIsResource) {
@@ -493,7 +494,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         //set the ZipResource
         //final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip") : (comboBoxScriptSelector.getSelectedItem().toString() + ".zip");
 
-        return new CASUALTools().prepareCurrentScript(comboBoxScriptSelector.getSelectedItem().toString());
+        //CASUALTools().prepareCurrentScriptZipfile(comboBoxScriptSelector.getSelectedItem().toString());
     }
 
     private void StatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseClicked

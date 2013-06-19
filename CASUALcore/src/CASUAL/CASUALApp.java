@@ -28,7 +28,7 @@ public class CASUALApp {
     /**
      *
      */
-    final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
+        final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
 
@@ -123,7 +123,7 @@ public class CASUALApp {
                         + "    GNU General Public License for more details.");
                 return;
             }
-            if (args[i].contains("--caspac") || args[i].contains("-c")) {
+            if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC")|| args[i].contains("-CASPAC")) {
                 i++;
                 new CASPACHandler().loadCASUALPack(args[i]);
                 new Log().level2Information("CASPAC completed.");

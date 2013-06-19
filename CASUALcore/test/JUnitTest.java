@@ -60,9 +60,8 @@ public class JUnitTest {
         CASUAL.Statics.useGUI = true;
         int x = new CASUAL.CASUALInteraction("testing", "Do you want to test CASPAC functionality?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
         if (x == 0) {
-
-            CASUAL.CASUALApp.main(new String[]{"-CASPAC", "../../CASPAC/testpak.zip"});
-            CASUAL.Statics.useGUI = true;
+            CASUAL.Statics.dumbTerminalGUI = true;
+            CASUAL.CASUALApp.beginCASUAL(new String[]{"-CASPAC", "../../CASPAC/testpak.zip"});
             x = new CASUAL.CASUALInteraction("testing", "Do you want to loop on CASPAC forever?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
             if (x == 0) {
                 while (true) {
@@ -97,6 +96,7 @@ public class JUnitTest {
 
     @Test
     public void testCASUALLanguage() {
+        CASUALApp.shutdown(0);
         String x = new CASUAL.CASUALScriptParser().executeOneShotCommand("$IFNOTCONTAINS d2cafdan $INCOMMAND shell \"cat /system/build.prop\" $DO $IFNOTCONTAINS d2asdfgtt $INCOMMAND shell \"cat /system/build.prop\" $DO $ECHO hi");
         assert x.contains("hi");
     }
@@ -156,32 +156,34 @@ public class JUnitTest {
 
             //run CASUAL to set environmental values
             CASUAL.CASUALApp.main(new String[]{"-e", "$ADB devices"});
+            CASUALApp.shutdown(0);
             //Testing ADB reboot download
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Testing Heimdall", "Connect an ODIN capable device in ADB mode").showUserCancelOption() == 1) {
                 String returnval = new CASUAL.CASUALScriptParser().executeOneShotCommand("$ADB reboot download");
                 assert returnval.equals("") || returnval.equals("\n ");
+                CASUALApp.shutdown(0);
             }
 
             //Testing Heimdall close-pc-screen
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Testing Heimdall", "Connect a device in ODIN mode").showUserCancelOption() == 1) {
                 CASUAL.CASUALApp.main(new String[]{"-e", "$HEIMDALL close-pc-screen"});
-
+                CASUALApp.shutdown(0);
             }
 
             //testing ADB reboot bootloader
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Testing Fastboot", "Connect a FASTBOOT capable device in ADB mode").showUserCancelOption() == 1) {
                 CASUAL.CASUALApp.main(new String[]{"-e", "$ADB reboot bootloader"});
-
+                CASUALApp.shutdown(0);
             }
 
             //testing Fastboot reboot
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Testing Fastboot", "Connect a device in FASTBOOT mode").showUserCancelOption() == 1) {
-                
                 String returnval = new CASUAL.CASUALScriptParser().executeOneShotCommand("$FASTBOOT reboot");
+                CASUALApp.shutdown(0);
                 assert returnval.contains("rebooting...");
             }
 
@@ -191,6 +193,7 @@ public class JUnitTest {
                 String[] cmd=new String[]{"-e", "$ADB shell \"echo hi\""};
                 String[] checks=new String[]{"hi"};
                 new CASUAL.CASUALTest(checks,cmd).checkTestPoints();
+                CASUALApp.shutdown(0);
             }
 
         }

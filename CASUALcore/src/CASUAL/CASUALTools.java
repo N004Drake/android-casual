@@ -155,7 +155,7 @@ public class CASUALTools {
             }
         }
     }
-    public static Thread scriptPrep;
+    public static Thread zipPrep;
 
     /**
      * prepares the script for execution by setting up environment
@@ -163,7 +163,7 @@ public class CASUALTools {
      * @param scriptName
      * @return
      */
-    public Thread prepareCurrentScript(String scriptName) {
+    public Thread prepareCurrentScriptZipfile(String scriptName) {
         Statics.SelectedScriptFolder = Statics.TempFolder + Statics.Slash + scriptName;
         //set the ZipResource
         final String ZipResource = Statics.TargetScriptIsResource ? Statics.ScriptLocation + scriptName + ".zip" : scriptName + ".zip";
@@ -171,9 +171,10 @@ public class CASUALTools {
         log.level4Debug("Created zipResource at " + ZipResource);
 
 
-        scriptPrep = new Thread() {
+        zipPrep = new Thread() {
             @Override
             public void run() {
+                
                 try {
                     Statics.GUI.enableControls(false);
                 } catch (NullPointerException ex) {
@@ -197,11 +198,11 @@ public class CASUALTools {
                 Statics.lockGUIunzip = false;
             }
         };
-        scriptPrep.setName("Script Preparation");
-        scriptPrep.start();
+        zipPrep.setName("Script Preparation");
+        zipPrep.start();
 
         log.level4Debug("Exiting comboBoxUpdate()");
-        return scriptPrep;
+        return zipPrep;
     }
 
     /**
