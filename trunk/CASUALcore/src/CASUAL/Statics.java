@@ -73,11 +73,11 @@ public class Statics {
     //Folders
     public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
     private static String TempF = null; //TempFolder is the actual tempfolder, it's served by getTempFolder
+    public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     
     //TODO: figure out a better way to not use static non-final variable during initialization. as reported by Netbeans
     final public static String TempFolder = (TempF==null)?getTempFolder():TempF;
     private static String getTempFolder() {
-
         if (TempF == null) {
             TempF = System.getProperty("java.io.tmpdir");
             if (!TempF.endsWith(Slash)) {
