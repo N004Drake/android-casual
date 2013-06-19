@@ -117,6 +117,9 @@
             <fileset dir="src/" includes="SCRIPTS/TestScript.txt" />
             <fileset dir="src/" includes="SCRIPTS/TestScript.zip" />
             <fileset dir="src/" includes="SCRIPTS/TestScript.meta" />
+            <fileset dir="src/" includes="SCRIPTS/MotoFail.scr" />
+            <fileset dir="src/" includes="SCRIPTS/MotoFail.txt" />
+            <fileset dir="src/" includes="SCRIPTS/MotoFail.zip" />
         </jar>
         <copy file="dist/CASUAL-Revision${svna.version}b.jar" tofile="dist/CASUALstatic.jar"/> 
         <chmod file="${dist.jar}" perm="755"/>
