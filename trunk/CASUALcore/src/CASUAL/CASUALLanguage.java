@@ -300,14 +300,16 @@ public class CASUALLanguage {
                 if (arg.contains("$ZIPFILE") && (!arg.startsWith("-") && (!arg.contains("=")))) {
                     //repalce to make it a file and strip off " and '
                     arg = arg.replace("$ZIPFILE", ScriptTempFolder).replace("'", "").replace("\"", "");
-                    if (new FileOperations().verifyExists(arg)) { //exists
-                        log.level3Verbose("verified " + arg + " exists");
-                    } else { //file not exists
-                        int n = new CASUALInteraction("Missing File", "It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL").showUserCancelOption();
-                        if (n == 0) {
-                            log.level0Error(ScriptName + " canceled at user request due to comprimised packages");
-                            CASUALScriptParser.ScriptContinue = false;
-                            return "";
+                    if (! line.startsWith("$ECHO") &&  !line.startsWith("#")) {
+                        if (new FileOperations().verifyExists(arg)) { //exists
+                            log.level3Verbose("verified " + arg + " exists");
+                        } else { //file not exists
+                            int n = new CASUALInteraction("Missing File", "It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL").showUserCancelOption();
+                            if (n == 0) {
+                                log.level0Error(ScriptName + " canceled at user request due to comprimised packages");
+                                CASUALScriptParser.ScriptContinue = false;
+                                return "";
+                            }
                         }
                     }
                 }

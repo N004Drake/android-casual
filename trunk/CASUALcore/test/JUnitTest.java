@@ -96,7 +96,6 @@ public class JUnitTest {
 
     @Test
     public void testCASUALLanguage() {
-        CASUALApp.shutdown(0);
         String x = new CASUAL.CASUALScriptParser().executeOneShotCommand("$IFNOTCONTAINS d2cafdan $INCOMMAND shell \"cat /system/build.prop\" $DO $IFNOTCONTAINS d2asdfgtt $INCOMMAND shell \"cat /system/build.prop\" $DO $ECHO hi");
         assert x.contains("hi");
     }
@@ -156,7 +155,6 @@ public class JUnitTest {
 
             //run CASUAL to set environmental values
             CASUAL.CASUALApp.main(new String[]{"-e", "$ADB devices"});
-            CASUALApp.shutdown(0);
             //Testing ADB reboot download
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Testing Heimdall", "Connect an ODIN capable device in ADB mode").showUserCancelOption() == 1) {
