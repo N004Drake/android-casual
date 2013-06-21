@@ -199,7 +199,7 @@ public class CASUALLanguage {
                 log.level4Debug("Sendlog Command Issued!\nFinishing remaining commands:" + line);
             }
             try {
-                Pastebin.doPosting();
+                new Pastebin().doPosting();
             } catch (IOException | URISyntaxException ex) {
                 Log logThis = new Log();
                 logThis.errorHandler(ex);

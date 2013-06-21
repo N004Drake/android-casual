@@ -140,7 +140,7 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
 
     private void jPastebinSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPastebinSubmitActionPerformed
         try {
-            Pastebin.doPosting();
+            new Pastebin().doPosting();
         } catch (IOException | URISyntaxException ex) {
             Log logThis = new Log();
             logThis.errorHandler(ex);
