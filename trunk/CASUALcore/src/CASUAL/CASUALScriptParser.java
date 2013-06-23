@@ -137,8 +137,8 @@ public class CASUALScriptParser {
                     Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 Statics.scriptRunLock = false;
-                Statics.currentStatus = "Script Complete";
-                log.level2Information("Script Complete");
+                Statics.currentStatus = "done";
+                log.level2Information("@scriptComplete");
 
             }
 
@@ -178,20 +178,19 @@ public class CASUALScriptParser {
                             //CASUAL must be update    
                             case 3:
                                 log.level0Error(Statics.webInformation.updateMessage);
-                                log.level0Error("CASUAL has been kill-switched due to critical updates.  Please read the above message");
-                                new CASUALInteraction("CRITICAL ERROR!", "CASUAL Cannot continue due to kill-switch activation.\n" + "\n CASUAL will now take you to the supporting webpage." + Statics.webInformation.updateMessage).showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                log.level0Error("@killSwitchMessage");
+                                new CASUALInteraction("@interactionKillSwitchMessage\n"+ Statics.webInformation.updateMessage).showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                 new LinkLauncher(Statics.webInformation.supportURL).launch();
                                 CASUALApp.shutdown(0);
                                 return true;
                             //download error
                             case 4:
-                                log.level0Error("There was a problem downloading the script.  Please check your internet connection and try again.");
+                                log.level0Error("@problemDownloading");
                                 //HALT script
                                 return true;
                             case 5:
-                                log.level0Error("Problem downloading file from internet, please try again");
-                                log.level0Error("Problem downloading file from internet, please try again");
-                                new CASUALInteraction("CRITICAL ERROR!", "Download Failure.  CASUAL will now restart.").showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
+                                log.level0Error("@problemDownlaodingFile");
+                                new CASUALInteraction("@interactionDownloadFileFailure").showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
                                 try {
                                     JavaSystem.restart(new String[]{""});
                                 } catch (InterruptedException ex) {
@@ -200,14 +199,16 @@ public class CASUALScriptParser {
                                 //HALT script
                                 return true;
                             default: //unknown error do nothing
-                                log.level0Error("CASUALScriptParser().executeSelectedScript: CASUAL has encountered an unknown error. Please report this.");
+                                log.level0Error("@executeScriptError");
                                 break;
                         }
                     } catch (MalformedURLException ex) {
-                        log.level0Error("Could not find the script while trying to executeSelectedScript in CASUALScriptParser! " + script + " Please report this.");
+                        log.level0Error("@couldNotFindScript"); 
+                        log.level0Error(script);
+                        log.level0Error("@reportThisError");
                         log.errorHandler(ex);
                     } catch (IOException ex) {
-                        log.level0Error("IOException occoured while trying to executeSelectedScript in CASUALScriptParser! It's likely a bad download.");
+                        log.level0Error("@ioExceptionInExecuteScript");
                         log.errorHandler(ex);
                     }
                 }

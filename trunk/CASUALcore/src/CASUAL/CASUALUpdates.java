@@ -63,19 +63,18 @@ public class CASUALUpdates {
             if (localInformation.uniqueIdentifier.equals(webInformation.uniqueIdentifier)) {
                 if (!webInformation.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(localInformation.minSVNRevision))) {
                     //update SVN
-                    Log.level0Error("ERROR. CASUAL is out-of-date. This version of CASUAL cannot procede further. See " + webInformation.supportURL + " for more information. ");
-                    //Log.level0(webInformation[4]);
+                    Log.level0Error("@casualIsOutOfDate");
+                    Log.level0Error(webInformation.supportURL);
                     return 3;
                 }
                 if (checkVersionInformation(webInformation.scriptRevision, localInformation.scriptRevision)) {
-                    Log.level0Error("Current Version " + localInformation.scriptRevision + " requires update to version " + webInformation.scriptRevision);
-                    Log.level0Error("Script is out of date. See " + webInformation.supportURL + " for more information.  Updating.");
-                    Log.level0Error(webInformation.updateMessage);
+                    
+                    Log.level2Information("@scriptIsOutOfDate");
                     //ugly code dealing with /SCRIPTS/ folder on computer.
                     new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
                     int status = downloadUpdates(script, webInformation, Statics.TempFolder);
                     if (status == 0) {
-                        Log.level0Error("... Update Sucessful! MD5s verified!");
+                        Log.level2Information("@md5sVerified");
                         return 2;
                     } else {
                         return 4;
@@ -84,7 +83,7 @@ public class CASUALUpdates {
             }
             return 0;
         } catch (NullPointerException ex) {
-            Log.level0Error("there was a problem with the online metadata.  please inform the developer");
+            Log.level0Error("@metaDataMalformed");
             return 0;
         }
     }
@@ -209,7 +208,7 @@ public class CASUALUpdates {
             Log.level4Debug("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + CASUALRepo + scriptname);
             return 1;
         }
-        Log.level0Error("Downloading Updates");
+        Log.level0Error("@downloadingUpdates");
         String[] md5lines = StringOperations.convertArrayListToStringArray(webInformation.md5s);
 
         try {
@@ -229,10 +228,10 @@ public class CASUALUpdates {
                         }
                     }
                 } catch (ArrayIndexOutOfBoundsException ex) {
-                    Log.level0Error("Invalid MD5 string");
+                    Log.level0Error("@invalidMD5String");
                     continue;
                 } catch (NullPointerException ex) {
-                    Log.level0Error("invalid MD5 string");
+                    Log.level0Error("@invalidMD5String");
                     continue;
                 }
 
@@ -302,10 +301,7 @@ public class CASUALUpdates {
                 //if MD5 does not match
                 if (!new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)) {
                     //show message and exit
-                    new CASUALInteraction("ERROR!", "During update a bad file was downlaoded.\n"
-                            + "Please check your internet connection and try again.\n"
-                            + "If the problem persists, report it.\n"
-                            + "CASUAL will now exit.  Please try again.").showErrorDialog();
+                    new CASUALInteraction("@interactionBadDownload").showErrorDialog();
                     CASUALApp.shutdown(0);
                 }
             }

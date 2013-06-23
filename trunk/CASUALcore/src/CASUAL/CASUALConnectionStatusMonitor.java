@@ -75,14 +75,8 @@ public class CASUALConnectionStatusMonitor {
                             DeviceList = getConnectedDevices();
                             if (DeviceList.contains("offline")) {
                                 String[] ok = {"All set and done!"};
-                                new CASUALInteraction("Your device is detected offline", "It would appear that the connected device is not paired properly.\n"
-                                        + "Your device is \"offline\", this can occour for a few reasons.\n"
-                                        + "-Please disconnect the device, then reconnect it.\n"
-                                        + "Next unlock the device and check for a message onscreen.\n"
-                                        + "Select \"Always allow from this computer\" then press OK.\n"
-                                        + "-if that doesn't work then reboot *everything*...\n"
-                                        + "reboot the computer and reboot the computer.").showTimeoutDialog(120, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
-                                Log.level0Error("Disconnect and reconnect your device.  Check the device for instructions.");
+                                new CASUALInteraction("@interactionOfflineNotification").showTimeoutDialog(120, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
+                                Log.level0Error("@disconnectAndReconnect");
                                 DeviceList = Shell.sendShellCommand(new String[]{Statics.adbDeployed, "wait-for-device"});
                                 Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                             }
@@ -91,25 +85,20 @@ public class CASUALConnectionStatusMonitor {
 
                         if (DeviceList.contains("????????????") && (!Statics.isWindows())) {
                             Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
-                            Log.level4Debug("sleeping for 4 seconds.  Device list: " + DeviceList);
+                            Log.level4Debug("@sleepingfor4Seconds");
                             sleepForFourSeconds();
                             DeviceList = getConnectedDevices();
                             CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
 
                             //Linux and mac only.
                             if (DeviceList.contains("????????????")) {
-                                Log.level0Error("Insufficient permissions detected.");
                                 String cmd[] = {Statics.adbDeployed, "kill-server"}; //kill the server
-                                Log.level2Information("killing server and requesting elevated permissions.");
+                                Log.level2Information("@permissionsElevationRequired");
                                 Shell.sendShellCommand(cmd); //send the command
                                 //notify user that permissions will be requested and what they are used for
                                 String[] ok = {"ok"};
                                 AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-                                new CASUALInteraction("Insufficient Permissions", "It would appear that this computer\n"
-                                        + "is not set up properly to communicate\n"
-                                        + "with the device.  As a work-around we\n"
-                                        + "will attempt to elevate permissions \n"
-                                        + "to access the device properly.").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
+                                new CASUALInteraction("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
                                 String[] getDevicesCommand = new String[]{Statics.adbDeployed, "devices"};
                                 DeviceList = Shell.elevateSimpleCommand(getDevicesCommand);
                                 // if permissions elevation was sucessful
@@ -119,7 +108,7 @@ public class CASUALConnectionStatusMonitor {
                                     stateSwitcher(1);
                                     //devices still not properly recognized.  Log it.
                                 } else {
-                                    Log.level0Error("Unrecognized device detected\nIf you continue to experience problems, please report this issue");
+                                    Log.level0Error("@unrecognizedDeviceDetected");
                                 }
                             }
                             Statics.casualConnectionStatusMonitor.DeviceCheck.start();
@@ -161,13 +150,13 @@ public class CASUALConnectionStatusMonitor {
             Log.level4Debug("State Change Detected, The new state is: " + State);
             switch (State) {
                 case 0:
-                    Log.level4Debug("State Disconnected commanded");
+                    Log.level4Debug("@stateDisconnected");
                     stateSwitchWasSucessful = Statics.GUI.enableControls(false);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                     AudioHandler.playSound("/CASUAL/resources/sounds/Disconnected.wav");
                     break;
                 case 1:
-                    Log.level4Debug("State Connected commanded");
+                    Log.level4Debug("@stateConnected");
                     stateSwitchWasSucessful = Statics.GUI.enableControls(true);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
                     Statics.GUI.setStatusMessageLabel("Target Acquired");
@@ -176,9 +165,8 @@ public class CASUALConnectionStatusMonitor {
                 default:
 
                     if (State == 2) {
-                        Log.level0Error("Multiple devices detected. Remove " + (State - 1) + " device to continue.");
-                    } else {
-                        Log.level0Error("Remove " + (State - 1) + " devices to continue.");
+                        Log.level0Error("@stateMultipleDevices");
+                        Log.level0Error("Remove " + (State - 1) + " device to continue.");
                     }
 
                     Log.level4Debug("State Multiple Devices Number of devices" + State);
@@ -199,11 +187,11 @@ public class CASUALConnectionStatusMonitor {
         cycles++;
         if (cycles == 30) {
             if (Statics.isWindows()) {
-                new CASUALInteraction("Device not detected", "I have not detected your device connect.\nIt is possible that you need to install drivers\nGoogle \"windows driver *your device*\" for more.").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                new CASUALInteraction("@interactionWindowsDeviceNotDetected").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
             } else if (Statics.isLinux()) {
-                new CASUALInteraction("Device not detected", "I have not detected your device connect.\nIt is possible that you need to install libusb \nGoogle \"using adb Linux *your device*\" for more.").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                new CASUALInteraction("@interactionLinuxDeviceNotDetected").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
             } else if (Statics.isMac()) {
-                new CASUALInteraction("Device not detected", "I have not detected your device connect.\nIt is possible that you need to install a kext\nGoogle \"kext *your device*\" for more").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                new CASUALInteraction("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
             }
             hasConnected = true;
         }

@@ -41,7 +41,7 @@ class ADBInstall {
             Statics.adbDeployed = Statics.TempFolder + "adb";
             FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.adbDeployed);
         } else if (Statics.isWindows()) {
-            Log.level4Debug("Found Windows Computer");
+            Log.level4Debug("@Found Windows Computer");
             FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.adbDeployed = Statics.TempFolder + "adb.exe";
             FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.adbDeployed);
@@ -49,7 +49,7 @@ class ADBInstall {
             FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
             adbTimeout=3000;
         } else {
-            new CASUALInteraction("Warning","Your system is not natively supported,\nplease install ADB manually.\nAttempting to continue").showInformationMessage();
+            new CASUALInteraction("@interactionsystemNotNativelySupported").showInformationMessage();
             Statics.adbDeployed = "adb";
         }
 

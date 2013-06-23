@@ -46,7 +46,8 @@ public class CASPACHandler {
             adb.start();
             File CASPAC = new File(pack);
             if (!CASPAC.exists()) { //verify this is a valid caspac
-                new Log().level0Error("File Not Found " + pack);
+                new Log().level0Error("@fileNotFound");
+                new Log().level0Error(pack);
                 CASUALApp.shutdown(1);
             }
             new Log().level3Verbose("-----CASPAC MODE-----\nCASPAC: " + CASPAC.getAbsolutePath());
@@ -55,7 +56,7 @@ public class CASPACHandler {
             try {
                 cd = processCASPAC(unzip.zipFileEntries, CASPAC);
             } catch (NullPointerException ex) {
-                new Log().level0Error("There is a problem with the online metadata for this script.  Please inform the developer.");
+                new Log().level0Error("@metaDataError");
                 return;
             }
 
@@ -103,12 +104,12 @@ public class CASPACHandler {
                 new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack interrupted" + ex));
             }
         } catch (ZipException ex) {
-            new Log().level0Error("Zip File is corrupt. cannot continue.");
+            new Log().level0Error("@zipFileCorrupt");
 
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack unzip failed" + ex));
             CASUALApp.shutdown(1);
         } catch (IOException ex) {
-            new Log().level0Error("There was a problem reading the file.");
+            new Log().level0Error("@zipFileCorrupt");
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
             CASUALApp.shutdown(1);
         }
@@ -221,17 +222,17 @@ public class CASPACHandler {
         }
         for (Object md5 : Statics.runnableMD5list.toArray()) {
 
-            new Log().level3Verbose(md5.toString());
+            new Log().level3Verbose("Searching for expected MD5:"+md5.toString());
             boolean md5Matches = false;
             for (Object expectedMD5 : cd.md5s.toArray()) {
+                new Log().level3Verbose("Searching for expected MD5:"+expectedMD5.toString());
                 if (expectedMD5.toString().equals(md5.toString())) {
                     md5Matches = true;
                 }
             }
 
             if (!md5Matches) {
-                new Log().level0Error("Expected ");
-                new Log().level0Error("ERROR: Package is corrupt. Cannot continue.");
+                new Log().level0Error("@packageCorrupt");
                 CASUALApp.shutdown(0);
             }
         }

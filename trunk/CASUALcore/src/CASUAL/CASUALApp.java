@@ -19,8 +19,6 @@ package CASUAL;
 import java.awt.Window;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The main class of the application.
@@ -148,11 +146,13 @@ public class CASUALApp {
             }
         }
         new Shell().silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
+        //if (!CASUALTools.IDEMode){
             try {
                 new Pastebin().pasteAnonymousLog();
             } catch (MalformedURLException ex) {
                 new Log().errorHandler(ex);
             }
+        //}
         Statics.initializeStatics();
     }
 }

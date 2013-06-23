@@ -72,6 +72,9 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level0Error(String data) {
+        if (data.startsWith("@")){
+            data=Translations.get(data);
+        }
         writeOutToLog("[ERROR]" + data);
         if (Statics.GUIVerboseLevel >= 0) {
             sendToGUI(data);
@@ -89,6 +92,9 @@ public class Log {
      * @param data is data to be written to log
      */
     public void Level1Interaction(String data) {
+        if (data.startsWith("@")){
+            data=Translations.get(data);
+        }
         writeOutToLog("[INTERACTION]" + data);
         if (Statics.GUIVerboseLevel >= 1) {
             sendToGUI(data);
@@ -107,6 +113,9 @@ public class Log {
      */
     // level 2 is for info-type data
     public void level2Information(String data) {
+        if (data.startsWith("@")){
+            data=Translations.get(data);
+        }
         writeOutToLog("[INFO]" + data);
         if (Statics.GUIVerboseLevel >= 2) {
             sendToGUI(data);
@@ -243,10 +252,13 @@ public class Log {
         StringWriter writer = new StringWriter();
         e.printStackTrace(new PrintWriter(writer));
         level0Error("[CRITICAL]" + e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
-        level0Error("A critical error was encoutered.  Please copy the log from About>Show Log and report this issue ");
+        level0Error("@criticalError");
     }
 
     void initialize() {
         out = new PrintStream(System.out);
     }
+    
+   
+    
 }

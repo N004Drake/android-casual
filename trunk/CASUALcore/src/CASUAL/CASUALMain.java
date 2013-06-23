@@ -81,10 +81,10 @@ public final class CASUALMain {
                 CASUALScriptParser csp = new CASUALScriptParser();
                 String executeOneShotCommand = csp.executeOneShotCommand(args[i]);
                 Statics.setStatus("Complete");
-                new Log().level2Information("Script Complete");
+                new Log().level2Information("@scriptComplete");
             } else {
                 Statics.setStatus("Invalid commands");
-                new Log().level0Error("Unrecogized command");
+                new Log().level0Error("@unrecognizedCommand");
             }
 
         }

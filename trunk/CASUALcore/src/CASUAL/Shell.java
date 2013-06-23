@@ -20,11 +20,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,7 +103,7 @@ public class Shell {
                     Result = Shell.liveShellCommand(new String[]{"pkexec", ScriptFile}, true);
                     i++;
                     if (Result.contains("Error executing command as another user:") && i >= 3) {
-                        log.level2Information("Failed password 3 times, attempting with normal permissions");
+                        log.level2Information("@permissionsElevationProblem");
                         Result = Shell.liveShellCommand(new String[]{ScriptFile}, true);
                         break;
                     }
@@ -186,8 +181,7 @@ public class Shell {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level0Error("Problem while executing" + arrayToString(cmd)
-                    + " in Shell.sendShellCommand() Received " + AllText);
+            log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + "\nreturnval:"+ AllText);
             return "CritERROR!!!";
         }
 
@@ -206,8 +200,7 @@ public class Shell {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level0Error("Problem while executing" + arrayToString(cmd)
-                    + " in Shell.sendShellCommand() Received " + AllText);
+           log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + "returnval:" + AllText);
             return "CritERROR!!!";
         }
 
@@ -276,9 +269,6 @@ public class Shell {
 
                 }
             }
-
-            //log.level4Debug(LogRead);
-
         } catch (RuntimeException | IOException ex) {
             log.errorHandler(ex);
             return LogRead;
@@ -292,7 +282,7 @@ public class Shell {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-
+                String LogData = "";
                 try {
                     String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
                     log.level4Debug("###executing real-time background command: " + params[0] + "###");
@@ -301,7 +291,7 @@ public class Shell {
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String LineRead = null;
                     String CharRead;
-                    String LogData = "";
+                    
                     boolean ResetLine = false;
                     int c;
                     while ((c = STDOUT.read()) > -1) {
@@ -320,10 +310,7 @@ public class Shell {
                     new Log().level2Information(LogData);
 
                 } catch (IOException ex) {
-                    String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                    log.level2Information("Problem while executing" + ArrayList
-                            + " in Shell.liveShellCommand()");
-                    Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                     log.level0Error("@problemWhileExecutingCommand " + StringOperations.convertArrayListToStringArray(Statics.LiveSendCommand) + "\nreturnval:"+ LogData);
                 }
             }
         };
@@ -339,8 +326,6 @@ public class Shell {
 
     }
     Runnable shell = new Runnable() {
-        public String woot;
-
         @Override
         public void run() {
             try {
@@ -354,10 +339,8 @@ public class Shell {
                     log.errorHandler(ex);
                 }
             } catch (IOException ex) {
-                String[] ArrayList = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                log.level0Error("Problem while executing" + ArrayList
-                        + " in Shell.liveShellCommand()");
-                Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                 log.level0Error("@problemWhileExecutingCommand " );
+                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     };
@@ -400,8 +383,7 @@ public class Shell {
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
                 } catch (Exception ex) {
-                    log.level0Error("Problem while executing" + arrayToString(cmd)
-                            + " in Shell.sendShellCommand() Received " + tos.AllText);
+                    log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + " "+ tos.AllText);
                 }
             }
         };

@@ -76,12 +76,12 @@ public class CASPACData {
      */
     public boolean isOurSVNHighEnoughToRunThisScript(int scriptVersion) {
         int mySVNVersion = Integer.parseInt(getSVNRevision());
-        new Log().level3Verbose("Checking my revision:" + mySVNVersion + " against Script:" + scriptVersion + " to verify we are compatible to run.");
+        new Log().level3Verbose("Checking CASUAL revision to verify compatibility");
         if (mySVNVersion < scriptVersion) {
-            new Log().level0Error("Improper version detected CASUAL cannot continue\n CASUAL Revison " + mySVNVersion + " is not new enough to run\nthis script which requires Revision " + scriptVersion);
+            new Log().level0Error("@improperCASUALversion");
             return false;
         } else {
-            new Log().level3Verbose("Revision check passed.");
+            new Log().level3Verbose("Revision check passed");
             return true;
         }
 
