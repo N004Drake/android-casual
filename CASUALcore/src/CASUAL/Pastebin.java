@@ -103,7 +103,7 @@ public class Pastebin {
         int CASRev = Integer.parseInt(CASPACData.getSVNRevision());
         if (((SVNrev - 5) >= CASRev) && (casualLog.contains("failed") || (casualLog.contains("FAILED")|| casualLog.contains("ERROR")))) { //build.prop contains the word error on some devices so error is not a good word to track. 
             casualLog = casualLog.replace(System.getProperty("user.home"),(Statics.isWindows() ? "\\" : "//") + "USERHOME" + (System.getProperty("user.home").endsWith(Statics.Slash) ? (Statics.isWindows() ? "\\" : "//") : ""));
-            String username=System.getenv("user.name");
+             String username=System.getProperty("user.name");
             if (username==null||username.equals("")){
                 username=System.getenv("USERNAME");
             }
