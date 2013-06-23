@@ -38,11 +38,7 @@ public class WindowsDrivers {
 
     public WindowsDrivers() {
         log.level4Debug("WindowsDrivers() Initializing");
-        driverRemoveOnDone = new CASUALInteraction("CADI",
-                "CASUAL will now install a generic USB driver."
-                + "\n\nThis will allow communications between CASUAL and your device"
-                + "\n\nWould you like CASUAL to remove this generic driver when the"
-                + " operation has completed?").showYesNoOption();
+        driverRemoveOnDone = new CASUALInteraction("@interactionInstallingCADI").showYesNoOption();
     }
     
     public void installDriverBlanket() {

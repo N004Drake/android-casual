@@ -359,7 +359,7 @@ public class CASUALLanguage {
                 AudioHandler.playSound("/CASUAL/resources/sounds/Notification.wav");
             }
             line = line.replace("$USERNOTIFICATION", "");
-            new CASUALInteraction(line.split(",")).showUserNotification();
+            new CASUALInteraction(line.replaceFirst(",",">>>")).showUserNotification();
             return "";
 
 // $USERCANCELOPTION will give the user the option to halt the script
@@ -372,7 +372,7 @@ public class CASUALLanguage {
             }
             int n;
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
-            n = new CASUALInteraction(line.split(",")).showUserCancelOption();
+            n = new CASUALInteraction(line.replaceFirst(",",">>>")).showUserCancelOption();
             if (n == 0) {
                 log.level0Error(ScriptName);
                 log.level0Error("@canceledAtUserRequest");
@@ -390,7 +390,7 @@ public class CASUALLanguage {
                 AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             }
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
-            int n = new CASUALInteraction(line.split(",", 2)).showActionRequiredDialog();
+            int n = new CASUALInteraction(line.replaceFirst(",",">>>")).showActionRequiredDialog();
             if (n == 0) {
                 log.level0Error(ScriptName);
                 log.level0Error("@haltedPerformActions");
@@ -406,7 +406,7 @@ public class CASUALLanguage {
             AudioHandler.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             //line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",", 3);
-            String inputBoxText = new CASUALInteraction(Message).inputDialog();
+            String inputBoxText = new CASUALInteraction(Message[0]+">>>"+Message[1]).inputDialog();
             if (inputBoxText == null) {
                 inputBoxText = "";
             }

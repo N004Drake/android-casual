@@ -64,7 +64,7 @@ public class Pastebin {
      */
     public void doPosting() throws IOException, URISyntaxException {
         if (Statics.debugMode) return;
-        String xdaUsername = new CASUALInteraction(new String[]{"An Error Has Occured!", "This is an automated prompt to sumbit a CASUAL log to Pastebin.\n\nPlease enter your XDA-Developers username and click 'Ok', click 'Cancel' to cancel"}).inputDialog();
+        String xdaUsername = new CASUALInteraction("@interactionPastebinError").inputDialog();
         if (xdaUsername != null) {//CANCEL_OPTION will rerturn a null String
             API paste = new API(devKey);
             Log log = new Log();
@@ -84,7 +84,7 @@ public class Pastebin {
                     StringSelection stringSelection = new StringSelection(output);
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
-                    new CASUALInteraction("Thank You!", "Pastebin URL Copied to Clipboard\n\nPlease Submit it in the appropriate forum thread").showInformationMessage();
+                    new CASUALInteraction("@interactionThankyouForPastebin").showInformationMessage();
                     log.level4Debug(output);
                 } else {
                     log.level4Debug(output);

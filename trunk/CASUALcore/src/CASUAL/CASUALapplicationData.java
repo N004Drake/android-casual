@@ -40,7 +40,6 @@ public class CASUALapplicationData {
     public static String donateButtonName = "";
     public static boolean useSound = false;
     public static String developerDonateLink = "";
-    public static String DontateButtonText = "";
     public static String donationLink = "";
     public static String CASUALFileName = "";
     public static boolean AlwaysEnableControls = true;

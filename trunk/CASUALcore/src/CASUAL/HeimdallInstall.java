@@ -155,10 +155,7 @@ public class HeimdallInstall {
                 log.errorHandler(ex);
             }
             new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
-            new CASUALInteraction("Unplug it and then plug it back in", "In order to continue, you must unplug the device and\n"
-                    + "then it back in.  Use a GOOD port, in the back, not\n"
-                    + "in the front.  Use a good cable too.").showErrorDialog();
-        }
+            new CASUALInteraction("@interactionUnplugItAndPlugItBackIn").showErrorDialog();        }
     }
 
     public void installWindowsVCRedist() {
@@ -270,10 +267,7 @@ Heimdall v1.4.0
 
     public void displayWindowsPermissionsMessageAndExit() {
         if (Statics.isWindows()) {
-            new CASUALInteraction("Permissions Error", "Administrative permissions are required to continue.\n"
-                    + "Please log in as a System Administrator  and rerun the command or use the console: \n"
-                    + "runas /user:Administrator java -jar " + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString() //Display Message
-                    ).showErrorDialog();
+            new CASUALInteraction("@interactionwindowsRunAsMessage"+ getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString() ).showErrorDialog();
         }
         CASUALApp.shutdown(0);
     }
