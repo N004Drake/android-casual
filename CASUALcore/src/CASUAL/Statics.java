@@ -18,8 +18,12 @@ package CASUAL;
 
 //import java.awt.Color;
 import java.io.PrintWriter;
+import java.security.Timestamp;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledDocument;
@@ -38,6 +42,8 @@ public class Statics {
     public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
     public static String currentStatus="working";
+
+
     public Statics() {
     }
 
@@ -72,33 +78,18 @@ public class Statics {
 
     //Folders
     public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
-    private static String TempF = null; //TempFolder is the actual tempfolder, it's served by getTempFolder
+    private static String TempF = null; //TempF is the actual tempfolder, it's served by getTempFolder
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     
     //TODO: figure out a better way to not use static non-final variable during initialization. as reported by Netbeans
     final public static String TempFolder = (TempF==null)?getTempFolder():TempF;
     private static String getTempFolder() {
         if (TempF == null) {
-            TempF = System.getProperty("java.io.tmpdir");
-            if (!TempF.endsWith(Slash)) {
-                TempF = TempF + Slash;
-            }
-            String UserName = System.getenv("USERNAME");
-            if (UserName == null) {
-                TempF = TempF + "TempCASUAL";
-            } else {
-                TempF = TempF + UserName + "TEMPCASUAL";
-            }
-            String Randomness = "";
-            String Characters = "123456789ABCDEF";
-            Random RandomNumberGenerator = new Random();
-            for (int i = 0; i < 8; i++) {
-                Randomness = Randomness + Characters.charAt(RandomNumberGenerator.nextInt(Characters.length()));
-            }
-            TempF = TempF + Randomness;
-            if (!TempF.endsWith(Slash)) {
-                TempF = TempF + Slash;
-            }
+            String user = System.getProperty("user.name");  //username
+            String tf = System.getProperty("java.io.tmpdir"); //tempfolder
+            tf=tf.endsWith(Slash)?tf:tf+Slash;  //make sure temp folder has a slash
+            SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
+            TempF= tf +"CASUAL"+user+sdf.format(new Date()).toString()+ Slash; //set /temp/usernameRandom/
             new FileOperations().makeFolder(TempF);
         }
         return TempF;
