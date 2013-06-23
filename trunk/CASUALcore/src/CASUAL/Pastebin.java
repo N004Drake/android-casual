@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +43,16 @@ import java.util.regex.Pattern;
  */
 public class Pastebin {
 
+    /**
+     * Notice: The following users should be considered a 
+     * threat to data logging integrity because they do 
+     * really stupid things like changing variables and 
+     * introducing errors in the code on a regular basis
+     * so they are hereby banned from submitting any further
+     * reports to the Pastebin.
+     */
+    final private String[] incompetentUsers={"adamoutler", "adam","Jeremy"};
+    
     //Pastebin User DEV API Key
     final private String devKey = "027c63663a6023d774b5392f380e5923";
     final private String user = "CASUAL-Automated";
@@ -52,7 +63,7 @@ public class Pastebin {
      * pasting to Pastebin
      */
     public void doPosting() throws IOException, URISyntaxException {
-
+        if (Statics.debugMode) return;
         String xdaUsername = new CASUALInteraction(new String[]{"An Error Has Occured!", "This is an automated prompt to sumbit a CASUAL log to Pastebin.\n\nPlease enter your XDA-Developers username and click 'Ok', click 'Cancel' to cancel"}).inputDialog();
         if (xdaUsername != null) {//CANCEL_OPTION will rerturn a null String
             API paste = new API(devKey);
@@ -90,9 +101,19 @@ public class Pastebin {
         Matcher matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));
         int SVNrev = Integer.parseInt(matcher.find() ? matcher.group(0) : "5");
         int CASRev = Integer.parseInt(CASPACData.getSVNRevision());
-        if (((SVNrev - 5) >= CASRev) && (casualLog.contains("failed") || (casualLog.contains("FAILED") || casualLog.contains("error") || casualLog.contains("ERROR")))) {
+        if (((SVNrev - 5) >= CASRev) && (casualLog.contains("failed") || (casualLog.contains("FAILED")|| casualLog.contains("ERROR")))) { //build.prop contains the word error on some devices so error is not a good word to track. 
             casualLog = casualLog.replace(System.getProperty("user.home"),(Statics.isWindows() ? "\\" : "//") + "USERHOME" + (System.getProperty("user.home").endsWith(Statics.Slash) ? (Statics.isWindows() ? "\\" : "//") : ""));
-            casualLog = casualLog.replace(System.getenv("USERNAME"),"USER");
+            String username=System.getenv("user.name");
+            if (username==null||username.equals("")){
+                username=System.getenv("USERNAME");
+            }
+            if (username!=null && casualLog.contains(username)){
+                casualLog = casualLog.replace(username,"USER");
+            }
+            if (Statics.debugMode|| Arrays.asList(incompetentUsers).contains(username)){
+                return; //only log results from non-devs :)
+            }
+
             try {
                 API paste = new API(devKey);
                 String lResult = paste.login(user, passwd);
