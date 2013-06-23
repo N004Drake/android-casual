@@ -78,9 +78,11 @@ public class HeimdallTools {
         String result = didHeimdallError(returnval);
         if (!result.equals("")) {
             if (result.contains("Script halted")) {
-                log.level0Error("[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+                log.level0Error("@heimdallEncounteredAnError");
+                log.level0Error( result );
+                log.level0Error("@heimdallEncounteredAnError");
                 CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
+                if (!Statics.debugMode) cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnval;
             } else if (result.contains("Attempting to continue")) {
                 log.level2Information("A permissions problem was detected.  Elevating permissions.");

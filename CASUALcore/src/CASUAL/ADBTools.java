@@ -27,7 +27,7 @@ public class ADBTools {
     
     public void restartADBserverSlowly() {
         try {
-            log.level3Verbose("Restarting ADB slowly");
+            log.level3Verbose("@restartingADBSlowly");
             Shell shell = new Shell();
             shell.timeoutShellCommand(killServer(),500);
             sleepForMillis(1000);
@@ -38,7 +38,7 @@ public class ADBTools {
     }
 
     public void elevateADBserver() {
-        log.level3Verbose("Restarting ADB");
+        log.level3Verbose("@restartingADB");
         Shell shell = new Shell();
         shell.silentShellCommand(killServer());
         shell.elevateSimpleCommand(devicesCmd());
@@ -62,27 +62,23 @@ public class ADBTools {
         //handle libusb -3
         if ((Statics.isLinux()) && (DeviceList.contains("ERROR-3"))) { //Don't know how to handle this yet
             Shell shell = new Shell();
-            log.level0Error("Permissions problem detected. Killing and requesting permissions escillation.");
+            log.level0Error("@permissionsElevationRequired");
             shell.silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
             shell.elevateSimpleCommandWithMessage(devicesCmd(), "Device permissions problem detected");
         }
 
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
-            new CASUALInteraction("ELFCLASS64 error!", "Could not execute ADB. 'Wrong ELF class' error\n"
-                    + "This can be resolved by installation of ia32-libs"
-                    + "eg.. sudo apt-get install ia32-libs\n"
-                    + "ie.. sudo YourPackageManger install ia32-libs").showInformationMessage();
+            new CASUALInteraction("@interactionELFCLASS64Error").showInformationMessage();
 
         }
 
         //TODO: implement this as an error handler for ADB. in a centralized manner. 
-        log.level4Debug("Device List:" + DeviceList);
         if (DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
-            log.level4Debug(" Device list: " + DeviceList + " Restarting server slowly");
+            log.level4Debug("Restarting ADB slowly");
             restartADBserverSlowly();
             DeviceList = new Shell().silentShellCommand(devicesCmd()).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
             if (!Statics.isWindows() && DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
-                log.level4Debug(" Device list: " + DeviceList + " \n Elevated Permissions Required to properly start ADB server");
+                log.level4Debug("Permissions problem detected. Requesting CASUAL permissions escillation.");
                 killADBserver();
                 elevateADBserver();
             }
@@ -92,7 +88,7 @@ public class ADBTools {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ex) {
-            Logger.getLogger(ADBInstall.class.getName()).log(Level.SEVERE, null, ex);
+            //no need to handle this
         }
     }
 }

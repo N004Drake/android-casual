@@ -48,13 +48,13 @@ public class HeimdallInstall {
             log.level4Debug("heimdall install sucessful");
             return true;
         } else {
-            log.level2Information("Additional Files are required in order to continue.. Downloading");
+            log.level2Information("@additionalFilesAreRequired");
             new HeimdallInstall().installWindowsVCRedist();
         }
 
         log.level4Debug("Verifying Heimdall deployment after Visual C++ Redistributable installation");
         if (checkHeimdall()) {
-            log.level0Error("There was a problem deploying installing heimdall");
+            log.level0Error("@heimdallCouldNotBeDeployed");
             return false;
         } else {
             log.level4Debug("heimdall install sucessful");
@@ -98,7 +98,7 @@ public class HeimdallInstall {
                 return false;
             }
         } else {
-            new Log().level0Error("This system has been detected as not compatible with Heimdall automatic-installer. If this is not correct, contact AdamOutler from XDA. You must compile and install heimdall from source to continue.  Heimdall's source is available from https://github.com/Benjamin-Dobell/Heimdall .  ");
+            new Log().level0Error("@incompatibleWithHeimdal");
             return false;
         }
 
@@ -162,7 +162,7 @@ public class HeimdallInstall {
     }
 
     public void installWindowsVCRedist() {
-        new Log().level2Information("Installing Visual C++ redistributable package\n You will need to click next in order to install.");
+        new Log().level2Information("@installingVisualCPP");
         String installVCResults = "CritERROR!!!";
         String exec = "";
         try {
@@ -181,7 +181,7 @@ public class HeimdallInstall {
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
         
-        log.level0Error("\nDrivers are Required Launching CADI.\nCASUAL Automated Driver Installer by jrloper.\nInstalling Drivers now"); //Add Newline
+        log.level2Information("@installingCADI"); //Add Newline
         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
                 + "We're going to install drivers now.  Lets do it.\n"
                 + "THIS PROCESS CAN TAKE UP TO 5 MINTUES.\nDURING THIS TIME YOU WILL NOT SEE ANYTHING.\nBE PATIENT!");
@@ -196,7 +196,7 @@ public class HeimdallInstall {
                 exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
             }
         } catch (IOException | InterruptedException ex) {
-            log.level0Error("There was a problem while accessing the online repository.");
+            log.level0Error("@problemWithOnlineRepo");
         }
         //verify MD5
         String driverreturn = new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});
@@ -281,8 +281,6 @@ Heimdall v1.4.0
     void runWinHeimdallInstallationProcedure() {
         installWindowsVCRedist();
         installWindowsDrivers();
-        new Log().level0Error("done.");
-
     }
 
     public boolean checkHeimdallVersion() {

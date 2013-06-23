@@ -71,8 +71,9 @@ public class CASUALLanguage {
              log.level2Information("Removing generic USB driver as requested");
              WindowsDrivers.removeDriver();
              }*/
-            log.level2Information("done");
+            log.level2Information("@done");
         } catch (Exception e) {//Catch exception if any
+            log.level0Error("CASUAL experienced an error while parsing command:\n" + strLine + "\nplease report the above exception.");
             log.errorHandler(e);
             log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
             log.level0Error("CASUAL experienced an error while parsing command:\n" + strLine + "\nplease report the above exception.");
@@ -293,26 +294,9 @@ public class CASUALLanguage {
         }
 //$ZIPFILE is a reference to the Script's .zip file
         if (line.contains("$ZIPFILE")) {
-            //break commandline into an array of arguments
-            String[] arguments = StringOperations.convertArrayListToStringArray(new ShellTools().parseCommandLine(line));
-            for (String arg : arguments) { //parse
-                //if arg contains zipfile and is not merged with another parameter
-                if (arg.contains("$ZIPFILE") && (!arg.startsWith("-") && (!arg.contains("=")))) {
-                    //repalce to make it a file and strip off " and '
-                    arg = arg.replace("$ZIPFILE", ScriptTempFolder).replace("'", "").replace("\"", "");
-                    if (! line.startsWith("$ECHO") &&  !line.startsWith("#")) {
-                        if (new FileOperations().verifyExists(arg)) { //exists
-                            log.level3Verbose("verified " + arg + " exists");
-                        } else { //file not exists
-                            int n = new CASUALInteraction("Missing File", "It has been detected that the integrity\nof CASUAL has been compromised.\nThis is likely the fault of a\nVirus Scanner.  Please disable any\nVirus Scanners and redownload CASUAL").showUserCancelOption();
-                            if (n == 0) {
-                                log.level0Error(ScriptName + " canceled at user request due to comprimised packages");
-                                CASUALScriptParser.ScriptContinue = false;
-                                return "";
-                            }
-                        }
-                    }
-                }
+
+            if (!verifyZIPFILEReferencesExist(line)) {
+                return "";
             }
 
             line = line.replace("$ZIPFILE", ScriptTempFolder);
@@ -390,7 +374,8 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
             n = new CASUALInteraction(line.split(",")).showUserCancelOption();
             if (n == 0) {
-                log.level0Error(ScriptName + " canceled at user request");
+                log.level0Error(ScriptName);
+                log.level0Error("@canceledAtUserRequest");
                 CASUALScriptParser.ScriptContinue = false;
                 return "";
             }
@@ -405,9 +390,10 @@ public class CASUALLanguage {
                 AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             }
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
-            int n = new CASUALInteraction(line.split(",")).showActionRequiredDialog();
+            int n = new CASUALInteraction(line.split(",", 2)).showActionRequiredDialog();
             if (n == 0) {
-                log.level0Error(ScriptName + " Halted.  Perform the required actions to continue.");
+                log.level0Error(ScriptName);
+                log.level0Error("@haltedPerformActions");
                 CASUALScriptParser.ScriptContinue = false;
                 return "";
             }
@@ -419,7 +405,7 @@ public class CASUALLanguage {
         } else if (line.startsWith("$USERINPUTBOX")) {
             AudioHandler.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             //line = line.replace("\\n", "\n");
-            String[] Message = line.replace("$USERINPUTBOX", "").split(",");
+            String[] Message = line.replace("$USERINPUTBOX", "").split(",", 3);
             String inputBoxText = new CASUALInteraction(Message).inputDialog();
             if (inputBoxText == null) {
                 inputBoxText = "";
@@ -514,7 +500,7 @@ public class CASUALLanguage {
                 /* if (Statics.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
                  }*/
-                log.level2Information("Executing Heimdall command.");
+                log.level2Information("@executingHeimdall");
                 return new HeimdallTools(line).doHeimdallShellCommand();
             } else {
                 return new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
@@ -526,9 +512,9 @@ public class CASUALLanguage {
             log.level4Debug("received fastbot command.");
             log.level4Debug("deploying fastboot.");
             FastbootTools.checkAndDeployFastboot();
-            log.level2Information("Waiting for Download Mode Device");
+            log.level2Information("@waitingForDownloadModeDevice");
             if (Statics.isLinux()) {
-                log.level2Information("elevating permissions for Linux.");
+                log.level2Information("@linuxPermissionsElevation");
                 if (CASUALapplicationData.useSound) {
                     AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 }
@@ -614,7 +600,7 @@ public class CASUALLanguage {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         if (Line.startsWith("wait-for")) {
-            log.level2Information("Waiting for ADB device connection.  When " + Statics.OSName() + " recognizes the device, we will continue.  Don't touch anything.");
+            log.level2Information("@waitingForDeviceToBeDetected");
         }
 
         Shell Shell = new Shell();
@@ -634,5 +620,76 @@ public class CASUALLanguage {
             return Shell.sendShellCommandIgnoreError(StringCommand);
         }
 
+    }
+
+    private boolean verifyFileExists(String testFileString) {
+        if (new FileOperations().verifyExists(testFileString)) {
+            //exists
+            log.level3Verbose("verified " + testFileString + " exists");
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    private void fileNotFound() {
+        int n = new CASUALInteraction("@interactionMissingFileVirusScanner").showUserCancelOption();
+        if (n == 0) {
+            log.level0Error(ScriptName);
+            log.level0Error("@canceledDueToMissingFiles");
+            CASUALScriptParser.ScriptContinue = false;
+        }
+    }
+
+    private boolean verifyZIPFILEReferencesExist(String line) {
+        //break commandline into an array of arguments
+        //verify zipfile reference exists
+        //allow echo of zipfile
+        if (!line.startsWith("$ECHO")) {
+            String[] lineArray = line.split(" ");
+            //loop through line, locate positions of $ZIPFILE and test
+            int pos = 0;
+            while (pos < lineArray.length) {
+                if (lineArray[pos].contains("$ZIPFILE")) {
+                    String zipRef = lineArray[pos].replace("$ZIPFILE", ScriptTempFolder).replace("\"", "");
+                    //if $ZIPFILE is a folder reference verify and continue
+                    if (lineArray[pos].endsWith("$ZIPFILE\"") || lineArray[pos].equals("$ZIPFILE")) {
+                        if (!verifyFileExists(zipRef)) {
+                            fileNotFound();
+                            return false;
+                        }
+                        pos++;
+                        continue;
+                    } else {
+                        //$ZIPFILE is not a folder reference
+                        //if we are at the last arg
+                        if (verifyFileExists(zipRef)) {
+                            pos++;
+                            continue; //zipfile at the end of the line
+                        }
+
+                        boolean fileFound = false;
+                        //test to end of string or until next ZIPFILE reference
+                        String instanceString = zipRef;
+                        for (int instancePos = pos + 1; instancePos < lineArray.length; instancePos++) {
+                            if (lineArray[instancePos].contains("$ZIPFILE")) {
+                                break;//new zipfile ref without previous found.
+                            }
+                            instanceString = instanceString + " " + lineArray[instancePos];
+                            if (verifyFileExists(instanceString)) {
+                                fileFound = true;
+                                pos++;
+                                break;
+                            }
+                        }
+                        if (!fileFound) {
+                            fileNotFound();
+                        }
+                    }
+                }
+                pos++;
+            }
+        }
+        return true;
     }
 }

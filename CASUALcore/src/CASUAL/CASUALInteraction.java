@@ -35,8 +35,21 @@ public class CASUALInteraction extends JOptionPane {
     String title;
 
     public CASUALInteraction(String messageInput) {
-        this.title = null;
-        this.message = messageInput;
+        if (messageInput.startsWith("@")){
+            String translation=Translations.get(messageInput);
+            if (translation.contains(">>>")){
+                String[] s = translation.split(">>>",2);
+                //message=s[1].replace("\n","\\n");
+                title=s[0];
+                message=s[1];
+            }  else {
+                title=null;
+                message=translation;
+            }
+        } else {
+            this.title = null;
+            this.message = messageInput;
+        }
     }
 
     public CASUALInteraction(String title, String messageInput) {
@@ -102,11 +115,13 @@ public class CASUALInteraction extends JOptionPane {
 
     public String inputDialog() throws HeadlessException {
         new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + message);
+        message="<html>"+message.replace("\\n","\n");
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             if (title == null) {
-                return JOptionPane.showInputDialog(Statics.GUI, message, "Input Required", JOptionPane.QUESTION_MESSAGE);
+                
+                return (String)JOptionPane.showInputDialog(Statics.GUI, message, "Input Required", JOptionPane.QUESTION_MESSAGE);
             } else {
-                return JOptionPane.showInputDialog(Statics.GUI, message, title, JOptionPane.QUESTION_MESSAGE);
+                return (String)JOptionPane.showInputDialog(Statics.GUI, message, title, JOptionPane.QUESTION_MESSAGE);
             }
         } else {
             if (title == null) {
@@ -199,8 +214,8 @@ public class CASUALInteraction extends JOptionPane {
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             if (title != null) {
                 JOptionPane.showMessageDialog(Statics.GUI,
-                        title,
                         message,
+                        title,
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(Statics.GUI,

@@ -50,7 +50,7 @@ $IFNOTCONTAINS woot $INCOMMAND $ADB shell "echo woot `pwd`" $DO $HALT $ECHO Fail
 $IFNOTCONTAINS foo $INCOMMAND $ADB shell "echo woot `pwd`" $DO $ECHO [PASS] IFNOTCONTAINS
 
 $ECHO This is ZIPFILE reference $ZIPFILE.
-$ADB shell "echo $ZIPFILE"
+$ADB shell "echo $ZIPFILEadb usb.ini $ZIPFILEadb_usb.ini $ZIPFILE and $ZIPFILE $ZIPFILE"
 
 $ECHO This is SLASH reference $SLASH.
 
@@ -79,19 +79,7 @@ $ECHO USERINPUTBOX
 $USERINPUTBOX type something, I will repeat what\nyou type., $ECHO [PASS] $USERINPUT
 $ECHO Waiting for device
 wait-for-device
-$ECHO Rebooting into Download Mode
-$ADB reboot download
-$ECHO You must have a SAMSUNG connected!
-$ECHO Rebooting into ADB Mode mode
-$HEIMDALL close-pc-screen
-$ECHO Waiting for device to automatically reboot
+$ECHO Rebooting
+$ADB reboot 
 
-$ECHO Connect a nexus device now.
-wait-for-device
-$ECHO Rebooting into bootloader
-$ADB reboot bootloader
-$FASTBOOT reboot
-$ECHO rebooting into android
-
-
-$HALT $ECHO $HALT [PASS] If your device rebooted twice, ALL TESTS PASSED!!!!!!!!!!!!. 
+$HALT $ECHO $HALT [PASS] If your device rebooted, ALL TESTS PASSED!!!!!!!!!!!!. 
