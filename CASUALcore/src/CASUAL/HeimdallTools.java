@@ -47,11 +47,7 @@ public class HeimdallTools {
         Timer connectionTimer = new Timer(60000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                new CASUALInteraction("I don't see the device", "It would appear that the connected device is not recognized.\n"
-                        + "The device should be in download mode.. Is it?.\n\n"
-                        + "If it's download mode, use a different USB port.\n"
-                        + "Don't use a USB hub.  Also, the USB ports behind\n"
-                        + "the computer are better than the front.\n").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, new String[]{"I did it"}, 0);
+                new CASUALInteraction("@interactionDownloadModeNotDetected").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, new String[]{"I did it"}, 0);
             }
         });
         connectionTimer.start();
@@ -157,7 +153,7 @@ public class HeimdallTools {
         for (String code : errFail) { //halt
             if (stdErrLog.contains(code)) {
                 if (heimdallRetries <= 3) {  //only loop thrice
-                    new CASUALInteraction("You must restart your device and put it back into download mode.\nThis is usually accompilished by pulling the battery\nthen holding Volume down + home while pressing power.\nIf you do not have a home button, press volume down\n while inserting the USB cable.").showActionRequiredDialog();
+                    new CASUALInteraction("@interactionRestartDownloadMode").showActionRequiredDialog();
                     return "Heimdall continuable error; Attempting to continue";
                 } else {
                     return "Heimdall uncontinuable error; Script halted";
@@ -170,8 +166,7 @@ public class HeimdallTools {
 
 
         if (stdErrLog.contains("Failed to detect compatible download-mode device")) {
-            if (new CASUALInteraction("Heimdall is unable to detect your phone in Odin/Download Mode\n"
-                    + "Recheck your cable connections, click Continue when ready").showUserCancelOption() == 0) {
+            if (new CASUALInteraction("@interactionUnableToDetectDownloadMode").showUserCancelOption() == 0) {
                 return "Heimdall uncontinuable error; Script halted";
             }
             return "Heimdall continuable error; Attempting to continue";
@@ -179,7 +174,7 @@ public class HeimdallTools {
 
         if (stdErrLog.contains(" failed!")) {
             if (stdErrLog.contains("Claiming interface failed!")) {
-                new CASUALInteraction(null, "Turn Off your Device and put it back into Odin Mode").showActionRequiredDialog();
+                new CASUALInteraction(null, "@interactionRestartDownloadMode").showActionRequiredDialog();
                 return "Heimdall failed to claim interface; Attempting to continue";
             }
 

@@ -418,7 +418,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 //DisplayTitle
                 CASUALInteraction.OK_OPTION, // Options buttons
                 CASUALInteraction.INFORMATION_MESSAGE, //Icon
-                new String[]{"Donate To CASUAL", "Donate To " + CASUALapplicationData.DontateButtonText}, // option buttons
+                new String[]{"Donate To CASUAL", "Donate To " + CASUALapplicationData.developerName}, // option buttons
                 "No"); //Default{
         if (DResult == 0) {
             launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");

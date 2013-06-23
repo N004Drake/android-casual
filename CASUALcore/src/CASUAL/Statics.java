@@ -186,7 +186,7 @@ public class Statics {
     }
 
     public static void displayWindowsXPDiscontinued() {
-        int dResult = new CASUALInteraction("Your Operating System is Not Fully Supported", "Windows XP is a " + (Calendar.getInstance().get(Calendar.YEAR) - 2001) + " year old Operating system.\n"
+        /*int dResult = new CASUALInteraction("Your Operating System is Not Fully Supported", "Windows XP is a " + (Calendar.getInstance().get(Calendar.YEAR) - 2001) + " year old Operating system.\n"
                 + "CASUAL is not able to handle problems caused by this.\n"
                 + "Certain critial operations may not work. Please run as\n"
                 + "an Administrator if you wish to continue.... However,\n"
@@ -200,7 +200,7 @@ public class Statics {
                 "Quit"); //Default{
         if (dResult != 0) {
             CASUALApp.shutdown(1);
-        }
+        }*/
     }
 
     //script data
@@ -373,7 +373,6 @@ public class Statics {
         CASUALapplicationData.donateButtonName="";
         CASUALapplicationData.useSound=false;
         CASUALapplicationData.developerDonateLink="";
-        CASUALapplicationData.DontateButtonText="";
         CASUALapplicationData.donationLink="";
         CASUALapplicationData.CASUALFileName="";
         CASUALapplicationData.AlwaysEnableControls=true;
