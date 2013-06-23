@@ -18,13 +18,10 @@ package CASUAL;
 
 //import java.awt.Color;
 import java.io.PrintWriter;
-import java.security.Timestamp;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledDocument;
 
@@ -42,6 +39,7 @@ public class Statics {
     public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
     public static String currentStatus="working";
+    public static boolean debugMode=false;
 
 
     public Statics() {
