@@ -73,10 +73,11 @@ public class CASUALLanguage {
              }*/
             log.level2Information("@done");
         } catch (Exception e) {//Catch exception if any
-            log.level0Error("CASUAL experienced an error while parsing command:\n" + strLine + "\nplease report the above exception.");
-            log.errorHandler(e);
+            log.level0Error("@problemParsingScript");
+            log.level0Error(strLine);
             log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
-            log.level0Error("CASUAL experienced an error while parsing command:\n" + strLine + "\nplease report the above exception.");
+            log.level0Error("@problemParsingScript");
+            log.level0Error(strLine);
         }
 
     }
@@ -191,6 +192,8 @@ public class CASUALLanguage {
 
         }
 
+//Sends the log to the pastebin account and informs user.
+        //usage $SENDLOG
         if (line.startsWith("$SENDLOG")) {
             line = line.replace("$SENDLOG", "");
             line = StringOperations.removeLeadingSpaces(line);
@@ -208,6 +211,9 @@ public class CASUALLanguage {
             return "";
         }
 
+//GOTO #commented line
+        //will go to any line starting with the argumments specified
+        //comments work best because they are otherwise inoperative
         if (line.startsWith("$GOTO")) {
             line = line.replace("$GOTO", "");
             GOTO = StringOperations.removeLeadingAndTrailingSpaces(line);
@@ -340,9 +346,7 @@ public class CASUALLanguage {
                         log.errorHandler(ex);
                     }
                 }
-            } else {
-                log.level2Information("no files");
-            }
+            } 
 // $MAKEDIR will make a folder
         } else if (line.startsWith("$MAKEDIR")) {
             line = line.replace("$MAKEDIR", "");
