@@ -523,13 +523,28 @@ public class CASUALLanguage {
                 if (CASUALapplicationData.useSound) {
                     AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 }
+             //TODO: make something like Shell.timeoutShellCommand but it must also test for values
+             /*
+              * Shell.timeOutCommand(String[] cmd, String[] values, int timeDelay)
+              * timeDelayClass{
+              * int timer=0
+              * new secondTimer(String testValues {"< waiting for device >"}, int timeDelay){
+              *    if Arrays.asList(values).contains(line)
+              *    timer++;
+              * }
+              * }
+              *   do Threaded shell command and pass line into time delay class
+              * while  timeDelayClass.timer < timeDelay && thread.isAlive()
+              *  do nothing
+              * if timer>timedelay return whatever is in que to be returned
+              */ 
                 String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
                 if (!returnValue.contentEquals("\n")) {
                     return returnValue;
                 }
+            } else {
+                return new FastbootTools().doFastbootShellCommand(line);
             }
-
-            return new FastbootTools().doFastbootShellCommand(line);
 
             // if Fastboot, Send to fastboot shell command
         } else if (line.startsWith("$ADB")) {

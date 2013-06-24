@@ -87,19 +87,19 @@ public class TimeOutOptionPane extends JOptionPane {
         Object selectedValue = pane.getValue();
         isSelected = true;
         dialog.dispose();
-
-        if (selectedValue.equals("uninitializedValue")) {
-            selectedValue = initialValue;
-        }
-        if (selectedValue == null) {
-            return CLOSED_OPTION;
-        }
         if (options == null) {
             if (selectedValue instanceof Integer) {
                 return ((Integer) selectedValue).intValue();
             }
             return CLOSED_OPTION;
         }
+        if (selectedValue.equals("uninitializedValue")) {
+            selectedValue = initialValue;
+        }
+        if (selectedValue.equals("cancel")) {
+            return CLOSED_OPTION;
+        }
+
         for (int counter = 0, maxCounter = options.length; counter < maxCounter; counter++) {
             if (options[counter].equals(selectedValue)) {
                 return counter;
