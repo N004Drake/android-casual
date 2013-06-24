@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 
-import CASUAL.CASUALTest;
 import CASUAL.CASUALApp;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -60,7 +59,7 @@ public class JUnitTest {
         CASUAL.Statics.useGUI = true;
         int x = new CASUAL.CASUALInteraction("testing", "Do you want to test CASPAC functionality?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
         if (x == 0) {
-            CASUAL.Statics.dumbTerminalGUI = true;
+            CASUAL.Statics.useGUI = false;
             CASUAL.CASUALApp.beginCASUAL(new String[]{"-CASPAC", "../../CASPAC/testpak.zip"});
             x = new CASUAL.CASUALInteraction("testing", "Do you want to loop on CASPAC forever?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
             if (x == 0) {
@@ -108,6 +107,7 @@ public class JUnitTest {
         //InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
 
         CASUAL.Statics.useGUI = false;
+        setContinue();
         CASUAL.CASUALInteraction ci = new CASUAL.CASUALInteraction(title, message);
         setContinue();
         assertEquals("", ci.inputDialog());
@@ -127,7 +127,7 @@ public class JUnitTest {
         ci.showUserNotification();
         CASUAL.Statics.useGUI = true;
         int x = new CASUAL.CASUALInteraction("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
-        if (x == 0) {
+        if ( x == 0) {
             ci = new CASUAL.CASUALInteraction("Text Input", "Press\n1");
             assertEquals("1", ci.inputDialog());
             ci = new CASUAL.CASUALInteraction("Action Required", "Select\nI didn't do it!");

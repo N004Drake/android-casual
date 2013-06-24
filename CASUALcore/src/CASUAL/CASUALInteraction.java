@@ -75,7 +75,7 @@ public class CASUALInteraction extends JOptionPane {
         } else {
             new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText);
             String s = getCommandLineInput();
-            if (s.equals("")){
+            if (s==null||s.equals("")){
                 return 0;
             }
             return 1;
