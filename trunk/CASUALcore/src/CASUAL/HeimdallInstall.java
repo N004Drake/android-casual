@@ -91,7 +91,7 @@ public class HeimdallInstall {
             fo.setExecutableBit(Statics.heimdallStaging);
             shell.elevateSimpleCommandWithMessage(new String[]{"dpkg", "-i", Statics.heimdallStaging}, "Install Heimdall");
             Statics.heimdallDeployed = "heimdall";
-            if (Statics.checkAndDeployHeimdall()) {
+            if (checkAndDeployHeimdall()) {
                 return true;
             } else {
                 Statics.heimdallDeployed = "";
@@ -108,7 +108,7 @@ public class HeimdallInstall {
     Log log = new Log();
     Shell shell = new Shell();
 
-    public static boolean installHeimdall() {
+    public boolean installHeimdall() {
         //if ( installedHeimdallVersion.length==2 && REGEX FOR STRING NUMBERS ONLY){ isHeimdallDeployed=true;
         if (Statics.isHeimdallDeployed) { //if heimdall is installed, return true
             return true;
@@ -120,7 +120,7 @@ public class HeimdallInstall {
                     return true;
                 } else {
                     new HeimdallInstall().installWindowsVCRedist();
-                    if (Statics.checkAndDeployHeimdall()) {
+                    if (checkAndDeployHeimdall()) {
                         return true;
                     }
                     Statics.heimdallDeployed = "";
@@ -277,6 +277,31 @@ Heimdall v1.4.0
         installWindowsDrivers();
     }
 
+    
+    
+    public boolean checkAndDeployHeimdall() {
+
+        //deploys heimdall for Windows, launches checks for all other OS's. 
+        
+        if (Statics.isHeimdallDeployed) {
+            return true;
+        } else {
+            if (Statics.isWindows()) {
+                return new HeimdallInstall().deployHeimdallForWindows();
+            } else {
+                
+                if (new HeimdallInstall().checkHeimdallVersion()) {
+                    return true;
+                } else { //shell returned error
+                    if (installHeimdall()) {
+                        return true;
+                    }
+                    return false;
+                }
+
+            }
+        }
+    }
     public boolean checkHeimdallVersion() {
         String heimdallCommand;
         if (Statics.heimdallDeployed.equals("")) {

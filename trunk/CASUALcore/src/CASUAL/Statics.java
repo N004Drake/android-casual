@@ -245,31 +245,6 @@ public class Statics {
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
     
-    //TODO: move this to HeimdallTools and break into verify heimdall and deploy Heimdall for Windows
-    public static boolean checkAndDeployHeimdall() {
-
-        //deploys heimdall for Windows, launches checks for all other OS's. 
-        
-        if (isHeimdallDeployed) {
-            return true;
-        } else {
-            if (Statics.isWindows()) {
-                return new HeimdallInstall().deployHeimdallForWindows();
-            } else {
-                
-                if (new HeimdallInstall().checkHeimdallVersion()) {
-                    return true;
-                } else { //shell returned error
-                    if (HeimdallInstall.installHeimdall()) {
-                        return true;
-                    }
-                    return false;
-                }
-
-            }
-        }
-    }
-
     public static boolean is64bitSystem() {
         if (isWindows()) {
             return isWindows64Arch();
