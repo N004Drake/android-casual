@@ -104,7 +104,6 @@ public class CASUALConnectionStatusMonitor {
                                 // if permissions elevation was sucessful
                                 if (!DeviceList.contains("????????????")) {
                                     Log.level4Debug(DeviceList);
-                                    Log.level2Information("Permissions problem corrected");
                                     stateSwitcher(1);
                                     //devices still not properly recognized.  Log it.
                                 } else {

@@ -54,12 +54,12 @@ public class FileOperations {
                         return true;
                     } else {
                         resourceAsStream.close();
-                        log.level0Error("Failed to write file");
+                        log.level0Error("@failedToWriteFile");
                         return false;
                     }
 
                 } else {
-                    log.level0Error("Critical Error copying " + Resource);
+                    log.level0Error("@criticalErrorWhileCopying " + Resource);
                 }
             } catch (NullPointerException e) {
                 return false;
@@ -70,7 +70,7 @@ public class FileOperations {
 
         } catch (IOException ex) {
             Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
-            log.level0Error("Critical Error copying " + Resource);
+            log.level0Error("@criticalErrorWhileCopying " + Resource);
             return false;
         }
         return false;
@@ -93,7 +93,7 @@ public class FileOperations {
     public void recursiveDelete(File path) {
         File[] c = path.listFiles();
         if (path.exists()) {
-            log.level2Information("Removing folder and contents:" + path.toString());
+            log.level4Debug("Removing folder and contents:" + path.toString());
 
             for (File file : c) {
                 if (file.isDirectory()) {
@@ -117,7 +117,7 @@ public class FileOperations {
         File Check = new File(path);
         File[] c = Check.listFiles();
         if (Check.exists()) {
-            log.level2Information("Verifying permissions in folder:" + path.toString());
+            log.level4Debug("Verifying permissions in folder:" + path.toString());
             for (File file : c) {
                 if (!file.canWrite()) {
                     return false;
@@ -224,7 +224,7 @@ public class FileOperations {
         if (folder.exists()) {
             return true;
         } else {
-            log.level0Error("Could not create temp folder in " + Folder);
+            log.level0Error("@couldNotCreateFolder " + Folder);
             return false;
         }
     }
@@ -292,21 +292,19 @@ public class FileOperations {
                     out.write(data, 0, currentByte);
                 }
             } else {
-                log.level0Error("Error: file was 0 length");
                 return false;
             }
             is.close();
             out.flush();
             out.close();
         } catch (IOException e) {
-            log.level0Error("Error Writing/Reading Streams.");
             return false;
         }
         if ((file.exists()) && (file.length() >= 4)) {
             log.level4Debug("File verified.");
             return true;
         } else {
-            log.level0Error("Failed to write file.");
+            log.level0Error("@failedToWriteFile");
             return false;
         }
     }
@@ -326,7 +324,7 @@ public class FileOperations {
                 log.level4Debug("Deleted " + FileName);
             } else {
                 Deleted = false;
-                log.level0Error("ERROR DELETING FILE:" + FileName);
+                log.level0Error("@couldNotDeleteFile" + FileName);
             }
         } else {
             Deleted = true;
@@ -482,10 +480,8 @@ public class FileOperations {
             }
             in.close();
         } catch (NullPointerException ex) {
-            log.level0Error("Could not find resource named:" + Resource);
-            Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+            log.level0Error("@resourceNotFound:" + Resource);
         } catch (IOException ex) {
-            Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
         }
         //Log.level3(text.toString());
         return text.toString();
@@ -521,12 +517,8 @@ public class FileOperations {
                 }
             }
         } catch (FileNotFoundException ex) {
-            log.level0Error("File Not Found Error: " + FileOnDisk);
-            new Log().errorHandler(ex);
-
+            log.level2Information("@fileNotFound " + FileOnDisk);
         } catch (IOException ex) {
-            log.level0Error("Permission Error: " + FileOnDisk);
-            new Log().errorHandler(ex);
         }
         EntireFile = EntireFile.replaceFirst("\n", "");
         return EntireFile;
@@ -541,10 +533,10 @@ public class FileOperations {
     public String[] listFolderFiles(String folder) {
         File dir = new File(folder);
         if (!dir.isDirectory()) {
-            new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
+            new Log().level0Error("@fileNotAFolder");
             return null;
         }
-        ArrayList<String> files = new ArrayList<String>();
+        ArrayList<String> files = new ArrayList<>();
         File[] list = dir.listFiles();
         for (int x = 0; list.length > x; x++) {
            files.add(list[x].getName());
@@ -555,7 +547,7 @@ public class FileOperations {
     public String[] listFolderFilesCannonically(String folder) {
         File dir = new File(folder);
         if (!dir.isDirectory()) {
-            new Log().level0Error("[listFolderFiles()]Specified file is not a folder");
+            new Log().level0Error("\"@fileNotAFolder");
             return null;
         }
         String[] childOf = new String[1024];
@@ -594,17 +586,16 @@ public class FileOperations {
     }
 
     public boolean moveFile(String sourceFile, String destFile) throws IOException {
-        Log log = new Log();
-        FileOperations fO = new FileOperations();
-        if (!fO.verifyExists(sourceFile)) {
+        FileOperations fo = new FileOperations();
+        if (!fo.verifyExists(sourceFile)) {
             log.level4Debug("[moveFile()] Source doesn't exist");
             return false;
         }
-        if (fO.verifyExists(destFile)) {
-            fO.deleteFile(destFile);
+        if (fo.verifyExists(destFile)) {
+            fo.deleteFile(destFile);
         }
-        if (fO.copyFile(sourceFile, destFile)) {
-            if (fO.deleteFile(sourceFile)) {
+        if (fo.copyFile(sourceFile, destFile)) {
+            if (fo.deleteFile(sourceFile)) {
                 log.level4Debug("[moveFile()]File moved successfully");
                 return true;
             } else {

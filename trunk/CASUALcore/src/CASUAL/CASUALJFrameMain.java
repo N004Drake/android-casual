@@ -376,10 +376,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
                 log.level2Information("Description for " + nonResourceFileName);
+                try{
                 log.level2Information(fileOperations.readFile(nonResourceFileName + ".txt"));
+                } catch (Exception e){
+                    log.level2Information("@textResourceNotFound");
+                }
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
                 Statics.SelectedScriptFolder = Statics.TempFolder + new File(nonResourceFileName).getName() + Statics.Slash;
-                log.level0Error("Delete this debug line in MenuItemOpenScriptActionPerformed()");
                 if (new FileOperations().verifyFileExists(nonResourceFileName.toString() + ".zip")) {
                     new Unzip(nonResourceFileName.toString() + ".zip").unzipFile(Statics.SelectedScriptFolder);
                 }
@@ -449,7 +452,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         Statics.lockGUIunzip = true;
         updateSelectedFromGUI();
         new CASUALTools().startZipPrepThreadOnZipFile(comboBoxScriptSelector.getSelectedItem().toString());
-        log.Level1Interaction(comboBoxScriptSelector.getSelectedItem().toString());
+        log.level2Information(comboBoxScriptSelector.getSelectedItem().toString());
         
         try {
             CASUALTools.zipPrep.join();

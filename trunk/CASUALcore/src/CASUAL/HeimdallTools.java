@@ -81,12 +81,12 @@ public class HeimdallTools {
                 if (!Statics.debugMode) cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnval;
             } else if (result.contains("Attempting to continue")) {
-                log.level2Information("A permissions problem was detected.  Elevating permissions.");
+                log.level2Information("@permissionsElevationRequired");
                 returnval = doElevatedHeimdallShellCommand();
                 return returnval;
             }
         } else {
-            log.level2Information("\n[Heimdall Success]\n\n");
+            log.level3Verbose("\n[Heimdall Success]\n\n");
         }
         return returnval;
     }
@@ -103,27 +103,32 @@ public class HeimdallTools {
         String result = didHeimdallError(returnRead);
         if (!result.equals("")) {
             if (result.contains("Script halted")) {
-                log.level0Error("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n");
+                
+                log.level0Error("@heimdallErrorReport");
+                log.level0Error(line);
+                log.level0Error("@heimdallErrorReport");
+                log.level0Error( result);
+                log.level0Error("@heimdallErrorReport");
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
                 return returnRead;
             } else if (result.contains("; Stopping")) {
                 return returnRead;
             }
-            log.level2Information("\n[Heimdall Error Report] Detected:\n" + result + "\n[/Heimdall Error Report]\n\n"); //not an error, generally requires permissions
+            log.level2Information(result);
         } else if (result.contains("")) {
-            log.level2Information("\n[Heimdall Success]\n\n");
+            log.level2Information("@heimdallWasSucessful");
         }
         if (result.contains("Attempting to continue")) {
             permissionEscillationAttempt++;
             if (Statics.isLinux()) {
-                log.level2Information("A permissions problem was detected.  Elevating permissions.");
+                log.level2Information("@permissionsElevationRequired");
                 returnRead = returnRead + doElevatedHeimdallShellCommand();
             } else if (Statics.isWindows() || Statics.isMac()) {
                 if (permissionEscillationAttempt < 5) {
                     returnRead = returnRead + doHeimdallShellCommand();
                 } else {
-                    log.level0Error("Maximum retries exceeded. Shutting down Parser.");
+                    log.level0Error("@maximumRetries");
                     //TODO: uninstall drivers, reinstall with CADI and try once more.
                     new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO cyclic error.");
                 }
