@@ -319,7 +319,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     public void StartButtonActionPerformed() {
-        log.level0Error("");
         log.level4Debug("StartButtonActionPerformed() Script Activated");
         log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
 
