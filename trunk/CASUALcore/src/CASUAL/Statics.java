@@ -20,7 +20,6 @@ package CASUAL;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledDocument;
@@ -80,7 +79,7 @@ public class Statics {
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     
     //TODO: figure out a better way to not use static non-final variable during initialization. as reported by Netbeans
-    final public static String TempFolder = (TempF==null)?getTempFolder():TempF;
+    final public static String TempFolder = getTempFolder();
     private static String getTempFolder() {
         if (TempF == null) {
             String user = System.getProperty("user.name");  //username
@@ -246,6 +245,8 @@ public class Statics {
     static String[] resourceHeimdallVersion;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
+    
+    //TODO: move this to HeimdallTools and break into verify heimdall and deploy Heimdall for Windows
     public static boolean checkAndDeployHeimdall() {
 
         //deploys heimdall for Windows, launches checks for all other OS's. 
