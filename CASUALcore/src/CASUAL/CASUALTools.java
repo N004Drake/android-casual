@@ -157,10 +157,8 @@ public class CASUALTools {
     }
     
     
-    //TODO: this is kinda ugly.  possibly needs to be moved to a new class. 
     //CASUALZipPrep
     public static Thread zipPrep;
-
     /**
      * prepares the script for execution by setting up environment
      *

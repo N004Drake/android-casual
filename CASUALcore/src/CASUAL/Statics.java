@@ -78,7 +78,6 @@ public class Statics {
     private static String TempF = null; //TempF is the actual tempfolder, it's served by getTempFolder
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     
-    //TODO: figure out a better way to not use static non-final variable during initialization. as reported by Netbeans
     final public static String TempFolder = getTempFolder();
     private static String getTempFolder() {
         if (TempF == null) {

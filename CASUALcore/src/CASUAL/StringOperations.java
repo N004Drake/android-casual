@@ -85,7 +85,7 @@ public class StringOperations {
      *
      * @author Jeremy Loper jrloper@gmail.com
      */
-    public static String[] convertStringToArray(String inputString) { //TODO - Use in HeimdallTools Error String Loading
+    public static String[] convertStringToArray(String inputString) {
         StringOperations.removeLeadingAndTrailingSpaces(inputString);
         String[] outputArray = {};
         int currentQuotePosition = 0;
