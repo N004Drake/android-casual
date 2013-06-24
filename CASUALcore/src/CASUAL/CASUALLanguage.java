@@ -499,7 +499,8 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line);
             log.level4Debug("Received Command: " + line);
             log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
-            if (Statics.checkAndDeployHeimdall()) {
+            HeimdallInstall heimdallInstall=new HeimdallInstall();
+            if (heimdallInstall.checkAndDeployHeimdall()) {
                 new HeimdallTools("").doHeimdallWaitForDevice();
                 /* if (Statics.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
