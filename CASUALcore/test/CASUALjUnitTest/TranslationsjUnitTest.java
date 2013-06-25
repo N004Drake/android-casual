@@ -1,39 +1,30 @@
+package CASUALjUnitTest;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 
 import CASUAL.Translations;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
+
 import org.junit.Test;
 
 /**
  *
  * @author adam
  */
-public class translationTest {
-    
-    public translationTest() {
-    }
-    
+public class TranslationsjUnitTest {
     @BeforeClass
     public static void setUpClass() {
+        CASUAL.CASUALApp.shutdown(0);
     }
     
     @AfterClass
     public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+        CASUAL.CASUALApp.shutdown(0);
+    }    
     
     //mixed valid and invalid translation strings early, middle, late values.
     final static String line="@permissionsElevationRequired @interactionOfflineNotification @ppermissionsElevationRequiredermissionsElevationRequired @permissionsElevatisfdasf  test test test   @heimdallWasSucessful test test  ";

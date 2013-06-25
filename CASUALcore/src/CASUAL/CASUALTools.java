@@ -359,4 +359,12 @@ public class CASUALTools {
             new Log().errorHandler(ex);
         }
     }
+    
+    public static void sleepForOneSecond() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

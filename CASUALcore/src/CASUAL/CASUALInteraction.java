@@ -87,6 +87,11 @@ public class CASUALInteraction extends JOptionPane {
         try {
             Log.out.flush();
             String s = in.readLine();
+            if (s==null){
+                while (s==null){
+                    s=in.readLine();
+                }
+            }
             return s;
         } catch (IOException ex) {
             new Log().errorHandler(ex);
@@ -135,6 +140,7 @@ public class CASUALInteraction extends JOptionPane {
                     Options[1]);
         } else {
             while (n != 0 && n != 1) {
+                new Log().Level1Interaction("[ACTIONREQUIRED][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit");
                 String retval = getCommandLineInput();
                 if (!retval.equals("q") && !retval.equals("Q") && !retval.equals("")) {
                     n = new CASUALInteraction(messageText).showActionRequiredDialog();

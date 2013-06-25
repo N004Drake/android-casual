@@ -18,7 +18,10 @@ package CASUAL;
 
 import java.awt.Window;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The main class of the application.
@@ -29,14 +32,12 @@ public class CASUALApp {
     /**
      *
      */
-        final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
+    final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
-
-   
     static String[] arguments;
 
-    /**
+     /**
      * At startup create and show the main frame of the application.
      */
     /**
@@ -55,23 +56,24 @@ public class CASUALApp {
      * @param args
      */
     public static void main(String[] args) {
-        arguments=args;
+        arguments = args;
         //Initialize statics
         Statics.initializeStatics();
 
         //Override args for test modes
-        if (useOverrideArgs) { 
+        if (useOverrideArgs) {
             args = overrideArguments;
         }
         beginCASUAL(args);
-     } 
+    }
 
-     /**
-      * Begins actual CASUAL modes this can be called as a reset for CASUAL
-      * without losing args[] in case of a problem
-      * @param args 
-      */
-     public static void beginCASUAL(String[] args) {
+    /**
+     * Begins actual CASUAL modes this can be called as a reset for CASUAL
+     * without losing args[] in case of a problem
+     *
+     * @param args
+     */
+    public static void beginCASUAL(String[] args) {
         CASUALapplicationData.CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
         CASUALapplicationData.CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         CASUALapplicationData.CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
@@ -87,12 +89,13 @@ public class CASUALApp {
         checkModeSwitchArgs(args);
         new CASUALMain().startup(args);
     }
-    
+
     /**
-     * checkModeSwitchArgs is a primary switch before any real
-     * actions happen.  Here we check for switches that will either
-     * change the mode of CASUAL or display something quick and exit.
-     * @param args 
+     * checkModeSwitchArgs is a primary switch before any real actions happen.
+     * Here we check for switches that will either change the mode of CASUAL or
+     * display something quick and exit.
+     *
+     * @param args
      */
     private static void checkModeSwitchArgs(String args[]) {
 
@@ -124,7 +127,7 @@ public class CASUALApp {
                         + "    GNU General Public License for more details.");
                 return;
             }
-            if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC")|| args[i].contains("-CASPAC")) {
+            if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
                 i++;
                 new CASPACHandler().loadCASUALPack(args[i]);
                 new Log().level2Information("CASPAC completed.");
@@ -140,19 +143,56 @@ public class CASUALApp {
         new Log().level4Debug("Shutting Down");
         Log.out.flush();
         Window windows[] = Window.getWindows();
-        if (windows != null) {
-            for (Window window : windows) {
-                window.dispose();
+        
+        if (windows != null && windows.length>0) {
+            Thread[] windowClosers= new Thread[windows.length];
+            //loop through each window and create a thread
+            for (int currentWindow=0; currentWindow<windows.length ;currentWindow++){
+                final Window targetWindow=windows[currentWindow];
+                Runnable r = new Runnable() { //dispose them all for shutdown
+                    @Override
+                    public void run() {
+                        targetWindow.dispose();
+                    }
+                };
+                windowClosers[currentWindow] = new Thread(r);
+                windowClosers[currentWindow].setName("Shutting Down "+targetWindow.getName());
+                windowClosers[currentWindow].setDaemon(true);  // put them in the background if they hang
+                windowClosers[currentWindow].start();
+            }
+            //give them 5 seconds to shutdown
+            boolean allWindowsClosed=false;
+            int passes=0;
+            while (!allWindowsClosed){
+                allWindowsClosed=true;
+                for (Thread waiting:windowClosers){
+                    if (waiting.isAlive()) allWindowsClosed=false;
+                }
+                CASUALTools.sleepForOneSecond();
+                if (passes>5) break;
+                passes++;
+            }
+                    
+            
+            
+            try {
+                new Shell().silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
+            } catch (Exception e) {//do nothing
+            }
+            if (!CASUALTools.IDEMode && !Statics.useGUI){
+                try {
+
+                    new Pastebin().pasteAnonymousLog();
+                } catch (MalformedURLException ex) {
+                    new Log().errorHandler(ex);
+                }
             }
         }
-        new Shell().silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
-        //if (!CASUALTools.IDEMode){
-            try {
-                new Pastebin().pasteAnonymousLog();
-            } catch (MalformedURLException ex) {
-                new Log().errorHandler(ex);
-            }
-        //}
-        Statics.initializeStatics();
+        try {
+            CASUALInteraction.in.close();
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            Statics.initializeStatics();
     }
 }
