@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -26,57 +25,65 @@ import java.util.ResourceBundle;
  */
 public class Translations {
 
-    private static ResourceBundle translation;
-    public static String language = "en";
+    //language resource bundle
+    static ResourceBundle translation;
 
     /**
-     * Returns translated string for CASUAL
+     * Returns translated string from translation Resource Bundle.
+     * Checks to make sure there is a valid resource file.  Default locale is
+     * loaded if required. The input String is split by " " and "\n".  If the 
+     * split values start with the (at) character, a translation is attempted.
      *
-     * @param reference string to be translated
-     * @return
+     * @param line string to be translated
+     * @return translated line
      */
-    public static String get(String reference) {
-        //load translation only if nulled.
-        if (translation == null) {
-            String lang = Locale.getDefault().getDisplayLanguage();
-            try {
-                translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
-            } catch (Exception e) {
-                translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/English");
-                new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
+    public static String get(String line) {
+        if (translation==null) Translations.setDefaultLanguage();
 
-            }
-        }
+        new Log().level4Debug("[TRANSLATION]" + line);
         //get translation
-        String[] splitRef = reference.split("( )|(\n)");
+        String[] splitRef = line.split("( )|(\n)");
         String retVal = "";
         for (String ref : splitRef) {
-            if (! ref.equals("") && ref.startsWith("@")){
+            if (!ref.equals("") && ref.startsWith("@")) {
                 try {
-                    new Log().level4Debug("[TRANSLATION]" + ref);
-                    retVal = reference.replace(ref, translation.getString(ref));
+                    retVal = line.replace(ref, translation.getString(ref));
                 } catch (java.util.MissingResourceException ex) {
                     new Log().level3Verbose("*****MISSING TRANSLATION VALUE*****");
                 }
-            } else {
-                
             }
         }
         return retVal;
     }
-
-    public static void changeLanguage(String newLanguage) {
-        translation = null;
-        language = newLanguage;
+    
+    /**
+     * Sets language by Locale.  
+     * If the translation is missing, the default is
+     * CASUAL/resources/Translations/English.properties. 
+     */
+    private static void setDefaultLanguage(){
+            String lang = Locale.getDefault().getDisplayLanguage();
+        try {
+            translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
+        } catch (Exception e) {
+            translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/English");
+            new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
+        }
     }
 
-    public static void translateAnyFromLine(String line) {
-        Enumeration allNames = translation.getKeys();
-        while (allNames.hasMoreElements()) {
-            String toBeReplaced = (String) allNames.nextElement();
-            if (line.contains(toBeReplaced)) {
-                line = line.replace(toBeReplaced, get(toBeReplaced));
-            }
+    /**
+     * Sets up a translation language for testing CASUAL. 
+     * If the translation is missing, the default is 
+     * CASUAL/resources/Translations/English.properties.
+     * 
+     * @param lang attempts to load specified language.
+     */
+    public void setLanguage(String lang) {
+        try {
+            translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
+        } catch (Exception e) {
+            translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/English");
+            new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
         }
     }
 }
