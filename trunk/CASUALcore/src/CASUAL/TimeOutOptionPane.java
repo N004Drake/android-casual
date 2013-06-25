@@ -45,7 +45,7 @@ public class TimeOutOptionPane extends JOptionPane {
     public int timeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType,
             int messageType, Object[] options, final Object initialValue) {
         JOptionPane pane = new JOptionPane(message, messageType, optionType, null, options, initialValue);
-
+        
         pane.setInitialValue(initialValue);
 
         final JDialog dialog = pane.createDialog(parentComponent, title);
@@ -64,11 +64,9 @@ public class TimeOutOptionPane extends JOptionPane {
                         dialog.setTitle(title + "  (" + i + " seconds before auto \"" + initialValue + "\")");
                     }
                 }
-                if (dialog.isVisible()) {
-                    dialog.setVisible(false);
-                    dialog.dispose();
-                }
-
+                dialog.setVisible(false);
+                dialog.dispose();
+                
             }
 
             void doSleep() {

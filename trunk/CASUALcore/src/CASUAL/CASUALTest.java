@@ -42,17 +42,51 @@ public class CASUALTest {
     BufferedReader readFromCASUAL;
     PipedOutputStream fromAppPipedOutputStream;
     PipedInputStream fromAppPipedInputStream;
-
-    final String[] loggingParams;
-    private boolean[] loggingResults;
+    
+    final String[] valuesWeDontWantToSee;
+    boolean[] badChecks;
+    final String[] valuesWeWantToSee;
+    private boolean[] goodChecks;
     /* constructor sets up logging and parameters */
-    public CASUALTest( String[] CASUALLaunchCommand,String[] valuesToCheckDuringRun) {
-        loggingParams=valuesToCheckDuringRun;
-        loggingResults=new boolean[loggingParams.length];
-        Arrays.fill(loggingResults,Boolean.FALSE);
-        
-        
-        
+    public CASUALTest(){        
+        valuesWeWantToSee=new String[]{""};
+        goodChecks=new boolean[valuesWeWantToSee.length];
+        Arrays.fill(goodChecks,Boolean.FALSE);
+        valuesWeDontWantToSee=new String[]{};
+        badChecks=new boolean[valuesWeDontWantToSee.length];
+        Arrays.fill(badChecks,Boolean.FALSE);
+        try {
+            fromAppPipedInputStream = new PipedInputStream(BUFFER);
+            fromAppPipedOutputStream = new PipedOutputStream(fromAppPipedInputStream);
+            readFromCASUAL = new BufferedReader(new InputStreamReader(fromAppPipedInputStream));
+            CASUAL.Log.out = new PrintStream(fromAppPipedOutputStream);
+
+            toAppPipedInputStream = new PipedInputStream(BUFFER);
+            writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
+            CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
+
+
+        } catch (IOException ex) {
+            new CASUAL.Log().errorHandler(ex);
+        }
+
+
+    }
+
+    
+    /**
+     * Launches CASUAL and monitors output
+     * @param CASUALLaunchCommand list of parameters to run
+     * @param valuesToCheckDuringRun desirable values from CASUAL
+     * @param valuesWeDontWantToSee  undesirable values reported from CASUAL
+     */
+    public CASUALTest( String[] CASUALLaunchCommand,String[] valuesToCheckDuringRun, String[] valuesWeDontWantToSee) {
+        valuesWeWantToSee=valuesToCheckDuringRun;
+        goodChecks=new boolean[valuesWeWantToSee.length];
+        Arrays.fill(goodChecks,Boolean.FALSE);
+        this.valuesWeDontWantToSee=valuesWeDontWantToSee;
+        badChecks=new boolean[valuesWeDontWantToSee.length];
+        Arrays.fill(badChecks,Boolean.FALSE);
         try {
             fromAppPipedInputStream = new PipedInputStream(BUFFER);
             fromAppPipedOutputStream = new PipedOutputStream(fromAppPipedInputStream);
@@ -80,15 +114,15 @@ public class CASUALTest {
         Thread launch = new Thread(launchCASUAL);
         launch.start();
         Thread read = new Thread(readReactToCASUAL);
+        read.setDaemon(true);
         read.start();
         try {
             launch.join();
-            read.join();
         } catch (InterruptedException ex) {
             Logger.getLogger(CASUALTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    Runnable readReactToCASUAL = new Runnable() {
+    public Runnable readReactToCASUAL = new Runnable() {
         @Override
         public void run() {
             //output from CASUAL is logged to a file in the temp folder
@@ -104,7 +138,7 @@ public class CASUALTest {
                     //nothing came out of CASUAL's Log, so lets sleep.
                     doQuarterSecondSleep();
                     
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     //no need to report this. its fine
                 }
             }
@@ -139,6 +173,10 @@ public class CASUALTest {
                     //general notification
                     System.out.println(line);
                     writeToCASUAL.write(13);
+                } else if (line.contains("[RETURN]")) {
+                    //general notification
+                    System.out.println(line);
+                    writeToCASUAL.write(13);
 
 
                 } else if (line.contains("[INFOMESSAGE][RETURN]")) {
@@ -148,6 +186,15 @@ public class CASUALTest {
 
 
                 } else if (line.contains("[ERRORMESSAGE][RETURN]")) {
+                    //general error 
+                    System.out.println(line);
+                    writeToCASUAL.write(13);
+                
+                } else if (line.contains("[INTERACTION][CANCELOPTION][Q or RETURN]")) {
+                    //general error 
+                    System.out.println(line);
+                    writeToCASUAL.write(13);
+                } else if (line.contains("[INTERACTION][ACTIONREQUIRED][Q or RETURN]")) {
                     //general error 
                     System.out.println(line);
                     writeToCASUAL.write(13);
@@ -182,16 +229,27 @@ public class CASUALTest {
         
     }
     private void validateLine(String line){
-        for (int i=0; i<loggingParams.length;i++){
-            if (line.contains(loggingParams[i])){
-               loggingResults[i]=true;
+        for (int i=0; i<valuesWeWantToSee.length;i++){
+            if (line.contains(valuesWeWantToSee[i])){
+               goodChecks[i]=true;
+            }
+            if (! line.contains(valuesWeDontWantToSee[i])){
+                badChecks[i]=true;
             }
         }
     }
+    
+    /**
+     * Instantiates CASUAL and checks values
+     * @return true if no desired values were seen and all desired values were seen
+     */
     public boolean checkTestPoints(){
         instantiateCASUAL();
-        if (loggingResults !=null && loggingResults.length>0){
-            for (boolean check : loggingResults){
+        if (goodChecks !=null && goodChecks.length>0){
+            for (boolean check : goodChecks){
+                if (!check) return false;
+            }
+            for (boolean check : badChecks){
                 if (!check) return false;
             }
         }
