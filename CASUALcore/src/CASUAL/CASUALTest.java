@@ -96,7 +96,7 @@ public class CASUALTest {
             toAppPipedInputStream = new PipedInputStream(BUFFER);
             writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
             CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
-
+        
 
         } catch (IOException ex) {
             new CASUAL.Log().errorHandler(ex);
@@ -112,8 +112,10 @@ public class CASUALTest {
     private void instantiateCASUAL() {
         //Runnable launchCASUAL=new CASUALTest();
         Thread launch = new Thread(launchCASUAL);
+        launch.setName("CASUALMain");
         launch.start();
         Thread read = new Thread(readReactToCASUAL);
+        read.setName("Reading and reacting to CASUAL");
         read.setDaemon(true);
         read.start();
         try {
@@ -218,10 +220,12 @@ public class CASUALTest {
     Runnable launchCASUAL = new Runnable() {
         @Override
         public void run() {
-
+            System.out.println("launching");
             CASUAL.CASUALApp.beginCASUAL(args);
             shutdown = true;
-            CASUAL.CASUALApp.shutdown(BUFFER);
+            System.out.println("shutting down");
+            CASUAL.CASUALApp.shutdown(0);
+            shutdown=false;
         }
     };
     
@@ -233,6 +237,8 @@ public class CASUALTest {
             if (line.contains(valuesWeWantToSee[i])){
                goodChecks[i]=true;
             }
+        }
+        for (int i=0; i<valuesWeDontWantToSee.length;i++){
             if (! line.contains(valuesWeDontWantToSee[i])){
                 badChecks[i]=true;
             }
@@ -249,6 +255,8 @@ public class CASUALTest {
             for (boolean check : goodChecks){
                 if (!check) return false;
             }
+        }
+        if (badChecks !=null && badChecks.length>0){
             for (boolean check : badChecks){
                 if (!check) return false;
             }

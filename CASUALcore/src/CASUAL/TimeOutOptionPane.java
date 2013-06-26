@@ -45,11 +45,9 @@ public class TimeOutOptionPane extends JOptionPane {
     public int timeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType,
             int messageType, Object[] options, final Object initialValue) {
         JOptionPane pane = new JOptionPane(message, messageType, optionType, null, options, initialValue);
-        
         pane.setInitialValue(initialValue);
-
         final JDialog dialog = pane.createDialog(parentComponent, title);
-
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         pane.selectInitialValue();
         Thread t = new Thread() {
             @Override
@@ -84,7 +82,7 @@ public class TimeOutOptionPane extends JOptionPane {
         dialog.setVisible(true);
         Object selectedValue = pane.getValue();
         isSelected = true;
-        dialog.dispose();
+        
         if (options == null) {
             if (selectedValue instanceof Integer) {
                 return ((Integer) selectedValue).intValue();

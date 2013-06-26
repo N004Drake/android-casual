@@ -142,57 +142,24 @@ public class CASUALApp {
     public static void shutdown(int i) {
         new Log().level4Debug("Shutting Down");
         Log.out.flush();
-        Window windows[] = Window.getWindows();
-        
-        if (windows != null && windows.length>0) {
-            Thread[] windowClosers= new Thread[windows.length];
-            //loop through each window and create a thread
-            for (int currentWindow=0; currentWindow<windows.length ;currentWindow++){
-                final Window targetWindow=windows[currentWindow];
-                Runnable r = new Runnable() { //dispose them all for shutdown
-                    @Override
-                    public void run() {
-                        targetWindow.dispose();
-                    }
-                };
-                windowClosers[currentWindow] = new Thread(r);
-                windowClosers[currentWindow].setName("Shutting Down "+targetWindow.getName());
-                windowClosers[currentWindow].setDaemon(true);  // put them in the background if they hang
-                windowClosers[currentWindow].start();
-            }
-            //give them 5 seconds to shutdown
-            boolean allWindowsClosed=false;
-            int passes=0;
-            while (!allWindowsClosed){
-                allWindowsClosed=true;
-                for (Thread waiting:windowClosers){
-                    if (waiting.isAlive()) allWindowsClosed=false;
-                }
-                CASUALTools.sleepForOneSecond();
-                if (passes>5) break;
-                passes++;
-            }
-                    
-            
-            
+        try {
+            new Shell().silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
+        } catch (Exception e) {//do nothing
+        }
+        if (!CASUALTools.IDEMode && !Statics.useGUI){
             try {
-                new Shell().silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
-            } catch (Exception e) {//do nothing
-            }
-            if (!CASUALTools.IDEMode && !Statics.useGUI){
-                try {
 
-                    new Pastebin().pasteAnonymousLog();
-                } catch (MalformedURLException ex) {
-                    new Log().errorHandler(ex);
-                }
+                new Pastebin().pasteAnonymousLog();
+            } catch (MalformedURLException ex) {
+                new Log().errorHandler(ex);
             }
         }
+
         try {
             CASUALInteraction.in.close();
         } catch (IOException ex) {
             Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
         }
-            Statics.initializeStatics();
+
     }
 }

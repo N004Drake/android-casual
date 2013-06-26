@@ -5,13 +5,12 @@
 package CASUALjUnitTest;
 
 
-import CASUAL.CASUALTest;
+import CASUAL.CASUALApp;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.BeforeClass;
 
@@ -38,27 +37,21 @@ public class CASPACjUnitTest {
         if (x == 0) {
             
 
-
-            Thread t=new Thread(new CASUAL.CASUALTest().readReactToCASUAL);
-            t.setDaemon(true);
-            t.start();
             CASUAL.Statics.useGUI = false;
-            CASUAL.CASUALApp.beginCASUAL(new String[]{"--CASPAC", "../../CASPAC/testpak.zip"});
-            CASUAL.CASUALApp.shutdown(0);
-            try {
-                Thread.sleep(10000); //must sleep because a process may be writing to the CASPAC
-            } catch (InterruptedException ex) {
-                Logger.getLogger(CASPACjUnitTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            t=new Thread(new CASUAL.CASUALTest().readReactToCASUAL);
-            t.setDaemon(true);
-            t.start();
+            CASUALApp.shutdown(0);
+            String[] casualParams=new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
+            String[] badValues=new String[]{"ERROR"};
+            String[] goodValues=new String[]{"echo [PASS]","[PASS] IFNOTCONTAINS"};
+            assertEquals(true, new CASUAL.CASUALTest(casualParams, goodValues,badValues).checkTestPoints());
+            System.out.println("TESTING SECOND ROUND");
+            System.out.println("TESTING SECOND ROUND");
+            System.out.println("TESTING SECOND ROUND");
+            System.out.println("TESTING SECOND ROUND");
             CASUAL.Statics.useGUI = false;
-            CASUAL.CASUALApp.beginCASUAL(new String[]{"--CASPAC", "../../CASPAC/testpak.zip"});
-            CASUALTest.shutdown=true;
-            CASUAL.CASUALApp.shutdown(0);
-            t.stop();
-            CASUALTest.shutdown=false;            
+            casualParams=new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
+            badValues=new String[]{"ERROR"};
+            goodValues=new String[]{"echo [PASS]","[PASS] IFNOTCONTAINS"};
+            assertEquals(true, new CASUAL.CASUALTest(casualParams, goodValues,badValues).checkTestPoints());
 
             //TODO: verify results
         }
