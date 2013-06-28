@@ -2,8 +2,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package casthezipper;
-import casthezipper.resources.*;
+package CASPACcreator;
+import CASUAL.Zip;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author loganludington
  */
-public class CASthezipper {
+public class CASPACcreator {
 
     private static final String slash = System.getProperty("file.separator");
     private static final String wd = System.getProperty("user.dir");
