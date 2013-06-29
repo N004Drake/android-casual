@@ -1,111 +1,118 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/*CASPACcreator creates a CASPAC using command-line args.
+ *Copyright (C) 2013  Logan Ludington
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package CASPACcreator;
+
+import CASUAL.Log;
 import CASUAL.Zip;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
 /**
  *
  * @author loganludington
+ * @author Adam Outler
  */
 public class CASPACcreator {
 
-    private static final String slash = System.getProperty("file.separator");
-    private static final String wd = System.getProperty("user.dir");
-    private static boolean force = false;
-    private static boolean ignore = false;
-    private static String outputfile = null;
-    private static List<File> inputfiles = new ArrayList();
+    private boolean force = false;
+    private boolean ignore = false;
+    private String outputfile = null;
+    List<File> inputfiles = new ArrayList<>();  //temp holding for collecting files.
+    boolean shutdown = false;
+    Log log = new Log();
+
+    private void doWork(String[] args) throws IOException {
+        argProcessor(args);
+        if (shutdown) {
+            return;
+        }
+        Zip zip = new Zip(outputfile);
+        for (File f : inputfiles) {
+            zip.addToZip(f);
+        }
+        zip.execute();
+        log.level2Information("Successfully created zip file at: " + outputfile);
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
-       argProcessor(args);
-       Zip zip = new Zip(outputfile);
-       for (File f : inputfiles)
-           zip.addToZip(f);
-       zip.execute();
-       System.out.println("Successfully created zip file at: \n" + outputfile);
-    }
-    
-    private static void argProcessor(String[] args){
-        List<String> listArgs = new ArrayList();
-                listArgs.addAll(Arrays.asList(args));
-        while("-".equals(listArgs.get(0).substring(0,1)))
-        {
-            flagProcessor(listArgs.get(0));
-            listArgs.remove(0);
-        }
-        if(args.length<2)
-            usage("Error: Requires 2 or more arguments.");
-        for (int i=0;i<listArgs.size();i++)
-        {
-            if (!listArgs.get(i).substring(0, 1).equals(slash))
-                listArgs.set(i, wd +slash+ listArgs.get(i));
-        }
-        outputfile = listArgs.get(0);
-        listArgs.remove(0);
-        if(new File(outputfile).exists() && !(force))
-            usage("Error: Output file exist, please use the -f option to overwrite");
-        if(!("zip".equals(outputfile.substring(outputfile.lastIndexOf(".")+1,outputfile.length()))))
-            usage("Error: Output file must have a .zip extension.");
-        String missingFiles = "";
-        for(String s : listArgs)
-        {
-            if(!(new File(s).exists()))
-                missingFiles = missingFiles + s + "\n";
-            else
-                inputfiles.add(new File(s));
-        }
-        if (ignore)
-        {
-            System.out.println("Warning: The following files are missing: \n"+ 
-                    missingFiles + "\n" + "However the packaging will continue.");
-        }
-        else if (!("".equals(missingFiles)))
-        {
-            usage("The following files are missing: \n"+ missingFiles);
-        }
-        
-        
-    }
-    
-    public static void usage(String error){
-        if (error != null)
-            System.out.println(error);
-        System.out.println("Usage: java -jar CASthezipper.jar  [-fi]  output_zipfile inputfile1 ... inputfileN");
-        System.out.println("       -f: Will overwrite existing output_zipfile");
-        System.out.println("       -i: Will ignore nonexisting input files");
-        System.exit(1);
+        CASPACcreator creator = new CASPACcreator();
+        creator.doWork(args);
     }
 
-    private static void flagProcessor(String get) {
-        
-        if (get.split("").length<2)
-            usage("Error: - is not a valid flag.");
-        String flagString = get.substring(1,get.length()).trim();
-        
-        List<String> flagList = new ArrayList();
-        String [] flags = flagString.split("");
-        flagList.addAll(Arrays.asList(flags));
-        for(int i=1;i<flagList.size();i++)
-        {
-            if ("f".equals(flagList.get(i)))
+    private void argProcessor(String[] args) {
+
+        //parse args
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].contains("--force") || args[i].contains("-f")) {
                 force = true;
-            
-            
-            else if ("i".equals(flagList.get(i)))
+                log.level3Verbose("force overwrite of output file.");
+            } else if (args[i].contains("--ignore")) {
                 ignore = true;
-            
-            else
-                usage("Error: -"+ flagList.get(i) + " is not a valid flag.");
+                log.level3Verbose("ignoring invalid files.");
+            } else if (args[i].contains("--output") || args[i].contains("-o")) {
+                outputfile = args[++i];
+                log.level3Verbose("Added " + args[i]);
+            } else if (args[i].startsWith("-")) {
+                usage("Error: -" + args[i] + " is not a valid flag.");
+            } else {
+                inputfiles.add(new File(args[i]));
+            }
+
         }
-        
+
+
+        //input validation
+        if (outputfile == null) {
+            usage("Error: You must specify an output file");
+        }
+        if (inputfiles.size() < 1) {
+            usage("Error: Requires 1 or more files.");
+        }
+        if (new File(outputfile).exists() && !(force)) {
+            usage("Error: Output file exist, please use the -f option to overwrite");
+        }
+
+        String missingFiles = "";
+        for (File f : inputfiles) {
+            if (!(f.exists())) {
+                missingFiles = missingFiles + f.getAbsolutePath() + "\n";
+            }
+        }
+        if (ignore) {
+            log.level0Error("Warning: The following files are missing: \n"
+                    + missingFiles + "\n" + "However the packaging will continue.");
+        } else if (!("".equals(missingFiles))) {
+            usage("The following missing files or invalid arguments: \n" + missingFiles);
+        }
+
+
+    }
+
+    private void usage(String error) {
+        log.level0Error(error);
+        log.level2Information("Usage: java -jar CASthezipper.jar  [-fi]  --output output_zipfile inputfile1 ... inputfileN");
+        log.level2Information("       -f: Will overwrite existing output_zipfile");
+        log.level2Information("       -i: Will ignore nonexisting input files");
+        shutdown = true;
     }
 }
