@@ -29,9 +29,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.channels.FileChannel;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.zip.ZipEntry;
@@ -43,40 +40,34 @@ import java.util.zip.ZipOutputStream;
  * @author adam
  */
 public class Zip {
-    private String name=null;
-    private String location=null;
+    private String outputZip=null;
     private final String slash = System.getProperty("file.separator");
     private final String tempDir = System.getProperty("java.io.tmpdir");
-    private final File casualTempFolder;
+
     
     
     public Zip()
     {
-        casualTempFolder =null;
+
     }
+    
+    public Zip(File zip){
+        
+    }
+    
     /**
      *
-     * @param destWithFilename
+     * @param outputFile
      */
-    public Zip(String destWithFilename) {
+    public Zip(String outputFile) {
         //First well seperate the string and store them into the name of the zip
         //file being created and the location of where the zip file is going to
         //be stored
-        name = destWithFilename.substring(destWithFilename.lastIndexOf(slash)+1,destWithFilename.length());
-        location = destWithFilename.substring(0,destWithFilename.lastIndexOf(slash));
+        outputZip = outputFile;
         
-        //Next were going to create a temp file that will act as the workspace 
-        //for our zip. To do this well create a folder with the params
-        // TempDirlocation + CASCADE_Username_MMddyyyy_HHmmss
-        DateFormat dateFormat = new SimpleDateFormat("MMddyyyy_HHmmss");
-        Date date = new Date();
-        String tempEndString = dateFormat.format(date);
-        String tempDirString = "CASCADE" + "_" + System.getProperty("user.name")+ "_"+ tempEndString;
-        casualTempFolder = new File(tempDir + tempDirString);
+        
         
         //Create the temp dir
-        casualTempFolder.mkdir();
-        deleteOnShutdown(casualTempFolder);
     }
     
     
@@ -248,7 +239,7 @@ public class Zip {
         
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
-        File fileToAdd = new File(casualTempFolder.toString() + slash + file.getName());
+        File fileToAdd = new File(Statics.TempFolder + slash + file.getName());
         if (!fileToAdd.exists())
             fileToAdd.createNewFile();
 
@@ -341,7 +332,7 @@ public class Zip {
     private void addDirectoryToZip(File folder, File parent) throws IOException {
         File dirToAdd = null;
         if (parent == null)
-            dirToAdd = new File(casualTempFolder.toString()+ slash + folder.getName() );
+            dirToAdd = new File(Statics.TempFolder+ slash + folder.getName() );
         else
             dirToAdd = new File(parent.toString()+ slash + folder.getName());
         if (!dirToAdd.exists())
@@ -368,8 +359,8 @@ public class Zip {
     public void execute() throws FileNotFoundException, IOException
     {
         
-        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(location+slash+name));
-        zipDir(casualTempFolder.toString(), location + slash + name , "");
+        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outputZip));
+        zipDir(Statics.TempFolder, outputZip, "");
         
         
     }
@@ -428,23 +419,7 @@ public class Zip {
     }
 
 
-    private void deleteOnShutdown( final File file){
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run(){
-                if (file.isDirectory()) {                   
-                    for (File c : file.listFiles())
-                        if(c.isDirectory())
-                            recursiveDelete(c);
-                        else
-                        {
-                            c.delete();
-                        }
-                    }
-                file.delete();
-                }
-            }
-    );
-    }
+   
     
     private void recursiveDelete(File file){
         if (file.isDirectory()) {                   
