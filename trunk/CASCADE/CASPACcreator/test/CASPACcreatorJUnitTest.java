@@ -31,7 +31,7 @@ public class CASPACcreatorJUnitTest {
 
     @AfterClass
     public static void tearDownClass() {
-        //new CASUAL.FileOperations().deleteFile(outfile);
+        new CASUAL.FileOperations().deleteFile(outfile);
     }
 
     @Test

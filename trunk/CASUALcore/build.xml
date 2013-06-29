@@ -105,6 +105,10 @@
             <entry key="Application.revision" value="${svna.version}" type="int" operation="="/>
             <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
         </propertyfile>  
+        <jar destfile="dist/CASUALcoreNoResources.jar">
+            <zipfileset src="${dist.jar}" excludes="CASUAL/resources/**"/>
+        </jar>
+        
         <jar jarfile="dist/CASUAL-Revision${svna.version}b.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*"/>
             <manifest>
