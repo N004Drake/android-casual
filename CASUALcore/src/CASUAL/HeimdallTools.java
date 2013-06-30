@@ -335,10 +335,10 @@ public class HeimdallTools {
         "Failed to request receival of PIT file!",//FAIL
         "Failed to receive PIT file size!",//FAIL
         "Failed to request PIT file part ",//FAIL
-        "Failed to receive PIT file part ",//FAIL
+        "Failed to receive PIT file part ",//TODO: FAIL  BAD USB CABLE
         "Failed to send request to end PIT file transfer!",//FAIL
         "Failed to receive end PIT file transfer verification!",//FAIL
-        "Failed to download PIT file!",//FAIL
+        "Failed to download PIT file!",//TODO: FAIL  BAD USB CABLE
         "Failed to send end session packet!",//FAIL
         "Failed to receive session end confirmation!",//FAIL
         "Failed to send reboot device packet!",//FAIL
