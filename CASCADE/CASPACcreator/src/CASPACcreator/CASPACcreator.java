@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import CASPACcreator.CASPACcreatorGUI.mainWindowController;
 
 /**
  *
@@ -32,21 +33,33 @@ public class CASPACcreator {
 
     private boolean force = false;
     private boolean ignore = false;
+    private boolean gui = false;
     private String outputfile = null;
     List<File> inputfiles = new ArrayList<>();  //temp holding for collecting files.
     boolean shutdown = false;
     Log log = new Log();
+    private mainWindowController mwc = null;
 
     private void doWork(String[] args) throws IOException {
         argProcessor(args);
         if (shutdown) {
             return;
         }
+        if(gui)
+        {
+            mwc.setForce(force);
+            mwc.setIgnore(ignore);
+            mwc.setOutputFile(outputfile);
+            mwc.init();
+        }
+        else
+        {
         Zip zip = new Zip(outputfile);
         for (File f : inputfiles) {
             zip.addToZip(f);
         }
         zip.execute();
+        }
         log.level2Information("Successfully created zip file at: " + outputfile);
     }
 
@@ -63,7 +76,11 @@ public class CASPACcreator {
 
         //parse args
         for (int i = 0; i < args.length; i++) {
-            if (args[i].contains("--force") || args[i].contains("-f")) {
+            if( args[i].contains("--gui")) {
+                gui = true;
+                log.level3Verbose("Starting GUI with args.");
+                mwc = new mainWindowController();  
+            } else if (args[i].contains("--force") || args[i].contains("-f")) {
                 force = true;
                 log.level3Verbose("force overwrite of output file.");
             } else if (args[i].contains("--ignore")) {
@@ -75,10 +92,16 @@ public class CASPACcreator {
             } else if (args[i].startsWith("-")) {
                 usage("Error: -" + args[i] + " is not a valid flag.");
             } else {
-                inputfiles.add(new File(args[i]));
+                if (gui)
+                    mwc.addFileToZip(new File(args[i]));
+                else
+                    inputfiles.add(new File(args[i]));
             }
 
         }
+        
+        if (gui)
+            return;
 
 
         //input validation
@@ -88,7 +111,7 @@ public class CASPACcreator {
         if (inputfiles.size() < 1) {
             usage("Error: Requires 1 or more files.");
         }
-        if (new File(outputfile).exists() && !(force)) {
+        if ((new File(outputfile).exists() && !(force))) {
             usage("Error: Output file exist, please use the -f option to overwrite");
         }
 
@@ -115,4 +138,14 @@ public class CASPACcreator {
         log.level2Information("       -i: Will ignore nonexisting input files");
         shutdown = true;
     }
+
+    public boolean isForce() {
+        return force;
+    }
+
+    public boolean isIgnore() {
+        return ignore;
+    }
+    
+    
 }
