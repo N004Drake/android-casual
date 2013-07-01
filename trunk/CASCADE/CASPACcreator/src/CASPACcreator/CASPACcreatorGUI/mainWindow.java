@@ -4,11 +4,19 @@
  */
 package CASPACcreator.CASPACcreatorGUI;
 
+import CASUAL.Zip;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.xml.bind.DatatypeConverter;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -21,6 +29,9 @@ public class mainWindow extends javax.swing.JFrame {
     /**
      * Creates new form mainWindow
      */
+    private DefaultListModel fileList = new DefaultListModel();
+    private Zip zipFile;
+    
     public mainWindow() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -63,16 +74,16 @@ public class mainWindow extends javax.swing.JFrame {
         zip = new javax.swing.JPanel();
         zipList = new javax.swing.JScrollPane();
         resourcesForScript = new javax.swing.JList();
-        add = new javax.swing.JButton();
         remove = new javax.swing.JButton();
+        add = new javax.swing.JButton();
         meta = new javax.swing.JPanel();
         minSVNversion = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        minSVNversionLabel = new javax.swing.JLabel();
+        scriptRevisionLabel = new javax.swing.JLabel();
+        uniqueIDLabel = new javax.swing.JLabel();
+        supportURLLabel = new javax.swing.JLabel();
+        updateMessageLabel = new javax.swing.JLabel();
+        killswitchMessageLabel = new javax.swing.JLabel();
         scriptRevision = new javax.swing.JTextField();
         uniqueID = new javax.swing.JTextField();
         supportURL = new javax.swing.JTextField();
@@ -154,11 +165,11 @@ public class mainWindow extends javax.swing.JFrame {
         script.setLayout(scriptLayout);
         scriptLayout.setHorizontalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("mainWindow.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -179,11 +190,11 @@ public class mainWindow extends javax.swing.JFrame {
         txtfile.setLayout(txtfileLayout);
         txtfileLayout.setHorizontalGroup(
             txtfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(descriptionScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
+            .addComponent(descriptionScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
         );
         txtfileLayout.setVerticalGroup(
             txtfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(descriptionScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+            .addComponent(descriptionScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("mainWindow.txtfile.TabConstraints.tabTitle"), txtfile); // NOI18N
@@ -192,24 +203,11 @@ public class mainWindow extends javax.swing.JFrame {
 
         zipList.setName("zipList"); // NOI18N
 
-        resourcesForScript.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        resourcesForScript.setModel(fileList);
         resourcesForScript.setName("resourcesForScript"); // NOI18N
         zipList.setViewportView(resourcesForScript);
 
-        add.setIcon(new ImageIcon(DatatypeConverter.parseHexBinary(trashIcon)));
-        add.setText(bundle.getString("mainWindow.add.text")); // NOI18N
-        add.setName("add"); // NOI18N
-        add.setPreferredSize(new java.awt.Dimension(35, 30));
-        add.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addActionPerformed(evt);
-            }
-        });
-
+        remove.setIcon(new ImageIcon(DatatypeConverter.parseHexBinary(trashIcon)));
         remove.setText(bundle.getString("mainWindow.remove.text")); // NOI18N
         remove.setName("remove"); // NOI18N
         remove.setPreferredSize(new java.awt.Dimension(35, 30));
@@ -219,25 +217,34 @@ public class mainWindow extends javax.swing.JFrame {
             }
         });
 
+        add.setText(bundle.getString("mainWindow.add.text")); // NOI18N
+        add.setName("add"); // NOI18N
+        add.setPreferredSize(new java.awt.Dimension(35, 30));
+        add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout zipLayout = new javax.swing.GroupLayout(zip);
         zip.setLayout(zipLayout);
         zipLayout.setHorizontalGroup(
             zipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(zipList)
+            .addComponent(zipList, javax.swing.GroupLayout.DEFAULT_SIZE, 855, Short.MAX_VALUE)
             .addGroup(zipLayout.createSequentialGroup()
-                .addGap(0, 566, Short.MAX_VALUE)
-                .addComponent(remove, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 897, Short.MAX_VALUE)
+                .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(remove, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         zipLayout.setVerticalGroup(
             zipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(zipLayout.createSequentialGroup()
-                .addComponent(zipList, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                .addComponent(zipList, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(zipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(remove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(remove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         scriptGroup.addTab(bundle.getString("mainWindow.zip.TabConstraints.tabTitle"), zip); // NOI18N
@@ -246,26 +253,34 @@ public class mainWindow extends javax.swing.JFrame {
 
         minSVNversion.setText(bundle.getString("mainWindow.minSVNversion.text")); // NOI18N
         minSVNversion.setName("minSVNversion"); // NOI18N
+        minSVNversion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minSVNversionActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText(bundle.getString("mainWindow.jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        minSVNversionLabel.setText(bundle.getString("mainWindow.minSVNversionLabel.text")); // NOI18N
+        minSVNversionLabel.setName("minSVNversionLabel"); // NOI18N
 
-        jLabel2.setText(bundle.getString("mainWindow.jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
+        scriptRevisionLabel.setText(bundle.getString("mainWindow.scriptRevisionLabel.text")); // NOI18N
+        scriptRevisionLabel.setMaximumSize(null);
+        scriptRevisionLabel.setMinimumSize(null);
+        scriptRevisionLabel.setName("scriptRevisionLabel"); // NOI18N
 
-        jLabel3.setText(bundle.getString("mainWindow.jLabel3.text")); // NOI18N
-        jLabel3.setName("jLabel3"); // NOI18N
+        uniqueIDLabel.setText(bundle.getString("mainWindow.uniqueIDLabel.text")); // NOI18N
+        uniqueIDLabel.setName("uniqueIDLabel"); // NOI18N
 
-        jLabel4.setText(bundle.getString("mainWindow.jLabel4.text")); // NOI18N
-        jLabel4.setName("jLabel4"); // NOI18N
+        supportURLLabel.setText(bundle.getString("mainWindow.supportURLLabel.text")); // NOI18N
+        supportURLLabel.setName("supportURLLabel"); // NOI18N
 
-        jLabel5.setText(bundle.getString("mainWindow.jLabel5.text")); // NOI18N
-        jLabel5.setName("jLabel5"); // NOI18N
+        updateMessageLabel.setText(bundle.getString("mainWindow.updateMessageLabel.text")); // NOI18N
+        updateMessageLabel.setName("updateMessageLabel"); // NOI18N
 
-        jLabel6.setText(bundle.getString("mainWindow.jLabel6.text")); // NOI18N
-        jLabel6.setName("jLabel6"); // NOI18N
+        killswitchMessageLabel.setText(bundle.getString("mainWindow.killswitchMessageLabel.text")); // NOI18N
+        killswitchMessageLabel.setName("killswitchMessageLabel"); // NOI18N
 
         scriptRevision.setText(bundle.getString("mainWindow.scriptRevision.text")); // NOI18N
+        scriptRevision.setMinimumSize(new java.awt.Dimension(50, 16));
         scriptRevision.setName("scriptRevision"); // NOI18N
         scriptRevision.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -274,6 +289,7 @@ public class mainWindow extends javax.swing.JFrame {
         });
 
         uniqueID.setText(bundle.getString("mainWindow.uniqueID.text")); // NOI18N
+        uniqueID.setMinimumSize(new java.awt.Dimension(50, 16));
         uniqueID.setName("uniqueID"); // NOI18N
 
         supportURL.setText(bundle.getString("mainWindow.supportURL.text")); // NOI18N
@@ -293,65 +309,63 @@ public class mainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(metaLayout.createSequentialGroup()
-                        .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5))
+                        .addComponent(killswitchMessageLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(updateMessage)
-                            .addComponent(killswitchMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)))
+                        .addComponent(killswitchMessage))
+                    .addGroup(metaLayout.createSequentialGroup()
+                        .addComponent(scriptRevisionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scriptRevision, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                        .addGap(696, 696, 696))
+                    .addGroup(metaLayout.createSequentialGroup()
+                        .addComponent(supportURLLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(supportURL)
+                        .addGap(166, 166, 166))
+                    .addGroup(metaLayout.createSequentialGroup()
+                        .addComponent(updateMessageLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateMessage))
                     .addGroup(metaLayout.createSequentialGroup()
                         .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(metaLayout.createSequentialGroup()
-                                .addGap(146, 146, 146)
-                                .addComponent(supportURL))
+                                .addComponent(minSVNversionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(minSVNversion, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(metaLayout.createSequentialGroup()
-                                .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addGroup(metaLayout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addGap(59, 59, 59)
-                                        .addComponent(uniqueID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, metaLayout.createSequentialGroup()
-                                            .addComponent(jLabel2)
-                                            .addGap(21, 21, 21)
-                                            .addComponent(scriptRevision))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, metaLayout.createSequentialGroup()
-                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(minSVNversion, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                .addComponent(uniqueIDLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(uniqueID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         metaLayout.setVerticalGroup(
             metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(metaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(minSVNversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(minSVNversionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minSVNversion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(scriptRevision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(scriptRevisionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(uniqueID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(uniqueIDLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
+                    .addComponent(supportURLLabel)
                     .addComponent(supportURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(updateMessageLabel)
                     .addComponent(updateMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(killswitchMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addContainerGap(224, Short.MAX_VALUE))
+                    .addComponent(killswitchMessageLabel))
+                .addGap(338, 338, 338))
         );
 
         scriptGroup.addTab(bundle.getString("mainWindow.meta.TabConstraints.tabTitle"), meta); // NOI18N
@@ -407,6 +421,11 @@ public class mainWindow extends javax.swing.JFrame {
         windowText.setText(bundle.getString("mainWindow.windowText.text")); // NOI18N
         windowText.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("mainWindow.windowText.border.title"))); // NOI18N
         windowText.setName("windowText"); // NOI18N
+        windowText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                windowTextActionPerformed(evt);
+            }
+        });
 
         buttonText.setText(bundle.getString("mainWindow.buttonText.text")); // NOI18N
         buttonText.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("mainWindow.buttonText.border.title"))); // NOI18N
@@ -457,8 +476,8 @@ public class mainWindow extends javax.swing.JFrame {
                             .addComponent(useBannerText))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(bannerPic)
-                            .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE))))
+                            .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
+                            .addComponent(bannerText))))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -503,7 +522,7 @@ public class mainWindow extends javax.swing.JFrame {
                 .addComponent(donationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addContainerGap(288, Short.MAX_VALUE))
         );
 
         workArea.addTab(bundle.getString("mainWindow.buildPropertiesPanel.TabConstraints.tabTitle"), buildPropertiesPanel); // NOI18N
@@ -553,17 +572,32 @@ public class mainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_outputFileActionPerformed
 
-    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addActionPerformed
-
     private void removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeActionPerformed
         // TODO add your handling code here:
+        removeFiles(resourcesForScript.getSelectedIndices());
     }//GEN-LAST:event_removeActionPerformed
+
+    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fc = new JFileChooser();
+        fc.setMultiSelectionEnabled(true);
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+            addFileToZip(fc.getSelectedFiles());
+    }//GEN-LAST:event_addActionPerformed
 
     private void scriptRevisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scriptRevisionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_scriptRevisionActionPerformed
+
+    private void windowTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_windowTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_windowTextActionPerformed
+
+    private void minSVNversionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minSVNversionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_minSVNversionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -614,18 +648,14 @@ public class mainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField donateLink;
     private javax.swing.JTextField donateText;
     private javax.swing.JPanel donationPanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField killswitchMessage;
+    private javax.swing.JLabel killswitchMessageLabel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton makeCASPAC;
     private javax.swing.JPanel meta;
     private javax.swing.JTextField minSVNversion;
+    private javax.swing.JLabel minSVNversionLabel;
     private javax.swing.JPanel outputFIle;
     private javax.swing.JTextField outputFile;
     private javax.swing.JScrollPane overviewScrollPane;
@@ -635,12 +665,16 @@ public class mainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel script;
     private javax.swing.JTabbedPane scriptGroup;
     private javax.swing.JTextField scriptRevision;
+    private javax.swing.JLabel scriptRevisionLabel;
     private javax.swing.JScrollPane scriptText;
     private javax.swing.JTextArea scriptWorkArea;
     private javax.swing.JTextField supportURL;
+    private javax.swing.JLabel supportURLLabel;
     private javax.swing.JPanel txtfile;
     private javax.swing.JTextField uniqueID;
+    private javax.swing.JLabel uniqueIDLabel;
     private javax.swing.JTextField updateMessage;
+    private javax.swing.JLabel updateMessageLabel;
     private javax.swing.JRadioButton useBannerPic;
     private javax.swing.JRadioButton useBannerText;
     private javax.swing.JTextField windowText;
@@ -649,5 +683,35 @@ public class mainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane zipList;
     // End of variables declaration//GEN-END:variables
 
+    public void addFileToZip(File[] files){
+        for (File f: files)
+            if (f.exists())
+                fileList.addElement(f.toString());
+    }
+    
+    public void addFileToZip(File files){
+        if (files.exists())
+            fileList.addElement(files.toString());
+    }
 
+    public void removeFiles(int[] indexList)
+    {
+        List<Integer> list = new ArrayList();
+        
+
+        for (int i:indexList )
+        {
+            list.add(i);
+        }
+        
+        Collections.sort(list);
+        Collections.reverse(list);
+        
+        for (int i : list)
+        {
+            fileList.remove(i);
+            System.out.println(i);
+        }
+        
+    }
 }
