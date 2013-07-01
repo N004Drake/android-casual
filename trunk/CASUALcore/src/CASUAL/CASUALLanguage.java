@@ -67,10 +67,10 @@ public class CASUALLanguage {
             }
             //Close the input stream
             dataIn.close();
-            /*if(WindowsDrivers.driverRemoveOnDone) {
+            if(WindowsDrivers.driverRemoveOnDone) {
              log.level2Information("Removing generic USB driver as requested");
-             WindowsDrivers.removeDriver();
-             }*/
+             new WindowsDrivers().removeDriver();
+             }
             log.level2Information("@done");
         } catch (Exception e) {//Catch exception if any
             log.level0Error("@problemParsingScript");

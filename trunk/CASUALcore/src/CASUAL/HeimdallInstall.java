@@ -177,13 +177,13 @@ public class HeimdallInstall {
         //install drivers
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
-        
-        log.level2Information("@installingCADI"); //Add Newline
+        new WindowsDrivers().installDriverBlanket();
+        return true;
+        /*log.level2Information("@installingCADI"); //Add Newline
         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
                 + "We're going to install drivers now.  Lets do it.\n"
                 + "THIS PROCESS CAN TAKE UP TO 5 MINTUES.\nDURING THIS TIME YOU WILL NOT SEE ANYTHING.\nBE PATIENT!");
 
-        //new WindowsDrivers().installDriverBlanket();
         String exec = "";
         try {
             if (new FileOperations().verifyResource(Statics.WinDriverResource)) {
@@ -196,7 +196,7 @@ public class HeimdallInstall {
             log.level0Error("@problemWithOnlineRepo");
         }
         //verify MD5
-        String driverreturn = new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});
+        String driverreturn = new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});*/
         /*
          * 
          * TODO: Here we need to parse return from CADI
@@ -205,64 +205,64 @@ public class HeimdallInstall {
          * 
          * 
          * UNSUPPORTED DEVICE for Galaxy S1  Loops forever   Why is GS1 not supported?
-[DEBUG]deployHeimdallForWindows- verifying Heimdall deployment
-[DEBUG]heimdall install sucessful
-Waiting for Downoad Mode device...[VERBOSE]detected!
-[INFO]Executing Heimdall command.
-[VERBOSE]Performing standard Heimdall commandclose-pc-screen
-[DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
-Heimdall v1.4.0
+        [DEBUG]deployHeimdallForWindows- verifying Heimdall deployment
+        [DEBUG]heimdall install sucessful
+        Waiting for Downoad Mode device...[VERBOSE]detected!
+        [INFO]Executing Heimdall command.
+        [VERBOSE]Performing standard Heimdall commandclose-pc-screen
+        [DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
+        Heimdall v1.4.0
 
-Copyright (c) 2010-2013, Benjamin Dobell, Glass Echidna
-http://www.glassechidna.com.au/
+        Copyright (c) 2010-2013, Benjamin Dobell, Glass Echidna
+        http://www.glassechidna.com.au/
 
-This software is provided free of charge. Copying and redistribution is
-encouraged.
+        This software is provided free of charge. Copying and redistribution is
+        encouraged.
 
-If you appreciate this software and you would like to support future
-development please consider donating:
-http://www.glassechidna.com.au/donate/
+        If you appreciate this software and you would like to support future
+        development please consider donating:
+        http://www.glassechidna.com.au/donate/
 
-Initialising connection...
-Detecting device...
-ERROR: Failed to access device. libusb error: -12
-[ERROR]
-Drivers are Required Launching CADI.
-CASUAL Automated Driver Installer by jrloper.
-Installing Drivers now
-[VERBOSE]Driver Problems suck. Lemme make it easy.
-We're going to install drivers now.  Lets do it.
-THIS PROCESS CAN TAKE UP TO 5 MINTUES.
-DURING THIS TIME YOU WILL NOT SEE ANYTHING.
-BE PATIENT!
-[DEBUG]Attempting to write C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\CADI.exe
-[DEBUG]File verified.
-[DEBUG]###executing: cmd.exe###
-[INFO]
+        Initialising connection...
+        Detecting device...
+        ERROR: Failed to access device. libusb error: -12
+        [ERROR]
+        Drivers are Required Launching CADI.
+        CASUAL Automated Driver Installer by jrloper.
+        Installing Drivers now
+        [VERBOSE]Driver Problems suck. Lemme make it easy.
+        We're going to install drivers now.  Lets do it.
+        THIS PROCESS CAN TAKE UP TO 5 MINTUES.
+        DURING THIS TIME YOU WILL NOT SEE ANYTHING.
+        BE PATIENT!
+        [DEBUG]Attempting to write C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\CADI.exe
+        [DEBUG]File verified.
+        [DEBUG]###executing: cmd.exe###
+        [INFO]
 
-[INFO]
-[Heimdall Error Report] Detected:
-'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue
-[/Heimdall Error Report]
+        [INFO]
+        [Heimdall Error Report] Detected:
+        'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue
+        [/Heimdall Error Report]
 
 
-[VERBOSE]Performing standard Heimdall commandclose-pc-screen
-[DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
-Heimdall v1.4.0
-....
-* ...
-* ...
+        [VERBOSE]Performing standard Heimdall commandclose-pc-screen
+        [DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
+        Heimdall v1.4.0
+        ....
+        * ...
+        * ...
 
-[ERROR]Maximum retries exceeded. Shutting down Parser.
-[DEBUG]HALT RECEIVED    * 
+        [ERROR]Maximum retries exceeded. Shutting down Parser.
+        [DEBUG]HALT RECEIVED    * 
          * 
          */
-        log.level2Information(driverreturn);
+        /*log.level2Information(driverreturn);
         if (driverreturn.contains("CritError")) {
             return false;
         } else {
             return true;
-        }
+        }*/
     }
 
     public void displayWindowsPermissionsMessageAndExit() {
