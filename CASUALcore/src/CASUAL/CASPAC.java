@@ -6,10 +6,6 @@
 
 
 /*
- * @adamoutler:
- * This is a very weird script.
- * 
- * Would recommend the following stucture
  * 
  * public class CASPAC {
  *      script [];
@@ -57,7 +53,7 @@ public class CASPAC {
 
     final public File caspac;
     public String overview;
-    public Object build;
+    public Build build;
     public ArrayList scripts = new ArrayList();
     public String TempFolder;
 
