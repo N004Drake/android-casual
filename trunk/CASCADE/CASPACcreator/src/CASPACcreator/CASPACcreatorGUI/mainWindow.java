@@ -4,19 +4,23 @@
  */
 package CASPACcreator.CASPACcreatorGUI;
 
+import CASUAL.CASPAC;
 import CASUAL.Zip;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.xml.bind.DatatypeConverter;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -411,9 +415,10 @@ public class mainWindow extends javax.swing.JFrame {
         );
         donationPanelLayout.setVerticalGroup(
             donationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(donationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(donateText, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(donateLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(donationPanelLayout.createSequentialGroup()
+                .addComponent(donateLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(donateText, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
         );
 
         jPanel4.setName("jPanel4"); // NOI18N
@@ -560,12 +565,19 @@ public class mainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void makeCASPACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeCASPACActionPerformed
-        try {
-            // TODO add your handling code here:
-            mwc.zipFiles(outputFile.getText());
-        } catch (IOException ex) {
-            Logger.getLogger(mainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        File file = new File(this.outputFile.getText());
+        if (file.exists())
+        {
+            int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.outputFile.getText()+
+                    " already exists are you sure you wish to continue.\n Any "
+                    + "previous files will be overridden.", "Overwrite existing file?",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (i == JOptionPane.NO_OPTION)
+                return;
         }
+        CASPAC cp = new CASPAC(file);
+        Map <String,String> build = buildMaker();
+        cp.setBuild(build);
     }//GEN-LAST:event_makeCASPACActionPerformed
 
     private void outputFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputFileActionPerformed
@@ -713,5 +725,23 @@ public class mainWindow extends javax.swing.JFrame {
             System.out.println(i);
         }
         
+    }
+
+    private Map<String, String> buildMaker() {
+        Map<String, String> buildMap = new HashMap();
+        if (!this.developerName.getText().isEmpty())
+            buildMap.put("developerName", this.developerName.getText());
+        if (!this.donateText.getText().isEmpty())
+            buildMap.put("developerDonateButtonText", this.donateText.getText());
+        if (!this.donateLink.getText().isEmpty())
+            buildMap.put("donateLink", this.donateLink.getText());
+        if (!this.windowText.getText().isEmpty())
+            buildMap.put("windowTitle", this.windowText.getText());
+        buildMap.put("usePictureForBanner", Boolean.toString(this.useBannerPic.isSelected()));
+        if (!this.bannerPic.getText().isEmpty())
+            buildMap.put("bannerPic", this.bannerPic.getText());
+        buildMap.put("AudioEnabled", Boolean.toString(this.audioEnabled.isSelected()));
+        buildMap.put("EnableControls", Boolean.toString(this.alwaysEnableControls.isSelected()));
+        return buildMap;
     }
 }
