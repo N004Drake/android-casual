@@ -45,7 +45,7 @@ public class Translations {
         String[] splitRef = line.split("( )|(\n)");
         String retVal = "";
         for (String ref : splitRef) {
-            if (!ref.equals("") && ref.startsWith("@")) {
+            if (translation !=null && !ref.isEmpty() && ref.startsWith("@")) {
                 try {
                     retVal = line.replace(ref, translation.getString(ref));
                 } catch (java.util.MissingResourceException ex) {
@@ -65,6 +65,8 @@ public class Translations {
             String lang = Locale.getDefault().getDisplayLanguage();
         try {
             translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
+        } catch (java.util.MissingResourceException e ){
+            //do nothing
         } catch (Exception e) {
             translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/English");
             new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");

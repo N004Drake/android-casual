@@ -63,7 +63,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="workArea" max="32767" attributes="0"/>
+                  <Component id="workArea" pref="630" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="outputFIle" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
@@ -166,12 +166,12 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scriptText" alignment="0" pref="980" max="32767" attributes="0"/>
+                          <Component id="scriptText" alignment="0" pref="1036" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scriptText" alignment="0" pref="542" max="32767" attributes="0"/>
+                          <Component id="scriptText" alignment="0" pref="554" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -217,12 +217,12 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="descriptionScrollpane" alignment="0" pref="980" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollpane" alignment="0" pref="1036" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="descriptionScrollpane" alignment="0" pref="542" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollpane" alignment="0" pref="554" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -270,7 +270,7 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="zipList" pref="855" max="32767" attributes="0"/>
+                          <Component id="zipList" pref="1036" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <EmptySpace min="0" pref="897" max="32767" attributes="0"/>
                               <Component id="add" min="-2" pref="38" max="-2" attributes="0"/>
@@ -282,7 +282,7 @@
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="zipList" pref="506" max="32767" attributes="0"/>
+                              <Component id="zipList" pref="518" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="add" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -374,7 +374,7 @@
                                   <Group type="102" attributes="0">
                                       <Component id="scriptRevisionLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="scriptRevision" pref="175" max="32767" attributes="0"/>
+                                      <Component id="scriptRevision" pref="203" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" pref="696" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -634,7 +634,7 @@
                           <Component id="donationPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="288" max="32767" attributes="0"/>
+                          <EmptySpace pref="268" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -676,7 +676,7 @@
                               <Component id="donateLink" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="donateText" alignment="0" pref="42" max="32767" attributes="0"/>
+                          <Component id="donateText" alignment="0" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
