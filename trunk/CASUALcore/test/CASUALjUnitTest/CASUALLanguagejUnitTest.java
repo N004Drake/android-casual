@@ -18,8 +18,6 @@ import static org.junit.Assert.*;
  */
 public class CASUALLanguagejUnitTest {
     
-    public CASUALLanguagejUnitTest() {
-    }
     
     @BeforeClass
     public static void setUpClass() {
