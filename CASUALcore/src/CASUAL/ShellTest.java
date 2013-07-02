@@ -2,15 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUALjUnitTest;
+package CASUAL;
 
-import static org.junit.Assert.assertEquals;
+
 
 /**
  *
  * @author adam
  */
 public class ShellTest {
+    
     final String[] valuesWeWantToSee;
     final String[] valuesWeDontWantToSee;
     final String[] cmdToExecute;
