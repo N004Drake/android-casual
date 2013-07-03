@@ -17,14 +17,15 @@ import static org.junit.Assert.*;
  * @author adam
  */
 public class CASUALInteractionsjUnitTest {
-    
+
     public CASUALInteractionsjUnitTest() {
     }
+
     @BeforeClass
     public static void setUpClass() {
         CASUAL.CASUALApp.shutdown(0);
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
         CASUAL.CASUALApp.shutdown(0);
@@ -60,7 +61,7 @@ public class CASUALInteractionsjUnitTest {
         ci.showUserNotification();
         CASUAL.Statics.useGUI = true;
         int x = new CASUAL.CASUALInteraction("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
-        if ( x == 0) {
+        if (x == 0) {
             ci = new CASUAL.CASUALInteraction("Text Input", "Press\n1");
             assertEquals("1", ci.inputDialog());
             ci = new CASUAL.CASUALInteraction("Action Required", "Select\nI didn't do it!");
@@ -79,7 +80,7 @@ public class CASUALInteractionsjUnitTest {
             ci.showUserNotification();
         }
     }
-    
+
     private void setContinue() {
         String string = "\n";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
@@ -91,6 +92,4 @@ public class CASUALInteractionsjUnitTest {
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
         CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
     }
-
-    
 }
