@@ -5,25 +5,22 @@
 package CASUALjUnitTest;
 
 import CASUAL.CASUALApp;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 
 /**
  *
  * @author adam
  */
 public class CASUALLanguagejUnitTest {
-    
-    
+
     @BeforeClass
     public static void setUpClass() {
         CASUAL.CASUALApp.shutdown(0);
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
         CASUAL.CASUALApp.shutdown(0);
