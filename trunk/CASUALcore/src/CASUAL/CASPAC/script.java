@@ -23,8 +23,10 @@ public class script {
     private String script = "";
     private List<File> includeFiles = new ArrayList();
     private meta metaData = null;
+    private String discription="";
 
-    public script(String name, String script, List<File> includeFiles) {
+    public script(String name, String script, String discription, List<File> includeFiles) {
+        this.discription = discription;
         this.name = name;
         this.script = script;
         this.includeFiles = includeFiles;
@@ -32,15 +34,17 @@ public class script {
 
     public script(String name, String script, String discription, 
             List<File> includeFiles, Map<String,String> metaMap) {
+        this.discription = discription;
         this.name = name;
         this.script = script;
         this.includeFiles = includeFiles;
         this.metaData = new meta(metaMap);
     }
 
-    public script(String name, String script, String description) {
+    public script(String name, String script, String discription) {
         this.name = name;
         this.script = script;
+        this.discription = discription;
     }
     
     public script(){
@@ -53,6 +57,7 @@ public class script {
         testingBool = !(name.isEmpty()) && testingBool;
         testingBool = !(script.isEmpty()) && testingBool;
         testingBool = !(includeFiles.isEmpty()) && testingBool;
+        testingBool = !(discription.isEmpty())  && testingBool;
         testingBool = metaData.verifyMeta() && testingBool;
         return testingBool;
     }
@@ -65,16 +70,31 @@ public class script {
             file.mkdir();
         if (!(new File(file.toString() + slash + name + ".scr")).exists())
             new FileOperations().writeToFile(script, file.toString() + slash + name + ".scr");
-        if((!new File(Statics.TempFolder + slash + name + ".zip").exists()))
+        if (!(new File(file.toString() + slash + name + ".txt")).exists())
+            new FileOperations().writeToFile(discription, file.toString() + slash + name + ".txt");
+        if (!(new File(Statics.TempFolder + slash + name + ".zip").exists()))
         {
             Zip includeZip = new Zip(new File(Statics.TempFolder + slash + name + ".zip")) ;
             for (File f : includeFiles)
                 includeZip.addToZip(f);
             includeZip.execute();
         }
-            
-        
+        if (!(new File(file.toString() + slash + name + ".meta").exists()))
+            new FileOperations().writeToFile(metaStringBuilder(), file.toString() + slash + name + ".meta");
     }
+    
+    private String metaStringBuilder()
+    {
+        String meta = "";
+        meta = "CASUAL.minSVN=" + metaData.getMinSVNversion()+ "\n";
+        meta = "Script.Revision=" + metaData.getScriptRevsion() + "\n";
+        meta = "Script.ID=" + metaData.getUniqueID() + "\n";
+        meta = "Script.SupportURL=" + metaData.getSupportURL() + "\n";
+        meta = "Script.UpdateMessage=" + metaData.getUpdateMessage() + "\n";
+        meta = "Script.KillSwitchMessage=" + metaData.getKillSwitchMessage() + "\n";
+        return meta;
+    }
+    
     public String getName() {
         return name;
     }
