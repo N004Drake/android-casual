@@ -3,42 +3,6 @@
  * and open the template in the editor.
  */
 
-
-
-/*
- * 
- * public class CASPAC {
- *      script [];
- *      buildProp build;
- * 
- *      class buildProp{
- *          public String developerName = "";
- *          public String developerDonateButtonText = "";
- *          public String donateLink = "";
- *          public String windowTitle = "";
- *          public boolean usePictureForBanner = false;
- *          //TODO: Do we want to to have the Bannerpic passed in as a File for zip
- *          public String bannerPic = "-logo.png";
- *          public String executeButtonText = "Do It";
- *          //@adamoutler should be boolean no?
- *          public String AudioEnabled = "false";
- *          public boolean EnableControls = false;
- *      }
- * }
- *      
- * 
- * CASUAL.script
- * 
- * public class script {
- *      meta meta
- *      String src;
- *      String desc;
- *      String name;
- *      ArrayList<File> contents;
- *  }
- * 
- */
-
 package CASUAL.CASPAC;
 
 import CASUAL.FileOperations;
@@ -46,6 +10,7 @@ import CASUAL.Statics;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+
 
 /**
  *
@@ -56,68 +21,57 @@ public class CASPAC {
     final public File caspac;
     public String overview;
     public Build build;
-    public ArrayList scripts = new ArrayList();
+    public ArrayList<script> scripts = new ArrayList();
     public String TempFolder;
 
-    //@adamoutler CASPAC Contructor needs to be public. :-P
     public CASPAC(File caspac) {
         this.caspac = caspac;
         TempFolder = Statics.TempFolder + "CASPAC" + caspac.getName();
-
-        if (new FileOperations().verifyFileExists(caspac.toString())){
-            //TODO: expand into TempFolder
-        } else {
-            //TODO: create new file for CASPAC
-        }
-
-        //get build.properties
-        this.build = new Build(new File("buildprop"));
-        //TODO: read from overview
-        overview = "";
-        //TODO:get files.endsWith("scr") and loop through on scr file names
-            {
-                Script s = new Script("file name");
-                scripts.add(new Object[]{s.name, s.meta, s.scr, s.txt, s.zipContents});
-            }
+        
+        if (!(new File(TempFolder).exists()))
+            new File(TempFolder).mkdir();
+    }
+    
+    public void addScript(script script) {
+        if (!(scripts.contains(script)))
+            scripts.add(script);
+}
+    public void removeScript (script script) {
+        if (scripts.contains(script))
+            scripts.remove(script);
     }
 
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+    
     public void write() {
         //todo write out CASPAC to File(caspac);        
     }
     
     public void setBuild(Map <String,String> buildMap)
     {
-        build = new Build(buildMap,new File("buildProp"));
-        System.out.println(buildMap.toString());
+        build = new Build(buildMap);
     }
-}
 
-class Build {
 
-    final File build;
-    Build(File build) {
-        this.build=build;
-        if (new FileOperations().verifyExists(build.toString())){
-            //TODO: get properties and put them into variables
-        }
-    }
-    
-    
+class Build {    
     public String developerName = "";
     public String developerDonateButtonText = "";
     public String donateLink = "";
     public String windowTitle = "";
     public boolean usePictureForBanner = false;
-    //TODO: Do we want to to have the Bannerpic passed in as a File for zip
     public String bannerPic = "-logo.png";
     public String executeButtonText = "Do It";
-    //@adamoutler should be boolean no?
     public String AudioEnabled = "false";
     public boolean EnableControls = false;
     
-    public Build(Map<String,String> buildMap , File build)
+    public Build(Map<String,String> buildMap)
     {
-        this.build = build;
         if (buildMap.containsKey("developerName"))
             developerName = buildMap.get("developerName");
         if (buildMap.containsKey("developerDonateButtonText"))
@@ -141,52 +95,6 @@ class Build {
     public void write(){
         //TODO write properties to build file
     }
-}
-
-class Script {
-
-    String txt = "";
-    String meta = "";
-    String scr = "";
-    ArrayList zipContents = new ArrayList();
-    String name="";
-    Script(String script) {
-        //remove extension and get string
-        String scriptWithoutExtension = "test";
-        name=scriptWithoutExtension;
-        scr = new FileOperations().readFile(scriptWithoutExtension + ".scr");
-        meta = new FileOperations().readFile(scriptWithoutExtension + ".meta");
-        txt = new FileOperations().readFile(scriptWithoutExtension + ".txt");
-        //TODO: check if these files exist and create new files if needed
-        Zip zip = new Zip(new File(scriptWithoutExtension + ".zip"));
-    }
-    public void write(){
-        
-    }
-
-    class Zip {
-
-        final File zipFile;
-
-        Zip(File f) {
-            //TODO: test if file exists and make a new one
-            zipFile = f;
-        }
-
-        public ArrayList getContents() {
-            //TODO: unzip "zip" to new folder in temp
-            //add contents to ArrayList
-            ArrayList folderContents = new ArrayList();
-            return folderContents;
-        }
-    }
-    
-    class meta {
-        String minSVNversion = "";
-        String scriptRevsion = "";
-        String uniqueID = "";
-        String supportURL = "";
-        
-        
     }
 }
+
