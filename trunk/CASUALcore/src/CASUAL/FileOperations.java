@@ -506,7 +506,7 @@ public class FileOperations {
     /*
      * reads file contents returns string
      */
-    String readFile(String FileOnDisk) {
+    public String readFile(String FileOnDisk) {
         String EntireFile = "";
         try {
             String Line;

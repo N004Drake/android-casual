@@ -39,8 +39,10 @@
  * 
  */
 
-package CASUAL;
+package CASUAL.CASPAC;
 
+import CASUAL.FileOperations;
+import CASUAL.Statics;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
