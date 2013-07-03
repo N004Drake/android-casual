@@ -52,7 +52,9 @@ public class WindowsDrivers {
     }*/
     
     public void installDriverBlanket() {
-         for(int x = 0; windowsDriverBlanket.length > x; x++) installDriver(windowsDriverBlanket[x]);
+         for(int x = 0; windowsDriverBlanket.length > x; x++) {
+             installDriver(windowsDriverBlanket[x]);
+         }
     }
 
     private boolean driverExtract() {
@@ -72,42 +74,22 @@ public class WindowsDrivers {
 
     private void driverCleanup() {
         FileOperations fO = new FileOperations();
-        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "xp" + Statics.Slash + "x86");
-        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "xp" + Statics.Slash + "x86" + Statics.Slash));
-        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "xp" + Statics.Slash + "x86");
-        fO.deleteFile(pathToCADI + "xp" + Statics.Slash + "x86");
-        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "xp" + Statics.Slash + "amd64");
-        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "xp" + Statics.Slash + "amd64" + Statics.Slash));
-        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "xp" + Statics.Slash + "amd64");
-        fO.deleteFile(pathToCADI + "xp" + Statics.Slash + "amd64");
-        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "xp" + Statics.Slash);
-        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "xp" + Statics.Slash));
-        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "xp");
-        fO.deleteFile(pathToCADI + "xp");
-        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "x86");
-        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "x86" + Statics.Slash));
-        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "x86");
-        fO.deleteFile(pathToCADI + "x86");
-        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "amd64");
-        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "amd64" + Statics.Slash));
-        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "amd64");
-        fO.deleteFile(pathToCADI + "amd64");
-        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + Statics.Slash);
-        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + Statics.Slash));
-        //log.level4Debug("driverCleanup() Removing folder: " + Statics.TempFolder + "CADI" + Statics.Slash + "libusbk");
-        fO.deleteFile(Statics.TempFolder + "CADI" + Statics.Slash + "libusbk");
-        //log.level4Debug("driverCleanup() Removing folder: " + Statics.TempFolder + "CADI");
-        fO.deleteFile(Statics.TempFolder + "CADI");
-        //log.level4Debug("driverCleanup() Cleanup complete");
+        log.level4Debug("driverCleanup() Cleanup complete");
     }
 
     private void installDriver(String VID) {
+        log.level3Verbose("Installing driver for VID:"+VID);
         if (VID.equals("")) return;
         String[] dList = getDeviceList(VID);
-        for (int x = 0; x < dList.length && dList[x] != null; x++) {
-            for(int y = 0; pastInstalls.length > y && pastInstalls[y] != null; y++) if(pastInstalls[y].equals(dList[x])) break;
-            if(Statics.OSName().contains("Windows XP")) devconCommand("update " + pathToCADI + "xp" + Statics.Slash + "cadixp.inf " + "\"" + dList[x] + "\"");
-            else devconCommand("update " + pathToCADI + "cadiV78.inf " + "\"" + dList[x] + "\"");
+        for (int x = 0; x < dList.length && dList[x] != null; x++) {  //Documentation needed for x/y/pastInstalls
+            for(int y = 0; pastInstalls.length > y && pastInstalls[y] != null; y++) {  //Possible to install WinUSB in same manner if this has been run before?
+                if(pastInstalls[y].equals(dList[x])) break;
+            }
+            if(Statics.OSName().contains("Windows XP")) {
+                devconCommand("update " + pathToCADI + "xp" + Statics.Slash + "cadixp.inf " + "\"" + dList[x] + "\"");
+            } else {
+                devconCommand("update " + pathToCADI + "cadiV78.inf " + "\"" + dList[x] + "\"");
+            }
             pastInstalls[x] = dList[x];
         }
     }

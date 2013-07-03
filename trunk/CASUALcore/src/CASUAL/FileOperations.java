@@ -147,7 +147,7 @@ public class FileOperations {
                     for (File sub : subdir) {
                         if (sub.isDirectory()) {
                             String FoundFile = findRecursive(sub.toString(), FileName);
-                            if (FoundFile.toString().endsWith(FileName)) {
+                            if (FoundFile!=null && FoundFile.toString().endsWith(FileName)) {
                                 return FoundFile;
                             }
                         } else {
