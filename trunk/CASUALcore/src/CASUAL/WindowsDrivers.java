@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
 public class WindowsDrivers {
 
     private Log log = new Log();
-    private Shell shell = new Shell();
     private final String[] windowsDriverBlanket;
     protected static volatile boolean driverExtracted = false;
     protected static volatile boolean driverRemoveOnDone = false;
@@ -43,7 +42,7 @@ public class WindowsDrivers {
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
         this.pathToCADI = Statics.TempFolder + "CADI" + Statics.Slash + "libusbk" + Statics.Slash;
         this.pastInstalls = new String[99];
-        //driverRemoveOnDone = new CASUALInteraction("CADI", "CASUAL will now install a generic USB driver.\n\nThis will allow communications between CASUAL and your device\n\nWould you like CASUAL to remove this generic driver when the operation has completed?").showYesNoOption();
+        driverRemoveOnDone = new CASUALInteraction("CADI", "CASUAL will now install a generic USB driver.\n\nThis will allow communications between CASUAL and your device\n\nWould you like CASUAL to remove this generic driver when the operation has completed?").showYesNoOption();
     }
     
     //For testing purposes only
@@ -73,17 +72,33 @@ public class WindowsDrivers {
 
     private void driverCleanup() {
         FileOperations fO = new FileOperations();
-        log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "xp" + Statics.Slash);
+        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "xp" + Statics.Slash + "x86");
+        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "xp" + Statics.Slash + "x86" + Statics.Slash));
+        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "xp" + Statics.Slash + "x86");
+        fO.deleteFile(pathToCADI + "xp" + Statics.Slash + "x86");
+        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "xp" + Statics.Slash + "amd64");
+        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "xp" + Statics.Slash + "amd64" + Statics.Slash));
+        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "xp" + Statics.Slash + "amd64");
+        fO.deleteFile(pathToCADI + "xp" + Statics.Slash + "amd64");
+        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "xp" + Statics.Slash);
         fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "xp" + Statics.Slash));
-        log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI);
-        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI));
-        log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "xp");
+        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "xp");
         fO.deleteFile(pathToCADI + "xp");
-        log.level4Debug("driverCleanup() Removing folder: " + pathToCADI);
-        fO.deleteFile(pathToCADI);
-        log.level4Debug("driverCleanup() Removing folder: " + Statics.TempFolder + "CADI");
+        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "x86");
+        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "x86" + Statics.Slash));
+        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "x86");
+        fO.deleteFile(pathToCADI + "x86");
+        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + "amd64");
+        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + "amd64" + Statics.Slash));
+        //log.level4Debug("driverCleanup() Removing folder: " + pathToCADI + "amd64");
+        fO.deleteFile(pathToCADI + "amd64");
+        //log.level4Debug("driverCleanup() Emptying folder: " + pathToCADI + Statics.Slash);
+        fO.deleteStringArrayOfFiles(fO.listFolderFilesCannonically(pathToCADI + Statics.Slash));
+        //log.level4Debug("driverCleanup() Removing folder: " + Statics.TempFolder + "CADI" + Statics.Slash + "libusbk");
+        fO.deleteFile(Statics.TempFolder + "CADI" + Statics.Slash + "libusbk");
+        //log.level4Debug("driverCleanup() Removing folder: " + Statics.TempFolder + "CADI");
         fO.deleteFile(Statics.TempFolder + "CADI");
-        log.level4Debug("driverCleanup() Cleanup complete");
+        //log.level4Debug("driverCleanup() Cleanup complete");
     }
 
     private void installDriver(String VID) {
@@ -98,48 +113,47 @@ public class WindowsDrivers {
     }
 
     public void removeDriver() { 
-        //TODO - 
-        //Problem: Uninstaller is only semifunctional, driver package is removed but previously installed devices remain in an orphaned state.
-        //Possible Fix: New REGEX for findall using windowsDriverBlanket. 
-        //              Device identifier String must match "CASUAL's Android Device" or "Samsung Android Device".
-        //              Pass matching fullHWIDs via "devcon remove HWID"
-        log.level4Debug("removeDriver() Initializing");
-        String[] orphanedDrivers = getAllDevices();
+        log.level2Information("removeDriver() Initializing");
         String[] infString = getOemInfName();
-        log.level4Debug("removeDriver() Forcing removal of driver package");
+        
+        log.level2Information("removeDriver() Forcing removal of driver package");
         for(int x = 0; infString.length > x && infString[x] != null; x++)devconCommand("-f dp_delete " + infString[x]);
-        log.level4Debug("removeDriver() Removing orphaned device installations");
-        devconCommand("remove \"libusbk devices\"");
-        for (int x = 0; x < orphanedDrivers.length && orphanedDrivers[x] != null; x++)devconCommand("remove " + "\"" + orphanedDrivers[x] + "\"");
-        log.level4Debug("removeDriver() Cleaning up temporary folder");
-        driverCleanup();
-        log.level4Debug("removeDriver() Windows will now scan for hardware changes");
+        
+        log.level2Information("removeDriver() Removing orphaned device installations");
+        for (int y = 0; windowsDriverBlanket.length > y; y++) {
+            String[] orphanedDevices = getOrphanedDevices(windowsDriverBlanket[y]);
+            for (int x = 0; x < orphanedDevices.length && orphanedDevices[x] != null; x++)devconCommand("remove " + "\"" + orphanedDevices[x] + "\"");
+        }
+
+        log.level2Information("removeDriver() Cleaning up temporary folder");
+        log.level2Information("removeDriver() Windows will now scan for hardware changes");
         devconCommand("rescan");
+        driverCleanup();
     }
 
     private String[] getDeviceList(String VID) {
         if (VID.equals("")) return null;
-        Pattern pattern = regexPatternHwid(false);
-        log.level4Debug("getDeviceList() Getting device list for: \"*USB\\VID_" + VID + "*\"");
+        Pattern pattern = getRegExPattern("install");
+        //log.level4Debug("getDeviceList() Getting device list for: \"*USB\\VID_" + VID + "*\"");
         Matcher matcher = pattern.matcher(devconCommand("find *USB\\VID_" + VID + "*"));
         String[] dList = new String[9];
         for(int x = 0; matcher.find(); x++) dList[x] = StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", ""));
         return dList;
     }
 
-    private String[] getAllDevices() {
-        Pattern pattern = regexPatternHwid(true);
-        log.level4Debug("getDeviceList() Getting device list for: \"libusbk devices\"");
-        Matcher matcher = pattern.matcher(devconCommand("findall \"libusbk devices\""));
+    private String[] getOrphanedDevices(String VID) {
+        Pattern pattern = getRegExPattern("orphans");
+        //log.level4Debug("getDeviceList() Getting device list for: *USB\\VID_" + VID + "*");
+        Matcher matcher = pattern.matcher(devconCommand("findall *USB\\VID_" + VID + "*"));
         String[] dList = new String[99];
         for(int x = 0; matcher.find(); x++)dList[x] = StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", ""));
         return dList;
     }    
     
     private String[] getOemInfName() {
-        Pattern pattern = regexPatternInf();
+        Pattern pattern = getRegExPattern("inf");
         String[] oemBuffer = new String[9];
-        log.level4Debug("getOemInfName() Enumerating installed driver packages");
+        log.level2Information("getOemInfName() Enumerating installed driver packages");
         String outputBuffer = devconCommand("dp_enum");
         Matcher matcher = pattern.matcher(outputBuffer);
         for(int x = 0; matcher.find(); x++) oemBuffer[x] = matcher.group(0);
@@ -149,21 +163,18 @@ public class WindowsDrivers {
     private String devconCommand(String Cmd) {
         if (!driverExtracted) driverExtracted = driverExtract();
         String exec = pathToCADI + (Statics.is64bitSystem() ? "devcon_x64.exe " : "devcon_x86.exe ") + Cmd;
-        log.level4Debug("devconCommand() " + shell.arrayToString(new String[]{exec}));
-        String outPut = new Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""}, true);
-        log.level4Debug(outPut);
-        return outPut;
+        //log.level4Debug("devconCommand() " + shell.arrayToString(new String[]{exec}));
+        return new Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""}, true);
+
     }
 
-    private Pattern regexPatternHwid(boolean fullHWID) {
-        Pattern pattern;
-        if(fullHWID) pattern = Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:)");
-        else pattern = Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}(?=.*:)");
-        return pattern;
+    private Pattern getRegExPattern(String whatPattern) {
+        switch (whatPattern) {
+            case "orphans": return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}(?=.*:\\s[CASUAL's|Samsung]+\\s[Android\\sDevice])");
+            case "inf": return Pattern.compile("[o|Oe|Em|M]{3}[0-9]{1,4}\\.inf(?=\\s*Provider:\\slibusbK\\s*Class:\\s*libusbK USB Devices)");
+            case "install": return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}(?=.*:)");
+            default: return null;
+        }
     }
 
-    private Pattern regexPatternInf() {
-        Pattern pattern = Pattern.compile("[o|Oe|Em|M]{3}[0-9]{1,4}\\.inf(?=\\s*Provider:\\slibusbK\\s*Class:\\s*libusbK USB Devices)");
-        return pattern;
-    }
 }
