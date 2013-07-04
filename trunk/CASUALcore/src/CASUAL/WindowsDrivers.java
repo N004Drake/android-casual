@@ -45,13 +45,17 @@ public class WindowsDrivers {
     private final String pathToCADI;
     private final String[] windowsDriverBlanket;
     protected static volatile boolean driverExtracted = false;
-    protected static volatile boolean driverRemoveOnDone = false;
+    protected static volatile int driverRemoveOnDone=0;//0=unset 1=do not remove 2=remove on exit
     
     public WindowsDrivers() {
         log.level4Debug("WindowsDrivers() Initializing");
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
+        
         this.pathToCADI = Statics.TempFolder + "CADI" + Statics.Slash + "libusbk" + Statics.Slash;
-        driverRemoveOnDone = new CASUALInteraction("CADI", "CASUAL will now install a generic USB driver.\n\nThis will allow communications between CASUAL and your device\n\nWould you like CASUAL to remove this generic driver when the operation has completed?").showYesNoOption();
+        if (driverRemoveOnDone==0){ //so it only asks once
+            //set value as 2 if true and 1 if false
+            driverRemoveOnDone = new CASUALInteraction("@interactionInstallingCADI").showYesNoOption()?2:1;
+        }
     }
 
     public static void main(String[] args) {
@@ -244,7 +248,9 @@ public class WindowsDrivers {
                 driverExtracted = true;
             }
             String exec = pathToCADI + (Statics.is64bitSystem() ? "devcon_x64.exe " : "devcon_x86.exe ") + Cmd;
-            return new Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""}, true);
+            String retval=new Shell().silentShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});
+            log.level2Information(retval);
+            return retval;
         } else {
             log.level0Error("devconCommand() no command specified");
             return null;

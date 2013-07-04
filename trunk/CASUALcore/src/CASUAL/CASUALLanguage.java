@@ -67,7 +67,7 @@ public class CASUALLanguage {
             }
             //Close the input stream
             dataIn.close();
-            if(WindowsDrivers.driverRemoveOnDone) {
+            if(WindowsDrivers.driverRemoveOnDone==2) {//2 for remove driver 1 for do not remove
              log.level2Information("Removing generic USB driver as requested");
              new WindowsDrivers().removeDriver();
              }
