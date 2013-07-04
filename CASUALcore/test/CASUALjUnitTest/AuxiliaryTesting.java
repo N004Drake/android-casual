@@ -5,6 +5,9 @@ package CASUALjUnitTest;
  * and open the template in the editor.
  */
 import CASUAL.CASUALApp;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 
@@ -62,6 +65,10 @@ public class AuxiliaryTesting {
             //Testing Heimdall close-pc-screen
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Testing Heimdall", "Connect a device in ODIN mode").showUserCancelOption() == 1) {
+                setContinue();
+                setContinue();
+                setContinue();
+                setContinue();
                 CASUALApp.main(new String[]{"-e", "$HEIMDALL close-pc-screen"});
                 CASUALApp.shutdown(0);
             }
@@ -93,5 +100,10 @@ public class AuxiliaryTesting {
             }
 
         }
+    }
+    public void setContinue() {
+        String string = "\n";
+        InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
+        CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
     }
 }
