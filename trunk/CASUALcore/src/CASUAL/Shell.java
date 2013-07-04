@@ -357,7 +357,7 @@ public class Shell {
      * @return any text from the command
      * @throws TimeoutException 
      */
-    public String timeoutShellCommand(final String[] cmd, int timeout) throws TimeoutException {
+    public String timeoutShellCommand(final String[] cmd, int timeout) {
       
         //Class object to be made final so it can be passed into the runnable
         class TimeoutString{
@@ -389,6 +389,8 @@ public class Shell {
         };
         //t executes the runnable on a different thread
         Thread t = new Thread(runCommand);
+        t.setDaemon(true);
+        t.setName("TimeOutShell "+cmd[0]+ timeout +"ms abandon time");
         t.start();
         
         //set up timeout with calendar time in millis
@@ -400,6 +402,9 @@ public class Shell {
         //loop while not timeout and halt if thread dies. 
         while (Calendar.getInstance().getTimeInMillis()<endTime.getTimeInMillis()) {
             if (! t.isAlive()) break;
+        }
+        if(Calendar.getInstance().getTimeInMillis()>=endTime.getTimeInMillis()){
+            log.level3Verbose("TimeOut on "+cmd[0]+" after "+timeout+"ms. Returning what was received.");
         }
         //return values logged from TimeoutString class above
         return tos.AllText;

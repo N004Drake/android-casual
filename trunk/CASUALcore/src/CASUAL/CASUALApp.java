@@ -32,7 +32,7 @@ public class CASUALApp {
     /**
      *
      */
-    final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
+    final public static String defaultPackage = "ATT GS3 Root"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
     static String[] arguments;

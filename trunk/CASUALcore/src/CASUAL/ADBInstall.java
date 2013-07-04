@@ -56,11 +56,7 @@ class ADBInstall {
         updateADBini();
         FileOperations.setExecutableBit(Statics.adbDeployed); //for *nix.
         String DeviceList;
-        try {
-            DeviceList = new Shell().timeoutShellCommand(ADBTools.devicesCmd(), adbTimeout);
-        } catch (TimeoutException ex) {
-            DeviceList="";
-        }
+        DeviceList = new Shell().timeoutShellCommand(ADBTools.devicesCmd(), adbTimeout);
         new ADBTools().checkADBerrorMessages(DeviceList);
     }
 

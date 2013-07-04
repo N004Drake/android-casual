@@ -24,15 +24,12 @@ public class ADBTools {
     }
     
     public void restartADBserverSlowly() {
-        try {
-            log.level3Verbose("@restartingADBSlowly");
-            Shell shell = new Shell();
-            shell.timeoutShellCommand(killServer(),500);
-            sleepForMillis(1000);
-            shell.timeoutShellCommand(devicesCmd(), 3000);
-        } catch (TimeoutException ex) {
-            //Do nothing  This is windows being a PITA and not returning. 
-        }
+        log.level3Verbose("@restartingADBSlowly");
+        Shell shell = new Shell();
+        shell.timeoutShellCommand(killServer(),500);
+        sleepForMillis(1000);
+        shell.timeoutShellCommand(devicesCmd(), 3000);
+
     }
 
     public void elevateADBserver() {
