@@ -49,6 +49,7 @@ public class LinkLauncher {
     private Runnable launcher = new Runnable() {
         @Override
         public void run() {
+            //use java to autolaunch if possible
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop;
                 desktop = Desktop.getDesktop();
@@ -64,15 +65,18 @@ public class LinkLauncher {
                 }
             } else {
                 Shell Shell = new Shell();
-                String Cmd[] = {"firefox", link};
-                String LaunchRes = Shell.sendShellCommand(Cmd);
-                if (LaunchRes.contains("CritERROR!!!")) {
-                    String MCmd[] = {"open", link};
-                    String MLaunchRes = Shell.sendShellCommand(MCmd);
-                    if (MLaunchRes.contains("CritERROR!!!")) {
-                        String WCmd[] = {"explorer", link};
-                        String WLaunchRes = Shell.sendShellCommand(WCmd);
-                        if (WLaunchRes.contains("CritERROR!!!")) {
+                if (Statics.isMac()){ 
+                    //separate mac because open is used on different platforms
+                    Shell.sendShellCommand(new String[]{"open", link});
+                } else {
+                    //launch link with firefox
+                    String retval = Shell.sendShellCommand(new String[]{"firefox", link});
+                    if (retval.contains("CritERROR!!!")) {
+                        //launch link with Chrome
+                        Shell.sendShellCommand(new String[]{"chrome", link});    
+                        if (retval.contains("CritERROR!!!")) {
+                            //launch link with explorer
+                            retval = Shell.sendShellCommand(new String[]{"explorer", link});
                         }
                     }
                 }
