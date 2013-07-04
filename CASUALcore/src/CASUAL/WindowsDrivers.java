@@ -30,6 +30,9 @@ package CASUAL;
  */
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -248,7 +251,8 @@ public class WindowsDrivers {
                 driverExtracted = true;
             }
             String exec = pathToCADI + (Statics.is64bitSystem() ? "devcon_x64.exe " : "devcon_x86.exe ") + Cmd;
-            String retval=new Shell().silentShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});
+            String retval;
+            retval = new Shell().timeoutShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""},3000);
             log.level2Information(retval);
             return retval;
         } else {
