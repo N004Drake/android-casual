@@ -123,9 +123,7 @@ public class CASUALScriptParser {
                 }
                 log.level4Debug("Reading datastream" + DATAIN);
                 new CASUALLanguage(script, scriptFolder).beginScriptingHandler(DATAIN);
-                if (Statics.useGUI) {
-                    Statics.GUI.enableControls(true);
-                }
+
                 if (Statics.useGUI) {
                     Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                 } else {
