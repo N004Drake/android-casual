@@ -39,7 +39,13 @@ public class CASUALConnectionStatusMonitor {
         this.r = new Runnable() {
             @Override
             public void run() {
-
+                if (CASUALapplicationData.AlwaysEnableControls){
+                    Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+                    if (Statics.useGUI){
+                        Statics.GUI.enableControls(true);
+                    }
+                    return;
+                }
                 //setup initial state
                 if ((Statics.GUIIsAvailable) && (Statics.lockGUIformPrep || Statics.lockGUIunzip)) {
                     Statics.GUI.enableControls(false);
@@ -64,9 +70,6 @@ public class CASUALConnectionStatusMonitor {
                         //One device detected
                     } else if (!CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
                         hasConnected = true;
-                        stateSwitcher(1);
-
-
                         //Check and handle abnormalities
                         // pairing problem with 4.2+
                         if (DeviceList.contains("offline")) {
@@ -80,6 +83,13 @@ public class CASUALConnectionStatusMonitor {
                                 DeviceList = Shell.sendShellCommand(new String[]{Statics.adbDeployed, "wait-for-device"});
                                 Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                             }
+                        } else {
+                            if (Statics.useGUI){
+                                if (!Statics.GUI.getControlStatus()){
+                                    Statics.GUI.enableControls(true);
+                                }
+                            }
+                            stateSwitcher(1);                            
                         }
                         //insufficient permissions
 

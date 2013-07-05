@@ -96,7 +96,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             }
         });
 
-        if (!CASUALapplicationData.AlwaysEnableControls) {
+        if (CASUALapplicationData.AlwaysEnableControls) {
             enableControls(true);
         }
         Statics.GUIIsAvailable = true;
@@ -372,6 +372,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
+                Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                 this.enableControls(false);
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
@@ -392,8 +393,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 comboBoxScriptSelector.setSelectedItem(ComboBoxValue);
                 comboBoxScriptSelector.setEditable(false);
                 Statics.TargetScriptIsResource = false;
-                this.enableControls(true);
-
+                Statics.casualConnectionStatusMonitor.DeviceCheck.start();
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
@@ -448,6 +448,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             Statics.TargetScriptIsResource = true;
 
         }
+        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
         this.enableControls(false);
         Statics.lockGUIunzip = true;
         updateSelectedFromGUI();
@@ -460,7 +461,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             new Log().errorHandler(ex);
         }
         Statics.lockGUIunzip = false;
-        this.enableControls(true);
+        Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+        
 
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
@@ -588,12 +590,20 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             comboBoxScriptSelector.setEnabled(status);
             return true;
         }
-        if (!Statics.lockGUIformPrep && !Statics.lockGUIunzip && !Statics.scriptRunLock) {
-            startButton.setEnabled(status);
-            comboBoxScriptSelector.setEnabled(status);
-            log.level4Debug("Controls Enabled status: " + status);
+        if (!Statics.lockGUIformPrep ){
+            if (!Statics.lockGUIunzip){
+                if (!Statics.scriptRunLock){
+                    startButton.setEnabled(status);
+                    comboBoxScriptSelector.setEnabled(status);
+                    log.level4Debug("Controls Enabled status: " + status);        
+                } else {
+                    log.level4Debug("Control Change requested but script is running");
+                }
+            } else {
+                log.level4Debug("Control Change requested but unzip has not yet finished");
+            }
         } else {
-            log.level4Debug("Control Change requested but Statics.MasterLock is set.");
+            log.level4Debug("Control Change requested but GUI is not ready is set.");
         }
         return (checkGUIStatus(status)) ? true : false;
     }
