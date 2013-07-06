@@ -21,10 +21,16 @@ public class Script {
     private static String slash = System.getProperty("file.separator");
     private String name = "";
     private String script = "";
-    private List<File> includeFiles = new ArrayList();
-    private meta metaData = null;
+    public List<File> includeFiles = new ArrayList();
+    public meta metaData = new meta();
     private String discription="";
 
+    public Script(String name) {
+        this.name=name;
+    }
+
+    
+    
     public Script(String name, String script, String discription, List<File> includeFiles) {
         this.discription = discription;
         this.name = name;
@@ -86,12 +92,12 @@ public class Script {
     private String metaStringBuilder()
     {
         String meta = "";
-        meta = "CASUAL.minSVN=" + metaData.getMinSVNversion()+ "\n";
-        meta = "Script.Revision=" + metaData.getScriptRevsion() + "\n";
-        meta = "Script.ID=" + metaData.getUniqueID() + "\n";
-        meta = "Script.SupportURL=" + metaData.getSupportURL() + "\n";
-        meta = "Script.UpdateMessage=" + metaData.getUpdateMessage() + "\n";
-        meta = "Script.KillSwitchMessage=" + metaData.getKillSwitchMessage() + "\n";
+        meta = meta + "CASUAL.minSVN=" + metaData.getMinSVNversion()+ "\n";
+        meta = meta + "Script.Revision=" + metaData.getScriptRevsion() + "\n";
+        meta = meta + "Script.ID=" + metaData.getUniqueID() + "\n";
+        meta = meta + "Script.SupportURL=" + metaData.getSupportURL() + "\n";
+        meta = meta + "Script.UpdateMessage=" + metaData.getUpdateMessage() + "\n";
+        meta = meta + "Script.KillSwitchMessage=" + metaData.getKillSwitchMessage() + "\n";
         return meta;
     }
     
@@ -118,11 +124,27 @@ public class Script {
     public void setMetaData(meta metaData) {
         this.metaData = metaData;
     }
+
+    public String getDiscription() {
+        return discription;
+    }
+
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
+    
+    
     
     public static void main(String args[]) {
         String test = "";
         System.out.println(test.isEmpty() && false);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+    
     
     
     public class meta{
