@@ -24,7 +24,7 @@ public class Caspac {
     public File caspac;
     public String overview;
     public Build build;
-    public ArrayList<Script> scripts = new ArrayList();
+    public ArrayList<Script> scripts = new ArrayList<>();
     public String TempFolder;
 
     public Caspac() {
@@ -101,7 +101,7 @@ public class Caspac {
     }
 
 
-    class Build {    
+    public class Build {    
         public String developerName = "";
         public String developerDonateButtonText = "";
         public String donateLink = "";

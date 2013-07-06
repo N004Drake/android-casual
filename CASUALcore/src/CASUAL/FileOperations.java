@@ -19,8 +19,6 @@ package CASUAL;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -168,7 +166,6 @@ public class FileOperations {
      * takes a path and a name returns qualified path to file
      *
      * @param PathToSearch
-     * @param FileName
      * @return absolute path to folder
      */
     public ArrayList listFoldersTwoDeep(String PathToSearch) {
@@ -194,7 +191,7 @@ public class FileOperations {
     /**
      * verifies file/folder exists returns a boolean value if the file exists
      *
-     * @param folder
+     * @param file
      * @return true if exists
      */
     public boolean verifyExists(String file) {
@@ -442,7 +439,7 @@ public class FileOperations {
     /**
      * takes a string resource name returns result if it exists
      *
-     * @param Res
+     * @param res resource to verify
      * @return true if resource exists
      */
     public boolean verifyResource(String res) {
@@ -525,10 +522,9 @@ public class FileOperations {
     }
 
     /**
-     *
-     * @param fname
-     * @param useFullPath
-     * @return
+     *lists files in a folder
+     * @param folder folder to list
+     * @return array of filenames
      */
     public String[] listFolderFiles(String folder) {
         File dir = new File(folder);
@@ -569,7 +565,6 @@ public class FileOperations {
      * @throws IOException
      */
     public boolean moveFile(File sourceFile, File destFile) throws IOException {
-        Log log = new Log();
         FileOperations fO = new FileOperations();
         if (fO.copyFile(sourceFile.toString(), destFile.toString())) {
             if (fO.deleteFile(sourceFile.toString())) {

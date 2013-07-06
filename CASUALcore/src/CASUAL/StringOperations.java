@@ -80,9 +80,9 @@ public class StringOperations {
     /**
      * Returns an array of Strings from a source String.
      *
-     * @param String contains comma delimited collection of strings each
+     * @param inputString contains comma delimited collection of strings each
      * surrounded by quotations.
-     *
+     * @return string array result of breaking on commas
      * @author Jeremy Loper jrloper@gmail.com
      */
     public static String[] convertStringToArray(String inputString) {
