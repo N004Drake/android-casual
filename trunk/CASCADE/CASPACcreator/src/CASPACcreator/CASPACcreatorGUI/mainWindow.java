@@ -35,7 +35,7 @@ public class mainWindow extends javax.swing.JFrame {
     private DefaultListModel<Script> scriptList = new DefaultListModel<>();
     private Zip zipFile;
     private Caspac cp = new Caspac();
-    int currentScriptIndex;
+    int currentScriptIndex = -1;
     
     public mainWindow() {
         initComponents();
@@ -71,20 +71,38 @@ public class mainWindow extends javax.swing.JFrame {
         scriptGroup = new javax.swing.JTabbedPane();
         scriptOverview = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        scriptNameTitleJLabel = new javax.swing.JLabel();
+        minSVNversionTitleJLabel = new javax.swing.JLabel();
+        scriptRevisionTitleJLabel = new javax.swing.JLabel();
+        uniqueIDTitleJLabel = new javax.swing.JLabel();
+        supportURLTitleJLabel = new javax.swing.JLabel();
+        updateMessageTitleJLabel = new javax.swing.JLabel();
+        killswitchMessageTitleJLabel = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        scriptDiscriptionJText = new javax.swing.JTextPane();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        scriptNameJLabel = new javax.swing.JLabel();
+        minSVNversionJLabel = new javax.swing.JLabel();
+        scriptRevisionJLabel = new javax.swing.JLabel();
+        uniqueIDJLabel = new javax.swing.JLabel();
+        supportURLJLabel = new javax.swing.JLabel();
+        updateMessageJLabel = new javax.swing.JLabel();
+        killSwitchJLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         scriptListJList = new javax.swing.JList();
         deleteScriptButton = new javax.swing.JButton();
         addScriptButton = new javax.swing.JButton();
         editScriptNameButton = new javax.swing.JButton();
-        loadScriptButton = new javax.swing.JButton();
         script = new javax.swing.JPanel();
         scriptText = new javax.swing.JScrollPane();
         scriptWorkArea = new javax.swing.JTextArea();
-        saveScriptButton = new javax.swing.JButton();
         txtfile = new javax.swing.JPanel();
         descriptionScrollpane = new javax.swing.JScrollPane();
         description = new javax.swing.JTextArea();
-        saveDescriptionButton = new javax.swing.JButton();
         zip = new javax.swing.JPanel();
         zipList = new javax.swing.JScrollPane();
         resourcesForScript = new javax.swing.JList();
@@ -103,7 +121,6 @@ public class mainWindow extends javax.swing.JFrame {
         supportURL = new javax.swing.JTextField();
         updateMessage = new javax.swing.JTextField();
         killswitchMessage = new javax.swing.JTextField();
-        metaSaveButton = new javax.swing.JButton();
         overviewScrollPane = new javax.swing.JScrollPane();
         overviewWorkArea = new javax.swing.JTextArea();
         buildPropertiesPanel = new javax.swing.JPanel();
@@ -165,20 +182,205 @@ public class mainWindow extends javax.swing.JFrame {
         workArea.setName(""); // NOI18N
 
         scriptGroup.setName("scriptGroup"); // NOI18N
+        scriptGroup.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                scriptGroupStateChanged(evt);
+            }
+        });
 
         scriptOverview.setName("scriptOverview"); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("mainWindow.jPanel2.border.title"))); // NOI18N
+        jPanel2.setName("jPanel2"); // NOI18N
+
+        scriptNameTitleJLabel.setText(bundle.getString("mainWindow.scriptNameTitleJLabel.text")); // NOI18N
+        scriptNameTitleJLabel.setName("scriptNameTitleJLabel"); // NOI18N
+
+        minSVNversionTitleJLabel.setText(bundle.getString("mainWindow.minSVNversionTitleJLabel.text")); // NOI18N
+        minSVNversionTitleJLabel.setName("minSVNversionTitleJLabel"); // NOI18N
+
+        scriptRevisionTitleJLabel.setText(bundle.getString("mainWindow.scriptRevisionTitleJLabel.text")); // NOI18N
+        scriptRevisionTitleJLabel.setMaximumSize(null);
+        scriptRevisionTitleJLabel.setMinimumSize(null);
+        scriptRevisionTitleJLabel.setName("scriptRevisionTitleJLabel"); // NOI18N
+
+        uniqueIDTitleJLabel.setText(bundle.getString("mainWindow.uniqueIDTitleJLabel.text")); // NOI18N
+        uniqueIDTitleJLabel.setName("uniqueIDTitleJLabel"); // NOI18N
+
+        supportURLTitleJLabel.setText(bundle.getString("mainWindow.supportURLTitleJLabel.text")); // NOI18N
+        supportURLTitleJLabel.setName("supportURLTitleJLabel"); // NOI18N
+
+        updateMessageTitleJLabel.setText(bundle.getString("mainWindow.updateMessageTitleJLabel.text")); // NOI18N
+        updateMessageTitleJLabel.setName("updateMessageTitleJLabel"); // NOI18N
+
+        killswitchMessageTitleJLabel.setText(bundle.getString("mainWindow.killswitchMessageTitleJLabel.text")); // NOI18N
+        killswitchMessageTitleJLabel.setName("killswitchMessageTitleJLabel"); // NOI18N
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("mainWindow.jPanel3.border.title"))); // NOI18N
+        jPanel3.setName("jPanel3"); // NOI18N
+
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
+
+        scriptDiscriptionJText.setEnabled(false);
+        scriptDiscriptionJText.setName("scriptDiscriptionJText"); // NOI18N
+        jScrollPane2.setViewportView(scriptDiscriptionJText);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("mainWindow.jPanel5.border.title"))); // NOI18N
+        jPanel5.setName("jPanel5"); // NOI18N
+
+        jScrollPane3.setName("jScrollPane3"); // NOI18N
+
+        jList1.setModel(fileList);
+        jList1.setEnabled(false);
+        jList1.setName("jList1"); // NOI18N
+        jScrollPane3.setViewportView(jList1);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3)
+                .addContainerGap())
+        );
+
+        scriptNameJLabel.setText(bundle.getString("mainWindow.scriptNameJLabel.text")); // NOI18N
+        scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
+
+        minSVNversionJLabel.setText(bundle.getString("mainWindow.minSVNversionJLabel.text")); // NOI18N
+        minSVNversionJLabel.setName("minSVNversionJLabel"); // NOI18N
+
+        scriptRevisionJLabel.setText(bundle.getString("mainWindow.scriptRevisionJLabel.text")); // NOI18N
+        scriptRevisionJLabel.setName("scriptRevisionJLabel"); // NOI18N
+
+        uniqueIDJLabel.setText(bundle.getString("mainWindow.uniqueIDJLabel.text")); // NOI18N
+        uniqueIDJLabel.setName("uniqueIDJLabel"); // NOI18N
+
+        supportURLJLabel.setText(bundle.getString("mainWindow.supportURLJLabel.text")); // NOI18N
+        supportURLJLabel.setName("supportURLJLabel"); // NOI18N
+
+        updateMessageJLabel.setText(bundle.getString("mainWindow.updateMessageJLabel.text")); // NOI18N
+        updateMessageJLabel.setName("updateMessageJLabel"); // NOI18N
+
+        killSwitchJLabel.setText(bundle.getString("mainWindow.killSwitchJLabel.text")); // NOI18N
+        killSwitchJLabel.setName("killSwitchJLabel"); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(supportURLTitleJLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(supportURLJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(minSVNversionTitleJLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(minSVNversionJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(scriptRevisionTitleJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scriptRevisionJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(uniqueIDTitleJLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(uniqueIDJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(updateMessageTitleJLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(updateMessageJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(scriptNameTitleJLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scriptNameJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 6, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(killswitchMessageTitleJLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(killSwitchJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap())))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(scriptNameTitleJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scriptNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(minSVNversionJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(minSVNversionTitleJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(scriptRevisionTitleJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scriptRevisionJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(uniqueIDTitleJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(uniqueIDJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(supportURLTitleJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(supportURLJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(updateMessageTitleJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(updateMessageJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(killswitchMessageTitleJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(killSwitchJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 469, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
@@ -186,6 +388,11 @@ public class mainWindow extends javax.swing.JFrame {
         scriptListJList.setModel(scriptList);
         scriptListJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scriptListJList.setName("scriptListJList"); // NOI18N
+        scriptListJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                scriptListJListValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(scriptListJList);
 
         deleteScriptButton.setIcon(new ImageIcon(DatatypeConverter.parseHexBinary(trashIcon)));
@@ -205,14 +412,6 @@ public class mainWindow extends javax.swing.JFrame {
         editScriptNameButton.setText(bundle.getString("mainWindow.editScriptNameButton.text")); // NOI18N
         editScriptNameButton.setName("editScriptNameButton"); // NOI18N
 
-        loadScriptButton.setText(bundle.getString("mainWindow.loadScriptButton.text")); // NOI18N
-        loadScriptButton.setName("loadScriptButton"); // NOI18N
-        loadScriptButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadScriptButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout scriptOverviewLayout = new javax.swing.GroupLayout(scriptOverview);
         scriptOverview.setLayout(scriptOverviewLayout);
         scriptOverviewLayout.setHorizontalGroup(
@@ -222,11 +421,9 @@ public class mainWindow extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(loadScriptButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editScriptNameButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteScriptButton)
@@ -245,8 +442,7 @@ public class mainWindow extends javax.swing.JFrame {
                         .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(deleteScriptButton)
                             .addComponent(addScriptButton)
-                            .addComponent(editScriptNameButton)
-                            .addComponent(loadScriptButton)))
+                            .addComponent(editScriptNameButton)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -263,30 +459,15 @@ public class mainWindow extends javax.swing.JFrame {
         scriptWorkArea.setName("scriptWorkArea"); // NOI18N
         scriptText.setViewportView(scriptWorkArea);
 
-        saveScriptButton.setText(bundle.getString("mainWindow.saveScriptButton.text")); // NOI18N
-        saveScriptButton.setName("saveScriptButton"); // NOI18N
-        saveScriptButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveScriptButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout scriptLayout = new javax.swing.GroupLayout(script);
         script.setLayout(scriptLayout);
         scriptLayout.setHorizontalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1036, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scriptLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(saveScriptButton)
-                .addContainerGap())
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1045, Short.MAX_VALUE)
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(scriptLayout.createSequentialGroup()
-                .addComponent(scriptText, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(saveScriptButton))
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("mainWindow.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -303,31 +484,15 @@ public class mainWindow extends javax.swing.JFrame {
         description.setName("description"); // NOI18N
         descriptionScrollpane.setViewportView(description);
 
-        saveDescriptionButton.setText(bundle.getString("mainWindow.saveDescriptionButton.text")); // NOI18N
-        saveDescriptionButton.setName("saveDescriptionButton"); // NOI18N
-        saveDescriptionButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveDescriptionButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout txtfileLayout = new javax.swing.GroupLayout(txtfile);
         txtfile.setLayout(txtfileLayout);
         txtfileLayout.setHorizontalGroup(
             txtfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(descriptionScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 1036, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, txtfileLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(saveDescriptionButton)
-                .addContainerGap())
+            .addComponent(descriptionScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 1045, Short.MAX_VALUE)
         );
         txtfileLayout.setVerticalGroup(
             txtfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(txtfileLayout.createSequentialGroup()
-                .addComponent(descriptionScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(saveDescriptionButton)
-                .addContainerGap())
+            .addComponent(descriptionScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("mainWindow.txtfile.TabConstraints.tabTitle"), txtfile); // NOI18N
@@ -363,9 +528,9 @@ public class mainWindow extends javax.swing.JFrame {
         zip.setLayout(zipLayout);
         zipLayout.setHorizontalGroup(
             zipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(zipList, javax.swing.GroupLayout.DEFAULT_SIZE, 1036, Short.MAX_VALUE)
+            .addComponent(zipList, javax.swing.GroupLayout.DEFAULT_SIZE, 1045, Short.MAX_VALUE)
             .addGroup(zipLayout.createSequentialGroup()
-                .addGap(0, 897, Short.MAX_VALUE)
+                .addGap(0, 962, Short.MAX_VALUE)
                 .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(remove, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -434,14 +599,6 @@ public class mainWindow extends javax.swing.JFrame {
         killswitchMessage.setText(bundle.getString("mainWindow.killswitchMessage.text")); // NOI18N
         killswitchMessage.setName("killswitchMessage"); // NOI18N
 
-        metaSaveButton.setText(bundle.getString("mainWindow.metaSaveButton.text")); // NOI18N
-        metaSaveButton.setName("metaSaveButton"); // NOI18N
-        metaSaveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                metaSaveButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout metaLayout = new javax.swing.GroupLayout(meta);
         meta.setLayout(metaLayout);
         metaLayout.setHorizontalGroup(
@@ -456,7 +613,7 @@ public class mainWindow extends javax.swing.JFrame {
                     .addGroup(metaLayout.createSequentialGroup()
                         .addComponent(scriptRevisionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scriptRevision, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                        .addComponent(scriptRevision, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                         .addGap(696, 696, 696))
                     .addGroup(metaLayout.createSequentialGroup()
                         .addComponent(supportURLLabel)
@@ -478,10 +635,6 @@ public class mainWindow extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(uniqueID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, metaLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(metaSaveButton)
-                .addContainerGap())
         );
         metaLayout.setVerticalGroup(
             metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -510,9 +663,7 @@ public class mainWindow extends javax.swing.JFrame {
                 .addGroup(metaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(killswitchMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(killswitchMessageLabel))
-                .addGap(303, 303, 303)
-                .addComponent(metaSaveButton)
-                .addContainerGap())
+                .addGap(338, 338, 338))
         );
 
         scriptGroup.addTab(bundle.getString("mainWindow.meta.TabConstraints.tabTitle"), meta); // NOI18N
@@ -624,7 +775,7 @@ public class mainWindow extends javax.swing.JFrame {
                             .addComponent(useBannerText))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
+                            .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 883, Short.MAX_VALUE)
                             .addComponent(bannerText))))
                 .addContainerGap())
         );
@@ -759,46 +910,33 @@ public class mainWindow extends javax.swing.JFrame {
         {
             scriptList.addElement(new Script(s));
             cp.addScript(new Script(s));
-            currentScriptIndex=scriptList.getSize();
+            currentScriptIndex=scriptList.getSize()-1;
+            loadScript();
         }
         
     }//GEN-LAST:event_addScriptButtonActionPerformed
 
-    private void saveScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveScriptButtonActionPerformed
-        // TODO add your handling code here:
-        scriptList.getElementAt(currentScriptIndex).setScript(this.scriptWorkArea.getText());
-    }//GEN-LAST:event_saveScriptButtonActionPerformed
-
-    private void loadScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadScriptButtonActionPerformed
+    private void scriptListJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_scriptListJListValueChanged
         // TODO add your handling code here:
         currentScriptIndex = this.scriptListJList.getSelectedIndex();
-        this.scriptWorkArea.setText(scriptList.getElementAt(currentScriptIndex).getScript());
-        this.description.setText(scriptList.getElementAt(currentScriptIndex).getDiscription());
-        this.killswitchMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getKillSwitchMessage());
-        this.minSVNversion.setText(scriptList.getElementAt(currentScriptIndex).metaData.getMinSVNversion());
-        this.scriptRevision.setText(scriptList.getElementAt(currentScriptIndex).metaData.getScriptRevsion());
-        this.supportURL.setText(scriptList.getElementAt(currentScriptIndex).metaData.getSupportURL());
-        this.uniqueID.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUniqueID());
-        this.updateMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUpdateMessage());
-        
-        
-    }//GEN-LAST:event_loadScriptButtonActionPerformed
+        loadScript();
+    }//GEN-LAST:event_scriptListJListValueChanged
 
-    private void metaSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metaSaveButtonActionPerformed
+    private void scriptGroupStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_scriptGroupStateChanged
         // TODO add your handling code here:
-        scriptList.getElementAt(currentScriptIndex).metaData.setKillSwitchMessage(this.killswitchMessage.getText());
-        scriptList.getElementAt(currentScriptIndex).metaData.setMinSVNversion(this.minSVNversion.getText());
-        scriptList.getElementAt(currentScriptIndex).metaData.setScriptRevsion(this.scriptRevision.getText());
-        scriptList.getElementAt(currentScriptIndex).metaData.setSupportURL(this.supportURL.getText());
-        scriptList.getElementAt(currentScriptIndex).metaData.setUniqueID(this.uniqueID.getText());
-        scriptList.getElementAt(currentScriptIndex).metaData.setUpdateMessage(this.updateMessage.getText());
-    }//GEN-LAST:event_metaSaveButtonActionPerformed
-
-    private void saveDescriptionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDescriptionButtonActionPerformed
-        // TODO add your handling code here:
-        scriptList.getElementAt(currentScriptIndex).setDiscription(this.description.getText());
-
-    }//GEN-LAST:event_saveDescriptionButtonActionPerformed
+        if (currentScriptIndex != -1)
+        {
+            scriptList.getElementAt(currentScriptIndex).setDiscription(this.description.getText());
+            scriptList.getElementAt(currentScriptIndex).setScript(this.scriptWorkArea.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.setKillSwitchMessage(this.killswitchMessage.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.setMinSVNversion(this.minSVNversion.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.setScriptRevsion(this.scriptRevision.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.setSupportURL(this.supportURL.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.setUniqueID(this.uniqueID.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.setUpdateMessage(this.updateMessage.getText());
+            loadScript();
+        }
+    }//GEN-LAST:event_scriptGroupStateChanged
 
     /**
      * @param args the command line arguments
@@ -852,41 +990,58 @@ public class mainWindow extends javax.swing.JFrame {
     private javax.swing.JTextField donateText;
     private javax.swing.JPanel donationPanel;
     private javax.swing.JButton editScriptNameButton;
+    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel killSwitchJLabel;
     private javax.swing.JTextField killswitchMessage;
     private javax.swing.JLabel killswitchMessageLabel;
-    private javax.swing.JButton loadScriptButton;
+    private javax.swing.JLabel killswitchMessageTitleJLabel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton makeCASPAC;
     private javax.swing.JPanel meta;
-    private javax.swing.JButton metaSaveButton;
     private javax.swing.JTextField minSVNversion;
+    private javax.swing.JLabel minSVNversionJLabel;
     private javax.swing.JLabel minSVNversionLabel;
+    private javax.swing.JLabel minSVNversionTitleJLabel;
     private javax.swing.JPanel outputFIle;
     private javax.swing.JTextField outputFile;
     private javax.swing.JScrollPane overviewScrollPane;
     private javax.swing.JTextArea overviewWorkArea;
     private javax.swing.JButton remove;
     private javax.swing.JList resourcesForScript;
-    private javax.swing.JButton saveDescriptionButton;
-    private javax.swing.JButton saveScriptButton;
     private javax.swing.JPanel script;
+    private javax.swing.JTextPane scriptDiscriptionJText;
     private javax.swing.JTabbedPane scriptGroup;
     private javax.swing.JList scriptListJList;
+    private javax.swing.JLabel scriptNameJLabel;
+    private javax.swing.JLabel scriptNameTitleJLabel;
     private javax.swing.JPanel scriptOverview;
     private javax.swing.JTextField scriptRevision;
+    private javax.swing.JLabel scriptRevisionJLabel;
     private javax.swing.JLabel scriptRevisionLabel;
+    private javax.swing.JLabel scriptRevisionTitleJLabel;
     private javax.swing.JScrollPane scriptText;
     private javax.swing.JTextArea scriptWorkArea;
     private javax.swing.JTextField supportURL;
+    private javax.swing.JLabel supportURLJLabel;
     private javax.swing.JLabel supportURLLabel;
+    private javax.swing.JLabel supportURLTitleJLabel;
     private javax.swing.JPanel txtfile;
     private javax.swing.JTextField uniqueID;
+    private javax.swing.JLabel uniqueIDJLabel;
     private javax.swing.JLabel uniqueIDLabel;
+    private javax.swing.JLabel uniqueIDTitleJLabel;
     private javax.swing.JTextField updateMessage;
+    private javax.swing.JLabel updateMessageJLabel;
     private javax.swing.JLabel updateMessageLabel;
+    private javax.swing.JLabel updateMessageTitleJLabel;
     private javax.swing.JRadioButton useBannerPic;
     private javax.swing.JRadioButton useBannerText;
     private javax.swing.JTextField windowText;
@@ -898,17 +1053,23 @@ public class mainWindow extends javax.swing.JFrame {
     public void addFileToZip(File[] files){
         for (File f: files)
             if (f.exists())
+            {
                 scriptList.getElementAt(currentScriptIndex).includeFiles.add(f);
+                fileList.addElement(f);
+            }
     }
     
     public void addFileToZip(File files){
         if (files.exists())
+        {
             scriptList.getElementAt(currentScriptIndex).includeFiles.add(files);
+            fileList.addElement(files);
+        }
     }
 
     public void removeFiles(int[] indexList)
     {
-        List<Integer> list = new ArrayList();
+        List<Integer> list = new ArrayList<>();
         
 
         for (int i:indexList )
@@ -922,12 +1083,13 @@ public class mainWindow extends javax.swing.JFrame {
         for (int i : list)
         {
             scriptList.getElementAt(currentScriptIndex).includeFiles.remove(i);
+            fileList.remove(i);
         }
         
     }
 
     private Map<String, String> buildMaker() {
-        Map<String, String> buildMap = new HashMap();
+        Map<String, String> buildMap = new HashMap<>();
         if (!this.developerName.getText().isEmpty())
             buildMap.put("developerName", this.developerName.getText());
         if (!this.donateText.getText().isEmpty())
@@ -942,5 +1104,29 @@ public class mainWindow extends javax.swing.JFrame {
         buildMap.put("AudioEnabled", Boolean.toString(this.audioEnabled.isSelected()));
         buildMap.put("EnableControls", Boolean.toString(this.alwaysEnableControls.isSelected()));
         return buildMap;
+    }
+    
+    private void loadScript()
+    {
+        this.scriptWorkArea.setText(scriptList.getElementAt(currentScriptIndex).getScript());
+        this.description.setText(scriptList.getElementAt(currentScriptIndex).getDiscription());
+        this.killswitchMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getKillSwitchMessage());
+        this.minSVNversion.setText(scriptList.getElementAt(currentScriptIndex).metaData.getMinSVNversion());
+        this.scriptRevision.setText(scriptList.getElementAt(currentScriptIndex).metaData.getScriptRevsion());
+        this.supportURL.setText(scriptList.getElementAt(currentScriptIndex).metaData.getSupportURL());
+        this.uniqueID.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUniqueID());
+        this.updateMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUpdateMessage());
+        fileList.removeAllElements();
+        for (File f: scriptList.getElementAt(currentScriptIndex).includeFiles)
+            fileList.addElement(f);
+
+        this.scriptNameJLabel.setText(scriptList.getElementAt(currentScriptIndex).getName());
+        this.scriptDiscriptionJText.setText(scriptList.getElementAt(currentScriptIndex).getDiscription());
+        this.killSwitchJLabel.setText(scriptList.getElementAt(currentScriptIndex).metaData.getKillSwitchMessage());
+        this.minSVNversionJLabel.setText(scriptList.getElementAt(currentScriptIndex).metaData.getMinSVNversion());
+        this.scriptRevisionJLabel.setText(scriptList.getElementAt(currentScriptIndex).metaData.getScriptRevsion());
+        this.supportURLJLabel.setText(scriptList.getElementAt(currentScriptIndex).metaData.getSupportURL());
+        this.uniqueIDJLabel.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUniqueID());
+        this.updateMessageJLabel.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUpdateMessage());
     }
 }
