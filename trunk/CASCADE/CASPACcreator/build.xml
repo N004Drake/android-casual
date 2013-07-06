@@ -72,7 +72,7 @@
 
     --> 
     
-<!--Uncommment once compleated   
+ 
     <target name="-post-jar">
         <jar jarfile="dist/CASPACcreator-dist.jar">
                 <zipfileset src="${dist.jar}" excludes="META-INF/*" />
@@ -81,5 +81,5 @@
                 <attribute name="Main-Class" value="com.example.mypackage.Main"/>
             </manifest>
         </jar>
-    </target>-->
+    </target>
 </project>
