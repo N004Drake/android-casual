@@ -46,7 +46,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="&lt;CASCADEGUI.mainPanel.border.title&gt;">
+            <TitledBorder title="CASCADE">
               <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.mainPanel.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
@@ -77,7 +77,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="&lt;CASCADEGUI.outputFIle.border.title&gt;">
+                <TitledBorder title="Output File:">
                   <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.outputFIle.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </TitledBorder>
               </Border>
@@ -143,7 +143,7 @@
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="&lt;CASCADEGUI.scriptGroup.TabConstraints.tabTitle&gt;">
+                  <JTabbedPaneConstraints tabName="Scripting Area">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.scriptGroup.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
@@ -159,7 +159,7 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="&lt;CASCADEGUI.scriptOverview.TabConstraints.tabTitle&gt;">
+                      <JTabbedPaneConstraints tabName="Scripting Overview">
                         <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.scriptOverview.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
@@ -175,7 +175,7 @@
                               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane1" pref="478" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" pref="517" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="editScriptNameButton" min="-2" max="-2" attributes="0"/>
@@ -233,7 +233,7 @@
                           <Properties>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                                <TitledBorder title="&lt;CASCADEGUI.jPanel2.border.title&gt;">
+                                <TitledBorder title="Currently Loaded Script">
                                   <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.jPanel2.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                                 </TitledBorder>
                               </Border>
@@ -408,7 +408,7 @@
                               <Properties>
                                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                                    <TitledBorder title="&lt;CASCADEGUI.jPanel3.border.title&gt;">
+                                    <TitledBorder title="Script Description:">
                                       <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.jPanel3.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                                     </TitledBorder>
                                   </Border>
@@ -461,7 +461,7 @@
                               <Properties>
                                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                                    <TitledBorder title="&lt;CASCADEGUI.jPanel5.border.title&gt;">
+                                    <TitledBorder title="Included Files:">
                                       <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.jPanel5.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                                     </TitledBorder>
                                   </Border>
@@ -474,43 +474,26 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jScrollPane3" max="32767" attributes="0"/>
+                                          <Component id="list1" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jScrollPane3" pref="0" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="list1" pref="141" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
                               <SubComponents>
-                                <Container class="javax.swing.JScrollPane" name="jScrollPane3">
+                                <Component class="java.awt.List" name="list1">
                                   <Properties>
-                                    <Property name="name" type="java.lang.String" value="jScrollPane3" noResource="true"/>
+                                    <Property name="name" type="java.lang.String" value="list1" noResource="true"/>
                                   </Properties>
-                                  <AuxValues>
-                                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                                  </AuxValues>
-
-                                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                                  <SubComponents>
-                                    <Component class="javax.swing.JList" name="jList1">
-                                      <Properties>
-                                        <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                                          <Connection code="fileList" type="code"/>
-                                        </Property>
-                                        <Property name="enabled" type="boolean" value="false"/>
-                                        <Property name="name" type="java.lang.String" value="jList1" noResource="true"/>
-                                      </Properties>
-                                    </Component>
-                                  </SubComponents>
-                                </Container>
+                                </Component>
                               </SubComponents>
                             </Container>
                             <Component class="javax.swing.JLabel" name="scriptNameJLabel">
@@ -620,7 +603,7 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="&lt;CASCADEGUI.script.TabConstraints.tabTitle&gt;">
+                      <JTabbedPaneConstraints tabName="Script Editor">
                         <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.script.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
@@ -636,7 +619,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scriptText" alignment="0" pref="548" max="32767" attributes="0"/>
+                          <Component id="scriptText" alignment="0" pref="552" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -668,7 +651,7 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="&lt;CASCADEGUI.txtfile.TabConstraints.tabTitle&gt;">
+                      <JTabbedPaneConstraints tabName="Script Description">
                         <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.txtfile.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
@@ -684,7 +667,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="descriptionScrollpane" alignment="0" pref="548" max="32767" attributes="0"/>
+                          <Component id="descriptionScrollpane" alignment="0" pref="552" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -718,7 +701,7 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="&lt;CASCADEGUI.zip.TabConstraints.tabTitle&gt;">
+                      <JTabbedPaneConstraints tabName="Include Files">
                         <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.zip.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
@@ -729,19 +712,23 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="zipList" pref="1101" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <EmptySpace min="0" pref="962" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="1018" max="32767" attributes="0"/>
                               <Component id="add" min="-2" pref="38" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="remove" min="-2" pref="39" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="resourcesForScriptList" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="zipList" pref="512" max="32767" attributes="0"/>
+                              <Component id="resourcesForScriptList" pref="512" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="add" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -752,26 +739,11 @@
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Container class="javax.swing.JScrollPane" name="zipList">
+                    <Component class="java.awt.List" name="resourcesForScriptList">
                       <Properties>
-                        <Property name="name" type="java.lang.String" value="zipList" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="resourcesForScriptList" noResource="true"/>
                       </Properties>
-                      <AuxValues>
-                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                      </AuxValues>
-
-                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                      <SubComponents>
-                        <Component class="javax.swing.JList" name="resourcesForScript">
-                          <Properties>
-                            <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="fileList" type="code"/>
-                            </Property>
-                            <Property name="name" type="java.lang.String" value="resourcesForScript" noResource="true"/>
-                          </Properties>
-                        </Component>
-                      </SubComponents>
-                    </Container>
+                    </Component>
                     <Component class="javax.swing.JButton" name="remove">
                       <Properties>
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -808,7 +780,7 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="&lt;CASCADEGUI.meta.TabConstraints.tabTitle&gt;">
+                      <JTabbedPaneConstraints tabName="Meta Info">
                         <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.meta.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
@@ -830,7 +802,7 @@
                                   <Group type="102" attributes="0">
                                       <Component id="scriptRevisionLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="scriptRevision" pref="268" max="32767" attributes="0"/>
+                                      <Component id="scriptRevision" pref="317" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" pref="696" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -1011,7 +983,7 @@
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="&lt;CASCADEGUI.overviewScrollPane.TabConstraints.tabTitle&gt;">
+                  <JTabbedPaneConstraints tabName="Overview">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.overviewScrollPane.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
@@ -1038,7 +1010,7 @@
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                  <JTabbedPaneConstraints tabName="&lt;CASCADEGUI.buildPropertiesPanel.TabConstraints.tabTitle&gt;">
+                  <JTabbedPaneConstraints tabName="Build Properties">
                     <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.buildPropertiesPanel.TabConstraints.tabTitle" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                     </Property>
@@ -1066,10 +1038,10 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="developerName" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="donationPanel" min="-2" pref="41" max="-2" attributes="0"/>
+                          <Component id="donationPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanel4" min="-2" pref="203" max="-2" attributes="0"/>
-                          <EmptySpace pref="274" max="32767" attributes="0"/>
+                          <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="289" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1077,10 +1049,16 @@
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="developerName">
                   <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="f0" green="f0" red="f0" type="rgb"/>
+                    </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="&lt;CASCADEGUI.developerName.border.title&gt;">
-                          <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.developerName.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                        <TitledBorder title="Button Text:">
+                          <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                            <EtchetBorder/>
+                          </Border>
+                          <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.buttonText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </TitledBorder>
                       </Border>
                     </Property>
@@ -1106,7 +1084,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="donateLink" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="2" max="32767" attributes="0"/>
                           </Group>
                           <Component id="donateText" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -1115,10 +1093,16 @@
                   <SubComponents>
                     <Component class="javax.swing.JTextField" name="donateLink">
                       <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="f0" green="f0" red="f0" type="rgb"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="&lt;CASCADEGUI.donateLink.border.title&gt;">
-                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.donateLink.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                            <TitledBorder title="Button Text:">
+                              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                                <EtchetBorder/>
+                              </Border>
+                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.buttonText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                             </TitledBorder>
                           </Border>
                         </Property>
@@ -1127,10 +1111,16 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="donateText">
                       <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="f0" green="f0" red="f0" type="rgb"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="&lt;CASCADEGUI.donateText.border.title&gt;">
-                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.donateText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                            <TitledBorder title="Button Text:">
+                              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                                <EtchetBorder/>
+                              </Border>
+                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.buttonText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                             </TitledBorder>
                           </Border>
                         </Property>
@@ -1166,7 +1156,7 @@
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="bannerPic" pref="883" max="32767" attributes="0"/>
+                                          <Component id="bannerPic" pref="947" max="32767" attributes="0"/>
                                           <Component id="bannerText" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1193,7 +1183,7 @@
                                   <Component id="bannerText" min="-2" max="-2" attributes="0"/>
                                   <Component id="useBannerText" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="17" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="bannerPic" min="-2" max="-2" attributes="0"/>
                                   <Component id="useBannerPic" min="-2" max="-2" attributes="0"/>
@@ -1206,10 +1196,16 @@
                   <SubComponents>
                     <Component class="javax.swing.JTextField" name="windowText">
                       <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="f0" green="f0" red="f0" type="rgb"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="&lt;CASCADEGUI.windowText.border.title&gt;">
-                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.windowText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                            <TitledBorder title="Button Text:">
+                              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                                <EtchetBorder/>
+                              </Border>
+                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.buttonText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                             </TitledBorder>
                           </Border>
                         </Property>
@@ -1221,9 +1217,15 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="buttonText">
                       <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="f0" green="f0" red="f0" type="rgb"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="&lt;CASCADEGUI.buttonText.border.title&gt;">
+                            <TitledBorder title="Button Text:">
+                              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                                <EtchetBorder/>
+                              </Border>
                               <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.buttonText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                             </TitledBorder>
                           </Border>
@@ -1273,10 +1275,16 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="bannerPic">
                       <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="f0" green="f0" red="f0" type="rgb"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="&lt;CASCADEGUI.bannerPic.border.title&gt;">
-                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.bannerPic.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                            <TitledBorder title="Button Text:">
+                              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                                <EtchetBorder/>
+                              </Border>
+                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.buttonText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                             </TitledBorder>
                           </Border>
                         </Property>
@@ -1285,10 +1293,16 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="bannerText">
                       <Properties>
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="f0" green="f0" red="f0" type="rgb"/>
+                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="&lt;CASCADEGUI.bannerText.border.title&gt;">
-                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.bannerText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                            <TitledBorder title="Button Text:">
+                              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                                <EtchetBorder/>
+                              </Border>
+                              <ResourceString PropertyName="titleX" bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.buttonText.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                             </TitledBorder>
                           </Border>
                         </Property>
