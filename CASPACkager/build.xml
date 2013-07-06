@@ -86,7 +86,7 @@
             <manifest>
                 <attribute name="Main-Class" value="Packager.PackagerMain"/>
             </manifest>
-            <zipfileset src="src/Packager/resources/CASUAL.jar" excludes="META-INF/*" /> 
+            <zipfileset src="$DIST../../../CASUALcore/dist/CASUALcoreNoResources.jar" excludes="META-INF/*" /> 
             
         </jar>
     </target>
