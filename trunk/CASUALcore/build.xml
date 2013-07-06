@@ -106,7 +106,12 @@
             <entry key="Application.buildnumber" value="1" type="int" operation="+"/>
         </propertyfile>  
         <jar destfile="dist/CASUALcoreNoResources.jar">
-            <zipfileset src="${dist.jar}" excludes="CASUAL/resources/**"/>
+            <zipfileset src="${dist.jar}"> 
+                <exclude name="CASUAL/resources/fastboot/**"/>
+                <exclude name="CASUAL/resources/heimdall/**"/>
+                <exclude name="CASUAL/resources/sounds/**"/>
+                <exclude name="CASUAL/resources/ADB/**"/>
+            </zipfileset>
         </jar>
         
         <jar jarfile="dist/CASUAL-Revision${svna.version}b.jar">
