@@ -43,11 +43,16 @@ import java.util.zip.ZipException;
  */
 public class PackagerMain {
 
+    /**
+     * instantiates Packager
+     */
     public PackagerMain() {
-        //NADA
     }
     private static boolean useOverrideArgs = false;
     private static String[] overrideArgs = {"--fullauto" ,"..\\CASPAC\\", "--type" ,"nightly"};
+    /**
+     * output directory for package
+     */
     protected static String userOutputDir = "";
     final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
     private static String caspacWithPath = "";
@@ -59,6 +64,10 @@ public class PackagerMain {
     static boolean hasProcessedFolder=false;
     ;
     
+    /**
+     * main method for packaging 
+     * @param args input from command line
+     */
     public static void main(String[] args) {
         if (useOverrideArgs) {
             args = overrideArgs;

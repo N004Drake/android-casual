@@ -25,8 +25,18 @@ import java.util.ArrayList;
 /*
  * Inspired by R.J. Lorimer http://www.javalobby.org/java/forums/t84420.html
  */
+/**
+ *
+ * @author adam
+ */
 public class MD5sum {
 
+    /**
+     * compares an MD5 to a file
+     * @param f file to be compared
+     * @param MD5 expected MD5
+     * @return true if matches
+     */
     public boolean compareFileToMD5(File f, String MD5) {
         if (md5sum(f).equals(MD5.toLowerCase())) {
             return true;
@@ -35,10 +45,20 @@ public class MD5sum {
         }
     }
 
+    /**
+     * gets MD5 of input stream
+     * @param is stream to be MD5d
+     * @return md5 of stream
+     */
     public String md5sum(InputStream is) {
         return md5sumStream(is);
     }
 
+    /**
+     * MD5s a file
+     * @param f file to MD5
+     * @return md5 of file
+     */
     public String md5sum(File f) {
         InputStream is;
         try {
@@ -49,6 +69,11 @@ public class MD5sum {
         }
     }
 
+    /**
+     * md5s an input stream
+     * @param is stream to MD5
+     * @return md5 of stream
+     */
     public String md5sumStream(InputStream is) {
 
         try {
@@ -81,6 +106,12 @@ public class MD5sum {
 
     }
 
+    /**
+     * compares files to MD5 to verify at least one matches
+     * @param LinuxFormat MD5 to compare
+     * @param MD5Filenames filenames to be checked
+     * @return true if all MD5s were matched to files
+     */
     public boolean compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames) {
         String[][] FilenamesAndMD5 = splitFilenamesAndMD5(LinuxFormat);
         boolean[] matches = new boolean[MD5Filenames.length];
@@ -140,15 +171,30 @@ public class MD5sum {
 
     }
 
+    /**
+     * splits a Linux MD5sum value into a md5 and a filename
+     * @param md5 linux md5 sum
+     * @return md5,filename
+     */
     public String[] splitMD5String(String md5) {
         String[] retval = md5.split("  ");
         return retval;
     }
 
+    /**
+     * returns MD5 from a linux md5sum
+     * @param md5 linux MD5sum
+     * @return md5
+     */
     public String getMD5fromLinuxMD5String(String md5) {
         return md5.split("  ")[0];
     }
 
+    /**
+     * gets filename from linux md5sum
+     * @param md5 linux md5sum
+     * @return filename of md5sum input
+     */
     public String getFileNamefromLinuxMD5String(String md5) {
         String[] s = md5.split("  ");
         if (s.length > 0) {
@@ -157,19 +203,35 @@ public class MD5sum {
         return s[0];
     }
 
+    /**
+     * returns a standard md5sum
+     * @param md5 md5 to be inserted
+     * @param filename filename to be appended
+     * @return linux md5sum
+     */
     public String makeMD5String(String md5, String filename) {
         return md5 + "  " + filename;
     }
 
+    /**
+     * tests to see if a line matches an md5sum 
+     * @param testLine line in question
+     * @return true if this is contains a 32 byte hex string
+     */
     public boolean lineContainsMD5(String testLine) {
-
         boolean x = testLine.matches("([0-9a-f]{32}([\\s\\S]*))");
         return x;
     }
 
-    public String pickNewMD5fromArrayList(ArrayList list, String OldMD5) {
+    /**
+     * picks the new MD5 if available 
+     * @param newMd5List new MD5s
+     * @param OldMD5 old md5s
+     * @return new md5s if available
+     */
+    public String pickNewMD5fromArrayList(ArrayList newMd5List, String OldMD5) {
         String[] md5FileSplit = OldMD5.split("  ");
-        for (Object item : list.toArray()) {
+        for (Object item : newMd5List.toArray()) {
             if (((String) item).endsWith(md5FileSplit[1])) {
                 return (String) item;
             }

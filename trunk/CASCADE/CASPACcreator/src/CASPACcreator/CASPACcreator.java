@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import CASPACcreator.CASPACcreatorGUI.mainWindowController;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,8 +34,14 @@ import CASPACcreator.CASPACcreatorGUI.mainWindowController;
  */
 public class CASPACcreator {
 
-    private boolean force = false;
-    private boolean ignore = false;
+    /**
+     * force overwrite
+     */
+    public boolean force = false;
+    /**
+     * ignore missing files
+     */
+    public boolean ignore = false;
     private boolean gui = false;
     private String outputfile = null;
     List<File> inputfiles = new ArrayList<>();  //temp holding for collecting files.
@@ -40,7 +49,7 @@ public class CASPACcreator {
     Log log = new Log();
     private mainWindowController mwc = null;
 
-    private void doWork(String[] args) throws IOException {
+    private void doWork(String[] args) {
         argProcessor(args);
         if (shutdown) {
             return;
@@ -56,9 +65,19 @@ public class CASPACcreator {
         {
         Zip zip = new Zip(outputfile);
         for (File f : inputfiles) {
-            zip.addToZip(f);
+            try {
+                zip.addToZip(f);
+            } catch (IOException ex) {
+                log.level0Error("could not add file to zip " +f.toString());
+            }
         }
-        zip.execute();
+            try {
+                zip.execute();
+            } catch (FileNotFoundException ex) {
+                log.level0Error("File not found while attempting to zip");
+            } catch (IOException ex) {
+                log.level0Error("problem while zipping");
+            }
         }
         log.level2Information("Successfully created zip file at: " + outputfile);
     }
@@ -66,7 +85,7 @@ public class CASPACcreator {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // TODO code application logic here
         CASPACcreator creator = new CASPACcreator();
         creator.doWork(args);
@@ -138,14 +157,4 @@ public class CASPACcreator {
         log.level2Information("       -i: Will ignore nonexisting input files");
         shutdown = true;
     }
-
-    public boolean isForce() {
-        return force;
-    }
-
-    public boolean isIgnore() {
-        return ignore;
-    }
-    
-    
 }

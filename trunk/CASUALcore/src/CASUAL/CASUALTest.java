@@ -34,8 +34,11 @@ import java.util.logging.Logger;
  */
 public class CASUALTest {
 
-    static String[] args;  //args to be passed into CASUAL
-    public static boolean shutdown = false; //Shudown is commanded
+    static String[] args; 
+    /**
+     * true if shutdown is commanded
+     */
+    public static boolean shutdown = false;
     int BUFFER = 4096;
     PipedOutputStream writeToCASUAL;
     PipedInputStream toAppPipedInputStream;
@@ -47,7 +50,9 @@ public class CASUALTest {
     boolean[] badChecks;
     final String[] valuesWeWantToSee;
     private boolean[] goodChecks;
-    /* constructor sets up logging and parameters */
+    /**
+     * sets up logging and parameters
+     */
     public CASUALTest(){        
         valuesWeWantToSee=new String[]{""};
         goodChecks=new boolean[valuesWeWantToSee.length];
@@ -124,6 +129,9 @@ public class CASUALTest {
             Logger.getLogger(CASUALTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * runs CASUAL, hits enter whenever it sees expected values
+     */
     public Runnable readReactToCASUAL = new Runnable() {
         @Override
         public void run() {

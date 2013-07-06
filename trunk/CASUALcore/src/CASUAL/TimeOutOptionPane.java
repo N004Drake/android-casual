@@ -27,10 +27,13 @@ import javax.swing.JOptionPane;
  */
 public class TimeOutOptionPane extends JOptionPane {
 
+    /**
+     * instantiates a timeout option pane
+     */
     public TimeOutOptionPane() {
         super();
     }
-    final static int PRESET_TIME = 335;
+    static int PRESET_TIME = 335;
     /*
      * int showTimeoutDialog = timeOutOptionPane.showTimeoutDialog( 5, //timeout
      * null, //parentComponent "My Message", //Display Message "My Title",
@@ -42,8 +45,21 @@ public class TimeOutOptionPane extends JOptionPane {
      */
     private boolean isSelected = false;
 
-    public int timeoutDialog(final int PRESET_TIME, Component parentComponent, Object message, final String title, int optionType,
+    /**
+     * timeout option pane
+     * @param time time limit to wait
+     * @param parentComponent display over
+     * @param message message to be displayed
+     * @param title title of message
+     * @param optionType JOptionPane.OPTION
+     * @param messageType JOptionPane.TYPE
+     * @param options button values
+     * @param initialValue default value to select if time runs out
+     * @return
+     */
+    public int timeoutDialog(final int time, Component parentComponent, Object message, final String title, int optionType,
             int messageType, Object[] options, final Object initialValue) {
+        PRESET_TIME=time;
         JOptionPane pane = new JOptionPane(message, messageType, optionType, null, options, initialValue);
         pane.setInitialValue(initialValue);
         final JDialog dialog = pane.createDialog(parentComponent, title);
@@ -53,7 +69,7 @@ public class TimeOutOptionPane extends JOptionPane {
             @Override
             public void run() {
 
-                for (int i = PRESET_TIME; i >= 0; i--) {
+                for (int i = time; i >= 0; i--) {
                     if (isSelected) {
                         break;
                     }

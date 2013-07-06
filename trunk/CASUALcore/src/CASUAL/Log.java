@@ -34,10 +34,11 @@ import javax.swing.text.BadLocationException;
  */
 public class Log {
 
+    /**
+     *output device
+     */
     public static PrintStream out = new PrintStream(System.out);
 
-    public Log() {
-    }
 
     private void sendToGUI(String data) {
         if (Statics.useGUI && !"".equals(data)) {
@@ -140,6 +141,10 @@ public class Log {
         }
     }
 
+    /**
+     * 
+     * @param data is data to be written to log
+     */
     public void level4Debug(String data) {
         writeOutToLog("[DEBUG]" + data);
 
@@ -151,6 +156,10 @@ public class Log {
         }
     }
 
+    /**
+     * 
+     * @param data to be written to log file
+     */
     public void writeToLogFile(String data) {
         writeOutToLog(data);
     }
@@ -175,6 +184,10 @@ public class Log {
     private static String progressBuffer = "";
     int lastNewLine = 100;
 
+    /**
+     *
+     * @param data data to be written to progress on screen
+     */
     public void progress(String data) {
         progressBuffer = progressBuffer + data;
         if (Statics.useGUI && Statics.ProgressDoc != null) {
@@ -206,6 +219,10 @@ public class Log {
 
     }
 
+    /**
+     *
+     * @param data data to be written to screen in real time
+     */
     public void LiveUpdate(String data) {
         out.println(data);
         if (Statics.useGUI) {
@@ -219,8 +236,8 @@ public class Log {
 
     }
 
-    /*
-     * begins a new line
+    /**
+     * begins a new line 
      */
     public void beginLine() {
         out.println();

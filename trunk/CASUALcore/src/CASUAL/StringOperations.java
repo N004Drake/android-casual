@@ -25,6 +25,13 @@ import java.util.Random;
  */
 public class StringOperations {
 
+    /**
+     * replaces the last instance of a string
+     * @param string original string
+     * @param toReplace value to replace
+     * @param replacement replace with this
+     * @return string with last value replaced
+     */
     public static String replaceLast(String string, String toReplace, String replacement) {
         int pos = string.lastIndexOf(toReplace);
         if (pos > -1) {
@@ -36,13 +43,23 @@ public class StringOperations {
         }
     }
 
-    public static String removeLeadingSpaces(String Line) {
-        while (Line.startsWith(" ")) {
-            Line = Line.replaceFirst(" ", "");
+    /**
+     * removes leading spaces from line
+     * @param line string to remove spaces from
+     * @return  line without any leading spaces
+     */
+    public static String removeLeadingSpaces(String line) {
+        while (line.startsWith(" ")) {
+            line = line.replaceFirst(" ", "");
         }
-        return Line;
+        return line;
     }
 
+    /**
+     * removes leading and trailing spaces
+     * @param line original value
+     * @return original value without leading or trailing spaces
+     */
     public static String removeLeadingAndTrailingSpaces(String line) {
         while (line.startsWith(" ")) {
             line = line.replaceFirst(" ", "");
@@ -55,6 +72,11 @@ public class StringOperations {
         return line;
     }
 
+    /**
+     * remove trailing spaces
+     * @param line original value
+     * @return original value without trailing spaces
+     */
     public static String removeTrailingSpaces(String line) {
         while (line.endsWith(" ")) {
             StringBuilder b = new StringBuilder(line);
@@ -64,15 +86,25 @@ public class StringOperations {
         return line;
     }
 
+    /**
+     * reads a stream and returns a string
+     * @param is stream to read
+     * @return stream converted to string
+     */
     public static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
-    public static String[] convertArrayListToStringArray(ArrayList List) {
-        String[] StringArray = new String[List.size()];
-        for (int i = 0; i <= List.size() - 1; i++) {
-            StringArray[i] = List.get(i).toString();
+    /**
+     * takes a array list and converts to string array
+     * @param list  input array list
+     * @return output string array
+     */
+    public static String[] convertArrayListToStringArray(ArrayList list) {
+        String[] StringArray = new String[list.size()];
+        for (int i = 0; i <= list.size() - 1; i++) {
+            StringArray[i] = list.get(i).toString();
         }
         return StringArray;
     }
@@ -102,6 +134,11 @@ public class StringOperations {
         }
         return outputArray;
     }
+    /**
+     * gets a random hexadecimal string
+     * @param len length of string to return
+     * @return random hex string of specified length
+     */
     public static String generateRandomHexString(int len) {
         final char[] chars = new char[]{'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
         String random = "";

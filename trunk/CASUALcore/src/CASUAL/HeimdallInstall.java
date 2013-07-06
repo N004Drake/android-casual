@@ -29,9 +29,19 @@ import java.io.IOException;
 public class HeimdallInstall {
 
     final String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
+    /**
+     *Vendor ID detected
+     */
     public String VID = "";
+    /**
+     *Device ID detected
+     */
     public String PID = "";
 
+    /**
+     * deploys heimdal
+     * @return true if deployed
+     */
     public boolean deployHeimdallForWindows() {
         FileOperations fo = new FileOperations();
         Statics.heimdallResource = Statics.heimdallWin2;
@@ -62,6 +72,10 @@ public class HeimdallInstall {
         }
     }
 
+    /**
+     * checks if heimdall is deployed
+     * @return true if heidmall version returns anything
+     */
     public boolean checkHeimdall() {
         boolean retval = !new Shell().silentShellCommand(new String[]{HeimdallTools.getHeimdallCommand(), "version"}).equals("");
         return retval;
@@ -108,6 +122,10 @@ public class HeimdallInstall {
     Log log = new Log();
     Shell shell = new Shell();
 
+    /**
+     * installs heimdall
+     * @return true if heimdall was detected
+     */
     public boolean installHeimdall() {
         //if ( installedHeimdallVersion.length==2 && REGEX FOR STRING NUMBERS ONLY){ isHeimdallDeployed=true;
         if (Statics.isHeimdallDeployed) { //if heimdall is installed, return true
@@ -158,6 +176,11 @@ public class HeimdallInstall {
             new CASUALInteraction("@interactionUnplugItAndPlugItBackIn").showErrorDialog();        }
     }
 
+    
+    /**
+     * @deprecated 
+     * installs Windows Visual C++ redistributable
+     */
     public void installWindowsVCRedist() {
         new Log().level2Information("@installingVisualCPP");
         String installVCResults = "CritERROR!!!";
@@ -173,10 +196,18 @@ public class HeimdallInstall {
         }
     }
 
+    /**
+     * Installs windows drivers
+     * @return always returns true
+     * @WTF always returns true?
+     */
     public boolean installWindowsDrivers() {
         //install drivers
         //CASUALJFrameWindowsDriverInstall HID = new CASUALJFrameWindowsDriverInstall();
         //HID.setVisible(true);
+        /*
+         * @WTF
+         */
         new WindowsDrivers().installDriverBlanket();
         return true;
         /*log.level2Information("@installingCADI"); //Add Newline
@@ -265,6 +296,9 @@ public class HeimdallInstall {
         }*/
     }
 
+    /**
+     *displays a message to the user that Windows permissions were not obtainable
+     */
     public void displayWindowsPermissionsMessageAndExit() {
         if (Statics.isWindows()) {
             new CASUALInteraction("@interactionwindowsRunAsMessage"+ getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString() ).showErrorDialog();
@@ -277,8 +311,10 @@ public class HeimdallInstall {
         installWindowsDrivers();
     }
 
-    
-    
+    /**
+     * checks and deploys heimdall
+     * @return true if deployed
+     */
     public boolean checkAndDeployHeimdall() {
 
         //deploys heimdall for Windows, launches checks for all other OS's. 
@@ -302,6 +338,10 @@ public class HeimdallInstall {
             }
         }
     }
+    /**
+     * checks the heimdall version against version expected from Statics
+     * @return true if version is good
+     */
     public boolean checkHeimdallVersion() {
         String heimdallCommand;
         if (Statics.heimdallDeployed.equals("")) {

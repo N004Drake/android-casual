@@ -29,11 +29,29 @@ import java.util.logging.Logger;
  */
 public class CASPACData {
 
+    /**
+     *minimum SVN revision required to run script
+     */
     public String minSVNRevision = "0";
+    /**
+     * Script revision used to determine if script is out of date
+     */
     public String scriptRevision = "0";
+    /**
+     * any string to identify the script
+     */
     public String uniqueIdentifier = "0";
+    /**
+     * string URL to get support
+     */
     public String supportURL = "";
+    /**
+     * message displayed upon update
+     */
     public String updateMessage = "";
+    /**
+     * md5sums for script, zip and txt
+     */
     public ArrayList<String> md5s = new ArrayList<>();
     Properties prop;
 

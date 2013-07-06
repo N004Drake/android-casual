@@ -24,10 +24,13 @@ import java.util.ArrayList;
  */
 public class FastbootTools {
 
+    /**
+     * deploys and verifies fastboot
+     */
     public static void checkAndDeployFastboot() {
         if (!Statics.isFastbootDeployed) {
             if (Statics.isLinux()) {
-                Statics.fastbootResource = fastbootLinux();
+                Statics.fastbootResource = getFastbootLinuxResource();
             }
             if (Statics.isWindows()) {
                 Statics.fastbootResource = Statics.fastbootWindows;
@@ -46,7 +49,11 @@ public class FastbootTools {
         }
     }
 
-    public static String fastbootLinux() {
+    /**
+     * gets the resource for Fastboot 
+     * @return path to resource
+     */
+    public static String getFastbootLinuxResource() {
         if (Statics.arch.equals("x86_64")) {
             new Log().level3Verbose("found x86-64 bit arch");
             return Statics.fastbootLinux64;
@@ -59,6 +66,11 @@ public class FastbootTools {
         return Statics.fastbootLinux32;
     }
 
+    /**
+     * executes fastboot
+     * @param line params for fastboot
+     * @return value from fastboot command
+     */
     public String doFastbootShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
 
@@ -71,6 +83,11 @@ public class FastbootTools {
         return Shell.liveShellCommand(StringCommand, true);
     }
 
+    /**
+     * performs elevated fastboot command
+     * @param line params for fastboot
+     * @return value from fastboot command
+     */
     public String doElevatedFastbootShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();

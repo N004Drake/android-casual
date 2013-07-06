@@ -111,6 +111,7 @@
                 <exclude name="CASUAL/resources/heimdall/**"/>
                 <exclude name="CASUAL/resources/sounds/**"/>
                 <exclude name="CASUAL/resources/ADB/**"/>
+                <exclude name="CASUAL/resources/icons/**"/>
             </zipfileset>
         </jar>
         

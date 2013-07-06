@@ -26,8 +26,12 @@ import java.util.logging.Logger;
  */
 public class DiffTextFiles {
 
-    /*
+
+    /**
      * takes a resource and a string outputs difference as a string
+     * @param TestIStream input stream to test
+     * @param OriginalFile original file to be diffed
+     * @return lines in test that are not in original
      */
     public String diffResourceVersusFile(String TestIStream, String OriginalFile) {
 
@@ -81,8 +85,12 @@ public class DiffTextFiles {
 
     }
 
-    /*
-     * takes two files returns the difference between the two
+
+    /**
+     *  takes two files returns the difference between the two
+     * @param Original original file
+     * @param TestForDiff new file
+     * @return lines which are in new file that are not in original
      */
     public String diffTextFiles(String Original, String TestForDiff) {
         String DifferenceFromFile1 = "";
@@ -118,8 +126,11 @@ public class DiffTextFiles {
     //Takes in the Diff from the constructor and writes it to the file that is 
     //iniFile.
 
-    /*
-     * appends text to a file
+
+    /**
+     * appends text to file
+     * @param NameOfFileToBeModified file to be appended
+     * @param Diff text to add
      */
     public void appendDiffToFile(String NameOfFileToBeModified, String Diff) {
         if (Diff.equals("")) {

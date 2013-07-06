@@ -28,14 +28,20 @@ import java.util.logging.Logger;
  */
 public class CASUALScriptParser {
 
+    /**
+     * If true, script will continue. False to shutdown.
+     */
     public static boolean ScriptContinue = true;
     Log log = new Log();
     int LinesInScript = 0;
     String ScriptTempFolder = "";
     String ScriptName = "";
 
-    /*
-     * Executes a selected script as a resource reports to Log class.
+
+    /**
+     *Executes a selected script as a resource reports to Log class.
+     * @param script script to execute
+     * @param multiThreaded run on separate thread if true main if false
      */
     public void loadResourceAndExecute(final String script, boolean multiThreaded) {
         Statics.setStatus("Loading resources");
@@ -51,17 +57,23 @@ public class CASUALScriptParser {
         executeSelectedScript(RAS, ScriptTempFolder, script, multiThreaded);
     }
 
+    /**
+     * executes a CASUAL script from a file
+     * @param File CASUAL.scr file
+     * @param script script name
+     * @param multiThreaded false executes on main thread
+     */
     public void loadFileAndExecute(String File, String script, boolean multiThreaded) {
         Statics.setStatus("Loading from file");
         DataInputStream DIS = getDataStreamFromFile(File);
         executeSelectedScript(DIS, ScriptTempFolder, script, multiThreaded);
     }
 
-    /*
+    /**
      * executes a CASUAL script from a file Reports to Log
-     *
+     * @param script path to file
      */
-    public DataInputStream getDataStreamFromFile(String script) {
+    private DataInputStream getDataStreamFromFile(String script) {
         log.level4Debug("Selected file" + script);
 
         ScriptName = script;
@@ -79,9 +91,10 @@ public class CASUALScriptParser {
 
     }
 
-    /*
-     * executeOneShotCommand provides a way to insert a script line.
-     *
+    /**
+     * provides a way to insert a line of CASUAL script.
+     * @param Line line to execute
+     * @return from CASUAL language
      */
     public String executeOneShotCommand(String Line) {
         Statics.setStatus("Executing");

@@ -40,6 +40,12 @@ public class Unzip {
     ZipFile zip;
     Enumeration zipFileEntries;
 
+    /**
+     * unzip unzips files
+     * @param f file to be unzip
+     * @throws ZipException
+     * @throws IOException
+     */
     public Unzip(File f) throws ZipException, IOException {
         this.zip = new ZipFile(f);
         try {
@@ -49,6 +55,12 @@ public class Unzip {
         }
     }
 
+    /**
+     * unzip unzips files
+     * @param f file to unzip
+     * @throws ZipException
+     * @throws IOException
+     */
     public Unzip(String f) throws ZipException, IOException {
         this.zip = new ZipFile(new File(f));
         try {
@@ -58,6 +70,12 @@ public class Unzip {
         }
     }
 
+    /**
+     * unzips recursively
+     * @param outputFolder to folder
+     * @throws ZipException
+     * @throws IOException
+     */
     public void recursiveUnzipFile(String outputFolder) throws ZipException, IOException {
 
         String newPath = outputFolder + System.getProperty("file.separator");
@@ -87,6 +105,12 @@ public class Unzip {
         }
     }
 
+    /**
+     * unzips a file to a folder
+     * @param outputFolder folder to be unzipped to
+     * @throws ZipException
+     * @throws IOException
+     */
     public void unzipFile(String outputFolder) throws ZipException, IOException {
         unzipFileToFolder(outputFolder);
     }
@@ -117,11 +141,25 @@ public class Unzip {
         }
     }
 
+    /**
+     * unzips a resource
+     * @param zipResource resource to be unzipped
+     * @param outputFolder folder to unzip to
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
         InputStream ZStream = new CASUALApp().getClass().getResourceAsStream(zipResource);
         unZipInputStream(ZStream, outputFolder);
     }
-
+    
+    /**
+     * unzips a stream
+     * @param ZStream input stream to unzip
+     * @param outputFolder output folder to unzip to
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public static void unZipInputStream(InputStream ZStream, String outputFolder) throws FileNotFoundException, IOException {
 
         ZipInputStream ZipInput;
@@ -157,7 +195,10 @@ public class Unzip {
         new Log().level3Verbose("Unzip Complete");
     }
 
-    public void closeZip() {
+    /**
+     * closes the zip file
+     */
+    public void close() {
         try {
             zip.close();
         } catch (IOException ex) {
@@ -165,6 +206,14 @@ public class Unzip {
         }
     }
 
+    /**
+     * deploys a file from a zip
+     * @param entry entry file to deploy
+     * @param outputFolder folder to be deployed to
+     * @return
+     * @throws ZipException
+     * @throws IOException
+     */
     public String deployFileFromZip(Object entry, String outputFolder) throws ZipException, IOException {
 
         ZipEntry zipEntry = new ZipEntry((ZipEntry) entry);
@@ -173,6 +222,14 @@ public class Unzip {
         return outputFolder + entry.toString();
     }
 
+    /**
+     * gets a stream of a specified file from a zip
+     * @param zipFile file to stream from
+     * @param entry entry to stream
+     * @return stream of file
+     * @throws ZipException
+     * @throws IOException
+     */
     public static BufferedInputStream streamFileFromZip(File zipFile, Object entry) throws ZipException, IOException {
         ZipFile zip = new ZipFile(zipFile);
         return new BufferedInputStream(zip.getInputStream((ZipEntry) entry));

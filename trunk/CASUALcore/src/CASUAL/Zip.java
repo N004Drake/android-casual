@@ -45,19 +45,25 @@ public class Zip {
     private final String tempDir = System.getProperty("java.io.tmpdir");
 
     
-    
+    /**
+     * instantiates the zip class
+     */
     public Zip()
     {
 
     }
     
+    /**
+     *instantiates the zip class
+     * @param zip file to be worked with
+     */
     public Zip(File zip){
         
     }
     
     /**
-     *
-     * @param outputFile
+     * instantiates the zip class
+     * @param outputFile file to be worked with
      */
     public Zip(String outputFile) {
         //First well seperate the string and store them into the name of the zip
@@ -71,12 +77,24 @@ public class Zip {
     }
     
     
+    /**
+     *adds files to zip
+     * @param zipFile specified zip file
+     * @param fileToAdd file to be added
+     * @throws IOException
+     */
     public static void addFilesToExistingZip(String zipFile, String fileToAdd) throws IOException {
         File zip = new File(zipFile);
         File file = new File(fileToAdd);
         addFilesToExistingZip(zip, new File[]{file});
     }
 
+    /**
+     * adds files to existing zip file
+     * @param zipFile zip file
+     * @param filesToBeZipped file to be added
+     * @throws IOException
+     */
     public static void addFilesToExistingZip(String zipFile, String[] filesToBeZipped) throws IOException {
         File[] fileList = new File[filesToBeZipped.length];
         int i = 0;
@@ -87,16 +105,34 @@ public class Zip {
         addFilesToExistingZip(zip, fileList);
     }
 
+    /**
+     *
+     * adds files to existing zip file
+     * @param zipFile zip file
+     * @param fileToAdd file to be added
+     * @throws IOException  
+     */
     public static void addFilesToExistingZip(File zipFile, File fileToAdd) throws IOException {
         addFilesToExistingZip(zipFile, new File[]{fileToAdd});
     }
 
+    /**
+     * adds files to existing zip file
+     * @param zipFile zip file
+     * @param fileToAdd file to be added
+     * @throws IOException
+     */
     public static void addFilesToExistingZip(File zipFile, String fileToAdd) throws IOException {
         File f = new File(fileToAdd);
         File[] zipAdd = new File[]{f};
         addFilesToExistingZip(zipFile, zipAdd);
     }
-
+    /**
+     * adds files to existing zip file
+     * @param zipFile zip file
+     * @param files files to be zipped
+     * @throws IOException
+     */
     public static void addFilesToExistingZip(File zipFile, File[] files) throws IOException {
         byte[] buf = new byte[4096];
 
@@ -171,9 +207,14 @@ public class Zip {
         out.close();
         tempFile.delete();
     }
-
-    public void addFilesToNewZip(String newZip, String ToBeZipped) throws Exception {
-        File directory = new File(ToBeZipped);
+    /**
+     * adds files to existing zip file
+     * @param newZip zip file
+     * @param toBeZipped file to be added
+     * @throws Exception 
+     */
+    public void addFilesToNewZip(String newZip, String toBeZipped) throws Exception {
+        File directory = new File(toBeZipped);
         URI base = directory.toURI();
         Deque<File> queue = new LinkedList<>();
         queue.push(directory);

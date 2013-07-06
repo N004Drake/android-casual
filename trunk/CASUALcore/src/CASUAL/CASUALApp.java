@@ -29,8 +29,9 @@ import java.util.logging.Logger;
 public class CASUALApp {
 //TODO: convert android-casual to Maven so it works better cross-platform
 
+
     /**
-     *
+     *the default package used for IDE mode or if no scripts are found
      */
     final public static String defaultPackage = "ATT GS3 Root"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
@@ -139,6 +140,10 @@ public class CASUALApp {
         }
     }
 
+    /**
+     * shuts down CASUAL
+     * @param i code to throw
+     */
     public static void shutdown(int i) {
         new Log().level4Debug("Shutting Down");
         Log.out.flush();

@@ -34,6 +34,10 @@ public class CASUALInteraction extends JOptionPane {
     String messageText;    
     String originalMessage="";
     
+    /**
+     * instantiates an interaction
+     * @param messageInput can be title,message or title>>>message, or just message and title will be automatically chosen
+     */
     public CASUALInteraction(String messageInput) {
         if (messageInput.startsWith("@")){
             String translation=Translations.get(messageInput);
@@ -60,14 +64,32 @@ public class CASUALInteraction extends JOptionPane {
         }
     }
 
+    /**
+     *instantiates a CASUALInteraction
+     * @param title title to display on interaction
+     * @param messageInput message to display on interaction
+     */
     public CASUALInteraction(String title, String messageInput) {
         this.title = title;
         this.messageText = messageInput;
     }
 
 
+    /**
+     * CASUALInteraction input device
+     */
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
+    /**
+     * shows a TimeOutDialog 
+     * @param PRESET_TIME time to show message
+     * @param parentComponent where to hover over
+     * @param optionType jOptionPane.OPTION_
+     * @param messageType jOptionPane.MESSAGETYPE
+     * @param options array of options
+     * @param initialValue value to choose if none other are chosen
+     * @return
+     */
     public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, int optionType, int messageType, Object[] options, final Object initialValue) {
         if (!originalMessage.equals("")) logPretranslated("[STANDARDMESSAGE]"+originalMessage);
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
@@ -83,6 +105,10 @@ public class CASUALInteraction extends JOptionPane {
     }
     static String cmdlineinput = "";
 
+    /**
+     * gets command line input from interaction input device
+     * @return commandline input
+     */
     public String getCommandLineInput() {
         try {
             Log.out.flush();
@@ -104,6 +130,11 @@ public class CASUALInteraction extends JOptionPane {
         getCommandLineInput();
     }
 
+    /**
+     * shows an input dialog
+     * @return value from user input 
+     * @throws HeadlessException 
+     */
     public String inputDialog() throws HeadlessException {
         if (!originalMessage.equals("")) logPretranslated("[INPUT][ANY]"+originalMessage);
         new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText);
@@ -121,6 +152,11 @@ public class CASUALInteraction extends JOptionPane {
         }
     }
 
+    /**
+     * shows action required dialog
+     * @return 0 if user didn't do it, or 1 if user did it.
+     * @throws HeadlessException
+     */
     public int showActionRequiredDialog() throws HeadlessException {
         if (!originalMessage.equals("")) logPretranslated("[USERTASK][Q or RETURN][CRITICAL]"+originalMessage);
         new Log().level4Debug("Displaying Action Is Required Dialog:" + messageText);
@@ -154,6 +190,10 @@ public class CASUALInteraction extends JOptionPane {
         return n;
     }
 
+    /**
+     * displays user cancel option
+     * @return 0 if cancel was requested
+     */
     public int showUserCancelOption() {
         if (!originalMessage.equals("")) logPretranslated("[CANCELOPTION][Q or RETURN]"+originalMessage);
         new Log().level4Debug("Displaying User Cancel Option Dialog title: " + title + " message: " + messageText);
@@ -193,6 +233,10 @@ public class CASUALInteraction extends JOptionPane {
         return n;
     }
 
+    /**
+     * displays user notification
+     * @throws HeadlessException
+     */
     public void showUserNotification() throws HeadlessException {
         if (!originalMessage.equals("")) logPretranslated("[NOTIFICATION][RETURN]"+originalMessage);
         new Log().level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
@@ -215,6 +259,10 @@ public class CASUALInteraction extends JOptionPane {
         }
     }
 
+    /**
+     * displays information message
+     * @throws HeadlessException
+     */
     public void showInformationMessage() throws HeadlessException {
         if (!originalMessage.equals("")) logPretranslated("[INFOMESSAGE][RETURN]" +originalMessage);
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
@@ -227,6 +275,10 @@ public class CASUALInteraction extends JOptionPane {
         }
     }
 
+    /**
+     * displays error message
+     * @throws HeadlessException
+     */
     public void showErrorDialog() throws HeadlessException {
         if (!originalMessage.equals("")) logPretranslated("[ERRORMESSAGE][RETURN]"+originalMessage);
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
@@ -237,6 +289,10 @@ public class CASUALInteraction extends JOptionPane {
         }
     }
 
+    /**
+     * displays a Yes/No dialog
+     * @return true if yes, false if no
+     */
     public boolean showYesNoOption() {
         if (!originalMessage.equals("")) logPretranslated("[YESNOOPTION][RETURN or n]" +originalMessage);
         new Log().level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText);
