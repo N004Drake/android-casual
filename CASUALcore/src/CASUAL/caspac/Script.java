@@ -21,7 +21,7 @@ public class Script {
     private static String slash = System.getProperty("file.separator");
     private String name = "";
     private String script = "";
-    public List<File> includeFiles = new ArrayList();
+    public List<File> includeFiles = new ArrayList<>();
     public meta metaData = new meta();
     private String discription="";
 
