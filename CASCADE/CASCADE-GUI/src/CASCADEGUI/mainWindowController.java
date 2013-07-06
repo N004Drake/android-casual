@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASPACcreator.CASPACcreatorGUI;
+package CASCADEGUI;
 
+import CASCADEGUI.CASCADEGUI;
 import CASUAL.Zip;
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class mainWindowController {
     
     public void init()
     {
-        mw = new mainWindow(this);
+        mw = new CASCADEGUI(this);
         mw.setVisible(true);
     }
  

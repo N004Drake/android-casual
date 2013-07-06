@@ -22,10 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import CASPACcreator.CASPACcreatorGUI.mainWindowController;
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -42,25 +39,18 @@ public class CASPACcreator {
      * ignore missing files
      */
     public boolean ignore = false;
-    private boolean gui = false;
+
     private String outputfile = null;
     List<File> inputfiles = new ArrayList<>();  //temp holding for collecting files.
     boolean shutdown = false;
     Log log = new Log();
-    private mainWindowController mwc = null;
 
     private void doWork(String[] args) {
         argProcessor(args);
         if (shutdown) {
             return;
         }
-        if(gui)
-        {
-            mwc.setForce(force);
-            mwc.setIgnore(ignore);
-            mwc.setOutputFile(outputfile);
-            mwc.init();
-        }
+
         else
         {
         Zip zip = new Zip(outputfile);
@@ -95,11 +85,8 @@ public class CASPACcreator {
 
         //parse args
         for (int i = 0; i < args.length; i++) {
-            if( args[i].contains("--gui")) {
-                gui = true;
-                log.level3Verbose("Starting GUI with args.");
-                mwc = new mainWindowController();  
-            } else if (args[i].contains("--force") || args[i].contains("-f")) {
+
+             if (args[i].contains("--force") || args[i].contains("-f")) {
                 force = true;
                 log.level3Verbose("force overwrite of output file.");
             } else if (args[i].contains("--ignore")) {
@@ -107,22 +94,15 @@ public class CASPACcreator {
                 log.level3Verbose("ignoring invalid files.");
             } else if (args[i].contains("--output") || args[i].contains("-o")) {
                 outputfile = args[++i];
-                log.level3Verbose("Added " + args[i]);
+                log.level3Verbose("output file " + args[i]);
             } else if (args[i].startsWith("-")) {
                 usage("Error: -" + args[i] + " is not a valid flag.");
             } else {
-                if (gui)
-                    mwc.addFileToZip(new File(args[i]));
-                else
                     inputfiles.add(new File(args[i]));
             }
 
         }
         
-        if (gui)
-            return;
-
-
         //input validation
         if (outputfile == null) {
             usage("Error: You must specify an output file");

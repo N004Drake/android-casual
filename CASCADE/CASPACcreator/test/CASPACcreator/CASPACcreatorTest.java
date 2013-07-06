@@ -2,13 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+package CASPACcreator;
 
-import CASPACcreator.CASPACcreator;
 import CASUAL.FileOperations;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,14 +16,12 @@ import static org.junit.Assert.*;
  *
  * @author adam
  */
-public class CASPACcreatorJUnitTest {
-
-    static String outfile;
-
-    public CASPACcreatorJUnitTest() {
+public class CASPACcreatorTest {
+    
+    public CASPACcreatorTest() {
     }
-
-    @BeforeClass
+    static String outfile;
+     @BeforeClass
     public static void setUpClass() {
     }
 
@@ -78,7 +74,7 @@ public class CASPACcreatorJUnitTest {
              [TEST]VERIFIED output file /home/adam/code/android-casual/trunk/CASCADE/CASPACcreator/testtmptest exists
              */
         } catch (IOException ex) {
-            Logger.getLogger(CASPACcreatorJUnitTest.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 }
