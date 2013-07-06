@@ -31,6 +31,9 @@ public class FileOperations {
     Log log = new Log();
     Shell shellCommand = new Shell();
 
+    /**
+     * performs file operations
+     */
     public FileOperations() {
     }
 
@@ -226,6 +229,13 @@ public class FileOperations {
         }
     }
 
+    /**
+     * writes a stream to a destination file
+     * @param stream Stream to be written
+     * @param destination output file
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public void writeStreamToFile(BufferedInputStream stream, String destination) throws FileNotFoundException, IOException {
         int currentByte;
         int buffer = 4096;
@@ -329,6 +339,11 @@ public class FileOperations {
         return Deleted;
     }
 
+    /**
+     * deletes files 
+     * @param cleanUp files to be deleted
+     * @return true if all files were deleted false and halts on error
+     */
     public boolean deleteStringArrayOfFiles(String[] cleanUp) {
         int x = 0;
         if (cleanUp[x] != null) {
@@ -484,6 +499,11 @@ public class FileOperations {
         return text.toString();
     }
 
+    /**
+     * reads text from stream
+     * @param in stream to read
+     * @return text output
+     */
     public String readTextFromStream(BufferedInputStream in) {
         StringBuilder text = new StringBuilder();
         try {
@@ -500,8 +520,11 @@ public class FileOperations {
         return text.toString();
     }
 
-    /*
+
+    /**
      * reads file contents returns string
+     * @param FileOnDisk file to read
+     * @return string representation of file
      */
     public String readFile(String FileOnDisk) {
         String EntireFile = "";
@@ -540,6 +563,11 @@ public class FileOperations {
         return StringOperations.convertArrayListToStringArray(files);
     }
 
+    /**
+     * lists files with full qualifiers
+     * @param folder folder to list
+     * @return array of files
+     */
     public String[] listFolderFilesCannonically(String folder) {
         File dir = new File(folder);
         if (!dir.isDirectory()) {
@@ -560,8 +588,9 @@ public class FileOperations {
 
     /**
      *
-     * @param sourceFile
-     * @param destFile
+     * @param sourceFile from locaton
+     * @param destFile to location
+     * @return true if moved
      * @throws IOException
      */
     public boolean moveFile(File sourceFile, File destFile) throws IOException {
@@ -580,6 +609,14 @@ public class FileOperations {
         }
     }
 
+    
+    /**
+     * moves a file
+     * @param sourceFile from location
+     * @param destFile to location
+     * @return true if moved
+     * @throws IOException
+     */
     public boolean moveFile(String sourceFile, String destFile) throws IOException {
         FileOperations fo = new FileOperations();
         if (!fo.verifyExists(sourceFile)) {

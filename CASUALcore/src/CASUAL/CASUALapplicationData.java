@@ -26,30 +26,79 @@ import java.util.Properties;
  */
 public class CASUALapplicationData {
 
+    /**
+     * the CASUAL build has been loaded
+     */
     public static boolean packageDataHasBeenSet = false;
+    /**
+     * scripts have been enumerated
+     */
     public static boolean scriptsHaveBeenRecognized = false;
+    /**
+     * the SVN version of the running CASUAL
+     */
     public static String CASUALSVNRevision = "0";
+    /**
+     * the build number of the running CASUAL
+     */
     public static String CASUALBuildNumber = "0";
+    /**
+     * path to -build.properties
+     */
     public static String buildProperties = "";
+    /**
+     *label for main button
+     */
     public static String buttonText = "Do It!";
+    /**
+     * window title
+     */
     public static String title = "";
+    /**
+     * banner text if pic is not used
+     */
     public static String bannerText = "CASUAL";
+    /**
+     * name of banner pic
+     */
     public static String bannerPic = "";
+    /**
+     *  true if picture is used false if text is used
+     */
     public static boolean usePictureForBanner = false;
+    /**
+     * name of CASUAL script developer
+     */
     public static String developerName = "";
+    /**
+     * name to be displayed on donate button-- Donate to:
+     */
     public static String donateButtonName = "";
+    /**
+     * true if sound should be used
+     */
     public static boolean useSound = false;
-    public static String developerDonateLink = "";
-    public static String donationLink = "";
+    /**
+     *  URL for donations to developer
+     */
+    public static String developerDonationLink = "";
+    /**
+     * name of CASUALFileName for license
+     */
     public static String CASUALFileName = "";
+    /**
+     * true if controls are enabled at all times
+     */
     public static boolean AlwaysEnableControls = true;
+    /** 
+     * name of meta file for active script
+     */
     public static String meta;
 
     CASUALapplicationData() {
         buildProperties = Statics.BUILDPROPERTIES;
         try {
             usePictureForBanner = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.UsePictureForBanner").contains("rue");
-            developerDonateLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
             useSound = java.util.ResourceBundle.getBundle(buildProperties).getString("Audio.Enabled").contains("rue");
             donateButtonName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateToButtonText");
             developerName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.Name");
@@ -58,7 +107,6 @@ public class CASUALapplicationData {
             bannerText = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.BannerText");
             bannerPic = java.util.ResourceBundle.getBundle(buildProperties).getString("Window.BannerPic");
             donateButtonName = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateToButtonText");
-            donationLink = java.util.ResourceBundle.getBundle(buildProperties).getString("Developer.DonateLink");
             AlwaysEnableControls = java.util.ResourceBundle.getBundle(buildProperties).getString("Application.AlwaysEnableControls").contains("rue");
             packageDataHasBeenSet = true;
         } catch (java.util.MissingResourceException ex) {
@@ -74,7 +122,7 @@ public class CASUALapplicationData {
         in.close();
         buildProperties = null;
         usePictureForBanner = properties.getProperty("Window.UsePictureForBanner").contains("rue");
-        developerDonateLink = properties.getProperty("Developer.DonateLink");
+        developerDonationLink = properties.getProperty("Developer.DonateLink");
         useSound = properties.getProperty("Audio.Enabled").contains("rue");
         donateButtonName = properties.getProperty("Developer.DonateToButtonText");
         developerName = properties.getProperty("Developer.Name");
@@ -83,16 +131,18 @@ public class CASUALapplicationData {
         bannerText = properties.getProperty("Window.BannerText");
         bannerPic = properties.getProperty("Window.BannerPic");
         donateButtonName = properties.getProperty("Developer.DonateToButtonText");
-        donationLink = properties.getProperty("Developer.DonateLink");
         packageDataHasBeenSet = true;
 
         new Log().level3Verbose("-----CASUAL PACKAGE-----");
         new Log().level3Verbose("" + title + "\n by:" + developerName + "");
-        if (!donationLink.equals("")) {
-            new Log().level3Verbose(" Donate:" + donationLink);
+        if (!developerDonationLink.isEmpty()) {
+            new Log().level3Verbose(" Donate:" + developerDonationLink);
         }
     }
 
+    /**
+     * dummy method to start the initialization
+     */
     public void initialize() {
         //handled in constructor, this is here to provide an access method.
     }

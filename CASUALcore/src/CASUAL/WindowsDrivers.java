@@ -47,9 +47,21 @@ public class WindowsDrivers {
     private Log log = new Log();
     private final String pathToCADI;
     private final String[] windowsDriverBlanket;
+    /**
+     * true if driver has been prepared.
+     */
     protected static volatile boolean driverExtracted = false;
+    /**
+     * driver should be removed when completed.
+     * 0-unset
+     * 1-do not remove
+     * 2-remove
+     */
     protected static volatile int driverRemoveOnDone=0;//0=unset 1=do not remove 2=remove on exit
     
+    /**
+     * instantiates the windows driver class.
+     */
     public WindowsDrivers() {
         log.level4Debug("WindowsDrivers() Initializing");
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
@@ -61,12 +73,19 @@ public class WindowsDrivers {
         }
     }
 
+    /**
+     * starts the windows driver install and remove procedure
+     * @param args
+     */
     public static void main(String[] args) {
         WindowsDrivers wd = new WindowsDrivers();
         wd.installDriverBlanket();
         wd.removeDriver();
      }
     
+    /**
+     *  Installs drivers for recognized devices.
+     */
     public void installDriverBlanket() {
         for (int x = 0; windowsDriverBlanket.length > x; x++) {
             installDriver(windowsDriverBlanket[x]);
@@ -112,6 +131,9 @@ public class WindowsDrivers {
         }
     }
     
+    /**
+     * removes drivers for recognized devices with recognized drivers
+     */
     public void removeDriver() {
         log.level2Information("removeDriver() Initializing");
         String[] infString = getOemInfName();

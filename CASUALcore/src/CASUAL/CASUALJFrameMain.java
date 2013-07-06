@@ -318,6 +318,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     *the start button was pressed.
+     */
     public void StartButtonActionPerformed() {
         log.level4Debug("StartButtonActionPerformed() Script Activated");
         log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
@@ -347,10 +350,18 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     }
 
+    /**
+     * sets the progress bar value.
+     * @param value value for progress bar
+     */
     public void setProgressBar(int value) {
         progressBar.setValue(value);
     }
 
+    /**
+     * sets max value for progress bar
+     * @param value maximum
+     */
     public void setProgressBarMax(int value) {
         progressBar.setMaximum(value);
     }
@@ -368,7 +379,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         String FileName;
         FileChooser1.setDialogTitle("Select a CASUAL \"scr\" file");
-        FileChooser1.setFileFilter(new SCRCustomFilter());
+        FileChooser1.setFileFilter(new CASUALScrFilter());
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
@@ -425,14 +436,22 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         if (DResult == 0) {
             launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
         } else if (DResult == 1) {
-            launchLink(CASUALapplicationData.donationLink);
+            launchLink(CASUALapplicationData.developerDonationLink);
         }
     }//GEN-LAST:event_DonateButtonActionPerformed
 
+    /**
+     * gets the selected combobox item.
+     * @return selected item in combobox
+     */
     public String comboBoxGetSelectedItem() {
         return (String) comboBoxScriptSelector.getSelectedItem();
     }
 
+    /**
+     * adds an item to the combo box
+     * @param item item to add
+     */
     public void comboBoxScriptSelectorAddNewItem(String item) {
         comboBoxScriptSelector.addItem(item);
     }
@@ -482,6 +501,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
     }//GEN-LAST:event_startButtonMouseExited
+    /**
+     * changes the selected script based on what is chosen from GUI.
+     */
     public void updateSelectedFromGUI() {
         log.level3Verbose("From Resource: " + Statics.TargetScriptIsResource);
         log.level2Information("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
@@ -548,10 +570,21 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     private javax.swing.JLabel windowBanner;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * changes the label icon
+     * @param Icon resource to be displayed
+     * @param Text text if icon is missing
+     */
     public void setStatusLabelIcon(String Icon, String Text) {
         StatusLabel.setIcon(createImageIcon(Icon, Text));
     }
 
+    /**
+     * takes a resource and turns it into an ImageIcon
+     * @param path pat to resource
+     * @param description icon description 
+     * @return an icon
+     */
     protected ImageIcon createImageIcon(String path, String description) {
         java.net.URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
@@ -571,14 +604,27 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     }
 
+    /**
+     * sets the message label text
+     * @param text label text
+     */
     public void setStatusMessageLabel(String text) {
         this.StatusLabel.setText(text);
     }
 
+    /**
+     * gets the control status
+     * @return true if enabled
+     */
     public boolean getControlStatus() {
         return (startButton.isEnabled() && comboBoxScriptSelector.isEnabled());
     }
 
+    /**
+     * sets controls status
+     * @param status commanded value
+     * @return true if enabled false if not
+     */
     public boolean enableControls(boolean status) {
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
         boolean bypassLock = CASUALapplicationData.AlwaysEnableControls;
@@ -620,19 +666,41 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     }
 
+    /**
+     * sets the main window banner text if an image is not used
+     * @param text text to display as banner
+     */
     public void setWindowBannerText(String text) {
         windowBanner.setText(text);
     }
 
+    /**
+     * sets "do it!" button text
+     * @param text text for main execution button
+     */
     public void setStartButtonText(String text) {
         startButton.setText(text);
     }
 
+    /**
+     * sets window banner image
+     * @param icon image to display 
+     * @param text text if image cannot be displayed
+     */
+    /**
+     *
+     * @param icon
+     * @param text
+     */
     public void setWindowBannerImage(String icon, String text) {
         windowBanner.setIcon(new ImageIcon(getClass().getResource(icon), ""));
 
     }
 
+    /**
+     * window is closing 
+     * @param e closing event
+     */
     public void windowCosing(WindowEvent e) {
         CASUALApp.shutdown(0);
     }

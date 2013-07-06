@@ -35,6 +35,9 @@ import java.util.logging.Logger;
  */
 public class CASUALUpdates {
 
+    /**
+     * location to CASUAL online repository
+     */
     public final String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/CASUALcore/src";
 
     /*
@@ -44,6 +47,20 @@ public class CASUALUpdates {
      */
     Log Log = new Log();
 
+    /**
+     * performs an update to CASUAL script
+     * @param script script to check
+     * @param localInformation local meta file
+     * @return integer value to be processed as return
+     * 0 no update required
+     * 1 error during update
+     * 2 update occured
+     * 3 SVN version cannot handle new script
+     * 4 bad download
+     * 
+     * @throws MalformedURLException
+     * @throws IOException
+     */
     public int checkOfficialRepo(String script, CASPACData localInformation) throws MalformedURLException, IOException {
         //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
 
@@ -107,6 +124,13 @@ public class CASUALUpdates {
 
     }
 
+    /**
+     * downloads a file
+     * @param URL web location to download
+     * @param outputFile the local file to output
+     * @param friendlyName name displayed to user
+     * @return true if downloaded
+     */
     public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
         try {
             downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
@@ -118,6 +142,14 @@ public class CASUALUpdates {
         return true;
     }
 
+    /**
+     *
+     * downloads a file
+     * @param url web location to download
+     * @param outputFile the local file to output
+     * @param friendlyName name displayed to user
+     * @return true if downloaded
+     */
     public boolean downloadFileFromInternet(URL url, String outputFile, String friendlyName) {
         Log.level4Debug("Downloading " + url);
         Log.level4Debug("To: " + outputFile);
@@ -155,6 +187,15 @@ public class CASUALUpdates {
         return true;
     }
 
+    /**
+     * displays data from a split meta file
+     * @param CASUALString meta information to be displayed
+     * 0-id
+     * 1-revsion
+     * 2-minimum svn
+     * 3-support URL
+     * 4-update message
+     */
     public void displayCASUALString(String[] CASUALString) {
         //SVN Revision, Script Revision, Script Identification, support URL, message to user
         Log.level4Debug("Identification: " + CASUALString[0]);
@@ -164,6 +205,13 @@ public class CASUALUpdates {
         Log.level4Debug("Server Message: " + CASUALString[4]);
     }
 
+    /**
+     * converts a string to a URL
+     * @param stringURL raw URL in string format
+     * @return URL formatted properly
+     * @throws MalformedURLException
+     * @throws URISyntaxException
+     */
     public URL stringToFormattedURL(String stringURL) throws MalformedURLException, URISyntaxException {
         URL url = new URL(stringURL);
         url = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef()).toURL();
@@ -258,6 +306,16 @@ public class CASUALUpdates {
     static String arch = "";
     static String system = "";
 
+    /**
+     * downloads proper file if available in repository
+     * @param propertiesFileInCASUALOnlineRepo requested file to be downloaded
+     * ie -"heimdall" will be translated to web url:heimdallWin32.zip, downloaded
+     * and the path to the downloaded file is returned. 
+     * @return file downloaded for system/arch
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public String CASUALRepoDownload(String propertiesFileInCASUALOnlineRepo) throws FileNotFoundException, IOException, InterruptedException {
         arch = Statics.is64bitSystem() ? "64" : "32";
         system = Statics.isWindows() ? "win" : system;

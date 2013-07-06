@@ -36,6 +36,9 @@ public class HeimdallTools {
         this.line = line;
     }
 
+    /**
+     * do nothing until a heimdall device is detected
+     */
     public void doHeimdallWaitForDevice() {
         Shell Shell = new Shell();
         ArrayList<String> shellCommand = new ArrayList<>();
@@ -58,9 +61,19 @@ public class HeimdallTools {
             shellReturn = Shell.silentShellCommand(stringCommand);
         }
         connectionTimer.stop();
+        if (Statics.isWindows()){
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException ex) {
+            }
+        }
         log.level3Verbose("detected!");
     }
 
+    /**
+     * performs an elevated heimdall command
+     * @return result from heimdall
+     */
     public String doElevatedHeimdallShellCommand() {
         ++heimdallRetries;
         line = StringOperations.removeLeadingSpaces(line);
@@ -91,6 +104,10 @@ public class HeimdallTools {
         return returnval;
     }
 
+    /**
+     * performs a heimdall command
+     * @return value from heimdall command
+     */
     public String doHeimdallShellCommand() {
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
@@ -267,6 +284,10 @@ public class HeimdallTools {
         return "";
     }
 
+    /**
+     * gets the command to run heimdall
+     * @return string path to heimdall
+     */
     public static String getHeimdallCommand() {
         if (Statics.isMac()) {
             Shell shell = new Shell();

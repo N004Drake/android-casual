@@ -15,8 +15,15 @@ import java.io.IOException;
 public class ElevateUAC {
 
     private static Log log = new Log();
+    /**
+     * name of batch file to execute
+     */
     public static String batName = "elevate.bat";
 
+    /**
+     * checks if UAC is turned on
+     * @return true if UAC is turned on
+     */
     public static boolean checkForUAC() {
         File dummyFile = new File("C:/foo.bar"); // Windows default is drive C: I'll figure out how to determine it programatically later
         dummyFile.deleteOnExit();
@@ -30,6 +37,9 @@ public class ElevateUAC {
         return false;
     }
 
+    /**
+     * elevates the batch file
+     */
     public void doElevate() {
         //create batch file in temporary directory as we have access to it regardless of UAC status
         File file = new File(Statics.TempFolder + batName);

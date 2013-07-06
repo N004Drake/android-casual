@@ -26,6 +26,9 @@ import javax.swing.Timer;
  */
 public class CASUALConnectionStatusMonitor {
 
+    /**
+     *array of device serial numbers
+     */
     public static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
     Log Log = new Log();
     Shell Shell = new Shell();
@@ -139,7 +142,8 @@ public class CASUALConnectionStatusMonitor {
         };
         //GETDEVICECOMMAND = new String[]{Statics.adbDeployed, "devices"};
     }
-    /*
+
+    /**
      * Starts and stops the ADB timer
      * reference with Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
      */

@@ -61,6 +61,8 @@ public class Pastebin {
     /**
      * Automatically prompts the user for their XDA username and submits a
      * pasting to Pastebin
+     * @throws IOException 
+     * @throws URISyntaxException 
      */
     public void doPosting() throws IOException, URISyntaxException {
         if (Statics.debugMode) return;
@@ -93,6 +95,10 @@ public class Pastebin {
         }
     }
 
+    /**
+     * strips user info and pastes an anonymous log to pastebin
+     * @throws MalformedURLException
+     */
     public void pasteAnonymousLog() throws MalformedURLException {
         Pattern svnRev = Pattern.compile("(?=[setViewedRevision]?.{2})[0-9]{3,4}");
         FileOperations fO = new FileOperations();

@@ -76,7 +76,7 @@ public class CASPACHandler {
                 }
 
                 if (new CASUALTools().getIDEMode()) {
-                    unzip.closeZip();
+                    unzip.close();
                     new CASUALTools().rewriteMD5OnCASPAC(new File(pack), this);
                 }
                 unzip = new Unzip(CASPAC);

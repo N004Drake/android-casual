@@ -35,6 +35,11 @@ public class CASUALLanguage {
     private String ScriptTempFolder;
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
 
+    /**
+     * instantiates CASUALLanguage with script
+     * @param ScriptName name of script
+     * @param ScriptTempFolder temp folder to use for script
+     */
     public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
         this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
@@ -43,6 +48,10 @@ public class CASUALLanguage {
     static String GOTO = "";
     int CurrentLine = 1;
 
+    /**
+     * starts the scripting handler spooler and handles flow control
+     * @param dataIn CASUALScript .scr file
+     */
     public void beginScriptingHandler(DataInputStream dataIn) {
         String strLine = "";
         try {
@@ -82,6 +91,11 @@ public class CASUALLanguage {
 
     }
 
+    /**
+     * Process a line of CASUAL script.
+     * @param line CASUAL line to process
+     * @return value returned from CASUAL command
+     */
     public String commandHandler(String line) {
         line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
         if (line.equals("")) {

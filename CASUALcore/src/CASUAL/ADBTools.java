@@ -26,6 +26,10 @@ public class ADBTools {
     Log log=new Log();
 
     
+    /**
+     * method to get the devices command for ADB use
+     * @return path_to_adb, devices
+     */
     public static String[] devicesCmd(){
         return new String[]{Statics.adbDeployed, "devices"}; 
     };

@@ -32,8 +32,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class AudioHandler {
 
-    /*
-     * playSound plays sounds
+
+    /**
+     *playSound plays sounds
+     * @param URL path to sound
      */
     public static synchronized void playSound(final String URL) {
         Thread t = new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
@@ -72,10 +74,11 @@ public class AudioHandler {
         t.setName("Audio");
         t.start();
     }
-    /*
-     * plays multiple sounds
-     */
 
+    /**
+     * plays multiple sounds
+     * @param URLs array of paths to sound
+     */
     public static synchronized void playMultipleInputStreams(final String[] URLs) {
         Thread t = new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override

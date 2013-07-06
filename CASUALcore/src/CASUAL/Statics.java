@@ -347,8 +347,7 @@ public class Statics {
         CASUALapplicationData.developerName="";
         CASUALapplicationData.donateButtonName="";
         CASUALapplicationData.useSound=false;
-        CASUALapplicationData.developerDonateLink="";
-        CASUALapplicationData.donationLink="";
+        CASUALapplicationData.developerDonationLink="";
         CASUALapplicationData.CASUALFileName="";
         CASUALapplicationData.AlwaysEnableControls=true;
         CASUALapplicationData.meta=null;

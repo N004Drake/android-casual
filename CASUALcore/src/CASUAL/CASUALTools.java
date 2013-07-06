@@ -158,6 +158,9 @@ public class CASUALTools {
     
     
     //CASUALZipPrep
+    /**
+     * thread used for preparing zip file. this should never be interrupted.
+     */
     public static Thread zipPrep;
     /**
      * prepares the script for execution by setting up environment
@@ -331,7 +334,7 @@ public class CASUALTools {
         } catch (IOException ex) {
             new Log().errorHandler(ex);
         } finally {
-            unzip.closeZip();
+            unzip.close();
         }
         try {
 
@@ -359,6 +362,9 @@ public class CASUALTools {
         }
     }
     
+    /**
+     * sleeps for 1000ms. 
+     */
     public static void sleepForOneSecond() {
         try {
             Thread.sleep(1000);

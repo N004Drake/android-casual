@@ -147,7 +147,10 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
         }          
     }//GEN-LAST:event_jPastebinSubmitActionPerformed
 
-    public static void initializeAsMain() {
+    /**
+     *shows the Log jFrame
+     */
+    public static void main() {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

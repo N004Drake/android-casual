@@ -26,6 +26,12 @@ import java.lang.management.ManagementFactory;
  */
 public class JavaSystem {
 
+    /**
+     * restarts java
+     * @param args args to add
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void restart(String[] args) throws IOException, InterruptedException {
         StringBuilder cmd = new StringBuilder();
 
