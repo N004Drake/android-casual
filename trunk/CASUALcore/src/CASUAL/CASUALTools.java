@@ -163,7 +163,6 @@ public class CASUALTools {
      * prepares the script for execution by setting up environment
      *
      * @param scriptName
-     * @return
      */
     public void startZipPrepThreadOnZipFile(String scriptName) {
         Statics.SelectedScriptFolder = Statics.TempFolder + Statics.Slash + scriptName;

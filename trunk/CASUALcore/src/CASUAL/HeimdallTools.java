@@ -139,10 +139,9 @@ public class HeimdallTools {
     }
 
     /**
-     * .
-     *
-     * @param String CASUAL log output
-     * @param String previously executed Heimdall command array
+     * checks if Heimdall threw an error
+     * @param stdErrLog CASUAL log output
+     * @return containing halted if cannot continue or continue if it can
      *
      * @author Jeremy Loper jrloper@gmail.com
      */

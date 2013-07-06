@@ -355,7 +355,7 @@ public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * @param args the command line arguments
+     * starts the developer instructions frame.
      */
     public static void main() {
         /*

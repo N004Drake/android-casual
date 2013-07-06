@@ -18,7 +18,7 @@ import javax.swing.ListModel;
  */
 public class mainWindowController {
     
-    private DefaultListModel fileList = new DefaultListModel();
+    private DefaultListModel<String> fileList = new DefaultListModel<>();
     private Zip zip;
     private JFrame mw;
     private boolean force = false;

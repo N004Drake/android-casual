@@ -194,7 +194,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="jScrollPane1" pref="491" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane1" pref="494" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
                                           <Component id="deleteScriptButton" min="-2" max="-2" attributes="0"/>
@@ -606,6 +606,9 @@
                         </Property>
                         <Property name="name" type="java.lang.String" value="deleteScriptButton" noResource="true"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteScriptButtonActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="addScriptButton">
                       <Properties>
@@ -631,6 +634,9 @@
                         </Property>
                         <Property name="name" type="java.lang.String" value="editScriptNameButton" noResource="true"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editScriptNameButtonActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -767,7 +773,7 @@
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="zipList" pref="502" max="32767" attributes="0"/>
+                              <Component id="zipList" pref="518" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="add" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1116,10 +1122,10 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="developerName" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="donationPanel" min="-2" max="-2" attributes="0"/>
+                          <Component id="donationPanel" min="-2" pref="41" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="286" max="32767" attributes="0"/>
+                          <Component id="jPanel4" min="-2" pref="203" max="-2" attributes="0"/>
+                          <EmptySpace pref="280" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1252,7 +1258,7 @@
                                   <Component id="bannerText" min="-2" max="-2" attributes="0"/>
                                   <Component id="useBannerText" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="11" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="bannerPic" min="-2" max="-2" attributes="0"/>
                                   <Component id="useBannerPic" min="-2" max="-2" attributes="0"/>

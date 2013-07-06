@@ -158,10 +158,9 @@ public class CASPACHandler {
 
     /**
      *
-     * @param zippedFiles enumeration containing all CASUAL files in the CASPAC
      * @param pack CASPAC file
      * @param CASUALMeta Metadata from CASPAC
-     * @return
+     * @return list of MD5s
      * @throws IOException
      */
     public ArrayList getMD5sfromCASPAC(String pack, String CASUALMeta) throws IOException {
@@ -186,7 +185,7 @@ public class CASPACHandler {
      *
      * @param zippedFiles Enumeration containing the names of all files in the
      * caspac
-     * @return
+     * @return name of meta file.  null if none found
      */
     public String getMetaName(Enumeration zippedFiles) {
         while (zippedFiles.hasMoreElements()) {

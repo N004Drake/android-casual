@@ -525,9 +525,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     private static void launchLink(String Link) {
         new LinkLauncher(Link).launch();
     }
-    /**
-     * @param args the command line arguments
-     */
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DonateButton;
     private javax.swing.JFileChooser FileChooser1;

@@ -156,7 +156,7 @@ public class CASUALJFrameAboutBox extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     /**
-     * @param args the command line arguments
+     * starts the about box
      */
     public static void main() {
         /*

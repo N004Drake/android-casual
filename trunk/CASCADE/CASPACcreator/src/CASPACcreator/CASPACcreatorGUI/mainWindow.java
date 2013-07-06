@@ -37,6 +37,9 @@ public class mainWindow extends javax.swing.JFrame {
     private Caspac cp = new Caspac();
     int currentScriptIndex = -1;
     
+    /**
+     *initializes window
+     */
     public mainWindow() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -398,6 +401,11 @@ public class mainWindow extends javax.swing.JFrame {
         deleteScriptButton.setIcon(new ImageIcon(DatatypeConverter.parseHexBinary(trashIcon)));
         deleteScriptButton.setText(bundle.getString("mainWindow.deleteScriptButton.text")); // NOI18N
         deleteScriptButton.setName("deleteScriptButton"); // NOI18N
+        deleteScriptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteScriptButtonActionPerformed(evt);
+            }
+        });
 
         addScriptButton.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         addScriptButton.setText(bundle.getString("mainWindow.addScriptButton.text")); // NOI18N
@@ -411,6 +419,11 @@ public class mainWindow extends javax.swing.JFrame {
         editScriptNameButton.setIcon(new ImageIcon(DatatypeConverter.parseHexBinary(pencilIcon)));
         editScriptNameButton.setText(bundle.getString("mainWindow.editScriptNameButton.text")); // NOI18N
         editScriptNameButton.setName("editScriptNameButton"); // NOI18N
+        editScriptNameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editScriptNameButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout scriptOverviewLayout = new javax.swing.GroupLayout(scriptOverview);
         scriptOverview.setLayout(scriptOverviewLayout);
@@ -437,7 +450,7 @@ public class mainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(deleteScriptButton)
@@ -538,7 +551,7 @@ public class mainWindow extends javax.swing.JFrame {
         zipLayout.setVerticalGroup(
             zipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(zipLayout.createSequentialGroup()
-                .addComponent(zipList, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                .addComponent(zipList, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(zipLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -821,7 +834,7 @@ public class mainWindow extends javax.swing.JFrame {
                 .addComponent(donationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(286, Short.MAX_VALUE))
+                .addContainerGap(268, Short.MAX_VALUE))
         );
 
         workArea.addTab(bundle.getString("mainWindow.buildPropertiesPanel.TabConstraints.tabTitle"), buildPropertiesPanel); // NOI18N
@@ -938,6 +951,14 @@ public class mainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_scriptGroupStateChanged
 
+    private void editScriptNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editScriptNameButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editScriptNameButtonActionPerformed
+
+    private void deleteScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteScriptButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteScriptButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1050,6 +1071,10 @@ public class mainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane zipList;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     *adds an array of files to list of files
+     * @param files
+     */
     public void addFileToZip(File[] files){
         for (File f: files)
             if (f.exists())
@@ -1059,6 +1084,10 @@ public class mainWindow extends javax.swing.JFrame {
             }
     }
     
+    /**
+     *adds a single file to list of files
+     * @param files
+     */
     public void addFileToZip(File files){
         if (files.exists())
         {
@@ -1067,6 +1096,10 @@ public class mainWindow extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * removes files from list
+     * @param indexList
+     */
     public void removeFiles(int[] indexList)
     {
         List<Integer> list = new ArrayList<>();
