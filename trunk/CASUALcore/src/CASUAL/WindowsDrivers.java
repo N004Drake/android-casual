@@ -30,9 +30,6 @@ package CASUAL;
  */
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,12 +113,10 @@ public class WindowsDrivers {
                         if (devconCommand("update " + pathToCADI + "xp" + Statics.Slash + "cadixp.inf " + "\"" + dList[x] + "\"") == null) {
                             log.level0Error("devconCommand() returned null!");
                         }
-                    } else if (!installedPreviously){
-                        if(devconCommand("update " + pathToCADI + "cadiV78.inf " + "\"" + dList[x] + "\"") == null) {
+                    } else if (!installedPreviously && devconCommand("update " + pathToCADI + "cadiV78.inf " + "\"" + dList[x] + "\"") == null) {
                             log.level0Error("devconCommand() returned null!");
-                        }
                     }
-                    pastInstalls[x] = dList[x];
+                  pastInstalls[x] = dList[x];
                 } 
             }else {
                 log.level0Error("getDeviceList() returned null!");
@@ -210,7 +205,7 @@ public class WindowsDrivers {
                 String outputBuffer = devconCommand("findall *USB\\VID_" + VID + "*");
                 if (outputBuffer != null) {
                     Matcher matcher = pattern.matcher(outputBuffer);
-                    String[] dList = new String[Integer.parseInt((matcher.find() ? matcher.group(0) : "0"))];
+                    String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0) : "0")];
                     pattern = getRegExPattern("orphans");
                     if (pattern != null) {
                         matcher = pattern.matcher(outputBuffer);

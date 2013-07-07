@@ -141,7 +141,6 @@ public class FileOperations {
         if (Check.exists()) {
             log.level3Verbose("Searching for file in folder:" + PathToSearch.toString());
             for (File file : c) {
-                String x = file.getName();
                 if (file.isDirectory()) {
                     log.level4Debug("Searching " + file.toString());
                     File[] subdir = file.listFiles();
@@ -199,12 +198,8 @@ public class FileOperations {
      */
     public boolean verifyExists(String file) {
         File f=new File(file);
-        if (!f.exists()){
-            if (!f.isDirectory()){
-                if (!f.isFile()){
-                    return false;
-                }
-            }
+        if (!f.exists()&& !f.isDirectory() &&!f.isFile()){
+            return false;
         }
         return true;
     }
@@ -307,7 +302,7 @@ public class FileOperations {
         } catch (IOException e) {
             return false;
         }
-        if ((file.exists()) && (file.length() >= 4)) {
+        if (file.exists() && file.length() >= 4) {
             log.level4Debug("File verified.");
             return true;
         } else {
@@ -432,10 +427,10 @@ public class FileOperations {
      */
     public boolean verifyFileExists(String Folder) {
         File FileFolder = new File(Folder);
-        boolean Result = (FileFolder.length() >= 1);
+        boolean Result = FileFolder.length() >= 1;
         log.level4Debug("Verifying " + Folder + " .  Result=" + Result);
         log.level4Debug("Result=" + Result);
-        return (Result);
+        return Result;
     }
 
     /**
@@ -458,19 +453,11 @@ public class FileOperations {
      * @return true if resource exists
      */
     public boolean verifyResource(String res) {
-        if ((getClass().getResource(res)) == null) {
+        if (getClass().getResource(res) == null) {
             return false;
         } else {
             return true;
         }
-    }
-
-    private String setDest(String FileName) {
-        return Statics.TempFolder + FileName;
-    }
-
-    private String setRes(String FileName) {
-        return Statics.ScriptLocation + FileName;
     }
 
     /**
@@ -494,6 +481,7 @@ public class FileOperations {
         } catch (NullPointerException ex) {
             log.level0Error("@resourceNotFound:" + Resource);
         } catch (IOException ex) {
+            log.level0Error("@resourceNotFound:" + Resource);
         }
         //Log.level3(text.toString());
         return text.toString();
@@ -536,9 +524,8 @@ public class FileOperations {
                     EntireFile = EntireFile + "\n" + Line;
                 }
             }
-        } catch (FileNotFoundException ex) {
-            log.level2Information("@fileNotFound " + FileOnDisk);
         } catch (IOException ex) {
+            log.level2Information("@fileNotFound " + FileOnDisk);
         }
         EntireFile = EntireFile.replaceFirst("\n", "");
         return EntireFile;

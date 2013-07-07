@@ -44,7 +44,7 @@ public class HeimdallTools {
         ArrayList<String> shellCommand = new ArrayList<>();
         shellCommand.add(Statics.heimdallDeployed);
         shellCommand.add("detect");
-        String stringCommand[] = (StringOperations.convertArrayListToStringArray(shellCommand));
+        String stringCommand[] = StringOperations.convertArrayListToStringArray(shellCommand);
         log.progress("Waiting for Downoad Mode device.");
         String shellReturn = "";
         Timer connectionTimer = new Timer(60000, new ActionListener() {

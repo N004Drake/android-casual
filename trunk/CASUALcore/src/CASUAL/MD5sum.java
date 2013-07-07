@@ -146,7 +146,7 @@ public class MD5sum {
             if (idStrings[n].contains("  ")) {
                 String[] splitID = idStrings[n].split("  ");
                 if (splitID.length == 2) {
-                    if ((splitID[0] != null) && (splitID[1] != null)) {
+                    if (splitID[0] != null && splitID[1] != null) {
                         NameMD5[n][0] = splitID[0];
                         NameMD5[n][1] = splitID[1];
                         //this is a valid MD5 split

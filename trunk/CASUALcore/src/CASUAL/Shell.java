@@ -20,7 +20,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,11 +69,11 @@ public class Shell {
             boolean useGKSU = true;
             String[] testGKSudo = {"which", "gksudo"};
             String testReturn = Shell.silentShellCommand(testGKSudo);
-            if ((testReturn.contains("CritERROR!!!") || (testReturn.equals("\n") || (testReturn.equals(""))))) {
+            if (testReturn.contains("CritERROR!!!") || testReturn.equals("\n") || testReturn.isEmpty()) {
                 useGKSU = false;
                 String[] testPKexec = {"which", "pkexec"};
                 testReturn = Shell.silentShellCommand(testPKexec);
-                if ((testReturn.contains("CritERROR!!!") || (testReturn.equals("\n") || (testReturn.equals(""))))) {
+                if (testReturn.contains("CritERROR!!!") || testReturn.equals("\n") || testReturn.isEmpty()) {
                     new CASUALInteraction("@interactionPermissionNotFound").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
                 }
             }
@@ -99,7 +98,7 @@ public class Shell {
             } else {
                 int i = 0;
                 //give the user 3 retries for password
-                while ((Result.equals("")) || (Result.contains("Error executing command as another user"))) {
+                while (Result.equals("") || Result.contains("Error executing command as another user")) {
                     Result = Shell.liveShellCommand(new String[]{"pkexec", ScriptFile}, true);
                     i++;
                     if (Result.contains("Error executing command as another user:") && i >= 3) {
@@ -259,7 +258,7 @@ public class Shell {
                     log.progress(CharRead);
                 }
 
-                if (!Statics.ActionEvents.isEmpty() && ((LineRead.contains("\n") || LineRead.contains("\r")))) {
+                if (!Statics.ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
                         if (Statics.ActionEvents != null && LineRead.contains((String) Statics.ActionEvents.get(i))) {
                             new CASUALScriptParser().executeOneShotCommand((String) Statics.ReactionEvents.get(i));

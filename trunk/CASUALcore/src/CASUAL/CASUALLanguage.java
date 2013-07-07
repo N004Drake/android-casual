@@ -58,7 +58,7 @@ public class CASUALLanguage {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
 
             bReader.mark(1);
-            while (((strLine = bReader.readLine()) != null) && (CASUALScriptParser.ScriptContinue)) {
+            while ((strLine = bReader.readLine()) != null && CASUALScriptParser.ScriptContinue) {
                 CurrentLine++;
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBar(CurrentLine);
@@ -323,7 +323,7 @@ public class CASUALLanguage {
             log.level4Debug("Expanded $ZIPFILE: " + line);
         }
 
-        if ((line.contains("\\n")) && ((line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERNOTIFICATION")) || line.startsWith("$USERCANCELOPTION"))) {
+        if (line.contains("\\n") && (line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERCANCELOPTION"))) {
             line = line.replace("\\n", "\n");
         }
 //$HOMEFOLDER will reference the user's home folder on the system        

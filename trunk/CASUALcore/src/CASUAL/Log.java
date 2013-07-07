@@ -41,27 +41,17 @@ public class Log {
 
 
     private void sendToGUI(String data) {
-        if (Statics.useGUI && !"".equals(data)) {
-            if (!"\n".equals(data)) {
-                try {
-                    try {
-                        Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
-                        try {
-                            Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-                        } catch (java.lang.IllegalArgumentException x) {
-                        }
-                    } catch (BadLocationException ex) {
-                    }
-
-
-                } catch (NullPointerException e) {
-
-                    Statics.PreProgress = Statics.PreProgress + "\n" + data;
-                    if (Statics.PreProgress.startsWith("\n")) {
-                        Statics.PreProgress = Statics.PreProgress.replaceFirst("\n", "");
-                    }
+        if (Statics.useGUI && !"".equals(data)&& !"\n".equals(data)) {
+            try {
+                    Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
+                    Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
+            } catch (NullPointerException e) {
+                Statics.PreProgress = Statics.PreProgress + "\n" + data;
+                if (Statics.PreProgress.startsWith("\n")) {
+                    Statics.PreProgress = Statics.PreProgress.replaceFirst("\n", "");
                 }
-
+            } catch (BadLocationException ex) {
+                //nothing to do, GUI is not running
             }
         }
     }

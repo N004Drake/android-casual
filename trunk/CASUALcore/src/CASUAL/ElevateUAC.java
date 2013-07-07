@@ -25,12 +25,12 @@ public class ElevateUAC {
      * @return true if UAC is turned on
      */
     public static boolean checkForUAC() {
-        File dummyFile = new File("C:/foo.bar"); // Windows default is drive C: I'll figure out how to determine it programatically later
+        File dummyFile = new File(System.getenv("SystemDrive")+"/foo.bar");
         dummyFile.deleteOnExit();
 
         try {
-            try (FileWriter fw = new FileWriter(dummyFile, true)) {
-            }
+            FileWriter fw = new FileWriter(dummyFile, true);
+            fw.write("foo");
         } catch (IOException ex) {//we cannot UAC must be on
             return true;
         }

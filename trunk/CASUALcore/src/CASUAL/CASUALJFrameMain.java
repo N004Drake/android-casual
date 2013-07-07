@@ -29,7 +29,6 @@ import javax.swing.JFileChooser;
  */
 public final class CASUALJFrameMain extends javax.swing.JFrame {
 
-    private int busyIconIndex = 0;
     String nonResourceFileName;
     Log log = new Log();
     FileOperations fileOperations = new FileOperations();
@@ -461,7 +460,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         log.level4Debug("hiding script selector TargetScript: " + comboBoxScriptSelector.getSelectedItem().toString());
 
-        if ((!Statics.dumbTerminalGUI) && comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
+        if ( !Statics.dumbTerminalGUI && comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
             Statics.TargetScriptIsResource = false;
         } else {
             Statics.TargetScriptIsResource = true;
@@ -616,7 +615,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      * @return true if enabled
      */
     public boolean getControlStatus() {
-        return (startButton.isEnabled() && comboBoxScriptSelector.isEnabled());
+        return startButton.isEnabled() && comboBoxScriptSelector.isEnabled();
     }
 
     /**
@@ -648,7 +647,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         } else {
             log.level4Debug("Control Change requested but GUI is not ready is set.");
         }
-        return (checkGUIStatus(status)) ? true : false;
+        return checkGUIStatus(status) ? true : false;
     }
 
     private boolean checkGUIStatus(boolean expectedStatus) {

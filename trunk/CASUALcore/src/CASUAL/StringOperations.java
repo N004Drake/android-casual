@@ -125,7 +125,7 @@ public class StringOperations {
 
         for (int i = 0; i <= inputString.length(); i++, currentQuotePosition = inputString.indexOf("\",", currentQuotePosition)) {
             if (inputString.length() != currentQuotePosition) {
-                outputArray[i] = inputString.substring(lastQuotePosition, (currentQuotePosition - 1));
+                outputArray[i] = inputString.substring(lastQuotePosition, currentQuotePosition - 1);
                 lastQuotePosition = currentQuotePosition++;
             } else {
                 outputArray[i] = inputString.substring(lastQuotePosition, currentQuotePosition);

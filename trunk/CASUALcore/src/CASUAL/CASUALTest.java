@@ -149,6 +149,7 @@ public class CASUALTest {
                     doQuarterSecondSleep();
                     
                 } catch (Exception ex) {
+                    new Log().level4Debug(ex.getLocalizedMessage());
                     //no need to report this. its fine
                 }
             }
@@ -237,9 +238,7 @@ public class CASUALTest {
         }
     };
     
-        private void setTestPoints(String[] readStrings){
-        
-    }
+
     private void validateLine(String line){
         for (int i=0; i<valuesWeWantToSee.length;i++){
             if (line.contains(valuesWeWantToSee[i])){

@@ -89,7 +89,7 @@ public class CASUALUpdates {
                     Log.level2Information("@scriptIsOutOfDate");
                     //ugly code dealing with /SCRIPTS/ folder on computer.
                     new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
-                    int status = downloadUpdates(script, webInformation, Statics.TempFolder);
+                    int status = downloadUpdates(script, webInformation);
                     if (status == 0) {
                         Log.level2Information("@md5sVerified");
                         return 2;
@@ -112,7 +112,7 @@ public class CASUALUpdates {
     private boolean checkVersionInformation(String webVersion, String localVersion) {
         int wv = Integer.parseInt(webVersion);
         int lv = Integer.parseInt(localVersion);
-        if ((wv != 0)) {
+        if (wv != 0) {
             if (wv > lv) {
                 return true;
             } else {
@@ -231,7 +231,7 @@ public class CASUALUpdates {
                 buf.rewind();
                 for (int i = 0; i < numRead; i++) {
                     byte b = buf.get();
-                    webData = webData + (new String(new byte[]{b}));
+                    webData = webData + new String(new byte[]{b});
                 }
             }
         }
@@ -245,7 +245,7 @@ public class CASUALUpdates {
      * 1- update not available
      * 2- update error
      */
-    private int downloadUpdates(String scriptname, CASPACData webInformation, String localPath) {
+    private int downloadUpdates(String scriptname, CASPACData webInformation) {
         URL url;
         try {
             url = stringToFormattedURL(CASUALRepo + scriptname);
@@ -355,13 +355,11 @@ public class CASUALUpdates {
             //get expected MD5
             String expectedMD5 = new MD5sum().getMD5fromLinuxMD5String(prop.getProperty(system + arch + "md5"));
             //verify  we have an MD5
-            if (expectedMD5.length() >= 31) {
-                //if MD5 does not match
-                if (!new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)) {
-                    //show message and exit
-                    new CASUALInteraction("@interactionBadDownload").showErrorDialog();
-                    CASUALApp.shutdown(0);
-                }
+            //if MD5 does not match
+            if (expectedMD5.length() >= 31 && !new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)) {
+                //show message and exit
+                new CASUALInteraction("@interactionBadDownload").showErrorDialog();
+                CASUALApp.shutdown(0);
             }
             counter++;
             filenumber = "-" + Integer.toString(counter);

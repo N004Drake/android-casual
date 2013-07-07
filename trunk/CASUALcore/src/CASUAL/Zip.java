@@ -42,8 +42,6 @@ import java.util.zip.ZipOutputStream;
 public class Zip {
     private String outputZip=null;
     private final String slash = System.getProperty("file.separator");
-    private final String tempDir = System.getProperty("java.io.tmpdir");
-
     
     /**
      * instantiates the zip class
@@ -58,7 +56,11 @@ public class Zip {
      * @param zip file to be worked with
      */
     public Zip(File zip){
-        
+        try {
+            this.outputZip=zip.getCanonicalPath();
+        } catch (IOException ex) {
+            new Log().errorHandler(ex);
+        }
     }
     
     /**
@@ -160,10 +162,8 @@ public class Zip {
             out.close();
             copyOk = true;
         }
-        if (!renameOk) {
-            if (!copyOk) {
-                throw new RuntimeException("could not rename or copy the file " + zipFile.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
-            }
+        if (!renameOk && !copyOk) {
+            throw new RuntimeException("could not rename or copy the file " + zipFile.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
         }
         ZipOutputStream out;
         try (ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile))) {
@@ -397,13 +397,9 @@ public class Zip {
      */
     
     //TODO: Make the files work if directories are empty.
-    public void execute() throws FileNotFoundException, IOException
-    {
-        
+    public void execute() throws FileNotFoundException, IOException {
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outputZip));
         zipDir(Statics.TempFolder, outputZip, "");
-        
-        
     }
 
 
@@ -457,21 +453,5 @@ public class Zip {
                 fis.close();
             }
         }
-    }
-
-
-   
-    
-    private void recursiveDelete(File file){
-        if (file.isDirectory()) {                   
-                    for (File c : file.listFiles())
-                        if(c.isDirectory())
-                            recursiveDelete(c);
-                        else
-                        {
-                            c.delete();
-                        }
-                    }
-                file.delete();
     }
 }

@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,8 +27,7 @@ import java.util.logging.Logger;
  */
 public class CASUALApp {
 //TODO: convert android-casual to Maven so it works better cross-platform
-
-
+    
     /**
      *the default package used for IDE mode or if no scripts are found
      */
@@ -37,19 +35,6 @@ public class CASUALApp {
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
     static String[] arguments;
-
-     /**
-     * At startup create and show the main frame of the application.
-     */
-    /**
-     * This method is to initialize the specified window by injecting resources.
-     * Windows shown in our application come fully initialized from the GUI
-     * builder, so this additional configuration is not needed.
-     *
-     * @param root
-     */
-    protected void configureWindow(java.awt.Window root) {
-    }
 
     /**
      * Main method launching the application.

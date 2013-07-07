@@ -64,11 +64,9 @@ public class Translations {
     private static void setDefaultLanguage(){
             String lang = Locale.getDefault().getDisplayLanguage();
         try {
-            translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
-        } catch (java.util.MissingResourceException e ){
-            //do nothing
+            translation = ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
         } catch (Exception e) {
-            translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/English");
+            translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English");
             new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
         }
     }
@@ -82,9 +80,9 @@ public class Translations {
      */
     public void setLanguage(String lang) {
         try {
-            translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
+            translation = ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
         } catch (Exception e) {
-            translation = java.util.ResourceBundle.getBundle("CASUAL/resources/Translations/English");
+            translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English");
             new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
         }
     }
