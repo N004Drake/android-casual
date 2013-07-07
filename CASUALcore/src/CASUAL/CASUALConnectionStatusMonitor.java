@@ -83,7 +83,7 @@ public class CASUALConnectionStatusMonitor {
                                 String[] ok = {"All set and done!"};
                                 new CASUALInteraction("@interactionOfflineNotification").showTimeoutDialog(120, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
                                 Log.level0Error("@disconnectAndReconnect");
-                                DeviceList = Shell.sendShellCommand(new String[]{Statics.adbDeployed, "wait-for-device"});
+                                DeviceList = ADBTools.getDevices();
                                 Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                             }
                         } else {
@@ -105,15 +105,14 @@ public class CASUALConnectionStatusMonitor {
 
                             //Linux and mac only.
                             if (DeviceList.contains("????????????")) {
-                                String cmd[] = {Statics.adbDeployed, "kill-server"}; //kill the server
                                 Log.level2Information("@permissionsElevationRequired");
-                                Shell.sendShellCommand(cmd); //send the command
+                                ADBTools.startServer(); //send the command
                                 //notify user that permissions will be requested and what they are used for
                                 String[] ok = {"ok"};
                                 AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                                 new CASUALInteraction("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
-                                String[] getDevicesCommand = new String[]{Statics.adbDeployed, "devices"};
-                                DeviceList = Shell.elevateSimpleCommand(getDevicesCommand);
+      
+                                DeviceList = ADBTools.getDevices();
                                 // if permissions elevation was sucessful
                                 if (!DeviceList.contains("????????????")) {
                                     Log.level4Debug(DeviceList);
@@ -140,7 +139,7 @@ public class CASUALConnectionStatusMonitor {
                 }
             }
         };
-        //GETDEVICECOMMAND = new String[]{Statics.adbDeployed, "devices"};
+
     }
 
     /**
@@ -212,8 +211,8 @@ public class CASUALConnectionStatusMonitor {
     }
 
     private String getConnectedDevices() {
-        String[] getDevicesCommand = new String[]{Statics.adbDeployed, "devices"};
-        String devices = Shell.silentShellCommand(getDevicesCommand).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
+        ;
+        String devices = ADBTools.getDevices().replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
         return devices;
 
     }

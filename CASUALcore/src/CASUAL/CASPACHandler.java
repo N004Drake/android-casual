@@ -91,9 +91,8 @@ public class CASPACHandler {
                 startDumbTerminalGUI();
             }
 
-            new CASUALScriptParser().executeOneShotCommand("$ADB wait-for-device");
-            //Launch script
 
+            //Launch script
             Thread t = new Thread(activateScript);
             t.setName("CASUAL Script");
             t.start();

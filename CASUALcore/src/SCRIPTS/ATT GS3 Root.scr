@@ -1,5 +1,5 @@
 $ECHO Checking device
-$HEIMDALL close-pc-screen
+
 #$IFCONTAINS "string string" $INCOMMAND "$ADB command to execute" $DO "CASUAL COMMAND"
 $IFNOTCONTAINS d2can $INCOMMAND $ADB shell "cat /system/build.prop" $DO $IFNOTCONTAINS d2att $INCOMMAND $ADB shell "cat /system/build.prop" $DO $GOTO #baddevice
 

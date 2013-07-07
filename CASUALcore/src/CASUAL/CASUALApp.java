@@ -147,10 +147,8 @@ public class CASUALApp {
     public static void shutdown(int i) {
         new Log().level4Debug("Shutting Down");
         Log.out.flush();
-        try {
-            new Shell().silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
-        } catch (Exception e) {//do nothing
-        }
+        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+        ADBTools.killADBserver();
         if (!CASUALTools.IDEMode && !Statics.useGUI){
             try {
 

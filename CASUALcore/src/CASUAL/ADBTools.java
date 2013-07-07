@@ -27,57 +27,104 @@ public class ADBTools {
 
     
     /**
-     * method to get the devices command for ADB use
-     * @return path_to_adb, devices
+     * method to get the wait-for-device command for ADB use
+     * @return path_to_adb, wait-for-device
      */
-    public static String[] devicesCmd(){
-        return new String[]{Statics.adbDeployed, "devices"}; 
-    };
-    /**
-     *starts adb server
-     * @return value from adb
-     */
-    public static String[] startServer(){
-        return new String[] {Statics.adbDeployed, "start-server"};
-    }
-    /**
-     *kills the ADB server
-     * @return value from ADB command
-     */
-    public static String[] killServer(){
-        return new String[]{Statics.adbDeployed, "kill-server"};
+    private static String[] getWaitForDeviceCmd(){
+        return new String[]{getADBCommand(), "wait-for-device"};
     }
     
     /**
-     *kills and restarts the adb server max duration of 4.5 seconds
+     * method to get the devices command for ADB use
+     * @return path_to_adb, devices
      */
-    public void restartADBserverSlowly() {
-        log.level3Verbose("@restartingADBSlowly");
-        Shell shell = new Shell();
-        shell.timeoutShellCommand(killServer(),500);
-        sleepForMillis(1000);
-        shell.timeoutShellCommand(devicesCmd(), 3000);
+    private static String[] getDevicesCmd(){
+        return new String[]{getADBCommand(), "devices"}; 
+    }
+    /**
+     *value to start the server
+     * @return value from adb
+     */
+    private static String[] getStartServerCmd(){
+        return new String[] {getADBCommand(), "start-server"};
+    }
+    /**
+     *return the value to kill the ADB server
+     * @return value from ADB command
+     */
+    private static String[] getKillServerCmd(){
+        return new String[]{getADBCommand(), "kill-server"};
+    }
+    /**
+     * returns the location of ADB
+     * @return 
+     */
+    public static String getADBCommand(){
+        FileOperations fo = new FileOperations();
+        if (! fo.verifyExists(Statics.adbDeployed)){
+            new ADBInstall().deployADB();
+        }
+        return Statics.adbDeployed;        
+    }
 
+    /**
+     * executes the adb wait-for-device commmand. will not do anything until 
+     * device is detected.
+     * @return value from adb wait-for-device
+     */
+    public static String waitForDevice(){
+        Shell shell = new Shell();
+        String retval=shell.silentShellCommand(getWaitForDeviceCmd());
+        return retval;
+    }
+    
+    
+    /**
+     * executes the getDevices command
+     * @return value from adb getDevices
+     */
+    public static String getDevices(){
+        Shell shell=new Shell();
+        String retval=shell.timeoutShellCommand(getDevicesCmd(),5000);
+        return retval;
+    }
+    /**
+     * executes the start server command
+     * @return value from adb start server
+     */
+    public static String startServer(){
+        Shell shell=new Shell();
+        String retval=shell.timeoutShellCommand(getStartServerCmd(),5000);
+        return retval;
+    }
+    
+    /**
+     *kills and restarts the adb server max duration of 7 seconds.
+     * Thread will be abandoned if time is exceeded
+     */
+    public static void restartADBserver() {
+        new Log().level3Verbose("@restartingADBSlowly");
+        Shell shell = new Shell();
+        shell.timeoutShellCommand(getKillServerCmd(),1000);
+        shell.timeoutShellCommand(getDevicesCmd(), 6000);
     }
 
     /**
      * starts an elevated ADB server
      */
-    public void elevateADBserver() {
-        log.level3Verbose("@restartingADB");
+    public static void elevateADBserver() {
+        new Log().level3Verbose("@restartingADB");
         Shell shell = new Shell();
-        shell.silentShellCommand(killServer());
-        shell.elevateSimpleCommand(devicesCmd());
+        shell.silentShellCommand(getKillServerCmd());
+        shell.elevateSimpleCommand(getDevicesCmd());
     }
 
     /**
      *
      */
-    public void killADBserver() {
-        log.level3Verbose("Restarting ADB after system update");
+    public static void killADBserver() {
         Shell shell = new Shell();
-
-        shell.silentShellCommand(killServer());
+        shell.silentShellCommand(getKillServerCmd());
     }
     
 
@@ -97,8 +144,8 @@ public class ADBTools {
         if ((Statics.isLinux()) && (DeviceList.contains("ERROR-3"))) { //Don't know how to handle this yet
             Shell shell = new Shell();
             log.level0Error("@permissionsElevationRequired");
-            shell.silentShellCommand(new String[]{Statics.adbDeployed, "kill-server"});
-            shell.elevateSimpleCommandWithMessage(devicesCmd(), "Device permissions problem detected");
+            shell.silentShellCommand(getKillServerCmd());
+            shell.elevateSimpleCommandWithMessage(getDevicesCmd(), "Device permissions problem detected");
         }
 
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
@@ -109,8 +156,8 @@ public class ADBTools {
         //TODO: implement this as an error handler for ADB. in a centralized manner. 
         if (DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
             log.level4Debug("Restarting ADB slowly");
-            restartADBserverSlowly();
-            DeviceList = new Shell().silentShellCommand(devicesCmd()).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
+            restartADBserver();
+            DeviceList = new Shell().silentShellCommand(getDevicesCmd()).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
             if (!Statics.isWindows() && DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
                 log.level4Debug("Permissions problem detected. Requesting CASUAL permissions escillation.");
                 killADBserver();
