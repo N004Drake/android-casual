@@ -44,14 +44,6 @@ public class Zip {
     private final String slash = System.getProperty("file.separator");
     
     /**
-     * instantiates the zip class
-     */
-    public Zip()
-    {
-
-    }
-    
-    /**
      *instantiates the zip class
      * @param zip file to be worked with
      */
@@ -213,7 +205,7 @@ public class Zip {
      * @param toBeZipped file to be added
      * @throws Exception 
      */
-    public void addFilesToNewZip(String newZip, String toBeZipped) throws Exception {
+    public static void addFilesToNewZip(String newZip, String toBeZipped) throws Exception {
         File directory = new File(toBeZipped);
         URI base = directory.toURI();
         Deque<File> queue = new LinkedList<>();
@@ -398,7 +390,6 @@ public class Zip {
     
     //TODO: Make the files work if directories are empty.
     public void execute() throws FileNotFoundException, IOException {
-        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outputZip));
         zipDir(Statics.TempFolder, outputZip, "");
     }
 
@@ -412,11 +403,9 @@ public class Zip {
      * @throws IOException
      */
     public static void zipDir(String directory, String zipName, String path) throws IOException {
-        // create a ZipOutputStream to zip the data to
-        ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipName));
-        zipDir(directory, zos, path);
-        // close the stream
-        zos.close();
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipName))) {
+            zipDir(directory, zos, path);
+        }
     }
 
     /**
