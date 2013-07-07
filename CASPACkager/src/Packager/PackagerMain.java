@@ -311,7 +311,7 @@ public class PackagerMain {
             }
             letCASUALLog(true);
             log.level4Debug("[doCASPACCASUALMerge()]File bases merged");
-            new Zip().addFilesToNewZip(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", Statics.TempFolder + "CASUAL" + Statics.Slash);
+            Zip.addFilesToNewZip(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", Statics.TempFolder + "CASUAL" + Statics.Slash);
             fileOperations.makeFolder(defaultOutputDir);
             String output = caspacNoPath + "-CASUAL-R" + CASUAL.CASPACData.getSVNRevision() + "b" + appendToName + ".jar";
 
