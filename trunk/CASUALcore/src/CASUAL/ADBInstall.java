@@ -29,24 +29,28 @@ class ADBInstall {
     FileOperations FileOperations = new FileOperations();
     Log Log = new Log();
 
-    public void deployADB() {
+    public void deployADB() { //This is called by getADBCommand() so it must not use that command
+        FileOperations fo=new FileOperations();
+        if ( Statics.adbDeployed!=null && fo.verifyExists(Statics.adbDeployed) ){
+            return;
+        }
 
         int adbTimeout=0;
         if (Statics.isLinux()) {
             Log.level4Debug("Found Linux Computer");
             Statics.adbDeployed = Statics.TempFolder + "adb";
-            FileOperations.copyFromResourceToFile(Statics.LinuxADB(), Statics.adbDeployed);
+            fo.copyFromResourceToFile(Statics.LinuxADB(), Statics.adbDeployed);
         } else if (Statics.isMac()) {
             Log.level4Debug("Found Mac Computer");
             Statics.adbDeployed = Statics.TempFolder + "adb";
-            FileOperations.copyFromResourceToFile(Statics.MacADB, Statics.adbDeployed);
+            fo.copyFromResourceToFile(Statics.MacADB, Statics.adbDeployed);
         } else if (Statics.isWindows()) {
             Log.level4Debug("@Found Windows Computer");
-            FileOperations.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
+            fo.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.adbDeployed = Statics.TempFolder + "adb.exe";
-            FileOperations.copyFromResourceToFile(Statics.WinADB, Statics.adbDeployed);
-            FileOperations.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
-            FileOperations.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
+            fo.copyFromResourceToFile(Statics.WinADB, Statics.adbDeployed);
+            fo.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
+            fo.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
             adbTimeout=3000;
         } else {
             new CASUALInteraction("@interactionsystemNotNativelySupported").showInformationMessage();
@@ -54,9 +58,9 @@ class ADBInstall {
         }
 
         updateADBini();
-        FileOperations.setExecutableBit(Statics.adbDeployed); //for *nix.
+        fo.setExecutableBit(Statics.adbDeployed); //for *nix.
         String DeviceList;
-        DeviceList = new Shell().timeoutShellCommand(ADBTools.devicesCmd(), adbTimeout);
+        DeviceList = ADBTools.getDevices();
         new ADBTools().checkADBerrorMessages(DeviceList);
     }
 

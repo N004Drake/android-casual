@@ -574,7 +574,7 @@ public class CASUALLanguage {
             return retVal;
         }
         //final line output for debugging purposes
-        log.level4Debug("COMMAND processed - " + Statics.adbDeployed + " " + line);
+        log.level4Debug("COMMAND processed - " + ADBTools.getADBCommand() + " " + line);
         return "";
     }
 //END OF SCRIPT PARSER
@@ -639,7 +639,7 @@ public class CASUALLanguage {
 
         Shell Shell = new Shell();
         ArrayList<String> ShellCommand = new ArrayList<>();
-        ShellCommand.add(Statics.adbDeployed);
+        ShellCommand.add(ADBTools.getADBCommand());
         ShellCommand.addAll(new ShellTools().parseCommandLine(Line));
         String StringCommand[] = StringOperations.convertArrayListToStringArray(ShellCommand);
         if (ReplaceThis != null) {
