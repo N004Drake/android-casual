@@ -1,4 +1,4 @@
-/*
+/*TODO check if this file is needed.
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -35,7 +35,7 @@ public class mainWindowController {
     
     public void init()
     {
-        mw = new CASCADEGUI(this);
+        //mw = new CASCADEGUI(this);
         mw.setVisible(true);
     }
  
