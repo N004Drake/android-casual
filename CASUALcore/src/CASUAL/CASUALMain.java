@@ -79,7 +79,7 @@ public final class CASUALMain {
                 i++;
                 Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                 CASUALScriptParser csp = new CASUALScriptParser();
-                String executeOneShotCommand = csp.executeOneShotCommand(args[i]);
+                csp.executeOneShotCommand(args[i]);
                 Statics.setStatus("Complete");
                 new Log().level2Information("@scriptComplete");
             } else {

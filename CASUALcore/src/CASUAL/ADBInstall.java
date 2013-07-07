@@ -16,9 +16,6 @@
  */
 package CASUAL;
 
-import java.util.concurrent.TimeoutException;
-
-
 
 /**
  *
@@ -35,7 +32,6 @@ class ADBInstall {
             return;
         }
 
-        int adbTimeout=0;
         if (Statics.isLinux()) {
             Log.level4Debug("Found Linux Computer");
             Statics.adbDeployed = Statics.TempFolder + "adb";
@@ -51,7 +47,6 @@ class ADBInstall {
             fo.copyFromResourceToFile(Statics.WinADB, Statics.adbDeployed);
             fo.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
             fo.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
-            adbTimeout=3000;
         } else {
             new CASUALInteraction("@interactionsystemNotNativelySupported").showInformationMessage();
             Statics.adbDeployed = "adb";

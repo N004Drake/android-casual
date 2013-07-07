@@ -53,7 +53,7 @@ public class ShellTest {
             }
         }
         
-        return (goodChecks && badChecks);  //return true if both check out
+        return goodChecks && badChecks;  //return true if both check out
         
     }
     

@@ -77,7 +77,7 @@ public class CASUALScriptParser {
         log.level4Debug("Selected file" + script);
 
         ScriptName = script;
-        ScriptTempFolder = Statics.TempFolder + (new File(script).getName()) + Statics.Slash;
+        ScriptTempFolder = Statics.TempFolder + new File(script).getName() + Statics.Slash;
         LinesInScript = new CountLines().countFileLines(script + ".scr");
         log.level4Debug("Lines in Script " + LinesInScript);
 

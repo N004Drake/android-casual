@@ -161,13 +161,13 @@ public class Statics {
         if (os.contains("XP")) {
             displayWindowsXPDiscontinued();
         }
-        return (os.indexOf("win") >= 0);
+        return os.indexOf("win") >= 0;
     }
     //Check for Mac
 
     public static boolean isMac() {
         String os = System.getProperty("os.name").toLowerCase();
-        return (os.indexOf("mac") >= 0);
+        return os.indexOf("mac") >= 0;
     }
     //Check for Linux
 
@@ -254,7 +254,7 @@ public class Statics {
     }
 
     private static boolean isWindows64Arch() {
-        return (System.getenv("ProgramFiles(x86)") != null);
+        return System.getenv("ProgramFiles(x86)") != null;
     }
 
     private static boolean isMacLinux64Arch() {

@@ -136,12 +136,12 @@ public class ADBTools {
      */
     public void checkADBerrorMessages(String DeviceList) throws HeadlessException {
         
-        if ((Statics.isLinux()) && (DeviceList.contains("something about UDEV rules"))) { //Don't know how to handle this yet
+        if (Statics.isLinux() && DeviceList.contains("something about UDEV rules")) { //Don't know how to handle this yet
             //handle add udevrule
         }
 
         //handle libusb -3
-        if ((Statics.isLinux()) && (DeviceList.contains("ERROR-3"))) { //Don't know how to handle this yet
+        if (Statics.isLinux() && DeviceList.contains("ERROR-3")) { //Don't know how to handle this yet
             Shell shell = new Shell();
             log.level0Error("@permissionsElevationRequired");
             shell.silentShellCommand(getKillServerCmd());
@@ -163,13 +163,6 @@ public class ADBTools {
                 killADBserver();
                 elevateADBserver();
             }
-        }
-    }
-    private void sleepForMillis(int millis){
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException ex) {
-            //no need to handle this
         }
     }
 }

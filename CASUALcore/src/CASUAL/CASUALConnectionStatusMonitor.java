@@ -50,7 +50,7 @@ public class CASUALConnectionStatusMonitor {
                     return;
                 }
                 //setup initial state
-                if ((Statics.GUIIsAvailable) && (Statics.lockGUIformPrep || Statics.lockGUIunzip)) {
+                if (Statics.GUIIsAvailable && (Statics.lockGUIformPrep || Statics.lockGUIunzip) ) {
                     Statics.GUI.enableControls(false);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                     LastState = 0;
@@ -62,7 +62,7 @@ public class CASUALConnectionStatusMonitor {
 
 
                     //Multiple devices detected
-                    if (CASUALConnectionStatusMonitor.DeviceTracker.length > 1 && (!DeviceList.contains("offline"))) {
+                    if (CASUALConnectionStatusMonitor.DeviceTracker.length > 1 && !DeviceList.contains("offline")) {
                         stateSwitcher(CASUALConnectionStatusMonitor.DeviceTracker.length);
                         //No devices detected
                     } else if (CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
@@ -87,16 +87,14 @@ public class CASUALConnectionStatusMonitor {
                                 Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                             }
                         } else {
-                            if (Statics.useGUI){
-                                if (!Statics.GUI.getControlStatus()){
+                            if (Statics.useGUI && !Statics.GUI.getControlStatus()){
                                     Statics.GUI.enableControls(true);
-                                }
                             }
                             stateSwitcher(1);                            
                         }
                         //insufficient permissions
 
-                        if (DeviceList.contains("????????????") && (!Statics.isWindows())) {
+                        if (DeviceList.contains("????????????") && !Statics.isWindows()) {
                             Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
                             Log.level4Debug("@sleepingfor4Seconds");
                             sleepForFourSeconds();
@@ -211,7 +209,6 @@ public class CASUALConnectionStatusMonitor {
     }
 
     private String getConnectedDevices() {
-        ;
         String devices = ADBTools.getDevices().replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
         return devices;
 

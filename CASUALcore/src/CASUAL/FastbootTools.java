@@ -78,7 +78,7 @@ public class FastbootTools {
         ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(line));
-        String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
+        String StringCommand[] = StringOperations.convertArrayListToStringArray(ShellCommand);
         new Log().level3Verbose("Performing standard fastboot command" + line);
         return Shell.liveShellCommand(StringCommand, true);
     }
@@ -94,7 +94,7 @@ public class FastbootTools {
         ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(line));
-        String StringCommand[] = (StringOperations.convertArrayListToStringArray(ShellCommand));
+        String StringCommand[] = StringOperations.convertArrayListToStringArray(ShellCommand);
         new Log().level3Verbose("Performing elevated Fastboot command" + line);
         String returnval = Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
         return returnval;

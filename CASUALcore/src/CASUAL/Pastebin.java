@@ -107,8 +107,10 @@ public class Pastebin {
         Matcher matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));
         int SVNrev = Integer.parseInt(matcher.find() ? matcher.group(0) : "5");
         int CASRev = Integer.parseInt(CASPACData.getSVNRevision());
-        if (((SVNrev - 5) >= CASRev) && (casualLog.contains("failed") || (casualLog.contains("FAILED")|| casualLog.contains("ERROR")))) { //build.prop contains the word error on some devices so error is not a good word to track. 
-            casualLog = casualLog.replace(System.getProperty("user.home"),(Statics.isWindows() ? "\\" : "//") + "USERHOME" + (System.getProperty("user.home").endsWith(Statics.Slash) ? (Statics.isWindows() ? "\\" : "//") : ""));
+        if ((SVNrev - 5) >= CASRev && casualLog.contains("failed") || casualLog.contains("FAILED")|| casualLog.contains("ERROR")) { //build.prop contains the word error on some devices so error is not a good word to track. 
+            String slashrep=Statics.isWindows() ? "\\" : "//";
+            String userhome=System.getProperty("user.home");
+            casualLog = casualLog.replace(userhome,slashrep + "USERHOME" + (userhome.endsWith(Statics.Slash) ? slashrep : ""));
              String username=System.getProperty("user.name");
             if (username==null||username.equals("")){
                 username=System.getenv("USERNAME");
