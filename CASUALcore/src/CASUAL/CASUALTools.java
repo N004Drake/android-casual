@@ -105,50 +105,52 @@ public class CASUALTools {
             //Set up scripts path
             String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "SCRIPTS" + Statics.Slash;
             final File folder = new File(scriptsPath);
-            for (final File fileEntry : folder.listFiles()) {
-                if (fileEntry.toString().endsWith(".meta")) {
-                    InputStream in = null;
-                    try {
-                        //load each meta file into a properties file
-                        new Log().level3Verbose("Verifying meta: " + fileEntry.toString());
-                        LinkedProperties prop = new LinkedProperties();
-                        in = new FileInputStream(fileEntry);
-                        prop.load(in);
-                        in.close();
-                        //Identify and store the new MD5s
-                        String md5;
-                        int pos = 0;
-                        boolean md5Changed = false;
-                        while ((md5 = prop.getProperty("Script.MD5[" + pos + "]")) != null) {
-                            String entry = "Script.MD5[" + pos + "]";
-                            String[] md5File = md5.split("  ");
-                            String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
-                            if (!md5.contains(newMD5)) {
-                                md5Changed = true;
-                                log.level4Debug("Old MD5: " + md5);
-                                log.level4Debug("New MD5: " + prop.getProperty(entry));
-                            }
-                            prop.setProperty(entry, newMD5 + "  " + md5File[1]);
-                            pos++;
-                        }
-                        if (md5Changed) {
-                            new Log().level4Debug("MD5s for " + fileEntry + " changed. Updating...");
-                            try (FileOutputStream fos = new FileOutputStream(fileEntry)) {
-                                prop.store(fos, null);
-                                fos.close();
-                            }
-                        }
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
-                    } finally {
+            if (folder.isDirectory()){
+                for (final File fileEntry : folder.listFiles()) {
+                    if (fileEntry.toString().endsWith(".meta")) {
+                        InputStream in = null;
                         try {
-                            if (in != null) {
-                                in.close();
+                            //load each meta file into a properties file
+                            new Log().level3Verbose("Verifying meta: " + fileEntry.toString());
+                            LinkedProperties prop = new LinkedProperties();
+                            in = new FileInputStream(fileEntry);
+                            prop.load(in);
+                            in.close();
+                            //Identify and store the new MD5s
+                            String md5;
+                            int pos = 0;
+                            boolean md5Changed = false;
+                            while ((md5 = prop.getProperty("Script.MD5[" + pos + "]")) != null) {
+                                String entry = "Script.MD5[" + pos + "]";
+                                String[] md5File = md5.split("  ");
+                                String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
+                                if (!md5.contains(newMD5)) {
+                                    md5Changed = true;
+                                    log.level4Debug("Old MD5: " + md5);
+                                    log.level4Debug("New MD5: " + prop.getProperty(entry));
+                                }
+                                prop.setProperty(entry, newMD5 + "  " + md5File[1]);
+                                pos++;
                             }
+                            if (md5Changed) {
+                                new Log().level4Debug("MD5s for " + fileEntry + " changed. Updating...");
+                                try (FileOutputStream fos = new FileOutputStream(fileEntry)) {
+                                    prop.store(fos, null);
+                                    fos.close();
+                                }
+                            }
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (IOException ex) {
                             Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                        } finally {
+                            try {
+                                if (in != null) {
+                                    in.close();
+                                }
+                            } catch (IOException ex) {
+                                Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }
                     }
                 }

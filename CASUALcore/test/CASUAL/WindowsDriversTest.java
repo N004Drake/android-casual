@@ -4,6 +4,9 @@
  */
 package CASUAL;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -30,6 +33,7 @@ public class WindowsDriversTest {
     
     @Before
     public void setUp() {
+        Statics.useGUI=true;
     }
     
     @After
@@ -43,9 +47,9 @@ public class WindowsDriversTest {
     public void testMain() {
         System.out.println("main");
         String[] args = null;
+        setContinue();
         WindowsDrivers.main(args);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -55,9 +59,9 @@ public class WindowsDriversTest {
     public void testInstallDriverBlanket() {
         System.out.println("installDriverBlanket");
         WindowsDrivers instance = new WindowsDrivers();
+        setContinue();
         instance.installDriverBlanket();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -67,8 +71,19 @@ public class WindowsDriversTest {
     public void testRemoveDriver() {
         System.out.println("removeDriver");
         WindowsDrivers instance = new WindowsDrivers();
+        setContinue();
         instance.removeDriver();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    }
+    public void setContinue() {
+        String string = "\n";
+        InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
+        CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
+    }
+
+    public void setQuit() {
+        String string = "q";
+        InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
+        CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
     }
 }
