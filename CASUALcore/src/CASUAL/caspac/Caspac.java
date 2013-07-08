@@ -5,13 +5,28 @@
 
 package CASUAL.caspac;
 
+import CASUAL.CASPACData;
+import CASUAL.CASUALapplicationData;
 import CASUAL.FileOperations;
+import CASUAL.Log;
+import CASUAL.MD5sumRunnable;
 import CASUAL.Statics;
+import CASUAL.StringOperations;
+import CASUAL.Unzip;
 import CASUAL.Zip;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 
 
 /**
@@ -21,23 +36,15 @@ import java.util.Map;
 public class Caspac {
     public File logo;
     private static String slash = System.getProperty("file.separator");
-    public File caspac;
+    public final File CASPAC;
     public String overview;
     public Build build;
     public ArrayList<Script> scripts = new ArrayList<>();
     public String TempFolder;
 
-    public Caspac() {
-        TempFolder = Statics.TempFolder + "CASPAC";
-        
-        if (!(new File(TempFolder).exists()))
-            new File(TempFolder).mkdir();
-    }
-    
-    
 
     public Caspac(File caspac) {
-        this.caspac = caspac;
+        this.CASPAC = caspac;
         System.out.println(Statics.TempFolder);
         TempFolder = Statics.TempFolder + "CASPAC" + caspac.getName();
         
@@ -46,11 +53,8 @@ public class Caspac {
     }
     
     public Caspac(File caspac , File logo) {
-        this.caspac = caspac;
+        this.CASPAC = caspac;
         TempFolder = Statics.TempFolder + "CASPAC" + caspac.getName();
-        if (logo.exists())
-            this.logo = logo;
-        
         if (!(new File(TempFolder).exists()))
             new File(TempFolder).mkdir();
     }
@@ -73,12 +77,9 @@ public class Caspac {
     }
 
     public File getCaspac() {
-        return caspac;
+        return CASPAC;
     }
 
-    public void setCaspac(File caspac) {
-        this.caspac = caspac;
-    }
 
     public File getLogo() {
         return logo;
@@ -102,7 +103,7 @@ public class Caspac {
             new FileOperations().copyFile(new File(build.bannerPic), new File(TempFolder.toString() + slash +
                     build.bannerPic.substring(build.bannerPic.lastIndexOf(slash)+1,
                     build.bannerPic.length())));
-        Zip zip = new Zip(caspac);   
+        Zip zip = new Zip(CASPAC);   
         for(File f : new File(TempFolder.toString()).listFiles())
             zip.addToZip(f);
         zip.execute();
@@ -113,7 +114,88 @@ public class Caspac {
         build = new Build(buildMap);
     }
 
+    public void load() throws ZipException, IOException{
+         Unzip unzip = new Unzip(CASPAC);
+         while (unzip.zipFileEntries.hasMoreElements()) {
+            Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
+            handleCASPACFiles(entry, unzip);
+         }
+    }
+    private void handleCASPACFiles(Object entry, Unzip pack) throws IOException {
 
+        //get the filename from the entry
+        String filename=pack.getEntryName(entry);
+        
+        ///Start parsing the files
+        if (filename.equals("-build.properties")) {
+            //load build.prop from memory
+            Properties prop = new Properties();
+            prop.load(pack.streamFileFromZip(entry));
+            try {
+                build.usePictureForBanner = prop.getProperty("Window.UsePictureForBanner").contains("rue");
+                build.AudioEnabled = prop.getProperty("Audio.Enabled").contains("rue");
+                build.developerDonateButtonText = prop.getProperty("Developer.DonateToButtonText");
+                build.developerName = prop.getProperty("Developer.Name");
+                build.executeButtonText = prop.getProperty("Window.ExecuteButtonText");
+                //load the CASUALApp resource bundle to get the proper window title. 
+                ResourceBundle casualAppData=ResourceBundle.getBundle("CASUAL/resources/CASUALApp");
+                build.windowTitle = prop.getProperty("Window.Title") + " - " + casualAppData.getString("Application.title") + casualAppData.getString("Application.revision");
+                build.bannerText = prop.getProperty("Window.BannerText");
+                build.bannerPic = prop.getProperty("Window.BannerPic");
+                build.alwaysEnableControls = prop.getProperty("Application.AlwaysEnableControls").contains("rue");
+            } catch (java.util.MissingResourceException ex) {
+                //Do nothing, bundle is missing.
+            }
+        } else if (filename.toString().equals("-Overview.txt")) {
+            overview=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
+        } else if (filename.toString().endsWith(".meta")) {
+            Script script=getScriptInstanceByFilename();
+            Properties prop = new Properties();
+            prop.load(pack.streamFileFromZip(entry)); //TODO: add this to the proper script
+             
+            String minSVNRevision = prop.getProperty("CASUAL.minSVN");
+            String scriptRevision = prop.getProperty("Script.Revision");
+            String uniqueIdentifier = prop.getProperty("Script.ID");
+            String supportURL = prop.getProperty("Script.SupportURL");
+            String updateMessage = prop.getProperty("Script.UpdateMessage");
+            int md5ArrayPosition = 0;
+            System.out.print("Script.MD5[" + md5ArrayPosition + "]");
+            String md5;
+            List<String> md5s=new ArrayList<>();
+            while ((md5 = prop.getProperty("Script.MD5[" + md5ArrayPosition + "]")) != null) {
+                md5s.add(md5);
+                md5ArrayPosition++;
+            }
+             //TODO: add this to the proper script  script.getName().set...
+        } else if (filename.toString().endsWith(".scr")) {
+            String script=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
+            //TODO: add this to the proper script  script.getName().set...
+        } else if (filename.toString().endsWith(".zip")) {
+            pack.deployFileFromZip(entry, TempFolder);
+            //TODO: add this to the proper script  script.getName().set...
+        } else if (filename.toString().endsWith(".txt")) {
+            String script=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
+            //TODO: add this to the proper script  script.getName().set...
+        }
+    }
+    
+    /**
+     * loads properties from a string
+     *
+     * @param propertiesString string containing properties
+     * @return Properties object
+     */
+    private Properties load(String propertiesString) throws IOException {
+        Properties properties = new Properties();
+        properties.load(new StringReader(propertiesString));
+        return properties;
+    }    
+
+    private Script getScriptInstanceByFilename() {
+        return new Script(); //TODO make an iterator to find a script by file name for loading; 
+    }
+    
+    
     public class Build {    
         public String developerName = "";
         public String developerDonateButtonText = "";
@@ -123,8 +205,8 @@ public class Caspac {
         public String bannerPic = "-logo.png";
         public String bannerText = "";
         public String executeButtonText = "Do It";
-        public String AudioEnabled = "false";
-        public boolean EnableControls = false;
+        public boolean AudioEnabled = false;
+        public boolean alwaysEnableControls = false;
 
         public Build(Map<String,String> buildMap)
         {
@@ -145,9 +227,9 @@ public class Caspac {
             if (buildMap.containsKey("executeButtonText"))
                 executeButtonText = buildMap.get("executeButtonText");
             if (buildMap.containsKey("AudioEnabled"))
-                AudioEnabled = buildMap.get("AudioEnabled");
+                AudioEnabled = buildMap.get("AudioEnabled").contains("rue");
             if (buildMap.containsKey("EnableControls"))
-                EnableControls = Boolean.getBoolean(buildMap.get("EnableControls"));
+                alwaysEnableControls = Boolean.getBoolean(buildMap.get("EnableControls"));
         }
 
         public String buildFile(){
@@ -171,7 +253,7 @@ public class Caspac {
             buildString = buildString + "#\"true\" or \"True\" to enable\n" + "Audio.Enabled=" +
                     AudioEnabled + "\n";
             buildString = buildString + "#Enable Connection/Disconnection control locks\n" + 
-                    "Application.AlwaysEnableControls=" + EnableControls + "\n";
+                    "Application.AlwaysEnableControls=" + alwaysEnableControls + "\n";
             return buildString;
         }
     }
