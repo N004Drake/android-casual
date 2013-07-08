@@ -197,8 +197,12 @@ public class FileOperations {
      * @return true if exists
      */
     public boolean verifyExists(String file) {
-        File f=new File(file);
-        if (!f.exists()&& !f.isDirectory() &&!f.isFile()){
+        if(file !=null && !file.isEmpty()){
+            File f=new File(file);
+            if (!f.exists()&& !f.isDirectory() &&!f.isFile()){
+                return false;
+            }
+        }  else {
             return false;
         }
         return true;
