@@ -38,6 +38,7 @@ public class Caspac {
 
     public Caspac(File caspac) {
         this.caspac = caspac;
+        System.out.println(Statics.TempFolder);
         TempFolder = Statics.TempFolder + "CASPAC" + caspac.getName();
         
         if (!(new File(TempFolder).exists()))
@@ -78,6 +79,15 @@ public class Caspac {
     public void setCaspac(File caspac) {
         this.caspac = caspac;
     }
+
+    public File getLogo() {
+        return logo;
+    }
+
+    public void setLogo(File logo) {
+        this.logo = logo;
+    }
+    
     
     
     
@@ -88,11 +98,14 @@ public class Caspac {
             new FileOperations().writeToFile(overview, TempFolder.toString() + slash + "-Overview.txt");
         if (!(new File(TempFolder.toString() + slash + "-build.properties")).exists())
             new FileOperations().writeToFile(build.buildFile(), TempFolder.toString() + slash + "-build.properties");
-        if (!(new File(TempFolder.toString() + slash + logo.getName()).exists()))
-            new FileOperations().copyFile(logo, new File(TempFolder.toString() + slash + logo.getName()));
+        if (!(new File(TempFolder.toString() + slash + build.bannerPic).exists()))
+            new FileOperations().copyFile(new File(build.bannerPic), new File(TempFolder.toString() + slash +
+                    build.bannerPic.substring(build.bannerPic.lastIndexOf(slash)+1,
+                    build.bannerPic.length())));
         Zip zip = new Zip(caspac);   
         for(File f : new File(TempFolder.toString()).listFiles())
             zip.addToZip(f);
+        zip.execute();
     }
     
     public void setBuild(Map <String,String> buildMap)
