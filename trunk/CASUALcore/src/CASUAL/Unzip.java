@@ -38,7 +38,7 @@ public class Unzip {
 
     static int BUFFER = 4096;
     ZipFile zip;
-    Enumeration zipFileEntries;
+    public Enumeration zipFileEntries;
 
     /**
      * unzip unzips files
@@ -254,4 +254,33 @@ public class Unzip {
         dest.close();
         is.close();
     }
+    /**
+     * gets a stream of a specified file from a zip
+     * @param zipFile file to stream from
+     * @param entry entry to stream
+     * @return stream of file
+     * @throws ZipException
+     * @throws IOException
+     */
+    public BufferedInputStream streamFileFromZip( Object entry) throws ZipException, IOException {
+        return new BufferedInputStream(zip.getInputStream((ZipEntry) entry));
+    }
+    
+    public String getEntryName(Object entry){
+        ZipEntry zipEntry = (ZipEntry)entry;
+        String name=zipEntry.getName();
+        return name;
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
