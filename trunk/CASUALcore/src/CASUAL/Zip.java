@@ -42,6 +42,7 @@ import java.util.zip.ZipOutputStream;
 public class Zip {
     private String outputZip=null;
     private final String slash = System.getProperty("file.separator");
+    private Log log = new Log();
     
     /**
      *instantiates the zip class
@@ -64,9 +65,13 @@ public class Zip {
         //file being created and the location of where the zip file is going to
         //be stored
         outputZip = outputFile;
-        
-        
-        
+        if (outputZip.endsWith(".zip"))
+        {
+            log.Level1Interaction("Adding Zip to file name");
+            outputZip = outputZip + ".zip";
+        }
+        log.level4Debug("A new zip file has been initiated at:\n\t"+
+                outputZip);
         //Create the temp dir
     }
     

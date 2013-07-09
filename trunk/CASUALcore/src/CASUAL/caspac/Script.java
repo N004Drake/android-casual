@@ -78,9 +78,9 @@ public class Script {
             new FileOperations().writeToFile(script, file.toString() + slash + name + ".scr");
         if (!(new File(file.toString() + slash + name + ".txt")).exists())
             new FileOperations().writeToFile(discription, file.toString() + slash + name + ".txt");
-        if (!(new File(Statics.TempFolder + slash + name + ".zip").exists()))
+        if (!(new File(file.toString() + slash + name + ".zip").exists()))
         {
-            Zip includeZip = new Zip(new File(Statics.TempFolder + slash + name + ".zip")) ;
+            Zip includeZip = new Zip(new File(file.toString() + slash + name + ".zip")) ;
             for (File f : includeFiles)
                 includeZip.addToZip(f);
             includeZip.execute();
