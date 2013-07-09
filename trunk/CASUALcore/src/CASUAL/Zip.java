@@ -43,6 +43,7 @@ public class Zip {
     private String outputZip=null;
     private final String slash = System.getProperty("file.separator");
     private Log log = new Log();
+    private String TempFolder = Statics.TempFolder;
     
     /**
      *instantiates the zip class
@@ -65,7 +66,7 @@ public class Zip {
         //file being created and the location of where the zip file is going to
         //be stored
         outputZip = outputFile;
-        if (outputZip.endsWith(".zip"))
+        if (!outputZip.endsWith(".zip"))
         {
             log.Level1Interaction("Adding Zip to file name");
             outputZip = outputZip + ".zip";
@@ -277,7 +278,7 @@ public class Zip {
         
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
-        File fileToAdd = new File(Statics.TempFolder + slash + file.getName());
+        File fileToAdd = new File(TempFolder + slash + file.getName());
         if (!fileToAdd.exists())
             fileToAdd.createNewFile();
 
@@ -358,6 +359,12 @@ public class Zip {
             System.out.println("File: " + file.toString() + " not found.");
             return;
         }
+        if (!TempFolder.contains("zipMaker"))
+        {
+        TempFolder = TempFolder + outputZip.substring(outputZip.lastIndexOf(slash) + 1, outputZip.lastIndexOf("."))
+                + "zipMaker";
+        new File(TempFolder).mkdirs();
+        }
         if (file.isFile())
             addFileToZip(file);
         
@@ -370,7 +377,7 @@ public class Zip {
     private void addDirectoryToZip(File folder, File parent) throws IOException {
         File dirToAdd = null;
         if (parent == null)
-            dirToAdd = new File(Statics.TempFolder+ slash + folder.getName() );
+            dirToAdd = new File(TempFolder+ slash + folder.getName() );
         else
             dirToAdd = new File(parent.toString()+ slash + folder.getName());
         if (!dirToAdd.exists())
@@ -393,14 +400,15 @@ public class Zip {
      * @throws IOException
      */
     
-    //TODO: Make the files work if directories are empty.
-    public void execute() throws FileNotFoundException, IOException {
-        zipDir(Statics.TempFolder, outputZip, "");
-    }
-    
     public void execute(String file) throws FileNotFoundException, IOException {
         zipDir(file.toString(), outputZip, "");
     }
+    //TODO: Make the files work if directories are empty.
+    public void execute() throws FileNotFoundException, IOException {
+        zipDir(TempFolder, outputZip, "");
+    }
+    
+ 
 
 
     /**
