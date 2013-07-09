@@ -523,12 +523,15 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void StatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseClicked
         if (buttonEnableStage) {
+            log.level4Debug("Control system override active.  User has manually enabled controls");
             startButton.setEnabled(buttonEnableStage);
             this.comboBoxScriptSelector.setEnabled(buttonEnableStage);
             this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
+            buttonEnableStage=false;
 
         }
         if (!startButton.isEnabled() && !Statics.lockGUIformPrep) {
+            log.level4Debug("Control system override clicked");
             startButton.setText("Click again to enable all controls");
             buttonEnableStage = true;
 
