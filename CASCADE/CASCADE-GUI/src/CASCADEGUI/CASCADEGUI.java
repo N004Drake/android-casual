@@ -99,7 +99,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                             files = (List<File>) transferable.getTransferData(flavor);
                             for (File f : files) {
                                 String file=f.getCanonicalPath();
-                                //resourcesForScriptList.add(file);
+                                scriptList.getElementAt(currentScriptIndex).includeFiles.add(f);
                                 listModel.addElement(file);
                             }
 
@@ -1105,7 +1105,10 @@ public class CASCADEGUI extends javax.swing.JFrame {
       java.awt.Point point = evt.getPoint();
       int index = jList1.locationToIndex(point);
       if (jList1.isSelectedIndex(index))
+      {
          listModel.remove(index);
+         scriptList.getElementAt(currentScriptIndex).includeFiles.remove(index);
+      }
         
     }//GEN-LAST:event_jList1MouseClicked
 

@@ -78,11 +78,16 @@ public class Script {
             new FileOperations().writeToFile(script, file.toString() + slash + name + ".scr");
         if (!(new File(file.toString() + slash + name + ".txt")).exists())
             new FileOperations().writeToFile(discription, file.toString() + slash + name + ".txt");
+        System.out.println(file.toString() + slash + name + ".zip");
         if (!(new File(file.toString() + slash + name + ".zip").exists()))
         {
-            Zip includeZip = new Zip(new File(file.toString() + slash + name + ".zip")) ;
+            Zip includeZip = new Zip(file.toString() + slash + name + ".zip") ;
             for (File f : includeFiles)
+            {
+                System.out.println(f.toString());
                 includeZip.addToZip(f);
+            }
+            String zipFileloc = file.toString();
             includeZip.execute();
         }
         if (!(new File(file.toString() + slash + name + ".meta").exists()))
