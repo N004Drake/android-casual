@@ -79,15 +79,15 @@ public class Script {
         if (!(new File(file.toString() + slash + name + ".txt")).exists())
             new FileOperations().writeToFile(discription, file.toString() + slash + name + ".txt");
         System.out.println(file.toString() + slash + name + ".zip");
-        if (!(new File(file.toString() + slash + name + ".zip").exists()))
+        if (!includeFiles.isEmpty())
         {
             Zip includeZip = new Zip(file.toString() + slash + name + ".zip") ;
+            includeZip.addToTempFolderLoc(name + ".script");
             for (File f : includeFiles)
             {
                 System.out.println(f.toString());
                 includeZip.addToZip(f);
             }
-            String zipFileloc = file.toString();
             includeZip.execute();
         }
         if (!(new File(file.toString() + slash + name + ".meta").exists()))

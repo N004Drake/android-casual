@@ -44,6 +44,8 @@ public class Zip {
     private final String slash = System.getProperty("file.separator");
     private Log log = new Log();
     private String TempFolder = Statics.TempFolder;
+
+
     
     /**
      *instantiates the zip class
@@ -76,6 +78,16 @@ public class Zip {
         //Create the temp dir
     }
     
+    
+    public String getTempFolder() {
+        return TempFolder;
+    }
+
+    public void addToTempFolderLoc(String TempFolder) {
+        this.TempFolder = this.TempFolder + slash + TempFolder;
+        if (!(new File(this.TempFolder).exists()))
+            new File(this.TempFolder).mkdirs();
+    }
     
     /**
      *adds files to zip
@@ -358,12 +370,6 @@ public class Zip {
             //TODO: Impliment Logger from casual
             System.out.println("File: " + file.toString() + " not found.");
             return;
-        }
-        if (!TempFolder.contains("zipMaker"))
-        {
-        TempFolder = TempFolder + outputZip.substring(outputZip.lastIndexOf(slash) + 1, outputZip.lastIndexOf("."))
-                + "zipMaker";
-        new File(TempFolder).mkdirs();
         }
         if (file.isFile())
             addFileToZip(file);
