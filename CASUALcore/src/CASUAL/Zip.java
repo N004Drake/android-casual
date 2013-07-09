@@ -392,6 +392,10 @@ public class Zip {
     public void execute() throws FileNotFoundException, IOException {
         zipDir(Statics.TempFolder, outputZip, "");
     }
+    
+    public void execute(String file) throws FileNotFoundException, IOException {
+        zipDir(file.toString(), outputZip, "");
+    }
 
 
     /**

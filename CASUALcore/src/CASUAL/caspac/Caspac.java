@@ -41,11 +41,14 @@ public class Caspac {
     public Build build;
     public ArrayList<Script> scripts = new ArrayList<>();
     public String TempFolder;
+    public Log log = new Log();
 
 
     public Caspac(File caspac) {
         this.CASPAC = caspac;
         System.out.println(Statics.TempFolder);
+        log.level4Debug("Creating folder for CASPAC at\n\t"
+                + Statics.TempFolder + "CASPAC" + caspac.getName());
         TempFolder = Statics.TempFolder + "CASPAC" + caspac.getName();
         
         if (!(new File(TempFolder).exists()))
@@ -61,11 +64,17 @@ public class Caspac {
     
     public void addScript(Script script) {
         if (!(scripts.contains(script)))
+        {
             scripts.add(script);
+            log.level4Debug("Adding Script: "+ script.getName());
+        }
 }
     public void removeScript (Script script) {
         if (scripts.contains(script))
+        {
             scripts.remove(script);
+            log.level4Debug("Removing Script: "+ script.getName());
+        }
     }
 
     public String getOverview() {
@@ -94,19 +103,41 @@ public class Caspac {
     
     public void write() throws IOException {
         for (Script s : scripts)
+        {
+            log.level4Debug("Writing Script: "+ s.getName());
             s.writeScript(new File(TempFolder));
+        }
         if (!(new File(TempFolder.toString() + slash + "-Overview.txt")).exists())
+        {
+            log.level4Debug("Writing Overview to: \n\t"+ 
+                    TempFolder.toString() + slash + "-Overview.txt");
             new FileOperations().writeToFile(overview, TempFolder.toString() + slash + "-Overview.txt");
+        }
         if (!(new File(TempFolder.toString() + slash + "-build.properties")).exists())
+        {
+            log.level4Debug("Writing build.properties to: \n\t"+ 
+                    TempFolder.toString() + slash + "-build.properties");
             new FileOperations().writeToFile(build.buildFile(), TempFolder.toString() + slash + "-build.properties");
+        }
         if (!(new File(TempFolder.toString() + slash + build.bannerPic).exists()))
+        {
+            log.level4Debug("Writing Overview to: \n\t"+ 
+                    TempFolder.toString() + slash +
+                    build.bannerPic.substring(build.bannerPic.lastIndexOf(slash)+1,
+                    build.bannerPic.length()));
             new FileOperations().copyFile(new File(build.bannerPic), new File(TempFolder.toString() + slash +
                     build.bannerPic.substring(build.bannerPic.lastIndexOf(slash)+1,
                     build.bannerPic.length())));
-        Zip zip = new Zip(CASPAC);   
+        }
+        log.level4Debug("Creating new Zip at: \n\t"+CASPAC.toString());
+        Zip zip = new Zip(CASPAC);  
+        log.level4Debug("Placeing the following files in the caspac Zip");
         for(File f : new File(TempFolder.toString()).listFiles())
+        {
             zip.addToZip(f);
-        zip.execute();
+            log.level4Debug(f.toString());
+        }
+        zip.execute(TempFolder);
     }
     
     public void setBuild(Map <String,String> buildMap)
