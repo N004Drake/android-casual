@@ -70,8 +70,8 @@ public class Script {
     
     public void writeScript(File file) throws IOException
     {
-        if (!(verifyScript()))
-            return;
+        //if (!(verifyScript()))
+          //  return;
         if (!(file.isDirectory()))
             file.mkdir();
         if (!(new File(file.toString() + slash + name + ".scr")).exists())
