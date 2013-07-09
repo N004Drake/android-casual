@@ -5,6 +5,8 @@
  */
 package CASCADEGUI;
 
+import CASUAL.Log;
+import CASUAL.Statics;
 import CASUAL.StringOperations;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
@@ -39,6 +41,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
      * Creates new form mainWindow
      */
     
+    private Log log = new Log();
+    
     //Stores the list of current include files. NOTE: only for current script
     private DefaultListModel<File> fileList = new DefaultListModel<>();
     
@@ -53,6 +57,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
     
     private boolean dropEventEnable =false;
     
+    private String slash = System.getProperty("file.separator");
     
     /**
      *initializes window
@@ -746,6 +751,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         bannerPicPanel.setName("bannerPicPanel"); // NOI18N
 
         bannerPic.setBorder(null);
+        bannerPic.setEnabled(false);
         bannerPic.setName("bannerPic"); // NOI18N
 
         browseLogo.setText(bundle.getString("CASCADEGUI.browseLogo.text")); // NOI18N
@@ -914,46 +920,49 @@ public class CASCADEGUI extends javax.swing.JFrame {
         File file = new File(this.outputFile.getText());
         List<Script> script = new ArrayList<>();
         
+        
+        if (!file.toString().endsWith(".zip"))
+        {
+            JOptionPane.showMessageDialog(this, "The file: \n"
+                    + this.outputFile.getText() + "\n is not a vlid zip file.\n"
+                    + "Please make sure that the file ends in a .zip", "File output error", 
+                    JOptionPane.ERROR_MESSAGE);
+            log.level0Error("Output zip file not valid: \n \t" + this.outputFile.getText());
+            return;
+        }
+        
         //File overwrite check
         if (file.exists())
         {
+            log.level2Information("File exist prompting for overwrite");
             int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.outputFile.getText()+
                     " already exists are you sure you wish to continue.\n Any "
                     + "previous files will be overridden.", "Overwrite existing file?",
                     JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (i == JOptionPane.YES_OPTION) {
-                /*
-                 * TODO Take scripts and change it from memory to caspac
-                 */
-                
-                Caspac cp = new Caspac(new File(this.outputFile.getText()));
-                cp.setBuild(buildMaker());
-                
-                for (int j = 0; j < scriptList.getSize();j++)
-                    cp.addScript(scriptList.elementAt(j));
-                cp.setOverview(this.overviewWorkArea.getText());
-                try {
-                    cp.write();
-                } catch (IOException ex) {
-                    Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
+            if (i == JOptionPane.NO_OPTION) {
+                log.level0Error("File override declined");
+                return;
+            }  
         }
-        else
-        {
-            Caspac cp = new Caspac(new File(this.outputFile.getText()));
-            cp.setBuild(buildMaker());
+        
+        log.level2Information("Creating CASPAC file");
+        Caspac cp = new Caspac(new File(this.outputFile.getText()));
+        log.level2Information("Setting CASPAC build");
+        cp.setBuild(buildMaker());
 
-            for (int j = 0; j < scriptList.getSize();j++)
-                cp.addScript(scriptList.elementAt(j));
-            cp.setOverview(this.overviewWorkArea.getText());
-            try {
-                cp.write();
-            } catch (IOException ex) {
-                Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        log.level2Information("Adding scripts from memory to CASPAC");
+        for (int j = 0; j < scriptList.getSize();j++)
+            cp.addScript(scriptList.elementAt(j));
+        log.level2Information("Setting Overview");
+        cp.setOverview(this.overviewWorkArea.getText());
+        log.level2Information("Attempting CASCPAC write");
+        try {
+            cp.write();
+        } catch (IOException ex) {
+            log.errorHandler(ex);
         }
+        log.level2Information("CASPAC write successfull!!!");
+        
     }//GEN-LAST:event_makeCASPACActionPerformed
 
     /*
