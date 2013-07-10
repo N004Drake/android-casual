@@ -160,16 +160,13 @@ public class Caspac {
         } else if (filename.toString().equals("-Overview.txt")) {
             overview=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
         } else if (filename.toString().endsWith(".meta")) {
-            if (!getScriptNames().contains(filename.toString().substring(0, filename.toString().lastIndexOf("."))))
-            {
-                Script script = new Script(filename.toString().substring(0, filename.toString().lastIndexOf(".")));
+
+            Script script=getScriptInstanceByFilename(filename.toString());
+            int i;
+            if (!scripts.contains(script))
                 scripts.add(script);
-                script.setName("testing123");
-            }
-            else
-            {
-                Script script=getScriptInstanceByFilename(filename.toString());
-            }
+            i = scripts.indexOf(script);
+
             Properties prop = new Properties();
             prop.load(pack.streamFileFromZip(entry)); //TODO: add this to the proper script
              
@@ -178,6 +175,7 @@ public class Caspac {
             String uniqueIdentifier = prop.getProperty("Script.ID");
             String supportURL = prop.getProperty("Script.SupportURL");
             String updateMessage = prop.getProperty("Script.UpdateMessage");
+            String killSwitchMessage = prop.getProperty("Script.KillSwitchMessage");
             int md5ArrayPosition = 0;
             System.out.print("Script.MD5[" + md5ArrayPosition + "]");
             String md5;
@@ -186,16 +184,45 @@ public class Caspac {
                 md5s.add(md5);
                 md5ArrayPosition++;
             }
+            script.metaData.setKillSwitchMessage(killSwitchMessage);
+            script.metaData.setMinSVNversion(minSVNRevision);
+            script.metaData.setScriptRevsion(scriptRevision);
+            script.metaData.setSupportURL(supportURL);
+            script.metaData.setUniqueID(uniqueIdentifier);
+            script.metaData.setUpdateMessage(updateMessage);
+            scripts.set(i, script);
              //TODO: add this to the proper script  script.getName().set...
         } else if (filename.toString().endsWith(".scr")) {
-            String script=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
-            //TODO: add this to the proper script  script.getName().set...
+            Script script=getScriptInstanceByFilename(filename.toString());
+            int i;
+            if (!scripts.contains(script))
+                scripts.add(script);
+            i = scripts.indexOf(script);
+            
+            String scriptText=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
+            script.setScript(scriptText);
+            scripts.set(i, script);
         } else if (filename.toString().endsWith(".zip")) {
-            pack.deployFileFromZip(entry, TempFolder);
-            //TODO: add this to the proper script  script.getName().set...
+            Script script=getScriptInstanceByFilename(filename.toString());
+            int i;
+            if (!scripts.contains(script))
+                scripts.add(script);
+            i = scripts.indexOf(script);
+            pack.deployFileFromZip(entry, TempFolder + "IncludeExplode");
+            for (File f:new File(TempFolder + "IncludeExplode").listFiles())
+                script.includeFiles.add(f);
+            
+            scripts.set(i, script);
         } else if (filename.toString().endsWith(".txt")) {
-            String script=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
-            //TODO: add this to the proper script  script.getName().set...
+             Script script=getScriptInstanceByFilename(filename.toString());
+            int i;
+            if (!scripts.contains(script))
+                scripts.add(script);
+            i = scripts.indexOf(script);
+            String description=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
+            script.setDiscription(description);
+            scripts.set(i, script);
+
         }
     }
     
@@ -215,7 +242,7 @@ public class Caspac {
         for (Script s: scripts)
             if(s.getName().equals(fileName.substring(0, fileName.lastIndexOf("."))))
                 return s;
-        return new Script(); //TODO make an iterator to find a script by file name for loading; 
+        return new Script(fileName.substring(0, fileName.lastIndexOf("."))); //TODO make an iterator to find a script by file name for loading; 
     }
     
     private ArrayList<String> getScriptNames()
