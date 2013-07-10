@@ -6,7 +6,6 @@
 package CASCADEGUI;
 
 import CASUAL.Log;
-import CASUAL.Statics;
 import CASUAL.StringOperations;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
@@ -22,8 +21,7 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
@@ -932,7 +930,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         //Create new file In memory with name from the JTextField
         //TODO Add a browse button for the JTextField for location
         File file = new File(this.outputFile.getText());
-        List<Script> script = new ArrayList<>();
+        script.removeAll();
         
         
         if (!file.toString().endsWith(".zip"))
@@ -1059,7 +1057,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     private void minSVNversionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_minSVNversionCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.setMinSVNversion(minSVNversion.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion=(minSVNversion.getText());
     }//GEN-LAST:event_minSVNversionCaretUpdate
 
     /*
@@ -1067,7 +1065,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     private void scriptRevisionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptRevisionCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.setScriptRevsion(scriptRevision.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision=(scriptRevision.getText());
     }//GEN-LAST:event_scriptRevisionCaretUpdate
 
     /*
@@ -1075,7 +1073,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     private void uniqueIDCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_uniqueIDCaretUpdate
         if (!scriptList.isEmpty()  && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.setUniqueID(uniqueID.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier=uniqueID.getText();
     }//GEN-LAST:event_uniqueIDCaretUpdate
 
     /*
@@ -1083,7 +1081,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     private void supportURLCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_supportURLCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.setSupportURL(supportURL.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.supportURL=supportURL.getText();
     }//GEN-LAST:event_supportURLCaretUpdate
 
     /*
@@ -1091,7 +1089,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     private void updateMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_updateMessageCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.setUpdateMessage(updateMessage.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.updateMessage=updateMessage.getText();
     }//GEN-LAST:event_updateMessageCaretUpdate
 
     /*
@@ -1099,7 +1097,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     private void killswitchMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_killswitchMessageCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.setKillSwitchMessage(killswitchMessage.getText());
+            scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage=killswitchMessage.getText();
     }//GEN-LAST:event_killswitchMessageCaretUpdate
 
     /*
@@ -1354,22 +1352,17 @@ public class CASCADEGUI extends javax.swing.JFrame {
     }
 
 
-    private Map<String, String> buildMaker() {
-        Map<String, String> buildMap = new HashMap<>();
-        if (!this.developerName.getText().isEmpty())
-            buildMap.put("developerName", this.developerName.getText());
-        if (!this.donateText.getText().isEmpty())
-            buildMap.put("developerDonateButtonText", this.donateText.getText());
-        if (!this.donateLink.getText().isEmpty())
-            buildMap.put("donateLink", this.donateLink.getText());
-        if (!this.windowText.getText().isEmpty())
-            buildMap.put("windowTitle", this.windowText.getText());
-        buildMap.put("usePictureForBanner", Boolean.toString(this.useBannerPic.isSelected()));
-        if (!this.bannerPic.getText().isEmpty())
-            buildMap.put("bannerPic", this.bannerPic.getText());
-        buildMap.put("AudioEnabled", Boolean.toString(this.audioEnabled.isSelected()));
-        buildMap.put("EnableControls", Boolean.toString(this.alwaysEnableControls.isSelected()));
-        return buildMap;
+    private Properties buildMaker() {
+        Properties buildProp= new Properties();
+            buildProp.setProperty("Audio.Enabled", this.audioEnabled.isSelected()?"True":"False");
+            buildProp.setProperty("Application.AlwaysEnableControls", this.alwaysEnableControls.isSelected()?"True":"False");
+            buildProp.setProperty("Developer.DonateToButtonText", this.donateText.getText());
+            buildProp.setProperty("Developer.Name", this.developerName.getText() );
+            buildProp.setProperty("Window.ExecuteButtonText", this.buttonText.getText());
+            buildProp.setProperty("Window.BannerText", this.bannerText.getText());
+            buildProp.setProperty("Window.BannerPic", this.bannerPic.getText());
+            buildProp.setProperty("Window.Title", this.windowText.getText());
+        return buildProp;
     }
     
     /*
@@ -1396,39 +1389,39 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.scriptDiscriptionJText.setText(scriptList.getElementAt(currentScriptIndex).getDiscription());
    
         
-        if (scriptList.getElementAt(currentScriptIndex).metaData.getKillSwitchMessage().isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.setKillSwitchMessage("CASUAL cannot continue. The SVN version is too low");
+        if (scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage.isEmpty()){
+            scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage="CASUAL cannot continue. The SVN version is too low";
         }
-        this.killswitchMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getKillSwitchMessage());
+        this.killswitchMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage);
         
         
-        if (scriptList.getElementAt(currentScriptIndex).metaData.getMinSVNversion().isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.setMinSVNversion(CASUAL.CASPACData.getSVNRevision());
+        if (scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion.isEmpty()){
+            scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion=(CASUAL.CASPACData.getSVNRevision());
         }
-        this.minSVNversion.setText(scriptList.getElementAt(currentScriptIndex).metaData.getMinSVNversion());
+        this.minSVNversion.setText(scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion);
         
         
-        if (scriptList.getElementAt(currentScriptIndex).metaData.getScriptRevsion().isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.setScriptRevsion("0");
+        if (scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision.isEmpty()){
+            scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision="0";
         }
-        this.scriptRevision.setText(scriptList.getElementAt(currentScriptIndex).metaData.getScriptRevsion());
+        this.scriptRevision.setText(scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision);
         
         
-        if (scriptList.getElementAt(currentScriptIndex).metaData.getSupportURL().isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.setSupportURL("http://xda-developers.com");
+        if (scriptList.getElementAt(currentScriptIndex).metaData.supportURL.isEmpty()){
+            scriptList.getElementAt(currentScriptIndex).metaData.supportURL="http://xda-developers.com";
         }
-        this.supportURL.setText(scriptList.getElementAt(currentScriptIndex).metaData.getSupportURL());
+        this.supportURL.setText(scriptList.getElementAt(currentScriptIndex).metaData.supportURL);
         
         
-        if (scriptList.getElementAt(currentScriptIndex).metaData.getUniqueID().isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.setUniqueID("Unique Update ID "+StringOperations.generateRandomHexString(8));
+        if (scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier.isEmpty()){
+            scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier=("Unique Update ID "+StringOperations.generateRandomHexString(8));
         }
-        this.uniqueID.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUniqueID());
+        this.uniqueID.setText(scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier);
         
-        if (scriptList.getElementAt(currentScriptIndex).metaData.getUpdateMessage().isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.setUpdateMessage("Inital Release.");
+        if (scriptList.getElementAt(currentScriptIndex).metaData.updateMessage.isEmpty()){
+            scriptList.getElementAt(currentScriptIndex).metaData.updateMessage=("Inital Release.");
         }
-        this.updateMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUpdateMessage());
+        this.updateMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.updateMessage);
         
         
         /*duplicate?
