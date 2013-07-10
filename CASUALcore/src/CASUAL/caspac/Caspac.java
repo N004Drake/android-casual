@@ -15,12 +15,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.zip.ZipException;
 
 
@@ -50,12 +48,6 @@ public class Caspac {
             new File(TempFolder).mkdir();
     }
     
-    public Caspac(File caspac , File logo) {
-        this.CASPAC = caspac;
-        TempFolder = Statics.TempFolder + "CASPAC" + caspac.getName();
-        if (!(new File(TempFolder).exists()))
-            new File(TempFolder).mkdir();
-    }
     
     public void addScript(Script script) {
         if (!(scripts.contains(script)))
@@ -104,21 +96,18 @@ public class Caspac {
         }
         if (!(new File(TempFolder.toString() + slash + "-Overview.txt")).exists())
         {
-            log.level4Debug("Writing Overview to: \n\t"+ 
-                    TempFolder.toString() + slash + "-Overview.txt");
+            log.level4Debug("Writing Overview to: \n\t"+ TempFolder.toString() + slash + "-Overview.txt");
             new FileOperations().writeToFile(overview, TempFolder.toString() + slash + "-Overview.txt");
         }
         if (!(new File(TempFolder.toString() + slash + "-build.properties")).exists())
         {
-            log.level4Debug("Writing build.properties to: \n\t"+ 
-                    TempFolder.toString() + slash + "-build.properties");
+            log.level4Debug("Writing build.properties to: \n\t"+ TempFolder.toString() + slash + "-build.properties");
             build.write(TempFolder.toString() + slash + "-build.properties");
 
         }
         if (!(new File(TempFolder.toString() + slash + build.bannerPic).exists()) && !(build.bannerPic.isEmpty()))
         {
-            log.level4Debug("Writing Overview to: \n\t"+ 
-                    TempFolder.toString() + slash +
+            log.level4Debug("Writing Overview to: \n\t"+ TempFolder.toString() + slash +
                     build.bannerPic.substring(build.bannerPic.lastIndexOf(slash)+1,
                     build.bannerPic.length()));
             new FileOperations().copyFile(new File(build.bannerPic), new File(TempFolder.toString() + slash +
@@ -136,9 +125,8 @@ public class Caspac {
         zip.execute(TempFolder);
     }
     
-    public void setBuild(Map <String,String> buildMap)
-    {
-        build = new Build(buildMap);
+    public void setBuild(Properties prop){
+        build=new Build(prop);
     }
 
     public void load() throws ZipException, IOException{
@@ -183,12 +171,13 @@ public class Caspac {
                 md5s.add(md5);
                 md5ArrayPosition++;
             }
-            script.metaData.setKillSwitchMessage(killSwitchMessage);
-            script.metaData.setMinSVNversion(minSVNRevision);
-            script.metaData.setScriptRevsion(scriptRevision);
-            script.metaData.setSupportURL(supportURL);
-            script.metaData.setUniqueID(uniqueIdentifier);
-            script.metaData.setUpdateMessage(updateMessage);
+            script.metaData.md5s=md5s;
+            script.metaData.killSwitchMessage=killSwitchMessage;
+            script.metaData.minSVNversion=minSVNRevision;
+            script.metaData.scriptRevision=scriptRevision;
+            script.metaData.supportURL=supportURL;
+            script.metaData.uniqueIdentifier=uniqueIdentifier;
+            script.metaData.updateMessage=updateMessage;
             scripts.set(i, script);
              //TODO: add this to the proper script  script.getName().set...
         } else if (filename.toString().endsWith(".scr")) {
@@ -299,58 +288,11 @@ public class Caspac {
          * loads build properties from a map
          * @param buildMap key,value pairs
          */
-        public Build(Map<String,String> buildMap)
-        {
-            if (buildMap.containsKey("developerName"))
-                developerName = buildMap.get("developerName");
-            if (buildMap.containsKey("developerDonateButtonText"))
-                developerDonateButtonText = buildMap.get("developerDonateButtonText");
-            if (buildMap.containsKey("donateLink"))
-                donateLink = buildMap.get("donateLink");
-            if (buildMap.containsKey("windowTitle"))
-                windowTitle = buildMap.get("windowTitle");
-            if (buildMap.containsKey("usePictureForBanner"))
-                usePictureForBanner = Boolean.valueOf(buildMap.get("usePictureForBanner"));
-            if (buildMap.containsKey("bannerPic"))
-                bannerPic = buildMap.get("bannerPic");
-            if (buildMap.containsKey("bannerText"))
-                bannerText = buildMap.get("bannerText");
-            if (buildMap.containsKey("executeButtonText"))
-                executeButtonText = buildMap.get("executeButtonText");
-            if (buildMap.containsKey("AudioEnabled"))
-                AudioEnabled = buildMap.get("AudioEnabled").contains("rue");
-            if (buildMap.containsKey("EnableControls"))
-                alwaysEnableControls = Boolean.getBoolean(buildMap.get("EnableControls"));
-        }
+       
 
         //empty build
         public Build(){
             buildProp=new Properties();
-        }
-
-        public String buildFile(){
-            String buildString = "";
-            buildString = buildString + "#Developer Name\n" + "Developer.Name=" + 
-                    developerName + "\n";
-            buildString = buildString + "#Donation link button title\n" + 
-                    "Developer.DonateToButtonText=" + developerDonateButtonText + "\n";
-            buildString = buildString + "#Link for donate button\n" + 
-                    "Developer.DonateLink=" + donateLink + "\n";
-            buildString = buildString + "#This is the window title\n" + 
-                    "Window.Title=" + windowTitle +"\n";
-            buildString = buildString + "#If true, BannerPic will be used for the main window banner decoration"
-                    + "Window.UsePictureForBanner=" + usePictureForBanner + "\n";
-            buildString = buildString + "#The main window banner\n" + "Window.BannerPic=" 
-                    + bannerPic +"\n";
-            buildString = buildString + "#If UsePictureForBanner is false this text will be displayed in large format" +
-                    "Window.BannerText=" + bannerText + "\n";
-            buildString = buildString + "#text for main button\n" + "Window.ExecuteButtonText=" +
-                    executeButtonText + "\n";
-            buildString = buildString + "#\"true\" or \"True\" to enable\n" + "Audio.Enabled=" +
-                    AudioEnabled + "\n";
-            buildString = buildString + "#Enable Connection/Disconnection control locks\n" + 
-                    "Application.AlwaysEnableControls=" + alwaysEnableControls + "\n";
-            return buildString;
         }
 
         
