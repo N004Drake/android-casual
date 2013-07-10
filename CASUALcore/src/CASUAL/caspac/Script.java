@@ -5,13 +5,16 @@
 package CASUAL.caspac;
 
 import CASUAL.FileOperations;
-import CASUAL.Statics;
 import CASUAL.Zip;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  *
@@ -70,26 +73,27 @@ public class Script {
     
     public void writeScript(File file) throws IOException
     {
-        //if (!(verifyScript()))
-          //  return;
-        if (!(file.isDirectory()))
+        String scriptPath=file.toString() + slash + name ;
+        if (!(file.isDirectory())){
             file.mkdir();
-        if (!(new File(file.toString() + slash + name + ".scr")).exists())
-            new FileOperations().writeToFile(script, file.toString() + slash + name + ".scr");
-        if (!(new File(file.toString() + slash + name + ".txt")).exists())
-            new FileOperations().writeToFile(discription, file.toString() + slash + name + ".txt");
-        if (!includeFiles.isEmpty())
-        {
-            Zip includeZip = new Zip(file.toString() + slash + name + ".zip") ;
+        }
+        if (!(new File(scriptPath + ".scr")).exists()){
+            new FileOperations().writeToFile(script, scriptPath+ ".scr");
+        }
+        if (!(new File(scriptPath + ".txt")).exists()){
+            new FileOperations().writeToFile(discription, scriptPath + ".txt");
+        }
+        if (!includeFiles.isEmpty()){
+            Zip includeZip = new Zip(scriptPath + ".zip") ;
             includeZip.addToTempFolderLoc(name + ".script");
-            for (File f : includeFiles)
-            {
+            for (File f : includeFiles){
                 includeZip.addToZip(f);
             }
             includeZip.execute();
         }
-        if (!(new File(file.toString() + slash + name + ".meta").exists()))
-            new FileOperations().writeToFile(metaStringBuilder(), file.toString() + slash + name + ".meta");
+        if (!(new File(scriptPath + ".meta").exists())){
+            metaData.write(scriptPath + ".meta");
+        }
     }
     
     private String metaStringBuilder()
@@ -151,23 +155,34 @@ public class Script {
     
     
     public class meta{
-        private String minSVNversion = "";
-        private String scriptRevsion = "";
-        private String uniqueID = "";
-        private String supportURL = "";
-        private String updateMessage = "";
-        private String killSwitchMessage = "";
-
+        public String minSVNversion = "";
+        public String scriptRevision = "";
+        public String uniqueIdentifier = "";
+        public String supportURL = "";
+        public String updateMessage = "";
+        public String killSwitchMessage = "";
+        public Properties metaProp;
         public meta() {
+            metaProp=new Properties();
         }
 
+        public meta(Properties prop){
+            metaProp=prop;
+            setVariablesFromProperties(prop);
+        }
+        
+        public meta(InputStream prop) throws IOException{
+            metaProp.load(prop);
+            setVariablesFromProperties(metaProp);
+        }
+        
         public meta(Map <String,String> metaMap) {
             if (metaMap.containsKey("minSVNversion"))
                 minSVNversion = metaMap.get("minSVNversion");
             if (metaMap.containsKey("scriptRevsion"))
-                scriptRevsion = metaMap.get("scriptRevsion");
+                scriptRevision = metaMap.get("scriptRevsion");
             if (metaMap.containsKey("uniqueID"))
-                uniqueID = metaMap.get("uniqueID");
+                uniqueIdentifier = metaMap.get("uniqueID");
             if (metaMap.containsKey("supportURL"))
                 supportURL = metaMap.get("supportURL");
             if (metaMap.containsKey("updateMessage"))
@@ -179,8 +194,8 @@ public class Script {
         public boolean verifyMeta (){
             boolean testingBool = true;
             testingBool = !(minSVNversion.isEmpty()) && testingBool;
-            testingBool = !(scriptRevsion.isEmpty()) && testingBool;
-            testingBool = !(uniqueID.isEmpty()) && testingBool;
+            testingBool = !(scriptRevision.isEmpty()) && testingBool;
+            testingBool = !(uniqueIdentifier.isEmpty()) && testingBool;
             testingBool = !(supportURL.isEmpty()) && testingBool;
             testingBool = !(updateMessage.isEmpty()) && testingBool;
             testingBool = !(killSwitchMessage.isEmpty()) && testingBool;
@@ -197,19 +212,19 @@ public class Script {
         }
 
         public String getScriptRevsion() {
-            return scriptRevsion;
+            return scriptRevision;
         }
 
         public void setScriptRevsion(String scriptRevsion) {
-            this.scriptRevsion = scriptRevsion;
+            this.scriptRevision = scriptRevsion;
         }
 
         public String getUniqueID() {
-            return uniqueID;
+            return uniqueIdentifier;
         }
 
         public void setUniqueID(String uniqueID) {
-            this.uniqueID = uniqueID;
+            this.uniqueIdentifier = uniqueID;
         }
 
         public String getSupportURL() {
@@ -234,6 +249,52 @@ public class Script {
 
         public void setKillSwitchMessage(String killSwitchMessage) {
             this.killSwitchMessage = killSwitchMessage;
+        }
+
+        
+             /**
+         * writes meta properties to a file
+         * @param output file to write
+         * @return true if file was written
+         * @throws FileNotFoundException 
+         * @throws IOException 
+         */
+        public boolean write(String output) throws FileNotFoundException, IOException{
+            File f= new File(output);
+            return write(f);
+        }
+        
+        /**
+         * writes meta properties to a file
+         * @param output file to write
+         * @return true if file was written
+         * @throws FileNotFoundException
+         * @throws IOException 
+         */
+        public boolean write (File output) throws FileNotFoundException, IOException{
+            setPropsFromVariables();
+            FileOutputStream fos=new FileOutputStream(output);
+            metaProp.store(fos, "This properties file was generated by CASUAL");
+            return new FileOperations().verifyExists(output.toString());
+        }
+        
+        
+        private void setPropsFromVariables(){
+            metaProp.setProperty("CASUAL.minSVN", script);
+            metaProp.setProperty("Script.Revision", script);
+            metaProp.setProperty("Script.ID", script);
+            metaProp.setProperty("Script.SupportURL", script);
+            metaProp.setProperty("Script.UpdateMessage", script);
+            metaProp.setProperty("Script.KillSwitchMessage", script);
+        }
+        
+        private void setVariablesFromProperties(Properties prop) {
+            minSVNversion = prop.getProperty("CASUAL.minSVN");
+            scriptRevision = prop.getProperty("Script.Revision");
+            uniqueIdentifier = prop.getProperty("Script.ID");
+            supportURL = prop.getProperty("Script.SupportURL");
+            updateMessage = prop.getProperty("Script.UpdateMessage");
+            killSwitchMessage = prop.getProperty("Script.KillSwitchMessage");
         }
         
     }
