@@ -51,7 +51,7 @@ public class Pastebin {
      * so they are hereby banned from submitting any further
      * reports to the Pastebin.
      */
-    final private String[] incompetentUsers={"adamoutler", "adam","Jeremy"};
+    final private String[] incompetentUsers={"adamoutler", "adam","Jeremy","loganludington"};
     
     //Pastebin User DEV API Key
     final private String devKey = "027c63663a6023d774b5392f380e5923";
