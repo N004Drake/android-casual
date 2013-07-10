@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipException;
 import javax.swing.JFileChooser;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -138,6 +139,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         outputFIle = new javax.swing.JPanel();
         outputFile = new javax.swing.JTextField();
         makeCASPAC = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         workArea = new javax.swing.JTabbedPane();
         scriptGroup = new javax.swing.JTabbedPane();
         scriptOverview = new javax.swing.JPanel();
@@ -229,11 +231,21 @@ public class CASCADEGUI extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText(bundle.getString("CASCADEGUI.jButton1.text")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout outputFIleLayout = new javax.swing.GroupLayout(outputFIle);
         outputFIle.setLayout(outputFIleLayout);
         outputFIleLayout.setHorizontalGroup(
             outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputFIleLayout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(makeCASPAC, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -241,7 +253,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
         outputFIleLayout.setVerticalGroup(
             outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(makeCASPAC)
-            .addComponent(outputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(outputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButton1))
         );
 
         workArea.setName(""); // NOI18N
@@ -334,7 +348,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
         );
 
         scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
@@ -572,7 +586,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -874,7 +888,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addComponent(donationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(307, Short.MAX_VALUE))
+                .addContainerGap(306, Short.MAX_VALUE))
         );
 
         workArea.addTab(bundle.getString("CASCADEGUI.buildPropertiesPanel.TabConstraints.tabTitle"), buildPropertiesPanel); // NOI18N
@@ -924,7 +938,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         if (!file.toString().endsWith(".zip"))
         {
             JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.outputFile.getText() + "\n is not a vlid zip file.\n"
+                    + this.outputFile.getText() + "\n is not a valid zip file.\n"
                     + "Please make sure that the file ends in a .zip", "File output error", 
                     JOptionPane.ERROR_MESSAGE);
             log.level0Error("Output zip file not valid: \n \t" + this.outputFile.getText());
@@ -974,7 +988,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 "Script Name", JOptionPane.QUESTION_MESSAGE);
         
         //If there is a name in prompt
-        //TODO Add check for more than one of same name
+        
+        if(checkScriptNameExists(s))
+            return;
         if (!(s.isEmpty()))
         {
             scriptList.addElement(new Script(s));
@@ -1009,6 +1025,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 "Script Name", JOptionPane.QUESTION_MESSAGE);
         
         //Only changes name if input string is not blank
+        if(checkScriptNameExists(s))
+            return;
         if (!(s.isEmpty()))
         {
             scriptList.getElementAt(currentScriptIndex).setName(s);
@@ -1127,6 +1145,50 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_browseLogoActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        File file = new File(this.outputFile.getText());
+        if (!file.toString().endsWith(".zip"))
+        {
+            JOptionPane.showMessageDialog(this, "The file: \n"
+                    + this.outputFile.getText() + "\n is not a valid zip file.\n"
+                    + "Please make sure that the file ends in a .zip", "File read error", 
+                    JOptionPane.ERROR_MESSAGE);
+            log.level0Error("Input zip file not valid: \n \t" + this.outputFile.getText());
+            return;
+        }
+        if (!file.exists())
+        {
+            JOptionPane.showMessageDialog(this, "The file: \n"
+                    + this.outputFile.getText() + "\n is not a valid zip file.\n"
+                    + "Ensure the file exists", "File Not Found", 
+                    JOptionPane.ERROR_MESSAGE);
+            log.level0Error("Input zip file not valid: \n \t" + this.outputFile.getText());
+            return;
+        }
+        Caspac cp = new Caspac(file);
+        try {
+            cp.load();
+        } catch (ZipException ex) {
+            log.errorHandler(ex);
+        } catch (IOException ex) {
+            log.errorHandler(ex);
+        }
+        
+        for (Script s : cp.scripts)
+        {
+            scriptList.addElement(s);
+            
+            //Set that script as current script
+            currentScriptIndex=scriptList.getSize()-1;
+            this.scriptListJList.setSelectedIndex(currentScriptIndex);
+            
+            //Rerender all of the Info to current script
+            loadScript();
+            this.scriptListJList.setSelectedIndex(this.scriptListJList.getLastVisibleIndex());
+        }
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     
     
     /**
@@ -1186,6 +1248,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private javax.swing.JPanel dontateLinkPanel;
     private javax.swing.JPanel dontateTextPanel;
     private javax.swing.JButton editScriptNameButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1231,28 +1294,32 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane workArea;
     // End of variables declaration//GEN-END:variables
 
-    /*
+    /* DEPRECIATED
      * Called to add a new files to the includeZip for a script
+     * 
+     * private void addFileToZip(File[] files){
+     *   for (File f: files)
+     *       if (f.exists())
+     *       {
+     *           scriptList.getElementAt(currentScriptIndex).includeFiles.add(f);
+     *           fileList.addElement(f);
+     *       }
+     *}
+     * 
      */
-    private void addFileToZip(File[] files){
-        for (File f: files)
-            if (f.exists())
-            {
-                scriptList.getElementAt(currentScriptIndex).includeFiles.add(f);
-                fileList.addElement(f);
-            }
-    }
     
-    /*
+    /*DEPRECIATED
      * Call to add a single file to the includeZip for a script
+     *
+     *private void addFileToZip(File files){
+     *    if (files.exists())
+     *    {
+     *        scriptList.getElementAt(currentScriptIndex).includeFiles.add(files);
+     *        fileList.addElement(files);
+     *    }
+     *}
+     *
      */
-    private void addFileToZip(File files){
-        if (files.exists())
-        {
-            scriptList.getElementAt(currentScriptIndex).includeFiles.add(files);
-            fileList.addElement(files);
-        }
-    }
 
     /*
      * Called to remove files from fileList
@@ -1466,5 +1533,20 @@ public class CASCADEGUI extends javax.swing.JFrame {
             else
                 enableAll();
         }
+    }
+    
+    private boolean checkScriptNameExists(String testName)
+    {
+        for (int i = 0; i<scriptList.getSize(); i++)
+        {
+            if (scriptList.get(i).getName().equals(testName))
+            {
+                log.level0Error("The script \""+ testName + "\" already exists");
+                JOptionPane.showMessageDialog(this, "The script \""+ testName + "\" already exists", 
+                        "Script Alreay Exists", JOptionPane.ERROR_MESSAGE);
+                return true;
+            }
+        }
+        return false;
     }
 }
