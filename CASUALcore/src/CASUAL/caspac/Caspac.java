@@ -154,30 +154,14 @@ public class Caspac {
                 scripts.add(script);
             i = scripts.indexOf(script);
 
-            Properties prop = new Properties();
-            prop.load(pack.streamFileFromZip(entry)); //TODO: add this to the proper script
-             
-            String minSVNRevision = prop.getProperty("CASUAL.minSVN");
-            String scriptRevision = prop.getProperty("Script.Revision");
-            String uniqueIdentifier = prop.getProperty("Script.ID");
-            String supportURL = prop.getProperty("Script.SupportURL");
-            String updateMessage = prop.getProperty("Script.UpdateMessage");
-            String killSwitchMessage = prop.getProperty("Script.KillSwitchMessage");
+            script.metaData.load(pack.streamFileFromZip(entry));
             int md5ArrayPosition = 0;
-            System.out.print("Script.MD5[" + md5ArrayPosition + "]");
             String md5;
             List<String> md5s=new ArrayList<>();
-            while ((md5 = prop.getProperty("Script.MD5[" + md5ArrayPosition + "]")) != null) {
-                md5s.add(md5);
+            while ((md5 = script.metaData.metaProp.getProperty("Script.MD5[" + md5ArrayPosition + "]")) != null) {
+                script.metaData.md5s.add(md5);
                 md5ArrayPosition++;
             }
-            script.metaData.md5s=md5s;
-            script.metaData.killSwitchMessage=killSwitchMessage;
-            script.metaData.minSVNversion=minSVNRevision;
-            script.metaData.scriptRevision=scriptRevision;
-            script.metaData.supportURL=supportURL;
-            script.metaData.uniqueIdentifier=uniqueIdentifier;
-            script.metaData.updateMessage=updateMessage;
             scripts.set(i, script);
              //TODO: add this to the proper script  script.getName().set...
         } else if (filename.toString().endsWith(".scr")) {
