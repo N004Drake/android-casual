@@ -119,7 +119,7 @@ public class Caspac {
                     TempFolder.toString() + slash + "-build.properties");
             new FileOperations().writeToFile(build.buildFile(), TempFolder.toString() + slash + "-build.properties");
         }
-        if (!(new File(TempFolder.toString() + slash + build.bannerPic).exists()))
+        if (!(new File(TempFolder.toString() + slash + build.bannerPic).exists()) && !(build.bannerPic.isEmpty()))
         {
             log.level4Debug("Writing Overview to: \n\t"+ 
                     TempFolder.toString() + slash +
@@ -162,8 +162,9 @@ public class Caspac {
             //load build.prop from memory
             Properties prop = new Properties();
             prop.load(pack.streamFileFromZip(entry));
+            this.build = new Build();
             try {
-                build.usePictureForBanner = prop.getProperty("Window.UsePictureForBanner").contains("rue");
+                //build.usePictureForBanner = prop.getProperty("Window.UsePictureForBanner").contains("rue");
                 build.AudioEnabled = prop.getProperty("Audio.Enabled").contains("rue");
                 build.developerDonateButtonText = prop.getProperty("Developer.DonateToButtonText");
                 build.developerName = prop.getProperty("Developer.Name");
@@ -180,7 +181,16 @@ public class Caspac {
         } else if (filename.toString().equals("-Overview.txt")) {
             overview=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
         } else if (filename.toString().endsWith(".meta")) {
-            Script script=getScriptInstanceByFilename();
+            if (!getScriptNames().contains(filename.toString().substring(0, filename.toString().lastIndexOf("."))))
+            {
+                Script script = new Script(filename.toString().substring(0, filename.toString().lastIndexOf(".")));
+                scripts.add(script);
+                script.setName("testing123");
+            }
+            else
+            {
+                Script script=getScriptInstanceByFilename(filename.toString());
+            }
             Properties prop = new Properties();
             prop.load(pack.streamFileFromZip(entry)); //TODO: add this to the proper script
              
@@ -222,8 +232,19 @@ public class Caspac {
         return properties;
     }    
 
-    private Script getScriptInstanceByFilename() {
+    private Script getScriptInstanceByFilename(String fileName) {
+        for (Script s: scripts)
+            if(s.getName().equals(fileName.substring(0, fileName.lastIndexOf("."))))
+                return s;
         return new Script(); //TODO make an iterator to find a script by file name for loading; 
+    }
+    
+    private ArrayList<String> getScriptNames()
+    {
+        ArrayList<String> scriptNames = new ArrayList<>();
+        for (Script s : scripts)
+            scriptNames.add(slash);
+        return scriptNames;
     }
     
     
@@ -233,7 +254,7 @@ public class Caspac {
         public String donateLink = "";
         public String windowTitle = "";
         public boolean usePictureForBanner = false;
-        public String bannerPic = "-logo.png";
+        public String bannerPic = "";
         public String bannerText = "";
         public String executeButtonText = "Do It";
         public boolean AudioEnabled = false;
@@ -261,6 +282,11 @@ public class Caspac {
                 AudioEnabled = buildMap.get("AudioEnabled").contains("rue");
             if (buildMap.containsKey("EnableControls"))
                 alwaysEnableControls = Boolean.getBoolean(buildMap.get("EnableControls"));
+        }
+        
+        public Build()
+        {
+            
         }
 
         public String buildFile(){
