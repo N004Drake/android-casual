@@ -208,8 +208,9 @@ public class Caspac {
             if (!scripts.contains(script))
                 scripts.add(script);
             i = scripts.indexOf(script);
-            pack.deployFileFromZip(entry, TempFolder + "IncludeExplode");
-            for (File f:new File(TempFolder + "IncludeExplode").listFiles())
+            new File(TempFolder + slash +  "IncludeExplode").mkdir();
+            pack.deployFileFromZip(entry, TempFolder + slash +  "IncludeExplode" + slash);
+            for (File f:new File(TempFolder + slash + "IncludeExplode"+slash).listFiles())
                 script.includeFiles.add(f);
             
             scripts.set(i, script);
@@ -384,7 +385,7 @@ public class Caspac {
             executeButtonText = buildprop.getProperty("Window.ExecuteButtonText");
             bannerText = buildprop.getProperty("Window.BannerText");
             bannerPic = buildprop.getProperty("Window.BannerPic");
-            alwaysEnableControls = buildprop.getProperty("Application.AlwaysEnableControls").contains("rue");
+//            alwaysEnableControls = buildprop.getProperty("Application.AlwaysEnableControls").contains("rue");
             windowTitle = buildprop.getProperty("Window.Title");
             
         }
