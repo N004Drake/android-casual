@@ -7,6 +7,7 @@ package CASUAL.caspac;
 import CASUAL.FileOperations;
 import CASUAL.MD5sum;
 import CASUAL.Zip;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -15,6 +16,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -240,6 +243,16 @@ public class Script {
             supportURL = prop.getProperty("Script.SupportURL");
             updateMessage = prop.getProperty("Script.UpdateMessage");
             killSwitchMessage = prop.getProperty("Script.KillSwitchMessage");
+        }
+
+        void load(BufferedInputStream streamFileFromZip) {
+            try {
+                this.metaProp.load(streamFileFromZip);
+            } catch (IOException ex) {
+                Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            setVariablesFromProperties(metaProp);
+            
         }
         
     }
