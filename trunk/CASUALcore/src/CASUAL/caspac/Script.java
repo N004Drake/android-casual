@@ -5,6 +5,7 @@
 package CASUAL.caspac;
 
 import CASUAL.FileOperations;
+import CASUAL.MD5sum;
 import CASUAL.Zip;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -42,12 +42,12 @@ public class Script {
     }
 
     public Script(String name, String script, String discription, 
-            List<File> includeFiles, Map<String,String> metaMap) {
+            List<File> includeFiles, Properties prop) {
         this.discription = discription;
         this.name = name;
         this.script = script;
         this.includeFiles = includeFiles;
-        this.metaData = new meta(metaMap);
+        this.metaData = new meta(prop);
     }
 
     public Script(String name, String script, String discription) {
@@ -96,17 +96,6 @@ public class Script {
         }
     }
     
-    private String metaStringBuilder()
-    {
-        String meta = "";
-        meta = meta + "CASUAL.minSVN=" + metaData.getMinSVNversion()+ "\n";
-        meta = meta + "Script.Revision=" + metaData.getScriptRevsion() + "\n";
-        meta = meta + "Script.ID=" + metaData.getUniqueID() + "\n";
-        meta = meta + "Script.SupportURL=" + metaData.getSupportURL() + "\n";
-        meta = meta + "Script.UpdateMessage=" + metaData.getUpdateMessage() + "\n";
-        meta = meta + "Script.KillSwitchMessage=" + metaData.getKillSwitchMessage() + "\n";
-        return meta;
-    }
     
     public String getName() {
         return name;
@@ -128,8 +117,8 @@ public class Script {
         return metaData;
     }
 
-    public void setMetaData(meta metaData) {
-        this.metaData = metaData;
+    public void setMetaData(Properties prop) {
+        this.metaData = new meta(prop);
     }
 
     public String getDiscription() {
@@ -162,6 +151,7 @@ public class Script {
         public String updateMessage = "";
         public String killSwitchMessage = "";
         public Properties metaProp;
+        List<String> md5s=new ArrayList<>();
         public meta() {
             metaProp=new Properties();
         }
@@ -176,21 +166,10 @@ public class Script {
             setVariablesFromProperties(metaProp);
         }
         
-        public meta(Map <String,String> metaMap) {
-            if (metaMap.containsKey("minSVNversion"))
-                minSVNversion = metaMap.get("minSVNversion");
-            if (metaMap.containsKey("scriptRevsion"))
-                scriptRevision = metaMap.get("scriptRevsion");
-            if (metaMap.containsKey("uniqueID"))
-                uniqueIdentifier = metaMap.get("uniqueID");
-            if (metaMap.containsKey("supportURL"))
-                supportURL = metaMap.get("supportURL");
-            if (metaMap.containsKey("updateMessage"))
-                updateMessage = metaMap.get("updateMessage");
-            if (metaMap.containsKey("killSwitchMessage"))
-                killSwitchMessage = metaMap.get("killSwitchMessage");
-        }
-        
+        /**
+         * verifies metadata is not empty
+         * @return true if filled in
+         */
         public boolean verifyMeta (){
             boolean testingBool = true;
             testingBool = !(minSVNversion.isEmpty()) && testingBool;
@@ -202,55 +181,7 @@ public class Script {
             return testingBool;
             
         }
-        
-        public String getMinSVNversion() {
-            return minSVNversion;
-        }
-
-        public void setMinSVNversion(String minSVNversion) {
-            this.minSVNversion = minSVNversion;
-        }
-
-        public String getScriptRevsion() {
-            return scriptRevision;
-        }
-
-        public void setScriptRevsion(String scriptRevsion) {
-            this.scriptRevision = scriptRevsion;
-        }
-
-        public String getUniqueID() {
-            return uniqueIdentifier;
-        }
-
-        public void setUniqueID(String uniqueID) {
-            this.uniqueIdentifier = uniqueID;
-        }
-
-        public String getSupportURL() {
-            return supportURL;
-        }
-
-        public void setSupportURL(String supportURL) {
-            this.supportURL = supportURL;
-        }
-
-        public String getUpdateMessage() {
-            return updateMessage;
-        }
-
-        public void setUpdateMessage(String updateMessage) {
-            this.updateMessage = updateMessage;
-        }
-
-        public String getKillSwitchMessage() {
-            return killSwitchMessage;
-        }
-
-        public void setKillSwitchMessage(String killSwitchMessage) {
-            this.killSwitchMessage = killSwitchMessage;
-        }
-
+       
         
              /**
          * writes meta properties to a file
@@ -278,7 +209,17 @@ public class Script {
             return new FileOperations().verifyExists(output.toString());
         }
         
+        void doMd5Sum(){
+            MD5sum md5sum = new MD5sum();
+            //TODO: zip resources in this class
+            //TODO: get md5sum the script.zip file
+            //TODO: get md5sum for the script.scr file
+            
+        }
         
+        /**
+         * sets the properties object from local variables for writing
+         */
         private void setPropsFromVariables(){
             metaProp.setProperty("CASUAL.minSVN", script);
             metaProp.setProperty("Script.Revision", script);
@@ -288,6 +229,10 @@ public class Script {
             metaProp.setProperty("Script.KillSwitchMessage", script);
         }
         
+        /**
+         * sets the variables from properties object for loading
+         * @param prop properties file
+         */
         private void setVariablesFromProperties(Properties prop) {
             minSVNversion = prop.getProperty("CASUAL.minSVN");
             scriptRevision = prop.getProperty("Script.Revision");
