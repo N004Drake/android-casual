@@ -134,21 +134,28 @@ public class Caspac {
     public void load() throws ZipException, IOException{
         Script dummy;
         int i;
+        log.level4Debug("\n\n\nStarting CASPAC unzip.");
          Unzip unzip = new Unzip(CASPAC);
          while (unzip.zipFileEntries.hasMoreElements()) {
             Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
             handleCASPACFiles(entry, unzip);
          }
+         log.level4Debug("CASPAC unzip completed.\n\n\n");
+         log.level4Debug("Starting to unzip script zips");
          for (File f : unzipQueue)
          {
+             log.level4Debug("Unzipping "+ f.getName());
              unzip = new Unzip(f.toString());
              new File(f.toString().replace(".zip", "")).mkdir();
              unzip.unzipFile(f.toString().replace(".zip", ""));
+             log.level4Debug("Addind zip contents to script Included Files");
              dummy = getScriptInstanceByFilename(f.getName());
              i = scripts.indexOf(dummy);
             dummy.includeFiles.addAll(Arrays.asList(new File(f.toString().replace(".zip", "")).listFiles()));
+            log.level4Debug("Added files from "+ f.getName()+ " to " + dummy.getName() + ".");
             scripts.set(i, dummy);
          }
+         log.level4Debug("CASPAC load completed.");
     }
     private void handleCASPACFiles(Object entry, Unzip pack) throws IOException {
 
@@ -157,19 +164,29 @@ public class Caspac {
         
         ///Start parsing the files
         if (filename.equals("-build.properties")) {
+            log.level4Debug("Found -build.properties adding information to "
+                    + "CASPAC");
             build = new Build(pack.streamFileFromZip(entry));
             build.loadPropsToVariables();
         } else if (filename.toString().equals("-Overview.txt")) {
+            log.level4Debug("Found -Overview.txt adding information to "
+                    + "CASPAC");
             overview=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
         } else if (filename.toString().endsWith(".meta")) {
 
             Script script=getScriptInstanceByFilename(filename.toString());
+            log.level4Debug("Found METADATA for " + script.getName()+ ".");
             int i;
             if (!scripts.contains(script))
-                scripts.add(script);
+            {
+                log.level4Debug(script.getName() + " not found in CASPAC adding"
+                        + " script to CASPAC.");
+                scripts.add(script); 
+            }                                 
             i = scripts.indexOf(script);
 
             script.metaData.load(pack.streamFileFromZip(entry));
+            log.level4Debug("Added METADATA to " +script.getName()+".");
             int md5ArrayPosition = 0;
             String md5;
             List<String> md5s=new ArrayList<>();
@@ -178,25 +195,36 @@ public class Caspac {
                 md5ArrayPosition++;
             }
             scripts.set(i, script);
-             //TODO: add this to the proper script  script.getName().set...
         } else if (filename.toString().endsWith(".scr")) {
             Script script=getScriptInstanceByFilename(filename.toString());
+            log.level4Debug("Found Script for " + script.getName()+ ".");
             int i;
             if (!scripts.contains(script))
+            {
+                log.level4Debug(script.getName() + " not found in CASPAC adding"
+                        + " script to CASPAC.");
                 scripts.add(script);
+            }
             i = scripts.indexOf(script);
             
             String scriptText=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
             script.setScript(scriptText);
+            log.level4Debug("Added Script for " + script.getName()+ ".");
             scripts.set(i, script);
         } else if (filename.toString().endsWith(".zip")) {
             Script script=getScriptInstanceByFilename(filename.toString());
             int i;
+            log.level4Debug("Found .zip for " + script.getName()+ ".");
             if (!scripts.contains(script))
+            {
+                log.level4Debug(script.getName() + " not found in CASPAC adding"
+                        + " script to CASPAC.");
                 scripts.add(script);
+            }
             i = scripts.indexOf(script);
             new FileOperations().writeStreamToFile(pack.streamFileFromZip(entry), TempFolder + slash + 
                     filename);
+            log.level4Debug("Added .zip to " + script.getName()+ ". It will be unziped at end of unpacking.");
             unzipQueue.add(new File(TempFolder + slash + filename));
             //for (File f:new File(TempFolder + slash + "IncludeExplode"+slash).listFiles())
             //    script.includeFiles.add(f);
@@ -205,11 +233,17 @@ public class Caspac {
         } else if (filename.toString().endsWith(".txt")) {
              Script script=getScriptInstanceByFilename(filename.toString());
             int i;
+            log.level4Debug("Found Description for " + script.getName()+ ".");
             if (!scripts.contains(script))
+            {
+                log.level4Debug(script.getName() + " not found in CASPAC adding"
+                        + " script to CASPAC.");
                 scripts.add(script);
+            }
             i = scripts.indexOf(script);
             String description=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
             script.setDiscription(description);
+            log.level4Debug("Added Description to " + script.getName()+ ".");
             scripts.set(i, script);
 
         }
