@@ -233,7 +233,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         jButton1.setName("jButton1"); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                loadCaspacActionPerformed(evt);
             }
         });
 
@@ -1136,7 +1136,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_browseLogoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void loadCaspacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCaspacActionPerformed
 
         File file = new File(this.outputFile.getText());
         if (!file.toString().endsWith(".zip"))
@@ -1159,6 +1159,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
         Caspac cp = new Caspac(file);
         try {
+            log.level4Debug("Initiating CASPAC load.");
             cp.load();
         } catch (ZipException ex) {
             log.errorHandler(ex);
@@ -1181,7 +1182,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             this.scriptListJList.setSelectedIndex(this.scriptListJList.getLastVisibleIndex());
         
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_loadCaspacActionPerformed
 
     private void scriptDescriptionJTextCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_scriptDescriptionJTextCaretPositionChanged
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
