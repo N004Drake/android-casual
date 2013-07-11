@@ -208,7 +208,7 @@ public class HeimdallInstall {
         /*
          * @WTF
          */
-        new WindowsDrivers().installDriverBlanket();
+        new WindowsDrivers(0).installDriverBlanket(null);
         return true;
         /*log.level2Information("@installingCADI"); //Add Newline
         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"

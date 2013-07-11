@@ -126,8 +126,10 @@ public class Statics {
     final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
     final public static String msvcp110dll = "/CASUAL/resources/heimdall/msvcp110.dll";
     final public static String msvcr110dll = "/CASUAL/resources/heimdall/msvcr110.dll";
-    final public static String WinDriverResource = "/CASUAL/resources/heimdall/CADI.exe";  //win driver in CASUAL
-    //final public static String WinDriverResource = "/CASUAL/resources/heimdall/CADI.zip";  //win driver in CASUAL
+    final public static String WinDriverResource = "/CASUAL/resources/heimdall/CADI.exe";  //original CADI
+    final public static String WinDriverResource1 = "/CASUAL/resources/heimdall/CADI.zip";  //devcon CADI
+    final public static String WinDriverResource2 = "/CASUAL/resources/heimdall/xp/CADI.exe";  //xp original CADI
+    final public static String WinDriverResource3 = "/CASUAL/resources/heimdall/xp/CADI.zip";  //xp devcon CADI
     //Fastboot
     final public static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
     final public static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
