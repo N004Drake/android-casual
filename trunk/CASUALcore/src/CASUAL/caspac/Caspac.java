@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -35,6 +36,7 @@ public class Caspac {
     public ArrayList<Script> scripts = new ArrayList<>();
     public String TempFolder;
     public Log log = new Log();
+    public ArrayList<File> unzipQueue = new ArrayList<>();
 
 
     public Caspac(File caspac) {
@@ -130,10 +132,22 @@ public class Caspac {
     }
 
     public void load() throws ZipException, IOException{
+        Script dummy;
+        int i;
          Unzip unzip = new Unzip(CASPAC);
          while (unzip.zipFileEntries.hasMoreElements()) {
             Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
             handleCASPACFiles(entry, unzip);
+         }
+         for (File f : unzipQueue)
+         {
+             unzip = new Unzip(f.toString());
+             new File(f.toString().replace(".zip", "")).mkdir();
+             unzip.unzipFile(f.toString().replace(".zip", ""));
+             dummy = getScriptInstanceByFilename(f.getName());
+             i = scripts.indexOf(dummy);
+            dummy.includeFiles.addAll(Arrays.asList(new File(f.toString().replace(".zip", "")).listFiles()));
+            scripts.set(i, dummy);
          }
     }
     private void handleCASPACFiles(Object entry, Unzip pack) throws IOException {
@@ -144,6 +158,7 @@ public class Caspac {
         ///Start parsing the files
         if (filename.equals("-build.properties")) {
             build = new Build(pack.streamFileFromZip(entry));
+            build.loadPropsToVariables();
         } else if (filename.toString().equals("-Overview.txt")) {
             overview=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
         } else if (filename.toString().endsWith(".meta")) {
@@ -180,10 +195,11 @@ public class Caspac {
             if (!scripts.contains(script))
                 scripts.add(script);
             i = scripts.indexOf(script);
-            new File(TempFolder + slash +  "IncludeExplode").mkdir();
-            pack.deployFileFromZip(entry, TempFolder + slash +  "IncludeExplode" + slash);
-            for (File f:new File(TempFolder + slash + "IncludeExplode"+slash).listFiles())
-                script.includeFiles.add(f);
+            new FileOperations().writeStreamToFile(pack.streamFileFromZip(entry), TempFolder + slash + 
+                    filename);
+            unzipQueue.add(new File(TempFolder + slash + filename));
+            //for (File f:new File(TempFolder + slash + "IncludeExplode"+slash).listFiles())
+            //    script.includeFiles.add(f);
             
             scripts.set(i, script);
         } else if (filename.toString().endsWith(".txt")) {
@@ -227,7 +243,7 @@ public class Caspac {
         public String executeButtonText = "Do It";
         public boolean AudioEnabled = false;
         public boolean alwaysEnableControls = false;
-        public Properties buildProp;
+        public Properties buildProp= new Properties();
         
         public Build(InputStream prop) throws IOException{
             buildProp.load(prop);
@@ -239,7 +255,6 @@ public class Caspac {
          */
         public Build(Properties prop){
             this.buildProp = prop;
-            loadPropsToVariables();
         }
         
         /**
@@ -276,7 +291,6 @@ public class Caspac {
 
         //empty build
         public Build(){
-            buildProp=new Properties();
         }
 
         
@@ -297,13 +311,16 @@ public class Caspac {
          * sets properties to values stored in build.properties file.
          */
         private void loadPropsToVariables() {
-            AudioEnabled = buildProp.getProperty("Audio.Enabled").contains("rue");
+            if (buildProp.containsKey("Audio.Enabled"))
+                AudioEnabled = buildProp.getProperty("Audio.Enabled").contains("rue");
             developerDonateButtonText = buildProp.getProperty("Developer.DonateToButtonText");
             developerName = buildProp.getProperty("Developer.Name");
+            donateLink = buildProp.getProperty("Developer.DonateLink");
             executeButtonText = buildProp.getProperty("Window.ExecuteButtonText");
             bannerText = buildProp.getProperty("Window.BannerText");
-            bannerPic = buildProp.getProperty("Window.BannerPic");
-//            alwaysEnableControls = buildprop.getProperty("Application.AlwaysEnableControls").contains("rue");
+            bannerPic = TempFolder + slash + buildProp.getProperty("Window.BannerPic");
+            if (buildProp.contains("Application.AlwaysEnableControls"))            
+                alwaysEnableControls = buildProp.getProperty("Application.AlwaysEnableControls").contains("rue");
             windowTitle = buildProp.getProperty("Window.Title");
             
         }
