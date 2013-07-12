@@ -347,15 +347,15 @@ public class Caspac {
         private void loadPropsToVariables() {
             if (buildProp.containsKey("Audio.Enabled"))
                 AudioEnabled = buildProp.getProperty("Audio.Enabled").contains("rue");
-            developerDonateButtonText = buildProp.getProperty("Developer.DonateToButtonText");
-            developerName = buildProp.getProperty("Developer.Name");
-            donateLink = buildProp.getProperty("Developer.DonateLink");
-            executeButtonText = buildProp.getProperty("Window.ExecuteButtonText");
-            bannerText = buildProp.getProperty("Window.BannerText");
-            bannerPic = TempFolder + slash + buildProp.getProperty("Window.BannerPic");
+            developerDonateButtonText = buildProp.getProperty("Developer.DonateToButtonText","");
+            developerName = buildProp.getProperty("Developer.Name","");
+            donateLink = buildProp.getProperty("Developer.DonateLink","");
+            executeButtonText = buildProp.getProperty("Window.ExecuteButtonText","");
+            bannerText = buildProp.getProperty("Window.BannerText","");
+            bannerPic = TempFolder + slash + buildProp.getProperty("Window.BannerPic","");
             if (buildProp.contains("Application.AlwaysEnableControls"))            
                 alwaysEnableControls = buildProp.getProperty("Application.AlwaysEnableControls").contains("rue");
-            windowTitle = buildProp.getProperty("Window.Title");
+            windowTitle = buildProp.getProperty("Window.Title","");
             
         }
     }

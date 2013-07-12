@@ -237,12 +237,12 @@ public class Script {
          * @param prop properties file
          */
         private void setVariablesFromProperties(Properties prop) {
-            minSVNversion = prop.getProperty("CASUAL.minSVN");
-            scriptRevision = prop.getProperty("Script.Revision");
-            uniqueIdentifier = prop.getProperty("Script.ID");
-            supportURL = prop.getProperty("Script.SupportURL");
-            updateMessage = prop.getProperty("Script.UpdateMessage");
-            killSwitchMessage = prop.getProperty("Script.KillSwitchMessage");
+            minSVNversion = prop.getProperty("CASUAL.minSVN","");
+            scriptRevision = prop.getProperty("Script.Revision","");
+            uniqueIdentifier = prop.getProperty("Script.ID","");
+            supportURL = prop.getProperty("Script.SupportURL","");
+            updateMessage = prop.getProperty("Script.UpdateMessage","");
+            killSwitchMessage = prop.getProperty("Script.KillSwitchMessage","");
         }
 
         void load(BufferedInputStream streamFileFromZip) {
