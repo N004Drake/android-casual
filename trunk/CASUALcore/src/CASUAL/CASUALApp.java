@@ -31,7 +31,7 @@ public class CASUALApp {
     /**
      *the default package used for IDE mode or if no scripts are found
      */
-    final public static String defaultPackage = "ATT GS3 Root"; //note this will be used for IDE only.
+    final public static String defaultPackage = "Install Basic Hacking Tools"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
     static String[] arguments;
