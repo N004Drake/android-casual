@@ -34,6 +34,7 @@ $ADB push "$ZIPFILErecovery.img" /data/local/tmp/
 $ECHO [*] Rooting phone...
 $ADB shell /data/local/tmp/pwn
 $ECHO installing superuser to system partition
+$ON su: not found, $HALT $ECHO Could not obtain root.  Shutting down. 
 $ADB shell "su -c 'mount -o remount,rw /system; cat /data/local/tmp/Superuser.apk >/system/app/Superuser.apk'"
 
 

@@ -72,7 +72,22 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-pre-init" description="sorts out properties files and selects higher revisions">
+        
+        <javac srcdir="BuildTasks" destdir="BuildTasks"/>
+        <java fork="true" failonerror="yes" classname="ResolveSVNConflicts">
+            <classpath>
+               <pathelement location="BuildTasks"/>
+            </classpath>
+            <arg line="src/CASUAL/resources/"/>
+        </java>
+        
+    </target>
+
+    
+            
     <target name="-pre-compile" description="Sets the buildversion for the current build">
+
         <exec outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
             <arg value="-c" />
             <redirector>
@@ -84,6 +99,7 @@
                 </outputfilterchain>
             </redirector>
         </exec> 
+        <echo>current directory: ${basedir}/BuildTasks/</echo>
         <echo>revision after svnversion command: ${svna.version}</echo>
         <loadproperties srcfile="src/CASUAL/resources/CASUALApp.properties"/>
         <condition property="svna.version" value=""> 

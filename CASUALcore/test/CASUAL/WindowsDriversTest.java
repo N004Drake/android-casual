@@ -71,7 +71,6 @@ public class WindowsDriversTest {
     public void testRemoveDriver() {
         System.out.println("uninstallCADI");
         WindowsDrivers instance = new WindowsDrivers(1);
-        setContinue();
         instance.uninstallCADI();
         // TODO review the generated test code and remove the default call to fail.
     }
