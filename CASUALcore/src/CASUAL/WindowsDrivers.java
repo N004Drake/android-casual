@@ -21,13 +21,13 @@ package CASUAL;
  * TODOs:
  * 
  * class-wide:
- * Javadoc all methods
+ * Javadoc launchOldFaithful, getDeviceList, removeOrphanedDevices, uninstallCADI
  * 
- * method installDriver():
- * Documentation needed for x/y/pastInstalls
- * Possible to install WinUSB in same manner if this has been run before?
- * 
+ * Q:Possible to install WinUSB in same manner if this has been run before?
+ * A:Possible, but overly complicated and probably unreliable without parsing all 
+ *   matching *.inf's contents
  */
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -44,38 +44,56 @@ public class WindowsDrivers {
     private Log log = new Log();
     private final String pathToCADI;
     private final String[] windowsDriverBlanket;
-    private String currentVID;
+     /**
+     * true if driver has been prepared.
+     */
     protected static volatile boolean driverExtracted = false;
-    protected static volatile int driverRemoveOnDone = 0; //0=unset 1=do not remove 2=remove on exit
+    
+     /**
+     * Should driver be removed on script completion?
+     * 0 - Unset (will prompt user)
+     * 1 - Do not remove driver on completion
+     * 2 - Remove driver on script completion
+     */
+    protected static volatile int removeDriverOnCompletion;
     
     /**
-     * WindowsDrivers
-     * @param promptInit
+     * WindowsDrivers instantiates the windows driver class.
+     *
+     * @param promptInit    initializes removeDriverOnCompletion member and subsequent 
+     *                      prompting action.
+     *                      0 - Unset (will prompt user) (default)
+     *                      1 - Do not remove driver on completion
+     *                      2 - Remove driver on script completion
      */
     public WindowsDrivers(int promptInit) {
-        driverRemoveOnDone = promptInit;
+        removeDriverOnCompletion = promptInit;
         log.level4Debug("WindowsDrivers() Initializing");
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
         this.pathToCADI = Statics.TempFolder + "CADI" + Statics.Slash;
-        if (driverRemoveOnDone == 0){ //so it only asks once
-            driverRemoveOnDone = (new CASUALInteraction("@interactionInstallingCADI").showYesNoOption() ? 2 : 1); //set value as 2 if true and 1 if false
+        if (removeDriverOnCompletion == 0){ //so it only asks once
+            removeDriverOnCompletion = (new CASUALInteraction("@interactionInstallingCADI").showYesNoOption() ? 2 : 1); //set value as 2 if true and 1 if false
         }
     }
 
     /**
-     * <code>main</code> execution entrypoint.
-     * In this class, used for testing purposes only
+     * main is the default execution entrypoint, however In this class it is 
+     * used only for testing purposes and should not be called externally.
      * 
      * @param args 
      */
     public static void main(String[] args) {
         WindowsDrivers wd = new WindowsDrivers(0);
         wd.installDriverBlanket(null);
-        wd.removeDriver();
+        wd.uninstallCADI();
      }
     
     /**
-     * <code>installDriverBlanket</code>
+     * installDriverBlanket parses VID String Array windowsDriverBlanket and calls
+     * installDriver() method for each.
+     * 
+     * @param additionalVIDs    optional String Array of additional VIDs to be scanned 
+     *                          for should normally always be null.
      */
     public void installDriverBlanket(String[] additionalVIDs) {
         for (int x = 0; windowsDriverBlanket.length > x; x++) {
@@ -108,10 +126,12 @@ public class WindowsDrivers {
     }
 
     /**
-     * installDriver
+     * installDriver parses devcon output for connected devices matching the VID
+     * parameter, and attempts to install LibusbK device driver (cadi.inf) via devcon
+     * on devcon failure (only for Samsung) libwdi will attempt to install the driver.
      * 
-     * @param VID
-     * @return 
+     * @param VID   target VID to scan & install drivers for.
+     * @return      
      */
     public boolean installDriver(String VID) {
         if (VID.equals("")) {
@@ -119,29 +139,33 @@ public class WindowsDrivers {
             return false;
         }
         log.level3Verbose("Installing driver for VID:" + VID);
-        boolean installedPreviously = false;
-        String[] dList = getDeviceList(VID);
+        boolean installedPreviously = false;    //flags true if a previously installed HWID is found, to prevent redundant calls to devcon.
+        String[] dList = getDeviceList(VID);    //get device HWID list for current VID
         if (dList != null) {
-            String[] pastInstalls = new String[dList.length];
-            for (int x = 0; x < dList.length && dList[x] != null; x++) {
-                for (int y = 0; pastInstalls.length > y && pastInstalls[y] != null; y++) { 
-                    if (pastInstalls[y].equals(dList[x])) {
-                        installedPreviously = true;
+            String[] pastInstalls = new String[dList.length];   //pastInstalls stores a history of previously installed HWIDs for comparison
+            for (int x = 0; x < dList.length && dList[x] != null; x++) {    //parse device HWID listing
+                for (int y = 0; pastInstalls.length > y && pastInstalls[y] != null; y++) { //parse previously installed HWID
+                    if (pastInstalls[y].equals(dList[x])) { //checks for previously installed HWID (index y) against current device HWID (index x)
+                        installedPreviously = true; //flags a redundant HWID
                     }
                 }
-                if (!installedPreviously){
+                if (!installedPreviously){ //checks if current HWID is redundant
                     String retVal = devconCommand("update " + pathToCADI + "cadi.inf " + "\"" + dList[x] + "\"");
                     if (retVal == null) {
                         log.level0Error("installDriver() devcon returned null!");
                         return false;
                     } else if (!retVal.contains("Drivers installed successfully") || retVal.contains(" failed")) {
                         log.level0Error("installDriver() failed for "+ "\"" + dList[x] + "\"!");
-                        return launchOldFaithful();
+                        if(VID.equals("04E8")) {
+                            return launchOldFaithful();
+                        } else {
+                            return false;
+                        }
                     }
-                }
-                pastInstalls[x] = dList[x];
-            } 
-        }else {
+                pastInstalls[x] = dList[x]; //add installed HWID to redundancy list
+                } 
+            }
+        } else {
             log.level0Error("installDriver() no target devices for VID: " + VID);
             return false;
         }
@@ -149,9 +173,8 @@ public class WindowsDrivers {
     }
     
     /**
-     * installDriver
+     * launchOldFaithful
      * 
-     * @param VID
      * @return 
      */
     private boolean launchOldFaithful() {
@@ -184,37 +207,17 @@ public class WindowsDrivers {
     }
     
     /**
-     * removeDriver
+     * uninstallCADI
      * 
      */
-    public void removeDriver() {
-        log.level2Information("removeDriver() Initializing");
-        log.level2Information("removeDriver() Scanning for CADI driver package(s)");
-        String[] infString = getOemInfName();
-        if (infString != null) {
-            for (int x = 0; infString.length > x && infString[x] != null; x++) {
-                log.level2Information("removeDriver() Forcing removal of driver package: " + infString[x]);
-                if (devconCommand("-f dp_delete " + infString[x]) == null) {
-                    log.level0Error("removeDriver() devcon returned null!");
-                }
-            }
-        } else {
-            log.level0Error("removeDriver() getOemInfName() returned null!");
-        }
+    public void uninstallCADI() {
+        log.level2Information("uninstallCADI() Initializing");
+        log.level2Information("uninstallCADI() Scanning for CADI driver package(s)");
+        deleteOemInf();
 
-        log.level2Information("removeDriver() Scanning for orphaned devices");
-        for (int y = 0; windowsDriverBlanket.length > y; y++) {
-            String[] orphanedDevices = getOrphanedDevices(windowsDriverBlanket[y]);
-            if (orphanedDevices != null) {
-                for (int x = 0; x < orphanedDevices.length && orphanedDevices[x] != null; x++) {
-                    log.level2Information("removeDriver() Removing orphaned device installation");
-                    if (devconCommand("remove " + "\"" + orphanedDevices[x] + "\"") == null) {
-                        log.level0Error("removeDriver() devcon returned null!");
-                    }
-                }
-            } else {
-                log.level0Error("removeDriver() getOrphanedDevices() returned null!");
-            }
+        log.level2Information("uninstallCADI() Scanning for orphaned devices");
+        for (int x = 0; windowsDriverBlanket.length > x; x++) {
+            removeOrphanedDevices(windowsDriverBlanket[x]);
         }
         
         log.level2Information("removeDriver() Windows will now scan for hardware changes");
@@ -264,71 +267,67 @@ public class WindowsDrivers {
     }
 
     /**
-     * getOrphanedDevices
+     * removeOrphanedDevices
      * 
      * @param   VID     a String containing a four character USB vendor ID code in hexadecimal
      * @return 
      */
-    private String[] getOrphanedDevices(String VID) {
+    private void removeOrphanedDevices(String VID) {
         if (!VID.equals("")) {
             Pattern pattern = getRegExPattern("Matching devices");
             if (pattern != null) {
                 String outputBuffer = devconCommand("findall *USB\\VID_" + VID + "*");
                 if (outputBuffer != null) {
                     Matcher matcher = pattern.matcher(outputBuffer);
-                    String[] dList = new String[Integer.parseInt((matcher.find() ? matcher.group(0) : "0"))];
                     pattern = getRegExPattern("orphans");
                     if (pattern != null) {
                         matcher = pattern.matcher(outputBuffer);
-                        for (int x = 0; matcher.find(); x++) {
-                            dList[x] = StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", ""));
+                        while (matcher.find()) {
+                            log.level2Information("removeOrphanedDevices() Removing orphaned device " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
+                            if (devconCommand("remove " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"") == null) {
+                                    log.level0Error("removeOrphanedDevices() devcon returned null!");
+                                }
                         }
-                        return dList;
                     } else {
-                        log.level0Error("getOrphanedDevices() getRegExPattern() returned null!");
-                        return null;
+                        log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
                     }
                 } else {
-                    log.level0Error("getOrphanedDevices() devcon returned null!");
-                    return null;
+                    log.level0Error("removeOrphanedDevices() devcon returned null!");
                 }
             } else {
-                log.level0Error("getOrphanedDevices() getRegExPattern() returned null!");
-                return null;
+                log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
             }
         } else {
-            log.level0Error("getOrphanedDevices() no VID specified");
-            return null;
+            log.level0Error("removeOrphanedDevices() no VID specified");
         }
     }
 
     /**
-     * getOemInfName parses output from devconCommand
+     * deleteOemInf parses output from devconCommand
      * via regex to extract the name of the *.inf file from Windows
      * driver store. Extraction of the file name is determined by setup classes 
      * & provider names.
      * 
      * @return      a String Array of *.inf files matching the search criteria.
      */
-    private String[] getOemInfName() {
-        log.level2Information("getOemInfName() Enumerating installed driver packages");
+    private void deleteOemInf() {
+        log.level2Information("deleteOemInf() Enumerating installed driver packages");
         Pattern pattern = getRegExPattern("inf");
         if (pattern != null) {
-            String[] oemBuffer = new String[9];
             String outputBuffer = devconCommand("dp_enum");
             if (outputBuffer != null) {
                 Matcher matcher = pattern.matcher(outputBuffer);
                 for (int x = 0; matcher.find(); x++) {
-                    oemBuffer[x] = matcher.group(0);
+                    log.level2Information("removeDriver() Forcing removal of driver package: " + matcher.group(0));
+                    if (devconCommand("-f dp_delete " + matcher.group(0)) == null) {
+                        log.level0Error("removeDriver() devcon returned null!");
+                    }
                 }
-                return oemBuffer;
             } else {
-                log.level0Error("getOemInfName() devcon returned null!");
-                return null;
+                log.level0Error("deleteOemInf() devcon returned null!");
             }
         } else {
-            log.level0Error("getOemInfName() getRegExPattern() returned null!");
-            return null;
+            log.level0Error("deleteOemInf() getRegExPattern() returned null!");
         }
     }
 
@@ -377,7 +376,7 @@ public class WindowsDrivers {
         if (!whatPattern.equals("")) {
             switch (whatPattern) {
                 case "orphans":
-                    return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}(?=.*:\\s[CASUAL's|Samsung]+\\s[Android\\sDevice])");
+                    return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:\\s[CASUAL's|Samsung]+\\s[Android\\sDevice])");
                 case "inf":
                     return Pattern.compile("[o|Oe|Em|M]{3}[0-9]{1,4}\\.inf(?=\\s*Provider:\\slibusbK\\s*Class:\\s*libusbK USB Devices)");
                 case "install":

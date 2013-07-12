@@ -76,9 +76,9 @@ public class CASUALLanguage {
             }
             //Close the input stream
             dataIn.close();
-            if(WindowsDrivers.driverRemoveOnDone==2) {//2 for remove driver 1 for do not remove
+            if(WindowsDrivers.removeDriverOnCompletion==2) {//2 for remove driver 1 for do not remove
              log.level2Information("Removing generic USB driver as requested");
-             new WindowsDrivers(2).removeDriver();
+             new WindowsDrivers(2).uninstallCADI();
              }
             log.level2Information("@done");
         } catch (Exception e) {//Catch exception if any

@@ -33,11 +33,11 @@ public class CADIjUnitTest {
     public void testCadi() {
         if (CASUAL.Statics.isWindows()) {
             setContinue();
-            new WindowsDrivers(2).installDriverBlanket(null);
+            new WindowsDrivers(1).installDriverBlanket(null);
             setContinue();
-            new WindowsDrivers(2).removeDriver();
+            new WindowsDrivers(2).uninstallCADI();
             
-            //new WindowsDrivers().removeDriver();
+            //new WindowsDrivers(2).uninstallCADI();
             //TODO: set good/bad returns and command to assert
             //execute the command
         }

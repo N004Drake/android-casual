@@ -58,9 +58,9 @@ public class WindowsDriversTest {
     @Test
     public void testInstallDriverBlanket() {
         System.out.println("installDriverBlanket");
-        WindowsDrivers instance = new WindowsDrivers();
+        WindowsDrivers instance = new WindowsDrivers(1);
         setContinue();
-        instance.installDriverBlanket();
+        instance.installDriverBlanket(null);
         // TODO review the generated test code and remove the default call to fail.
     }
 
@@ -69,10 +69,10 @@ public class WindowsDriversTest {
      */
     @Test
     public void testRemoveDriver() {
-        System.out.println("removeDriver");
-        WindowsDrivers instance = new WindowsDrivers();
+        System.out.println("uninstallCADI");
+        WindowsDrivers instance = new WindowsDrivers(1);
         setContinue();
-        instance.removeDriver();
+        instance.uninstallCADI();
         // TODO review the generated test code and remove the default call to fail.
     }
     public void setContinue() {
