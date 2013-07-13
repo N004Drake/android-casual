@@ -118,7 +118,6 @@ public class CASUALapplicationData {
 
         Properties properties = new Properties();
         properties.load(in);
-        //properties.list(System.out);
         in.close();
         buildProperties = null;
         usePictureForBanner = properties.getProperty("Window.UsePictureForBanner").contains("rue");

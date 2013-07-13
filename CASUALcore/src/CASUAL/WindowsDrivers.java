@@ -72,7 +72,7 @@ public class WindowsDrivers {
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
         this.pathToCADI = Statics.TempFolder + "CADI" + Statics.Slash;
         if (removeDriverOnCompletion == 0){ //so it only asks once
-            removeDriverOnCompletion = (new CASUALInteraction("@interactionInstallingCADI").showYesNoOption() ? 2 : 1); //set value as 2 if true and 1 if false
+            removeDriverOnCompletion = new CASUALInteraction("@interactionInstallingCADI").showYesNoOption() ? 2 : 1; //set value as 2 if true and 1 if false
         }
     }
 
@@ -239,7 +239,7 @@ public class WindowsDrivers {
                 Pattern pattern = getRegExPattern("Matching devices");
                 if (pattern != null) {
                     Matcher matcher = pattern.matcher(outputBuffer);
-                    String[] dList = new String[Integer.parseInt((matcher.find() ? matcher.group(0).toString() : "0"))];
+                    String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
                     pattern = getRegExPattern("install");
                     
                     if (pattern != null) {
@@ -317,8 +317,9 @@ public class WindowsDrivers {
             String outputBuffer = devconCommand("dp_enum");
             if (outputBuffer != null) {
                 Matcher matcher = pattern.matcher(outputBuffer);
+                //TODO: examine this to find out why we are iterating through but only using "0"
                 for (int x = 0; matcher.find(); x++) {
-                    log.level2Information("removeDriver() Forcing removal of driver package: " + matcher.group(0));
+                    log.level2Information("removeDriver() Forcing removal of driver package" + matcher.group(0));
                     if (devconCommand("-f dp_delete " + matcher.group(0)) == null) {
                         log.level0Error("removeDriver() devcon returned null!");
                     }
@@ -357,6 +358,44 @@ public class WindowsDrivers {
             }
             String exec = pathToCADI + (Statics.is64bitSystem() ? "devcon_x64.exe " : "devcon_x86.exe ") + args;
             String retval;
+            
+            //TODO: Figure out why this is installing with no driver connected.
+            //TODO: This causes Windows Setup API error on each parsed VID on Windows 7
+            /*
+             * Attatched are relevant details
+             * No device was connected  but 04E8 was detected
+             * 
+             * exec= "C:\Users\adam\AppData\Local\Temp\CASUALadam-2013-07-13-08.03.19\CADI\devcon_x64.exe find *USB\VID_04E8*"
+             * [VERBOSE]Unzip Complete
+[DEBUG]Executing timeoutShellCommand
+[DEBUG]The current time is: 1373720675341
+[DEBUG]The thread will end at: 1373720765340
+[DEBUG]
+###executing: cmd.exe###
+
+             * 
+[Window Title]
+Windows Setup API
+
+[Main Instruction]
+Do you want to send more information about the problem?
+
+[Content]
+Additional details about what went wrong can help Microsoft create a solution.
+
+[V] View Details  [Send information] [Cancel]
+             * Files that help describe the problem:
+  C:\Users\adam\AppData\Local\Temp\WER3334.tmp.WERInternalMetadata.xml
+  C:\Users\adam\AppData\Local\Temp\WER4A9C.tmp.appcompat.txt
+  C:\Users\adam\AppData\Local\Temp\WER4AAC.tmp.mdmp
+
+Read our privacy statement online:
+  http://go.microsoft.com/fwlink/?linkid=104288&clcid=0x0409
+
+If the online privacy statement is not available, please read our privacy statement offline:
+  C:\Windows\system32\en-US\erofflps.txt
+
+             */
             retval = new Shell().timeoutShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""},90000); //1000 milliseconds — one second
             log.level2Information(retval);
             return retval;

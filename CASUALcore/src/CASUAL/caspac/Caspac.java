@@ -40,7 +40,6 @@ public class Caspac {
 
     public Caspac(File caspac) {
         this.CASPAC = caspac;
-        System.out.println(Statics.TempFolder);
         log.level4Debug("Creating folder for CASPAC at\n\t"
                 + Statics.TempFolder + "CASPAC" + caspac.getName());
         TempFolder = Statics.TempFolder + "CASPAC" + caspac.getName();
@@ -192,7 +191,6 @@ public class Caspac {
             log.level4Debug("Added METADATA to " +script.getName()+".");
             int md5ArrayPosition = 0;
             String md5;
-            List<String> md5s=new ArrayList<>();
             while ((md5 = script.metaData.metaProp.getProperty("Script.MD5[" + md5ArrayPosition + "]")) != null) {
                 script.metaData.md5s.add(md5);
                 md5ArrayPosition++;
@@ -261,7 +259,7 @@ public class Caspac {
     }
     
     private ArrayList<String> getScriptNames()
-    {
+    { //TODO: examine this to figure out why we are iterating "scripts" and adding a slash while getting names
         ArrayList<String> scriptNames = new ArrayList<>();
         for (Script s : scripts)
             scriptNames.add(slash);
@@ -271,12 +269,11 @@ public class Caspac {
     private void cleanCaspacWrite() {
         for (File f : new File(Statics.TempFolder).listFiles())
         {
-            if (f.toString().endsWith(".script") || f.toString().endsWith(".zip"))
-                if (f.isDirectory())
-                    new FileOperations().recursiveDelete(f);
+            if ((f.toString().endsWith(".script") || f.toString().endsWith(".zip"))&& f.isDirectory()){
+                new FileOperations().recursiveDelete(f);
+            }
         }
     }
-    
     
     public class Build {    
         public String developerName = "";

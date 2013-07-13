@@ -123,7 +123,6 @@ public class CASPACHandler {
     private CASPACData handleCASPACFiles(Object entry, File f) throws IOException {
 
         if (entry.toString().equals("-build.properties")) {
-            //TODO: stream ca into CASPAC
             CASUALapplicationData ca = new CASUALapplicationData(Unzip.streamFileFromZip(f, entry));
         } else if (entry.toString().equals("-Overview.txt")) {
             if (Statics.useGUI) { //only display overview if using GUI.

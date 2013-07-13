@@ -85,7 +85,7 @@ public class ADBTools {
      */
     public static String getDevices(){
         Shell shell=new Shell();
-        String retval=shell.timeoutShellCommand(getDevicesCmd(),5000);
+        String retval=shell.silentTimeoutShellCommand(getDevicesCmd(),5000);
         return retval;
     }
     /**
@@ -153,7 +153,6 @@ public class ADBTools {
 
         }
 
-        //TODO: implement this as an error handler for ADB. in a centralized manner. 
         if (DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
             log.level4Debug("Restarting ADB slowly");
             restartADBserver();
