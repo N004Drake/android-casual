@@ -49,7 +49,6 @@ public class WindowsDriversTest {
         String[] args = null;
         setContinue();
         WindowsDrivers.main(args);
-        // TODO review the generated test code and remove the default call to fail.
     }
 
     /**
@@ -61,8 +60,7 @@ public class WindowsDriversTest {
         WindowsDrivers instance = new WindowsDrivers(1);
         setContinue();
         instance.installDriverBlanket(null);
-        // TODO review the generated test code and remove the default call to fail.
-    }
+   }
 
     /**
      * Test of removeDriver method, of class WindowsDrivers.
@@ -72,7 +70,7 @@ public class WindowsDriversTest {
         System.out.println("uninstallCADI");
         WindowsDrivers instance = new WindowsDrivers(1);
         instance.uninstallCADI();
-        // TODO review the generated test code and remove the default call to fail.
+        
     }
     public void setContinue() {
         String string = "\n";

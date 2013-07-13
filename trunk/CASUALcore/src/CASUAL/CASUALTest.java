@@ -169,45 +169,37 @@ public class CASUALTest {
 
                     writeToCASUAL.write(13);
                 } else if (line.contains("[USERTASK][Q or RETURN][CRITICAL]")) {
-                    System.out.println(line);
                     writeToCASUAL.write(13);
 
 
                     //perform an action now or stop
                 } else if (line.contains("[CANCELOPTION][Q or RETURN]")) {
                     //are you sure you want to continue?
-                    System.out.println(line);
                     writeToCASUAL.write(13);
 
 
                 } else if (line.contains("[INTERACTION][NOTIFICATION][RETURN]")) {
                     //general notification
-                    System.out.println(line);
                     writeToCASUAL.write(13);
                 } else if (line.contains("[RETURN]")) {
                     //general notification
-                    System.out.println(line);
                     writeToCASUAL.write(13);
 
 
                 } else if (line.contains("[INFOMESSAGE][RETURN]")) {
                     //general information
-                    System.out.println(line);
                     writeToCASUAL.write(13);
 
 
                 } else if (line.contains("[ERRORMESSAGE][RETURN]")) {
                     //general error 
-                    System.out.println(line);
                     writeToCASUAL.write(13);
                 
                 } else if (line.contains("[INTERACTION][CANCELOPTION][Q or RETURN]")) {
                     //general error 
-                    System.out.println(line);
                     writeToCASUAL.write(13);
                 } else if (line.contains("[INTERACTION][ACTIONREQUIRED][Q or RETURN]")) {
                     //general error 
-                    System.out.println(line);
                     writeToCASUAL.write(13);
                 }
             } catch (IOException ex) {
@@ -229,10 +221,8 @@ public class CASUALTest {
     Runnable launchCASUAL = new Runnable() {
         @Override
         public void run() {
-            System.out.println("launching");
             CASUAL.CASUALApp.beginCASUAL(args);
             shutdown = true;
-            System.out.println("shutting down");
             CASUAL.CASUALApp.shutdown(0);
             shutdown=false;
         }

@@ -67,7 +67,6 @@ public class CASPACData {
         supportURL = prop.getProperty("Script.SupportURL");
         updateMessage = prop.getProperty("Script.UpdateMessage");
         int md5ArrayPosition = 0;
-        System.out.print("Script.MD5[" + md5ArrayPosition + "]");
         String md5;
         while ((md5 = prop.getProperty("Script.MD5[" + md5ArrayPosition + "]")) != null) {
             md5s.add(md5);

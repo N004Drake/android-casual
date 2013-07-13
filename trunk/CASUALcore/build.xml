@@ -74,8 +74,8 @@
     -->
     <target name="-pre-init" description="sorts out properties files and selects higher revisions">
         
-        <javac srcdir="BuildTasks" destdir="BuildTasks"/>
-        <java fork="true" failonerror="yes" classname="ResolveSVNConflicts">
+        <javac includeantruntime="last" failonerror="no" srcdir="BuildTasks" destdir="BuildTasks"/>
+        <java fork="false" failonerror="no" classname="ResolveSVNConflicts">
             <classpath>
                <pathelement location="BuildTasks"/>
             </classpath>

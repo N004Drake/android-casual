@@ -47,8 +47,6 @@ public class CASPACjUnitTest {
             badValues = new String[]{"ERROR"};
             goodValues = new String[]{"echo [PASS]", "[PASS] IFNOTCONTAINS"};
             assertEquals(true, new CASUAL.CASUALTest(casualParams, goodValues, badValues).checkTestPoints());
-
-            //TODO: not shutting down here
         }
     }
 }

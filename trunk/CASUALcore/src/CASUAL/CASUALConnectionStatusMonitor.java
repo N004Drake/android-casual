@@ -56,7 +56,6 @@ public class CASUALConnectionStatusMonitor {
                     LastState = 0;
                     return;
                 }
-                try {
                     String DeviceList = getConnectedDevices();
                     CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
 
@@ -124,9 +123,7 @@ public class CASUALConnectionStatusMonitor {
                         }
 
                     }
-                } catch (NullPointerException E) {
-                    //unreported because there's no reason to report there are no devices.
-                }
+
             }
 
             private void sleepForFourSeconds() {
@@ -161,11 +158,13 @@ public class CASUALConnectionStatusMonitor {
             switch (State) {
                 case 0:
                     Log.level4Debug("@stateDisconnected");
+                    Statics.currentStatus="Device Removed";
                     stateSwitchWasSucessful = Statics.GUI.enableControls(false);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                     AudioHandler.playSound("/CASUAL/resources/sounds/Disconnected.wav");
                     break;
                 case 1:
+                    Statics.currentStatus="Device Connected";
                     Log.level4Debug("@stateConnected");
                     stateSwitchWasSucessful = Statics.GUI.enableControls(true);
                     Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
@@ -173,7 +172,7 @@ public class CASUALConnectionStatusMonitor {
                     AudioHandler.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
                     break;
                 default:
-
+                    Statics.currentStatus="Multiple Devices Detected";
                     if (State == 2) {
                         Log.level0Error("@stateMultipleDevices");
                         Log.level0Error("Remove " + (State - 1) + " device to continue.");

@@ -91,11 +91,11 @@ public class CASUALInteraction extends JOptionPane {
      * @return
      */
     public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, int optionType, int messageType, Object[] options, final Object initialValue) {
-        if (!originalMessage.equals("")) logPretranslated("[STANDARDMESSAGE]"+originalMessage);
+        if (!originalMessage.equals("")) logPretranslated("[STANDARDMESSAGE]"+originalMessage+"\n[RESPONSEEXPECTED]");
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             return new TimeOutOptionPane().timeoutDialog(PRESET_TIME, parentComponent, messageText, title, optionType, messageType, options, initialValue);
         } else {
-            new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText);
+            new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText+"\n[RESPONSEEXPECTED]");
             String s = getCommandLineInput();
             if (s==null||s.equals("")){
                 return 0;
@@ -137,7 +137,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public String inputDialog() throws HeadlessException {
         if (!originalMessage.equals("")) logPretranslated("[INPUT][ANY]"+originalMessage);
-        new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText);
+        new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText+"\n[RESPONSEEXPECTED]");
         messageText="<html>"+messageText.replace("\\n","\n");
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             if (title == null) {
@@ -158,7 +158,7 @@ public class CASUALInteraction extends JOptionPane {
      * @throws HeadlessException
      */
     public int showActionRequiredDialog() throws HeadlessException {
-        if (!originalMessage.equals("")) logPretranslated("[USERTASK][Q or RETURN][CRITICAL]"+originalMessage);
+        if (!originalMessage.equals("")) logPretranslated("[USERTASK][Q or RETURN][CRITICAL]"+originalMessage+"\n[RESPONSEEXPECTED]");
         new Log().level4Debug("Displaying Action Is Required Dialog:" + messageText);
         int n = 9999;
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
@@ -176,7 +176,7 @@ public class CASUALInteraction extends JOptionPane {
                     Options[1]);
         } else {
             while (n != 0 && n != 1) {
-                new Log().Level1Interaction("[ACTIONREQUIRED][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit");
+                new Log().Level1Interaction("[ACTIONREQUIRED][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit"+"\n[RESPONSEEXPECTED]");
                 String retval = getCommandLineInput();
                 if (!retval.equals("q") && !retval.equals("Q") && !retval.equals("")) {
                     n = new CASUALInteraction(messageText).showActionRequiredDialog();
@@ -195,8 +195,8 @@ public class CASUALInteraction extends JOptionPane {
      * @return 0 if cancel was requested
      */
     public int showUserCancelOption() {
-        if (!originalMessage.equals("")) logPretranslated("[CANCELOPTION][Q or RETURN]"+originalMessage);
-        new Log().level4Debug("Displaying User Cancel Option Dialog title: " + title + " message: " + messageText);
+        if (!originalMessage.equals("")) logPretranslated("[CANCELOPTION][Q or RETURN]"+originalMessage+"\n[RESPONSEEXPECTED]");
+        new Log().level4Debug("Displaying User Cancel Option Dialog title: " + title + " message: " + messageText+"\n[RESPONSEEXPECTED]");
 
         int n;
         Object[] Options = {"Stop", "Continue"};
@@ -223,7 +223,7 @@ public class CASUALInteraction extends JOptionPane {
                         Options[1]);
             }
         } else {
-            new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit");
+            new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit"+"\n[RESPONSEEXPECTED]");
             String s = this.getCommandLineInput();
             if (s.equals("q") || s.equals("Q")) {
                 return 0;
@@ -238,7 +238,7 @@ public class CASUALInteraction extends JOptionPane {
      * @throws HeadlessException
      */
     public void showUserNotification() throws HeadlessException {
-        if (!originalMessage.equals("")) logPretranslated("[NOTIFICATION][RETURN]"+originalMessage);
+        if (!originalMessage.equals("")) logPretranslated("[NOTIFICATION][RETURN]"+originalMessage +"\n[RESPONSEEXPECTED]");
         new Log().level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
 
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
@@ -254,7 +254,7 @@ public class CASUALInteraction extends JOptionPane {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            new Log().Level1Interaction("[NOTIFICATION][RETURN]" + title + "\n" + messageText + "  Press any key to continue.");
+            new Log().Level1Interaction("[NOTIFICATION][RETURN]" + title + "\n" + messageText + "  Press any key to continue."+"\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -264,13 +264,13 @@ public class CASUALInteraction extends JOptionPane {
      * @throws HeadlessException
      */
     public void showInformationMessage() throws HeadlessException {
-        if (!originalMessage.equals("")) logPretranslated("[INFOMESSAGE][RETURN]" +originalMessage);
+        if (!originalMessage.equals("")) logPretranslated("[INFOMESSAGE][RETURN]" +originalMessage+"\n[RESPONSEEXPECTED]");
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog(Statics.GUI,
                     messageText, title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
-            new Log().Level1Interaction("[INFOMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue.");
+            new Log().Level1Interaction("[INFOMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue."+"\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -280,11 +280,11 @@ public class CASUALInteraction extends JOptionPane {
      * @throws HeadlessException
      */
     public void showErrorDialog() throws HeadlessException {
-        if (!originalMessage.equals("")) logPretranslated("[ERRORMESSAGE][RETURN]"+originalMessage);
+        if (!originalMessage.equals("")) logPretranslated("[ERRORMESSAGE][RETURN]"+originalMessage+"\n[RESPONSEEXPECTED]");
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog(Statics.GUI, messageText, title, JOptionPane.ERROR_MESSAGE);
         } else {
-            new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue.");
+            new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue."+"\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -294,8 +294,8 @@ public class CASUALInteraction extends JOptionPane {
      * @return true if yes, false if no
      */
     public boolean showYesNoOption() {
-        if (!originalMessage.equals("")) logPretranslated("[YESNOOPTION][RETURN or n]" +originalMessage);
-        new Log().level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText);
+        if (!originalMessage.equals("")) logPretranslated("[YESNOOPTION][RETURN or n]" +originalMessage+"\n[RESPONSEEXPECTED]");
+        new Log().level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText+"\n[RESPONSEEXPECTED]");
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             if (title == null) {
                 title = "Yes or No";
@@ -313,7 +313,7 @@ public class CASUALInteraction extends JOptionPane {
                 title = title + "\n";
             }
             //display the messageText
-            new Log().Level1Interaction("[YESNOOPTION][RETURN or n]" + title + "\n" + messageText + "\npress N for no");
+            new Log().Level1Interaction("[YESNOOPTION][RETURN or n]" + title + "\n" + messageText + "\npress N for no"+"\n[RESPONSEEXPECTED]");
             String s = this.getCommandLineInput();
             if (s.equals("n") || s.equals("N")) {
                 return false;

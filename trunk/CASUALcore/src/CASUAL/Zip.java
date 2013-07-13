@@ -277,14 +277,12 @@ public class Zip {
         }
     }
     
-        //TODO: look at making this private
     private void addFileToZip(File file) throws IOException
     {
         
         if (!file.exists())
         {
-            //TODO: Impliment Logger from casual
-            System.out.println("File: " + file.toString() + " not found.");
+            log.level0Error("File: " + file.toString() + " not found while adding to zip");
             return;
         }
         
@@ -323,8 +321,7 @@ public class Zip {
         
         if (!file.exists())
         {
-            //TODO: Impliment Logger from casual
-            System.out.println("File: " + file.toString() + " not found.");
+            log.level0Error("File: " + file.toString() + " not found while adding to zip.");
             return;
         }
         
@@ -367,8 +364,7 @@ public class Zip {
     {
         if (!file.exists())
         {
-            //TODO: Impliment Logger from casual
-            System.out.println("File: " + file.toString() + " not found.");
+            log.level0Error("File: " + file.toString() + " not found while adding to zip.");
             return;
         }
         if (file.isFile())
