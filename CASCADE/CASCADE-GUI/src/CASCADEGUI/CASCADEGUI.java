@@ -931,7 +931,6 @@ public class CASCADEGUI extends javax.swing.JFrame {
         //Create new file In memory with name from the JTextField
         //TODO Add a browse button for the JTextField for location
         File file = new File(this.outputFile.getText());
-        script.removeAll();
         
         
         if (!file.toString().endsWith(".zip"))
@@ -955,13 +954,17 @@ public class CASCADEGUI extends javax.swing.JFrame {
             if (i == JOptionPane.NO_OPTION) {
                 log.level0Error("File override declined");
                 return;
-            }  
+            }
+            else {
+                file.delete();
+            }
         }
         
         log.level2Information("Creating CASPAC file");
         Caspac cp = new Caspac(new File(this.outputFile.getText()));
         log.level2Information("Setting CASPAC build");
         cp.setBuild(buildMaker());
+        cp.build.bannerPic=this.bannerPic.getText();
 
         log.level2Information("Adding scripts from memory to CASPAC");
         for (int j = 0; j < scriptList.getSize();j++)
@@ -1159,6 +1162,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
         Caspac cp = new Caspac(file);
         try {
+            scriptList.clear();;
             log.level4Debug("Initiating CASPAC load.");
             cp.load();
         } catch (ZipException ex) {
@@ -1382,6 +1386,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         if (scriptList.getElementAt(currentScriptIndex).getScript().isEmpty()){
             scriptList.getElementAt(currentScriptIndex).setScript("#Enter CASUAL commands here");
         }
+        
         this.scriptWorkArea.setText(scriptList.getElementAt(currentScriptIndex).getScript());
 
         

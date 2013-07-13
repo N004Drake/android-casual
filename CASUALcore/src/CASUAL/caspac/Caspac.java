@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipException;
 
@@ -46,8 +45,7 @@ public class Caspac {
                 + Statics.TempFolder + "CASPAC" + caspac.getName());
         TempFolder = Statics.TempFolder + "CASPAC" + caspac.getName();
         
-        if (!(new File(TempFolder).exists()))
-            new File(TempFolder).mkdir();
+
     }
     
     
@@ -57,7 +55,7 @@ public class Caspac {
             scripts.add(script);
             log.level4Debug("Adding Script: "+ script.getName());
         }
-}
+    }   
     public void removeScript (Script script) {
         if (scripts.contains(script))
         {
@@ -91,6 +89,8 @@ public class Caspac {
     
     
     public void write() throws IOException {
+        if (!(new File(TempFolder).exists()))
+            new File(TempFolder).mkdir();
         for (Script s : scripts)
         {
             log.level4Debug("Writing Script: "+ s.getName());
@@ -119,19 +119,17 @@ public class Caspac {
         log.level4Debug("Creating new Zip at: \n\t"+CASPAC.toString());
         Zip zip = new Zip(CASPAC);  
         log.level4Debug("Placeing the following files in the caspac Zip");
-        for(File f : new File(TempFolder.toString()).listFiles())
-        {
-            zip.addToZip(f);
-            log.level4Debug(f.toString());
-        }
         zip.execute(TempFolder);
+        cleanCaspacWrite();
     }
     
     public void setBuild(Properties prop){
         build=new Build(prop);
+        build.loadPropsToVariables();
     }
 
     public void load() throws ZipException, IOException{
+        TempFolder = TempFolder + "EXPLOAD";
         Script dummy;
         int i;
         log.level4Debug("\n\n\nStarting CASPAC unzip.");
@@ -168,7 +166,12 @@ public class Caspac {
                     + "CASPAC");
             build = new Build(pack.streamFileFromZip(entry));
             build.loadPropsToVariables();
-        } else if (filename.toString().equals("-Overview.txt")) {
+        } else if (filename.endsWith(".png")) {            
+        log.level4Debug("Found logo adding information to "
+                    + "CASPAC");
+        new FileOperations().writeStreamToFile(pack.streamFileFromZip(entry), TempFolder + slash + filename);
+        build.bannerPic =TempFolder + slash + filename;
+        }else if (filename.toString().equals("-Overview.txt")) {
             log.level4Debug("Found -Overview.txt adding information to "
                     + "CASPAC");
             overview=new FileOperations().readTextFromStream(pack.streamFileFromZip(entry));
@@ -264,6 +267,15 @@ public class Caspac {
             scriptNames.add(slash);
         return scriptNames;
     }
+
+    private void cleanCaspacWrite() {
+        for (File f : new File(Statics.TempFolder).listFiles())
+        {
+            if (f.toString().endsWith(".script") || f.toString().endsWith(".zip"))
+                if (f.isDirectory())
+                    new FileOperations().recursiveDelete(f);
+        }
+    }
     
     
     public class Build {    
@@ -352,7 +364,6 @@ public class Caspac {
             donateLink = buildProp.getProperty("Developer.DonateLink","");
             executeButtonText = buildProp.getProperty("Window.ExecuteButtonText","");
             bannerText = buildProp.getProperty("Window.BannerText","");
-            bannerPic = TempFolder + slash + buildProp.getProperty("Window.BannerPic","");
             if (buildProp.contains("Application.AlwaysEnableControls"))            
                 alwaysEnableControls = buildProp.getProperty("Application.AlwaysEnableControls").contains("rue");
             windowTitle = buildProp.getProperty("Window.Title","");

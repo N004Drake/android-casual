@@ -224,12 +224,12 @@ public class Script {
          * sets the properties object from local variables for writing
          */
         private void setPropsFromVariables(){
-            metaProp.setProperty("CASUAL.minSVN", script);
-            metaProp.setProperty("Script.Revision", script);
-            metaProp.setProperty("Script.ID", script);
-            metaProp.setProperty("Script.SupportURL", script);
-            metaProp.setProperty("Script.UpdateMessage", script);
-            metaProp.setProperty("Script.KillSwitchMessage", script);
+            metaProp.setProperty("CASUAL.minSVN", minSVNversion);
+            metaProp.setProperty("Script.Revision", scriptRevision);
+            metaProp.setProperty("Script.ID", uniqueIdentifier);
+            metaProp.setProperty("Script.SupportURL", supportURL);
+            metaProp.setProperty("Script.UpdateMessage", updateMessage);
+            metaProp.setProperty("Script.KillSwitchMessage", killSwitchMessage);
         }
         
         /**
