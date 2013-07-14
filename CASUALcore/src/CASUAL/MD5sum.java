@@ -189,6 +189,20 @@ public class MD5sum {
     public String getMD5fromLinuxMD5String(String md5) {
         return md5.split("  ")[0];
     }
+    
+    /**
+     * Returns the standard md5sum found on Linux as though the file were
+     * in the same directory
+     * @param file to be MD5sum'd
+     * @return 32digitMd5Sum+"  "+file.Name
+     */
+    public String getLinuxMD5Sum(File file){
+        String md5=this.md5sum(file);
+        String fileName=file.getName();
+        return md5+"  "+fileName;
+        
+        
+    }
 
     /**
      * gets filename from linux md5sum
