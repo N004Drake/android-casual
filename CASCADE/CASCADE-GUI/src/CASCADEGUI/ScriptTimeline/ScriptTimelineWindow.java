@@ -33,7 +33,6 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
     
     
     
-    
 
     /**
      * Creates new form CASCADEGUIScriptTimeline 
@@ -46,6 +45,8 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
         commandList.add(statics);
         commandList.add(controls);
         makeCommandList();
+        blankOutJLabels();
+        
         
     }
 
@@ -68,7 +69,7 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
         commandSyntaxTitle = new javax.swing.JLabel();
         commandDescriptionTitle = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        commandDescriptionTextArea = new javax.swing.JTextArea();
         commandNameLabel = new javax.swing.JLabel();
         commandTypeLabel = new javax.swing.JLabel();
         commandSyntaxLabel = new javax.swing.JLabel();
@@ -114,10 +115,12 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
 
         jScrollPane2.setName("jScrollPane2"); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setName("jTextArea1"); // NOI18N
-        jScrollPane2.setViewportView(jTextArea1);
+        commandDescriptionTextArea.setColumns(20);
+        commandDescriptionTextArea.setLineWrap(true);
+        commandDescriptionTextArea.setRows(5);
+        commandDescriptionTextArea.setWrapStyleWord(true);
+        commandDescriptionTextArea.setName("commandDescriptionTextArea"); // NOI18N
+        jScrollPane2.setViewportView(commandDescriptionTextArea);
 
         commandNameLabel.setText(bundle.getString("ScriptTimelineWindow.commandNameLabel.text")); // NOI18N
         commandNameLabel.setName("commandNameLabel"); // NOI18N
@@ -257,7 +260,8 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
-            System.out.println(jTree1.getSelectionPath().getLastPathComponent());
+            if (commandArrayList.contains(jTree1.getSelectionPath().getLastPathComponent().toString()))
+                System.out.println("test");
     }//GEN-LAST:event_jTree1ValueChanged
 
     /**
@@ -295,6 +299,7 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea commandDescriptionTextArea;
     private javax.swing.JLabel commandDescriptionTitle;
     private javax.swing.JLabel commandNameLabel;
     private javax.swing.JLabel commandNameTitle;
@@ -311,7 +316,6 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 
@@ -353,6 +357,14 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
                     break;
             }
         }
+    }
+    
+    private void blankOutJLabels()
+    {
+        this.commandNameLabel.setText("");
+        this.commandSyntaxLabel.setText("");
+        this.commandTypeLabel.setText("");
+        this.commandDescriptionTextArea.setText("");
     }
 
 

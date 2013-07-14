@@ -118,13 +118,18 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="outputFile" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="outputBrowseButton" min="-2" pref="41" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="makeCASPAC" min="-2" pref="100" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="makeCASPAC" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="makeCASPAC" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="outputBrowseButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                       <Component id="outputFile" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="loadButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -161,6 +166,20 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadCaspacActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="outputBrowseButton">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="UIManager.getIcon(&quot;Tree.openIcon&quot;)" type="code"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="CASCADEGUI/resources/Bundle.properties" key="CASCADEGUI.outputBrowseButton.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="outputBrowseButton" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="outputBrowseButtonActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
@@ -210,7 +229,7 @@
                               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane1" pref="444" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" pref="460" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="editScriptNameButton" min="-2" max="-2" attributes="0"/>
@@ -699,7 +718,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scriptText" alignment="0" pref="500" max="32767" attributes="0"/>
+                          <Component id="scriptText" alignment="0" pref="534" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -797,7 +816,7 @@
                           <Component id="donationPanel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="124" max="32767" attributes="0"/>
+                          <EmptySpace pref="217" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -876,9 +895,6 @@
                             </Property>
                             <Property name="name" type="java.lang.String" value="donateText" noResource="true"/>
                           </Properties>
-                          <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="donateTextActionPerformed"/>
-                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -899,7 +915,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="donateLink" pref="751" max="32767" attributes="0"/>
+                                  <Component id="donateLink" pref="799" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -1171,9 +1187,6 @@
                             </Property>
                             <Property name="name" type="java.lang.String" value="bannerText" noResource="true"/>
                           </Properties>
-                          <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bannerTextActionPerformed"/>
-                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
