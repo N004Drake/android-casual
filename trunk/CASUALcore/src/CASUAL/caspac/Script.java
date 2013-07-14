@@ -5,6 +5,7 @@
 package CASUAL.caspac;
 
 import CASUAL.FileOperations;
+import CASUAL.Log;
 import CASUAL.MD5sum;
 import CASUAL.Zip;
 import java.io.BufferedInputStream;
@@ -74,27 +75,38 @@ public class Script {
         return testingBool;
     }
     
-    public void writeScript(File file) throws IOException
-    {
+    public void writeScript(File file) throws IOException {
         String scriptPath=file.toString() + slash + name ;
+        CASUAL.Log log = new CASUAL.Log();
+        int md5Position=0;
+        CASUAL.MD5sum md5sum=new CASUAL.MD5sum();
         if (!(file.isDirectory())){
             file.mkdir();
         }
         if (!(new File(scriptPath + ".scr")).exists()){
-            new FileOperations().writeToFile(script, scriptPath+ ".scr");
+            String filePath=scriptPath+".scr";
+            new FileOperations().writeToFile(script, filePath);
+            addMD5ToMeta(md5sum, filePath, log, md5Position);
+            md5Position++;
+            metaData.write(scriptPath + ".meta");
         }
         if (!(new File(scriptPath + ".txt")).exists()){
-            new FileOperations().writeToFile(discription, scriptPath + ".txt");
+            String filePath=scriptPath+".txt";
+            new FileOperations().writeToFile(discription, filePath);
+            addMD5ToMeta(md5sum, filePath, log, md5Position);
+            md5Position++;
+            metaData.write(scriptPath + ".meta");
         }
         if (!includeFiles.isEmpty()){
-            Zip includeZip = new Zip(scriptPath + ".zip") ;
+            String filePath=scriptPath+".zip";
+            Zip includeZip = new Zip(filePath) ;
             includeZip.addToTempFolderLoc(name + ".script");
             for (File f : includeFiles){
                 includeZip.addToZip(f);
             }
             includeZip.execute();
-        }
-        if (!(new File(scriptPath + ".meta").exists())){
+            addMD5ToMeta(md5sum, filePath, log, md5Position);
+            md5Position++;
             metaData.write(scriptPath + ".meta");
         }
     }
@@ -137,6 +149,12 @@ public class Script {
     @Override
     public String toString() {
         return name;
+    }
+
+    private void addMD5ToMeta(MD5sum md5sum, String filePath, Log log, int md5Position) {
+        String linuxMD5=md5sum.getLinuxMD5Sum(new File(filePath));
+        log.level3Verbose("evaluated MD5 to "+linuxMD5);
+        metaData.metaProp.setProperty("Script.MD5["+md5Position+"]",linuxMD5);
     }
     
     
