@@ -64,11 +64,12 @@ public class AuxiliaryTesting {
             //Testing Heimdall close-pc-screen
             CASUAL.Statics.useGUI = true;
             if (new CASUAL.CASUALInteraction("Testing Heimdall", "Connect a device in ODIN mode").showUserCancelOption() == 1) {
+                CASUAL.Statics.useGUI = false;
                 setContinue();
                 setContinue();
                 setContinue();
                 setContinue();
-                CASUALApp.main(new String[]{"-e", "$HEIMDALL close-pc-screen"});
+                new CASUAL.CASUALScriptParser().executeOneShotCommand( "$HEIMDALL close-pc-screen");
                 CASUALApp.shutdown(0);
             }
 

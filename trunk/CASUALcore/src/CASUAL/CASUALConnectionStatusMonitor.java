@@ -58,70 +58,73 @@ public class CASUALConnectionStatusMonitor {
                 }
                     String DeviceList = getConnectedDevices();
                     CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
+                    try {
 
-
-                    //Multiple devices detected
-                    if (CASUALConnectionStatusMonitor.DeviceTracker.length > 1 && !DeviceList.contains("offline")) {
-                        stateSwitcher(CASUALConnectionStatusMonitor.DeviceTracker.length);
-                        //No devices detected
-                    } else if (CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
-                        stateSwitcher(0);
-                        if (!hasConnected) {
-                            messageUser();
-                        }
-                        //One device detected
-                    } else if (!CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
-                        hasConnected = true;
-                        //Check and handle abnormalities
-                        // pairing problem with 4.2+
-                        if (DeviceList.contains("offline")) {
-                            Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
-                            sleepForFourSeconds(); //give the device a chance to come online
-                            DeviceList = getConnectedDevices();
+                        //Multiple devices detected
+                        if (CASUALConnectionStatusMonitor.DeviceTracker.length > 1 && !DeviceList.contains("offline")) {
+                            stateSwitcher(CASUALConnectionStatusMonitor.DeviceTracker.length);
+                            //No devices detected
+                        } else if (CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
+                            stateSwitcher(0);
+                            if (!hasConnected) {
+                                messageUser();
+                            }
+                            //One device detected
+                        } else if (!CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
+                            hasConnected = true;
+                            //Check and handle abnormalities
+                            // pairing problem with 4.2+
                             if (DeviceList.contains("offline")) {
-                                String[] ok = {"All set and done!"};
-                                new CASUALInteraction("@interactionOfflineNotification").showTimeoutDialog(120, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
-                                Log.level0Error("@disconnectAndReconnect");
-                                DeviceList = ADBTools.getDevices();
+                                Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+                                sleepForFourSeconds(); //give the device a chance to come online
+                                DeviceList = getConnectedDevices();
+                                if (DeviceList.contains("offline")) {
+                                    String[] ok = {"All set and done!"};
+                                    new CASUALInteraction("@interactionOfflineNotification").showTimeoutDialog(120, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
+                                    Log.level0Error("@disconnectAndReconnect");
+                                    DeviceList = ADBTools.getDevices();
+                                    Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                                }
+                            } else {
+                                if (Statics.useGUI && !Statics.GUI.getControlStatus()){
+                                        Statics.GUI.enableControls(true);
+                                }
+                                stateSwitcher(1);                            
+                            }
+                            //insufficient permissions
+
+                            if (DeviceList.contains("????????????") && !Statics.isWindows()) {
+                                Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+                                Log.level4Debug("@sleepingfor4Seconds");
+                                sleepForFourSeconds();
+                                DeviceList = getConnectedDevices();
+                                CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
+
+                                //Linux and mac only.
+                                if (DeviceList.contains("????????????")) {
+                                    Log.level2Information("@permissionsElevationRequired");
+                                    ADBTools.startServer(); //send the command
+                                    //notify user that permissions will be requested and what they are used for
+                                    String[] ok = {"ok"};
+                                    AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
+                                    new CASUALInteraction("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
+
+                                    DeviceList = ADBTools.getDevices();
+                                    // if permissions elevation was sucessful
+                                    if (!DeviceList.contains("????????????")) {
+                                        Log.level4Debug(DeviceList);
+                                        stateSwitcher(1);
+                                        //devices still not properly recognized.  Log it.
+                                    } else {
+                                        Log.level0Error("@unrecognizedDeviceDetected");
+                                    }
+                                }
                                 Statics.casualConnectionStatusMonitor.DeviceCheck.start();
                             }
-                        } else {
-                            if (Statics.useGUI && !Statics.GUI.getControlStatus()){
-                                    Statics.GUI.enableControls(true);
-                            }
-                            stateSwitcher(1);                            
+
                         }
-                        //insufficient permissions
-
-                        if (DeviceList.contains("????????????") && !Statics.isWindows()) {
-                            Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
-                            Log.level4Debug("@sleepingfor4Seconds");
-                            sleepForFourSeconds();
-                            DeviceList = getConnectedDevices();
-                            CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
-
-                            //Linux and mac only.
-                            if (DeviceList.contains("????????????")) {
-                                Log.level2Information("@permissionsElevationRequired");
-                                ADBTools.startServer(); //send the command
-                                //notify user that permissions will be requested and what they are used for
-                                String[] ok = {"ok"};
-                                AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-                                new CASUALInteraction("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, ok, 0);
-      
-                                DeviceList = ADBTools.getDevices();
-                                // if permissions elevation was sucessful
-                                if (!DeviceList.contains("????????????")) {
-                                    Log.level4Debug(DeviceList);
-                                    stateSwitcher(1);
-                                    //devices still not properly recognized.  Log it.
-                                } else {
-                                    Log.level0Error("@unrecognizedDeviceDetected");
-                                }
-                            }
-                            Statics.casualConnectionStatusMonitor.DeviceCheck.start();
-                        }
-
+                    } catch (NullPointerException ex){
+                        
                     }
 
             }

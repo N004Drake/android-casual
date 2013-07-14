@@ -351,8 +351,10 @@ public class Caspac {
         
         
         private void setPropsFromVariables(){
+            buildProp.setProperty("Window.UsePictureForBanner", usePictureForBanner?"True":"False");
             buildProp.setProperty("Audio.Enabled", AudioEnabled?"True":"False");
             buildProp.setProperty("Application.AlwaysEnableControls", AudioEnabled?"True":"False");
+            buildProp.setProperty("Developer.DonateLink", donateLink );
             buildProp.setProperty("Developer.DonateToButtonText", developerDonateButtonText);
             buildProp.setProperty("Developer.Name", developerName );
             buildProp.setProperty("Window.ExecuteButtonText", executeButtonText);
@@ -367,14 +369,16 @@ public class Caspac {
          */
         private void loadPropsToVariables() {
             if (buildProp.containsKey("Audio.Enabled"))
-                AudioEnabled = buildProp.getProperty("Audio.Enabled").contains("rue");
+            
+            usePictureForBanner = buildProp.getProperty("Window.UsePictureForBanner","").contains("rue");
+            AudioEnabled = buildProp.getProperty("Audio.Enabled","").contains("rue");
             developerDonateButtonText = buildProp.getProperty("Developer.DonateToButtonText","");
             developerName = buildProp.getProperty("Developer.Name","");
             donateLink = buildProp.getProperty("Developer.DonateLink","");
+            donateLink = buildProp.getProperty("Developer.DonateLink","");
             executeButtonText = buildProp.getProperty("Window.ExecuteButtonText","");
             bannerText = buildProp.getProperty("Window.BannerText","");
-            if (buildProp.contains("Application.AlwaysEnableControls"))            
-                alwaysEnableControls = buildProp.getProperty("Application.AlwaysEnableControls").contains("rue");
+            alwaysEnableControls = buildProp.getProperty("Application.AlwaysEnableControls","").contains("rue");
             windowTitle = buildProp.getProperty("Window.Title","");
             
         }

@@ -1432,7 +1432,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
         Properties buildProp = new Properties();
         buildProp.setProperty("Audio.Enabled", this.audioEnabled.isSelected() ? "True" : "False");
         buildProp.setProperty("Application.AlwaysEnableControls", this.alwaysEnableControls.isSelected() ? "True" : "False");
+        buildProp.setProperty("Window.UsePictureForBanner", this.useBannerPic.isSelected()?"True":"False");
         buildProp.setProperty("Developer.DonateToButtonText", this.donateText.getText());
+        buildProp.setProperty("Developer.DonateLink", this.donateLink.getText());
         buildProp.setProperty("Developer.Name", this.developerName.getText());
         buildProp.setProperty("Window.ExecuteButtonText", this.buttonText.getText());
         buildProp.setProperty("Window.BannerText", this.bannerText.getText());

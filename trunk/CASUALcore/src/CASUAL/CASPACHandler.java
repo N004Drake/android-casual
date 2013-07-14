@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
@@ -33,6 +35,7 @@ public class CASPACHandler {
     Thread zip;
     CASPACData cd = null;
     String meta = "";
+    Thread adbLaunch=new Thread(new CASUALTools().launchADB);
 
     /**
      *Launches a CASPAC
@@ -63,6 +66,9 @@ public class CASPACHandler {
             //get ADB ready
             try {
                 adb.join();
+                adbLaunch.setDaemon(true);
+                adbLaunch.setName("Starting ADB server");
+                adbLaunch.start();
                 if (zip != null) {
                     zip.join();
                 }
@@ -91,7 +97,7 @@ public class CASPACHandler {
                 startDumbTerminalGUI();
             }
 
-
+            adbLaunch.join();
             //Launch script
             Thread t = new Thread(activateScript);
             t.setName("CASUAL Script");
@@ -111,6 +117,8 @@ public class CASPACHandler {
             new Log().level0Error("@zipFileCorrupt");
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
             CASUALApp.shutdown(1);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     Runnable activateScript = new Runnable() {

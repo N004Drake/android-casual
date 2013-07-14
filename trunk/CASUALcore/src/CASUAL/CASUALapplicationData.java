@@ -120,16 +120,16 @@ public class CASUALapplicationData {
         properties.load(in);
         in.close();
         buildProperties = null;
-        usePictureForBanner = properties.getProperty("Window.UsePictureForBanner").contains("rue");
-        developerDonationLink = properties.getProperty("Developer.DonateLink");
-        useSound = properties.getProperty("Audio.Enabled").contains("rue");
-        donateButtonName = properties.getProperty("Developer.DonateToButtonText");
-        developerName = properties.getProperty("Developer.Name");
-        buttonText = properties.getProperty("Window.ExecuteButtonText");
-        title = properties.getProperty("Window.Title") + " - " + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
-        bannerText = properties.getProperty("Window.BannerText");
-        bannerPic = properties.getProperty("Window.BannerPic");
-        donateButtonName = properties.getProperty("Developer.DonateToButtonText");
+        usePictureForBanner = properties.getProperty("Window.UsePictureForBanner","").contains("rue");
+        developerDonationLink = properties.getProperty("Developer.DonateLink","");
+        useSound = properties.getProperty("Audio.Enabled","").contains("rue");
+        donateButtonName = properties.getProperty("Developer.DonateToButtonText","");
+        developerName = properties.getProperty("Developer.Name","");
+        buttonText = properties.getProperty("Window.ExecuteButtonText","");
+        title = properties.getProperty("Window.Title","") + " - " + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.title") + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+        bannerText = properties.getProperty("Window.BannerText","");
+        bannerPic = properties.getProperty("Window.BannerPic","");
+        donateButtonName = properties.getProperty("Developer.DonateToButtonText","");
         packageDataHasBeenSet = true;
 
         new Log().level3Verbose("-----CASUAL PACKAGE-----");
