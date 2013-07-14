@@ -6,6 +6,7 @@
 package CASCADEGUI;
 
 import CASUAL.Log;
+import CASUAL.Statics;
 import CASUAL.StringOperations;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
@@ -31,7 +32,7 @@ import javax.swing.event.ListDataListener;
 
 //TODO Add author info
 /**
- * 
+ *
  * @author loganludington
  */
 public class CASCADEGUI extends javax.swing.JFrame {
@@ -39,27 +40,21 @@ public class CASCADEGUI extends javax.swing.JFrame {
     /**
      * Creates new form mainWindow
      */
-    
     private Log log = new Log();
-    
     //Stores the list of current include files. NOTE: only for current script
     private DefaultListModel<File> fileList = new DefaultListModel<>();
-    
     /*Stores the list of the current scripts
      * Will only store in memory untill caspacme is pressed.
      */
     private DefaultListModel<Script> scriptList = new DefaultListModel<>();
-    
     //Used to keep track of currently selected script
     int currentScriptIndex = -1;
-    DefaultListModel listModel=new DefaultListModel();
-    
-    private boolean dropEventEnable =false;
-    
+    DefaultListModel listModel = new DefaultListModel();
+    private boolean dropEventEnable = false;
     private String slash = System.getProperty("file.separator");
-    
+
     /**
-     *initializes window
+     * initializes window
      */
     public CASCADEGUI() {
         initComponents();
@@ -67,60 +62,93 @@ public class CASCADEGUI extends javax.swing.JFrame {
         //this.resourcesForScriptList.setDropTarget(dt);
         jList1.setModel(listModel);
         listModel.addElement("Drop files here and click to remove.");
-        this.jList1.setDropTarget(dt);
+        this.jList1.setDropTarget(dropTargetForFileList);
+        this.outputFile.setDropTarget(caspacDropTarget);
         disableAll();
         scriptList.addListDataListener(new scriptListener());
     }
-    
-    DropTarget dt=new DropTarget(){
-        
-            @Override
-            public synchronized void drop(DropTargetDropEvent event) {
-                if (!dropEventEnable)
-                    return;
-                // Accept copy drops
-                event.acceptDrop(DnDConstants.ACTION_COPY);
+    DropTarget dropTargetForFileList = new DropTarget() {
+        @Override
+        public synchronized void drop(DropTargetDropEvent event) {
+            if (!dropEventEnable) {
+                return;
+            }
+            // Accept copy drops
+            event.acceptDrop(DnDConstants.ACTION_COPY);
 
-                // Get the transfer which can provide the dropped item data
-                Transferable transferable = event.getTransferable();
+            // Get the transfer which can provide the dropped item data
+            Transferable transferable = event.getTransferable();
 
-                // Get the data formats of the dropped item
-                DataFlavor[] flavors = transferable.getTransferDataFlavors();
-                // Loop through the flavors
-                for (DataFlavor flavor : flavors) {
-                    // If the item is a file
-                    if (flavor.isFlavorJavaFileListType()) {
-                        List<File> files;
-                        try {  //get a list of the files and add them
-                            if (! listModel.isEmpty()&&listModel.get(0).equals("Drop files here and click to remove.")){
-                                listModel.remove(0);
-                            }
-                            files = (List<File>) transferable.getTransferData(flavor);
-                            for (File f : files) {
-                                String file=f.getCanonicalPath();
-                                scriptList.getElementAt(currentScriptIndex).includeFiles.add(f);
-                                listModel.addElement(file);
-                            }
-
-                        } catch ( IOException | UnsupportedFlavorException ex) {
-                            Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+            // Get the data formats of the dropped item
+            DataFlavor[] flavors = transferable.getTransferDataFlavors();
+            // Loop through the flavors
+            for (DataFlavor flavor : flavors) {
+                // If the item is a file
+                if (flavor.isFlavorJavaFileListType()) {
+                    List<File> files;
+                    try {  //get a list of the files and add them
+                        if (!listModel.isEmpty() && listModel.get(0).equals("Drop files here and click to remove.")) {
+                            listModel.remove(0);
                         }
+                        files = (List<File>) transferable.getTransferData(flavor);
+                        for (File f : files) {
+                            String file = f.getCanonicalPath();
+                            scriptList.getElementAt(currentScriptIndex).includeFiles.add(f);
+                            listModel.addElement(file);
+                        }
+
+                    } catch (IOException | UnsupportedFlavorException ex) {
+                        Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-   
-                    //event.dropComplete(true);
-
-
-                Point point = event.getLocation();
-                System.out.println(point+"drop event");
-                // handle drop inside current table
             }
-        };
+            Point point = event.getLocation();
+            System.out.println(point + "drop event");
+            // handle drop inside current table
+        }
+    };
 
+      DropTarget caspacDropTarget = new DropTarget() {
+        @Override
+        public synchronized void drop(DropTargetDropEvent event) {
+            //Accept copy drops
+            event.acceptDrop(DnDConstants.ACTION_COPY);
+            // Get the transfer which can provide the dropped item data
+            Transferable transferable = event.getTransferable();
+            // Get the data formats of the dropped item
+            DataFlavor[] flavors = transferable.getTransferDataFlavors();
+            // Loop through the flavors
+            for (DataFlavor flavor : flavors) {
+                // If the item is a file
+                if (flavor.isFlavorJavaFileListType()) {
+                    List<File> files;
+                    try {  //get a list of the files and add them
+                        files = (List<File>) transferable.getTransferData(flavor);
+                        File firstFile= files.get(0);
+                        if (firstFile.isDirectory()){
+                            String newFile=firstFile.getCanonicalPath();
+                            newFile=newFile+Statics.Slash+"newCaspac.zip";
+                            outputFile.setText(newFile);
+                        } else if (firstFile.isFile() && firstFile.exists()){
+                            outputFile.setText(files.get(0).getCanonicalPath());    
+                            loadCaspacActionPerformed(null);
+                        }                       
+                        
 
-
+                    } catch (IOException | UnsupportedFlavorException ex) {
+                        Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            Point point = event.getLocation();
+            System.out.println(point + "drop event");
+            // handle drop inside current table
+        }
+    };
     
-
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -137,7 +165,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         outputFIle = new javax.swing.JPanel();
         outputFile = new javax.swing.JTextField();
         makeCASPAC = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        loadButton = new javax.swing.JButton();
         workArea = new javax.swing.JTabbedPane();
         scriptGroup = new javax.swing.JTabbedPane();
         scriptOverview = new javax.swing.JPanel();
@@ -229,9 +257,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText(bundle.getString("CASCADEGUI.jButton1.text")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        loadButton.setText(bundle.getString("CASCADEGUI.loadButton.text")); // NOI18N
+        loadButton.setName("loadButton"); // NOI18N
+        loadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadCaspacActionPerformed(evt);
             }
@@ -242,7 +270,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         outputFIleLayout.setHorizontalGroup(
             outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputFIleLayout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(loadButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -253,7 +281,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             .addComponent(makeCASPAC)
             .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(outputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jButton1))
+                .addComponent(loadButton))
         );
 
         workArea.setName(""); // NOI18N
@@ -347,7 +375,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
         );
 
         scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
@@ -535,7 +563,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(editScriptNameButton)
@@ -581,11 +609,11 @@ public class CASCADEGUI extends javax.swing.JFrame {
         script.setLayout(scriptLayout);
         scriptLayout.setHorizontalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1233, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1049, Short.MAX_VALUE)
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -610,8 +638,14 @@ public class CASCADEGUI extends javax.swing.JFrame {
         dontateTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.dontateTextPanel.border.title"))); // NOI18N
         dontateTextPanel.setName("dontateTextPanel"); // NOI18N
 
+        donateText.setText(System.getProperty("user.name"));
         donateText.setBorder(null);
         donateText.setName("donateText"); // NOI18N
+        donateText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                donateTextActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout dontateTextPanelLayout = new javax.swing.GroupLayout(dontateTextPanel);
         dontateTextPanel.setLayout(dontateTextPanelLayout);
@@ -633,6 +667,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         dontateLinkPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.dontateLinkPanel.border.title"))); // NOI18N
         dontateLinkPanel.setName("dontateLinkPanel"); // NOI18N
 
+        donateLink.setText(bundle.getString("CASCADEGUI.donateLink.text")); // NOI18N
         donateLink.setBorder(null);
         donateLink.setName("donateLink"); // NOI18N
 
@@ -642,7 +677,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             dontateLinkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dontateLinkPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 908, Short.MAX_VALUE)
+                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 751, Short.MAX_VALUE)
                 .addContainerGap())
         );
         dontateLinkPanelLayout.setVerticalGroup(
@@ -694,6 +729,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         windowTitlePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.windowTitlePanel.border.title"))); // NOI18N
         windowTitlePanel.setName("windowTitlePanel"); // NOI18N
 
+        windowText.setText(bundle.getString("CASCADEGUI.windowText.text")); // NOI18N
         windowText.setBorder(null);
         windowText.setName("windowText"); // NOI18N
 
@@ -717,6 +753,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         buttonTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.buttonTextPanel.border.title"))); // NOI18N
         buttonTextPanel.setName("buttonTextPanel"); // NOI18N
 
+        buttonText.setText(bundle.getString("CASCADEGUI.buttonText.text")); // NOI18N
         buttonText.setBorder(null);
         buttonText.setName("buttonText"); // NOI18N
 
@@ -740,8 +777,14 @@ public class CASCADEGUI extends javax.swing.JFrame {
         bannerTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.bannerTextPanel.border.title"))); // NOI18N
         bannerTextPanel.setName("bannerTextPanel"); // NOI18N
 
+        bannerText.setText(bundle.getString("CASCADEGUI.bannerText.text")); // NOI18N
         bannerText.setBorder(null);
         bannerText.setName("bannerText"); // NOI18N
+        bannerText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bannerTextActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout bannerTextPanelLayout = new javax.swing.GroupLayout(bannerTextPanel);
         bannerTextPanel.setLayout(bannerTextPanelLayout);
@@ -749,7 +792,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             bannerTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerTextPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 1040, Short.MAX_VALUE)
+                .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 859, Short.MAX_VALUE)
                 .addContainerGap())
         );
         bannerTextPanelLayout.setVerticalGroup(
@@ -781,7 +824,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerPicPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 998, Short.MAX_VALUE)
+                .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(browseLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -846,6 +889,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         developerNamePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.developerNamePanel.border.title"))); // NOI18N
         developerNamePanel.setName("developerNamePanel"); // NOI18N
 
+        developerName.setText(System.getProperty("user.name"));
         developerName.setBorder(null);
         developerName.setName("developerName"); // NOI18N
 
@@ -887,7 +931,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addComponent(donationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(389, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
 
         workArea.addTab(bundle.getString("CASCADEGUI.buildPropertiesPanel.TabConstraints.tabTitle"), buildPropertiesPanel); // NOI18N
@@ -931,44 +975,42 @@ public class CASCADEGUI extends javax.swing.JFrame {
         //Create new file In memory with name from the JTextField
         //TODO Add a browse button for the JTextField for location
         File file = new File(this.outputFile.getText());
-        
-        
-        if (!file.toString().endsWith(".zip"))
-        {
+
+
+        if (!file.toString().endsWith(".zip")) {
             JOptionPane.showMessageDialog(this, "The file: \n"
                     + this.outputFile.getText() + "\n is not a valid zip file.\n"
-                    + "Please make sure that the file ends in a .zip", "File output error", 
+                    + "Please make sure that the file ends in a .zip", "File output error",
                     JOptionPane.ERROR_MESSAGE);
             log.level0Error("Output zip file not valid: \n \t" + this.outputFile.getText());
             return;
         }
-        
+
         //File overwrite check
-        if (file.exists())
-        {
+        if (file.exists()) {
             log.level2Information("File exist prompting for overwrite");
-            int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.outputFile.getText()+
-                    " already exists are you sure you wish to continue.\n Any "
+            int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.outputFile.getText()
+                    + " already exists are you sure you wish to continue.\n Any "
                     + "previous files will be overridden.", "Overwrite existing file?",
                     JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (i == JOptionPane.NO_OPTION) {
                 log.level0Error("File override declined");
                 return;
-            }
-            else {
+            } else {
                 file.delete();
             }
         }
-        
+
         log.level2Information("Creating CASPAC file");
         Caspac cp = new Caspac(new File(this.outputFile.getText()));
         log.level2Information("Setting CASPAC build");
         cp.setBuild(buildMaker());
-        cp.build.bannerPic=this.bannerPic.getText();
+        cp.build.bannerPic = this.bannerPic.getText();
 
         log.level2Information("Adding scripts from memory to CASPAC");
-        for (int j = 0; j < scriptList.getSize();j++)
+        for (int j = 0; j < scriptList.getSize(); j++) {
             cp.addScript(scriptList.elementAt(j));
+        }
         log.level2Information("Setting Overview");
         cp.setOverview(this.overviewWorkArea.getText());
         log.level2Information("Attempting CASCPAC write");
@@ -978,7 +1020,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             log.errorHandler(ex);
         }
         log.level2Information("CASPAC write successfull!!!");
-        
+
     }//GEN-LAST:event_makeCASPACActionPerformed
 
     /*
@@ -988,24 +1030,24 @@ public class CASCADEGUI extends javax.swing.JFrame {
         // Prompt for script name
         String s = JOptionPane.showInputDialog(this, "What would you like to name the script:\n",
                 "Script Name", JOptionPane.QUESTION_MESSAGE);
-        
+
         //If there is a name in prompt
-        
-        if(checkScriptNameExists(s))
+
+        if (checkScriptNameExists(s)) {
             return;
-        if (!(s.isEmpty()))
-        {
+        }
+        if (!(s.isEmpty())) {
             scriptList.addElement(new Script(s));
-            
+
             //Set that script as current script
-            currentScriptIndex=scriptList.getSize()-1;
+            currentScriptIndex = scriptList.getSize() - 1;
             this.scriptListJList.setSelectedIndex(currentScriptIndex);
-            
+
             //Rerender all of the Info to current script
             loadScript();
             this.scriptListJList.setSelectedIndex(this.scriptListJList.getLastVisibleIndex());
         }
-        
+
     }//GEN-LAST:event_addScriptButtonActionPerformed
 
     /*
@@ -1025,12 +1067,12 @@ public class CASCADEGUI extends javax.swing.JFrame {
         String s = JOptionPane.showInputDialog(this, "Please enter the new name for the script:\n"
                 + "Leave empty to keep the existing name",
                 "Script Name", JOptionPane.QUESTION_MESSAGE);
-        
+
         //Only changes name if input string is not blank
-        if(checkScriptNameExists(s))
+        if (checkScriptNameExists(s)) {
             return;
-        if (!(s.isEmpty()))
-        {
+        }
+        if (!(s.isEmpty())) {
             scriptList.getElementAt(currentScriptIndex).setName(s);
             loadScript();
         }
@@ -1041,8 +1083,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
      * TODO Add a confirmation dialog
      */
     private void deleteScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteScriptButtonActionPerformed
-        if (this.scriptListJList.getSelectedIndex()!=-1)
-        {
+        if (this.scriptListJList.getSelectedIndex() != -1) {
             scriptList.removeElementAt(this.scriptListJList.getSelectedIndex());
             clearAll();
         }
@@ -1052,110 +1093,112 @@ public class CASCADEGUI extends javax.swing.JFrame {
      * Listener to dynamically save the minSVNversion
      */
     private void minSVNversionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_minSVNversionCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion=(minSVNversion.getText());
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion = (minSVNversion.getText());
+        }
     }//GEN-LAST:event_minSVNversionCaretUpdate
 
     /*
      * Listener to dynamically save the scriptRevision
      */
     private void scriptRevisionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptRevisionCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision=(scriptRevision.getText());
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision = (scriptRevision.getText());
+        }
     }//GEN-LAST:event_scriptRevisionCaretUpdate
 
     /*
      * Listener to dynamically save the uniqueId
      */
     private void uniqueIDCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_uniqueIDCaretUpdate
-        if (!scriptList.isEmpty()  && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier=uniqueID.getText();
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier = uniqueID.getText();
+        }
     }//GEN-LAST:event_uniqueIDCaretUpdate
 
     /*
      * Listener to dynamically save the supportURL
      */
     private void supportURLCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_supportURLCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.supportURL=supportURL.getText();
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(currentScriptIndex).metaData.supportURL = supportURL.getText();
+        }
     }//GEN-LAST:event_supportURLCaretUpdate
 
     /*
      * Listener to dynamically save the updateMessage
      */
     private void updateMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_updateMessageCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.updateMessage=updateMessage.getText();
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(currentScriptIndex).metaData.updateMessage = updateMessage.getText();
+        }
     }//GEN-LAST:event_updateMessageCaretUpdate
 
     /*
      * Listener to dynamically save the killswitchMessage
      */
     private void killswitchMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_killswitchMessageCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
-            scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage=killswitchMessage.getText();
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage = killswitchMessage.getText();
+        }
     }//GEN-LAST:event_killswitchMessageCaretUpdate
 
     /*
      * Listener to dynamically save the script
      */
     private void scriptWorkAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptWorkAreaCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
             scriptList.getElementAt(currentScriptIndex).setScript(this.scriptWorkArea.getText());
+        }
     }//GEN-LAST:event_scriptWorkAreaCaretUpdate
 
     private void removeZipFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeZipFileActionPerformed
-       this.popupMenuForZipManagement.setVisible(false);
-       
-       jList1.remove(this.jList1.getSelectedIndex());
+        this.popupMenuForZipManagement.setVisible(false);
+
+        jList1.remove(this.jList1.getSelectedIndex());
 
     }//GEN-LAST:event_removeZipFileActionPerformed
 
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-        int X=(int)this.jList1.getBounds().getMaxX();
-        
-      java.awt.Point point = evt.getPoint();
-      int index = jList1.locationToIndex(point);
-      if (jList1.isSelectedIndex(index))
-      {
-         listModel.remove(index);
-         scriptList.getElementAt(currentScriptIndex).includeFiles.remove(index);
-      }
-        
+        int X = (int) this.jList1.getBounds().getMaxX();
+
+        java.awt.Point point = evt.getPoint();
+        int index = jList1.locationToIndex(point);
+        if (jList1.isSelectedIndex(index)) {
+            listModel.remove(index);
+            scriptList.getElementAt(currentScriptIndex).includeFiles.remove(index);
+        }
+
     }//GEN-LAST:event_jList1MouseClicked
 
     private void browseLogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseLogoActionPerformed
         final JFileChooser fc = new JFileChooser();
         int returnValue = fc.showOpenDialog(this);
-        if (returnValue == JFileChooser.OPEN_DIALOG)
-        {
-            if (fc.getSelectedFile().toString().contains(".png"))
-            {
+        if (returnValue == JFileChooser.OPEN_DIALOG) {
+            if (fc.getSelectedFile().toString().contains(".png")) {
                 this.bannerPic.setText(fc.getSelectedFile().toString());
-            }
-            else
+            } else {
                 JOptionPane.showMessageDialog(this, "File must be a PNG "
                         + "image.", "Incorrect Format", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_browseLogoActionPerformed
 
     private void loadCaspacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCaspacActionPerformed
 
         File file = new File(this.outputFile.getText());
-        if (!file.toString().endsWith(".zip"))
-        {
+        if (!file.toString().endsWith(".zip")) {
             JOptionPane.showMessageDialog(this, "The file: \n"
                     + this.outputFile.getText() + "\n is not a valid zip file.\n"
-                    + "Please make sure that the file ends in a .zip", "File read error", 
+                    + "Please make sure that the file ends in a .zip", "File read error",
                     JOptionPane.ERROR_MESSAGE);
             log.level0Error("Input zip file not valid: \n \t" + this.outputFile.getText());
             return;
         }
-        if (!file.exists())
-        {
+        if (!file.exists()) {
             JOptionPane.showMessageDialog(this, "The file: \n"
                     + this.outputFile.getText() + "\n is not a valid zip file.\n"
-                    + "Ensure the file exists", "File Not Found", 
+                    + "Ensure the file exists", "File Not Found",
                     JOptionPane.ERROR_MESSAGE);
             log.level0Error("Input zip file not valid: \n \t" + this.outputFile.getText());
             return;
@@ -1170,31 +1213,37 @@ public class CASCADEGUI extends javax.swing.JFrame {
         } catch (IOException ex) {
             log.errorHandler(ex);
         }
-        
-        for (Script s : cp.scripts)
-        {
+
+        for (Script s : cp.scripts) {
             scriptList.addElement(s);
-            
+
             //Set that script as current script
         }
-        currentScriptIndex=scriptList.getSize()-1;
+        currentScriptIndex = scriptList.getSize() - 1;
         this.scriptListJList.setSelectedIndex(currentScriptIndex);
-            
-            //Rerender all of the Info to current script
-            loadScript();
-            updateBuildAndOverview(cp);
-            this.scriptListJList.setSelectedIndex(this.scriptListJList.getLastVisibleIndex());
-        
-        
+
+        //Rerender all of the Info to current script
+        loadScript();
+        updateBuildAndOverview(cp);
+        this.scriptListJList.setSelectedIndex(this.scriptListJList.getLastVisibleIndex());
+
+
     }//GEN-LAST:event_loadCaspacActionPerformed
 
     private void scriptDescriptionJTextCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_scriptDescriptionJTextCaretPositionChanged
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex()!=-1)
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
             scriptList.getElementAt(currentScriptIndex).setDiscription(this.scriptDescriptionJText.getText());
+        }
     }//GEN-LAST:event_scriptDescriptionJTextCaretPositionChanged
 
-    
-    
+    private void donateTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_donateTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_donateTextActionPerformed
+
+    private void bannerTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bannerTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bannerTextActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1206,7 +1255,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("System".equals(info.getName())||info.getName().toLowerCase().contains(System.getProperty("os.name").toLowerCase().subSequence(0, 3))) {
+                if ("System".equals(info.getName()) || info.getName().toLowerCase().contains(System.getProperty("os.name").toLowerCase().subSequence(0, 3))) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -1252,7 +1301,6 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private javax.swing.JPanel dontateLinkPanel;
     private javax.swing.JPanel dontateTextPanel;
     private javax.swing.JButton editScriptNameButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1264,6 +1312,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField killswitchMessage;
     private javax.swing.JLabel killswitchMessageTitleJLabel;
+    private javax.swing.JButton loadButton;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton makeCASPAC;
     private javax.swing.JTextField minSVNversion;
@@ -1311,7 +1360,6 @@ public class CASCADEGUI extends javax.swing.JFrame {
      *}
      * 
      */
-    
     /*DEPRECIATED
      * Call to add a single file to the includeZip for a script
      *
@@ -1328,123 +1376,121 @@ public class CASCADEGUI extends javax.swing.JFrame {
     /*
      * Called to remove files from fileList
      */
-    private void removeFiles(int[] indexList)
-    {
-        
+    private void removeFiles(int[] indexList) {
+
         /*
          * The order of operations is to remove the first ones one the list first
          * problem is if you remove 5 before 6 then 6 will no longer exist as 
          * it is 5 so therefore list must be sorted.
          */
         List<Integer> list = new ArrayList<>();
-        
 
-        for (int i:indexList )
-        {
+
+        for (int i : indexList) {
             list.add(i);
         }
         //Sorts from least to greatest
         Collections.sort(list);
-        
+
         //Reverses sort
         Collections.reverse(list);
-        
-        for (int i : list)
-        {
+
+        for (int i : list) {
             scriptList.getElementAt(currentScriptIndex).includeFiles.remove(i);
             fileList.remove(i);
         }
-        
-    }
 
+    }
 
     private Properties buildMaker() {
-        Properties buildProp= new Properties();
-            buildProp.setProperty("Audio.Enabled", this.audioEnabled.isSelected()?"True":"False");
-            buildProp.setProperty("Application.AlwaysEnableControls", this.alwaysEnableControls.isSelected()?"True":"False");
-            buildProp.setProperty("Developer.DonateToButtonText", this.donateText.getText());
-            buildProp.setProperty("Developer.Name", this.developerName.getText() );
-            buildProp.setProperty("Window.ExecuteButtonText", this.buttonText.getText());
-            buildProp.setProperty("Window.BannerText", this.bannerText.getText());
-            buildProp.setProperty("Window.BannerPic", this.bannerPic.getText());
-            buildProp.setProperty("Window.Title", this.windowText.getText());
+        Properties buildProp = new Properties();
+        buildProp.setProperty("Audio.Enabled", this.audioEnabled.isSelected() ? "True" : "False");
+        buildProp.setProperty("Application.AlwaysEnableControls", this.alwaysEnableControls.isSelected() ? "True" : "False");
+        buildProp.setProperty("Developer.DonateToButtonText", this.donateText.getText());
+        buildProp.setProperty("Developer.Name", this.developerName.getText());
+        buildProp.setProperty("Window.ExecuteButtonText", this.buttonText.getText());
+        buildProp.setProperty("Window.BannerText", this.bannerText.getText());
+        buildProp.setProperty("Window.BannerPic", this.bannerPic.getText());
+        buildProp.setProperty("Window.Title", this.windowText.getText());
         return buildProp;
     }
-    
+
     /*
      * SAVES ALL ELEMENTS OF SCRIPT
      * then clears all fields then
      * LOADS ALL ELEMENTS OF NEW SCRIPT
      */
-    private void loadScript()
-    {
-        if (scriptList.isEmpty())
+    private void loadScript() {
+        if (scriptList.isEmpty()) {
             return;
-        if (this.scriptListJList.getSelectedIndex()==-1)
+        }
+        if (this.scriptListJList.getSelectedIndex() == -1) {
             return;
+        }
         this.scriptNameJLabel.setText(scriptList.getElementAt(currentScriptIndex).getName());
-        if (scriptList.getElementAt(currentScriptIndex).getScript().isEmpty()){
+        if (scriptList.getElementAt(currentScriptIndex).getScript().isEmpty()) {
             scriptList.getElementAt(currentScriptIndex).setScript("#Enter CASUAL commands here");
         }
-        
+
         this.scriptWorkArea.setText(scriptList.getElementAt(currentScriptIndex).getScript());
 
-        
-        if (scriptList.getElementAt(currentScriptIndex).getDiscription().isEmpty()){
+
+        if (scriptList.getElementAt(currentScriptIndex).getDiscription().isEmpty()) {
             scriptList.getElementAt(currentScriptIndex).setDiscription("Describe your script here");
         }
         this.scriptDescriptionJText.setText(scriptList.getElementAt(currentScriptIndex).getDiscription());
-   
-        
-        if (scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage.isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage="CASUAL cannot continue. The SVN version is too low";
+
+
+        if (scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage.isEmpty()) {
+            scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage = "CASUAL cannot continue. The SVN version is too low";
         }
         this.killswitchMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.killSwitchMessage);
-        
-        
-        if (scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion.isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion=(CASUAL.CASPACData.getSVNRevision());
+
+
+        if (scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion.isEmpty()) {
+            scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion = (CASUAL.CASPACData.getSVNRevision());
         }
         this.minSVNversion.setText(scriptList.getElementAt(currentScriptIndex).metaData.minSVNversion);
-        
-        
-        if (scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision.isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision="0";
+
+
+        if (scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision.isEmpty()) {
+            scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision = "0";
         }
         this.scriptRevision.setText(scriptList.getElementAt(currentScriptIndex).metaData.scriptRevision);
-        
-        
-        if (scriptList.getElementAt(currentScriptIndex).metaData.supportURL.isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.supportURL="http://xda-developers.com";
+
+
+        if (scriptList.getElementAt(currentScriptIndex).metaData.supportURL.isEmpty()) {
+            scriptList.getElementAt(currentScriptIndex).metaData.supportURL = "http://xda-developers.com";
         }
         this.supportURL.setText(scriptList.getElementAt(currentScriptIndex).metaData.supportURL);
-        
-        
-        if (scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier.isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier=("Unique Update ID "+StringOperations.generateRandomHexString(8));
+
+
+        if (scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier.isEmpty()) {
+            scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier = ("Unique Update ID " + StringOperations.generateRandomHexString(8));
         }
         this.uniqueID.setText(scriptList.getElementAt(currentScriptIndex).metaData.uniqueIdentifier);
-        
-        if (scriptList.getElementAt(currentScriptIndex).metaData.updateMessage.isEmpty()){
-            scriptList.getElementAt(currentScriptIndex).metaData.updateMessage=("Inital Release.");
+
+        if (scriptList.getElementAt(currentScriptIndex).metaData.updateMessage.isEmpty()) {
+            scriptList.getElementAt(currentScriptIndex).metaData.updateMessage = ("Inital Release.");
         }
         this.updateMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.updateMessage);
-        
+
         /*duplicate?
-        this.scriptDiscriptionJText.setText(scriptList.getElementAt(currentScriptIndex).getDiscription());
-        this.killswitchMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getKillSwitchMessage());
-        this.minSVNversion.setText(scriptList.getElementAt(currentScriptIndex).metaData.getMinSVNversion());
-        this.scriptRevision.setText(scriptList.getElementAt(currentScriptIndex).metaData.getScriptRevsion());
-        this.supportURL.setText(scriptList.getElementAt(currentScriptIndex).metaData.getSupportURL());
-        this.uniqueID.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUniqueID());
-        this.updateMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUpdateMessage());
-        */
+         this.scriptDiscriptionJText.setText(scriptList.getElementAt(currentScriptIndex).getDiscription());
+         this.killswitchMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getKillSwitchMessage());
+         this.minSVNversion.setText(scriptList.getElementAt(currentScriptIndex).metaData.getMinSVNversion());
+         this.scriptRevision.setText(scriptList.getElementAt(currentScriptIndex).metaData.getScriptRevsion());
+         this.supportURL.setText(scriptList.getElementAt(currentScriptIndex).metaData.getSupportURL());
+         this.uniqueID.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUniqueID());
+         this.updateMessage.setText(scriptList.getElementAt(currentScriptIndex).metaData.getUpdateMessage());
+         */
         listModel.removeAllElements();
-        for (File f: scriptList.getElementAt(this.currentScriptIndex).includeFiles)
+        for (File f : scriptList.getElementAt(this.currentScriptIndex).includeFiles) {
             listModel.addElement(f);
-    
+        }
+
     }
-    
+
     /*
      * Disables those items that can not be used if there is no loaded script
      * or if there are no scripts
@@ -1464,7 +1510,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.jList1.setEnabled(false);
         this.dropEventEnable = false;
     }
-    
+
     /*
      * Enables those items that can  be used if there is a loaded script
      */
@@ -1481,10 +1527,10 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.editScriptNameButton.setEnabled(true);
         this.deleteScriptButton.setEnabled(true);
         this.jList1.setEnabled(true);
-        this.dropEventEnable =true;
+        this.dropEventEnable = true;
 
     }
-    
+
     private void clearAll() {
         this.scriptNameJLabel.setText("");
         this.scriptDescriptionJText.setText("");
@@ -1498,8 +1544,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.editScriptNameButton.setText("");
         this.deleteScriptButton.setText("");
     }
-    
-    
+
     /*
      * Listener that enables and disables script elements based on the existance
      * of scripts in list. Whenever a script is added or deleted it will check 
@@ -1507,50 +1552,49 @@ public class CASCADEGUI extends javax.swing.JFrame {
      * from null pointer exeptions.
      */
     private class scriptListener implements ListDataListener {
+
         @Override
         public void contentsChanged(ListDataEvent evt) {
-            if (scriptList.isEmpty())
+            if (scriptList.isEmpty()) {
                 disableAll();
-            else
+            } else {
                 enableAll();
+            }
         }
+
         @Override
         public void intervalRemoved(ListDataEvent evt) {
-            if (scriptList.isEmpty())
-            {
+            if (scriptList.isEmpty()) {
                 disableAll();
                 clearAll();
-            }
-            
-            else
+            } else {
                 enableAll();
+            }
         }
+
         @Override
         public void intervalAdded(ListDataEvent evt) {
-            if (scriptList.isEmpty())
+            if (scriptList.isEmpty()) {
                 disableAll();
-            else
+            } else {
                 enableAll();
+            }
         }
     }
-    
-    private boolean checkScriptNameExists(String testName)
-    {
-        for (int i = 0; i<scriptList.getSize(); i++)
-        {
-            if (scriptList.get(i).getName().equals(testName))
-            {
-                log.level0Error("The script \""+ testName + "\" already exists");
-                JOptionPane.showMessageDialog(this, "The script \""+ testName + "\" already exists", 
+
+    private boolean checkScriptNameExists(String testName) {
+        for (int i = 0; i < scriptList.getSize(); i++) {
+            if (scriptList.get(i).getName().equals(testName)) {
+                log.level0Error("The script \"" + testName + "\" already exists");
+                JOptionPane.showMessageDialog(this, "The script \"" + testName + "\" already exists",
                         "Script Alreay Exists", JOptionPane.ERROR_MESSAGE);
                 return true;
             }
         }
         return false;
     }
-    
-    private void updateBuildAndOverview(Caspac cp)
-    {
+
+    private void updateBuildAndOverview(Caspac cp) {
         this.developerName.setText(cp.build.developerName);
         this.donateLink.setText(cp.build.donateLink);
         this.donateText.setText(cp.build.developerDonateButtonText);
