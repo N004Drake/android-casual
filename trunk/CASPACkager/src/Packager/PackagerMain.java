@@ -65,8 +65,24 @@ public class PackagerMain {
     ;
     
     /**
-     * main method for packaging 
-     * @param args input from command line
+     * Packages a CASPAC into a CASUAL.
+     * @param args input from command line where args can be the following:
+     * --CASPAC || -c "/path_to/CASPAC.*"
+     * specifies the path to the CASPAC
+     * eg "--type C:/mycaspac.zip".
+     * --output || -o  "/path_to/OutputCASUAL.jar"
+     * specifies an output file name.
+     * --type || -t "words to be appended before jar" 
+     * appends words to the end of the filename
+     * eg "--type nightly" results: CASPAC-CASUALr327-nightly.jar.
+     *
+     * --fullauto || -f "/path_to_CASPAC_Folder/"
+     * Creates a folder in the specified fullauto path called "CASUAL".  
+     * Generates new CASUAL.jar files based upon each CASPAC name in the full auto folder
+     * eg "--fullauto /path/to/folder" will process all CASPACs in the folder and
+     * output to /path/to/folder/CASUAL/.  May be used with --type.
+     * cannot be used with --output or --CASPAC arguments. 
+     * 
      */
     public static void main(String[] args) {
         if (useOverrideArgs) {
