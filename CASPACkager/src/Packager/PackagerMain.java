@@ -1,4 +1,4 @@
-/*PackagerMain
+/*PackagerMain packages CASPACs
  ***************************************************************************
  *Copyright (C) 2013  Adam Outler
  *
