@@ -37,6 +37,7 @@ public class CASPACjUnitTest {
             String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
             String[] badValues = new String[]{"ERROR"};
             String[] goodValues = new String[]{"echo [PASS]", "[PASS] IFNOTCONTAINS"};
+            CASUAL.CASUALapplicationData.useSound = false;
             assertEquals(true, new CASUAL.CASUALTest(casualParams, goodValues, badValues).checkTestPoints());
             System.out.println("TESTING SECOND ROUND");
             System.out.println("TESTING SECOND ROUND");

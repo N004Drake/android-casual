@@ -222,6 +222,18 @@ public class CASUALTools {
             return true;
         }
     }
+    
+    /**
+     * Starts a new ADB instance
+     */
+    public Runnable launchADB =new Runnable(){
+        @Override
+        public void run(){
+            ADBTools.startServer();
+        }
+    };
+    
+    
     /**
      * deploys ADB to Statics.ADBDeployed.
      */
@@ -229,6 +241,7 @@ public class CASUALTools {
         @Override
         public void run() {
             new ADBInstall().deployADB();
+            new Log().level3Verbose("ADB Server Started!!!");
         }
     };
     /**
