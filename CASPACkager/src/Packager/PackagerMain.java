@@ -69,7 +69,7 @@ public class PackagerMain {
      * @param args input from command line where args can be the following:
      * --CASPAC || -c "/path_to/CASPAC.*"
      * specifies the path to the CASPAC
-     * eg "--type C:/mycaspac.zip".
+     * eg "--CASPAC C:/mycaspac.zip".
      * --output || -o  "/path_to/OutputCASUAL.jar"
      * specifies an output file name.
      * --type || -t "words to be appended before jar" 
