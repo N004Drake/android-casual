@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
@@ -118,13 +116,14 @@ public class CASPACHandler {
             new Log().errorHandler(new Exception("CASPACHandler.loadCASUALPack" + ex));
             CASUALApp.shutdown(1);
         } catch (InterruptedException ex) {
-            Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
     }
     Runnable activateScript = new Runnable() {
         @Override
         public void run() {
             new CASUALScriptParser().loadFileAndExecute(activeScript, activeScript, false);
+            CASUALApp.shutdown(0);
         }
     };
 
