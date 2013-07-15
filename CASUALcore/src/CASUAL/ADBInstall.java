@@ -41,7 +41,7 @@ class ADBInstall {
             Statics.adbDeployed = Statics.TempFolder + "adb";
             fo.copyFromResourceToFile(Statics.MacADB, Statics.adbDeployed);
         } else if (Statics.isWindows()) {
-            Log.level4Debug("@Found Windows Computer");
+            Log.level4Debug("Found Windows Computer");
             fo.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.adbDeployed = Statics.TempFolder + "adb.exe";
             fo.copyFromResourceToFile(Statics.WinADB, Statics.adbDeployed);
