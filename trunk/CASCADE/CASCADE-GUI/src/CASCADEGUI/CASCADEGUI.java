@@ -26,6 +26,7 @@ import CASUAL.Statics;
 import CASUAL.StringOperations;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
+import Packager.PackagerMain;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +48,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class CASCADEGUI extends javax.swing.JFrame {
 
@@ -76,9 +78,10 @@ public class CASCADEGUI extends javax.swing.JFrame {
         jList1.setModel(listModel);
         listModel.addElement("Drop files here and click to remove.");
         this.jList1.setDropTarget(dropTargetForFileList);
-        this.outputFile.setDropTarget(caspacDropTarget);
+        this.caspacOutputFile.setDropTarget(caspacDropTarget);
         disableAll();
         scriptList.addListDataListener(new scriptListener());
+        argBuilder();
         
     }
     DropTarget dropTargetForFileList = new DropTarget() {
@@ -142,9 +145,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
                         if (firstFile.isDirectory()){
                             String newFile=firstFile.getCanonicalPath();
                             newFile=newFile+Statics.Slash+"newCaspac.zip";
-                            outputFile.setText(newFile);
+                            caspacOutputFile.setText(newFile);
                         } else if (firstFile.isFile() && firstFile.exists()){
-                            outputFile.setText(files.get(0).getCanonicalPath());    
+                            caspacOutputFile.setText(files.get(0).getCanonicalPath());    
                             loadCaspacActionPerformed(null);
                         }                       
                         
@@ -177,10 +180,16 @@ public class CASCADEGUI extends javax.swing.JFrame {
         removeZipFile = new javax.swing.JMenuItem();
         mainPanel = new javax.swing.JPanel();
         outputFIle = new javax.swing.JPanel();
-        outputFile = new javax.swing.JTextField();
+        caspacOutputFile = new javax.swing.JTextField();
         makeCASPAC = new javax.swing.JButton();
         loadButton = new javax.swing.JButton();
-        outputBrowseButton = new javax.swing.JButton();
+        caspacOutputBrowseButton = new javax.swing.JButton();
+        CASPACkagerPanel = new javax.swing.JPanel();
+        casualOutputFile = new javax.swing.JTextField();
+        makeItCasualButton = new javax.swing.JButton();
+        casualOutputBrowseButton = new javax.swing.JButton();
+        typeCheckBox = new javax.swing.JCheckBox();
+        typeTextBox = new javax.swing.JTextField();
         workArea = new javax.swing.JTabbedPane();
         scriptGroup = new javax.swing.JTabbedPane();
         scriptOverview = new javax.swing.JPanel();
@@ -261,8 +270,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
         outputFIle.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.outputFIle.border.title"))); // NOI18N
         outputFIle.setName("outputFIle"); // NOI18N
 
-        outputFile.setText(System.getProperty("user.dir"));
-        outputFile.setName("outputFile"); // NOI18N
+        caspacOutputFile.setText(System.getProperty("user.dir"));
+        caspacOutputFile.setName("caspacOutputFile"); // NOI18N
 
         makeCASPAC.setText(bundle.getString("CASCADEGUI.makeCASPAC.text")); // NOI18N
         makeCASPAC.setName("makeCASPAC"); // NOI18N
@@ -280,12 +289,12 @@ public class CASCADEGUI extends javax.swing.JFrame {
             }
         });
 
-        outputBrowseButton.setIcon(UIManager.getIcon("Tree.openIcon"));
-        outputBrowseButton.setText(bundle.getString("CASCADEGUI.outputBrowseButton.text")); // NOI18N
-        outputBrowseButton.setName("outputBrowseButton"); // NOI18N
-        outputBrowseButton.addActionListener(new java.awt.event.ActionListener() {
+        caspacOutputBrowseButton.setIcon(UIManager.getIcon("Tree.openIcon"));
+        caspacOutputBrowseButton.setText(bundle.getString("CASCADEGUI.caspacOutputBrowseButton.text")); // NOI18N
+        caspacOutputBrowseButton.setName("caspacOutputBrowseButton"); // NOI18N
+        caspacOutputBrowseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                outputBrowseButtonActionPerformed(evt);
+                caspacOutputBrowseButtonActionPerformed(evt);
             }
         });
 
@@ -296,9 +305,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
             .addGroup(outputFIleLayout.createSequentialGroup()
                 .addComponent(loadButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(outputFile)
+                .addComponent(caspacOutputFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(outputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(caspacOutputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(makeCASPAC, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -306,10 +315,73 @@ public class CASCADEGUI extends javax.swing.JFrame {
             outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(makeCASPAC)
-                .addComponent(outputBrowseButton))
+                .addComponent(caspacOutputBrowseButton))
             .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(outputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(caspacOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(loadButton))
+        );
+
+        CASPACkagerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.CASPACkagerPanel.border.title"))); // NOI18N
+        CASPACkagerPanel.setName("CASPACkagerPanel"); // NOI18N
+
+        casualOutputFile.setText(System.getProperty("user.dir"));
+        casualOutputFile.setName("casualOutputFile"); // NOI18N
+
+        makeItCasualButton.setText(bundle.getString("CASCADEGUI.makeItCasualButton.text")); // NOI18N
+        makeItCasualButton.setName("makeItCasualButton"); // NOI18N
+        makeItCasualButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                makeItCasualButtonActionPerformed(evt);
+            }
+        });
+
+        casualOutputBrowseButton.setIcon(UIManager.getIcon("Tree.openIcon"));
+        casualOutputBrowseButton.setText(bundle.getString("CASCADEGUI.casualOutputBrowseButton.text")); // NOI18N
+        casualOutputBrowseButton.setName("casualOutputBrowseButton"); // NOI18N
+        casualOutputBrowseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                casualOutputBrowseButtonActionPerformed(evt);
+            }
+        });
+
+        typeCheckBox.setText(bundle.getString("CASCADEGUI.typeCheckBox.text")); // NOI18N
+        typeCheckBox.setName("typeCheckBox"); // NOI18N
+        typeCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                typeCheckBoxActionPerformed(evt);
+            }
+        });
+
+        typeTextBox.setText(bundle.getString("CASCADEGUI.typeTextBox.text")); // NOI18N
+        typeTextBox.setEnabled(false);
+        typeTextBox.setName("typeTextBox"); // NOI18N
+
+        javax.swing.GroupLayout CASPACkagerPanelLayout = new javax.swing.GroupLayout(CASPACkagerPanel);
+        CASPACkagerPanel.setLayout(CASPACkagerPanelLayout);
+        CASPACkagerPanelLayout.setHorizontalGroup(
+            CASPACkagerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CASPACkagerPanelLayout.createSequentialGroup()
+                .addComponent(casualOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(casualOutputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(typeTextBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(typeCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(makeItCasualButton))
+        );
+        CASPACkagerPanelLayout.setVerticalGroup(
+            CASPACkagerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CASPACkagerPanelLayout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(CASPACkagerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(casualOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(casualOutputBrowseButton)
+                    .addComponent(typeTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(typeCheckBox)
+                    .addComponent(makeItCasualButton))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         workArea.setName(""); // NOI18N
@@ -403,7 +475,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
         );
 
         scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
@@ -641,7 +713,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -810,7 +882,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             bannerTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerTextPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 859, Short.MAX_VALUE)
+                .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 863, Short.MAX_VALUE)
                 .addContainerGap())
         );
         bannerTextPanelLayout.setVerticalGroup(
@@ -828,6 +900,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         bannerPic.setEnabled(false);
         bannerPic.setName("bannerPic"); // NOI18N
 
+        browseLogo.setIcon(UIManager.getIcon("Tree.openIcon"));
         browseLogo.setText(bundle.getString("CASCADEGUI.browseLogo.text")); // NOI18N
         browseLogo.setName("browseLogo"); // NOI18N
         browseLogo.addActionListener(new java.awt.event.ActionListener() {
@@ -842,7 +915,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerPicPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 810, Short.MAX_VALUE)
+                .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(browseLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -850,11 +923,10 @@ public class CASCADEGUI extends javax.swing.JFrame {
         bannerPicPanelLayout.setVerticalGroup(
             bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerPicPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(bannerPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(browseLogo)))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -901,7 +973,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(useBannerPic)
                     .addComponent(bannerPicPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(63, 63, 63))
+                .addGap(56, 56, 56))
         );
 
         developerNamePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.developerNamePanel.border.title"))); // NOI18N
@@ -949,7 +1021,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addComponent(donationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(217, Short.MAX_VALUE))
+                .addContainerGap(235, Short.MAX_VALUE))
         );
 
         workArea.addTab(bundle.getString("CASCADEGUI.buildPropertiesPanel.TabConstraints.tabTitle"), buildPropertiesPanel); // NOI18N
@@ -960,14 +1032,19 @@ public class CASCADEGUI extends javax.swing.JFrame {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(workArea, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(outputFIle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addComponent(CASPACkagerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addComponent(workArea)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(workArea, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputFIle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(CASPACkagerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -978,9 +1055,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -992,22 +1067,22 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private void makeCASPACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeCASPACActionPerformed
         //Create new file In memory with name from the JTextField
         //TODO Add a browse button for the JTextField for location
-        File file = new File(this.outputFile.getText());
+        File file = new File(this.caspacOutputFile.getText());
 
 
         if (!file.toString().endsWith(".zip")) {
             JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.outputFile.getText() + "\n is not a valid zip file.\n"
+                    + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
                     + "Please make sure that the file ends in a .zip", "File output error",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Output zip file not valid: \n \t" + this.outputFile.getText());
+            log.level0Error("Output zip file not valid: \n \t" + this.caspacOutputFile.getText());
             return;
         }
 
         //File overwrite check
         if (file.exists()) {
             log.level2Information("File exist prompting for overwrite");
-            int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.outputFile.getText()
+            int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.caspacOutputFile.getText()
                     + " already exists are you sure you wish to continue.\n Any "
                     + "previous files will be overridden.", "Overwrite existing file?",
                     JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -1020,7 +1095,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
 
         log.level2Information("Creating CASPAC file");
-        Caspac cp = new Caspac(new File(this.outputFile.getText()));
+        Caspac cp = new Caspac(new File(this.caspacOutputFile.getText()));
         log.level2Information("Setting CASPAC build");
         cp.setBuild(buildMaker());
         cp.build.bannerPic = this.bannerPic.getText();
@@ -1207,21 +1282,21 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
     private void loadCaspacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCaspacActionPerformed
 
-        File file = new File(this.outputFile.getText());
+        File file = new File(this.caspacOutputFile.getText());
         if (!file.toString().endsWith(".zip")) {
             JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.outputFile.getText() + "\n is not a valid zip file.\n"
+                    + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
                     + "Please make sure that the file ends in a .zip", "File read error",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input zip file not valid: \n \t" + this.outputFile.getText());
+            log.level0Error("Input zip file not valid: \n \t" + this.caspacOutputFile.getText());
             return;
         }
         if (!file.exists()) {
             JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.outputFile.getText() + "\n is not a valid zip file.\n"
+                    + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
                     + "Ensure the file exists", "File Not Found",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input zip file not valid: \n \t" + this.outputFile.getText());
+            log.level0Error("Input zip file not valid: \n \t" + this.caspacOutputFile.getText());
             return;
         }
         Caspac cp = new Caspac(file);
@@ -1257,17 +1332,77 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_scriptDescriptionJTextCaretPositionChanged
 
-    private void outputBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputBrowseButtonActionPerformed
+    private void caspacOutputBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caspacOutputBrowseButtonActionPerformed
         JFileChooser jc;
-        if (new File(this.outputFile.getText()).exists())
-            jc = new JFileChooser(this.outputFile.getText());
+        if (new File(this.caspacOutputFile.getText()).exists())
+            jc = new JFileChooser(this.caspacOutputFile.getText());
         else
             jc = new JFileChooser();
         int returnVal = jc.showSaveDialog(this);
         if (returnVal == JFileChooser.OPEN_DIALOG)
-            this.outputFile.setText(jc.getSelectedFile().toString());
-        // TODO add your handling code here:
-    }//GEN-LAST:event_outputBrowseButtonActionPerformed
+        {
+            if (!jc.getSelectedFile().toString().endsWith(".zip"))
+                this.caspacOutputFile.setText(jc.getSelectedFile().toString() + ".zip");
+            else
+                this.caspacOutputFile.setText(jc.getSelectedFile().toString());
+        }
+    }//GEN-LAST:event_caspacOutputBrowseButtonActionPerformed
+
+    private void casualOutputBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_casualOutputBrowseButtonActionPerformed
+        JFileChooser jc;
+        if (new File(this.casualOutputFile.getText()).exists())
+            jc = new JFileChooser(this.casualOutputFile.getText());
+        else
+            jc = new JFileChooser();
+        jc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = jc.showOpenDialog(this);
+        if (returnVal == JFileChooser.OPEN_DIALOG)
+        {
+            if (!jc.getSelectedFile().toString().endsWith(".jar"))
+                this.casualOutputFile.setText(jc.getSelectedFile().toString() + ".jar");
+            else
+                this.casualOutputFile.setText(jc.getSelectedFile().toString());
+        }
+    }//GEN-LAST:event_casualOutputBrowseButtonActionPerformed
+
+    private void makeItCasualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeItCasualButtonActionPerformed
+        File caspacin = new File(this.caspacOutputFile.getText());
+        File casualout = new File(this.casualOutputFile.getText());
+        if (!caspacin.toString().endsWith(".zip")) {
+            JOptionPane.showMessageDialog(this, "The file: \n"
+                    + this.caspacOutputFile.getText() + "\n is not a valid CASPAC file.\n"
+                    + "Please make sure that the file ends in a .zip, and is a valid CASPAC", "File read error",
+                    JOptionPane.ERROR_MESSAGE);
+            log.level0Error("Input CASPAC file not valid: \n \t" + this.caspacOutputFile.getText());
+            return;
+        }
+        if (!caspacin.exists()) {
+            JOptionPane.showMessageDialog(this, "The file: \n"
+                    + this.caspacOutputFile.getText() + "\n is not a valid CASPAC file.\n"
+                    + "Ensure the CASPAC exists.", "File Not Found",
+                    JOptionPane.ERROR_MESSAGE);
+            log.level0Error("Input CASPAC file not found: \n \t" + this.caspacOutputFile.getText());
+            return;
+        }
+        
+        if (casualout.isFile()) {
+            JOptionPane.showMessageDialog(this, "ERROR:" + this.caspacOutputFile.getText()
+                    + " is a file, and must be a folder to place the pregenerated"
+                    + "named file into.\n Please select a valid ouput folder and try again."
+                    , "Output should be directory",
+                    JOptionPane.ERROR);
+
+        }
+        String[] args = argBuilder();
+        PackagerMain.main(args);
+    }//GEN-LAST:event_makeItCasualButtonActionPerformed
+
+    private void typeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeCheckBoxActionPerformed
+        if (this.typeCheckBox.isSelected())
+            this.typeTextBox.setEnabled(true);
+        else
+            this.typeTextBox.setEnabled(false);
+    }//GEN-LAST:event_typeCheckBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1306,6 +1441,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BannerPicOrText;
+    private javax.swing.JPanel CASPACkagerPanel;
     private javax.swing.JButton addScriptButton;
     private javax.swing.JCheckBox alwaysEnableControls;
     private javax.swing.JCheckBox audioEnabled;
@@ -1317,6 +1453,10 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private javax.swing.JPanel buildPropertiesPanel;
     private javax.swing.JTextField buttonText;
     private javax.swing.JPanel buttonTextPanel;
+    private javax.swing.JButton caspacOutputBrowseButton;
+    private javax.swing.JTextField caspacOutputFile;
+    private javax.swing.JButton casualOutputBrowseButton;
+    private javax.swing.JTextField casualOutputFile;
     private javax.swing.JButton deleteScriptButton;
     private javax.swing.JTextField developerName;
     private javax.swing.JPanel developerNamePanel;
@@ -1340,11 +1480,10 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private javax.swing.JButton loadButton;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton makeCASPAC;
+    private javax.swing.JButton makeItCasualButton;
     private javax.swing.JTextField minSVNversion;
     private javax.swing.JLabel minSVNversionTitleJLabel;
-    private javax.swing.JButton outputBrowseButton;
     private javax.swing.JPanel outputFIle;
-    private javax.swing.JTextField outputFile;
     private javax.swing.JScrollPane overviewScrollPane;
     private javax.swing.JTextArea overviewWorkArea;
     private javax.swing.JPopupMenu popupMenuForZipManagement;
@@ -1362,6 +1501,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private javax.swing.JTextArea scriptWorkArea;
     private javax.swing.JTextField supportURL;
     private javax.swing.JLabel supportURLTitleJLabel;
+    private javax.swing.JCheckBox typeCheckBox;
+    private javax.swing.JTextField typeTextBox;
     private javax.swing.JTextField uniqueID;
     private javax.swing.JLabel uniqueIDTitleJLabel;
     private javax.swing.JTextField updateMessage;
@@ -1571,6 +1712,19 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.scriptWorkArea.setText("");
         this.editScriptNameButton.setText("");
         this.deleteScriptButton.setText("");
+    }
+
+    private String[] argBuilder() {
+        String[] args;
+        String CASPACIn = this.caspacOutputFile.getText();
+        String CASUALOut = this.casualOutputFile.getText();
+        if (this.typeCheckBox.isSelected())
+            args = new String[]{"--CASPAC",CASPACIn,"--output",CASUALOut,"--type",this.typeTextBox.getText()};
+        else
+            args = new String[]{"--CASPAC",CASPACIn,"--output",CASUALOut};
+        return args;
+        
+        
     }
 
     /*
