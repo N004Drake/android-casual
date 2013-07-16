@@ -59,7 +59,10 @@ public class Caspac {
 
     }
     
-    
+    /**
+     * adds a Script
+     * @param script completed Script class 
+     */
     public void addScript(Script script) {
         if (!(scripts.contains(script)))
         {
@@ -67,6 +70,10 @@ public class Caspac {
             log.level4Debug("Adding Script: "+ script.getName());
         }
     }   
+    /**
+     * removes a script 
+     * @param script Script reference
+     */
     public void removeScript (Script script) {
         if (scripts.contains(script))
         {
@@ -75,10 +82,18 @@ public class Caspac {
         }
     }
 
+    /**
+     * 
+     * @return the -Overview
+     */
     public String getOverview() {
         return overview;
     }
 
+    /**
+     * sets the overview 
+     * @param overview description of package
+     */
     public void setOverview(String overview) {
         this.overview = overview;
     }
@@ -87,18 +102,28 @@ public class Caspac {
         return CASPAC;
     }
 
-
+    /**
+     * 
+     * @return File reference to package banner
+     */
     public File getLogo() {
         return logo;
     }
 
+    /**
+     * sets the banner file
+     * @param logo file to use for banner
+     */
     public void setLogo(File logo) {
         this.logo = logo;
     }
     
     
     
-    
+    /**
+     * writes a CASPAC
+     * @throws IOException 
+     */
     public void write() throws IOException {
         if (!(new File(TempFolder).exists()))
             new File(TempFolder).mkdir();
@@ -134,11 +159,20 @@ public class Caspac {
         cleanCaspacWrite();
     }
     
+    /**
+     * sets build properties
+     * @param prop properties file
+     */
     public void setBuild(Properties prop){
         build=new Build(prop);
         build.loadPropsToVariables();
     }
 
+    /**
+     * loads a CASPAC.zip file
+     * @throws ZipException
+     * @throws IOException 
+     */
     public void load() throws ZipException, IOException{
         TempFolder = TempFolder + "EXPLOAD";
         Script dummy;
@@ -166,6 +200,13 @@ public class Caspac {
          }
          log.level4Debug("CASPAC load completed.");
     }
+    
+    /**
+     * handles each CASPAC file appropriately
+     * @param entry entry from CASPAC
+     * @param pack CASPAC file to be processed
+     * @throws IOException 
+     */
     private void handleCASPACFiles(Object entry, Unzip pack) throws IOException {
 
         //get the filename from the entry
@@ -262,7 +303,11 @@ public class Caspac {
         }
     }
     
-
+    /**
+     * script instance which is being referenced
+     * @param fileName filename of script
+     * @return script instance of script to be processed
+     */
     private Script getScriptInstanceByFilename(String fileName) {
         for (Script s: scripts)
             if(s.getName().equals(fileName.substring(0, fileName.lastIndexOf("."))))
@@ -270,7 +315,11 @@ public class Caspac {
         return new Script(fileName.substring(0, fileName.lastIndexOf("."))); //TODO make an iterator to find a script by file name for loading; 
     }
     
-    private ArrayList<String> getScriptNames()
+    /**
+     * returns all script names
+     * @return list of script names
+     */
+    public ArrayList<String> getScriptNames()
     { //TODO: examine this to figure out why we are iterating "scripts" and adding a slash while getting names
         ArrayList<String> scriptNames = new ArrayList<>();
         for (Script s : scripts)
@@ -278,6 +327,9 @@ public class Caspac {
         return scriptNames;
     }
 
+    /**
+     * TODO: should this be endswith(".scr")???
+     */
     private void cleanCaspacWrite() {
         for (File f : new File(Statics.TempFolder).listFiles())
         {
@@ -287,6 +339,9 @@ public class Caspac {
         }
     }
     
+    /**
+     * build class is a reference to handle -build.properties information
+     */
     public class Build {    
         public String developerName = "";
         public String developerDonateButtonText = "";
@@ -343,12 +398,6 @@ public class Caspac {
          * @param buildMap key,value pairs
          */
        
-
-        //empty build
-        public Build(){
-        }
-
-        
         
         private void setPropsFromVariables(){
             buildProp.setProperty("Window.UsePictureForBanner", usePictureForBanner?"True":"False");
