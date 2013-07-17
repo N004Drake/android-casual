@@ -42,9 +42,10 @@ public class Script {
     private String name = "";
     private String script = "";
     public List<File> includeFiles = new ArrayList<>();
+    public String TempFolder="";
     public meta metaData = new meta();
     private String discription="";
-
+    
     public Script(String name) {
         this.name=name;
     }
