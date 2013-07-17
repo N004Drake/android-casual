@@ -18,7 +18,6 @@
  *
  * @author loganludington
  */
-
 package CASCADEGUI;
 //Dependencies must be built or they will be 
 import CASUAL.AudioHandler;
@@ -83,8 +82,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.caspacOutputFile.setDropTarget(caspacDropTarget);
         disableAll();
         scriptList.addListDataListener(new scriptListener());
-        
-        
+
+
     }
     DropTarget dropTargetForFileList = new DropTarget() {
         @Override
@@ -126,8 +125,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             // handle drop inside current table
         }
     };
-
-      DropTarget caspacDropTarget = new DropTarget() {
+    DropTarget caspacDropTarget = new DropTarget() {
         @Override
         public synchronized void drop(DropTargetDropEvent event) {
             //Accept copy drops
@@ -143,16 +141,16 @@ public class CASCADEGUI extends javax.swing.JFrame {
                     List<File> files;
                     try {  //get a list of the files and add them
                         files = (List<File>) transferable.getTransferData(flavor);
-                        File firstFile= files.get(0);
-                        if (firstFile.isDirectory()){
-                            String newFile=firstFile.getCanonicalPath();
-                            newFile=newFile+Statics.Slash+"newCaspac.zip";
+                        File firstFile = files.get(0);
+                        if (firstFile.isDirectory()) {
+                            String newFile = firstFile.getCanonicalPath();
+                            newFile = newFile + Statics.Slash + "newCaspac.zip";
                             caspacOutputFile.setText(newFile);
-                        } else if (firstFile.isFile() && firstFile.exists()){
-                            caspacOutputFile.setText(files.get(0).getCanonicalPath());    
+                        } else if (firstFile.isFile() && firstFile.exists()) {
+                            caspacOutputFile.setText(files.get(0).getCanonicalPath());
                             loadCaspacActionPerformed(null);
-                        }                       
-                        
+                        }
+
 
                     } catch (IOException | UnsupportedFlavorException ex) {
                         Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -164,10 +162,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             // handle drop inside current table
         }
     };
-    
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1131,44 +1126,48 @@ public class CASCADEGUI extends javax.swing.JFrame {
      * Listener set up to listen for the CASPACme button
      */
     private void makeCASPACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeCASPACActionPerformed
-        //Create new file In memory with name from the JTextField
-        File file = new File(this.caspacOutputFile.getText());
-
-
-        if (!file.toString().endsWith(".zip")) {
-            JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
-                    + "Please make sure that the file ends in a .zip", "File output error",
-                    JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Output zip file not valid: \n \t" + this.caspacOutputFile.getText());
-            return;
-        }
-
-        //File overwrite check
-        if (file.exists()) {
-            log.level2Information("File exist prompting for overwrite");
-            int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.caspacOutputFile.getText()
-                    + " already exists are you sure you wish to continue.\n Any "
-                    + "previous files will be overridden.", "Overwrite existing file?",
-                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (i == JOptionPane.NO_OPTION) {
-                log.level0Error("File override declined");
-                return;
-            } else {
-                file.delete();
-            }
-        }
-
-        cp = buildCASPAC();
-        log.level2Information("Attempting CASCPAC write");
         try {
-            cp.write();
+            //Create new file In memory with name from the JTextField
+            File file = new File(this.caspacOutputFile.getText());
+
+
+            if (!file.toString().endsWith(".zip")) {
+                JOptionPane.showMessageDialog(this, "The file: \n"
+                        + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
+                        + "Please make sure that the file ends in a .zip", "File output error",
+                        JOptionPane.ERROR_MESSAGE);
+                log.level0Error("Output zip file not valid: \n \t" + this.caspacOutputFile.getText());
+                return;
+            }
+
+            //File overwrite check
+            if (file.exists()) {
+                log.level2Information("File exist prompting for overwrite");
+                int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.caspacOutputFile.getText()
+                        + " already exists are you sure you wish to continue.\n Any "
+                        + "previous files will be overridden.", "Overwrite existing file?",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (i == JOptionPane.NO_OPTION) {
+                    log.level0Error("File override declined");
+                    return;
+                } else {
+                    file.delete();
+                }
+            }
+
+            cp = buildCASPAC();
+            log.level2Information("Attempting CASCPAC write");
+            try {
+                cp.write();
+            } catch (IOException ex) {
+                log.errorHandler(ex);
+            }
+            log.level2Information("CASPAC write successfull!!!");
+            enableCasual();
         } catch (IOException ex) {
-            log.errorHandler(ex);
+            Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        log.level2Information("CASPAC write successfull!!!");
-        enableCasual();
-        
+
 
     }//GEN-LAST:event_makeCASPACActionPerformed
 
@@ -1206,13 +1205,12 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private void scriptListJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_scriptListJListValueChanged
         //this.scriptListJList.getSelectedIndex() = this.scriptListJList.getSelectedIndex();
         //System.out.println(this.scriptListJList.getSelectedIndex());
-        if (this.scriptListJList.getSelectedIndex() == -1)
-        {
+        if (this.scriptListJList.getSelectedIndex() == -1) {
             this.editScriptNameButton.setEnabled(false);
             this.deleteScriptButton.setEnabled(false);
         } else {
             this.editScriptNameButton.setEnabled(true);
-            this.deleteScriptButton.setEnabled(true); 
+            this.deleteScriptButton.setEnabled(true);
         }
         loadScript();
     }//GEN-LAST:event_scriptListJListValueChanged
@@ -1235,7 +1233,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             loadScript();
             disableCasual();
         }
-        
+
     }//GEN-LAST:event_editScriptNameButtonActionPerformed
 
     /*
@@ -1244,7 +1242,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private void deleteScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteScriptButtonActionPerformed
         int i = JOptionPane.showConfirmDialog(this, "Are you sure you wish to delete this script?\n"
                 + "THIS IS IRREVERSABLE", "Confirm Deletion:", JOptionPane.WARNING_MESSAGE);
-        if (i==JOptionPane.YES_OPTION) {
+        if (i == JOptionPane.YES_OPTION) {
             if (this.scriptListJList.getSelectedIndex() != -1) {
                 scriptList.removeElementAt(this.scriptListJList.getSelectedIndex());
                 clearAll();
@@ -1376,11 +1374,16 @@ public class CASCADEGUI extends javax.swing.JFrame {
             log.level0Error("Input zip file not valid: \n \t" + this.caspacOutputFile.getText());
             return;
         }
-        cp = new Caspac(file);
+        try {
+            cp = new Caspac(file, Statics.TempFolder);
+        } catch (IOException ex) {
+            Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             scriptList.clear();;
             log.level4Debug("Initiating CASPAC load.");
             cp.load();
+            cp.waitForUnzipComplete();
         } catch (ZipException ex) {
             log.errorHandler(ex);
         } catch (IOException ex) {
@@ -1408,35 +1411,37 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
     private void caspacOutputBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caspacOutputBrowseButtonActionPerformed
         JFileChooser jc;
-        if (new File(this.caspacOutputFile.getText()).exists())
+        if (new File(this.caspacOutputFile.getText()).exists()) {
             jc = new JFileChooser(this.caspacOutputFile.getText());
-        else
+        } else {
             jc = new JFileChooser();
+        }
         int returnVal = jc.showSaveDialog(this);
-        if (returnVal == JFileChooser.OPEN_DIALOG)
-        {
-            if (!jc.getSelectedFile().toString().endsWith(".zip"))
+        if (returnVal == JFileChooser.OPEN_DIALOG) {
+            if (!jc.getSelectedFile().toString().endsWith(".zip")) {
                 this.caspacOutputFile.setText(jc.getSelectedFile().toString() + ".zip");
-            else
+            } else {
                 this.caspacOutputFile.setText(jc.getSelectedFile().toString());
+            }
             disableCasual();
         }
     }//GEN-LAST:event_caspacOutputBrowseButtonActionPerformed
 
     private void casualOutputBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_casualOutputBrowseButtonActionPerformed
         JFileChooser jc;
-        if (new File(this.casualOutputFile.getText()).exists())
+        if (new File(this.casualOutputFile.getText()).exists()) {
             jc = new JFileChooser(this.casualOutputFile.getText());
-        else
+        } else {
             jc = new JFileChooser();
+        }
         jc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = jc.showOpenDialog(this);
-        if (returnVal == JFileChooser.OPEN_DIALOG)
-        {
-            if (!jc.getSelectedFile().toString().endsWith(".jar"))
+        if (returnVal == JFileChooser.OPEN_DIALOG) {
+            if (!jc.getSelectedFile().toString().endsWith(".jar")) {
                 this.casualOutputFile.setText(jc.getSelectedFile().toString() + ".jar");
-            else
+            } else {
                 this.casualOutputFile.setText(jc.getSelectedFile().toString());
+            }
         }
     }//GEN-LAST:event_casualOutputBrowseButtonActionPerformed
 
@@ -1459,39 +1464,34 @@ public class CASCADEGUI extends javax.swing.JFrame {
             log.level0Error("Input CASPAC file not found: \n \t" + this.caspacOutputFile.getText());
             return;
         }
-        
+
         if (casualout.isFile()) {
             JOptionPane.showMessageDialog(this, "ERROR:" + this.caspacOutputFile.getText()
                     + " is a file, and must be a folder to place the pregenerated"
-                    + "named file into.\n Please select a valid ouput folder and try again."
-                    , "Output should be directory",
+                    + "named file into.\n Please select a valid ouput folder and try again.", "Output should be directory",
                     JOptionPane.ERROR);
-                    
+
 
         }
-            
+
 
         String[] args = argBuilder();
         PackagerMain.main(args);
     }//GEN-LAST:event_makeItCasualButtonActionPerformed
 
     private void typeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeCheckBoxActionPerformed
-        if (this.typeCheckBox.isSelected())
-        {
+        if (this.typeCheckBox.isSelected()) {
             this.typeTextBox.setEnabled(true);
             this.CASPACkagerPanel.setEnabled(true);
-        }
-        else
+        } else {
             this.typeTextBox.setEnabled(false);
+        }
     }//GEN-LAST:event_typeCheckBoxActionPerformed
 
     private void CASPACkagerPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_CASPACkagerPanelPropertyChange
-        if (this.CASPACkagerPanel.isEnabled())
-        {
+        if (this.CASPACkagerPanel.isEnabled()) {
             enableCasualComponents();
-        }
-        else
-        {
+        } else {
             disableCasualComponents();
         }
     }//GEN-LAST:event_CASPACkagerPanelPropertyChange
@@ -1691,7 +1691,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         Properties buildProp = new Properties();
         buildProp.setProperty("Audio.Enabled", this.audioEnabled.isSelected() ? "True" : "False");
         buildProp.setProperty("Application.AlwaysEnableControls", this.alwaysEnableControls.isSelected() ? "True" : "False");
-        buildProp.setProperty("Window.UsePictureForBanner", this.useBannerPic.isSelected()?"True":"False");
+        buildProp.setProperty("Window.UsePictureForBanner", this.useBannerPic.isSelected() ? "True" : "False");
         buildProp.setProperty("Developer.DonateToButtonText", this.donateText.getText());
         buildProp.setProperty("Developer.DonateLink", this.donateLink.getText());
         buildProp.setProperty("Developer.Name", this.developerName.getText());
@@ -1701,10 +1701,10 @@ public class CASCADEGUI extends javax.swing.JFrame {
         buildProp.setProperty("Window.Title", this.windowText.getText());
         return buildProp;
     }
-    
-    private Caspac buildCASPAC(){
+
+    private Caspac buildCASPAC() throws IOException {
         log.level2Information("Creating CASPAC file");
-        Caspac cp = new Caspac(new File(this.caspacOutputFile.getText()));
+        Caspac cp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.TempFolder);
         log.level2Information("Setting CASPAC build");
         cp.setBuild(buildMaker());
         cp.build.bannerPic = this.bannerPic.getText();
@@ -1714,7 +1714,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             cp.addScript(scriptList.get(j));
         }
         log.level2Information("Setting Overview");
-        cp.setOverview(this.overviewWorkArea.getText());
+        cp.overview = this.overviewWorkArea.getText();
         return cp;
     }
 
@@ -1784,28 +1784,23 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
 
     }
-    
-    private void enableCasual()
-    {
+
+    private void enableCasual() {
         this.CASPACkagerPanel.setEnabled(true);
     }
-    
-    private void disableCasual()
-    {
+
+    private void disableCasual() {
         this.CASPACkagerPanel.setEnabled(false);
     }
-    
-    private void enableCasualComponents()
-    {
+
+    private void enableCasualComponents() {
         this.casualOutputFile.setEnabled(true);
         this.casualOutputBrowseButton.setEnabled(true);
         this.typeCheckBox.setEnabled(true);
         this.makeItCasualButton.setEnabled(true);
     }
 
-    
-    private void disableCasualComponents()
-    {
+    private void disableCasualComponents() {
         this.casualOutputFile.setEnabled(false);
         this.casualOutputBrowseButton.setEnabled(false);
         this.typeCheckBox.setEnabled(false);
@@ -1815,6 +1810,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
      * Disables those items that can not be used if there is no loaded script
      * or if there are no scripts
      */
+
     private void disableAll() {
         this.scriptNameJLabel.setEnabled(false);
         this.scriptDescriptionJText.setEnabled(false);
@@ -1869,16 +1865,15 @@ public class CASCADEGUI extends javax.swing.JFrame {
         String[] args;
         String CASPACIn = this.caspacOutputFile.getText();
         String CASUALOut = this.casualOutputFile.getText();
-        if (this.typeCheckBox.isSelected())
-            args = new String[]{"--CASPAC",CASPACIn,"--output",CASUALOut,"--type",this.typeTextBox.getText()};
-        else
-            args = new String[]{"--CASPAC",CASPACIn,"--output",CASUALOut};
+        if (this.typeCheckBox.isSelected()) {
+            args = new String[]{"--CASPAC", CASPACIn, "--output", CASUALOut, "--type", this.typeTextBox.getText()};
+        } else {
+            args = new String[]{"--CASPAC", CASPACIn, "--output", CASUALOut};
+        }
         return args;
-        
-        
+
+
     }
-
-
 
     private boolean checkScriptNameExists(String testName) {
         for (int i = 0; i < scriptList.getSize(); i++) {
@@ -1905,10 +1900,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.bannerText.setText(cp.build.bannerText);
         this.overviewWorkArea.setText(cp.overview);
     }
-    
-    
-    
-     /*
+
+    /*
      * Listener that enables and disables script elements based on the existance
      * of scripts in list. Whenever a script is added or deleted it will check 
      * to see if the list is empty. If its empty then it disables all to prevent
@@ -1918,7 +1911,6 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
         @Override
         public void contentsChanged(ListDataEvent evt) {
-            
         }
 
         @Override
@@ -1927,7 +1919,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 disableAll();
                 clearAll();
                 makeCASPAC.setEnabled(false);
-            } 
+            }
         }
 
         @Override
