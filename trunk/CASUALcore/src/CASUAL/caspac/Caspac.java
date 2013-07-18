@@ -22,6 +22,7 @@ import CASUAL.Statics;
 import CASUAL.StringOperations;
 import CASUAL.Unzip;
 import CASUAL.Zip;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,6 +35,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -41,7 +43,8 @@ import java.util.zip.ZipException;
  */
 public class Caspac {
 
-    public File logo;
+    //public File logo;
+    public BufferedImage logo;
     public final File CASPAC;
     public String overview;
     public Build build;
@@ -73,8 +76,9 @@ public class Caspac {
                             this.build = new Build(unzip.streamFileFromZip(o));
                         }
                         if (unzip.getEntryName(o).contains("-logo.png")) {
-                            unzip.deployFileFromZip(o, TempFolder);
-                            logo = new File(TempFolder + "-logo.png");
+                            logo = ImageIO.read(unzip.streamFileFromZip(o));
+                            //unzip.deployFileFromZip(o, TempFolder);
+                            //logo = new File(TempFolder + "-logo.png");
                         }
                     }
                 }
