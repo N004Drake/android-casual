@@ -16,6 +16,8 @@
  */
 package CASUAL.caspac;
 
+import CASUAL.BooleanOperations;
+import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
@@ -94,9 +96,7 @@ public class Caspac {
 
     }
 
-    public Caspac(File file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
     /**
      * adds a Script
@@ -173,8 +173,24 @@ public class Caspac {
         build.loadPropsToVariables();
     }
     
-    public void loadFirstScriptFromCASPAC(){
+    public void loadFirstScriptFromCASPAC() throws ZipException, IOException{
+        log.level4Debug("\n\n\nStarting CASPAC unzip.");
+        String scriptName="";
+        Unzip unzip = new Unzip(CASPAC);
+        while (unzip.zipFileEntries.hasMoreElements()) {
+            Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
+            String filename = unzip.getEntryName(entry);
+            boolean isScript=!handleCASPACInformationFiles(filename, unzip, entry);
+            if ((isScript && scriptName.isEmpty()) || (isScript && scriptName.equals(entry) )){
+                handleScriptFiles(filename, unzip, entry);
+            }
+            
+        }
+        log.level4Debug("Starting to unzip script zips");
         
+
+        
+        performUnzipOnQueue();
     }
     
     
@@ -216,15 +232,17 @@ public class Caspac {
     public void waitForUnzipComplete(){
         boolean[] isUnzipping=new boolean[unzipThreads.size()];
         Arrays.fill(isUnzipping, Boolean.TRUE);
-        while (Arrays.asList().contains(Boolean.TRUE)){
+        while (BooleanOperations.containsTrue(isUnzipping)){
+            CASUALTools.sleepForOneTenthOfASecond();
             for (int i = 0; i<isUnzipping.length; i++){
                 if (!unzipThreads.get(i).isAlive()){
                     isUnzipping[i]=false;
                 }
             }
         }
+        log.level4Debug("Unzipping complete.");
     }
-    
+
     /**
      * handles each CASPAC file appropriately
      *
@@ -243,7 +261,7 @@ public class Caspac {
     }
 
     /**
-     * script instance which is being referenced
+     * script instance which is being referenced. creates a new script if not found
      *
      * @param fileName filename of script
      * @return script instance of script to be processed
@@ -257,9 +275,24 @@ public class Caspac {
         Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")));
         //Add script 
         scripts.add(script);
-        return scripts.get(scripts.indexOf(script)); //TODO make an iterator to find a script by file name for loading; 
+        return scripts.get(scripts.indexOf(script));
+    }
+    /**
+     * script instance which is being referenced
+     *
+     * @param fileName filename of script
+     * @return script instance of script to be processed null if not found
+     */
+    public Script getScriptByFilename(String fileName) {
+        for (Script s : scripts) {
+            if (s.getName().equals(fileName.substring(0, fileName.lastIndexOf(".")))) {
+                return s;
+            }
+        }
+        return null;
     }
 
+    
     /**
      * returns all script names
      *
@@ -271,6 +304,20 @@ public class Caspac {
             scriptNames.add(s.getName());
         }
         return StringOperations.convertArrayListToStringArray(scripts);
+    }
+    
+    /**
+     * gets script by name
+     * @param name name of script to be pulled
+     * @return Script object or null
+     */
+    public Script getScriptByName(String name){
+        for (Script s : scripts) {
+            if (s.getName().equals(name)){
+                return s;
+            }
+        }
+        return null;
     }
 
     /**
@@ -285,22 +332,24 @@ public class Caspac {
     }
 
     private void performUnzipOnQueue() {
-        for (final File f : unzipQueue) {
+        for (final File zipFileName : unzipQueue) {
 
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        new Log().level4Debug("Unzipping " + f.getName());
-                        Unzip unzip = new Unzip(f.toString());
-                        new File(f.toString().replace(".zip", "")).mkdir();
-                        unzip.unzipFile(f.toString().replace(".zip", ""));
+                        new Log().level4Debug("Unzipping " + zipFileName.getName());
+                        Unzip unzip = new Unzip(zipFileName.toString());
+                        new File(zipFileName.toString().replace(".zip", "")).mkdir();
+                        String tempFolder=zipFileName.toString().replace(".zip", "");
+                        unzip.unzipFile(tempFolder);
                         log.level4Debug("Addind zip contents to script Included Files");
-                        Script dummy = getScriptInstanceByFilename(f.getName());
-                        int i = scripts.indexOf(dummy);
-                        dummy.includeFiles.addAll(Arrays.asList(new File(f.toString().replace(".zip", "")).listFiles()));
-                        log.level4Debug("Added files from " + f.getName() + " to " + dummy.getName() + ".");
-                        scripts.set(i, dummy);
+                        Script scriptInstance = getScriptInstanceByFilename(zipFileName.getName());
+                        int i = scripts.indexOf(scriptInstance);
+                        scriptInstance.includeFiles.addAll(Arrays.asList(new File(tempFolder).listFiles()));
+                        scriptInstance.TempFolder=tempFolder;
+                        log.level4Debug("Added files from " + zipFileName.getName() + " to " + scriptInstance.getName() + ".");
+                        scripts.set(i, scriptInstance);
                     } catch (ZipException ex) {
                         Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {

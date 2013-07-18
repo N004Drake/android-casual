@@ -387,4 +387,14 @@ public class CASUALTools {
             Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+     /**
+     * sleeps for 100ms. 
+     */
+    public static void sleepForOneTenthOfASecond() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
