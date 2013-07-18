@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import CASUAL.caspac.Caspac;
+import CASUAL.caspac.Script;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -235,5 +237,26 @@ public class CASUALScriptParser {
             r.run();
 
         }
+    }
+
+    void executeFirstScriptInCASPAC(Caspac CASPAC) {
+        String scriptName= CASPAC.getScriptNames()[0];
+        Script s=CASPAC.getScriptByName(scriptName);
+        log.level2Information(s.getDiscription());
+        int CASUALSVN=Integer.parseInt(CASUALapplicationData.CASUALSVNRevision);
+        int scriptSVN=Integer.parseInt(s.metaData.minSVNversion);
+        if (CASUALSVN<scriptSVN){
+           new Log().level0Error("@improperCASUALversion");
+           return;
+        }
+        CASPAC.waitForUnzipComplete();
+        try {
+            ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.getScript().getBytes("UTF-8"));
+            DataInputStream dis=new DataInputStream(scriptStream);
+            new CASUALLanguage(s.getName(), s.TempFolder).beginScriptingHandler(dis);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 }

@@ -175,6 +175,7 @@ public class Script {
     
     public class meta{
         public String minSVNversion = "";
+        
         public String scriptRevision = "";
         public String uniqueIdentifier = "";
         public String supportURL = "";
@@ -282,6 +283,9 @@ public class Script {
             
         }
         
+        public int minSVNversion(){
+            return Integer.parseInt(minSVNversion);
+        }
     }
     
 }
