@@ -72,8 +72,8 @@ public class CASUALApp {
                 + "    for details. http://android-casual.googlecode.com for source.");
 
 
-        checkModeSwitchArgs(args);
-        new CASUALMain().startup(args);
+        boolean shutdown = checkModeSwitchArgs(args);
+        if ( ! shutdown ) new CASUALMain().startup(args);
     }
 
     /**
@@ -82,8 +82,9 @@ public class CASUALApp {
      * display something quick and exit.
      *
      * @param args
+     * @return true if shutdown is commanded;
      */
-    private static void checkModeSwitchArgs(String args[]) {
+    private static boolean checkModeSwitchArgs(String args[]) {
 
         for (int i = 0; i < args.length; i++) {
 
@@ -99,6 +100,7 @@ public class CASUALApp {
 
 
                 CASUALApp.shutdown(0);
+                return true;
             }
             if (args[i].equals("--license")) {
                 new Log().level2Information("\n"
@@ -111,18 +113,22 @@ public class CASUALApp {
                         + "    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
                         + "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
                         + "    GNU General Public License for more details.");
-                return;
+                CASUALApp.shutdown(0);
+                return true;
             }
             if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
                 i++;
                 new CASPACHandler().loadCASUALPack(args[i]);
                 new Log().level2Information("CASPAC completed.");
                 CASUALApp.shutdown(0);
+                return true;
             }
             if (args[i].contains("--gui") || args[i].contains("-g")) {
                 Statics.useGUI = true;
             }
+            
         }
+        return false;
     }
 
     /**

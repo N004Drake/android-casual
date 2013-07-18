@@ -84,7 +84,7 @@ public class CASUALTools {
                     Thread update = new Thread(updateMD5s);
                     update.setName("Updating MD5s");
                     update.start();
-                    log.level0Error("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
+                    log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
                     //Statics.scriptLocations = new String[]{""};
                     Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
                 }
