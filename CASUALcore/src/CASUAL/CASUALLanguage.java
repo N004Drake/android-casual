@@ -111,7 +111,7 @@ public class CASUALLanguage {
         if (line.startsWith("$LINUXMAC")) {
             if (Statics.isLinux() || Statics.isMac()) {
                 String removeCommand = "$LINUXMAC";
-                line = removeCommandAndContinue(removeCommand, line);
+                line = processIdentifiedCommand(removeCommand, line);
                 log.progress("Linux Or Mac Detected: ");
                 log.level4Debug("OS IS LINUX or MAC! remaining commands:" + line);
             } else {
@@ -121,7 +121,7 @@ public class CASUALLanguage {
         if (line.startsWith("$LINUXWINDOWS")) {
             if (Statics.isLinux() || Statics.isWindows()) {
                 String removeCommand = "$LINUXWINDOWS";
-                line = removeCommandAndContinue(removeCommand, line);
+                line = processIdentifiedCommand(removeCommand, line);
                 log.progress("Windows or Linux Detected: ");
                 log.level4Debug("OS IS WINDOWS OR LINUX! remaining commands:" + line);
             } else {
@@ -131,7 +131,7 @@ public class CASUALLanguage {
         if (line.startsWith("$WINDOWSMAC")) {
             if (Statics.isWindows() || Statics.isMac()) {
                 String removeCommand = "$WINDOWSMAC";
-                line = removeCommandAndContinue(removeCommand, line);
+                line = processIdentifiedCommand(removeCommand, line);
                 log.progress("Mac or Windows Detected: ");
                 log.level4Debug("OS IS Windows or Mac! remaining commands:" + line);
             } else {
@@ -141,7 +141,7 @@ public class CASUALLanguage {
         if (line.startsWith("$LINUX")) {
             if (Statics.isLinux()) {
                 String removeCommand = "$LINUX";
-                line = removeCommandAndContinue(removeCommand, line);
+                line = processIdentifiedCommand(removeCommand, line);
                 log.progress("Linux Detected: ");
                 log.level4Debug("OS IS LINUX! remaining commands:" + line);
             } else {
@@ -152,7 +152,7 @@ public class CASUALLanguage {
             if (Statics.isWindows()) {
                 log.progress("Windows Detected: ");
                 String removeCommand = "$WINDOWS";
-                line = removeCommandAndContinue(removeCommand, line);
+                line = processIdentifiedCommand(removeCommand, line);
                 log.level4Debug("OS IS WINDOWS! remaining commands:" + line);
             } else {
                 return "";
@@ -162,7 +162,7 @@ public class CASUALLanguage {
             if (Statics.isMac()) {
                 log.progress("Mac Detected: ");
                 String removeCommand = "$MAC";
-                line = removeCommandAndContinue(removeCommand, line);
+                line = processIdentifiedCommand(removeCommand, line);
                 log.level4Debug("OS IS MAC! remaining commands:" + line);
             } else {
                 return "";
@@ -579,9 +579,9 @@ public class CASUALLanguage {
     }
 //END OF SCRIPT PARSER
 
-    private String removeCommandAndContinue(String remove, String line) {
-        line = line.replace(remove, "");
-        log.level4Debug("Removed " + remove);
+    private String processIdentifiedCommand(String identified, String line) {
+        line = line.replace(identified, "");
+        log.level4Debug("Processing " + identified);
         line = StringOperations.removeLeadingSpaces(line);
         return line;
     }

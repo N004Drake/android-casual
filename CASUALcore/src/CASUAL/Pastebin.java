@@ -104,7 +104,12 @@ public class Pastebin {
         FileOperations fO = new FileOperations();
         if(!fO.verifyExists(Statics.TempFolder + "log.txt")) return;
         String casualLog = fO.readFile(Statics.TempFolder + "log.txt");
-        Matcher matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));
+        Matcher matcher;
+        try {
+            matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));
+        } catch (NullPointerException ex){
+            return;
+        }
         int SVNrev = Integer.parseInt(matcher.find() ? matcher.group(0) : "5");
         int CASRev = Integer.parseInt(CASPACData.getSVNRevision());
         if ((SVNrev - 5) >= CASRev && casualLog.contains("failed") || casualLog.contains("FAILED")|| casualLog.contains("ERROR")) { //build.prop contains the word error on some devices so error is not a good word to track. 

@@ -56,7 +56,7 @@ public class CASPACHandler {
         new Log().level3Verbose("-----CASPAC MODE-----\nCASPAC: " + zipFile.getAbsolutePath());
         try {
             //begin unziping and analyzing CASPAC
-            CASPAC = new Caspac(zipFile,Statics.TempFolder);
+            CASPAC = new Caspac(zipFile,Statics.TempFolder,0);
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -128,7 +128,7 @@ public class CASPACHandler {
             if (entry.toString().endsWith(".meta")) {
                 new FileOperations().overwriteFile(StringOperations.convertStreamToString(Unzip.streamFileFromZip(f, entry)), CASUALMeta);
             } else {
-                list.add(md5sum.makeMD5String(md5sum.md5sum(Unzip.streamFileFromZip(f, entry)), entry.toString()));
+                list.add(md5sum.convertMD5andFiletoLinuxMD5Sum(md5sum.md5sum(Unzip.streamFileFromZip(f, entry)), entry.toString()));
             }
 
         }

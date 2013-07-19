@@ -27,6 +27,7 @@ public class CASPACjUnitTest {
 
     @Test
     public void testCASPACOperations() {
+        
         CASUAL.Statics.useGUI = true;
         int x = new CASUAL.CASUALInteraction("testing", "Do you want to test CASPAC functionality?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
         if (x == 0) {
@@ -36,9 +37,10 @@ public class CASPACjUnitTest {
             CASUALApp.shutdown(0);
             String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
             String[] badValues = new String[]{"ERROR"};
-            String[] goodValues = new String[]{"echo [PASS]", "[PASS] IFNOTCONTAINS"};
+            String[] goodValues = new String[]{"echo [PASS]"};
             CASUAL.CASUALapplicationData.useSound = false;
             assertEquals(true, new CASUAL.CASUALTest(casualParams, goodValues, badValues).checkTestPoints());
+            CASUALApp.shutdown(0);
             System.out.println("TESTING SECOND ROUND");
             System.out.println("TESTING SECOND ROUND");
             System.out.println("TESTING SECOND ROUND");

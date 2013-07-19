@@ -25,6 +25,8 @@ import CASUAL.StringOperations;
 import CASUAL.Unzip;
 import CASUAL.Zip;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,9 +35,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import java.util.zip.ZipException;
 import javax.imageio.ImageIO;
 
@@ -53,22 +56,26 @@ public class Caspac {
     public ArrayList<Script> scripts = new ArrayList<>();
     public final String TempFolder;
     public Log log = new Log();
-    private ArrayList<File> unzipQueue = new ArrayList<>();
     FileOperations fo = new FileOperations();
     private ArrayList<Thread> unzipThreads=new ArrayList<>();
-    public boolean isAZipFile;
-
-    public Caspac(File caspac, String tempDir) throws IOException {
+    final int type;
+    
+    
+    /* Loads a CASPAC
+     * Types 0 CASPAC
+     * Type 1 CASUAL
+     * Type 2 Filesystem
+     */
+    public Caspac(File caspac, String tempDir, int type) throws IOException {
         this.CASPAC = caspac;
         this.TempFolder = tempDir;
-        isAZipFile = false;
+        this.type=type;
         //if the CASPAC exists lets try to grab the non-script files 
         if (fo.verifyExists(CASPAC.getAbsolutePath()) && CASPAC.canRead()) {
             try {
                 Unzip unzip = new Unzip(CASPAC);
                 Enumeration cpEnumeration = unzip.zipFileEntries;
                 if (cpEnumeration.hasMoreElements()) {
-                    isAZipFile = true;
                     while (cpEnumeration.hasMoreElements()) {
                         Object o = cpEnumeration.nextElement();
                         if (unzip.getEntryName(o).contains("-Overview.txt")) {
@@ -132,35 +139,29 @@ public class Caspac {
      * @throws IOException
      */
     public void write() throws IOException {
-        if (!(new File(TempFolder).exists())) {
-            new File(TempFolder).mkdir();
+        Map<String, InputStream> nameStream=new HashMap<>();
+        if (!CASPAC.exists()){
+            CASPAC.createNewFile();
+        }
+        Zip zip = new Zip(CASPAC);
+        //write Properties File
+        nameStream.put("-build.properties",build.getBuildPropInputStream());
+        nameStream.put("-Overview.txt", StringOperations.convertStringToStream(overview));
+        
+        if (logo!=null){
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(logo, "png", baos);
+            InputStream is = new ByteArrayInputStream(baos.toByteArray());
+            nameStream.put("-logo.png", is);
         }
         for (Script s : scripts) {
-            log.level4Debug("Writing Script: " + s.getName());
-            s.writeScript(new File(TempFolder));
+            //individualFiles.toArray();
+            nameStream.putAll(s.getScriptAsMapForCASPAC());
         }
-        if (!(new File(TempFolder + "-Overview.txt")).exists()) {
-            log.level4Debug("Writing Overview to: \n\t" + TempFolder.toString() + "-Overview.txt");
-            fo.writeToFile(overview, TempFolder.toString() + "-Overview.txt");
-        }
-        if (!(new File(TempFolder + "-build.properties")).exists()) {
-            log.level4Debug("Writing build.properties to: \n\t" + TempFolder + Statics.Slash + "-build.properties");
-            build.write(TempFolder + "-build.properties");
+        
 
-        }
-        if (!(new File(TempFolder + Statics.Slash + build.bannerPic).exists()) && !(build.bannerPic.isEmpty())) {
-            log.level4Debug("Writing Overview to: \n\t" + TempFolder.toString()
-                    + build.bannerPic.substring(build.bannerPic.lastIndexOf(Statics.Slash) + 1,
-                    build.bannerPic.length()));
-            fo.copyFile(new File(build.bannerPic), new File(TempFolder
-                    + build.bannerPic.substring(build.bannerPic.lastIndexOf(Statics.Slash) + 1,
-                    build.bannerPic.length())));
-        }
-        log.level4Debug("Creating new Zip at: \n\t" + CASPAC.toString());
-        Zip zip = new Zip(CASPAC);
         log.level4Debug("Placeing the following files in the caspac Zip");
-        zip.execute(TempFolder);
-        cleanCaspacWrite();
+        zip.streamEntryToExistingZip(nameStream);
     }
 
     /**
@@ -272,7 +273,7 @@ public class Caspac {
                 return s;
             }
         }
-        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")));
+        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder+fileName+Statics.Slash);
         //Add script 
         scripts.add(script);
         return scripts.get(scripts.indexOf(script));
@@ -332,34 +333,9 @@ public class Caspac {
     }
 
     private void performUnzipOnQueue() {
-        for (final File zipFileName : unzipQueue) {
-
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        new Log().level4Debug("Unzipping " + zipFileName.getName());
-                        Unzip unzip = new Unzip(zipFileName.toString());
-                        new File(zipFileName.toString().replace(".zip", "")).mkdir();
-                        String tempFolder=zipFileName.toString().replace(".zip", "");
-                        unzip.unzipFile(tempFolder);
-                        log.level4Debug("Addind zip contents to script Included Files");
-                        Script scriptInstance = getScriptInstanceByFilename(zipFileName.getName());
-                        int i = scripts.indexOf(scriptInstance);
-                        scriptInstance.includeFiles.addAll(Arrays.asList(new File(tempFolder).listFiles()));
-                        scriptInstance.TempFolder=tempFolder;
-                        log.level4Debug("Added files from " + zipFileName.getName() + " to " + scriptInstance.getName() + ".");
-                        scripts.set(i, scriptInstance);
-                    } catch (ZipException ex) {
-                        Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            };
-            unzipThreads.add(new Thread(r));
-            unzipThreads.get(unzipThreads.size()-1).start();
-        }
+            for (Thread t :this.unzipThreads){
+                t.start();
+            }
     }
 
     private void setBuildPropInformation(Unzip pack, Object entry) throws IOException {
@@ -383,18 +359,18 @@ public class Caspac {
     }
 
     private boolean handleCASPACInformationFiles(String filename, Unzip pack, Object entry) throws IOException {
-        boolean isCASPAC=false;
+        boolean isAControlFile=false;
         if (filename.equals("-build.properties")) {
             setBuildPropInformation(pack, entry);
-            isCASPAC=true;
+            isAControlFile=true;
         } else if (filename.endsWith(".png")) {
             extractCASPACBanner(pack, entry, filename);
-            isCASPAC=true;
+            isAControlFile=true;
         } else if (filename.toString().equals("-Overview.txt")) {
             setOverview(pack, entry);
-            isCASPAC=true;
+            isAControlFile=true;
         }
-        return isCASPAC;
+        return isAControlFile;
     }
 
     private void handleScriptFiles(String filename, Unzip pack, Object entry) throws IOException {
@@ -429,9 +405,15 @@ public class Caspac {
            
         } else if (filename.toString().endsWith(".zip")) {
             Script script = getScriptInstanceByFilename(filename.toString());
-            fo.writeStreamToFile(pack.streamFileFromZip(entry), TempFolder + filename);
-            log.level4Debug("Added .zip to " + script.getName() + ". It will be unziped at end of unpacking.");
+            /*fo.writeStreamToFile(pack.streamFileFromZip(entry), TempFolder + filename);
+            
+            script.zipFile
             unzipQueue.add(new File(TempFolder + filename));
+            */
+            script.scriptZipFile=entry;
+            script.zipfile=pack;
+            this.unzipThreads.add(new Thread(script.getExtractionRunnable()));
+            log.level4Debug("Added .zip to " + script.getName() + ". It will be unziped at end of unpacking.");
             //for (File f:new File(TempFolder + slash + "IncludeExplode"+slash).listFiles())
             //    script.includeFiles.add(f);
 
@@ -486,6 +468,10 @@ public class Caspac {
             return write(f);
         }
 
+        
+        
+        
+        
         /**
          * writes build properties to a file
          *
@@ -499,6 +485,15 @@ public class Caspac {
             FileOutputStream fos = new FileOutputStream(output);
             buildProp.store(fos, "This properties file was generated by CASUAL");
             return fo.verifyExists(output.toString());
+        }
+        
+        
+        public InputStream getBuildPropInputStream() throws IOException{
+            setPropsFromVariables();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            buildProp.store(output, "This properties file was generated by CASUAL");
+            return new ByteArrayInputStream(output.toByteArray());
+            
         }
 
         /**

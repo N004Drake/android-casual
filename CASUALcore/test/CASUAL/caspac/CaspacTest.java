@@ -25,7 +25,7 @@ public class CaspacTest {
     
     public CaspacTest() {
         try {
-            this.instance = new Caspac(new File("../../../CASPAC/testpak.zip"), Statics.TempFolder);
+            this.instance = new Caspac(new File("../../../CASPAC/testpak.zip"), Statics.TempFolder,0);
         } catch (IOException ex) {
             Logger.getLogger(CaspacTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -53,8 +53,7 @@ public class CaspacTest {
     @Test
     public void testAddScript() {
         System.out.println("addScript");
-        String[] s =instance.getScriptNames();
-        instance.addScript(new Script());
+
         // TODO review the generated test code and remove the default call to fail.
     }
 

@@ -337,7 +337,7 @@ public class CASUALTools {
                         new Log().level3Verbose(e.toString());
                         if (filetocheck.contains(e.toString())) {
                             String newMD5 = new MD5sum().md5sum(Unzip.streamFileFromZip(CASPAC, e));
-                            output = output + new MD5sum().makeMD5String(newMD5, e.toString() + "\n");
+                            output = output + new MD5sum().convertMD5andFiletoLinuxMD5Sum(newMD5, e.toString() + "\n");
                         }
                     }
                 } else {
@@ -353,7 +353,7 @@ public class CASUALTools {
         }
         try {
 
-            Zip.addFilesToExistingZip(CASPAC, caspacHandler.meta);
+            new Zip(CASPAC).addFilesToExistingZip(caspacHandler.meta);
         } catch (IOException ex) {
             new Log().errorHandler(ex);
         }

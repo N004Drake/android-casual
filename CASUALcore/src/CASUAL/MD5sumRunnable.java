@@ -46,9 +46,9 @@ public class MD5sumRunnable implements Runnable {
     private void addMD5ToList() {
         MD5sum md5 = new MD5sum();
         if (fileToMD5.equals("")) {
-            Statics.runnableMD5list.add(md5.makeMD5String(md5.md5sum(sumstream), filename));
+            Statics.runnableMD5list.add(md5.convertMD5andFiletoLinuxMD5Sum(md5.md5sum(sumstream), filename));
         } else {
-            Statics.runnableMD5list.add(md5.makeMD5String(md5.md5sum(fileToMD5), filename));
+            Statics.runnableMD5list.add(md5.convertMD5andFiletoLinuxMD5Sum(md5.md5sum(fileToMD5), filename));
         }
     }
 

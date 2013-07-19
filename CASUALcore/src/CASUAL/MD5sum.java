@@ -187,7 +187,7 @@ public class MD5sum {
      * @return md5
      */
     public String getMD5fromLinuxMD5String(String md5) {
-        return md5.split("  ")[0];
+        return splitMD5String(md5)[0];
     }
     
     /**
@@ -198,8 +198,21 @@ public class MD5sum {
      */
     public String getLinuxMD5Sum(File file){
         String md5=this.md5sum(file);
-        String fileName=file.getName();
-        return md5+"  "+fileName;
+        String filename=file.getName();
+        return convertMD5andFiletoLinuxMD5Sum(md5,filename);
+        
+        
+    } 
+    /**
+     * Returns the standard md5sum found on Linux as though the file were
+     * in the same directory
+     * @param file to be MD5sum'd
+     * @return 32digitMd5Sum+"  "+file.Name
+     */
+    public String getLinuxMD5Sum(InputStream stream,String filename){
+        String md5=this.md5sum(stream);
+        return convertMD5andFiletoLinuxMD5Sum(md5,filename);
+        
         
         
     }
@@ -210,7 +223,7 @@ public class MD5sum {
      * @return filename of md5sum input
      */
     public String getFileNamefromLinuxMD5String(String md5) {
-        String[] s = md5.split("  ");
+        String[] s = splitMD5String(md5);
         if (s.length > 0) {
             return s[1];
         }
@@ -223,7 +236,7 @@ public class MD5sum {
      * @param filename filename to be appended
      * @return linux md5sum
      */
-    public String makeMD5String(String md5, String filename) {
+    public String convertMD5andFiletoLinuxMD5Sum(String md5, String filename) {
         return md5 + "  " + filename;
     }
 
