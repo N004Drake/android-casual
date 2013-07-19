@@ -253,7 +253,7 @@ public class CASUALScriptParser {
         try {
             ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.getScript().getBytes("UTF-8"));
             DataInputStream dis=new DataInputStream(scriptStream);
-            new CASUALLanguage(s.getName(), s.TempFolder).beginScriptingHandler(dis);
+            new CASUALLanguage(s.getName(), s.tempDir).beginScriptingHandler(dis);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }

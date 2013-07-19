@@ -151,6 +151,7 @@ public class CASUALApp {
 
         try {
             CASUALInteraction.in.close();
+            Statics.initializeStatics();
         } catch (IOException ex) {
             Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
         }

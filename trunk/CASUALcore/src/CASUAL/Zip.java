@@ -31,6 +31,7 @@ import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -40,190 +41,160 @@ import java.util.zip.ZipOutputStream;
  * @author adam
  */
 public class Zip {
-    private String outputZip=null;
+
+    private final File outputZip;
     private final String slash = System.getProperty("file.separator");
     private Log log = new Log();
     private String TempFolder = Statics.TempFolder;
+    byte[] BUFFER = new byte[4096];
 
-
-    
-    /**
-     *instantiates the zip class
-     * @param zip file to be worked with
-     */
-    public Zip(File zip){
-        try {
-            this.outputZip=zip.getCanonicalPath();
-        } catch (IOException ex) {
-            new Log().errorHandler(ex);
-        }
-    }
-    
     /**
      * instantiates the zip class
-     * @param outputFile file to be worked with
+     *
+     * @param zip file to be worked with
      */
-    public Zip(String outputFile) {
-        //First well seperate the string and store them into the name of the zip
-        //file being created and the location of where the zip file is going to
-        //be stored
-        outputZip = outputFile;
-        if (!outputZip.endsWith(".zip"))
-        {
-            log.Level1Interaction("Adding Zip to file name");
-            outputZip = outputZip + ".zip";
-        }
-        log.level4Debug("A new zip file has been initiated at:\n\t"+
-                outputZip);
-        //Create the temp dir
+    public Zip(File zip) throws IOException {
+        this.outputZip = zip;
     }
-    
-    
+
     public String getTempFolder() {
         return TempFolder;
     }
 
     public void addToTempFolderLoc(String TempFolder) {
         this.TempFolder = this.TempFolder + slash + TempFolder;
-        if (!(new File(this.TempFolder).exists()))
+        if (!(new File(this.TempFolder).exists())) {
             new File(this.TempFolder).mkdirs();
+        }
     }
-    
+
     /**
-     *adds files to zip
+     * adds files to zip
+     *
      * @param zipFile specified zip file
      * @param fileToAdd file to be added
      * @throws IOException
      */
-    public static void addFilesToExistingZip(String zipFile, String fileToAdd) throws IOException {
-        File zip = new File(zipFile);
+    public void addFilesToExistingZip(String fileToAdd) throws IOException {
         File file = new File(fileToAdd);
-        addFilesToExistingZip(zip, new File[]{file});
+        addFilesToExistingZip(new File[]{file});
     }
 
     /**
      * adds files to existing zip file
+     *
      * @param zipFile zip file
      * @param filesToBeZipped file to be added
      * @throws IOException
      */
-    public static void addFilesToExistingZip(String zipFile, String[] filesToBeZipped) throws IOException {
+    public void addFilesToExistingZip(String[] filesToBeZipped) throws IOException {
         File[] fileList = new File[filesToBeZipped.length];
         int i = 0;
         for (String file : filesToBeZipped) {
             fileList[i] = new File(file);
         }
-        File zip = new File(zipFile);
-        addFilesToExistingZip(zip, fileList);
+
+        addFilesToExistingZip(fileList);
     }
 
     /**
      *
      * adds files to existing zip file
-     * @param zipFile zip file
-     * @param fileToAdd file to be added
-     * @throws IOException  
-     */
-    public static void addFilesToExistingZip(File zipFile, File fileToAdd) throws IOException {
-        addFilesToExistingZip(zipFile, new File[]{fileToAdd});
-    }
-
-    /**
-     * adds files to existing zip file
+     *
      * @param zipFile zip file
      * @param fileToAdd file to be added
      * @throws IOException
      */
-    public static void addFilesToExistingZip(File zipFile, String fileToAdd) throws IOException {
-        File f = new File(fileToAdd);
-        File[] zipAdd = new File[]{f};
-        addFilesToExistingZip(zipFile, zipAdd);
+    public void addFilesToExistingZip(File fileToAdd) throws IOException {
+        addFilesToExistingZip(new File[]{fileToAdd});
     }
+
     /**
      * adds files to existing zip file
+     *
+     * @param zipFile zip file
+     * @param fileToAdd file to be added
+     * @throws IOException
+     */
+    public void addFilesToExistingZip(File zipFile, String fileToAdd) throws IOException {
+        File f = new File(fileToAdd);
+        File[] zipAdd = new File[]{f};
+        addFilesToExistingZip(zipAdd);
+    }
+
+    /**
+     * adds files to existing zip file
+     *
      * @param zipFile zip file
      * @param files files to be zipped
      * @throws IOException
      */
-    public static void addFilesToExistingZip(File zipFile, File[] files) throws IOException {
-        byte[] buf = new byte[4096];
-
-
+    public void addFilesToExistingZip(File[] files) throws IOException {
         // get a temp file
-        File tempFile = File.createTempFile(zipFile.getName(), null);
+        File tempFile = File.createTempFile(outputZip.getName(), null);
         // delete it, otherwise you cannot rename your existing zip to it.
         tempFile.delete();
-        //try rename
-        boolean renameOk = zipFile.renameTo(tempFile);
-        boolean copyOk = false;
-        //if rename fails, make copy
-
-        if (!renameOk) {
-            tempFile.delete();
-            tempFile.createNewFile();
-            FileOutputStream out;
-            try (FileInputStream in = new FileInputStream(zipFile)) {
-                out = new FileOutputStream(tempFile);
-                int len;
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-            }
-            out.close();
-            copyOk = true;
-        }
-        if (!renameOk && !copyOk) {
-            throw new RuntimeException("could not rename or copy the file " + zipFile.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
-        }
+        getTemporaryOutputZip(tempFile, BUFFER);
         ZipOutputStream out;
-        try (ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile))) {
-            out = new ZipOutputStream(new FileOutputStream(zipFile));
-            ZipEntry entry = zin.getNextEntry();
-            while (entry != null) {
-                String name = entry.getName();
-                boolean notInFiles = true;
-                for (File f : files) {
-                    if (f.getName().equals(name)) {
-                        notInFiles = false;
-                        break;
-                    }
-                }
-                if (notInFiles) {
-                    // Add ZIP entry to output stream.
-                    out.putNextEntry(new ZipEntry(name));
-                    // Transfer bytes from the ZIP file to the output file
-                    int len;
-                    while ((len = zin.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-                }
-                entry = zin.getNextEntry();
-            }
-        }
-        // Compress the files
+        ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
+        out = prepareZipFileForMoreEntries(zin);
+        // Compress the files into the zip
         for (int i = 0; i < files.length; i++) {
-            try (InputStream in = new FileInputStream(files[i])) {
-                out.putNextEntry(new ZipEntry(files[i].getName()));
-                // Transfer bytes from the file to the ZIP file
-                int len;
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                // Complete the entry
-                out.closeEntry();
-            }
+            InputStream in = new FileInputStream(files[i]);
+            writeEntryToZipFile(out, files[i].getName(), in);
+
         }
         // Complete the ZIP file
         out.close();
         tempFile.delete();
     }
+    
+    public void streamEntryToExistingZip(InputStream in, String name) throws IOException{
+        File tempFile = File.createTempFile(outputZip.getName(), null);
+        // delete it, otherwise you cannot rename your existing zip to it.
+        tempFile.delete();
+        getTemporaryOutputZip(tempFile, BUFFER);
+        ZipOutputStream out;
+        ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
+        out = prepareZipFileForMoreEntries(zin);
+        // Compress the files into the zip
+        writeEntryToZipFile(out, name, in);
+        // Complete the ZIP file
+        out.close();
+        tempFile.delete();
+        
+        
+    }
+    
+    
+    
+    public void streamEntryToExistingZip(Map<String, InputStream> nameStream) throws IOException{
+        File tempFile = File.createTempFile(outputZip.getName(), null);
+        // delete it, otherwise you cannot rename your existing zip to it.
+        tempFile.delete();
+        getTemporaryOutputZip(tempFile, BUFFER);
+        ZipOutputStream out;
+        ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
+        out = prepareZipFileForMoreEntries(zin);
+           
+           for (Map.Entry<String, InputStream> entry : nameStream.entrySet()){
+           // Compress the files into the zip
+            writeEntryToZipFile(out, entry.getKey(),entry.getValue());
+           }
+        // Complete the ZIP file
+        out.close();
+        tempFile.delete();
+        
+        
+    }
     /**
      * adds files to existing zip file
+     *
      * @param newZip zip file
      * @param toBeZipped file to be added
-     * @throws Exception 
+     * @throws Exception
      */
-    public static void addFilesToNewZip(String newZip, String toBeZipped) throws Exception {
+    public void addFolderFilesToNewZip(String newZip, String toBeZipped) throws Exception {
         File directory = new File(toBeZipped);
         URI base = directory.toURI();
         Deque<File> queue = new LinkedList<>();
@@ -253,6 +224,10 @@ public class Zip {
         }
     }
 
+    private static void copy(File in, File out) throws FileNotFoundException, IOException {
+        copy(in, new FileOutputStream(out));
+    }
+
     private static void copy(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         while (true) {
@@ -276,28 +251,27 @@ public class Zip {
             copy(in, out);
         }
     }
-    
-    private void addFileToZip(File file) throws IOException
-    {
-        
-        if (!file.exists())
-        {
+
+    private void addFileToZipDir(File file) throws IOException {
+
+        if (!file.exists()) {
             log.level0Error("File: " + file.toString() + " not found while adding to zip");
             return;
         }
-        
+
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
         File fileToAdd = new File(TempFolder + slash + file.getName());
-        if (!fileToAdd.exists())
+        if (!fileToAdd.exists()) {
             fileToAdd.createNewFile();
+        }
 
         //Create two file channels (effectivly Filestreamers with pointers)
         //Well take the source and read it into the file.
         FileChannel source = null;
         FileChannel dest = null;
-        
-        
+
+
         //Now stream from one channel to the other, and close once files are
         //filled
         try {
@@ -305,136 +279,112 @@ public class Zip {
             dest = new FileOutputStream(fileToAdd).getChannel();
             dest.transferFrom(source, 0, source.size());
         } finally {
-            if(source != null) {
+            if (source != null) {
                 source.close();
             }
-            if(dest != null) {
+            if (dest != null) {
                 dest.close();
             }
         }
-        
+
     }
-    
+
     //SHOULD ONLY BE CALLED FROM addDirectory
-     private void addFileToZip(File file, File destFolder) throws IOException
-    {
-        
-        if (!file.exists())
-        {
+    private void addFileToZipDir(File file, File destFolder) throws IOException {
+        if (!file.exists()) {
             log.level0Error("File: " + file.toString() + " not found while adding to zip.");
             return;
         }
-        
+
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
         File fileToAdd = new File(destFolder.toString() + slash + file.getName());
-        if (!fileToAdd.exists())
+        if (!fileToAdd.exists()) {
             fileToAdd.createNewFile();
-
-        //Create two file channels (effectivly Filestreamers with pointers)
-        //Well take the source and read it into the file.
-        FileChannel source = null;
-        FileChannel dest = null;
-        
-        
-        //Now stream from one channel to the other, and close once files are
-        //filled
-        try {
-            source = new FileInputStream(file).getChannel();
-            dest = new FileOutputStream(fileToAdd).getChannel();
-            dest.transferFrom(source, 0, source.size());
-        } finally {
-            if(source != null) {
-                source.close();
-            }
-            if(dest != null) {
-                dest.close();
-            }
         }
-        
+
+        copy(fileToAdd, destFolder);
+
     }
-     
-     
+
     /**
      *
      * @param file
      * @throws IOException
      */
-    public void addToZip(File file) throws IOException
-    {
-        if (!file.exists())
-        {
+    public void addFileToZipDIr(File file) throws IOException {
+        if (!file.exists()) {
             log.level0Error("File: " + file.toString() + " not found while adding to zip.");
             return;
         }
-        if (file.isFile())
-            addFileToZip(file);
-        
-        if (file.isDirectory())
-            addDirectoryToZip(file,null);
-            
-        
+        if (file.isFile()) {
+            addFileToZipDir(file);
+        }
+
+        if (file.isDirectory()) {
+            addDirectoryToZipDir(file, null);
+        }
+
+
     }
 
-    private void addDirectoryToZip(File folder, File parent) throws IOException {
+    private void addDirectoryToZipDir(File folder, File parent) throws IOException {
         File dirToAdd = null;
-        if (parent == null)
-            dirToAdd = new File(TempFolder+ slash + folder.getName() );
-        else
-            dirToAdd = new File(parent.toString()+ slash + folder.getName());
-        if (!dirToAdd.exists())
-            dirToAdd.mkdir();
-        for ( File c : folder.listFiles())
-        {
-            if (c.isDirectory())
-                    addDirectoryToZip(c,dirToAdd);
-            else
-                addFileToZip(c,dirToAdd);
+        if (parent == null) {
+            dirToAdd = new File(TempFolder + slash + folder.getName());
+        } else {
+            dirToAdd = new File(parent.toString() + slash + folder.getName());
         }
-        
+        if (!dirToAdd.exists()) {
+            dirToAdd.mkdir();
+        }
+        for (File c : folder.listFiles()) {
+            if (c.isDirectory()) {
+                addDirectoryToZipDir(c, dirToAdd);
+            } else {
+                addFileToZipDir(c, dirToAdd);
+            }
+        }
+
     }
-    
-    
-    
+
     /**
      *
      * @throws FileNotFoundException
      * @throws IOException
      */
-    
-    public void execute(String file) throws FileNotFoundException, IOException {
-        zipDir(file.toString(), outputZip, "");
+    public void compressZipDir(String file) throws FileNotFoundException, IOException {
+        zipDir(file.toString(), "");
     }
     //TODO: Make the files work if directories are empty.
-    public void execute() throws FileNotFoundException, IOException {
-        zipDir(TempFolder, outputZip, "");
-    }
-    
- 
 
+    public void compressZipDir() throws FileNotFoundException, IOException {
+        zipDir(TempFolder, "");
+    }
 
     /**
      * Zip up a directory
-     * 
+     *
      * @param directory
      * @param zipName
-     * @param path 
+     * @param path
      * @throws IOException
      */
-    public static void zipDir(String directory, String zipName, String path) throws IOException {
-        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipName))) {
+    public void zipDir(String directory, String path) throws IOException {
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outputZip))) {
             zipDir(directory, zos, path);
         }
     }
 
     /**
      * Zip up a directory path
+     *
      * @param directory
      * @param zos
      * @param path
      * @throws IOException
      */
-    public static void zipDir(String directory, ZipOutputStream zos, String path) throws IOException {
+    public void zipDir(String directory, ZipOutputStream zos, String path) throws IOException {
         File zipDir = new File(directory);
         // get a listing of the directory content
         String[] dirList = zipDir.list();
@@ -461,5 +411,59 @@ public class Zip {
                 fis.close();
             }
         }
+    }
+
+    private void getTemporaryOutputZip(File tempFile, byte[] buf) throws IOException, RuntimeException {
+        //try rename
+        boolean renameOk = outputZip.renameTo(tempFile);
+        boolean copyOk = false;
+        //if rename fails, make copy
+
+        if (!renameOk) {
+            tempFile.delete();
+            tempFile.createNewFile();
+            FileOutputStream out;
+            try (FileInputStream in = new FileInputStream(outputZip)) {
+                out = new FileOutputStream(tempFile);
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            }
+            out.close();
+            copyOk = true;
+        }
+        if (!renameOk && !copyOk) {
+            throw new IOException("could not rename or copy the file " + outputZip.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
+        }
+    }
+
+    private ZipOutputStream prepareZipFileForMoreEntries(ZipInputStream zin) throws FileNotFoundException, IOException {
+        ZipOutputStream out;
+        out = new ZipOutputStream(new FileOutputStream(outputZip));
+        //ZipEntry entry = zin.getNextEntry();
+        ZipEntry entry;
+        while ((entry = zin.getNextEntry()) != null) {
+            String name = entry.getName();
+            // Add ZIP entry to output stream.
+            out.putNextEntry(new ZipEntry(name));
+            // Transfer bytes from the ZIP file to the output file
+            int len;
+            while ((len = zin.read(BUFFER)) > 0) {
+                out.write(BUFFER, 0, len);
+            }
+        }
+        return out;
+    }
+
+    private void writeEntryToZipFile(ZipOutputStream out, String file, InputStream in) throws IOException {
+        out.putNextEntry(new ZipEntry(file));
+        // Transfer bytes from the file to the ZIP file
+        int len;
+        while ((len = in.read(BUFFER)) > 0) {
+            out.write(BUFFER, 0, len);
+        }
+        // Complete the entry
+        out.closeEntry();
     }
 }

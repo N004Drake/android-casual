@@ -111,7 +111,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                         files = (List<File>) transferable.getTransferData(flavor);
                         for (File f : files) {
                             String file = f.getCanonicalPath();
-                            scriptList.getElementAt(scriptListJList.getSelectedIndex()).includeFiles.add(f);
+                            scriptList.getElementAt(scriptListJList.getSelectedIndex()).individualFiles.add(f);
                             listModel.addElement(file);
                         }
 
@@ -1185,7 +1185,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
             return;
         }
         if (!(s.isEmpty())) {
-            scriptList.addElement(new Script(s));
+            
+            scriptList.addElement(new Script(s,Statics.TempFolder+s));
 
             //Set that script as current script
             this.scriptListJList.setSelectedIndex(scriptList.getSize() - 1);
@@ -1220,16 +1221,16 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     private void editScriptNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editScriptNameButtonActionPerformed
         //Prompts for the new string name.
-        String s = JOptionPane.showInputDialog(this, "Please enter the new name for the script:\n"
+        String scriptName = JOptionPane.showInputDialog(this, "Please enter the new name for the script:\n"
                 + "Leave empty to keep the existing name",
                 "Script Name", JOptionPane.QUESTION_MESSAGE);
 
         //Only changes name if input string is not blank
-        if (checkScriptNameExists(s)) {
+        if (checkScriptNameExists(scriptName)) {
             return;
         }
-        if (!(s.isEmpty())) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).setName(s);
+        if (!(scriptName.isEmpty())) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex());
             loadScript();
             disableCasual();
         }
@@ -1335,7 +1336,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         int index = jList1.locationToIndex(point);
         if (jList1.isSelectedIndex(index)) {
             listModel.remove(index);
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).includeFiles.remove(index);
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.remove(index);
             disableCasual();
         }
 
@@ -1371,11 +1372,11 @@ public class CASCADEGUI extends javax.swing.JFrame {
                     + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
                     + "Ensure the file exists", "File Not Found",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input zip file not valid: \n \t" + this.caspacOutputFile.getText());
+            log.level0Error("Could not find file at: \n \t" + this.caspacOutputFile.getText());
             return;
         }
         try {
-            cp = new Caspac(file, Statics.TempFolder);
+            cp = new Caspac(file, Statics.TempFolder,0); 
         } catch (IOException ex) {
             Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1681,7 +1682,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         Collections.reverse(list);
 
         for (int i : list) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).includeFiles.remove(i);
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.remove(i);
             fileList.remove(i);
         }
 
@@ -1704,7 +1705,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
     private Caspac buildCASPAC() throws IOException {
         log.level2Information("Creating CASPAC file");
-        Caspac cp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.TempFolder);
+        Caspac cp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.TempFolder,0);
         log.level2Information("Setting CASPAC build");
         cp.setBuild(buildMaker());
         cp.build.bannerPic = this.bannerPic.getText();
@@ -1779,7 +1780,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.updateMessage.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.updateMessage);
 
         listModel.removeAllElements();
-        for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).includeFiles) {
+        for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles) {
             listModel.addElement(f);
         }
 

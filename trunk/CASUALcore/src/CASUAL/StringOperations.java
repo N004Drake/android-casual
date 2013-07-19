@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -96,6 +98,12 @@ public class StringOperations {
         return s.hasNext() ? s.next() : "";
     }
 
+    public static InputStream convertStringToStream(String input){
+        InputStream bas= new ByteArrayInputStream(input.getBytes());
+        return bas;
+        
+        
+    }
     /**
      * takes a array list and converts to string array
      * @param list  input array list

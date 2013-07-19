@@ -121,7 +121,7 @@ public class CASUALTest {
         launch.start();
         Thread read = new Thread(readReactToCASUAL);
         read.setName("Reading and reacting to CASUAL");
-        read.setDaemon(true);
+
         read.start();
         try {
             launch.join();
@@ -141,6 +141,7 @@ public class CASUALTest {
                 try {
                     String line;
                     while ((line = readFromCASUAL.readLine()) != null) {
+                        sb.append(line+"\n");
                         doCasualOuputHandling(line);
                         if (line.contains("[DEBUG]Shutting Down")) break;
                     }
@@ -236,7 +237,7 @@ public class CASUALTest {
             }
         }
         for (int i=0; i<valuesWeDontWantToSee.length;i++){
-            if (! line.contains(valuesWeDontWantToSee[i])){
+            if ( line.contains(valuesWeDontWantToSee[i])){
                 badChecks[i]=true;
             }
         }
@@ -250,14 +251,19 @@ public class CASUALTest {
         instantiateCASUAL();
         if (goodChecks !=null && goodChecks.length>0){
             for (boolean check : goodChecks){
-                if (!check) return false;
+                if (!check) {
+                    return false;
+                }
             }
         }
         if (badChecks !=null && badChecks.length>0){
             for (boolean check : badChecks){
-                if (!check) return false;
+                if (check){
+                    return false;
+                }
             }
         }
+
         return true;
     }
     

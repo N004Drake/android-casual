@@ -82,15 +82,15 @@ public class mainWindowController {
                 return;  
         }
         
-        zip = new Zip(output);
+        zip = new Zip(new File(output));
         
         for (Object o : fileList.toArray())
         {
             File file = new File(o.toString());
             System.out.println(file.exists());
-            zip.addToZip(file);
+            zip.addFileToZipDIr(file);
         }
-        zip.execute();
+        zip.compressZipDir();
         
         JOptionPane.showMessageDialog(mw,
             "SUCCESS: " + output + " was created.\n"
