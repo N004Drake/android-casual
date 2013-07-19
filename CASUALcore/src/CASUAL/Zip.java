@@ -180,6 +180,7 @@ public class Zip {
            for (Map.Entry<String, InputStream> entry : nameStream.entrySet()){
            // Compress the files into the zip
             writeEntryToZipFile(out, entry.getKey(),entry.getValue());
+            entry.getValue().close();
            }
         // Complete the ZIP file
         out.close();

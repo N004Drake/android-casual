@@ -304,7 +304,8 @@ public class Script {
 
             zip = new Zip(instanceZip);
             zip.addFilesToExistingZip(individualFiles.toArray(new File[individualFiles.size()]));
-            scriptEntries.put(name+".zip",new FileInputStream(instanceZip));
+            log.level3Verbose("Adding zip:"+instanceZip.getAbsolutePath());
+            scriptEntries.put(name+".zip",new FileInputStream(instanceZip.getAbsoluteFile()));
         } catch (IOException ex) {
             Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
         }
