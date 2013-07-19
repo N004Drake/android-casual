@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -49,27 +51,14 @@ public class CASPACcreator {
         argProcessor(args);
         if (shutdown) {
             return;
-        }
-
-        else
-        {
-        Zip zip = new Zip(outputfile);
-        for (File f : inputfiles) {
+        } else {
             try {
-                zip.addToZip(f);
+                Zip zip = new Zip(new File(outputfile));
+                zip.addFilesToExistingZip(inputfiles.toArray(new File[inputfiles.size()]));
             } catch (IOException ex) {
-                log.level0Error("could not add file to zip " +f.toString());
+                Logger.getLogger(CASPACcreator.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-            try {
-                zip.execute();
-            } catch (FileNotFoundException ex) {
-                log.level0Error("File not found while attempting to zip");
-            } catch (IOException ex) {
-                log.level0Error("problem while zipping");
-            }
-        }
-        log.level2Information("Successfully created zip file at: " + outputfile);
     }
 
     /**
