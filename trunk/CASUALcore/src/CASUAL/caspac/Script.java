@@ -58,10 +58,10 @@ public class Script {
     public Unzip zipfile; //CASPAC, Resource, or Filesystem
     final public String name;
     final public String tempDir;
-    private String scriptContents = "";
+    public String scriptContents = "";
     public List<File> individualFiles = new ArrayList<>();
     public meta metaData = new meta();
-    private String discription = "";
+    public String discription = "";
 
     private static String slash = System.getProperty("file.separator");
     Map<? extends String, ? extends InputStream> getAllAsStringAndInputStream;
@@ -123,69 +123,7 @@ public class Script {
         return testingBool;
     }
 
-    public void writeScript(File file) throws IOException {
-        String scriptPath = file.toString() + slash + name;
-        CASUAL.Log log = new CASUAL.Log();
-        int md5Position = 0;
-        CASUAL.MD5sum md5sum = new CASUAL.MD5sum();
-        if (!(file.isDirectory())) {
-            file.mkdir();
-        }
-        if (!(new File(scriptPath + ".scr")).exists()) {
-            String filePath = scriptPath + ".scr";
-            new FileOperations().writeToFile(scriptContents, filePath);
-            addMD5ToMeta(md5sum, filePath, md5Position);
-            md5Position++;
-            metaData.write(scriptPath + ".meta");
-        }
-        if (!(new File(scriptPath + ".txt")).exists()) {
-            String filePath = scriptPath + ".txt";
-            new FileOperations().writeToFile(discription, filePath);
-            addMD5ToMeta(md5sum, filePath, md5Position);
-            md5Position++;
-            metaData.write(scriptPath + ".meta");
-        }
-        if (!individualFiles.isEmpty()) {
-            String filePath = scriptPath + ".zip";
-            Zip includeZip = new Zip(new File(filePath));
-            includeZip.addToTempFolderLoc(name + ".script");
-            for (File f : individualFiles) {
-                includeZip.addFileToZipDIr(f);
-            }
-            includeZip.compressZipDir();
-            addMD5ToMeta(md5sum, filePath, md5Position);
-            md5Position++;
-            metaData.write(scriptPath + ".meta");
-        }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getScript() {
-        return scriptContents;
-    }
-
-    public void setScript(String script) {
-        this.scriptContents = script;
-    }
-
-    public meta getMetaData() {
-        return metaData;
-    }
-
-    public void setMetaData(Properties prop) {
-        this.metaData = new meta(prop);
-    }
-
-    public String getDiscription() {
-        return discription;
-    }
-
-    public void setDiscription(String discription) {
-        this.discription = discription;
-    }
+  
 
     @Override
     public String toString() {
@@ -215,7 +153,7 @@ public class Script {
                     BufferedInputStream bis = null;
                     try {
                         Log log = new Log();
-                        new Log().level4Debug("Unzipping " + getName());
+                        new Log().level4Debug("Unzipping " + name);
                         log.level3Verbose("Grabbing Entry "+CASPAC.getEntryName(entry));
                         bis = CASPAC.streamFileFromZip(entry);
                         log.level4Debug("Setup InputStream. Extracting to"+tempDir);

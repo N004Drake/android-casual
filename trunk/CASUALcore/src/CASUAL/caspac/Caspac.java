@@ -41,6 +41,7 @@ import java.util.Properties;
 
 import java.util.zip.ZipException;
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 
 /**
  *
@@ -85,9 +86,7 @@ public class Caspac {
                             this.build = new Build(unzip.streamFileFromZip(o));
                         }
                         if (unzip.getEntryName(o).contains("-logo.png")) {
-                            logo = ImageIO.read(unzip.streamFileFromZip(o));
-                            //unzip.deployFileFromZip(o, TempFolder);
-                            //logo = new File(TempFolder + "-logo.png");
+                            extractCASPACBanner(unzip, o, overview);
                         }
                     }
                 }
@@ -113,7 +112,7 @@ public class Caspac {
     public void addScript(Script script) {
         if (!(scripts.contains(script))) {
             scripts.add(script);
-            log.level4Debug("Adding Script: " + script.getName());
+            log.level4Debug("Adding Script: " + script.name);
         }
     }
 
@@ -125,12 +124,8 @@ public class Caspac {
     public void removeScript(Script script) {
         if (scripts.contains(script)) {
             scripts.remove(script);
-            log.level4Debug("Removing Script: " + script.getName());
+            log.level4Debug("Removing Script: " + script.name);
         }
-    }
-
-    public File getCaspac() {
-        return CASPAC;
     }
 
     /**
@@ -182,7 +177,7 @@ public class Caspac {
             Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
             String filename = unzip.getEntryName(entry);
             boolean isScript=!handleCASPACInformationFiles(filename, unzip, entry);
-            if ((isScript && scriptName.isEmpty()) || (isScript && scriptName.equals(entry) )){
+            if ((isScript && scriptName.isEmpty()) || (isScript && scriptName.equals(entry) )){ //ugly
                 handleScriptFiles(filename, unzip, entry);
             }
             
@@ -269,7 +264,7 @@ public class Caspac {
      */
     private Script getScriptInstanceByFilename(String fileName) {
         for (Script s : scripts) {
-            if (s.getName().equals(fileName.substring(0, fileName.lastIndexOf(".")))) {
+            if (s.name.equals(fileName.substring(0, fileName.lastIndexOf(".")))) {
                 return s;
             }
         }
@@ -286,7 +281,7 @@ public class Caspac {
      */
     public Script getScriptByFilename(String fileName) {
         for (Script s : scripts) {
-            if (s.getName().equals(fileName.substring(0, fileName.lastIndexOf(".")))) {
+            if (s.name.equals(fileName.substring(0, fileName.lastIndexOf(".")))) {
                 return s;
             }
         }
@@ -302,9 +297,9 @@ public class Caspac {
     public String[] getScriptNames() { //TODO: examine this to figure out why we are iterating "scripts" and adding a slash while getting names
         ArrayList<String> scriptNames = new ArrayList<>();
         for (Script s : scripts) {
-            scriptNames.add(s.getName());
+            scriptNames.add(s.name);
         }
-        return StringOperations.convertArrayListToStringArray(scripts);
+        return StringOperations.convertArrayListToStringArray(scriptNames);
     }
     
     /**
@@ -314,23 +309,13 @@ public class Caspac {
      */
     public Script getScriptByName(String name){
         for (Script s : scripts) {
-            if (s.getName().equals(name)){
+            if (s.name.equals(name)){
                 return s;
             }
         }
         return null;
     }
 
-    /**
-     * TODO: should this be endswith(".scr")???
-     */
-    private void cleanCaspacWrite() {
-        for (File f : new File(Statics.TempFolder).listFiles()) {
-            if ((f.toString().endsWith(".script") || f.toString().endsWith(".zip")) && f.isDirectory()) {
-                fo.recursiveDelete(f);
-            }
-        }
-    }
 
     private void performUnzipOnQueue() {
             for (Thread t :this.unzipThreads){
@@ -348,15 +333,11 @@ public class Caspac {
     private void extractCASPACBanner(Unzip pack, Object entry, String filename) throws IOException {
         log.level4Debug("Found logo adding information to "
                 + "CASPAC");
-        fo.writeStreamToFile(pack.streamFileFromZip(entry), TempFolder + filename);
-        build.bannerPic = TempFolder + filename;
+        logo=ImageIO.read(ImageIO.createImageInputStream(pack.streamFileFromZip(entry)));
+        build.bannerPic = filename;
+        
     }
 
-    private void setOverview(Unzip pack, Object entry) throws IOException {
-        log.level4Debug("Found -Overview.txt adding information to "
-                + "CASPAC");
-        overview = fo.readTextFromStream(pack.streamFileFromZip(entry));
-    }
 
     private boolean handleCASPACInformationFiles(String filename, Unzip pack, Object entry) throws IOException {
         boolean isAControlFile=false;
@@ -367,7 +348,7 @@ public class Caspac {
             extractCASPACBanner(pack, entry, filename);
             isAControlFile=true;
         } else if (filename.toString().equals("-Overview.txt")) {
-            setOverview(pack, entry);
+            overview=StringOperations.convertStreamToString(pack.streamFileFromZip(entry));
             isAControlFile=true;
         }
         return isAControlFile;
@@ -379,17 +360,17 @@ public class Caspac {
         if (filename.toString().endsWith(".meta")) {
 
             Script script = getScriptInstanceByFilename(filename.toString());
-            log.level4Debug("Found METADATA for " + script.getName() + ".");
+            log.level4Debug("Found METADATA for " + script.name + ".");
             int i;
             if (!scripts.contains(script)) {
-                log.level4Debug(script.getName() + " not found in CASPAC adding"
+                log.level4Debug(script.name + " not found in CASPAC adding"
                         + " script to CASPAC.");
                 scripts.add(script);
             }
             i = scripts.indexOf(script);
 
             script.metaData.load(pack.streamFileFromZip(entry));
-            log.level4Debug("Added METADATA to " + script.getName() + ".");
+            log.level4Debug("Added METADATA to " + script.name + ".");
             int md5ArrayPosition = 0;
             String md5;
             while ((md5 = script.metaData.metaProp.getProperty("Script.MD5[" + md5ArrayPosition + "]")) != null) {
@@ -399,9 +380,8 @@ public class Caspac {
             scripts.set(i, script);
         } else if (filename.toString().endsWith(".scr")) {
             Script script = getScriptInstanceByFilename(filename.toString());
-            String scriptText = fo.readTextFromStream(pack.streamFileFromZip(entry));
-            script.setScript(scriptText);
-            log.level4Debug("Added Script for " + script.getName() + ".");
+            script.discription= fo.readTextFromStream(pack.streamFileFromZip(entry));
+            log.level4Debug("Added Script for " + script.name + ".");
            
         } else if (filename.toString().endsWith(".zip")) {
             Script script = getScriptInstanceByFilename(filename.toString());
@@ -413,15 +393,15 @@ public class Caspac {
             script.scriptZipFile=entry;
             script.zipfile=pack;
             this.unzipThreads.add(new Thread(script.getExtractionRunnable()));
-            log.level4Debug("Added .zip to " + script.getName() + ". It will be unziped at end of unpacking.");
+            log.level4Debug("Added .zip to " + script.name + ". It will be unziped at end of unpacking.");
             //for (File f:new File(TempFolder + slash + "IncludeExplode"+slash).listFiles())
             //    script.includeFiles.add(f);
 
         } else if (filename.toString().endsWith(".txt")) {
             Script script = getScriptInstanceByFilename(filename.toString());
             String description = fo.readTextFromStream(pack.streamFileFromZip(entry));
-            script.setDiscription(description);
-            log.level4Debug("Added Description to " + script.getName() + ".");
+            script.discription=description;
+            log.level4Debug("Added Description to " + script.name + ".");
         }
     }
 

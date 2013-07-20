@@ -137,7 +137,7 @@ public class Zip {
         getTemporaryOutputZip(tempFile, BUFFER);
         ZipOutputStream out;
         ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
-        out = prepareZipFileForMoreEntries(zin);
+        out = prepareZipFileForMoreEntries(zin,files);
         // Compress the files into the zip
         for (int i = 0; i < files.length; i++) {
             InputStream in = new FileInputStream(files[i]);
@@ -156,7 +156,7 @@ public class Zip {
         getTemporaryOutputZip(tempFile, BUFFER);
         ZipOutputStream out;
         ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
-        out = prepareZipFileForMoreEntries(zin);
+        out = prepareZipFileForMoreEntries(zin,name);
         // Compress the files into the zip
         writeEntryToZipFile(out, name, in);
         // Complete the ZIP file
@@ -175,7 +175,7 @@ public class Zip {
         getTemporaryOutputZip(tempFile, BUFFER);
         ZipOutputStream out;
         ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
-        out = prepareZipFileForMoreEntries(zin);
+        out = prepareZipFileForMoreEntries(zin,nameStream);
            
            for (Map.Entry<String, InputStream> entry : nameStream.entrySet()){
            // Compress the files into the zip
@@ -438,20 +438,47 @@ public class Zip {
             throw new IOException("could not rename or copy the file " + outputZip.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
         }
     }
+    
+    private ZipOutputStream prepareZipFileForMoreEntries(ZipInputStream zin, File[] files) throws FileNotFoundException, IOException {
+        
+        
+        String[] namesToCheck=new String[files.length];
+        for (int i=0; i<files.length;i++){
+            namesToCheck[i]=files[i].getName();
+        }
+        return this.prepareZipFileForMoreEntries(zin, namesToCheck);
+    }
 
-    private ZipOutputStream prepareZipFileForMoreEntries(ZipInputStream zin) throws FileNotFoundException, IOException {
+    private ZipOutputStream prepareZipFileForMoreEntries(ZipInputStream zin, String name) throws FileNotFoundException, IOException {
+        String[] namesToCheck=new String[]{name};
+        return this.prepareZipFileForMoreEntries(zin, namesToCheck);
+    }
+
+    private ZipOutputStream prepareZipFileForMoreEntries(ZipInputStream zin, Map<String, InputStream> nameStream) throws FileNotFoundException, IOException {
+        String[] namesToCheck=nameStream.keySet().toArray(new String[nameStream.size()]);
+        return this.prepareZipFileForMoreEntries(zin, namesToCheck);
+    }
+    private ZipOutputStream prepareZipFileForMoreEntries(ZipInputStream zin,String[] namesToCheck) throws FileNotFoundException, IOException {
         ZipOutputStream out;
         out = new ZipOutputStream(new FileOutputStream(outputZip));
         //ZipEntry entry = zin.getNextEntry();
         ZipEntry entry;
         while ((entry = zin.getNextEntry()) != null) {
-            String name = entry.getName();
-            // Add ZIP entry to output stream.
-            out.putNextEntry(new ZipEntry(name));
-            // Transfer bytes from the ZIP file to the output file
-            int len;
-            while ((len = zin.read(BUFFER)) > 0) {
-                out.write(BUFFER, 0, len);
+            boolean skipEntryInFavorOfNewEntry=false;
+            for (String newEntryName:namesToCheck){
+                if (newEntryName.equals(entry.getName())){
+                    skipEntryInFavorOfNewEntry=true;
+                }
+            }
+            if (!skipEntryInFavorOfNewEntry){
+                String name = entry.getName();
+                // Add ZIP entry to output stream.
+                out.putNextEntry(new ZipEntry(name));
+                // Transfer bytes from the ZIP file to the output file
+                int len;
+                while ((len = zin.read(BUFFER)) > 0) {
+                    out.write(BUFFER, 0, len);
+                }
             }
         }
         return out;
@@ -467,4 +494,6 @@ public class Zip {
         // Complete the entry
         out.closeEntry();
     }
+
+
 }

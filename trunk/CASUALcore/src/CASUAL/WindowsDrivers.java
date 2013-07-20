@@ -278,10 +278,10 @@ public class WindowsDrivers {
             if (pattern != null) {
                 String outputBuffer = devconCommand("findall *USB\\VID_" + VID + "*");
                 if (outputBuffer != null) {
-                    Matcher matcher = pattern.matcher(outputBuffer);
+  
                     pattern = getRegExPattern("orphans");
                     if (pattern != null) {
-                        matcher = pattern.matcher(outputBuffer);
+                        Matcher matcher = pattern.matcher(outputBuffer);
                         while (matcher.find()) {
                             log.level2Information("removeOrphanedDevices() Removing orphaned device " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
                             if (devconCommand("remove " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"") == null) {
