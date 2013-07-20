@@ -242,7 +242,7 @@ public class CASUALScriptParser {
     void executeFirstScriptInCASPAC(Caspac CASPAC) {
         String scriptName= CASPAC.getScriptNames()[0];
         Script s=CASPAC.getScriptByName(scriptName);
-        log.level2Information(s.getDiscription());
+        log.level2Information(s.discription);
         int CASUALSVN=Integer.parseInt(CASUALapplicationData.CASUALSVNRevision);
         int scriptSVN=Integer.parseInt(s.metaData.minSVNversion);
         if (CASUALSVN<scriptSVN){
@@ -251,9 +251,9 @@ public class CASUALScriptParser {
         }
         CASPAC.waitForUnzipComplete();
         try {
-            ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.getScript().getBytes("UTF-8"));
+            ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.scriptContents.getBytes("UTF-8"));
             DataInputStream dis=new DataInputStream(scriptStream);
-            new CASUALLanguage(s.getName(), s.tempDir).beginScriptingHandler(dis);
+            new CASUALLanguage(s.name, s.tempDir).beginScriptingHandler(dis);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }
