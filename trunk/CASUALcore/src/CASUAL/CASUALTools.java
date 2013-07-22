@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.caspac.Caspac;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,7 +46,7 @@ public class CASUALTools {
     /**
      *
      */
-    public static boolean IDEMode = false;
+    public static boolean IDEMode = new CASUALTools().getIDEMode();
     Log log = new Log();
 
     /**
@@ -54,6 +55,7 @@ public class CASUALTools {
      *
      * @throws IOException
      */
+    /*
     public void listScripts() throws IOException {
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         int Count = 0;
@@ -88,10 +90,9 @@ public class CASUALTools {
                     //Statics.scriptLocations = new String[]{""};
                     Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
                 }
-                CASUALapplicationData.scriptsHaveBeenRecognized = true;
             }
         }
-    }
+    }*/
 
     /**
      * md5sumTestScript Refreshes the MD5s on the scripts in the /SCRIPTS folder
@@ -213,9 +214,10 @@ public class CASUALTools {
      *
      * @return true if in IDE mode
      */
-    public boolean getIDEMode() {
-        String className = this.getClass().getName().replace('.', '/');
-        String classJar = this.getClass().getResource("/" + className + ".class").toString();
+    private boolean getIDEMode() {
+        String className = getClass().getName().replace('.', '/');
+        String classJar = getClass().getResource("/" + className + ".class").toString();
+        new Log().level4Debug("ClassJar:"+ classJar);
         if (classJar.startsWith("jar:")) {
             return false;
         } else {
@@ -244,27 +246,8 @@ public class CASUALTools {
             new Log().level3Verbose("ADB Server Started!!!");
         }
     };
-    /**
-     * sets up the static CASUALPackageData for use with /SCRIPTS/folder.
-     */
-    public Runnable setCASUALPackageDataFromScriptsFolder = new Runnable() {
-        @Override
-        public void run() {
-            new CASUALapplicationData().initialize();
 
-        }
-    };
-    /**
-     * Plays the CASUAL startup sound.
-     */
-    public Runnable casualSound = new Runnable() {
-        @Override
-        public void run() {
-            if (CASUALapplicationData.useSound) {
-                AudioHandler.playSound("/CASUAL/resources/sounds/CASUAL.wav");
-            }
-        }
-    };
+
     /**
      * Starts the GUI, should be done last and only if needed.
      */
@@ -275,23 +258,13 @@ public class CASUALTools {
             Statics.GUI.setVisible(true);
         }
     };
-    /**
-     * Scans /SCRIPTS/ Folder to locate scripts.
-     */
-    public Runnable prepScripts = new Runnable() {
+    
+    
+   
+    public static Runnable updateMD5s = new Runnable() {
         @Override
         public void run() {
-            try {
-                new CASUALTools().listScripts();
-            } catch (IOException ex) {
-                new Log().errorHandler(ex);
-            }
-        }
-    };
-    private Runnable updateMD5s = new Runnable() {
-        @Override
-        public void run() {
-            md5sumTestScripts();
+            new CASUALTools().md5sumTestScripts();
         }
     };
 

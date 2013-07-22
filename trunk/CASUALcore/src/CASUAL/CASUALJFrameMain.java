@@ -16,19 +16,23 @@
  */
 package CASUAL;
 
+import CASUAL.caspac.Caspac;
+import CASUAL.caspac.Script;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.border.TitledBorder;
 
 /**
  *
  * @author adam
  */
 public final class CASUALJFrameMain extends javax.swing.JFrame {
-
+    Caspac caspac;
     String nonResourceFileName;
     Log log = new Log();
     FileOperations fileOperations = new FileOperations();
@@ -40,7 +44,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     public CASUALJFrameMain() {
 
         initComponents();
-        enableControls(false);
 
         //set up place to log to for GUI
         ProgressArea.setContentType("text/html");
@@ -49,41 +52,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         Statics.ProgressDoc = Statics.ProgressPane.getStyledDocument();
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
-        log.level4Debug("OMFGWOOT GUI running!");
-        if (Statics.TargetScriptIsResource) {
-            if (!Statics.dumbTerminalGUI) {
-                log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + "-Overview.txt") + "\n");
-            }
-        } else {
-            if (!Statics.dumbTerminalGUI) {
-                log.level2Information(fileOperations.readFile("-Overview.txt") + "\n");
-            }
-        }
-
 
         log.level4Debug("Searching for scripts");
-        try {
-            CASUALTools.zipPrep.join();
-        } catch (InterruptedException ex) {
-        }
-        for (String script : Statics.scriptNames) {
-            comboBoxScriptSelectorAddNewItem(script);
-        }
-        if (comboBoxScriptSelector.getItemCount() == 1) {
-            comboBoxScriptSelector.setVisible(false);
-        }
 
-        log.level4Debug("Updating Scripts for UI");
-        updateSelectedFromGUI();
-
-        setStartButtonText(CASUALapplicationData.buttonText);
-        setTitle(CASUALapplicationData.title);
-        if (CASUALapplicationData.usePictureForBanner) {
-            setWindowBannerText("");
-            setWindowBannerImage("/SCRIPTS/" + CASUALapplicationData.bannerPic, CASUALapplicationData.bannerText);
-        } else {
-            setWindowBannerText(CASUALapplicationData.bannerText);
-        }
         Statics.lockGUIformPrep = false;
 
 
@@ -94,12 +65,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 CASUALApp.shutdown(0);
             }
         });
-
-        if (CASUALapplicationData.AlwaysEnableControls) {
-            enableControls(true);
-        }
-        Statics.GUIIsAvailable = true;
-
 
     }
 
@@ -124,7 +89,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         progressBar = new javax.swing.JProgressBar();
         StatusLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        informationScrollPanel = new javax.swing.JScrollPane();
         ProgressArea = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -145,7 +110,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         });
 
         windowBanner.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
-        windowBanner.setText("NARZ or picture of some sort");
+        windowBanner.setText("loading.. please wait");
 
         comboBoxScriptSelector.setEnabled(false);
         comboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
@@ -217,11 +182,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Abyssinica SIL", 0, 12))); // NOI18N
+        informationScrollPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Ubuntu", 1, 10))); // NOI18N
 
-        ProgressArea.setText("<html><a href=\"http://www.w3schools.com\">Visit W3Schools.com!</a>");
+        ProgressArea.setText("<html>");
         ProgressArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jScrollPane3.setViewportView(ProgressArea);
+        informationScrollPanel.setViewportView(ProgressArea);
 
         jMenu1.setText("File");
 
@@ -294,7 +259,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                                 .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(DonateButton))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(informationScrollPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -302,7 +267,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -324,27 +289,15 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         log.level4Debug("StartButtonActionPerformed() Script Activated");
         log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
 
-        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+        CASUALConnectionStatusMonitor.DeviceCheck.stop();
         enableControls(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
-
-        //this belongs here because GUI is the only provision for opening a file from disk. 
-        String diskLocation;
-        diskLocation = Statics.getScriptLocationOnDisk(script);
-        log.level4Debug("disk location for script resources " + diskLocation);
-        //check for updates
-        if (!(diskLocation.length() == 0)) {
-            Statics.TargetScriptIsResource = false;
-            nonResourceFileName = Statics.getScriptLocationOnDisk(script);
-        }
+        
 
         //execute
         if (Statics.TargetScriptIsResource) {
             log.level4Debug("Loading internal resource: " + script);
-            new CASUALScriptParser().loadResourceAndExecute(script, true);
-        } else {
-            log.level4Debug("Loading from file: " + script);
-            new CASUALScriptParser().loadFileAndExecute(nonResourceFileName, script, true);
+            new CASUALScriptParser().executeSelectedScript(caspac, true);
         }
 
     }
@@ -382,7 +335,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+                CASUALConnectionStatusMonitor.DeviceCheck.stop();
                 this.enableControls(false);
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
@@ -403,7 +356,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 comboBoxScriptSelector.setSelectedItem(ComboBoxValue);
                 comboBoxScriptSelector.setEditable(false);
                 Statics.TargetScriptIsResource = false;
-                Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                CASUALConnectionStatusMonitor.DeviceCheck.start();
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
@@ -422,20 +375,20 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemExitActionPerformed
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
-        setWindowBannerImage("/SCRIPTS/" + CASUALapplicationData.bannerPic, CASUALapplicationData.bannerText);
-        int DResult = new CASUALInteraction("Donate to the developers", "This application was developed by " + CASUALapplicationData.developerName + " using CASUAL framework.\n"
+        this.setInformationScrollBorderText("Donate");
+        int DResult = new CASUALInteraction("Donate to the developers", "This application was developed by " + caspac.build.developerName + " using CASUAL framework.\n"
                 + "Donations give developers a tangeble reason to continue quality software development\n").showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
                 //DisplayTitle
                 CASUALInteraction.OK_OPTION, // Options buttons
                 CASUALInteraction.INFORMATION_MESSAGE, //Icon
-                new String[]{"Donate To CASUAL", "Donate To " + CASUALapplicationData.developerName}, // option buttons
+                new String[]{"Donate To CASUAL", "Donate To " + caspac.build.developerName}, // option buttons
                 "No"); //Default{
         if (DResult == 0) {
             launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
         } else if (DResult == 1) {
-            launchLink(CASUALapplicationData.developerDonationLink);
+            launchLink(caspac.build.donateLink);
         }
     }//GEN-LAST:event_DonateButtonActionPerformed
 
@@ -466,11 +419,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             Statics.TargetScriptIsResource = true;
 
         }
-        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+        CASUALConnectionStatusMonitor.DeviceCheck.stop();
         this.enableControls(false);
         Statics.lockGUIunzip = true;
-        updateSelectedFromGUI();
-        new CASUALTools().startZipPrepThreadOnZipFile(comboBoxScriptSelector.getSelectedItem().toString());
+        Script s=caspac.getScriptByName(comboBoxScriptSelector.getSelectedItem().toString());
+        
         log.level2Information(comboBoxScriptSelector.getSelectedItem().toString());
         
         try {
@@ -479,7 +432,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             new Log().errorHandler(ex);
         }
         Statics.lockGUIunzip = false;
-        Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+        CASUALConnectionStatusMonitor.DeviceCheck.start();
         
 
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
@@ -490,7 +443,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+        CASUALConnectionStatusMonitor.DeviceCheck.stop();
         ADBTools.killADBserver();
     }//GEN-LAST:event_formWindowClosing
     boolean buttonEnableStage = false;
@@ -499,27 +452,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
     }//GEN-LAST:event_startButtonMouseExited
-    /**
-     * changes the selected script based on what is chosen from GUI.
-     */
-    public void updateSelectedFromGUI() {
-        log.level3Verbose("From Resource: " + Statics.TargetScriptIsResource);
-        log.level2Information("--" + comboBoxScriptSelector.getSelectedItem().toString() + "--");
-        if (Statics.TargetScriptIsResource) {
-            if (!Statics.dumbTerminalGUI) {
-                log.level2Information(fileOperations.readTextFromResource(Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
-            }
-        } else {
-            if (!Statics.dumbTerminalGUI) {
-                log.level2Information(fileOperations.readFile(comboBoxScriptSelector.getSelectedItem().toString() + ".txt") + "\n");
-            }
-        }
-        Statics.SelectedScriptFolder = Statics.TempFolder + comboBoxScriptSelector.getSelectedItem().toString() + Statics.Slash;
-        //set the ZipResource
-        //final String ZipResource = Statics.TargetScriptIsResource ? (Statics.ScriptLocation + comboBoxScriptSelector.getSelectedItem().toString() + ".zip") : (comboBoxScriptSelector.getSelectedItem().toString() + ".zip");
 
-        //CASUALTools().prepareCurrentScriptZipfile(comboBoxScriptSelector.getSelectedItem().toString());
-    }
 
     private void StatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseClicked
         if (buttonEnableStage) {
@@ -559,12 +492,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JLabel StatusLabel;
     private javax.swing.JComboBox<String> comboBoxScriptSelector;
+    private javax.swing.JScrollPane informationScrollPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton startButton;
@@ -628,12 +561,14 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      */
     public boolean enableControls(boolean status) {
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
-        boolean bypassLock = CASUALapplicationData.AlwaysEnableControls;
-        if (bypassLock) {
-            status = true; //if LockOnADBDisconnect is false then just enable controls
-            startButton.setEnabled(status);
-            comboBoxScriptSelector.setEnabled(status);
-            return true;
+        if (caspac!=null){
+            boolean bypassLock = caspac.build.alwaysEnableControls;
+            if (bypassLock) {
+                status = true; //if LockOnADBDisconnect is false then just enable controls
+                startButton.setEnabled(status);
+                comboBoxScriptSelector.setEnabled(status);
+                return true;
+            }
         }
         if (!Statics.lockGUIformPrep ){
             if (!Statics.lockGUIunzip){
@@ -693,8 +628,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      * @param icon
      * @param text
      */
-    public void setWindowBannerImage(String icon, String text) {
-        windowBanner.setIcon(new ImageIcon(getClass().getResource(icon), ""));
+    public void setWindowBannerImage(BufferedImage icon, String text) {
+        windowBanner.setIcon(new ImageIcon(icon, text));
 
     }
 
@@ -704,5 +639,44 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      */
     public void windowCosing(WindowEvent e) {
         CASUALApp.shutdown(0);
+    }
+
+    void setCASPAC(Caspac caspac) {
+        this.setInformationScrollBorderText("Important Information");
+        this.caspac=caspac;
+        Statics.GUIIsAvailable=true;
+       
+        log.level2Information(caspac.overview);
+        if (caspac.build.usePictureForBanner){
+            //setup banner with CASPAC.logo
+        }
+        if (caspac.build.alwaysEnableControls){
+            enableControls(true);
+        }
+        if( caspac.scripts.size()>0){
+            for (Script s:caspac.scripts){
+                this.comboBoxScriptSelector.addItem(s.name);
+                log.level4Debug("adding "+s.name+" to UI");
+            }
+            this.comboBoxScriptSelector.setSelectedIndex(0);
+            log.level2Information(caspac.getScriptByName(this.comboBoxGetSelectedItem()).discription);
+        }
+        if (comboBoxScriptSelector.getItemCount() < 1) {
+           // comboBoxScriptSelector.setVisible(false);
+        }
+        this.startButton.setText(caspac.build.executeButtonText);
+        setWindowBannerText("");
+        if (caspac.logo !=null && caspac.logo.getMinX()<40){
+            setWindowBannerImage(caspac.logo, caspac.build.bannerText);
+        } else {
+            setWindowBannerText(caspac.build.bannerText);
+        }
+    }
+    
+
+    public void setInformationScrollBorderText(String title) {
+        TitledBorder info=(TitledBorder)this.informationScrollPanel.getBorder();
+        info.setTitle(title);
+        this.repaint();
     }
 }

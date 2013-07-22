@@ -17,6 +17,7 @@
 package CASUAL;
 
 //import java.awt.Color;
+import CASUAL.caspac.Caspac;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,10 +38,13 @@ public class Statics {
     public static boolean GUIIsAvailable = false; //used to tell if the GUI is up yet.
     public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
-    public static String currentStatus="working";
+    private static String currentStatus="working";
     public static boolean debugMode=false;
-
-
+    public static Caspac CASPAC;
+    public static boolean useSound=true;
+    
+    
+    
     public Statics() {
     }
 
@@ -57,7 +61,6 @@ public class Statics {
     public static ArrayList<String> LiveSendCommand = new ArrayList<>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by Log class
-    public static CASUALConnectionStatusMonitor casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
     public static CASPACData localInformation;
     public static CASPACData webInformation;
     public static ArrayList<String> runnableMD5list = new ArrayList<>();
@@ -206,34 +209,10 @@ public class Statics {
     //script data
     public static ArrayList<String> ActionEvents = new ArrayList<>(); //Action events for $ON command. set by script
     public static ArrayList<String> ReactionEvents = new ArrayList<>(); //Reactions for $ON command. . set by script
-    public static String[] scriptNames = {""};//list of all scripts in package. set on runtime
-    public static String[] scriptLocations = {""}; //All scripts in package. set on runtime
+  
+  
 
-    public static String getScriptLocationOnDisk(String name) {
-        if (Statics.TargetScriptIsResource) return "";
-        for (int n = 0; n < scriptNames.length; n++) {
-            if (name.equals(scriptNames[n])) {
-                Log.level4Debug("Script " + name + " returned #" + n + scriptNames[n]);
-
-                if (scriptLocations[n] != null) {
-                    return scriptLocations[n];
-                }
-                return "";
-            }
-        }
-        return "";
-    }
-
-    public static void setScriptLocationOnDisk(String name, String location) {
-        for (int n = 0; n < scriptNames.length; n++) {
-            if (name.equals(scriptNames[n])) {
-                Log.level4Debug("Associated Script " + name + " with #" + n + scriptNames[n]);
-                scriptLocations[n] = location;
-            }
-        }
-
-    }
-    
+ 
     //fastboot
     static boolean isFastbootDeployed = false;  // if fastboot has been deployed
     public static String fastbootResource = ""; //location to fastboot set from final values above
@@ -296,14 +275,14 @@ public class Statics {
         GUIIsAvailable = false;
         useGUI = false;
         dumbTerminalGUI = false;
-        currentStatus="working";
+        setStatus("working");
         GUIVerboseLevel = 2;
         CommandLineVerboseLevel = 4;
 
         LiveSendCommand = new ArrayList<>();
         OutFile=null;
         LogCreated = false;
-        casualConnectionStatusMonitor = new CASUALConnectionStatusMonitor();
+
         localInformation=null;
         webInformation=null;
         TargetScriptIsResource = true;  
@@ -321,8 +300,7 @@ public class Statics {
         runnableMD5list = new ArrayList<>();
         ActionEvents = new ArrayList<>();
         ReactionEvents = new ArrayList<>();
-        scriptNames = new String[]{""};
-        scriptLocations = new String[]{""};
+
         isFastbootDeployed = false;  // if fastboot has been deployed
         fastbootResource = ""; //location to fastboot set from final values above
         fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
@@ -335,28 +313,15 @@ public class Statics {
         arch = "";
         CASUALLanguage.GOTO = "";
         CASUALScriptParser.ScriptContinue = true;
-        CASUALTools.IDEMode = false;
-        CASUALapplicationData.packageDataHasBeenSet = false;
-        CASUALapplicationData.scriptsHaveBeenRecognized = false;
-        CASUALapplicationData.CASUALSVNRevision="0";
-        CASUALapplicationData.CASUALBuildNumber="0";
-        CASUALapplicationData.buildProperties="";
-        CASUALapplicationData.buttonText="Do It!";
-        CASUALapplicationData.title="";
-        CASUALapplicationData.bannerText="CASUAL";
-        CASUALapplicationData.bannerPic="";
-        CASUALapplicationData.usePictureForBanner=false;
-        CASUALapplicationData.developerName="";
-        CASUALapplicationData.donateButtonName="";
-        CASUALapplicationData.useSound=false;
-        CASUALapplicationData.developerDonationLink="";
-        CASUALapplicationData.CASUALFileName="";
-        CASUALapplicationData.AlwaysEnableControls=true;
-        CASUALapplicationData.meta=null;
+        Caspac.useSound=false;
     }
     
     public static void setStatus(String status){
-        Statics.currentStatus=status;
+        new Log().level4Debug(status);
+        currentStatus=status;
+        if (GUIIsAvailable){
+            GUI.setInformationScrollBorderText(status);
+        }
     }
  
 }

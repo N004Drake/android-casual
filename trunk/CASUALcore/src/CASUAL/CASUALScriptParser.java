@@ -40,24 +40,6 @@ public class CASUALScriptParser {
     String ScriptName = "";
 
 
-    /**
-     *Executes a selected script as a resource reports to Log class.
-     * @param script script to execute
-     * @param multiThreaded run on separate thread if true main if false
-     */
-    public void loadResourceAndExecute(final String script, boolean multiThreaded) {
-        Statics.setStatus("Loading resources");
-        log.level4Debug("Selected resource" + script);
-        ScriptName = script;
-        CountLines CountLines = new CountLines();
-        LinesInScript = CountLines.countResourceLines(script);
-        log.level4Debug("Lines in Script " + LinesInScript);
-        ScriptTempFolder = Statics.TempFolder + script + Statics.Slash;
-
-
-        DataInputStream RAS = new DataInputStream(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".scr"));
-        executeSelectedScript(RAS, ScriptTempFolder, script, multiThreaded);
-    }
 
     /**
      * executes a CASUAL script from a file
@@ -65,29 +47,32 @@ public class CASUALScriptParser {
      * @param script script name
      * @param multiThreaded false executes on main thread
      */
-    public void loadFileAndExecute(String File, String script, boolean multiThreaded) {
+    public void loadFileAndExecute(Caspac caspac, boolean multiThreaded) {
         Statics.setStatus("Loading from file");
-        DataInputStream DIS = getDataStreamFromFile(File);
-        executeSelectedScript(DIS, ScriptTempFolder, script, multiThreaded);
+        executeSelectedScript(caspac, multiThreaded);
     }
 
     /**
      * executes a CASUAL script from a file Reports to Log
      * @param script path to file
      */
-    private DataInputStream getDataStreamFromFile(String script) {
-        log.level4Debug("Selected file" + script);
-
-        ScriptName = script;
-        ScriptTempFolder = Statics.TempFolder + new File(script).getName() + Statics.Slash;
-        LinesInScript = new CountLines().countFileLines(script + ".scr");
-        log.level4Debug("Lines in Script " + LinesInScript);
+    private DataInputStream getDataStreamFromFile(Caspac caspac) {
 
         try {
-            return new DataInputStream(new FileInputStream(script + ".scr"));
+            log.level4Debug("Selected file" + caspac.activeScript.name);
+
+            ScriptName = caspac.activeScript.name;
+            ScriptTempFolder = caspac.activeScript.tempDir;
+            LinesInScript = new CountLines().countISLines(caspac.activeScript.getScriptContents());
+            log.level4Debug("Lines in Script " + LinesInScript);
+            return new DataInputStream(caspac.activeScript.getScriptContents());
 
         } catch (FileNotFoundException ex) {
             log.errorHandler(ex);
+            return null;
+
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
 
@@ -107,28 +92,21 @@ public class CASUALScriptParser {
     /*
      * Script Handler contains all script commands and will execute commands
      */
-    DataInputStream DATAIN;
+    DataInputStream scriptInput;
 
-    private void executeSelectedScript(DataInputStream DIS, final String scriptFolder, final String script, boolean startThreaded) {
+    public void executeSelectedScript(final Caspac caspac, boolean startThreaded) {
         Statics.scriptRunLock = true;
         Statics.ReactionEvents = new ArrayList<>();
         Statics.ActionEvents = new ArrayList<>();
         ScriptContinue = true;
-        DATAIN = DIS;
-        log.level4Debug("Executing Scripted Datastream" + DIS.toString());
+        scriptInput = new DataInputStream(StringOperations.convertStringToStream(caspac.activeScript.scriptContents));
+        log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 //int updateStatus;
                 log.level4Debug("CASUAL has initiated a multithreaded execution environment");
-                String idStringFile;
                 String TestString = "";
-                try {
-                    idStringFile = StringOperations.removeLeadingSpaces(StringOperations.convertStreamToString(getClass().getResourceAsStream(Statics.ScriptLocation + script + ".meta")));
-                    TestString = StringOperations.removeLeadingSpaces(idStringFile);
-                } catch (NullPointerException ex) {
-                    log.level4Debug("NO METADATA FOUND\nNO METADATA FOUND\n");
-                }
                 if (checkForUpdates(TestString)) {
                     return;
                 }
@@ -136,39 +114,39 @@ public class CASUALScriptParser {
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBarMax(LinesInScript);
                 }
-                log.level4Debug("Reading datastream" + DATAIN);
-                new CASUALLanguage(script, scriptFolder).beginScriptingHandler(DATAIN);
+                log.level4Debug("Reading datastream" + scriptInput);
+                new CASUALLanguage(caspac.activeScript.name, caspac.activeScript.tempDir).beginScriptingHandler(scriptInput);
 
                 if (Statics.useGUI) {
-                    Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                    //return to normal.
+                    CASUALConnectionStatusMonitor.DeviceCheck.start();
                 } else {
-                    Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+                    //just in case something started the device monitor
+                    CASUALConnectionStatusMonitor.DeviceCheck.stop();
                 }
                 try {
-                    DATAIN.close();
+                    scriptInput.close();
                 } catch (IOException ex) {
                     Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 Statics.scriptRunLock = false;
-                Statics.currentStatus = "done";
+                Statics.setStatus("done");
                 log.level2Information("@scriptComplete");
 
             }
 
-            private void updateDataStream(String script) {
-                DATAIN = getDataStreamFromFile(script);
-            }
+
 
             private boolean checkForUpdates(String testString) {
                 Statics.setStatus("Checking for Updates");
                 int updateStatus;
-                if (testString != null && Statics.getScriptLocationOnDisk(script).equals("")) {
+                if (caspac.activeScript.extractionMethod!=0) {
                     try {
                         //String[] IDStrings = CASUALIDString.split("\n");
                         //This is where we hold the local information to be compared to the update
                         CASPACData localInformation = new CASPACData(testString);
 
-                        updateStatus = new CASUALUpdates().checkOfficialRepo(Statics.ScriptLocation + script, localInformation);
+                        updateStatus = new CASUALUpdates().checkOfficialRepo(caspac.activeScript.tempDir, localInformation);
                         /*
                          * checks for updates returns: 0=no updates found
                          * 1=random error 2=Script Update Required 3=CASUAL
@@ -185,8 +163,7 @@ public class CASUALScriptParser {
                             //script update performed
                             case 2:
                                 Statics.TargetScriptIsResource = false;
-                                Statics.setScriptLocationOnDisk(script, Statics.TempFolder + "SCRIPTS" + Statics.Slash + script);
-                                updateDataStream(Statics.getScriptLocationOnDisk(script));//switch input stream to file
+                                //TODO: switch input stream to file
                                 break;
                             //CASUAL must be update    
                             case 3:
@@ -217,7 +194,7 @@ public class CASUALScriptParser {
                         }
                     } catch (MalformedURLException ex) {
                         log.level0Error("@couldNotFindScript"); 
-                        log.level0Error(script);
+                        log.level0Error(caspac.activeScript.name);
                         log.level0Error("@reportThisError");
                         log.errorHandler(ex);
                     } catch (IOException ex) {
@@ -243,7 +220,7 @@ public class CASUALScriptParser {
         String scriptName= CASPAC.getScriptNames()[0];
         Script s=CASPAC.getScriptByName(scriptName);
         log.level2Information(s.discription);
-        int CASUALSVN=Integer.parseInt(CASUALapplicationData.CASUALSVNRevision);
+        int CASUALSVN=Integer.parseInt( java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
         int scriptSVN=Integer.parseInt(s.metaData.minSVNversion);
         if (CASUALSVN<scriptSVN){
            new Log().level0Error("@improperCASUALversion");

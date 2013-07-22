@@ -80,7 +80,7 @@ public class Pastebin {
                 }
                 String pasteData = new FileOperations().readFile(Statics.TempFolder + "log.txt");
 
-                String output = paste.makePaste(pasteData, "CASUAL r" + CASUALapplicationData.CASUALSVNRevision + "-" + xdaUsername, format);
+                String output = paste.makePaste(pasteData, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-" + xdaUsername, format);
                 if (output.substring(0, 4).equals("http")) {
                     new LinkLauncher(output).launch();
                     StringSelection stringSelection = new StringSelection(output);
@@ -136,7 +136,7 @@ public class Pastebin {
                     paste.setToken(lResult);
                 }
                 if(casualLog.equals("")) return;
-                paste.makePaste(casualLog, "CASUAL r" + CASUALapplicationData.CASUALSVNRevision + "-Anonymous", format);
+                paste.makePaste(casualLog, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-Anonymous", format);
             } catch (IOException ex) {
                 new Log().errorHandler(ex);
             }

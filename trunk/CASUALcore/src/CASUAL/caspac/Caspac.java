@@ -16,6 +16,7 @@
  */
 package CASUAL.caspac;
 
+import CASUAL.AudioHandler;
 import CASUAL.BooleanOperations;
 //Ugly, should not depend on CASUALApp or CASUALTools.
 import CASUAL.CASUALApp;
@@ -69,7 +70,7 @@ public final class Caspac {
     public BufferedImage logo;
     public final File CASPAC;
     public final CodeSource CASPACsrc;
-    public String overview;
+    public String overview="";
     public Build build;
     public ArrayList<Script> scripts = new ArrayList<>();
     public final String TempFolder;
@@ -78,7 +79,7 @@ public final class Caspac {
     private ArrayList<Thread> unzipThreads = new ArrayList<>();
     public static boolean useSound=true;
     //For CASUAL mode
-    Script activeScript;
+    public Script activeScript;
 
     
     /*
@@ -142,7 +143,7 @@ public final class Caspac {
                 while ((ZEntry = zip.getNextEntry()) != null) {
 
                     String entry = ZEntry.getName();
-                    handleCASUALFiles(entry, fileOps, ZEntry);
+                    handleCASUALFilesFromCASPAC(entry, fileOps, ZEntry);
                 }
             }
         } else {
@@ -160,17 +161,7 @@ public final class Caspac {
 
 
 
-    /**
-     * adds a Script
-     *
-     * @param script completed Script class
-     */
-    public void addScript(Script script) {
-        if (!(scripts.contains(script))) {
-            scripts.add(script);
-            log.level4Debug("Adding Script: " + script.name);
-        }
-    }
+
 
     /**
      * removes a script
@@ -234,17 +225,40 @@ public final class Caspac {
             String filename = unzip.getEntryName(entry);
             boolean isScript=!handleCASPACInformationFiles(filename, unzip, entry);
             if ((isScript && scriptName.isEmpty()) || (isScript && scriptName.equals(entry) )){ //ugly
-                handleScriptFiles(filename, unzip, entry);
+                handleCASPACScriptFiles(filename, unzip, entry);
+                this.activeScript=this.getScriptByFilename(filename);
             }
-            
-        }
-        log.level4Debug("Starting to unzip script zips");
-        
 
-        
+        }
         performUnzipOnQueue();
     }
     
+    public void loadSelectedScript(Script s) throws IOException{
+         log.level4Debug("\n\n\nStarting CASPAC unzip.");
+        String scriptName=s.name;
+
+        if (type==0){
+            Unzip unzip = new Unzip(CASPAC);
+            while (unzip.zipFileEntries.hasMoreElements()) {
+                Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
+                String filename = unzip.getEntryName(entry);
+                if (entry.toString().startsWith(scriptName)){
+                    handleCASPACScriptFiles(filename, unzip, entry);
+                }
+            }
+    
+        } else if (type==1){
+            unzipThreads=new ArrayList<>();
+            this.unzipThreads.add(new Thread(s.getExtractionRunnable()));
+            activeScript=s;
+            unzipThreads.get(0).start();
+        }
+        
+        
+        
+        
+    }
+
     
 
     /**
@@ -318,7 +332,7 @@ public final class Caspac {
         String filename = pack.getEntryName(entry);
         boolean isScript=!handleCASPACInformationFiles(filename, pack, entry);
         if (isScript){
-            handleScriptFiles(filename, pack, entry);
+            handleCASPACScriptFiles(filename, pack, entry);
         }
     }
 
@@ -334,7 +348,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder+fileName+Statics.Slash);
+        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder+fileName+Statics.Slash,this.type);
         //Add script 
         scripts.add(script);
         return scripts.get(scripts.indexOf(script));
@@ -353,7 +367,9 @@ public final class Caspac {
                 return s;
             }
         }
-        return new Script(scriptName,this.TempFolder+scriptName,this.type);
+        Script s=new Script(scriptName,this.TempFolder+scriptName+Statics.Slash,this.type);
+        this.scripts.add(s);
+        return this.scripts.get(scripts.size()-1);
     }
 
     
@@ -381,7 +397,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script s=new Script(name,this.TempFolder,this.type);
+        Script s=new Script(name,this.TempFolder+Statics.Slash+name+Statics.Slash,this.type);
         this.scripts.add(s);
         return this.scripts.get(scripts.size()-1);
     }
@@ -424,7 +440,7 @@ public final class Caspac {
         return isAControlFile;
     }
 
-    private void handleScriptFiles(String filename, Unzip pack, Object entry) throws IOException {
+    private void handleCASPACScriptFiles(String filename, Unzip pack, Object entry) throws IOException {
         boolean isScript=false;
         
         if (filename.toString().endsWith(".meta")) {
@@ -483,7 +499,7 @@ public final class Caspac {
 
 }
 
-    private void handleCASUALFiles(String entry, FileOperations fo, ZipEntry ZEntry) throws IOException {
+    private void handleCASUALFilesFromCASPAC(String entry, FileOperations fo, ZipEntry ZEntry) throws IOException {
         if (entry.equals("-Overview.txt")) {
             this.overview = fo.readTextFromResource(entry);
         } else if (entry.equals("-build.properties")) {
@@ -644,9 +660,11 @@ public final class Caspac {
      */
     private void loadPropsToVariables() {
         if (buildProp.containsKey("Audio.Enabled")) {
-            usePictureForBanner = buildProp.getProperty("Window.UsePictureForBanner", "").contains("rue");
+            audioEnabled = buildProp.getProperty("Audio.Enabled", "").contains("rue");
+            AudioHandler.useSound=audioEnabled;
         }
-        audioEnabled = buildProp.getProperty("Audio.Enabled", "").contains("rue");
+        usePictureForBanner = buildProp.getProperty("Window.UsePictureForBanner", "").contains("rue");
+        
         developerDonateButtonText = buildProp.getProperty("Developer.DonateToButtonText", "");
         developerName = buildProp.getProperty("Developer.Name", "");
         donateLink = buildProp.getProperty("Developer.DonateLink", "");
