@@ -17,28 +17,37 @@
  **************************************************************************/
 package Packager;
 
-//This project must be built first in order to satisfy the dependencies
-import CASUAL.Statics;
-import CASUAL.Log;
-import CASUAL.StringOperations;
 import CASUAL.FileOperations;
+import CASUAL.Log;
+import CASUAL.Statics;
+import CASUAL.StringOperations;
 import CASUAL.Unzip;
-import CASUAL.Zip;
-import static Packager.PackagerMain.userOutputDir;
+import CASUAL.caspac.Caspac;
+import static Packager.PackagerMain.hasProcessedFolder;
+import static Packager.PackagerMain.packagerMain;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+import javax.swing.ProgressMonitorInputStream;
+
+
 
 /**
  * *************************************************************************
  * PackagerMain
  *
  * @author Jeremy Loper jrloper@gmail.com
+ * @author Logan Ludington loglud@logatech.org
  * ************************************************************************
  */
 public class PackagerMain {
@@ -48,21 +57,22 @@ public class PackagerMain {
      */
     public PackagerMain() {
     }
-    private static boolean useOverrideArgs = false;
-    private static String[] overrideArgs = {"--fullauto" ,"..\\CASPAC\\", "--type" ,"nightly"};
+    public PackagerMain(Caspac cp) {
+        
+    }
+    //private static boolean useOverrideArgs = false;
+    //private static String[] overrideArgs = {"--fullauto" ,"..\\CASPAC\\", "--type" ,"nightly"};
     /**
      * output directory for package
      */
     protected static String userOutputDir = "";
     final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
     private static String caspacWithPath = "";
-    private static String caspacNoPath = "";
     private static Log log = new Log();
     static String appendToName = "";
     static String processFolder = "";
-    private static FileOperations fileOperations = new FileOperations();
     static boolean hasProcessedFolder=false;
-    ;
+    public static PackagerMain packagerMain;
     
     /**
      * Packages a CASPAC into a CASUAL.
@@ -84,29 +94,83 @@ public class PackagerMain {
      * cannot be used with --output or --CASPAC arguments. 
      * 
      */
-    public static void main(String[] args) {
-        if (useOverrideArgs) {
-            args = overrideArgs;
-        }
+    public static void main(final String[] args) {
         processCommandline(args);
-        if (args.length > 0 && args[0].length() != 0) {
-            if (doCASPACWork()) {
-                if (doCASUALWork()) {
-                    if (doCASPACCASUALMerge()) {
-                        doCleanUp();
-                    }
-                }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                packagerMain = new PackagerMain();
+                log.level2Information("[CASPACkager] Command line utility started");
+                if (hasProcessedFolder)
+                    packagerMain.processFolder();
+                else
+                    packagerMain.mergeCaspacCasual();
             }
-        }
+        });
+    }
+    
+    public void mergeCaspacCasual() {
+        mergeCaspacCasual(caspacWithPath, userOutputDir);
+    }
+    
+    public void mergeCaspacCasual(String caspacLoc) {
+        mergeCaspacCasual(caspacLoc, userOutputDir);
     }
 
-    /**
-     * *************************************************************************
-     * processCommandline
-     *
-     * @param args String array of arguments passed at runtime
-     * ************************************************************************
-     */
+    public void mergeCaspacCasual(String caspacLoc, String outputDir){
+        try {
+            File outputFile;
+            String outputFileName = caspacLoc.substring(caspacLoc.lastIndexOf(Statics.Slash), caspacLoc.lastIndexOf("."));
+            if (outputDir.equals(""))
+                outputFile = new File(defaultOutputDir + outputFileName + "-CASUAL-R" + CASUAL.CASPACData.getSVNRevision() + "b" + appendToName + ".jar" );
+            else
+                outputFile = new File(outputDir + outputFileName + "-CASUAL-R" + CASUAL.CASPACData.getSVNRevision() + "b" + appendToName + ".jar" );
+            if (!outputFile.exists())
+                outputFile.createNewFile();
+            byte[] buf = new byte[1024];
+            ZipInputStream zin = new ZipInputStream(new FileInputStream(this.getClass().getResource("/Packager/resources/CASUAL.jar").getFile()));
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile));
+            ZipEntry entry = zin.getNextEntry();
+            while (entry != null){
+                out.putNextEntry(entry);
+                int len;
+                while ((len = zin.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                entry = zin.getNextEntry();
+            }
+            zin.close();
+            if(caspacLoc.equals("")){
+                log.level0Error("The path for the CASPAC location is not set");
+            }
+            if(!new File(caspacLoc).exists()){
+                log.level0Error("The file "+ caspacLoc + " doesn't exist please make sure it is the right location.");
+                return;
+            }
+            zin = new ZipInputStream(new FileInputStream(new File(caspacLoc)));
+            entry = zin.getNextEntry();
+            while (entry != null){
+                String name = entry.getName();
+                out.putNextEntry(new ZipEntry("SCRIPTS"+Statics.Slash+name));
+                int len;
+                while ((len = zin.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                entry = zin.getNextEntry();
+            }
+            out.close();
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void mergeCaspacCasual(Caspac caspac, String outputDir) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     private static void processCommandline(String[] args) {
 
 
@@ -119,6 +183,9 @@ public class PackagerMain {
                 userOutputDir = StringOperations.removeLeadingAndTrailingSpaces(args[++i]);
             } else if (args[i].contains("--fullauto") || args[i].contains("-f")) {
                 processFolder = StringOperations.removeLeadingAndTrailingSpaces(args[++i]);
+            } else {
+                log.level0Error( args[i] + " is an unrecognized command.");
+                showMessageAndExit();
             }
         }
 
@@ -126,6 +193,31 @@ public class PackagerMain {
         //exit if nothing to process        
         if (caspacWithPath.equals("") && processFolder.equals("")) {
             log.level0Error("You failed to specify any processing items.");
+            showMessageAndExit();
+        }
+        
+        if (!caspacWithPath.equals("") && !processFolder.equals("")) {
+            log.level0Error("Please only specify either a folder to process or "
+                    + "a CASPAC to work.");
+            showMessageAndExit();
+        }
+        
+        if (!caspacWithPath.endsWith(".zip") && !caspacWithPath.equals("")) {
+            log.level0Error(caspacWithPath + " is not a valid CASPAC file.");
+            showMessageAndExit();
+        }    
+        
+        if (!processFolder.equals("") && userOutputDir.equals("")) {
+            log.level2Information("No output directory supplied will place " 
+                    + processFolder + "dist");
+            userOutputDir = processFolder + "dist" +Statics.Slash;
+            if (!(new File(userOutputDir).exists()))
+                new File(userOutputDir).mkdir();
+        }
+        
+        if (!new File(userOutputDir).isDirectory() && !userOutputDir.equals("")) {
+            log.level0Error(userOutputDir + " is a file not a directory. Please make sure to "
+                    + "specify a folder not a file. The file will be named for you.");
             showMessageAndExit();
         }
         
@@ -138,70 +230,75 @@ public class PackagerMain {
             // set output dir to the same as the file    
         } 
         
-         //if we are using processFolder   
-        if (!processFolder.equals("") && !hasProcessedFolder) {
-            hasProcessedFolder=true;
-            useOverrideArgs = false; //turn off override in case of IDE mode
-            if (!processFolder.endsWith(Statics.Slash)) {
-                processFolder = processFolder + Statics.Slash;
-            }
-            //list the files in the folder
-            String[] filesToProcess = fileOperations.listFolderFilesCannonically(processFolder);
-            
-            //parse each file and set up args
-            for (String file : filesToProcess) {
-                ArrayList argslist=new ArrayList();
-                
-                //set up append list
-                if (!appendToName.equals("")){
-                    argslist.add("--type");
-                    argslist.add(appendToName);
-                }
-                
-                //do checks to verify its a good file
-                if ((file != null) && (!new File(file).isDirectory()) && (!file.endsWith(Statics.Slash))) {
-                    argslist.add("--CASPAC");
-                    argslist.add(file);
-                    
-                    //execute the packager
-                    PackagerMain.main(StringOperations.convertArrayListToStringArray(argslist));
-                }
-            }
-            log.level2Information("done");
-            System.exit(0);
+        if (!processFolder.equals("")) {
+            hasProcessedFolder = true;
         }
-        if (userOutputDir.equals("")){
+        
+        if (hasProcessedFolder && !(new File(processFolder).isDirectory()))
+        {
+            log.level0Error(processFolder + " is not a valid processing directory.");
+            showMessageAndExit();
+        }
+        
+        if (appendToName.contains(Statics.Slash)) {
+            log.level0Error("Append to name contains illegal characters");
+            showMessageAndExit();
+        }
+
+    }
+    
+    public String[] getCaspacFileList() {
+        if (caspacWithPath.equals("")){
+            log.level0Error("Caspac file not set.");
+            return null;
+        }
+       String[] files =  getCaspacFileList(caspacWithPath);
+       return files;
+    }
+    
+    public String[] getCaspacFileList(String caspacLoc) {
+        ArrayList<String> fileList = new ArrayList<>();
+        if (!new File(caspacLoc).exists()){
+            log.level0Error("CASPAC requested not a valid file.");
+            return null;
+        }
+        if (!(caspacLoc.endsWith(".zip"))){
+            log.level0Error(caspacLoc + "is not a valid CASPAC file.");
+            return null;
+        }
+        try {
+            ZipInputStream zin = new ZipInputStream(new FileInputStream(new File(caspacLoc)));
+            ZipEntry entry = zin.getNextEntry();
+            while (entry != null) {
+                fileList.add(entry.getName());
+                entry = zin.getNextEntry();
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return fileList.toArray(new String[fileList.size()]);   
+    }
+    
+    public String[] getCaspacFileList(File caspac) {
+        if (!caspac.exists()){
+            log.level0Error("CASPAC requested not a valid file.");
+            return null;
+        }
+        if (!caspac.getName().endsWith("zip")){
             try {
-                userOutputDir = caspacWithPath;
-                userOutputDir = new File(userOutputDir).getCanonicalPath().toString();
-                userOutputDir = userOutputDir.substring(0, userOutputDir.lastIndexOf(Statics.Slash)) + Statics.Slash + "CASUAL" + Statics.Slash;
-                if (!fileOperations.verifyExists(userOutputDir)) {
-                    fileOperations.makeFolder(userOutputDir);
-                }
-                log.level2Information("Set output folder to default: " + userOutputDir);
+                log.level0Error(caspac.getCanonicalPath() + "is not a valid CASPAC file.");
             } catch (IOException ex) {
                 Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
             }
+            return null;
         }
-        //if we are using caspacWithPath
-        if (!caspacWithPath.equals("")) {
-            //verify it is a known extension and extract the name
-            if (caspacWithPath.endsWith(".zip") || caspacWithPath.endsWith(".CASPAC")) {
-                //log.level4Debug("[processCommandline()]File type is known based on extension");
-                caspacNoPath = caspacNoPath = new File(caspacWithPath).getName();
-                caspacNoPath = caspacNoPath.substring(0, caspacNoPath.lastIndexOf("."));
-            } else {
-                log.level0Error("[processCommandline()]File type is unknown based on extention");
-                showMessageAndExit();
-            }
-        }
-
-       
-
+        String [] fileList = getCaspacFileList(caspac.getAbsolutePath());
+        return fileList;  
     }
 
     private static void showMessageAndExit() {
-        letCASUALLog(true);
         log.level2Information(
                 "CASUAL's CASPAC deployment PACKAGER              ");
         log.level2Information(
@@ -230,150 +327,13 @@ public class PackagerMain {
                 "default nothing                                  ");
         System.exit(1);
     }
-
-    /**
-     * *************************************************************************
-     * doCASPACWork
-     *
-     * @return Success = True, Failure = False
-     * ************************************************************************
-     */
-    private static boolean doCASPACWork() {
-        if (!fileOperations.makeFolder(Statics.TempFolder + "CASPAC")) {
-            return false;
-        }
-        //log.level4Debug("[doCASUALWork()]Created folder " + Statics.TempFolder + "CASPAC");
-
-        try {
-            new Unzip(caspacWithPath).unzipFile(Statics.TempFolder + "CASPAC");
-        } catch (ZipException ex) {
-            letCASUALLog(true);
-            log.errorHandler(ex);
-            return false;
-        } catch (IOException ex) {
-            letCASUALLog(true);
-            log.errorHandler(ex);
-            return false;
-        }
-
-        log.level4Debug("[doCASPACWork()]CASPAC unzipped to " + Statics.TempFolder + "CASPAC");
-        return true;
-    }
-
-    /**
-     * *************************************************************************
-     * doCASUALWork
-     *
-     * @return Success = True, Failure = False
-     * ************************************************************************
-     */
-    private static boolean doCASUALWork() {
-        if (!fileOperations.makeFolder(Statics.TempFolder + "CASUAL")) {
-            return false;
-        }
-        //log.level4Debug("[doCASUALWork()]Created folder " + Statics.TempFolder + "CASUAL");
-        fileOperations.copyFromResourceToFile("/Packager/resources/CASUAL.jar", Statics.TempFolder + "CASUAL.zip");
-
-        try {
-            letCASUALLog(false);
-            new Unzip(Statics.TempFolder + "CASUAL.zip").unzipFile(Statics.TempFolder + "CASUAL" + Statics.Slash);
-            letCASUALLog(true);
-        } catch (FileNotFoundException ex) {
-            letCASUALLog(true);
-            log.errorHandler(ex);
-            return false;
-        } catch (IOException ex) {
-            letCASUALLog(true);
-            log.errorHandler(ex);
-            return false;
-        }
-
-
-
-        String folderToDelete = Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash;
-        //log.level4Debug("[doCASUALWork()]Unzipping CASUAL.jar from PACKAGER.jar's resources");
-        //log.level4Debug("[doCASUALWork()]Getting /SCRIPTS folder contents list");
-
-        if (fileOperations.deleteStringArrayOfFiles(fileOperations.listFolderFilesCannonically(folderToDelete))) {
-            fileOperations.makeFolder(Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash);
-            return true;
-        }
-
-        //log.level4Debug("[doCASUALWork()]Folder is empty");
-        //log.level4Debug("[doCASUALWork()]Operation Complete");
-        return false;
-    }
-
-    /**
-     * *************************************************************************
-     * doCASPACCASUALMerge merges the extracted CASPAC and extracted CASUAL.jar
-     * into a new caspac-CASUAL.jar
-     *
-     * @return Success = True, Failure = False
-     * ************************************************************************
-     */
-    private static boolean doCASPACCASUALMerge() {
-        String[] files = fileOperations.listFolderFiles(Statics.TempFolder + "CASPAC" + Statics.Slash);
-
-        if (files[0] == null) {
-            log.level0Error("[doCASPACCASUALMerge()]CASPAC contained no files.");
-            return false;
-        }
-
-        try {
-            letCASUALLog(false);
-            for (String file: files) {
-                fileOperations.moveFile(Statics.TempFolder + "CASPAC" + Statics.Slash + file, Statics.TempFolder + "CASUAL" + Statics.Slash + "SCRIPTS" + Statics.Slash + file);
-            }
-            letCASUALLog(true);
-            log.level4Debug("[doCASPACCASUALMerge()]File bases merged");
-            Zip zip = new Zip(new File(Statics.TempFolder + caspacNoPath + "-CASUAL.jar"));
-            zip.addFilesToExistingZip(new File(Statics.TempFolder + "CASUAL" + Statics.Slash).listFiles());
-            fileOperations.makeFolder(defaultOutputDir);
-            String output = caspacNoPath + "-CASUAL-R" + CASUAL.CASPACData.getSVNRevision() + "b" + appendToName + ".jar";
-
-            if (userOutputDir.equals("")) {
-                output = defaultOutputDir + output;
-                fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", defaultOutputDir);
-            } else {
-                output = userOutputDir + output;
-                fileOperations.moveFile(Statics.TempFolder + caspacNoPath + "-CASUAL.jar", output);
-            }
-            fileOperations.setExecutableBit(output);
-            log.Level1Interaction("CREATED NEW FILE");
-            log.Level1Interaction(output);
-
-        } catch (Exception ex) {
-            log.errorHandler(ex);
-            return false;
-        }
-        //log.level4Debug("[doCASPACCASUALMerge()] " + caspacNoPath + "-CASUAL.jar created");
-
-        return true;
-    }
-
-    /**
-     * *************************************************************************
-     * doCleanUp
-     * ************************************************************************
-     */
-    private static void doCleanUp() {
-        letCASUALLog(false);
-        fileOperations.recursiveDelete(Statics.TempFolder + "CASUAL");
-        fileOperations.recursiveDelete(Statics.TempFolder + "CASPAC");
-        letCASUALLog(true);
-    }
-    static PrintStream x=CASUAL.Log.out;
-    private static void letCASUALLog(boolean log){
-        if (log){
-            CASUAL.Log.out=x;
-        } else {
-            String x=Statics.TempFolder+"shutup";
-            try {
-                CASUAL.Log.out=new PrintStream(new File(x));
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
+    
+    public void processFolder() {
+        for (File f : new File(processFolder).listFiles()){
+            if (f.toString().contains(".zip")) {
+                packagerMain.mergeCaspacCasual(f.toString(), userOutputDir);
             }
         }
     }
+  
 }
