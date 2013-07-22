@@ -33,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,7 @@ import java.util.zip.ZipException;
  *
  * @author loganludington
  */
-public class Script {
+public class Script{
     /*
      * extractionMethod = 
      * 0 for CASPAC  (File, zipFile/zipFile)
@@ -55,7 +56,7 @@ public class Script {
     final public int extractionMethod;
     public Object scriptZipFile; //zipFile Entry, Resource or File on disk
     
-    public Unzip zipfile; //CASPAC, Resource, or Filesystem
+    public Unzip zipfile; //CASPAC only.
     final public String name;
     final public String tempDir;
     public String scriptContents = "";
@@ -73,7 +74,11 @@ public class Script {
         this.tempDir = tempDir;
         this.extractionMethod = 0;
     }
-
+    public Script(String name, String tempDir,int type) {
+        this.name = name;
+        this.tempDir = tempDir;
+        this.extractionMethod = type;
+    }
     public Script(String name, String script, String discription, List<File> includeFiles, String tempDir) {
         this.discription = discription;
         this.name = name;
@@ -172,9 +177,7 @@ public class Script {
                         }
                     }
                     File[] files =new File(tempDir).listFiles();
-                    for (File file :files){
-                        individualFiles.add(file);
-                    }
+                    individualFiles.addAll(Arrays.asList(files));
                 }
             };
             return r;
@@ -376,6 +379,10 @@ public class Script {
             killSwitchMessage = prop.getProperty("Script.KillSwitchMessage", "");
         }
 
+        public void load(Properties prop){
+            this.metaProp=prop;
+            setVariablesFromProperties(metaProp);
+        }
         void load(BufferedInputStream streamFileFromZip) {
             try {
                 this.metaProp.load(streamFileFromZip);
