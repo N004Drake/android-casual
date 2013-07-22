@@ -16,6 +16,7 @@
  */
 package CASUAL.caspac;
 
+import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.MD5sum;
@@ -26,6 +27,7 @@ import CASUAL.Zip;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -128,7 +130,10 @@ public class Script{
         return testingBool;
     }
 
-  
+    public DataInputStream getScriptContents(){
+        InputStream is=StringOperations.convertStringToStream(scriptContents);
+        return new DataInputStream(is);
+    }
 
     @Override
     public String toString() {
@@ -186,7 +191,18 @@ public class Script{
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    
+                    if (new CASUALTools().IDEMode){
+                        try {
+                            Unzip unzip=new Unzip(new File((String)scriptZipFile));
+                            unzip.unzipFile(tempDir);
+                        } catch (ZipException ex) {
+                            Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+                        }                        
+                    } else {
+                        
+                    }
                 }
             };
             return r;

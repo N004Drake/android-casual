@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
@@ -31,7 +32,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class AudioHandler {
-
+    public static boolean useSound=false;
 
     /**
      *playSound plays sounds
@@ -41,7 +42,7 @@ public class AudioHandler {
         Thread t = new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override
             public void run() {
-                if (CASUALapplicationData.useSound) {
+                if (useSound) {
                     AudioInputStream IS;
                     try {
                         byte[] buffer = new byte[4096];
@@ -59,14 +60,8 @@ public class AudioHandler {
                         line.close();
                         IS.close();
                         //Don't worry about autio exceptions.  Just turn off audio
-                    } catch (IllegalArgumentException ex) {
-                        CASUALapplicationData.useSound = false;
-                    } catch (UnsupportedAudioFileException ex) {
-                        CASUALapplicationData.useSound = false;
-                    } catch (IOException ex) {
-                        CASUALapplicationData.useSound = false;
-                    } catch (LineUnavailableException ex) {
-                        CASUALapplicationData.useSound = false;
+                    } catch (            IllegalArgumentException | UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                        useSound = false;
                     }
                 }
             }
@@ -83,7 +78,7 @@ public class AudioHandler {
         Thread t = new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override
             public void run() {
-                if (CASUALapplicationData.useSound) {
+                if (useSound) {
                     byte[] buffer = new byte[4096];
                     int URLEndPosition = URLs.length - 1;
                     int CurrentURL = 0;
@@ -108,14 +103,8 @@ public class AudioHandler {
                                 IS.close();
                             }
                             //Don't worry about autio exceptions.  Just turn off audio
-                        } catch (IllegalArgumentException ex) {
-                            CASUALapplicationData.useSound = false;
-                        } catch (UnsupportedAudioFileException ex) {
-                            CASUALapplicationData.useSound = false;
-                        } catch (IOException ex) {
-                            CASUALapplicationData.useSound = false;
-                        } catch (LineUnavailableException ex) {
-                            CASUALapplicationData.useSound = false;
+                        } catch (IllegalArgumentException | UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                            useSound = false;
                         }
                     }
                 }

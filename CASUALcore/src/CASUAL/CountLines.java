@@ -71,7 +71,7 @@ public class CountLines {
         return Lines;
     }
 
-    private int countISLines(InputStream IS) throws IOException {
+    public int countISLines(InputStream IS) throws IOException {
         int count = 0;
         try {
             byte[] c = new byte[1024];

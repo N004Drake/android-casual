@@ -155,7 +155,6 @@ public class CASPACHandler {
 
  
     private void startDumbTerminalGUI() {
-        CASUALapplicationData.scriptsHaveBeenRecognized = true;
         Statics.TargetScriptIsResource = false;
         Statics.dumbTerminalGUI = true;
         Statics.GUI = new CASUALJFrameMain();

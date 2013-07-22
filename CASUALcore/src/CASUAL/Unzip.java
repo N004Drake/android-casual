@@ -37,7 +37,7 @@ import java.util.zip.ZipInputStream;
 public class Unzip {
 
     static int BUFFER = 4096;
-    ZipFile zip;
+    final ZipFile zip;
     /**
      *
      */
@@ -80,7 +80,7 @@ public class Unzip {
             new Log().errorHandler(e);
         }
     }
-
+    
     /**
      * Unzips the current file, and then if any zip files are found within the
      * zip, they are then unziped as a recursive function.

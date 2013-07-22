@@ -373,9 +373,7 @@ public class CASUALLanguage {
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 
         } else if (line.startsWith("$USERNOTIFICATION")) {
-            if (CASUALapplicationData.useSound) {
-                AudioHandler.playSound("/CASUAL/resources/sounds/Notification.wav");
-            }
+            AudioHandler.playSound("/CASUAL/resources/sounds/Notification.wav");
             line = line.replace("$USERNOTIFICATION", "");
             new CASUALInteraction(line.replaceFirst(",",">>>")).showUserNotification();
             return "";
@@ -384,10 +382,8 @@ public class CASUALLanguage {
             //USE: $USERCANCELOPTION Message
             //USE: $USERCANCELOPTION Title, Message
         } else if (line.startsWith("$USERCANCELOPTION")) {
-            if (CASUALapplicationData.useSound) {
-                //CASUALAudioSystem CAS = new CASUALAudioSystem();
-                AudioHandler.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
-            }
+            //CASUALAudioSystem CAS = new CASUALAudioSystem();
+            AudioHandler.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             int n;
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
             n = new CASUALInteraction(line.replaceFirst(",",">>>")).showUserCancelOption();
@@ -404,9 +400,7 @@ public class CASUALLanguage {
 //$ACTIONREQUIRED Message            
 
         } else if (line.startsWith("$ACTIONREQUIRED")) {
-            if (CASUALapplicationData.useSound) {
-                AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
-            }
+            AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
             int n = new CASUALInteraction(line.replaceFirst(",",">>>")).showActionRequiredDialog();
             if (n == 0) {
@@ -534,9 +528,7 @@ public class CASUALLanguage {
             log.level2Information("@waitingForDownloadModeDevice");
             if (Statics.isLinux()) {
                 log.level2Information("@linuxPermissionsElevation");
-                if (CASUALapplicationData.useSound) {
-                    AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-                }
+                AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
              //TODO: make something like Shell.timeoutShellCommand but it must also test for values
              /*
               * Shell.timeOutCommand(String[] cmd, String[] values, int timeDelay)

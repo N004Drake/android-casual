@@ -16,56 +16,71 @@
  */
 package CASUAL;
 
+
+import CASUAL.caspac.Caspac;
+import java.io.IOException;
+import java.security.CodeSource;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.ZipException;
+
 /**
  *
  * @author adam
  */
 public final class CASUALMain {
-
     String[] args;
-    static Thread scriptPrep;
-
+    
     /**
      * startup is where CASUAL starts its normal routines for both 
      * @param cmd 
      */
     public void startup(String[] cmd) {
         args = cmd;
+        //Build Caspac
+        
+        CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
+        Thread startGUI = null;
+        if (Statics.useGUI = true) {
+            startGUI = new Thread(new CASUALTools().GUI);
+            startGUI.setName("CASUAL GUI");
+            Statics.setStatus("launching GUI");
+            startGUI.start();
+            CASUALConnectionStatusMonitor.DeviceCheck.start();
+        }
+        
         new FileOperations().makeFolder(Statics.TempFolder);
         Thread adb = new Thread(new CASUALTools().adbDeployment);
         adb.setName("ADB Deployment");
         adb.start(); //start ADB deployment
         Statics.lockGUIformPrep = true;
-        scriptPrep = new Thread(new CASUALTools().prepScripts);
-        scriptPrep.setName("Preparing Scripts");
-        scriptPrep.start(); //scan self for embedded scripts
-        Thread pData = new Thread(new CASUALTools().setCASUALPackageDataFromScriptsFolder);
-        pData.setName("Setting Up CASUAL Package");
-        pData.start(); // scan self and set package properties
-        Thread cSound = new Thread(new CASUALTools().casualSound);
-        cSound.setName("CASUAL Sound");
+        Thread prepCASPAC = new Thread(setupCASUALCASPAC);
+        prepCASPAC.setName("Preparing Scripts");
+        prepCASPAC.start(); //scan self for embedded scripts
         
         
         try {
-            pData.join(); //wait for properties
-            scriptPrep.join();
-            new CASUALTools().startZipPrepThreadOnZipFile(Statics.scriptNames[0]);
 
-            cSound.start();  //do startup sound
-
+            prepCASPAC.join();
+            Caspac CASPAC=Statics.CASPAC;
+            try {
+                CASPAC.loadSelectedScript(CASPAC.scripts.get(0));
+            } catch (ZipException ex) {
+                new Log().errorHandler(ex);
+            } catch (IOException ex) {
+                new Log().errorHandler(ex);
+            }
+            AudioHandler.playSound("/CASUAL/resources/sounds/CASUAL.wav");
             if (args.length != 0 && !Statics.useGUI) {
                 Statics.setStatus("waiting for ADB");
                 adb.join(); //wait for adb deployment
-                Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                CASUALConnectionStatusMonitor.DeviceCheck.start();
                 Statics.setStatus("Preparing scripts");
-                scriptPrep.join(); //wait for embedded scripts scan
-                Statics.setStatus("Warming Up");
+                prepCASPAC.join(); //wait for embedded scripts scan
                 doConsoleStartup();  //use command line args
             } else {
-                Statics.useGUI = true;
-                //CASUALTools().zipPrep is joined inside doGUIStartup();
-                doGUIStartup(); //bring up GUI and wait for user to click start
-                Statics.casualConnectionStatusMonitor.DeviceCheck.start();
+                if (startGUI!=null) startGUI.join();
+                    Statics.GUI.setCASPAC(CASPAC);
             }
         } catch (InterruptedException ex) {
             new Log().errorHandler(ex);
@@ -77,13 +92,13 @@ public final class CASUALMain {
             Statics.setStatus("parsing");
             if (args[i].contains("--execute") || args[i].contains("-e")) {
                 i++;
-                Statics.casualConnectionStatusMonitor.DeviceCheck.stop();
+                CASUALConnectionStatusMonitor.DeviceCheck.stop();
                 CASUALScriptParser csp = new CASUALScriptParser();
                 csp.executeOneShotCommand(args[i]);
                 Statics.setStatus("Complete");
                 new Log().level2Information("@scriptComplete");
             } else {
-                Statics.setStatus("Invalid commands");
+                Statics.setStatus("Invalid command");
                 new Log().level0Error("@unrecognizedCommand");
             }
 
@@ -97,4 +112,25 @@ public final class CASUALMain {
         Statics.setStatus("launching GUI");
         startGUI.start();
     }
+     /**
+     * Scans /SCRIPTS/ Folder to locate scripts.
+     */
+    public Runnable setupCASUALCASPAC = new Runnable() {
+        @Override
+        public void run() {
+            //Build a CASPAC from the SCRIPTS folder
+            CodeSource src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
+            Caspac cp;
+            try {
+                cp=new Caspac(src,Statics.TempFolder,1);
+                
+                //cp.load();
+                Statics.CASPAC=cp;
+            } catch (ZipException ex) {
+                Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    };
 }

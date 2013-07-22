@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import java.io.File;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
@@ -29,7 +30,11 @@ public class CASUALJFrameAboutBox extends javax.swing.JFrame {
      */
     public CASUALJFrameAboutBox() {
         initComponents();
-        this.jLabel4.setText("CASUAL Revision:" + CASUALapplicationData.CASUALSVNRevision + " Build:" + CASUALapplicationData.CASUALBuildNumber);
+        String CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
+        String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+        String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
+        
+        this.jLabel4.setText("CASUAL Revision:" + CASUALSVNRevision + " Build:" + CASUALBuildNumber);
     }
 
     /**
