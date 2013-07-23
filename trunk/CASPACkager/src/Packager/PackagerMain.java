@@ -17,12 +17,9 @@
  **************************************************************************/
 package Packager;
 
-import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.StringOperations;
-import CASUAL.Unzip;
-import CASUAL.caspac.Caspac;
 import static Packager.PackagerMain.hasProcessedFolder;
 import static Packager.PackagerMain.packagerMain;
 import java.io.File;
@@ -30,15 +27,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.swing.ProgressMonitorInputStream;
 
 
 
@@ -56,9 +50,6 @@ public class PackagerMain {
      * instantiates Packager
      */
     public PackagerMain() {
-    }
-    public PackagerMain(Caspac cp) {
-        
     }
     //private static boolean useOverrideArgs = false;
     //private static String[] overrideArgs = {"--fullauto" ,"..\\CASPAC\\", "--type" ,"nightly"};
@@ -167,9 +158,6 @@ public class PackagerMain {
         }
     }
     
-    public void mergeCaspacCasual(Caspac caspac, String outputDir) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     private static void processCommandline(String[] args) {
 
