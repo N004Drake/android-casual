@@ -141,9 +141,13 @@ public final class Caspac {
                 ZipEntry ZEntry;
                 log.level4Debug("Picking Jar File:" + jar.getFile());
                 while ((ZEntry = zip.getNextEntry()) != null) {
-
                     String entry = ZEntry.getName();
-                    handleCASUALFilesFromCASPAC(entry, fileOps, ZEntry);
+                    System.out.println(entry);
+                    if (entry.startsWith("SCRIPTS/")){ //part of CASPAC
+                        log.level4Debug("parsing "+entry);
+                        handleCASPACJarFiles(entry);
+                    }
+                    
                 }
             }
         } else {
@@ -499,26 +503,33 @@ public final class Caspac {
 
 }
 
-    private void handleCASUALFilesFromCASPAC(String entry, FileOperations fo, ZipEntry ZEntry) throws IOException {
-        if (entry.equals("-Overview.txt")) {
+    private void handleCASPACJarFiles(String entry) throws IOException {
+        FileOperations fo=new FileOperations();
+        
+        if (entry.equals("SCRIPTS/-Overview.txt")) {
+            entry="/"+entry;
+            System.out.println("Attempting to read resource:" +entry);
             this.overview = fo.readTextFromResource(entry);
-        } else if (entry.equals("-build.properties")) {
+            System.out.println("overview "+overview);
+        } else if (entry.equals("SCRIPTS/-build.properties")) {
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             setBuild(in);
-        } else if (entry.equals("-logo.png")) {
+        } else if (entry.equals("SCRIPTS/-logo.png")) {
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             logo = ImageIO.read(ImageIO.createImageInputStream(in));
             build.bannerPic = entry;
-        } else if (entry.endsWith(".txt")) {
+        } else if (entry.endsWith("SCRIPTS/.txt")) {
             InputStream in = getClass().getClassLoader()
-                    .getResourceAsStream(ZEntry.getName());
+                    .getResourceAsStream(entry);
             this.getScriptByFilename(entry).discription = fo.readTextFromResource(entry);
         } else if (entry.endsWith(".scr")) {
+            entry="/"+entry;
             this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource(entry);
         } else if (entry.endsWith(".meta")) {
-            InputStream in = getClass().getClassLoader()
+            System.out.println("loading meta "+entry);
+                        InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             Properties prop = new Properties();
             prop.load(in);
