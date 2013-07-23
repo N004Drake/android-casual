@@ -45,7 +45,7 @@ public class CipherHandlerTest {
         System.out.println("encrypt");
         String input="../../CASPAC/testpak.zip";
         String output = "../../CASPAC/testpak.enc.zip";
-        String key = "OMFGWTFBBQ";
+        String key = "hi";
         CipherHandler instance = new CipherHandler(new File(input));
         String result = instance.encrypt(output, key);
         System.out.println("Your key is:"+result+"\nDecrypting...");
