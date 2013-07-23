@@ -128,7 +128,7 @@ public class PackagerMain {
             if (!outputFile.exists())
                 outputFile.createNewFile();
             byte[] buf = new byte[1024];
-            ZipInputStream zin = new ZipInputStream(new FileInputStream(this.getClass().getResource("/Packager/resources/CASUAL.jar").getFile()));
+            ZipInputStream zin = new ZipInputStream(getClass().getResource("/Packager/resources/CASUAL.jar").openStream());
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile));
             ZipEntry entry = zin.getNextEntry();
             while (entry != null){
