@@ -42,19 +42,25 @@ public class CipherHandlerTest {
      */
     @Test
     public void testEncrypt() {
-        System.out.println("encrypt");
-        String input="../../CASPAC/testpak.zip";
-        String output = "../../CASPAC/testpak.enc.zip";
-        String key = "hi";
-        CipherHandler instance = new CipherHandler(new File(input));
-        String result = instance.encrypt(output, key);
-        System.out.println("Your key is:"+result+"\nDecrypting...");
-        CipherHandler instance2 = new CipherHandler(new File(output));
-        String result2=instance2.decrypt(input+".zip", result);
-        System.out.println(result2);
-        assertEquals("../../CASPAC/testpak.zip.zip",result2);
-        // TODO review the generated test code and remove the default call to fail.
-       //fail("The test case is a prototype.");
+        
+        for (int i=0; i<10; i++){
+            System.out.println("encrypt");
+            String input="../../CASPAC/testpak.zip";
+            String output = "../../CASPAC/testpak.enc.zip";
+            String key = "testatesttestatestatestatest";
+            MD5sum md5=new MD5sum();
+            File f=new File(input);
+            String originalMD5=md5.md5sum(f);
+            CipherHandler instance = new CipherHandler(f);
+            String result = instance.encrypt(output, key);
+            System.out.println("Your key is:"+result+"\nDecrypting...");
+            CipherHandler instance2 = new CipherHandler(new File(output));
+            String result2=instance2.decrypt(input+".zip", result);
+            System.out.println(result2);
+            String newMD5=md5.md5sum(new File(input+".zip"));
+            assertEquals(originalMD5,newMD5);
+        }
+        
     }
     
    
