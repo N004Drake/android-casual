@@ -168,11 +168,15 @@ public class CipherHandler {
      */
     public byte[] oneWayHash(String input) {
         try {
+            
             int maxSecurity=Cipher.getMaxAllowedKeyLength("AES");
-            if (maxSecurity>256) maxSecurity=256;
-            System.out.println("The maximum security provided is being used AES"+maxSecurity);
+            System.out.println("The maximum security allowed on this system is AES "+maxSecurity);
+            if (maxSecurity>128){
+                maxSecurity=128;
+            }
+            System.out.println("For the sake of compatibility with US Import/Export laws we are using AES "+maxSecurity);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            KeySpec keyspec = new PBEKeySpec("password".toCharArray(), "00000000".getBytes(), 10000, 256);
+            KeySpec keyspec = new PBEKeySpec("password".toCharArray(), "00000000".getBytes(), 10000, maxSecurity);
             Key key = factory.generateSecret(keyspec);
             return key.getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
