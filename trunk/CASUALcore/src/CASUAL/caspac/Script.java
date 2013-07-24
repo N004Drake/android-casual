@@ -191,17 +191,29 @@ public class Script{
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    if (new CASUALTools().IDEMode){
-                        try {
-                            Unzip unzip=new Unzip(new File((String)scriptZipFile));
-                            unzip.unzipFile(tempDir);
-                        } catch (ZipException ex) {
-                            Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IOException ex) {
-                            Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
-                        }                        
-                    } else {
-                        
+                    if (scriptZipFile!=null){
+                        if (new CASUALTools().IDEMode){
+                            try {
+                                Unzip unzip=new Unzip(new File((String)scriptZipFile));
+                                unzip.unzipFile(tempDir);
+                            } catch (ZipException ex) {
+                                Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IOException ex) {
+                                Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+                            }                        
+                        } else {
+                            try {
+                                new Log().level4Debug("unzip of "+scriptZipFile.toString()+" is beginning.");   
+                                Unzip.unZipResource("/"+scriptZipFile.toString(), tempDir);
+                            } catch (FileNotFoundException ex) {
+                                Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IOException ex) {
+                                Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            new Log().level4Debug("unzip of "+name+" is complete.");
+                        }
+                    } else { 
+                      new Log().level3Verbose("script Zipfile was null");
                     }
                 }
             };

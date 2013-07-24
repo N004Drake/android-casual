@@ -516,8 +516,8 @@ public final class Caspac {
                     .getResourceAsStream(entry);
             this.getScriptByFilename(entry).discription = fo.readTextFromResource(entry);
         } else if (entry.endsWith(".scr")) {
-            entry="/"+entry;
-            this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource(entry);
+            
+            this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource("/"+entry);
         } else if (entry.endsWith(".meta")) {
             System.out.println("loading meta "+entry);
                         InputStream in = getClass().getClassLoader()
@@ -526,6 +526,7 @@ public final class Caspac {
             prop.load(in);
             this.getScriptByFilename(entry).metaData.load(prop);
         }  else if (entry.endsWith(".zip")) {
+            log.level3Verbose("found zip at "+entry);
             this.getScriptByFilename(entry).scriptZipFile=entry;
         }
     }
