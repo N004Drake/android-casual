@@ -106,12 +106,6 @@ public final class CASUALMain {
         //   CASUALApp.shutdown(0);
     }
 
-    private void doGUIStartup() {
-        Thread startGUI = new Thread(new CASUALTools().GUI);
-        startGUI.setName("CASUAL GUI");
-        Statics.setStatus("launching GUI");
-        startGUI.start();
-    }
      /**
      * Scans /SCRIPTS/ Folder to locate scripts.
      */
