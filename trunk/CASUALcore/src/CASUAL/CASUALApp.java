@@ -85,7 +85,7 @@ public class CASUALApp {
      * @return true if shutdown is commanded;
      */
     private static boolean checkModeSwitchArgs(String args[]) {
-
+        String password=null;
         for (int i = 0; i < args.length; i++) {
 
             if (args[i].equals("--help") || args[i].equals("-v?")) {
@@ -116,9 +116,20 @@ public class CASUALApp {
                 CASUALApp.shutdown(0);
                 return true;
             }
-            if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
+            if (args[i].contains("--password")||args[i].contains("-p")){
                 i++;
-                new CASPACHandler().loadCASUALPack(args[i]);
+                password=args[i];
+            }
+            
+            if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
+                
+                
+                i++;
+                if (password!=null){
+                    new CASPACHandler().loadCASUALPack(args[i],password);    
+                } else {
+                    new CASPACHandler().loadCASUALPack(args[i]);
+                }
                 new Log().level2Information("CASPAC completed.");
                 CASUALApp.shutdown(0);
                 return true;

@@ -101,7 +101,7 @@ public final class Caspac {
      */
     public Caspac(File caspac, String tempDir, int type, String securityKey) throws IOException {
         CipherHandler ch=new CipherHandler(caspac);
-        ch.decrypt(tempDir+caspac.getName(), securityKey);
+        ch.decrypt(tempDir+caspac.getName(), securityKey.toCharArray());
         this.CASPAC = new File(tempDir+caspac);
         this.CASPACsrc=null;
         this.TempFolder = tempDir;
@@ -123,7 +123,11 @@ public final class Caspac {
         FileOperations fileOps = new FileOperations();
         int Count = 0;
         ArrayList<String> list = new ArrayList<>();
-        if (!new CASUALTools().IDEMode){
+        if (CASUALTools.IDEMode){
+            updateMD5s();
+            //Statics.scriptLocations = new String[]{""};
+            setupIDEModeScriptForCASUAL(CASUALApp.defaultPackage);
+        } else {
 
             try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
                 ZipEntry ZEntry;
@@ -135,19 +139,8 @@ public final class Caspac {
                         log.level4Debug("parsing "+entry);
                         handleCASPACJarFiles(entry);
                     }
-                    
                 }
             }
-        } else {
-            Thread update;
-            update = new Thread(CASUALTools.updateMD5s);
-            update.setName("Updating MD5s");
-            update.start(); //ugly  move this to somewhere else
-            log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
-            //Statics.scriptLocations = new String[]{""};
-            setupIDEModeScriptForCASUAL(CASUALApp.defaultPackage);
-            
-            
         }
     }
 
@@ -600,6 +593,14 @@ public final class Caspac {
 
 
         }
+    }
+
+    private void updateMD5s() {
+        Thread update;
+        update = new Thread(CASUALTools.updateMD5s);
+        update.setName("Updating MD5s");
+        update.start(); //ugly  move this to somewhere else
+        log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
     }
 
     /**

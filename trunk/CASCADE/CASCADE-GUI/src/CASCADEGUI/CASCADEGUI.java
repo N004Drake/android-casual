@@ -20,6 +20,8 @@
  */
 package CASCADEGUI;
 //Dependencies must be built or there will be errors.. Build the project first.
+import CASUAL.CipherHandler;
+import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.StringOperations;
@@ -46,6 +48,9 @@ import java.util.zip.ZipException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -69,6 +74,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private String slash = System.getProperty("file.separator");
     private Caspac cp;
     BufferedImage logo;
+
     /**
      * initializes window
      */
@@ -82,8 +88,6 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.caspacOutputFile.setDropTarget(caspacDropTarget);
         disableAll();
         scriptList.addListDataListener(new scriptListener());
-
-
     }
     DropTarget dropTargetForFileList = new DropTarget() {
         @Override
@@ -181,6 +185,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         makeCASPAC = new javax.swing.JButton();
         loadButton = new javax.swing.JButton();
         caspacOutputBrowseButton = new javax.swing.JButton();
+        useEncryption = new javax.swing.JCheckBox();
         CASPACkagerPanel = new javax.swing.JPanel();
         casualOutputFile = new javax.swing.JTextField();
         makeItCasualButton = new javax.swing.JButton();
@@ -297,6 +302,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
             }
         });
 
+        useEncryption.setText(bundle.getString("CASCADEGUI.useEncryption.text")); // NOI18N
+        useEncryption.setName("useEncryption"); // NOI18N
+
         javax.swing.GroupLayout outputFIleLayout = new javax.swing.GroupLayout(outputFIle);
         outputFIle.setLayout(outputFIleLayout);
         outputFIleLayout.setHorizontalGroup(
@@ -307,17 +315,20 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addComponent(caspacOutputFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(caspacOutputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(makeCASPAC, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(makeCASPAC, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(useEncryption))
         );
         outputFIleLayout.setVerticalGroup(
             outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(makeCASPAC)
-                .addComponent(caspacOutputBrowseButton))
+                .addComponent(useEncryption))
             .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(caspacOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(loadButton))
+            .addComponent(caspacOutputBrowseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         CASPACkagerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.CASPACkagerPanel.border.title"))); // NOI18N
@@ -370,11 +381,11 @@ public class CASCADEGUI extends javax.swing.JFrame {
         CASPACkagerPanelLayout.setHorizontalGroup(
             CASPACkagerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CASPACkagerPanelLayout.createSequentialGroup()
-                .addComponent(casualOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(casualOutputFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(casualOutputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(typeTextBox)
+                .addComponent(typeTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(typeCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -482,7 +493,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
         );
 
         scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
@@ -686,7 +697,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(addScriptButton)
@@ -720,7 +731,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 567, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -980,7 +991,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         bannerPicPanelLayout.setVerticalGroup(
             bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerPicPanelLayout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
+                .addContainerGap(24, Short.MAX_VALUE)
                 .addGroup(bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(bannerPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseLogo)))
@@ -1091,7 +1102,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1110,12 +1121,11 @@ public class CASCADEGUI extends javax.swing.JFrame {
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addComponent(workArea, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(workArea)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(outputFIle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(outputFIle, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(CASPACkagerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(CASPACkagerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1173,6 +1183,12 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 log.errorHandler(ex);
             }
             log.level2Information("CASPAC write successfull!!!");
+            if (useEncryption.isSelected()) {
+                File temp = new File(cp.CASPAC.getAbsolutePath() + ".tmp");
+                new FileOperations().copyFile(file, temp);
+                new CipherHandler(temp).encrypt(file.getAbsolutePath(), getPassword());
+            }
+
             enableCasual();
         } catch (IOException ex) {
             Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -1180,6 +1196,25 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_makeCASPACActionPerformed
+
+    private char[] getPassword() {
+        char[] password = new char[]{};
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Enter a password:");
+        JPasswordField pass = new JPasswordField(10);
+        panel.add(label);
+        panel.add(pass);
+        String[] options = new String[]{"OK", "Cancel"};
+        int option = JOptionPane.showOptionDialog(null, panel, "The title",
+                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                null, options, options[1]);
+        if (option == 0) // pressing OK button
+        {
+            password = pass.getPassword();
+            System.out.println("Your password is: " + new String(password));
+        }
+        return password;
+    }
 
     /*
      * Listener set up to listen for the + button to add script
@@ -1195,8 +1230,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
             return;
         }
         if (!(s.isEmpty())) {
-            
-            scriptList.addElement(new Script(s,Statics.TempFolder+s));
+
+            scriptList.addElement(new Script(s, Statics.TempFolder + s));
 
             //Set that script as current script
             this.scriptListJList.setSelectedIndex(scriptList.getSize() - 1);
@@ -1327,8 +1362,8 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     private void scriptWorkAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptWorkAreaCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents=(this.scriptWorkArea.getText());
+
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents = (this.scriptWorkArea.getText());
         }
         disableCasual();
     }//GEN-LAST:event_scriptWorkAreaCaretUpdate
@@ -1360,7 +1395,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             if (fc.getSelectedFile().toString().contains(".png")) {
                 this.bannerPic.setText(fc.getSelectedFile().toString());
                 try {
-                    logo=ImageIO.read(ImageIO.createImageInputStream(new FileInputStream (fc.getSelectedFile())));
+                    logo = ImageIO.read(ImageIO.createImageInputStream(new FileInputStream(fc.getSelectedFile())));
                     logoLabel.setIcon(new ImageIcon(logo));
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -1395,7 +1430,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             return;
         }
         try {
-            cp = new Caspac(file, Statics.TempFolder,0); 
+            cp = new Caspac(file, Statics.TempFolder, 0);
         } catch (IOException ex) {
             Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1416,7 +1451,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
             //Set that script as current script
         }
-        
+
         this.scriptListJList.setSelectedIndex(scriptList.getSize() - 1);
 
         //Rerender all of the Info to current script
@@ -1519,7 +1554,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
     private void scriptDescriptionJTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptDescriptionJTextCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription=this.scriptDescriptionJText.getText();
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription = this.scriptDescriptionJText.getText();
         }
         disableCasual();
     }//GEN-LAST:event_scriptDescriptionJTextCaretUpdate
@@ -1668,6 +1703,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private javax.swing.JLabel updateMessageTitleJLabel;
     private javax.swing.JRadioButton useBannerPic;
     private javax.swing.JRadioButton useBannerText;
+    private javax.swing.JCheckBox useEncryption;
     private javax.swing.JTextField windowText;
     private javax.swing.JPanel windowTitlePanel;
     private javax.swing.JTabbedPane workArea;
@@ -1720,13 +1756,13 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
     private Caspac buildCASPAC() throws IOException {
         log.level2Information("Creating CASPAC file");
-        Caspac casp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.TempFolder,0);
+        Caspac casp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.TempFolder, 0);
         log.level2Information("Setting CASPAC build");
         casp.setBuild(buildMaker());
-        casp.logo=logo;
+        casp.logo = logo;
         log.level2Information("Adding scripts from memory to CASPAC");
         for (int j = 0; j < scriptList.getSize(); j++) {
-            casp.addScript(scriptList.get(j));
+            casp.scripts.add(scriptList.get(j));
         }
         log.level2Information("Setting Overview");
         casp.overview = this.overviewWorkArea.getText();
@@ -1747,14 +1783,14 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
         this.scriptNameJLabel.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).name);
         if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents="#Enter CASUAL commands here";
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents = "#Enter CASUAL commands here";
         }
 
         this.scriptWorkArea.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents);
 
 
         if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription="Describe your script here";
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription = "Describe your script here";
         }
         this.scriptDescriptionJText.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription);
 
@@ -1908,13 +1944,13 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.donateText.setText(cp.build.developerDonateButtonText);
         this.windowText.setText(cp.build.windowTitle);
         this.buttonText.setText(cp.build.executeButtonText);
-        this.audioEnabled.setSelected(cp.build.AudioEnabled);
+        this.audioEnabled.setSelected(cp.build.audioEnabled);
         this.alwaysEnableControls.setSelected(cp.build.alwaysEnableControls);
         this.useBannerPic.setSelected(cp.build.usePictureForBanner);
         this.bannerPic.setText(cp.build.bannerPic);
         this.bannerText.setText(cp.build.bannerText);
         this.overviewWorkArea.setText(cp.overview);
-        this.logo=cp.logo;
+        this.logo = cp.logo;
     }
 
     /*

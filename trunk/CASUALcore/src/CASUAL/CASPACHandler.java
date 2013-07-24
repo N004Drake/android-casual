@@ -37,7 +37,11 @@ public class CASPACHandler {
     Caspac CASPAC;
     String meta = "";
     Thread adbLaunch = new Thread(new CASUALTools().launchADB);
-
+    String password;
+    public void loadCASUALPack(String pack, String password) {
+        this.password=password;
+        loadCASUALPack(pack);
+    }
     /**
      * Launches a CASPAC
      *
@@ -56,7 +60,11 @@ public class CASPACHandler {
         new Log().level3Verbose("-----CASPAC MODE-----\nCASPAC: " + zipFile.getAbsolutePath());
         try {
             //begin unziping and analyzing CASPAC
-            CASPAC = new Caspac(zipFile,Statics.TempFolder,0);
+            if (password==null){
+                CASPAC = new Caspac(zipFile,Statics.TempFolder,0);
+            } else {
+                CASPAC = new Caspac(zipFile,Statics.TempFolder,0,password);
+            }
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

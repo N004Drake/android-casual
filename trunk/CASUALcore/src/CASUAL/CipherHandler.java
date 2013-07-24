@@ -24,6 +24,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -67,16 +69,15 @@ public class CipherHandler {
      *
      * @param output string location of file output
      * @param key password
-     * @return modified version of password with random digits at the end, null
-     * if error
+     * @return true if encryption was sucessful
      */
-    public String encrypt(String output, String key) {
+    public boolean encrypt(String output, char[] key) {
         new Log().level2Information("Encrypting " + targetFile.getName());
 
         try {
             //key is infalated by 16 random characters A-Z,a-z,0-9
             //16 digits are used for ivSpec
-            byte[] randomness = randomCharGen(key, 16).getBytes();
+            byte[] randomness = secureRandomCharGen(key, 16).getBytes();
             new Log().level2Information("Key parsed.  Encrypting...");
             InputStream fis = new FileInputStream(targetFile);
             List<InputStream> streams = Arrays.asList(
@@ -84,12 +85,12 @@ public class CipherHandler {
                     fis);
             new Log().level2Information("obtaining key...");
             InputStream is = new SequenceInputStream(Collections.enumeration(streams));
-            doIt(is, randomness, output, key, Cipher.ENCRYPT_MODE);
-        } catch (NoSuchAlgorithmException | FileNotFoundException ex) {
-            Logger.getLogger(CipherHandler.class.getName()).log(Level.SEVERE, null, ex);
+            writeCipherFile(is, randomness, output, key, Cipher.ENCRYPT_MODE);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IOException ex) {
+            return false;
         }
         //key is returned.
-        return key;
+        return true;
     }
 
     /**
@@ -99,57 +100,37 @@ public class CipherHandler {
      * @param key password issued by encrytper
      * @return name of file written, null if error
      */
-    public String decrypt(String output, String key) {
+    public String decrypt(String output, char[] key) {
         new Log().level2Information("Decrytping " + targetFile.getName());
-        //filename is returned
-        new Log().level2Information("parsing key...");
-        new Log().level2Information("Key parsed.  Encrypting...");
-        FileInputStream fis = null;
-        byte[] IV = new byte[16];
         try {
-            fis = new FileInputStream(targetFile);
-            IV = new byte[16];
+            FileInputStream fis = new FileInputStream(targetFile);
+            byte[] IV = new byte[16];
             fis.read(IV);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(CipherHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(CipherHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return doIt(fis, IV, output, key, Cipher.DECRYPT_MODE);
-    }
-
-    private String doIt(InputStream fis, byte[] iv, String output, String key, int mode) {
-
-        Cipher c;
-        try {
-
-            SecretKeySpec skey = new SecretKeySpec(oneWayHash(key), "AES");
-            IvParameterSpec ivspec = new IvParameterSpec(iv);
-            c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            c.init(mode, skey, ivspec);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException ex) {
-            new Log().errorHandler(ex);
-            return null;
-        }
-        try {
-            CipherInputStream cis = new CipherInputStream(fis, c);
-            new FileOperations().writeStreamToFile(new BufferedInputStream(cis), output);
-            new Log().level2Information("Encryption operation complete.");
-
-            return output;
-
-        } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            return writeCipherFile(fis, IV, output, key, Cipher.DECRYPT_MODE);
+        } catch (IOException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchAlgorithmException ex) {
             return null;
         }
     }
 
-    private String randomCharGen(String key, int numberOfChars) throws NoSuchAlgorithmException {
+    private String writeCipherFile(InputStream fis, byte[] iv, String output, char[] key, int mode) throws NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, FileNotFoundException, IOException {
+        byte[]bkey=oneWayHash(key);
+        char[] newKey=new char[bkey.length];
+        for(int i=0;i < bkey.length;i++){
+            newKey[i]=(char)bkey[i];
+        }
+
+        Cipher c = getCipher(newKey, iv, mode);
+        CipherInputStream cis = new CipherInputStream(fis, c);
+        new FileOperations().writeStreamToFile(new BufferedInputStream(cis), output);
+        new Log().level2Information("Encryption operation complete.");
+        return output;
+    }
+
+    private String secureRandomCharGen(char[] key, int numberOfChars) throws NoSuchAlgorithmException {
         String alphabet = "!@#$%^&*()_+,./:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         int len = alphabet.length();
-        System.out.println("Generating randomness");
-        SecureRandom random = new SecureRandom(SecureRandom.getSeed(key.length()));
+        log.level4Debug("Generating randomness");
+        SecureRandom random = new SecureRandom(SecureRandom.getSeed(key.length));
         byte bytes[] = new byte[numberOfChars];
         random.nextBytes(bytes);
         String retval = "";
@@ -166,7 +147,7 @@ public class CipherHandler {
      * @param input your password
      * @return PBKDF2 with HMAC SHA1 password
      */
-    public byte[] oneWayHash(String input) {
+    public byte[] oneWayHash(char[] input) {
         try {
             
             int maxSecurity=Cipher.getMaxAllowedKeyLength("AES");
@@ -176,12 +157,20 @@ public class CipherHandler {
             }
             log.level4Debug("For the sake of compatibility with US Import/Export laws we are using AES "+maxSecurity);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            KeySpec keyspec = new PBEKeySpec("password".toCharArray(), "--salt--".getBytes(), 100000, maxSecurity);
+            KeySpec keyspec = new PBEKeySpec(input, "--salt--".getBytes(), 100000, maxSecurity);
             Key key = factory.generateSecret(keyspec);
             return key.getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
             Logger.getLogger(CipherHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public Cipher getCipher(char[] key, byte[] iv, int mode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException {
+        SecretKeySpec skey = new SecretKeySpec( oneWayHash(key), "AES");
+        IvParameterSpec ivspec = new IvParameterSpec(iv);
+        Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        c.init(mode, skey, ivspec);
+        return c;
     }
 }
