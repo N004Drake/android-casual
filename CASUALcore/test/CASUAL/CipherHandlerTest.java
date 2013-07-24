@@ -5,6 +5,16 @@
 package CASUAL;
 
 import java.io.File;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.xml.bind.DatatypeConverter;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,20 +52,21 @@ public class CipherHandlerTest {
      */
     @Test
     public void testEncrypt() {
-        
+        String input="../../CASPAC/testpak.zip";
+        String output = "../../CASPAC/testpak.enc.zip";
+        File f=new File(input);
+        CipherHandler instance = new CipherHandler(f);
         for (int i=0; i<10; i++){
             System.out.println("encrypt");
-            String input="../../CASPAC/testpak.zip";
-            String output = "../../CASPAC/testpak.enc.zip";
-            String key = "testatesttestatestatestatest";
+            String key = "testatesttestatestatestatest"+i;
             MD5sum md5=new MD5sum();
-            File f=new File(input);
             String originalMD5=md5.md5sum(f);
-            CipherHandler instance = new CipherHandler(f);
-            String result = instance.encrypt(output, key);
-            System.out.println("Your key is:"+result+"\nDecrypting...");
-            CipherHandler instance2 = new CipherHandler(new File(output));
-            String result2=instance2.decrypt(input+".zip", result);
+            boolean result = instance.encrypt(output, key.toCharArray());
+            System.out.println("encryption passed:"+result);
+            File encFile=new File(output);
+            CipherHandler instance2 = new CipherHandler(encFile);
+            System.out.println(md5.getLinuxMD5Sum(encFile));
+            String result2=instance2.decrypt(input+".zip", key.toCharArray());
             System.out.println(result2);
             String newMD5=md5.md5sum(new File(input+".zip"));
             assertEquals(originalMD5,newMD5);
