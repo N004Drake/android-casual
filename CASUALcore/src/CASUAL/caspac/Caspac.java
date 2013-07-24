@@ -21,6 +21,7 @@ import CASUAL.BooleanOperations;
 //Ugly, should not depend on CASUALApp or CASUALTools.
 import CASUAL.CASUALApp;
 import CASUAL.CASUALTools;
+import CASUAL.CipherHandler;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
@@ -80,7 +81,7 @@ public final class Caspac {
     public static boolean useSound=true;
     //For CASUAL mode
     public Script activeScript;
-
+    public boolean caspacShouldBeDeletedAfterExtraction=false;
     
     /*
      * Constructor for Caspac
@@ -91,37 +92,24 @@ public final class Caspac {
         this.CASPACsrc=null;
         this.TempFolder = tempDir;
         this.type = type;
-        //if the CASPAC exists lets try to grab the non-script files 
-        if (fo.verifyExists(CASPAC.getAbsolutePath()) && CASPAC.canRead()) {
-            try {
-                Unzip unzip = new Unzip(CASPAC);
-                Enumeration cpEnumeration = unzip.zipFileEntries;
-                if (cpEnumeration.hasMoreElements()) {
-                    while (cpEnumeration.hasMoreElements()) {
-                        Object o = cpEnumeration.nextElement();
-                        if (unzip.getEntryName(o).contains("-Overview.txt")) {
-                            this.overview = fo.readTextFromStream(unzip.streamFileFromZip(o));
-                        }
-                        if (unzip.getEntryName(o).contains("-build.properties")) {
-                            this.build = new Build(unzip.streamFileFromZip(o));
-                        }
-                        if (unzip.getEntryName(o).contains("-logo.png")) {
-                            extractCASPACBanner(unzip, o, overview);
-                        }
-                    }
-                }
-
-            } catch (ZipException ex) {
-            }
-
-
-
-        }
-
-
-
+        loadCASPACcontrolFilesFromCASPAC();
     }
-
+    
+    /*
+     * secure constructor for Caspac 
+     * always call waitForUnzipComplete in order to delete file and maintain security
+     */
+    public Caspac(File caspac, String tempDir, int type, String securityKey) throws IOException {
+        CipherHandler ch=new CipherHandler(caspac);
+        ch.decrypt(tempDir+caspac.getName(), securityKey);
+        this.CASPAC = new File(tempDir+caspac);
+        this.CASPACsrc=null;
+        this.TempFolder = tempDir;
+        this.type = type;
+        caspacShouldBeDeletedAfterExtraction=true;
+        loadCASPACcontrolFilesFromCASPAC();
+    }
+    
     /*
      * Constructor for CASUAL
      */
@@ -319,6 +307,9 @@ public final class Caspac {
                     isUnzipping[i]=false;
                 }
             }
+        }
+        if (this.caspacShouldBeDeletedAfterExtraction){
+            this.CASPAC.delete();
         }
         log.level4Debug("Unzipping complete.");
     }
@@ -579,6 +570,35 @@ public final class Caspac {
             //no meta, its not requried
         }
         getScriptByName(defaultPackage).scriptZipFile=(scriptPath+".zip");
+    }
+
+    private void loadCASPACcontrolFilesFromCASPAC() throws IOException {
+        //if the CASPAC exists lets try to grab the non-script files 
+        if (fo.verifyExists(CASPAC.getAbsolutePath()) && CASPAC.canRead()) {
+            try {
+                Unzip unzip = new Unzip(CASPAC);
+                Enumeration cpEnumeration = unzip.zipFileEntries;
+                if (cpEnumeration.hasMoreElements()) {
+                    while (cpEnumeration.hasMoreElements()) {
+                        Object o = cpEnumeration.nextElement();
+                        if (unzip.getEntryName(o).contains("-Overview.txt")) {
+                            this.overview = fo.readTextFromStream(unzip.streamFileFromZip(o));
+                        }
+                        if (unzip.getEntryName(o).contains("-build.properties")) {
+                            this.build = new Build(unzip.streamFileFromZip(o));
+                        }
+                        if (unzip.getEntryName(o).contains("-logo.png")) {
+                            extractCASPACBanner(unzip, o, overview);
+                        }
+                    }
+                }
+
+            } catch (ZipException ex) {
+            }
+
+
+
+        }
     }
 
     /**

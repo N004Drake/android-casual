@@ -57,8 +57,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class CipherHandler {
 
     final File targetFile;
-
-    CipherHandler(File targetFile) {
+    Log log = new Log();
+    public CipherHandler(File targetFile) {
         this.targetFile = targetFile;
     }
 
@@ -170,13 +170,13 @@ public class CipherHandler {
         try {
             
             int maxSecurity=Cipher.getMaxAllowedKeyLength("AES");
-            System.out.println("The maximum security allowed on this system is AES "+maxSecurity);
+            log.level4Debug("The maximum security allowed on this system is AES "+maxSecurity);
             if (maxSecurity>128){
                 maxSecurity=128;
             }
-            System.out.println("For the sake of compatibility with US Import/Export laws we are using AES "+maxSecurity);
+            log.level4Debug("For the sake of compatibility with US Import/Export laws we are using AES "+maxSecurity);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            KeySpec keyspec = new PBEKeySpec("password".toCharArray(), "00000000".getBytes(), 10000, maxSecurity);
+            KeySpec keyspec = new PBEKeySpec("password".toCharArray(), "--salt--".getBytes(), 100000, maxSecurity);
             Key key = factory.generateSecret(keyspec);
             return key.getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
