@@ -443,7 +443,7 @@ public final class Caspac {
     }
 
     private void handleCASPACScriptFiles(String filename, Unzip pack, Object entry) throws IOException {
-        boolean isScript=false;
+
         
         if (filename.toString().endsWith(".meta")) {
 
@@ -468,7 +468,7 @@ public final class Caspac {
             scripts.set(i, script);
         } else if (filename.toString().endsWith(".scr")) {
             Script script = getScriptInstanceByFilename(filename.toString());
-            script.discription= fo.readTextFromStream(pack.streamFileFromZip(entry));
+            script.scriptContents= fo.readTextFromStream(pack.streamFileFromZip(entry));
             log.level4Debug("Added Script for " + script.name + ".");
            
         } else if (filename.toString().endsWith(".zip")) {
