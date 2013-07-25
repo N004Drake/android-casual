@@ -357,7 +357,7 @@ public final class Caspac {
      */
     public Script getScriptByFilename(String fileName) {
         
-        String scriptName=fileName.substring(0, fileName.lastIndexOf("."));
+       try{ String scriptName=fileName.substring(0, fileName.lastIndexOf("."));
         for (Script s : scripts) {
             if (s.name.equals(scriptName)) {
                 return s;
@@ -366,6 +366,9 @@ public final class Caspac {
         Script s=new Script(scriptName,this.TempFolder+scriptName+Statics.Slash,this.type);
         this.scripts.add(s);
         return this.scripts.get(scripts.size()-1);
+       } catch (ArrayIndexOutOfBoundsException ex){
+           return null;
+       }
     }
 
     
