@@ -60,12 +60,21 @@ public class CipherHandler {
 
     final File targetFile;
     Log log = new Log();
+
+    /*these variables are used for generating a header 
+     *"EncryptedCASPAC-CASUAL-Revision3999" where
+     * 3 represents then number of digits in the revision
+     */
+    final static private String revision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+    final static private String casualID = "EncryptedCASPAC-CASUAL-Revision";
+    private static String header = casualID + revision.length() + revision;
+
     public CipherHandler(File targetFile) {
         this.targetFile = targetFile;
     }
 
     /**
-     * encrypts a file to the output file
+     * encrypts a file to the output file. Appends CASPAC Header
      *
      * @param output string location of file output
      * @param key password
@@ -77,7 +86,7 @@ public class CipherHandler {
         try {
             //key is infalated by 16 random characters A-Z,a-z,0-9
             //16 digits are used for ivSpec
-            byte[] randomness = secureRandomCharGen(key, 16).getBytes();
+            byte[] randomness = secureRandomCharGen(key, 16);
             new Log().level2Information("Key parsed.  Encrypting...");
             InputStream fis = new FileInputStream(targetFile);
             List<InputStream> streams = Arrays.asList(
@@ -100,10 +109,15 @@ public class CipherHandler {
      * @param key password issued by encrytper
      * @return name of file written, null if error
      */
-    public String decrypt(String output, char[] key) {
-        new Log().level2Information("Decrytping " + targetFile.getName());
+    public String decrypt(String output, char[] key) throws Exception {
         try {
             FileInputStream fis = new FileInputStream(targetFile);
+            int headersize = getCASPACHeaderLength(targetFile);
+            if (headersize < 10) {
+                throw new Exception("Invalid CASPAC Format");
+            }
+
+            fis.read(new byte[headersize]);
             byte[] IV = new byte[16];
             fis.read(IV);
             return writeCipherFile(fis, IV, output, key, Cipher.DECRYPT_MODE);
@@ -112,33 +126,46 @@ public class CipherHandler {
         }
     }
 
-    private String writeCipherFile(InputStream fis, byte[] iv, String output, char[] key, int mode) throws NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, FileNotFoundException, IOException {
-        byte[]bkey=oneWayHash(key);
-        char[] newKey=new char[bkey.length];
-        for(int i=0;i < bkey.length;i++){
-            newKey[i]=(char)bkey[i];
-        }
+    private InputStream appendStream(InputStream appendToFront, InputStream is) {
+        List<InputStream> streams = Arrays.asList(
+                appendToFront, is);
+        InputStream newis = new SequenceInputStream(Collections.enumeration(streams));
+        return newis;
+    }
 
+    private String writeCipherFile(InputStream fis, byte[] iv, String output, char[] key, int mode) throws NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, FileNotFoundException, IOException {
+        byte[] bkey = oneWayHash(key);
+        char[] newKey = new char[bkey.length];
+        for (int i = 0; i < bkey.length; i++) {
+            newKey[i] = (char) bkey[i];
+        }
         Cipher c = getCipher(newKey, iv, mode);
         CipherInputStream cis = new CipherInputStream(fis, c);
-        new FileOperations().writeStreamToFile(new BufferedInputStream(cis), output);
-        new Log().level2Information("Encryption operation complete.");
+
+        if (mode == Cipher.ENCRYPT_MODE) {
+            InputStream headerbytes = new ByteArrayInputStream(header.getBytes());
+            InputStream doOutput = appendStream(headerbytes, (InputStream) cis);
+            new FileOperations().writeStreamToFile(new BufferedInputStream(doOutput), output);
+        } else {
+            new FileOperations().writeStreamToFile(new BufferedInputStream(cis), output);
+        }
         return output;
     }
 
-    private String secureRandomCharGen(char[] key, int numberOfChars) throws NoSuchAlgorithmException {
+    private byte[] secureRandomCharGen(char[] key, int numberOfChars) throws NoSuchAlgorithmException {
         String alphabet = "!@#$%^&*()_+,./:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         int len = alphabet.length();
         log.level4Debug("Generating randomness");
         SecureRandom random = new SecureRandom(SecureRandom.getSeed(key.length));
         byte bytes[] = new byte[numberOfChars];
-        random.nextBytes(bytes);
+        random.nextBytes(bytes);  //burn some bits
         String retval = "";
-        for (int i = 0; i < numberOfChars; i++) {
+        for (int i = 0; i < numberOfChars - 1; i++) {
+            bytes[i] = (byte) alphabet.charAt(random.nextInt(len));
             retval = retval + alphabet.charAt(random.nextInt(len));
-            random = new SecureRandom();
+
         }
-        return retval;
+        return bytes;
     }
 
     /**
@@ -149,13 +176,13 @@ public class CipherHandler {
      */
     public byte[] oneWayHash(char[] input) {
         try {
-            
-            int maxSecurity=Cipher.getMaxAllowedKeyLength("AES");
-            log.level4Debug("The maximum security allowed on this system is AES "+maxSecurity);
-            if (maxSecurity>128){
-                maxSecurity=128;
+
+            int maxSecurity = Cipher.getMaxAllowedKeyLength("AES");
+            log.level4Debug("The maximum security allowed on this system is AES " + maxSecurity);
+            if (maxSecurity > 128) {
+                maxSecurity = 128;
             }
-            log.level4Debug("For the sake of compatibility with US Import/Export laws we are using AES "+maxSecurity);
+            log.level4Debug("For the sake of compatibility with US Import/Export laws we are using AES " + maxSecurity);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             KeySpec keyspec = new PBEKeySpec(input, "--salt--".getBytes(), 100000, maxSecurity);
             Key key = factory.generateSecret(keyspec);
@@ -167,10 +194,33 @@ public class CipherHandler {
     }
 
     public Cipher getCipher(char[] key, byte[] iv, int mode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException {
-        SecretKeySpec skey = new SecretKeySpec( oneWayHash(key), "AES");
+        SecretKeySpec skey = new SecretKeySpec(oneWayHash(key), "AES");
         IvParameterSpec ivspec = new IvParameterSpec(iv);
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(mode, skey, ivspec);
         return c;
+    }
+
+    /**
+     * will return the length of the CASPAC Header
+     *
+     * @param f
+     * @return 0 if failed, will be between >18 if valid.
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static int getCASPACHeaderLength(File f) throws FileNotFoundException, IOException {
+        CipherHandler c = new CipherHandler(f);
+        FileInputStream fis = new FileInputStream(f);
+        byte[] chartest = new byte[casualID.length()];
+        byte[] headert = casualID.getBytes();
+        fis.read(chartest);
+        //read length of revision
+        if (Arrays.equals(chartest, headert)) {
+            char charRevisionLength = (char) fis.read();
+            int revisionLength = Integer.parseInt(String.valueOf(charRevisionLength));
+            return chartest.length + 1 + revisionLength;
+        }
+        return 0;
     }
 }

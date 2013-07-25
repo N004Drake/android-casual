@@ -59,6 +59,13 @@ import javax.imageio.ImageIO;
  * @author adam
  */
 public final class Caspac {
+/*TODO: update this.build.bannerPic=tempbannerpic;
+ * at the end of every load operation involving loading
+ * build.properties files.  This is important because
+ * the logo.png location is stored on the filesystem,
+ * not in the caspac.  Once caspac is loaded, if build.properties 
+ * is loaded last, it will be an invalid file reference.
+ */
 
     
     /* Loads a CASPAC
@@ -99,15 +106,16 @@ public final class Caspac {
      * secure constructor for Caspac 
      * always call waitForUnzipComplete in order to delete file and maintain security
      */
-    public Caspac(File caspac, String tempDir, int type, String securityKey) throws IOException {
+    public Caspac(File caspac, String tempDir, int type, char[] securityKey) throws IOException, Exception {
         CipherHandler ch=new CipherHandler(caspac);
-        ch.decrypt(tempDir+caspac.getName(), securityKey.toCharArray());
-        this.CASPAC = new File(tempDir+caspac);
+        ch.decrypt(tempDir+caspac.getName(), securityKey);
+        this.CASPAC = new File(tempDir+caspac.getName());
         this.CASPACsrc=null;
         this.TempFolder = tempDir;
         this.type = type;
         caspacShouldBeDeletedAfterExtraction=true;
         loadCASPACcontrolFilesFromCASPAC();
+        this.build.bannerPic=tempbannerpic;
     }
     
     /*
@@ -408,10 +416,15 @@ public final class Caspac {
         log.level4Debug("Found logo adding information to "
                 + "CASPAC");
         logo=ImageIO.read(ImageIO.createImageInputStream(pack.streamFileFromZip(entry)));
-        build.bannerPic = filename;
+        if (filename.isEmpty())filename=this.TempFolder+"-logo.png";
+        if (build!=null){
+            build.bannerPic = filename;
+        } else {
+            tempbannerpic=filename;
+        }
         
     }
-
+    private String tempbannerpic;
 
     private boolean handleCASPACInformationFiles(String filename, Unzip pack, Object entry) throws IOException {
         boolean isAControlFile=false;
@@ -419,6 +432,7 @@ public final class Caspac {
             setBuildPropInformation(pack, entry);
             isAControlFile=true;
         } else if (filename.endsWith(".png")) {
+            if (filename.equals("")) filename=this.TempFolder+"-logo.png";
             extractCASPACBanner(pack, entry, filename);
             isAControlFile=true;
         } else if (filename.toString().equals("-Overview.txt")) {
