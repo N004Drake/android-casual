@@ -37,8 +37,8 @@ public class CASPACHandler {
     Caspac CASPAC;
     String meta = "";
     Thread adbLaunch = new Thread(new CASUALTools().launchADB);
-    String password;
-    public void loadCASUALPack(String pack, String password) {
+    char[] password;
+    public void loadCASUALPack(String pack, char[] password) {
         this.password=password;
         loadCASUALPack(pack);
     }
@@ -66,6 +66,8 @@ public class CASPACHandler {
                 CASPAC = new Caspac(zipFile,Statics.TempFolder,0,password);
             }
         } catch (IOException ex) {
+            Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         

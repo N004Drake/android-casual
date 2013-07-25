@@ -1411,27 +1411,35 @@ public class CASCADEGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_browseLogoActionPerformed
 
     private void loadCaspacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCaspacActionPerformed
-
+        
         File file = new File(this.caspacOutputFile.getText());
+        
+        String filename=file.getAbsolutePath();
         if (!file.toString().endsWith(".zip")) {
             JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
+                    + filename + "\n is not a valid zip file.\n"
                     + "Please make sure that the file ends in a .zip", "File read error",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input zip file not valid: \n \t" + this.caspacOutputFile.getText());
+            log.level0Error("Input zip file not valid: \n \t" + filename);
             return;
         }
         if (!file.exists()) {
             JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
+                    + filename + "\n is not a valid zip file.\n"
                     + "Ensure the file exists", "File Not Found",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Could not find file at: \n \t" + this.caspacOutputFile.getText());
+            log.level0Error("Could not find file at: \n \t" + filename);
             return;
         }
         try {
-            cp = new Caspac(file, Statics.TempFolder, 0);
+            if (CipherHandler.getCASPACHeaderLength(file)>20){
+                cp = new Caspac(file, Statics.TempFolder, 0,getPassword());
+            } else {
+                cp = new Caspac(file, Statics.TempFolder, 0);
+            }
         } catch (IOException ex) {
+            Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {

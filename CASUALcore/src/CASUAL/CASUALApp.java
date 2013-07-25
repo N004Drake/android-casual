@@ -126,7 +126,7 @@ public class CASUALApp {
                 
                 i++;
                 if (password!=null){
-                    new CASPACHandler().loadCASUALPack(args[i],password);    
+                    new CASPACHandler().loadCASUALPack(args[i],password.toCharArray());    
                 } else {
                     new CASPACHandler().loadCASUALPack(args[i]);
                 }

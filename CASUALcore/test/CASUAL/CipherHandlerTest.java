@@ -54,21 +54,28 @@ public class CipherHandlerTest {
     public void testEncrypt() {
         String input="../../CASPAC/testpak.zip";
         String output = "../../CASPAC/testpak.enc.zip";
-        File f=new File(input);
-        CipherHandler instance = new CipherHandler(f);
+        String finalOutput="../../CASPAC/testpak.zip";
+        File inputFile=new File(input);
+        CipherHandler instance = new CipherHandler(inputFile);
         for (int i=0; i<10; i++){
             System.out.println("encrypt");
             String key = "testatesttestatestatestatest"+i;
             MD5sum md5=new MD5sum();
-            String originalMD5=md5.md5sum(f);
-            boolean result = instance.encrypt(output, key.toCharArray());
-            System.out.println("encryption passed:"+result);
-            File encFile=new File(output);
-            CipherHandler instance2 = new CipherHandler(encFile);
-            System.out.println(md5.getLinuxMD5Sum(encFile));
-            String result2=instance2.decrypt(input+".zip", key.toCharArray());
+            String originalMD5=md5.md5sum(inputFile);
+            //encrypt file
+            assertEquals(true,instance.encrypt(output, key.toCharArray()));
+            //decrypt file
+            File encryptedFile=new File(output);
+            CipherHandler instance2 = new CipherHandler(encryptedFile);
+            System.out.println("Encrypted MD5:"+md5.getLinuxMD5Sum(encryptedFile));
+            String result2="";
+            try {
+                result2 = instance2.decrypt(finalOutput, key.toCharArray());
+            } catch (Exception ex) {
+                Logger.getLogger(CipherHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
             System.out.println(result2);
-            String newMD5=md5.md5sum(new File(input+".zip"));
+            String newMD5=md5.md5sum(new File(finalOutput));
             assertEquals(originalMD5,newMD5);
         }
         
