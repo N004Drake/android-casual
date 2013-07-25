@@ -23,6 +23,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.border.TitledBorder;
@@ -267,7 +269,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -409,28 +411,21 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
-
-
-        log.level4Debug("hiding script selector TargetScript: " + comboBoxScriptSelector.getSelectedItem().toString());
-
-        if ( !Statics.dumbTerminalGUI && comboBoxScriptSelector.getSelectedItem().toString().contains(Statics.Slash)) {
-            Statics.TargetScriptIsResource = false;
-        } else {
-            Statics.TargetScriptIsResource = true;
-
-        }
         CASUALConnectionStatusMonitor.DeviceCheck.stop();
         this.enableControls(false);
-        Statics.lockGUIunzip = true;
-        Script s=caspac.getScriptByName(comboBoxScriptSelector.getSelectedItem().toString());
-        
-        log.level2Information(comboBoxScriptSelector.getSelectedItem().toString());
-        
+        Statics.lockGUIunzip=true;
+        String selectedScript=comboBoxScriptSelector.getSelectedItem().toString();
+        log.level4Debug("hiding script selector TargetScript: " + selectedScript);
+        caspac.activeScript=caspac.getScriptByName(selectedScript);
+        log.level2Information(caspac.activeScript.discription);
         try {
-            CASUALTools.zipPrep.join();
-        } catch (InterruptedException ex) {
-            new Log().errorHandler(ex);
+            caspac.loadSelectedScript(caspac.activeScript);
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALJFrameMain.class.getName()).log(Level.SEVERE, null, ex);
         }
+        caspac.waitForUnzipComplete();
+        
+       
         Statics.lockGUIunzip = false;
         CASUALConnectionStatusMonitor.DeviceCheck.start();
         
