@@ -51,8 +51,8 @@ public class PackagerMain {
      */
     public PackagerMain() {
     }
-    //private static boolean useOverrideArgs = false;
-    //private static String[] overrideArgs = {"--fullauto" ,"..\\CASPAC\\", "--type" ,"nightly"};
+    private static boolean useOverrideArgs = true;
+    private static String[] overrideArgs = {"--fullauto" ,"../CASPAC/", "--type" ,"nightly"};
     /**
      * output directory for package
      */
@@ -150,7 +150,7 @@ public class PackagerMain {
                 entry = zin.getNextEntry();
             }
             out.close();
-            
+            log.level4Debug("created "+outputFile);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -160,8 +160,10 @@ public class PackagerMain {
     
     
     private static void processCommandline(String[] args) {
-
-
+        
+        if (useOverrideArgs){
+            args=overrideArgs;
+        }
         for (int i = 0; i < args.length; i++) {
             if (args[i].contains("--type") || args[i].contains("-t")) {
                 appendToName = args[++i];
@@ -171,6 +173,7 @@ public class PackagerMain {
                 userOutputDir = StringOperations.removeLeadingAndTrailingSpaces(args[++i]);
             } else if (args[i].contains("--fullauto") || args[i].contains("-f")) {
                 processFolder = StringOperations.removeLeadingAndTrailingSpaces(args[++i]);
+                
             } else {
                 log.level0Error( args[i] + " is an unrecognized command.");
                 showMessageAndExit();
@@ -197,10 +200,17 @@ public class PackagerMain {
         
         if (!processFolder.equals("") && userOutputDir.equals("")) {
             log.level2Information("No output directory supplied will place " 
-                    + processFolder + "dist");
-            userOutputDir = processFolder + "dist" +Statics.Slash;
-            if (!(new File(userOutputDir).exists()))
-                new File(userOutputDir).mkdir();
+                    + processFolder + "CASUAL");
+            userOutputDir = processFolder + "CASUAL" +Statics.Slash;
+            if (!(new File(userOutputDir).exists())){
+                File outdir= new File(userOutputDir);
+                outdir.mkdirs();
+                for (File f:outdir.listFiles()){
+                    f.delete();
+                }
+            }
+            
+                
         }
         
         if (!new File(userOutputDir).isDirectory() && !userOutputDir.equals("")) {
@@ -319,6 +329,7 @@ public class PackagerMain {
     public void processFolder() {
         for (File f : new File(processFolder).listFiles()){
             if (f.toString().contains(".zip")) {
+                log.level4Debug("processing "+f.getAbsolutePath());
                 packagerMain.mergeCaspacCasual(f.toString(), userOutputDir);
             }
         }
