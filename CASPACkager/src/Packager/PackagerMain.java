@@ -51,7 +51,7 @@ public class PackagerMain {
      */
     public PackagerMain() {
     }
-    private static boolean useOverrideArgs = true;
+    private static boolean useOverrideArgs = false;
     private static String[] overrideArgs = {"--fullauto" ,"../CASPAC/", "--type" ,"nightly"};
     /**
      * output directory for package
@@ -111,11 +111,15 @@ public class PackagerMain {
     public void mergeCaspacCasual(String caspacLoc, String outputDir){
         try {
             File outputFile;
-            String outputFileName = caspacLoc.substring(caspacLoc.lastIndexOf(Statics.Slash), caspacLoc.lastIndexOf("."));
+            String outputFileName = caspacLoc.substring(caspacLoc.lastIndexOf(Statics.Slash), caspacLoc.lastIndexOf("."))+ "-CASUAL-R" + CASUAL.CASPACData.getSVNRevision() + "b";
+            if (!appendToName.isEmpty()){
+                outputFileName=outputFileName+"-"+appendToName;
+            }
+            outputFileName=outputFileName+".jar";
             if (outputDir.equals(""))
-                outputFile = new File(defaultOutputDir + outputFileName + "-CASUAL-R" + CASUAL.CASPACData.getSVNRevision() + "b" + appendToName + ".jar" );
+                outputFile = new File(defaultOutputDir + outputFileName );
             else
-                outputFile = new File(outputDir + outputFileName + "-CASUAL-R" + CASUAL.CASPACData.getSVNRevision() + "b" + appendToName + ".jar" );
+                outputFile = new File(outputDir + outputFileName );
             if (!outputFile.exists())
                 outputFile.createNewFile();
             byte[] buf = new byte[1024];
