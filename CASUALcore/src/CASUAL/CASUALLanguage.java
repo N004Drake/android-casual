@@ -17,6 +17,7 @@
 package CASUAL;
 
 import CASUAL.caspac.Caspac;
+import CASUAL.crypto.MD5sum;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -36,27 +37,31 @@ public class CASUALLanguage {
     private String ScriptTempFolder;
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     final Caspac CASPAC;
+
     /**
      * instantiates CASUALLanguage with script
+     *
      * @param ScriptName name of script
      * @param ScriptTempFolder temp folder to use for script
      */
     public CASUALLanguage(Caspac caspac, String ScriptName, String ScriptTempFolder) {
         this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
-        this.CASPAC=caspac;
+        this.CASPAC = caspac;
     }
     Log log = new Log();
     static String GOTO = "";
     int CurrentLine = 1;
-     public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
+
+    public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
         this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
-        this.CASPAC=null;
+        this.CASPAC = null;
     }
-    
+
     /**
      * starts the scripting handler spooler and handles flow control
+     *
      * @param dataIn CASUALScript .scr file
      */
     public void beginScriptingHandler(DataInputStream dataIn) {
@@ -66,7 +71,9 @@ public class CASUALLanguage {
 
             bReader.mark(1);
             while ((strLine = bReader.readLine()) != null) {
-                if (Statics.CASPAC.getActiveScript().scriptContinue==false) return;
+                if (Statics.CASPAC.getActiveScript().scriptContinue == false) {
+                    return;
+                }
                 CurrentLine++;
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBar(CurrentLine);
@@ -84,10 +91,10 @@ public class CASUALLanguage {
             }
             //Close the input stream
             dataIn.close();
-            if(WindowsDrivers.removeDriverOnCompletion==2) {//2 for remove driver 1 for do not remove
-             log.level2Information("Removing generic USB driver as requested");
-             new WindowsDrivers(2).uninstallCADI();
-             }
+            if (WindowsDrivers.removeDriverOnCompletion == 2) {//2 for remove driver 1 for do not remove
+                log.level2Information("Removing generic USB driver as requested");
+                new WindowsDrivers(2).uninstallCADI();
+            }
             log.level2Information("@done");
         } catch (Exception e) {//Catch exception if any
             log.level0Error("@problemParsingScript");
@@ -101,6 +108,7 @@ public class CASUALLanguage {
 
     /**
      * Process a line of CASUAL script.
+     *
      * @param line CASUAL line to process
      * @return value returned from CASUAL command
      */
@@ -368,7 +376,7 @@ public class CASUALLanguage {
                         log.errorHandler(ex);
                     }
                 }
-            } 
+            }
 // $MAKEDIR will make a folder
         } else if (line.startsWith("$MAKEDIR")) {
             line = line.replace("$MAKEDIR", "");
@@ -383,7 +391,7 @@ public class CASUALLanguage {
         } else if (line.startsWith("$USERNOTIFICATION")) {
             AudioHandler.playSound("/CASUAL/resources/sounds/Notification.wav");
             line = line.replace("$USERNOTIFICATION", "");
-            new CASUALInteraction(line.replaceFirst(",",">>>")).showUserNotification();
+            new CASUALInteraction(line.replaceFirst(",", ">>>")).showUserNotification();
             return "";
 
 // $USERCANCELOPTION will give the user the option to halt the script
@@ -394,8 +402,8 @@ public class CASUALLanguage {
             AudioHandler.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             int n;
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
-            n = new CASUALInteraction(line.replaceFirst(",",">>>")).showUserCancelOption();
-            if (n == 0) {
+            n = new CASUALInteraction(line.replaceFirst(",", ">>>")).showUserCancelOption();
+            if (n == 1) {
                 log.level0Error(ScriptName);
                 log.level0Error("@canceledAtUserRequest");
                 Statics.CASPAC.getActiveScript().scriptContinue = false;
@@ -410,8 +418,8 @@ public class CASUALLanguage {
         } else if (line.startsWith("$ACTIONREQUIRED")) {
             AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
-            int n = new CASUALInteraction(line.replaceFirst(",",">>>")).showActionRequiredDialog();
-            if (n == 0) {
+            int n = new CASUALInteraction(line.replaceFirst(",", ">>>")).showActionRequiredDialog();
+            if (n == 1) {
                 log.level0Error(ScriptName);
                 log.level0Error("@haltedPerformActions");
                 Statics.CASPAC.getActiveScript().scriptContinue = false;
@@ -426,7 +434,7 @@ public class CASUALLanguage {
             AudioHandler.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             //line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",", 3);
-            String inputBoxText = new CASUALInteraction(Message[0]+">>>"+Message[1]).inputDialog();
+            String inputBoxText = new CASUALInteraction(Message[0] + ">>>" + Message[1]).inputDialog();
             if (inputBoxText == null) {
                 inputBoxText = "";
             }
@@ -515,7 +523,7 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line);
             log.level4Debug("Received Command: " + line);
             log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
-            HeimdallInstall heimdallInstall=new HeimdallInstall();
+            HeimdallInstall heimdallInstall = new HeimdallInstall();
             if (heimdallInstall.checkAndDeployHeimdall()) {
                 new HeimdallTools("").doHeimdallWaitForDevice();
                 /* if (Statics.isLinux()) {   //Is this needed?
@@ -537,21 +545,21 @@ public class CASUALLanguage {
             if (Statics.isLinux()) {
                 log.level2Information("@linuxPermissionsElevation");
                 AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-             //TODO: make something like Shell.timeoutShellCommand but it must also test for values
+                //TODO: make something like Shell.timeoutShellCommand but it must also test for values
              /*
-              * Shell.timeOutCommand(String[] cmd, String[] values, int timeDelay)
-              * timeDelayClass{
-              * int timer=0
-              * new secondTimer(String testValues {"< waiting for device >"}, int timeDelay){
-              *    if Arrays.asList(values).contains(line)
-              *    timer++;
-              * }
-              * }
-              *   do Threaded shell command and pass line into time delay class
-              * while  timeDelayClass.timer < timeDelay && thread.isAlive()
-              *  do nothing
-              * if timer>timedelay return whatever is in que to be returned
-              */ 
+                 * Shell.timeOutCommand(String[] cmd, String[] values, int timeDelay)
+                 * timeDelayClass{
+                 * int timer=0
+                 * new secondTimer(String testValues {"< waiting for device >"}, int timeDelay){
+                 *    if Arrays.asList(values).contains(line)
+                 *    timer++;
+                 * }
+                 * }
+                 *   do Threaded shell command and pass line into time delay class
+                 * while  timeDelayClass.timer < timeDelay && thread.isAlive()
+                 *  do nothing
+                 * if timer>timedelay return whatever is in que to be returned
+                 */
                 String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
                 if (!returnValue.contentEquals("\n")) {
                     return returnValue;

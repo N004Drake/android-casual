@@ -29,23 +29,25 @@ public class Translations {
     static ResourceBundle translation;
 
     /**
-     * Returns translated string from translation Resource Bundle.
-     * Checks to make sure there is a valid resource file.  Default locale is
-     * loaded if required. The input String is split by " " and "\n".  If the 
-     * split values start with the (at) character, a translation is attempted.
+     * Returns translated string from translation Resource Bundle. Checks to
+     * make sure there is a valid resource file. Default locale is loaded if
+     * required. The input String is split by " " and "\n". If the split values
+     * start with the (at) character, a translation is attempted.
      *
      * @param line string to be translated
      * @return translated line
      */
     public static String get(String line) {
-        if (translation==null) Translations.setDefaultLanguage();
+        if (translation == null) {
+            Translations.setDefaultLanguage();
+        }
 
         new Log().level4Debug("[TRANSLATION]" + line);
         //get translation
         String[] splitRef = line.split("( )|(\n)");
         String retVal = "";
         for (String ref : splitRef) {
-            if (translation !=null && !ref.isEmpty() && ref.startsWith("@")) {
+            if (translation != null && !ref.isEmpty() && ref.startsWith("@")) {
                 try {
                     retVal = line.replace(ref, translation.getString(ref));
                 } catch (java.util.MissingResourceException ex) {
@@ -55,14 +57,13 @@ public class Translations {
         }
         return retVal;
     }
-    
+
     /**
-     * Sets language by Locale.  
-     * If the translation is missing, the default is
-     * CASUAL/resources/Translations/English.properties. 
+     * Sets language by Locale. If the translation is missing, the default is
+     * CASUAL/resources/Translations/English.properties.
      */
-    private static void setDefaultLanguage(){
-            String lang = Locale.getDefault().getDisplayLanguage();
+    private static void setDefaultLanguage() {
+        String lang = Locale.getDefault().getDisplayLanguage();
         try {
             translation = ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
         } catch (Exception e) {
@@ -72,10 +73,9 @@ public class Translations {
     }
 
     /**
-     * Sets up a translation language for testing CASUAL. 
-     * If the translation is missing, the default is 
-     * CASUAL/resources/Translations/English.properties.
-     * 
+     * Sets up a translation language for testing CASUAL. If the translation is
+     * missing, the default is CASUAL/resources/Translations/English.properties.
+     *
      * @param lang attempts to load specified language.
      */
     public void setLanguage(String lang) {

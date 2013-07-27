@@ -61,7 +61,7 @@ public class HeimdallTools {
             shellReturn = Shell.silentShellCommand(stringCommand);
         }
         connectionTimer.stop();
-        if (Statics.isWindows()){
+        if (Statics.isWindows()) {
             try {
                 Thread.sleep(4000);
             } catch (InterruptedException ex) {
@@ -72,6 +72,7 @@ public class HeimdallTools {
 
     /**
      * performs an elevated heimdall command
+     *
      * @return result from heimdall
      */
     public String doElevatedHeimdallShellCommand() {
@@ -88,10 +89,12 @@ public class HeimdallTools {
         if (!result.equals("")) {
             if (result.contains("Script halted")) {
                 log.level0Error("@heimdallEncounteredAnError");
-                log.level0Error( result );
+                log.level0Error(result);
                 log.level0Error("@heimdallEncounteredAnError");
                 CASUALScriptParser cLang = new CASUALScriptParser();
-                if (!Statics.debugMode) cLang.executeOneShotCommand("$HALT $SENDLOG");
+                if (!Statics.debugMode) {
+                    cLang.executeOneShotCommand("$HALT $SENDLOG");
+                }
                 return returnval;
             } else if (result.contains("Attempting to continue")) {
                 log.level2Information("@permissionsElevationRequired");
@@ -106,6 +109,7 @@ public class HeimdallTools {
 
     /**
      * performs a heimdall command
+     *
      * @return value from heimdall command
      */
     public String doHeimdallShellCommand() {
@@ -120,11 +124,11 @@ public class HeimdallTools {
         String result = didHeimdallError(returnRead);
         if (!result.equals("")) {
             if (result.contains("Script halted")) {
-                
+
                 log.level0Error("@heimdallErrorReport");
                 log.level0Error(line);
                 log.level0Error("@heimdallErrorReport");
-                log.level0Error( result);
+                log.level0Error(result);
                 log.level0Error("@heimdallErrorReport");
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $SENDLOG");
@@ -157,6 +161,7 @@ public class HeimdallTools {
 
     /**
      * checks if Heimdall threw an error
+     *
      * @param stdErrLog CASUAL log output
      * @return containing halted if cannot continue or continue if it can
      *
@@ -286,6 +291,7 @@ public class HeimdallTools {
 
     /**
      * gets the command to run heimdall
+     *
      * @return string path to heimdall
      */
     public static String getHeimdallCommand() {

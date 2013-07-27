@@ -23,89 +23,100 @@ import java.awt.HeadlessException;
  * @author adam
  */
 public class ADBTools {
-    Log log=new Log();
 
-    
+    Log log = new Log();
+
     /**
      * method to get the wait-for-device command for ADB use
+     *
      * @return path_to_adb, wait-for-device
      */
-    private static String[] getWaitForDeviceCmd(){
+    private static String[] getWaitForDeviceCmd() {
         return new String[]{getADBCommand(), "wait-for-device"};
-    }
-    
-    /**
-     * method to get the devices command for ADB use
-     * @return path_to_adb, devices
-     */
-    private static String[] getDevicesCmd(){
-        return new String[]{getADBCommand(), "devices"}; 
-    }
-    /**
-     *value to start the server
-     * @return value from adb
-     */
-    private static String[] getStartServerCmd(){
-        return new String[] {getADBCommand(), "start-server"};
-    }
-    /**
-     *return the value to kill the ADB server
-     * @return value from ADB command
-     */
-    private static String[] getKillServerCmd(){
-        return new String[]{getADBCommand(), "kill-server"};
-    }
-    /**
-     * returns the location of ADB
-     * @return 
-     */
-    public static String getADBCommand(){
-        FileOperations fo = new FileOperations();
-        if (! fo.verifyExists(Statics.adbDeployed)){
-            new ADBInstall().deployADB();
-        }
-        return Statics.adbDeployed;        
     }
 
     /**
-     * executes the adb wait-for-device commmand. will not do anything until 
+     * method to get the devices command for ADB use
+     *
+     * @return path_to_adb, devices
+     */
+    private static String[] getDevicesCmd() {
+        return new String[]{getADBCommand(), "devices"};
+    }
+
+    /**
+     * value to start the server
+     *
+     * @return value from adb
+     */
+    private static String[] getStartServerCmd() {
+        return new String[]{getADBCommand(), "start-server"};
+    }
+
+    /**
+     * return the value to kill the ADB server
+     *
+     * @return value from ADB command
+     */
+    private static String[] getKillServerCmd() {
+        return new String[]{getADBCommand(), "kill-server"};
+    }
+
+    /**
+     * returns the location of ADB
+     *
+     * @return
+     */
+    public static String getADBCommand() {
+        FileOperations fo = new FileOperations();
+        if (!fo.verifyExists(Statics.adbDeployed)) {
+            new ADBInstall().deployADB();
+        }
+        return Statics.adbDeployed;
+    }
+
+    /**
+     * executes the adb wait-for-device commmand. will not do anything until
      * device is detected.
+     *
      * @return value from adb wait-for-device
      */
-    public static String waitForDevice(){
+    public static String waitForDevice() {
         Shell shell = new Shell();
-        String retval=shell.silentShellCommand(getWaitForDeviceCmd());
+        String retval = shell.silentShellCommand(getWaitForDeviceCmd());
         return retval;
     }
-    
-    
+
     /**
      * executes the getDevices command
+     *
      * @return value from adb getDevices
      */
-    public static String getDevices(){
-        Shell shell=new Shell();
-        String retval=shell.silentTimeoutShellCommand(getDevicesCmd(),5000);
+    public static String getDevices() {
+        Shell shell = new Shell();
+        String retval = shell.silentTimeoutShellCommand(getDevicesCmd(), 5000);
         return retval;
     }
+
     /**
      * executes the start server command
+     *
      * @return value from adb start server
      */
-    public static String startServer(){
-        Shell shell=new Shell();
-        String retval=shell.timeoutShellCommand(getStartServerCmd(),5000);
+    public static String startServer() {
+        Shell shell = new Shell();
+        String retval = shell.timeoutShellCommand(getStartServerCmd(), 5000);
         return retval;
     }
-    
+
     /**
-     *kills and restarts the adb server max duration of 7 seconds.
-     * Thread will be abandoned if time is exceeded
+     * kills and restarts the adb server max duration of 7 seconds. Thread will
+     * be abandoned if time is exceeded
      */
     public static void restartADBserver() {
         new Log().level3Verbose("@restartingADBSlowly");
         Shell shell = new Shell();
-        shell.timeoutShellCommand(getKillServerCmd(),1000);
+        shell.timeoutShellCommand(getKillServerCmd(), 1000);
         shell.timeoutShellCommand(getDevicesCmd(), 6000);
     }
 
@@ -126,8 +137,6 @@ public class ADBTools {
         Shell shell = new Shell();
         shell.silentShellCommand(getKillServerCmd());
     }
-    
-
 
     /**
      *
@@ -135,7 +144,7 @@ public class ADBTools {
      * @throws HeadlessException
      */
     public void checkADBerrorMessages(String DeviceList) throws HeadlessException {
-        
+
         if (Statics.isLinux() && DeviceList.contains("something about UDEV rules")) { //Don't know how to handle this yet
             //handle add udevrule
         }

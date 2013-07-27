@@ -26,9 +26,9 @@ import java.util.logging.Logger;
  */
 public class DiffTextFiles {
 
-
     /**
      * takes a resource and a string outputs difference as a string
+     *
      * @param TestIStream input stream to test
      * @param OriginalFile original file to be diffed
      * @return lines in test that are not in original
@@ -85,9 +85,9 @@ public class DiffTextFiles {
 
     }
 
-
     /**
-     *  takes two files returns the difference between the two
+     * takes two files returns the difference between the two
+     *
      * @param Original original file
      * @param TestForDiff new file
      * @return lines which are in new file that are not in original
@@ -126,9 +126,9 @@ public class DiffTextFiles {
     //Takes in the Diff from the constructor and writes it to the file that is 
     //iniFile.
 
-
     /**
      * appends text to file
+     *
      * @param NameOfFileToBeModified file to be appended
      * @param Diff text to add
      */

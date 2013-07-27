@@ -17,6 +17,7 @@
 package CASUAL;
 
 import CASUAL.caspac.Script;
+import CASUAL.crypto.MD5sum;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -51,21 +52,19 @@ public class CASUALUpdates {
 
     /**
      * performs an update to CASUAL script
+     *
      * @param script script to check
      * @param localInformation local meta file
-     * @return integer value to be processed as return
-     * 0 no update required
-     * 1 error during update
-     * 2 update occured
-     * 3 SVN version cannot handle new script
-     * 4 bad download
-     * 
+     * @return integer value to be processed as return 0 no update required 1
+     * error during update 2 update occured 3 SVN version cannot handle new
+     * script 4 bad download
+     *
      * @throws MalformedURLException
      * @throws IOException
      */
     public int checkOfficialRepo(Script script) throws MalformedURLException, IOException {
         //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
-        CASPACData localInformation=new CASPACData(script.metaData.metaProp.toString());
+        CASPACData localInformation = new CASPACData(script.metaData.metaProp.toString());
         CASPACData webInformation;
         try {
             webInformation = new CASPACData(getWebData(CASUALRepo + script + ".meta"));
@@ -87,7 +86,7 @@ public class CASUALUpdates {
                     return 3;
                 }
                 if (checkVersionInformation(webInformation.scriptRevision, localInformation.scriptRevision)) {
-                    
+
                     Log.level2Information("@scriptIsOutOfDate");
                     //ugly code dealing with /SCRIPTS/ folder on computer.
                     new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
@@ -128,6 +127,7 @@ public class CASUALUpdates {
 
     /**
      * downloads a file
+     *
      * @param URL web location to download
      * @param outputFile the local file to output
      * @param friendlyName name displayed to user
@@ -145,6 +145,7 @@ public class CASUALUpdates {
     /**
      *
      * downloads a file
+     *
      * @param url web location to download
      * @param outputFile the local file to output
      * @param friendlyName name displayed to user
@@ -152,7 +153,7 @@ public class CASUALUpdates {
      */
     public boolean downloadFileFromInternet(URL url, String outputFile, String friendlyName) {
         Log.progress("Downloading ");
-        Log.level4Debug("Downloading "+url);
+        Log.level4Debug("Downloading " + url);
         Log.level4Debug("To: " + outputFile);
         InputStream input;
         try {
@@ -166,8 +167,8 @@ public class CASUALUpdates {
             Log.progress(friendlyName.replace("/SCRIPTS/", ""));
             int lastlength = 0;
             int kilobytes;
-            int offset=1;
-            if (Statics.ProgressDoc!=null){
+            int offset = 1;
+            if (Statics.ProgressDoc != null) {
                 offset = Statics.ProgressDoc.getLength();
             }
             try {
@@ -176,7 +177,7 @@ public class CASUALUpdates {
                     output.write(buffer, 0, bytesRead);
                     bytes = bytes + bytesRead;
                     kilobytes = bytes / 1024;
-                    if (Statics.ProgressDoc!=null){
+                    if (Statics.ProgressDoc != null) {
                         Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
                     }
                     lastlength = 6 + Integer.toString(kilobytes).length();
@@ -196,12 +197,9 @@ public class CASUALUpdates {
 
     /**
      * displays data from a split meta file
-     * @param CASUALString meta information to be displayed
-     * 0-id
-     * 1-revsion
-     * 2-minimum svn
-     * 3-support URL
-     * 4-update message
+     *
+     * @param CASUALString meta information to be displayed 0-id 1-revsion
+     * 2-minimum svn 3-support URL 4-update message
      */
     public void displayCASUALString(String[] CASUALString) {
         //SVN Revision, Script Revision, Script Identification, support URL, message to user
@@ -214,6 +212,7 @@ public class CASUALUpdates {
 
     /**
      * converts a string to a URL
+     *
      * @param stringURL raw URL in string format
      * @return URL formatted properly
      * @throws MalformedURLException
@@ -245,26 +244,25 @@ public class CASUALUpdates {
         return webData;
     }
 
-    public InputStream downloadMetaFromRepoForScript(Script s) throws MalformedURLException, URISyntaxException, IOException{
+    public InputStream downloadMetaFromRepoForScript(Script s) throws MalformedURLException, URISyntaxException, IOException {
         URL url;
-        String parentFolder=new File(s.tempDir).getParent() +"/";
-        String meta=s.name+".meta";
-        if (CASUALTools.IDEMode){
-            url = stringToFormattedURL(CASUALRepo + "/SCRIPTS/"+meta);   
+        String parentFolder = new File(s.tempDir).getParent() + "/";
+        String meta = s.name + ".meta";
+        if (CASUALTools.IDEMode) {
+            url = stringToFormattedURL(CASUALRepo + "/SCRIPTS/" + meta);
         } else {
-            
-            url = stringToFormattedURL(CASUALRepo+"/" + meta);
+
+            url = stringToFormattedURL(CASUALRepo + "/" + meta);
             System.out.println(url.toString());
         }
         return url.openStream();
     }
-    
-    public InputStream streamFileFromNet(String link) throws MalformedURLException, URISyntaxException, IOException{
-        URL url=new URL(link);
+
+    public InputStream streamFileFromNet(String link) throws MalformedURLException, URISyntaxException, IOException {
+        URL url = new URL(link);
         return url.openStream();
     }
-    
-    
+
     /*
      * Takes CASUAL ID String Returns: SVN Revision, Script Revision, Script
      * Identification, support URL, message to user
@@ -335,9 +333,10 @@ public class CASUALUpdates {
 
     /**
      * downloads proper file if available in repository
+     *
      * @param propertiesFileInCASUALOnlineRepo requested file to be downloaded
-     * ie -"heimdall" will be translated to web url:heimdallWin32.zip, downloaded
-     * and the path to the downloaded file is returned. 
+     * ie -"heimdall" will be translated to web url:heimdallWin32.zip,
+     * downloaded and the path to the downloaded file is returned.
      * @return file downloaded for system/arch
      * @throws FileNotFoundException
      * @throws IOException
@@ -397,29 +396,29 @@ public class CASUALUpdates {
 
     }
 
-    public Script updateScript(Script script,String tempFolder) throws ZipException, IOException, MalformedURLException, URISyntaxException {
-        MD5sum md5sum=new MD5sum();
-        
-        for (String md5:script.metaData.md5s){
-                FileOperations fo=new FileOperations();
-                String targetFilename=md5sum.getFileNamefromLinuxMD5String(md5);
-                URL url;
-                url = stringToFormattedURL(CASUALRepo +"/SCRIPTS/"+ targetFilename);
-                System.out.println(url);
-    
-                String localFilename=tempFolder+targetFilename;
-                
-                if (targetFilename.endsWith(".scr")){
-                    script.scriptContents=StringOperations.convertStreamToString(url.openStream());
-                }  else if (targetFilename.endsWith(".txt")){
-                    script.discription=StringOperations.convertStreamToString(url.openStream());
-                } else if (targetFilename.endsWith(".zip")){
-                    this.downloadFileFromInternet(url, localFilename, targetFilename);
-                    script.scriptZipFile=localFilename;
-                    script.performUnzipAfterScriptZipfileUpdate();
-                }
-                
+    public Script updateScript(Script script, String tempFolder) throws ZipException, IOException, MalformedURLException, URISyntaxException {
+        MD5sum md5sum = new MD5sum();
+
+        for (String md5 : script.metaData.md5s) {
+            FileOperations fo = new FileOperations();
+            String targetFilename = md5sum.getFileNamefromLinuxMD5String(md5);
+            URL url;
+            url = stringToFormattedURL(CASUALRepo + "/SCRIPTS/" + targetFilename);
+            System.out.println(url);
+
+            String localFilename = tempFolder + targetFilename;
+
+            if (targetFilename.endsWith(".scr")) {
+                script.scriptContents = StringOperations.convertStreamToString(url.openStream());
+            } else if (targetFilename.endsWith(".txt")) {
+                script.discription = StringOperations.convertStreamToString(url.openStream());
+            } else if (targetFilename.endsWith(".zip")) {
+                this.downloadFileFromInternet(url, localFilename, targetFilename);
+                script.scriptZipFile = localFilename;
+                script.performUnzipAfterScriptZipfileUpdate();
             }
+
+        }
         return script;
     }
 }

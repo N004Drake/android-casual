@@ -30,16 +30,17 @@ public class HeimdallInstall {
 
     final String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
     /**
-     *Vendor ID detected
+     * Vendor ID detected
      */
     public String VID = "";
     /**
-     *Device ID detected
+     * Device ID detected
      */
     public String PID = "";
 
     /**
      * deploys heimdal
+     *
      * @return true if deployed
      */
     public boolean deployHeimdallForWindows() {
@@ -74,6 +75,7 @@ public class HeimdallInstall {
 
     /**
      * checks if heimdall is deployed
+     *
      * @return true if heidmall version returns anything
      */
     public boolean checkHeimdall() {
@@ -124,6 +126,7 @@ public class HeimdallInstall {
 
     /**
      * installs heimdall
+     *
      * @return true if heimdall was detected
      */
     public boolean installHeimdall() {
@@ -173,13 +176,12 @@ public class HeimdallInstall {
                 log.errorHandler(ex);
             }
             new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
-            new CASUALInteraction("@interactionUnplugItAndPlugItBackIn").showErrorDialog();        }
+            new CASUALInteraction("@interactionUnplugItAndPlugItBackIn").showErrorDialog();
+        }
     }
 
-    
     /**
-     * @deprecated 
-     * installs Windows Visual C++ redistributable
+     * @deprecated installs Windows Visual C++ redistributable
      */
     public void installWindowsVCRedist() {
         new Log().level2Information("@installingVisualCPP");
@@ -198,6 +200,7 @@ public class HeimdallInstall {
 
     /**
      * Installs windows drivers
+     *
      * @return always returns true
      * @WTF always returns true?
      */
@@ -211,23 +214,23 @@ public class HeimdallInstall {
         new WindowsDrivers(0).installDriverBlanket(null);
         return true;
         /*log.level2Information("@installingCADI"); //Add Newline
-        new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
-                + "We're going to install drivers now.  Lets do it.\n"
-                + "THIS PROCESS CAN TAKE UP TO 5 MINTUES.\nDURING THIS TIME YOU WILL NOT SEE ANYTHING.\nBE PATIENT!");
+         new Log().level3Verbose("Driver Problems suck. Lemme make it easy.\n"
+         + "We're going to install drivers now.  Lets do it.\n"
+         + "THIS PROCESS CAN TAKE UP TO 5 MINTUES.\nDURING THIS TIME YOU WILL NOT SEE ANYTHING.\nBE PATIENT!");
 
-        String exec = "";
-        try {
-            if (new FileOperations().verifyResource(Statics.WinDriverResource)) {
-                exec = Statics.TempFolder + "CADI.exe";
-                new FileOperations().copyFromResourceToFile(Statics.WinDriverResource, exec);
-            } else {
-                exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
-            }
-        } catch (IOException | InterruptedException ex) {
-            log.level0Error("@problemWithOnlineRepo");
-        }
-        //verify MD5
-        String driverreturn = new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});*/
+         String exec = "";
+         try {
+         if (new FileOperations().verifyResource(Statics.WinDriverResource)) {
+         exec = Statics.TempFolder + "CADI.exe";
+         new FileOperations().copyFromResourceToFile(Statics.WinDriverResource, exec);
+         } else {
+         exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
+         }
+         } catch (IOException | InterruptedException ex) {
+         log.level0Error("@problemWithOnlineRepo");
+         }
+         //verify MD5
+         String driverreturn = new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});*/
         /*
          * 
          * TODO: Here we need to parse return from CADI
@@ -236,72 +239,73 @@ public class HeimdallInstall {
          * 
          * 
          * UNSUPPORTED DEVICE for Galaxy S1  Loops forever   Why is GS1 not supported?
-        [DEBUG]deployHeimdallForWindows- verifying Heimdall deployment
-        [DEBUG]heimdall install sucessful
-        Waiting for Downoad Mode device...[VERBOSE]detected!
-        [INFO]Executing Heimdall command.
-        [VERBOSE]Performing standard Heimdall commandclose-pc-screen
-        [DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
-        Heimdall v1.4.0
+         [DEBUG]deployHeimdallForWindows- verifying Heimdall deployment
+         [DEBUG]heimdall install sucessful
+         Waiting for Downoad Mode device...[VERBOSE]detected!
+         [INFO]Executing Heimdall command.
+         [VERBOSE]Performing standard Heimdall commandclose-pc-screen
+         [DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
+         Heimdall v1.4.0
 
-        Copyright (c) 2010-2013, Benjamin Dobell, Glass Echidna
-        http://www.glassechidna.com.au/
+         Copyright (c) 2010-2013, Benjamin Dobell, Glass Echidna
+         http://www.glassechidna.com.au/
 
-        This software is provided free of charge. Copying and redistribution is
-        encouraged.
+         This software is provided free of charge. Copying and redistribution is
+         encouraged.
 
-        If you appreciate this software and you would like to support future
-        development please consider donating:
-        http://www.glassechidna.com.au/donate/
+         If you appreciate this software and you would like to support future
+         development please consider donating:
+         http://www.glassechidna.com.au/donate/
 
-        Initialising connection...
-        Detecting device...
-        ERROR: Failed to access device. libusb error: -12
-        [ERROR]
-        Drivers are Required Launching CADI.
-        CASUAL Automated Driver Installer by jrloper.
-        Installing Drivers now
-        [VERBOSE]Driver Problems suck. Lemme make it easy.
-        We're going to install drivers now.  Lets do it.
-        THIS PROCESS CAN TAKE UP TO 5 MINTUES.
-        DURING THIS TIME YOU WILL NOT SEE ANYTHING.
-        BE PATIENT!
-        [DEBUG]Attempting to write C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\CADI.exe
-        [DEBUG]File verified.
-        [DEBUG]###executing: cmd.exe###
-        [INFO]
+         Initialising connection...
+         Detecting device...
+         ERROR: Failed to access device. libusb error: -12
+         [ERROR]
+         Drivers are Required Launching CADI.
+         CASUAL Automated Driver Installer by jrloper.
+         Installing Drivers now
+         [VERBOSE]Driver Problems suck. Lemme make it easy.
+         We're going to install drivers now.  Lets do it.
+         THIS PROCESS CAN TAKE UP TO 5 MINTUES.
+         DURING THIS TIME YOU WILL NOT SEE ANYTHING.
+         BE PATIENT!
+         [DEBUG]Attempting to write C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\CADI.exe
+         [DEBUG]File verified.
+         [DEBUG]###executing: cmd.exe###
+         [INFO]
 
-        [INFO]
-        [Heimdall Error Report] Detected:
-        'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue
-        [/Heimdall Error Report]
+         [INFO]
+         [Heimdall Error Report] Detected:
+         'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue
+         [/Heimdall Error Report]
 
 
-        [VERBOSE]Performing standard Heimdall commandclose-pc-screen
-        [DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
-        Heimdall v1.4.0
-        ....
-        * ...
-        * ...
+         [VERBOSE]Performing standard Heimdall commandclose-pc-screen
+         [DEBUG]###executing real-time command: C:\Users\adam\AppData\Local\Temp\adamTEMPCASUAL6EDFD949\heimdall.exe###
+         Heimdall v1.4.0
+         ....
+         * ...
+         * ...
 
-        [ERROR]Maximum retries exceeded. Shutting down Parser.
-        [DEBUG]HALT RECEIVED    * 
+         [ERROR]Maximum retries exceeded. Shutting down Parser.
+         [DEBUG]HALT RECEIVED    * 
          * 
          */
         /*log.level2Information(driverreturn);
-        if (driverreturn.contains("CritError")) {
-            return false;
-        } else {
-            return true;
-        }*/
+         if (driverreturn.contains("CritError")) {
+         return false;
+         } else {
+         return true;
+         }*/
     }
 
     /**
-     *displays a message to the user that Windows permissions were not obtainable
+     * displays a message to the user that Windows permissions were not
+     * obtainable
      */
     public void displayWindowsPermissionsMessageAndExit() {
         if (Statics.isWindows()) {
-            new CASUALInteraction("@interactionwindowsRunAsMessage"+ getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString() ).showErrorDialog();
+            new CASUALInteraction("@interactionwindowsRunAsMessage" + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString()).showErrorDialog();
         }
         CASUALApp.shutdown(0);
     }
@@ -313,19 +317,20 @@ public class HeimdallInstall {
 
     /**
      * checks and deploys heimdall
+     *
      * @return true if deployed
      */
     public boolean checkAndDeployHeimdall() {
 
         //deploys heimdall for Windows, launches checks for all other OS's. 
-        
+
         if (Statics.isHeimdallDeployed) {
             return true;
         } else {
             if (Statics.isWindows()) {
                 return new HeimdallInstall().deployHeimdallForWindows();
             } else {
-                
+
                 if (new HeimdallInstall().checkHeimdallVersion()) {
                     return true;
                 } else { //shell returned error
@@ -338,8 +343,10 @@ public class HeimdallInstall {
             }
         }
     }
+
     /**
      * checks the heimdall version against version expected from Statics
+     *
      * @return true if version is good
      */
     public boolean checkHeimdallVersion() {

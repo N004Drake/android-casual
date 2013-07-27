@@ -19,11 +19,11 @@ package CASUAL.caspac;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.MD5sum;
 import CASUAL.Statics;
 import CASUAL.StringOperations;
 import CASUAL.Unzip;
 import CASUAL.Zip;
+import CASUAL.crypto.MD5sum;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -187,7 +187,9 @@ public class Script{
                         Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {
                         try {
-                            if (bis!=null)bis.close();
+                            if (bis!=null) {
+                                bis.close();
+                            }
                         } catch (IOException ex) {
                             Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -264,7 +266,7 @@ public class Script{
     Map<String,InputStream> getScriptAsMapForCASPAC() {
         CASUAL.Log log = new CASUAL.Log();
         int md5Position = 0;
-        CASUAL.MD5sum md5sum = new CASUAL.MD5sum();
+        CASUAL.crypto.MD5sum md5sum = new CASUAL.crypto.MD5sum();
         Map<String, InputStream> scriptEntries=new HashMap<>();
         ArrayList<String> tempMD5s=new ArrayList<>();
         

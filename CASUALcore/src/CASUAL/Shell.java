@@ -180,7 +180,7 @@ public class Shell {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + "\nreturnval:"+ AllText);
+            log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + "\nreturnval:" + AllText);
             return "CritERROR!!!";
         }
 
@@ -199,7 +199,7 @@ public class Shell {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-           log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + "returnval:" + AllText);
+            log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + "returnval:" + AllText);
             return "CritERROR!!!";
         }
 
@@ -290,7 +290,7 @@ public class Shell {
                     BufferedReader STDERR = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String LineRead = null;
                     String CharRead;
-                    
+
                     boolean ResetLine = false;
                     int c;
                     while ((c = STDOUT.read()) > -1) {
@@ -309,7 +309,7 @@ public class Shell {
                     new Log().level2Information(LogData);
 
                 } catch (IOException ex) {
-                     log.level0Error("@problemWhileExecutingCommand " + StringOperations.convertArrayListToStringArray(Statics.LiveSendCommand) + "\nreturnval:"+ LogData);
+                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.convertArrayListToStringArray(Statics.LiveSendCommand) + "\nreturnval:" + LogData);
                 }
             }
         };
@@ -338,136 +338,137 @@ public class Shell {
                     log.errorHandler(ex);
                 }
             } catch (IOException ex) {
-                 log.level0Error("@problemWhileExecutingCommand " );
-                 Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                log.level0Error("@problemWhileExecutingCommand ");
+                Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     };
 
-    
     /**
-     * timeoutShellCommand is a multi-threaded method and reports to 
-     * the TimeOutString class.  The value contained within  the 
-     * TimeOutString class is reported after the timeout elapses
-     * if the task locks up.
-     * 
+     * timeoutShellCommand is a multi-threaded method and reports to the
+     * TimeOutString class. The value contained within the TimeOutString class
+     * is reported after the timeout elapses if the task locks up.
+     *
      * @param cmd cmd to be executed
      * @param timeout in millis
      * @return any text from the command
-     * @throws TimeoutException 
+     * @throws TimeoutException
      */
     public String timeoutShellCommand(final String[] cmd, int timeout) {
         //final object for runnable to write out to.
         final TimeoutString tos = new TimeoutString();
- 
+
         //Runnable executes in the background
-        Runnable runCommand = new Runnable(){
+        Runnable runCommand = new Runnable() {
             @Override
             public void run() {
                 log.level4Debug("\n###executing: " + cmd[0] + "###");
                 try {
                     String line;
-                    ProcessBuilder p=new ProcessBuilder(cmd);
+                    ProcessBuilder p = new ProcessBuilder(cmd);
                     p.redirectError();
                     Process process = p.start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    
+
                     while ((line = STDOUT.readLine()) != null) {
                         tos.AllText = tos.AllText + line + "\n";
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
                 } catch (Exception ex) {
-                    log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + " "+ tos.AllText);
+                    log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + " " + tos.AllText);
                 }
             }
         };
         //t executes the runnable on a different thread
         Thread t = new Thread(runCommand);
         t.setDaemon(true);
-        t.setName("TimeOutShell "+cmd[0]+ timeout +"ms abandon time");
+        t.setName("TimeOutShell " + cmd[0] + timeout + "ms abandon time");
         t.start();
-        
+
         //set up timeout with calendar time in millis
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MILLISECOND, timeout);
         log.level4Debug("Executing timeoutShellCommand");
-        log.level4Debug("The current time is: "+Calendar.getInstance().getTimeInMillis());
-        log.level4Debug("The thread will end at: "+endTime.getTimeInMillis());
+        log.level4Debug("The current time is: " + Calendar.getInstance().getTimeInMillis());
+        log.level4Debug("The thread will end at: " + endTime.getTimeInMillis());
         //loop while not timeout and halt if thread dies. 
-        while (Calendar.getInstance().getTimeInMillis()<endTime.getTimeInMillis()) {
-            if (! t.isAlive()) break;
+        while (Calendar.getInstance().getTimeInMillis() < endTime.getTimeInMillis()) {
+            if (!t.isAlive()) {
+                break;
+            }
         }
-        if(Calendar.getInstance().getTimeInMillis()>=endTime.getTimeInMillis()){
-            log.level3Verbose("TimeOut on "+cmd[0]+" after "+timeout+"ms. Returning what was received.");
-            return "Timeout!!! "+tos.AllText;
+        if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
+            log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
+            return "Timeout!!! " + tos.AllText;
         }
         //return values logged from TimeoutString class above
         return tos.AllText;
-        
+
     }
-     
-  /**
-     * timeoutShellCommand is a multi-threaded method and reports to 
-     * the TimeOutString class.  The value contained within  the 
-     * TimeOutString class is reported after the timeout elapses
-     * if the task locks up.
-     * 
+
+    /**
+     * timeoutShellCommand is a multi-threaded method and reports to the
+     * TimeOutString class. The value contained within the TimeOutString class
+     * is reported after the timeout elapses if the task locks up.
+     *
      * @param cmd cmd to be executed
      * @param timeout in millis
      * @return any text from the command
-     * @throws TimeoutException 
+     * @throws TimeoutException
      */
     public String silentTimeoutShellCommand(final String[] cmd, int timeout) {
         //final object for runnable to write out to.
         final TimeoutString tos = new TimeoutString();
- 
+
         //Runnable executes in the background
-        Runnable runCommand = new Runnable(){
+        Runnable runCommand = new Runnable() {
             @Override
             public void run() {
                 try {
                     String line;
-                    ProcessBuilder p=new ProcessBuilder(cmd);
+                    ProcessBuilder p = new ProcessBuilder(cmd);
                     p.redirectError();
                     Process process = p.start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    
+
                     while ((line = STDOUT.readLine()) != null) {
                         tos.AllText = tos.AllText + line + "\n";
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
                 } catch (Exception ex) {
-                    log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + " "+ tos.AllText);
+                    log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + " " + tos.AllText);
                 }
             }
         };
         //t executes the runnable on a different thread
         Thread t = new Thread(runCommand);
         t.setDaemon(true);
-        t.setName("SilentTimeOutShell "+cmd[0]+ timeout +"ms abandon time");
+        t.setName("SilentTimeOutShell " + cmd[0] + timeout + "ms abandon time");
         t.start();
-        
+
         //set up timeout with calendar time in millis
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MILLISECOND, timeout);
         //loop while not timeout and halt if thread dies. 
-        while (Calendar.getInstance().getTimeInMillis()<endTime.getTimeInMillis()) {
-            if (! t.isAlive()) break;
+        while (Calendar.getInstance().getTimeInMillis() < endTime.getTimeInMillis()) {
+            if (!t.isAlive()) {
+                break;
+            }
         }
-        if(Calendar.getInstance().getTimeInMillis()>=endTime.getTimeInMillis()){
-            log.level3Verbose("TimeOut on "+cmd[0]+" after "+timeout+"ms. Returning what was received.");
+        if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
+            log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
         }
         //return values logged from TimeoutString class above
         return tos.AllText;
-        
+
     }
-    
 
     /**
-     * holds variables temporarily.  this class is here to be made final for passing objects
+     * holds variables temporarily. this class is here to be made final for
+     * passing objects
      */
-    class TimeoutString{
+    class TimeoutString {
+
         public String AllText = "";
     };
-
 }

@@ -29,6 +29,7 @@ public class StringOperations {
 
     /**
      * replaces the last instance of a string
+     *
      * @param string original string
      * @param toReplace value to replace
      * @param replacement replace with this
@@ -47,8 +48,9 @@ public class StringOperations {
 
     /**
      * removes leading spaces from line
+     *
      * @param line string to remove spaces from
-     * @return  line without any leading spaces
+     * @return line without any leading spaces
      */
     public static String removeLeadingSpaces(String line) {
         while (line.startsWith(" ")) {
@@ -59,6 +61,7 @@ public class StringOperations {
 
     /**
      * removes leading and trailing spaces
+     *
      * @param line original value
      * @return original value without leading or trailing spaces
      */
@@ -76,6 +79,7 @@ public class StringOperations {
 
     /**
      * remove trailing spaces
+     *
      * @param line original value
      * @return original value without trailing spaces
      */
@@ -90,6 +94,7 @@ public class StringOperations {
 
     /**
      * reads a stream and returns a string
+     *
      * @param is stream to read
      * @return stream converted to string
      */
@@ -98,15 +103,17 @@ public class StringOperations {
         return s.hasNext() ? s.next() : "";
     }
 
-    public static InputStream convertStringToStream(String input){
-        InputStream bas= new ByteArrayInputStream(input.getBytes());
+    public static InputStream convertStringToStream(String input) {
+        InputStream bas = new ByteArrayInputStream(input.getBytes());
         return bas;
-        
-        
+
+
     }
+
     /**
      * takes a array list and converts to string array
-     * @param list  input array list
+     *
+     * @param list input array list
      * @return output string array
      */
     public static String[] convertArrayListToStringArray(ArrayList list) {
@@ -142,13 +149,15 @@ public class StringOperations {
         }
         return outputArray;
     }
+
     /**
      * gets a random hexadecimal string
+     *
      * @param len length of string to return
      * @return random hex string of specified length
      */
     public static String generateRandomHexString(int len) {
-        final char[] chars = new char[]{'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+        final char[] chars = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
         String random = "";
         for (int i = 0; i < len; i++) {
             random = random + chars[new Random().nextInt(chars.length)];

@@ -28,6 +28,7 @@ public class JavaSystem {
 
     /**
      * restarts java
+     *
      * @param args args to add
      * @throws IOException
      * @throws InterruptedException

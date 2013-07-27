@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
@@ -30,31 +29,29 @@ public class CASUALConnectionStatusMonitor {
     /**
      * array of device serial numbers
      */
-    private static String mode="adb";
-    public  static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
+    private static String mode = "adb";
+    public static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
     private static int LastState = 0;  //last state detected
     private static int cycles = 0; //number of cycles
     private static boolean hasConnected = false; //device was detected since startup
-    public static int adbLockedUp=0;
-    final static int TIMERINTERVAL = 1000; 
-    
-    
-    CASUALConnectionStatusMonitor(){
-        adbLockedUp=0;
+    public static int adbLockedUp = 0;
+    final static int TIMERINTERVAL = 1000;
+
+    CASUALConnectionStatusMonitor() {
+        adbLockedUp = 0;
     }
-    
+
     /**
      * Starts and stops the ADB timer reference with
      * Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
      */
-    
-    public static void setMode(String mode){
-        mode="mode";
+    public static void setMode(String mode) {
+        mode = "mode";
     }
     public static Timer DeviceCheck = new Timer(TIMERINTERVAL, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent evt) {
-            if (mode.equals("qprst")){
+            if (mode.equals("qprst")) {
                 //TODO: implement fastboot here as well. 
             } else {  //default to adb
                 Thread t = new Thread(adbDeviceCheck);
@@ -65,9 +62,10 @@ public class CASUALConnectionStatusMonitor {
     });
     final static Runnable adbDeviceCheck = new Runnable() {
         Log log = new Log();
+
         @Override
         public void run() {
-            
+
             //setup initial state
             if (Statics.GUIIsAvailable && (Statics.lockGUIformPrep || Statics.lockGUIunzip)) {
                 Statics.GUI.enableControls(false);
@@ -166,7 +164,7 @@ public class CASUALConnectionStatusMonitor {
                         stateSwitchWasSucessful = Statics.GUI.enableControls(true);
                         Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
                         Statics.GUI.setStatusMessageLabel("Target Acquired");
-                        if (stateSwitchWasSucessful){
+                        if (stateSwitchWasSucessful) {
                             AudioHandler.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
                         }
                         break;
@@ -208,14 +206,14 @@ public class CASUALConnectionStatusMonitor {
 
         private String getConnectedDevices() {
             String devices = ADBTools.getDevices().replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
-            if (devices.startsWith("Timeout!!! ")){
-                devices=devices.replace("Timeout!!! ", "");
+            if (devices.startsWith("Timeout!!! ")) {
+                devices = devices.replace("Timeout!!! ", "");
                 CASUALConnectionStatusMonitor.adbLockedUp++;
-                if (adbLockedUp==10){
+                if (adbLockedUp == 10) {
                     new CASUALInteraction("@interactionADBLockedUp").showErrorDialog();
                 }
             } else {
-                adbLockedUp=0;
+                adbLockedUp = 0;
             }
             return devices;
 

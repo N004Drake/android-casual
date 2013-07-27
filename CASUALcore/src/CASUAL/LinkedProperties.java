@@ -24,8 +24,8 @@ import java.util.Set;
 
 /**
  *
- * @author adam
- * inspiredBy http://stackoverflow.com/questions/1312383/pulling-values-from-a-java-properties-file-in-order
+ * @author adam inspiredBy
+ * http://stackoverflow.com/questions/1312383/pulling-values-from-a-java-properties-file-in-order
  */
 class LinkedProperties extends Properties {
 
