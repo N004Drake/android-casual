@@ -65,11 +65,22 @@ public class Script{
     public List<File> individualFiles = new ArrayList<>();
     public meta metaData = new meta();
     public String discription = "";
-
+    public boolean scriptContinue=false;
     private static String slash = System.getProperty("file.separator");
     Map<? extends String, ? extends InputStream> getAllAsStringAndInputStream;
 
     
+    public Script (Script s){
+        this.name = s.name;
+        this.tempDir = s.tempDir;
+        this.extractionMethod = 2;
+        this.metaData=s.metaData;
+        this.individualFiles=s.individualFiles;
+        this.zipfile=s.zipfile;
+        this.discription=s.discription;
+        this.scriptContinue=s.scriptContinue;
+        this.getAllAsStringAndInputStream=s.getAllAsStringAndInputStream;
+    }
     
     public Script(String name, String tempDir) {
         this.name = name;
@@ -223,7 +234,16 @@ public class Script{
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-
+                    String ziplocation=scriptZipFile.toString();
+                    try {
+                        Unzip unzip = new Unzip(ziplocation);
+                        unzip.unzipFile(tempDir);
+                    } catch (ZipException ex) {
+                        Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
                 }
             };
             return r;
@@ -241,7 +261,7 @@ public class Script{
 
     }
 
-    Map<? extends String, ? extends InputStream> getScriptAsMapForCASPAC() {
+    Map<String,InputStream> getScriptAsMapForCASPAC() {
         CASUAL.Log log = new CASUAL.Log();
         int md5Position = 0;
         CASUAL.MD5sum md5sum = new CASUAL.MD5sum();
@@ -293,6 +313,10 @@ public class Script{
        
     }
 
+    public void performUnzipAfterScriptZipfileUpdate() throws ZipException, IOException {
+       this.getExtractionRunnable().run();
+    }
+
     public class meta {
 
         public String minSVNversion = "";
@@ -302,7 +326,7 @@ public class Script{
         public String updateMessage = "";
         public String killSwitchMessage = "";
         public Properties metaProp;
-        List<String> md5s = new ArrayList<>();
+        public List<String> md5s = new ArrayList<>();
 
         public meta() {
             metaProp = new Properties();
@@ -375,6 +399,7 @@ public class Script{
 
         void doMd5Sum() {
             MD5sum md5sum = new MD5sum();
+            
             //TODO: zip resources in this class
             //TODO: get md5sum the script.zip file
             //TODO: get md5sum for the script.scr file
@@ -405,6 +430,14 @@ public class Script{
             supportURL = prop.getProperty("Script.SupportURL", "");
             updateMessage = prop.getProperty("Script.UpdateMessage", "");
             killSwitchMessage = prop.getProperty("Script.KillSwitchMessage", "");
+            md5s = new ArrayList<>();
+            int i=0;
+            while (!prop.getProperty("Script.MD5["+i+"]", "").equals("")){
+                md5s.add(prop.getProperty("Script.MD5["+i+"]"));
+                i++;
+            }
+                
+              
         }
 
         public void load(Properties prop){
@@ -424,5 +457,7 @@ public class Script{
         public int minSVNversion() {
             return Integer.parseInt(minSVNversion);
         }
+
     }
+    
 }

@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -56,6 +58,13 @@ public class Log {
         }
     }
 
+    public void clearGUI(){
+        try {
+            Statics.ProgressDoc.remove(0, Statics.ProgressDoc.getLength());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * level 0 is used for errors.. basically silent. Use level 1 for for most
      * tasks
@@ -246,7 +255,6 @@ public class Log {
                 Statics.ProgressDoc.insertString(position, data, null);
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
             } catch (BadLocationException ex) {
-                new Log().errorHandler(ex);
             }
         }
     }

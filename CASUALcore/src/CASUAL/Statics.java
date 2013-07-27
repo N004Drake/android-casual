@@ -312,7 +312,9 @@ public class Statics {
         installedHeimdallVersion=null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
         arch = "";
         CASUALLanguage.GOTO = "";
-        CASUALScriptParser.ScriptContinue = true;
+        if (CASPAC!=null){
+            Statics.CASPAC.getActiveScript().scriptContinue=false;
+        }
         Caspac.useSound=false;
     }
     

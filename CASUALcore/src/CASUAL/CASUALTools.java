@@ -213,10 +213,10 @@ public class CASUALTools {
         String className = getClass().getName().replace('.', '/');
         String classJar = getClass().getResource("/" + className + ".class").toString();
         new Log().level4Debug("ClassJar:"+ classJar);
-        if (classJar.startsWith("jar:")) {
-            return false;
-        } else {
+        if (classJar.startsWith("file:")) {
             return true;
+        } else {
+            return false;
         }
     }
     

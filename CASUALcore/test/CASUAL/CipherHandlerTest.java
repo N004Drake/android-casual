@@ -5,16 +5,8 @@
 package CASUAL;
 
 import java.io.File;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.xml.bind.DatatypeConverter;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -57,7 +49,7 @@ public class CipherHandlerTest {
         String finalOutput="../../CASPAC/testpak.zip";
         File inputFile=new File(input);
         CipherHandler instance = new CipherHandler(inputFile);
-        for (int i=0; i<10; i++){
+        for (int i=0; i<3; i++){
             System.out.println("encrypt");
             String key = "testatesttestatestatestatest"+i;
             MD5sum md5=new MD5sum();

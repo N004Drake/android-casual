@@ -161,7 +161,9 @@ public class CASUALConnectionStatusMonitor {
                         stateSwitchWasSucessful = Statics.GUI.enableControls(true);
                         Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
                         Statics.GUI.setStatusMessageLabel("Target Acquired");
-                        AudioHandler.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
+                        if (stateSwitchWasSucessful){
+                            AudioHandler.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
+                        }
                         break;
                     default:
                         Statics.setStatus("Multiple Devices Detected");

@@ -114,7 +114,7 @@ public class SHA256sum {
      * @throws NoSuchAlgorithmException
      */
     public String getSha256() throws IOException, NoSuchAlgorithmException {
-        ByteBuffer bb=ByteBuffer.allocate(8120);
+        ByteBuffer bb=ByteBuffer.allocate(512);
        
         byte[] buffer = new byte[8120];
         MessageDigest md = MessageDigest.getInstance("SHA-256");

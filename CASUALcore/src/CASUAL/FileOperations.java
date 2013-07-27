@@ -522,8 +522,8 @@ public class FileOperations {
         String EntireFile = "";
         try {
             String Line;
-            try (BufferedReader BROriginal = new BufferedReader(new FileReader(FileOnDisk))) {
-                while ((Line = BROriginal.readLine()) != null) {
+            try (BufferedReader br = new BufferedReader(new FileReader(FileOnDisk))) {
+                while ((Line = br.readLine()) != null) {
                     //Log.level3(Line);  
                     EntireFile = EntireFile + "\n" + Line;
                 }
