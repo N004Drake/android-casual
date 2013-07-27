@@ -213,6 +213,14 @@ public class CASUALScriptParser {
     void executeFirstScriptInCASPAC(Caspac CASPAC) {
         String scriptName = CASPAC.getScriptNames()[0];
         Script s = CASPAC.getScriptByName(scriptName);
+        CASPAC.setActiveScript(s);
+        Statics.CASPAC.getActiveScript().scriptContinue=true;
+        try {
+            CASPAC.loadActiveScript();
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        CASPAC.waitForUnzipComplete();
         log.level2Information(s.discription);
         int CASUALSVN = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
         int scriptSVN = Integer.parseInt(s.metaData.minSVNversion);
@@ -220,7 +228,7 @@ public class CASUALScriptParser {
             new Log().level0Error("@improperCASUALversion");
             return;
         }
-        CASPAC.waitForUnzipComplete();
+       
         try {
             ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.scriptContents.getBytes("UTF-8"));
             DataInputStream dis = new DataInputStream(scriptStream);

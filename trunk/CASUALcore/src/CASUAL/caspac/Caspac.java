@@ -242,7 +242,6 @@ public final class Caspac {
                 handleCASPACScriptFiles(filename, unzip, entry);
                 this.activeScript=this.getScriptByFilename(filename);
             }
-
         }
         performUnzipOnQueue();
     }
@@ -272,7 +271,7 @@ public final class Caspac {
 
             unzipThreads=new ArrayList<>();
             this.unzipThreads.add(new Thread(activeScript.getExtractionRunnable()));
-            unzipThreads.get(0).start();
+            performUnzipOnQueue();
         }
         
         
