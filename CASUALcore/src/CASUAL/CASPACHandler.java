@@ -65,6 +65,8 @@ public class CASPACHandler {
             } else {
                 CASPAC = new Caspac(zipFile,Statics.TempFolder,0,password);
             }
+            Statics.CASPAC=CASPAC;
+
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -108,6 +110,7 @@ public class CASPACHandler {
         @Override
         public void run() {
             try {
+                
                 CASPAC.loadFirstScriptFromCASPAC();
             } catch (ZipException ex) {
                 Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);

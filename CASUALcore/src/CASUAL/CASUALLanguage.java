@@ -66,7 +66,7 @@ public class CASUALLanguage {
 
             bReader.mark(1);
             while ((strLine = bReader.readLine()) != null) {
-                if (Statics.CASPAC.getActiveScript().scriptContinue=false) return;
+                if (Statics.CASPAC.getActiveScript().scriptContinue==false) return;
                 CurrentLine++;
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBar(CurrentLine);
