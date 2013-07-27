@@ -399,12 +399,13 @@ public class Shell {
         }
         if(Calendar.getInstance().getTimeInMillis()>=endTime.getTimeInMillis()){
             log.level3Verbose("TimeOut on "+cmd[0]+" after "+timeout+"ms. Returning what was received.");
+            return "Timeout!!! "+tos.AllText;
         }
         //return values logged from TimeoutString class above
         return tos.AllText;
         
     }
-    
+     
   /**
      * timeoutShellCommand is a multi-threaded method and reports to 
      * the TimeOutString class.  The value contained within  the 

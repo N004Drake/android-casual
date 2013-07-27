@@ -38,7 +38,8 @@ public class CASPACjUnitTest {
             String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
             String[] badValues = new String[]{"ERROR"};
             String[] goodValues = new String[]{"echo [PASS]"};
-            assertEquals(true, new CASUAL.CASUALTest(casualParams, goodValues, badValues).checkTestPoints());
+            CASUALTest ct=new CASUALTest(casualParams, goodValues, badValues);
+            assertEquals(true, ct.checkTestPoints());
             CASUALApp.shutdown(0);
             System.out.println("TESTING SECOND ROUND");
             System.out.println("TESTING SECOND ROUND");
