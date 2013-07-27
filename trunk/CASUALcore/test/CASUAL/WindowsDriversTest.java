@@ -56,10 +56,12 @@ public class WindowsDriversTest {
      */
     @Test
     public void testInstallDriverBlanket() {
+      if (Statics.isWindows()){
         System.out.println("installDriverBlanket");
         WindowsDrivers instance = new WindowsDrivers(1);
         setContinue();
         instance.installDriverBlanket(null);
+      }
    }
 
     /**
@@ -67,9 +69,11 @@ public class WindowsDriversTest {
      */
     @Test
     public void testRemoveDriver() {
-        System.out.println("uninstallCADI");
-        WindowsDrivers instance = new WindowsDrivers(1);
-        instance.uninstallCADI();
+        if (Statics.isWindows()){
+            System.out.println("uninstallCADI");
+            WindowsDrivers instance = new WindowsDrivers(1);
+            instance.uninstallCADI();
+        }
         
     }
     public void setContinue() {

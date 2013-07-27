@@ -18,9 +18,11 @@ package CASUAL.caspac;
 
 import CASUAL.AudioHandler;
 import CASUAL.BooleanOperations;
+import CASUAL.CASPACData;
 //Ugly, should not depend on CASUALApp or CASUALTools.
 import CASUAL.CASUALApp;
 import CASUAL.CASUALTools;
+import CASUAL.CASUALUpdates;
 import CASUAL.CipherHandler;
 import CASUAL.FileOperations;
 import CASUAL.Log;
@@ -38,6 +40,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -73,7 +77,7 @@ public final class Caspac {
      * Type 1 CASUAL
      * Type 2 Filesystem
      */
-    final int type;
+    public final int type;
     //public File logo;
     public BufferedImage logo;
     public final File CASPAC;
@@ -87,7 +91,7 @@ public final class Caspac {
     private ArrayList<Thread> unzipThreads = new ArrayList<>();
     public static boolean useSound=true;
     //For CASUAL mode
-    public Script activeScript;
+    private Script activeScript;
     public boolean caspacShouldBeDeletedAfterExtraction=false;
     
     /*
@@ -139,10 +143,9 @@ public final class Caspac {
 
             try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
                 ZipEntry ZEntry;
-                log.level4Debug("Picking Jar File:" + jar.getFile());
+                log.level4Debug("Picking Jar File:" + jar.getFile() +" ..scanning.");
                 while ((ZEntry = zip.getNextEntry()) != null) {
                     String entry = ZEntry.getName();
-                    System.out.println(entry);
                     if (entry.startsWith("SCRIPTS/")){ //part of CASPAC
                         log.level4Debug("parsing "+entry);
                         handleCASPACJarFiles(entry);
@@ -153,8 +156,26 @@ public final class Caspac {
     }
 
 
+    public void setActiveScript(Script s){
+        if (type == 1) {  //CASUAL checks for updates
+            try {
+                activeScript=s;
+                loadActiveScript();
+                //update script
 
+            } catch (MalformedURLException ex) {
+                log.level0Error("@problemDownloading");
+            } catch (IOException ex) {
+                log.level0Error("@problemDownloading");
+            }
 
+        } else {
+            activeScript=s;
+        }
+    }
+    public Script getActiveScript(){
+        return this.activeScript;
+    }
 
     /**
      * removes a script
@@ -226,9 +247,9 @@ public final class Caspac {
         performUnzipOnQueue();
     }
     
-    public void loadSelectedScript(Script s) throws IOException{
+    public void loadActiveScript() throws IOException{
          log.level4Debug("\n\n\nStarting CASPAC unzip.");
-        String scriptName=s.name;
+        String scriptName=activeScript.name;
 
         if (type==0){
             Unzip unzip = new Unzip(CASPAC);
@@ -241,9 +262,16 @@ public final class Caspac {
             }
     
         } else if (type==1){
+             try {
+                 activeScript=updateIfRequired(activeScript);
+             } catch (     MalformedURLException | URISyntaxException ex) {
+                 Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
+             }
+            //no need to update again because it is being updated
+            replaceScriptByName(activeScript);
+
             unzipThreads=new ArrayList<>();
-            this.unzipThreads.add(new Thread(s.getExtractionRunnable()));
-            activeScript=s;
+            this.unzipThreads.add(new Thread(activeScript.getExtractionRunnable()));
             unzipThreads.get(0).start();
         }
         
@@ -301,6 +329,7 @@ public final class Caspac {
     public void waitForUnzipComplete(){
         boolean[] isUnzipping=new boolean[unzipThreads.size()];
         Arrays.fill(isUnzipping, Boolean.TRUE);
+        log.level4Debug("Currently waiting for Threads:"+ Integer.toString(isUnzipping.length));
         while (BooleanOperations.containsTrue(isUnzipping)){
             CASUALTools.sleepForOneTenthOfASecond();
             for (int i = 0; i<isUnzipping.length; i++){
@@ -311,6 +340,9 @@ public final class Caspac {
         }
         if (this.caspacShouldBeDeletedAfterExtraction){
             this.CASPAC.delete();
+        }
+        if (Statics.useGUI){
+            Statics.GUI.setCASPAC(this);
         }
         log.level4Debug("Unzipping complete.");
     }
@@ -620,6 +652,69 @@ public final class Caspac {
         log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
     }
 
+    
+        
+    /**
+     * checks for updates.  
+     * @return true if script can continue.  false if halt is recommended.
+     */
+    public Script updateIfRequired(Script s) throws MalformedURLException, URISyntaxException, IOException{
+        if (s.metaData.minSVNversion.isEmpty())return s;
+        int mySVNVersion=Integer.parseInt(java.util.ResourceBundle
+                .getBundle("CASUAL/resources/CASUALApp")
+                .getString("Application.revision"));
+        int myScriptVersion=Integer.parseInt(s.metaData.scriptRevision);
+        String myScriptName=s.name;
+        CASUALUpdates ci=new CASUALUpdates();
+        Properties updatedprop=new Properties();
+        
+        Script updatedScript=new Script(s);
+        new File(s.tempDir).mkdirs();
+        updatedprop.load((InputStream)ci.downloadMetaFromRepoForScript(s));
+        updatedScript.metaData.load(updatedprop);
+        int updatedSVNVersion=Integer.parseInt(updatedScript.metaData.minSVNversion);
+        int updatedScriptVersion=Integer.parseInt(updatedScript.metaData.scriptRevision);
+        
+        if (mySVNVersion<updatedSVNVersion){
+            updatedScript.scriptContents="";
+            log.level2Information("\n"+updatedScript.metaData.killSwitchMessage);
+            return updatedScript;
+        } else if (myScriptVersion< updatedScriptVersion){
+            log.level2Information("@scriptIsOutOfDate");
+            log.level2Information("\n"+updatedScript.metaData.updateMessage);
+            updatedScript=ci.updateScript(updatedScript,this.TempFolder);
+            return updatedScript;
+        } else {
+            log.level2Information("@noUpdateRequired");
+            return s;
+        }
+
+    }
+ 
+    /**
+     * replaces a script in list array
+     * @param s script to replace
+     */
+    public int replaceScriptByName(Script s) {
+        String name=s.name;
+        for (int i=0; i<this.scripts.size();i++){
+            if (scripts.get(i).name.equals(name)){
+                scripts.set(i, s);
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * build class is a reference to handle -build.properties information
      */

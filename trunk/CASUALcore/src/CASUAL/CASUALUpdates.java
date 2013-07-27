@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.caspac.Script;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipException;
 
 /**
  *
@@ -61,9 +63,9 @@ public class CASUALUpdates {
      * @throws MalformedURLException
      * @throws IOException
      */
-    public int checkOfficialRepo(String script, CASPACData localInformation) throws MalformedURLException, IOException {
+    public int checkOfficialRepo(Script script) throws MalformedURLException, IOException {
         //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
-
+        CASPACData localInformation=new CASPACData(script.metaData.metaProp.toString());
         CASPACData webInformation;
         try {
             webInformation = new CASPACData(getWebData(CASUALRepo + script + ".meta"));
@@ -89,7 +91,7 @@ public class CASUALUpdates {
                     Log.level2Information("@scriptIsOutOfDate");
                     //ugly code dealing with /SCRIPTS/ folder on computer.
                     new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
-                    int status = downloadUpdates(script, webInformation);
+                    int status = downloadUpdates(script.name, webInformation);
                     if (status == 0) {
                         Log.level2Information("@md5sVerified");
                         return 2;
@@ -134,9 +136,7 @@ public class CASUALUpdates {
     public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
         try {
             downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
-        } catch (MalformedURLException ex) {
-            Log.errorHandler(ex);
-        } catch (URISyntaxException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             Log.errorHandler(ex);
         }
         return true;
@@ -151,7 +151,8 @@ public class CASUALUpdates {
      * @return true if downloaded
      */
     public boolean downloadFileFromInternet(URL url, String outputFile, String friendlyName) {
-        Log.level4Debug("Downloading " + url);
+        Log.progress("Downloading ");
+        Log.level4Debug("Downloading "+url);
         Log.level4Debug("To: " + outputFile);
         InputStream input;
         try {
@@ -159,19 +160,25 @@ public class CASUALUpdates {
             input = url.openStream();
             byte[] buffer = new byte[4096];
             File f = new File(outputFile);
+            f.getParentFile().mkdirs();
             OutputStream output = new FileOutputStream(f);
             int bytes = 0;
             Log.progress(friendlyName.replace("/SCRIPTS/", ""));
             int lastlength = 0;
             int kilobytes;
-            int offset = Statics.ProgressDoc.getLength();
+            int offset=1;
+            if (Statics.ProgressDoc!=null){
+                offset = Statics.ProgressDoc.getLength();
+            }
             try {
                 int bytesRead;
                 while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
                     output.write(buffer, 0, bytesRead);
                     bytes = bytes + bytesRead;
                     kilobytes = bytes / 1024;
-                    Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
+                    if (Statics.ProgressDoc!=null){
+                        Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
+                    }
                     lastlength = 6 + Integer.toString(kilobytes).length();
 
                 }
@@ -218,7 +225,7 @@ public class CASUALUpdates {
         return url;
     }
 
-    private String getWebData(String script) throws MalformedURLException, IOException, URISyntaxException {
+    public String getWebData(String script) throws MalformedURLException, IOException, URISyntaxException {
         URL url = stringToFormattedURL(script);
         String webData;
         try (ReadableByteChannel rbc = Channels.newChannel(url.openStream())) {
@@ -238,6 +245,26 @@ public class CASUALUpdates {
         return webData;
     }
 
+    public InputStream downloadMetaFromRepoForScript(Script s) throws MalformedURLException, URISyntaxException, IOException{
+        URL url;
+        String parentFolder=new File(s.tempDir).getParent() +"/";
+        String meta=s.name+".meta";
+        if (CASUALTools.IDEMode){
+            url = stringToFormattedURL(CASUALRepo + "/SCRIPTS/"+meta);   
+        } else {
+            
+            url = stringToFormattedURL(CASUALRepo+"/" + meta);
+            System.out.println(url.toString());
+        }
+        return url.openStream();
+    }
+    
+    public InputStream streamFileFromNet(String link) throws MalformedURLException, URISyntaxException, IOException{
+        URL url=new URL(link);
+        return url.openStream();
+    }
+    
+    
     /*
      * Takes CASUAL ID String Returns: SVN Revision, Script Revision, Script
      * Identification, support URL, message to user
@@ -368,5 +395,31 @@ public class CASUALUpdates {
         String downloadBasename = new File(downloadURL).getName();
         return Statics.TempFolder + downloadBasename;
 
+    }
+
+    public Script updateScript(Script script,String tempFolder) throws ZipException, IOException, MalformedURLException, URISyntaxException {
+        MD5sum md5sum=new MD5sum();
+        
+        for (String md5:script.metaData.md5s){
+                FileOperations fo=new FileOperations();
+                String targetFilename=md5sum.getFileNamefromLinuxMD5String(md5);
+                URL url;
+                url = stringToFormattedURL(CASUALRepo +"/SCRIPTS/"+ targetFilename);
+                System.out.println(url);
+    
+                String localFilename=tempFolder+targetFilename;
+                
+                if (targetFilename.endsWith(".scr")){
+                    script.scriptContents=StringOperations.convertStreamToString(url.openStream());
+                }  else if (targetFilename.endsWith(".txt")){
+                    script.discription=StringOperations.convertStreamToString(url.openStream());
+                } else if (targetFilename.endsWith(".zip")){
+                    this.downloadFileFromInternet(url, localFilename, targetFilename);
+                    script.scriptZipFile=localFilename;
+                    script.performUnzipAfterScriptZipfileUpdate();
+                }
+                
+            }
+        return script;
     }
 }

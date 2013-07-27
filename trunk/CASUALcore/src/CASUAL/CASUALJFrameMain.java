@@ -23,8 +23,6 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.border.TitledBorder;
@@ -122,6 +120,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+        comboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxScriptSelectorActionPerformed(evt);
             }
         });
 
@@ -269,7 +272,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -299,6 +302,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         //execute
         if (Statics.TargetScriptIsResource) {
             log.level4Debug("Loading internal resource: " + script);
+            caspac.getActiveScript().scriptContinue=true;
             new CASUALScriptParser().executeSelectedScript(caspac, true);
         }
 
@@ -416,13 +420,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         Statics.lockGUIunzip=true;
         String selectedScript=comboBoxScriptSelector.getSelectedItem().toString();
         log.level4Debug("hiding script selector TargetScript: " + selectedScript);
-        caspac.activeScript=caspac.getScriptByName(selectedScript);
-        log.level2Information(caspac.activeScript.discription);
-        try {
-            caspac.loadSelectedScript(caspac.activeScript);
-        } catch (IOException ex) {
-            Logger.getLogger(CASUALJFrameMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        caspac.setActiveScript(caspac.getScriptByName(selectedScript));
+        log.level2Information(caspac.getActiveScript().discription);
         caspac.waitForUnzipComplete();
         
        
@@ -472,6 +471,10 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
         buttonEnableStage = false;
     }//GEN-LAST:event_StatusLabelMouseExited
+
+    private void comboBoxScriptSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxScriptSelectorActionPerformed
 
     private static void launchLink(String Link) {
         new LinkLauncher(Link).launch();
@@ -636,7 +639,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         CASUALApp.shutdown(0);
     }
 
-    void setCASPAC(Caspac caspac) {
+    public void setScript(Script s){
+        
+    }
+    
+    public void setCASPAC(Caspac caspac) {
         this.setInformationScrollBorderText("Important Information");
         this.caspac=caspac;
         Statics.GUIIsAvailable=true;
@@ -650,10 +657,19 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         }
         if( caspac.scripts.size()>0){
             for (Script s:caspac.scripts){
-                this.comboBoxScriptSelector.addItem(s.name);
+                boolean addScript=true;
+                for (int i=0; i<comboBoxScriptSelector.getItemCount();i++){
+                    if (comboBoxScriptSelector.getItemAt(i).equals(s.name)){
+                        addScript=false;
+                    }
+                }
+                if (addScript){
+                    this.comboBoxScriptSelector.addItem(s.name);
+                }                
+                
                 log.level4Debug("adding "+s.name+" to UI");
             }
-            this.comboBoxScriptSelector.setSelectedIndex(0);
+            this.comboBoxScriptSelector.setSelectedItem(caspac.getActiveScript().name);
             log.level2Information(caspac.getScriptByName(this.comboBoxGetSelectedItem()).discription);
         }
         if (comboBoxScriptSelector.getItemCount() < 1) {

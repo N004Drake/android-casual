@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.caspac.Caspac;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -34,20 +35,26 @@ public class CASUALLanguage {
     String ScriptName;
     private String ScriptTempFolder;
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
-
+    final Caspac CASPAC;
     /**
      * instantiates CASUALLanguage with script
      * @param ScriptName name of script
      * @param ScriptTempFolder temp folder to use for script
      */
-    public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
+    public CASUALLanguage(Caspac caspac, String ScriptName, String ScriptTempFolder) {
         this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
+        this.CASPAC=caspac;
     }
     Log log = new Log();
     static String GOTO = "";
     int CurrentLine = 1;
-
+     public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
+        this.ScriptName = ScriptName;
+        this.ScriptTempFolder = ScriptTempFolder;
+        this.CASPAC=null;
+    }
+    
     /**
      * starts the scripting handler spooler and handles flow control
      * @param dataIn CASUALScript .scr file
@@ -58,7 +65,8 @@ public class CASUALLanguage {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
 
             bReader.mark(1);
-            while ((strLine = bReader.readLine()) != null && CASUALScriptParser.ScriptContinue) {
+            while ((strLine = bReader.readLine()) != null) {
+                if (CASPAC.getActiveScript().scriptContinue=false) return;
                 CurrentLine++;
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBar(CurrentLine);
@@ -196,7 +204,7 @@ public class CASUALLanguage {
          }
          */
         if (line.startsWith("$HALT")) {
-            CASUALScriptParser.ScriptContinue = false;
+            CASPAC.getActiveScript().scriptContinue = false;
 
             //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
@@ -390,7 +398,7 @@ public class CASUALLanguage {
             if (n == 0) {
                 log.level0Error(ScriptName);
                 log.level0Error("@canceledAtUserRequest");
-                CASUALScriptParser.ScriptContinue = false;
+                CASPAC.getActiveScript().scriptContinue = false;
                 return "";
             }
             return "";
@@ -406,7 +414,7 @@ public class CASUALLanguage {
             if (n == 0) {
                 log.level0Error(ScriptName);
                 log.level0Error("@haltedPerformActions");
-                CASUALScriptParser.ScriptContinue = false;
+                CASPAC.getActiveScript().scriptContinue = false;
                 return "";
             }
             return "";
@@ -660,10 +668,10 @@ public class CASUALLanguage {
 
     private void fileNotFound() {
         int n = new CASUALInteraction("@interactionMissingFileVirusScanner").showUserCancelOption();
-        if (n == 0) {
+        if (n == 1) {
             log.level0Error(ScriptName);
             log.level0Error("@canceledDueToMissingFiles");
-            CASUALScriptParser.ScriptContinue = false;
+            CASPAC.getActiveScript().scriptContinue = false;
         }
     }
 

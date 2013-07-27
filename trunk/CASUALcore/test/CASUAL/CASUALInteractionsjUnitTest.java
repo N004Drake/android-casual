@@ -67,9 +67,9 @@ public class CASUALInteractionsjUnitTest {
             assertEquals(0, ci.showActionRequiredDialog());
             ci = new CASUAL.CASUALInteraction("Action Required", "Select\nI did it!");
             assertEquals(1, ci.showActionRequiredDialog());
-            ci = new CASUAL.CASUALInteraction("Cancel Option", "hit\nStop!");
-            assertEquals(0, ci.showUserCancelOption());
             ci = new CASUAL.CASUALInteraction("Cancel Option ", "hit\nContinue!");
+            assertEquals(0, ci.showUserCancelOption());
+            ci = new CASUAL.CASUALInteraction("Cancel Option", "hit\nStop!");
             assertEquals(1, ci.showUserCancelOption());
             ci = new CASUAL.CASUALInteraction("Error Dialog", "hit\nOK!");
             ci.showErrorDialog();

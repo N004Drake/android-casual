@@ -199,7 +199,7 @@ public class CASUALInteraction extends JOptionPane {
         new Log().level4Debug("Displaying User Cancel Option Dialog title: " + title + " message: " + messageText+"\n[RESPONSEEXPECTED]");
 
         int n;
-        Object[] Options = {"Stop", "Continue"};
+        Object[] Options = {"Continue", "Stop"};
         if (Statics.useGUI && !Statics.dumbTerminalGUI) {
             if (title == null) {
                 n = JOptionPane.showOptionDialog(

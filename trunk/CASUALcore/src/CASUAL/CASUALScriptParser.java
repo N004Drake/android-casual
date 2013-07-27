@@ -33,16 +33,14 @@ public class CASUALScriptParser {
     /**
      * If true, script will continue. False to shutdown.
      */
-    public static boolean ScriptContinue = true;
     Log log = new Log();
     int LinesInScript = 0;
     String ScriptTempFolder = "";
     String ScriptName = "";
 
-
-
     /**
      * executes a CASUAL script from a file
+     *
      * @param File CASUAL.scr file
      * @param script script name
      * @param multiThreaded false executes on main thread
@@ -54,18 +52,19 @@ public class CASUALScriptParser {
 
     /**
      * executes a CASUAL script from a file Reports to Log
+     *
      * @param script path to file
      */
     private DataInputStream getDataStreamFromFile(Caspac caspac) {
 
         try {
-            log.level4Debug("Selected file" + caspac.activeScript.name);
+            log.level4Debug("Selected file" + caspac.getActiveScript().name);
 
-            ScriptName = caspac.activeScript.name;
-            ScriptTempFolder = caspac.activeScript.tempDir;
-            LinesInScript = new CountLines().countISLines(caspac.activeScript.getScriptContents());
+            ScriptName = caspac.getActiveScript().name;
+            ScriptTempFolder = caspac.getActiveScript().tempDir;
+            LinesInScript = new CountLines().countISLines(caspac.getActiveScript().getScriptContents());
             log.level4Debug("Lines in Script " + LinesInScript);
-            return new DataInputStream(caspac.activeScript.getScriptContents());
+            return new DataInputStream(caspac.getActiveScript().getScriptContents());
 
         } catch (FileNotFoundException ex) {
             log.errorHandler(ex);
@@ -80,6 +79,7 @@ public class CASUALScriptParser {
 
     /**
      * provides a way to insert a line of CASUAL script.
+     *
      * @param Line line to execute
      * @return from CASUAL language
      */
@@ -98,24 +98,20 @@ public class CASUALScriptParser {
         Statics.scriptRunLock = true;
         Statics.ReactionEvents = new ArrayList<>();
         Statics.ActionEvents = new ArrayList<>();
-        ScriptContinue = true;
-        scriptInput = new DataInputStream(StringOperations.convertStringToStream(caspac.activeScript.scriptContents));
+        caspac.getActiveScript().scriptContinue = true;
+        scriptInput = new DataInputStream(StringOperations.convertStringToStream(caspac.getActiveScript().scriptContents));
         log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 //int updateStatus;
                 log.level4Debug("CASUAL has initiated a multithreaded execution environment");
-                String TestString = "";
-                if (checkForUpdates(TestString)) {
-                    return;
-                }
-
+               
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBarMax(LinesInScript);
                 }
                 log.level4Debug("Reading datastream" + scriptInput);
-                new CASUALLanguage(caspac.activeScript.name, caspac.activeScript.tempDir).beginScriptingHandler(scriptInput);
+                new CASUALLanguage(caspac, caspac.getActiveScript().name, caspac.getActiveScript().tempDir).beginScriptingHandler(scriptInput);
 
                 if (Statics.useGUI) {
                     //return to normal.
@@ -135,18 +131,16 @@ public class CASUALScriptParser {
 
             }
 
-
-
             private boolean checkForUpdates(String testString) {
                 Statics.setStatus("Checking for Updates");
                 int updateStatus;
-                if (caspac.activeScript.extractionMethod!=0) {
+                if (caspac.getActiveScript().extractionMethod != 0) {
                     try {
                         //String[] IDStrings = CASUALIDString.split("\n");
                         //This is where we hold the local information to be compared to the update
                         CASPACData localInformation = new CASPACData(testString);
 
-                        updateStatus = new CASUALUpdates().checkOfficialRepo(caspac.activeScript.tempDir, localInformation);
+                        updateStatus = 0;
                         /*
                          * checks for updates returns: 0=no updates found
                          * 1=random error 2=Script Update Required 3=CASUAL
@@ -169,7 +163,7 @@ public class CASUALScriptParser {
                             case 3:
                                 log.level0Error(Statics.webInformation.updateMessage);
                                 log.level0Error("@killSwitchMessage");
-                                new CASUALInteraction("@interactionKillSwitchMessage\n"+ Statics.webInformation.updateMessage).showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
+                                new CASUALInteraction("@interactionKillSwitchMessage\n" + Statics.webInformation.updateMessage).showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
                                 new LinkLauncher(Statics.webInformation.supportURL).launch();
                                 CASUALApp.shutdown(0);
                                 return true;
@@ -193,8 +187,8 @@ public class CASUALScriptParser {
                                 break;
                         }
                     } catch (MalformedURLException ex) {
-                        log.level0Error("@couldNotFindScript"); 
-                        log.level0Error(caspac.activeScript.name);
+                        log.level0Error("@couldNotFindScript");
+                        log.level0Error(caspac.getActiveScript().name);
                         log.level0Error("@reportThisError");
                         log.errorHandler(ex);
                     } catch (IOException ex) {
@@ -217,23 +211,23 @@ public class CASUALScriptParser {
     }
 
     void executeFirstScriptInCASPAC(Caspac CASPAC) {
-        String scriptName= CASPAC.getScriptNames()[0];
-        Script s=CASPAC.getScriptByName(scriptName);
+        String scriptName = CASPAC.getScriptNames()[0];
+        Script s = CASPAC.getScriptByName(scriptName);
         log.level2Information(s.discription);
-        int CASUALSVN=Integer.parseInt( java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
-        int scriptSVN=Integer.parseInt(s.metaData.minSVNversion);
-        if (CASUALSVN<scriptSVN){
-           new Log().level0Error("@improperCASUALversion");
-           return;
+        int CASUALSVN = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
+        int scriptSVN = Integer.parseInt(s.metaData.minSVNversion);
+        if (CASUALSVN < scriptSVN) {
+            new Log().level0Error("@improperCASUALversion");
+            return;
         }
         CASPAC.waitForUnzipComplete();
         try {
             ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.scriptContents.getBytes("UTF-8"));
-            DataInputStream dis=new DataInputStream(scriptStream);
+            DataInputStream dis = new DataInputStream(scriptStream);
             new CASUALLanguage(s.name, s.tempDir).beginScriptingHandler(dis);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 }
