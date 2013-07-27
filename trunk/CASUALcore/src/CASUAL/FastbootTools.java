@@ -50,7 +50,8 @@ public class FastbootTools {
     }
 
     /**
-     * gets the resource for Fastboot 
+     * gets the resource for Fastboot
+     *
      * @return path to resource
      */
     public static String getFastbootLinuxResource() {
@@ -68,6 +69,7 @@ public class FastbootTools {
 
     /**
      * executes fastboot
+     *
      * @param line params for fastboot
      * @return value from fastboot command
      */
@@ -85,6 +87,7 @@ public class FastbootTools {
 
     /**
      * performs elevated fastboot command
+     *
      * @param line params for fastboot
      * @return value from fastboot command
      */

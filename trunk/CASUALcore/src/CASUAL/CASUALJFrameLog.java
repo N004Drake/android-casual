@@ -22,8 +22,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import javax.swing.JOptionPane;  
-
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -139,11 +138,11 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
         } catch (IOException | URISyntaxException ex) {
             Log logThis = new Log();
             logThis.errorHandler(ex);
-        }          
+        }
     }//GEN-LAST:event_jPastebinSubmitActionPerformed
 
     /**
-     *shows the Log jFrame
+     * shows the Log jFrame
      */
     public static void main() {
         java.awt.EventQueue.invokeLater(new Runnable() {

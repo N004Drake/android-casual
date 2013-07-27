@@ -22,10 +22,11 @@ public class ElevateUAC {
 
     /**
      * checks if UAC is turned on
+     *
      * @return true if UAC is turned on
      */
     public static boolean checkForUAC() {
-        File dummyFile = new File(System.getenv("SystemDrive")+"/foo.bar");
+        File dummyFile = new File(System.getenv("SystemDrive") + "/foo.bar");
         dummyFile.deleteOnExit();
 
         try {

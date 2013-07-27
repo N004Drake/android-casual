@@ -8,9 +8,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -45,17 +45,17 @@ public class CASUALInteractionsjUnitTest {
         assertEquals("q", ci.inputDialog());
 
         setQuit();
-        assertEquals(0, ci.showActionRequiredDialog());
-        setContinue();
         assertEquals(1, ci.showActionRequiredDialog());
+        setContinue();
+        assertEquals(0, ci.showActionRequiredDialog());
         setContinue();
         ci.showErrorDialog();
         setContinue();
         ci.showInformationMessage();
         setQuit();
-        assertEquals(0, ci.showUserCancelOption());
-        setContinue();
         assertEquals(1, ci.showUserCancelOption());
+        setContinue();
+        assertEquals(0, ci.showUserCancelOption());
         setContinue();
         ci.showUserNotification();
         CASUAL.Statics.useGUI = true;
@@ -64,13 +64,13 @@ public class CASUALInteractionsjUnitTest {
             ci = new CASUAL.CASUALInteraction("Text Input", "Press\n1");
             assertEquals("1", ci.inputDialog());
             ci = new CASUAL.CASUALInteraction("Action Required", "Select\nI didn't do it!");
-            assertEquals(0, ci.showActionRequiredDialog());
-            ci = new CASUAL.CASUALInteraction("Action Required", "Select\nI did it!");
             assertEquals(1, ci.showActionRequiredDialog());
-            ci = new CASUAL.CASUALInteraction("Cancel Option ", "hit\nContinue!");
-            assertEquals(0, ci.showUserCancelOption());
+            ci = new CASUAL.CASUALInteraction("Action Required", "Select\nI did it!");
+            assertEquals(0, ci.showActionRequiredDialog());
             ci = new CASUAL.CASUALInteraction("Cancel Option", "hit\nStop!");
             assertEquals(1, ci.showUserCancelOption());
+            ci = new CASUAL.CASUALInteraction("Cancel Option ", "hit\nContinue!");
+            assertEquals(0, ci.showUserCancelOption());
             ci = new CASUAL.CASUALInteraction("Error Dialog", "hit\nOK!");
             ci.showErrorDialog();
             ci = new CASUAL.CASUALInteraction("Information Dialog", "hit\nOK!");

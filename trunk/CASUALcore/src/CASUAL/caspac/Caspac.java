@@ -18,18 +18,16 @@ package CASUAL.caspac;
 
 import CASUAL.AudioHandler;
 import CASUAL.BooleanOperations;
-import CASUAL.CASPACData;
-//Ugly, should not depend on CASUALApp or CASUALTools.
 import CASUAL.CASUALApp;
 import CASUAL.CASUALTools;
 import CASUAL.CASUALUpdates;
-import CASUAL.CipherHandler;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.StringOperations;
 import CASUAL.Unzip;
 import CASUAL.Zip;
+import CASUAL.crypto.AES128Handler;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -53,7 +51,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
@@ -111,7 +108,7 @@ public final class Caspac {
      * always call waitForUnzipComplete in order to delete file and maintain security
      */
     public Caspac(File caspac, String tempDir, int type, char[] securityKey) throws IOException, Exception {
-        CipherHandler ch=new CipherHandler(caspac);
+        AES128Handler ch=new AES128Handler(caspac);
         ch.decrypt(tempDir+caspac.getName(), securityKey);
         this.CASPAC = new File(tempDir+caspac.getName());
         this.CASPACsrc=null;
@@ -231,7 +228,7 @@ public final class Caspac {
     }
     
     public void loadFirstScriptFromCASPAC() throws ZipException, IOException{
-        log.level4Debug("\n\n\nStarting CASPAC unzip.");
+        log.level4Debug("\n\n\nStarting CASPAC unzip on "+CASPAC.getAbsolutePath());
         String scriptName="";
         Unzip unzip = new Unzip(CASPAC);
         while (unzip.zipFileEntries.hasMoreElements()) {
@@ -450,7 +447,9 @@ public final class Caspac {
         log.level4Debug("Found logo adding information to "
                 + "CASPAC");
         logo=ImageIO.read(ImageIO.createImageInputStream(pack.streamFileFromZip(entry)));
-        if (filename.isEmpty())filename=this.TempFolder+"-logo.png";
+        if (filename.isEmpty()) {
+            filename=this.TempFolder+"-logo.png";
+        }
         if (build!=null){
             build.bannerPic = filename;
         } else {
@@ -466,7 +465,9 @@ public final class Caspac {
             setBuildPropInformation(pack, entry);
             isAControlFile=true;
         } else if (filename.endsWith(".png")) {
-            if (filename.equals("")) filename=this.TempFolder+"-logo.png";
+            if (filename.equals("")) {
+                filename=this.TempFolder+"-logo.png";
+            }
             extractCASPACBanner(pack, entry, filename);
             isAControlFile=true;
         } else if (filename.toString().equals("-Overview.txt")) {
@@ -658,7 +659,9 @@ public final class Caspac {
      * @return true if script can continue.  false if halt is recommended.
      */
     public Script updateIfRequired(Script s) throws MalformedURLException, URISyntaxException, IOException{
-        if (s.metaData.minSVNversion.isEmpty())return s;
+        if (s.metaData.minSVNversion.isEmpty()) {
+            return s;
+        }
         int mySVNVersion=Integer.parseInt(java.util.ResourceBundle
                 .getBundle("CASUAL/resources/CASUALApp")
                 .getString("Application.revision"));

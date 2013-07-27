@@ -32,6 +32,7 @@ import javax.swing.border.TitledBorder;
  * @author adam
  */
 public final class CASUALJFrameMain extends javax.swing.JFrame {
+
     Caspac caspac;
     String nonResourceFileName;
     Log log = new Log();
@@ -288,7 +289,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     *the start button was pressed.
+     * the start button was pressed.
      */
     public void StartButtonActionPerformed() {
         log.level4Debug("StartButtonActionPerformed() Script Activated");
@@ -297,12 +298,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         CASUALConnectionStatusMonitor.DeviceCheck.stop();
         enableControls(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
-        
+
 
         //execute
         if (Statics.TargetScriptIsResource) {
             log.level4Debug("Loading internal resource: " + script);
-            Statics.CASPAC.getActiveScript().scriptContinue=true;
+            Statics.CASPAC.getActiveScript().scriptContinue = true;
             new CASUALScriptParser().executeSelectedScript(caspac, true);
         }
 
@@ -310,6 +311,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * sets the progress bar value.
+     *
      * @param value value for progress bar
      */
     public void setProgressBar(int value) {
@@ -318,6 +320,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * sets max value for progress bar
+     *
      * @param value maximum
      */
     public void setProgressBarMax(int value) {
@@ -346,9 +349,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
                 log.level2Information("Description for " + nonResourceFileName);
-                try{
-                log.level2Information(fileOperations.readFile(nonResourceFileName + ".txt"));
-                } catch (Exception e){
+                try {
+                    log.level2Information(fileOperations.readFile(nonResourceFileName + ".txt"));
+                } catch (Exception e) {
                     log.level2Information("@textResourceNotFound");
                 }
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
@@ -400,6 +403,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * gets the selected combobox item.
+     *
      * @return selected item in combobox
      */
     public String comboBoxGetSelectedItem() {
@@ -408,6 +412,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * adds an item to the combo box
+     *
      * @param item item to add
      */
     public void comboBoxScriptSelectorAddNewItem(String item) {
@@ -417,17 +422,17 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
         CASUALConnectionStatusMonitor.DeviceCheck.stop();
         this.enableControls(false);
-        Statics.lockGUIunzip=true;
-        String selectedScript=comboBoxScriptSelector.getSelectedItem().toString();
+        Statics.lockGUIunzip = true;
+        String selectedScript = comboBoxScriptSelector.getSelectedItem().toString();
         log.level4Debug("hiding script selector TargetScript: " + selectedScript);
         caspac.setActiveScript(caspac.getScriptByName(selectedScript));
         log.level2Information(caspac.getActiveScript().discription);
         caspac.waitForUnzipComplete();
-        
-       
+
+
         Statics.lockGUIunzip = false;
         CASUALConnectionStatusMonitor.DeviceCheck.start();
-        
+
 
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
 
@@ -447,14 +452,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     private void startButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseExited
     }//GEN-LAST:event_startButtonMouseExited
 
-
     private void StatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseClicked
         if (buttonEnableStage) {
             log.level4Debug("Control system override active.  User has manually enabled controls");
             startButton.setEnabled(buttonEnableStage);
             this.comboBoxScriptSelector.setEnabled(buttonEnableStage);
             this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
-            buttonEnableStage=false;
+            buttonEnableStage = false;
 
         }
         if (!startButton.isEnabled() && !Statics.lockGUIformPrep) {
@@ -479,7 +483,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     private static void launchLink(String Link) {
         new LinkLauncher(Link).launch();
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DonateButton;
     private javax.swing.JFileChooser FileChooser1;
@@ -504,6 +507,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * changes the label icon
+     *
      * @param Icon resource to be displayed
      * @param Text text if icon is missing
      */
@@ -513,8 +517,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * takes a resource and turns it into an ImageIcon
+     *
      * @param path pat to resource
-     * @param description icon description 
+     * @param description icon description
      * @return an icon
      */
     protected ImageIcon createImageIcon(String path, String description) {
@@ -538,6 +543,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * sets the message label text
+     *
      * @param text label text
      */
     public void setStatusMessageLabel(String text) {
@@ -546,6 +552,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * gets the control status
+     *
      * @return true if enabled
      */
     public boolean getControlStatus() {
@@ -554,12 +561,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * sets controls status
+     *
      * @param status commanded value
      * @return true if enabled false if not
      */
     public boolean enableControls(boolean status) {
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
-        if (caspac!=null){
+        if (caspac != null) {
             boolean bypassLock = caspac.build.alwaysEnableControls;
             if (bypassLock) {
                 status = true; //if LockOnADBDisconnect is false then just enable controls
@@ -568,12 +576,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 return true;
             }
         }
-        if (!Statics.lockGUIformPrep ){
-            if (!Statics.lockGUIunzip){
-                if (!Statics.scriptRunLock){
+        if (!Statics.lockGUIformPrep) {
+            if (!Statics.lockGUIunzip) {
+                if (!Statics.scriptRunLock) {
                     startButton.setEnabled(status);
                     comboBoxScriptSelector.setEnabled(status);
-                    log.level4Debug("Controls Enabled status: " + status);        
+                    log.level4Debug("Controls Enabled status: " + status);
                 } else {
                     log.level4Debug("Control Change requested but script is running");
                 }
@@ -602,6 +610,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * sets the main window banner text if an image is not used
+     *
      * @param text text to display as banner
      */
     public void setWindowBannerText(String text) {
@@ -610,6 +619,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * sets "do it!" button text
+     *
      * @param text text for main execution button
      */
     public void setStartButtonText(String text) {
@@ -618,7 +628,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
     /**
      * sets window banner image
-     * @param icon image to display 
+     *
+     * @param icon image to display
      * @param text text if image cannot be displayed
      */
     /**
@@ -632,61 +643,60 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }
 
     /**
-     * window is closing 
+     * window is closing
+     *
      * @param e closing event
      */
     public void windowCosing(WindowEvent e) {
         CASUALApp.shutdown(0);
     }
 
-    public void setScript(Script s){
-        
+    public void setScript(Script s) {
     }
-    
+
     public void setCASPAC(Caspac caspac) {
         this.setInformationScrollBorderText("Important Information");
-        this.caspac=caspac;
-        Statics.GUIIsAvailable=true;
-       
+        this.caspac = caspac;
+        Statics.GUIIsAvailable = true;
+
         log.level2Information(caspac.overview);
-        if (caspac.build.usePictureForBanner){
+        if (caspac.build.usePictureForBanner) {
             //setup banner with CASPAC.logo
         }
-        if (caspac.build.alwaysEnableControls){
+        if (caspac.build.alwaysEnableControls) {
             enableControls(true);
         }
-        if( caspac.scripts.size()>0){
-            for (Script s:caspac.scripts){
-                boolean addScript=true;
-                for (int i=0; i<comboBoxScriptSelector.getItemCount();i++){
-                    if (comboBoxScriptSelector.getItemAt(i).equals(s.name)){
-                        addScript=false;
+        if (caspac.scripts.size() > 0) {
+            for (Script s : caspac.scripts) {
+                boolean addScript = true;
+                for (int i = 0; i < comboBoxScriptSelector.getItemCount(); i++) {
+                    if (comboBoxScriptSelector.getItemAt(i).equals(s.name)) {
+                        addScript = false;
                     }
                 }
-                if (addScript){
+                if (addScript) {
                     this.comboBoxScriptSelector.addItem(s.name);
-                }                
-                
-                log.level4Debug("adding "+s.name+" to UI");
+                }
+
+                log.level4Debug("adding " + s.name + " to UI");
             }
             this.comboBoxScriptSelector.setSelectedItem(caspac.getActiveScript().name);
             log.level2Information(caspac.getScriptByName(this.comboBoxGetSelectedItem()).discription);
         }
         if (comboBoxScriptSelector.getItemCount() < 1) {
-           // comboBoxScriptSelector.setVisible(false);
+            // comboBoxScriptSelector.setVisible(false);
         }
         this.startButton.setText(caspac.build.executeButtonText);
         setWindowBannerText("");
-        if (caspac.logo !=null && caspac.logo.getMinX()<40){
+        if (caspac.logo != null && caspac.logo.getMinX() < 40) {
             setWindowBannerImage(caspac.logo, caspac.build.bannerText);
         } else {
             setWindowBannerText(caspac.build.bannerText);
         }
     }
-    
 
     public void setInformationScrollBorderText(String title) {
-        TitledBorder info=(TitledBorder)this.informationScrollPanel.getBorder();
+        TitledBorder info = (TitledBorder) this.informationScrollPanel.getBorder();
         info.setTitle(title);
         this.repaint();
     }

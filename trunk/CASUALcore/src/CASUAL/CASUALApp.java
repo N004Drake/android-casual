@@ -27,9 +27,9 @@ import java.util.logging.Logger;
  */
 public class CASUALApp {
 //TODO: convert android-casual to Maven so it works better cross-platform
-    
+
     /**
-     *the default package used for IDE mode or if no scripts are found
+     * the default package used for IDE mode or if no scripts are found
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
@@ -64,7 +64,7 @@ public class CASUALApp {
         String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
         new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
-                + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" +CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
+                + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
                 + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
                 + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
                 + "    and you are welcome to redistribute it, under certain conditions; run\n"
@@ -73,7 +73,9 @@ public class CASUALApp {
 
 
         boolean shutdown = checkModeSwitchArgs(args);
-        if ( ! shutdown ) new CASUALMain().startup(args);
+        if (!shutdown) {
+            new CASUALMain().startup(args);
+        }
     }
 
     /**
@@ -85,7 +87,7 @@ public class CASUALApp {
      * @return true if shutdown is commanded;
      */
     private static boolean checkModeSwitchArgs(String args[]) {
-        String password=null;
+        String password = null;
         for (int i = 0; i < args.length; i++) {
 
             if (args[i].equals("--help") || args[i].equals("-v?")) {
@@ -116,19 +118,19 @@ public class CASUALApp {
                 CASUALApp.shutdown(0);
                 return true;
             }
-            if (args[i].contains("--password")||args[i].contains("-p")){
+            if (args[i].contains("--password") || args[i].contains("-p")) {
                 i++;
-                password=args[i];
+                password = args[i];
             }
-            
+
             if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
-                
-                
+
+
                 i++;
-                if (password==null){
+                if (password == null) {
                     new CASPACHandler().loadCASUALPack(args[i]);
                 } else {
-                    new CASPACHandler().loadCASUALPack(args[i],password.toCharArray());    
+                    new CASPACHandler().loadCASUALPack(args[i], password.toCharArray());
                 }
                 new Log().level2Information("CASPAC completed.");
                 CASUALApp.shutdown(0);
@@ -137,25 +139,26 @@ public class CASUALApp {
             if (args[i].contains("--gui") || args[i].contains("-g")) {
                 Statics.useGUI = true;
             }
-            
+
         }
         return false;
     }
 
     /**
      * shuts down CASUAL
+     *
      * @param i code to throw
      */
     public static void shutdown(int i) {
         new Log().level4Debug("Shutting Down");
         Log.out.flush();
-        if (Statics.CASPAC !=null && Statics.CASPAC.getActiveScript()!=null){
-            Statics.CASPAC.getActiveScript().scriptContinue=false;
+        if (Statics.CASPAC != null && Statics.CASPAC.getActiveScript() != null) {
+            Statics.CASPAC.getActiveScript().scriptContinue = false;
         }
         CASUALConnectionStatusMonitor.DeviceCheck.stop();
         ADBTools.killADBserver();
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
-        if (!CASUALTools.IDEMode && !Statics.useGUI && Statics.CASPAC.type!=0){
+        if (!CASUALTools.IDEMode && !Statics.useGUI && Statics.CASPAC.type != 0) {
             try {
                 new Pastebin().pasteAnonymousLog();
             } catch (MalformedURLException ex) {

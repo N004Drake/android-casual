@@ -65,7 +65,7 @@ public class LinkLauncher {
                 }
             } else {
                 Shell Shell = new Shell();
-                if (Statics.isMac()){ 
+                if (Statics.isMac()) {
                     //separate mac because open is used on different platforms
                     Shell.sendShellCommand(new String[]{"open", link});
                 } else {
@@ -73,7 +73,7 @@ public class LinkLauncher {
                     String retval = Shell.sendShellCommand(new String[]{"firefox", link});
                     if (retval.contains("CritERROR!!!")) {
                         //launch link with Chrome
-                        Shell.sendShellCommand(new String[]{"chrome", link});    
+                        Shell.sendShellCommand(new String[]{"chrome", link});
                         if (retval.contains("CritERROR!!!")) {
                             //launch link with explorer
                             retval = Shell.sendShellCommand(new String[]{"explorer", link});

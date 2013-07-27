@@ -17,6 +17,7 @@
 package CASUAL;
 
 import CASUAL.caspac.Caspac;
+import CASUAL.crypto.MD5sum;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,10 +39,12 @@ public class CASPACHandler {
     String meta = "";
     Thread adbLaunch = new Thread(new CASUALTools().launchADB);
     char[] password;
+
     public void loadCASUALPack(String pack, char[] password) {
-        this.password=password;
+        this.password = password;
         loadCASUALPack(pack);
     }
+
     /**
      * Launches a CASPAC
      *
@@ -60,19 +63,19 @@ public class CASPACHandler {
         new Log().level3Verbose("-----CASPAC MODE-----\nCASPAC: " + zipFile.getAbsolutePath());
         try {
             //begin unziping and analyzing CASPAC
-            if (password==null){
-                CASPAC = new Caspac(zipFile,Statics.TempFolder,0);
+            if (password == null) {
+                CASPAC = new Caspac(zipFile, Statics.TempFolder, 0);
             } else {
-                CASPAC = new Caspac(zipFile,Statics.TempFolder,0,password);
+                CASPAC = new Caspac(zipFile, Statics.TempFolder, 0, password);
             }
-            Statics.CASPAC=CASPAC;
-
+            Statics.CASPAC = CASPAC;
+            //CASPAC.setActiveScript(CASPAC.scripts.get(0));
         } catch (IOException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         //get ADB ready
         try {
             adb.join();
@@ -92,7 +95,7 @@ public class CASPACHandler {
             adbLaunch.join();
         } catch (InterruptedException ex) {
             Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
 
         //Launch script
         Thread t = new Thread(activateFirstScript);
@@ -110,7 +113,7 @@ public class CASPACHandler {
         @Override
         public void run() {
             try {
-                
+
                 CASPAC.loadFirstScriptFromCASPAC();
             } catch (ZipException ex) {
                 Logger.getLogger(CASPACHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,7 +126,6 @@ public class CASPACHandler {
         }
     };
 
-    
     /**
      *
      * @param pack CASPAC file
@@ -165,8 +167,6 @@ public class CASPACHandler {
         return null;
     }
 
-
- 
     private void startDumbTerminalGUI() {
         Statics.TargetScriptIsResource = false;
         Statics.dumbTerminalGUI = true;

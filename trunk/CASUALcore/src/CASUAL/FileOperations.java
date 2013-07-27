@@ -147,7 +147,7 @@ public class FileOperations {
                     for (File sub : subdir) {
                         if (sub.isDirectory()) {
                             String FoundFile = findRecursive(sub.toString(), FileName);
-                            if (FoundFile!=null && FoundFile.toString().endsWith(FileName)) {
+                            if (FoundFile != null && FoundFile.toString().endsWith(FileName)) {
                                 return FoundFile;
                             }
                         } else {
@@ -197,12 +197,12 @@ public class FileOperations {
      * @return true if exists
      */
     public boolean verifyExists(String file) {
-        if(file !=null && !file.isEmpty()){
-            File f=new File(file);
-            if (!f.exists()&& !f.isDirectory() &&!f.isFile()){
+        if (file != null && !file.isEmpty()) {
+            File f = new File(file);
+            if (!f.exists() && !f.isDirectory() && !f.isFile()) {
                 return false;
             }
-        }  else {
+        } else {
             return false;
         }
         return true;
@@ -230,6 +230,7 @@ public class FileOperations {
 
     /**
      * writes a stream to a destination file
+     *
      * @param stream Stream to be written
      * @param destination output file
      * @throws FileNotFoundException
@@ -339,7 +340,8 @@ public class FileOperations {
     }
 
     /**
-     * deletes files 
+     * deletes files
+     *
      * @param cleanUp files to be deleted
      * @return true if all files were deleted false and halts on error
      */
@@ -493,6 +495,7 @@ public class FileOperations {
 
     /**
      * reads text from stream
+     *
      * @param in stream to read
      * @return text output
      */
@@ -512,9 +515,9 @@ public class FileOperations {
         return text.toString();
     }
 
-
     /**
      * reads file contents returns string
+     *
      * @param FileOnDisk file to read
      * @return string representation of file
      */
@@ -536,7 +539,8 @@ public class FileOperations {
     }
 
     /**
-     *lists files in a folder
+     * lists files in a folder
+     *
      * @param folder folder to list
      * @return array of filenames
      */
@@ -549,13 +553,14 @@ public class FileOperations {
         ArrayList<String> files = new ArrayList<>();
         File[] list = dir.listFiles();
         for (int x = 0; list.length > x; x++) {
-           files.add(list[x].getName());
+            files.add(list[x].getName());
         }
         return StringOperations.convertArrayListToStringArray(files);
     }
 
     /**
      * lists files with full qualifiers
+     *
      * @param folder folder to list
      * @return array of files
      */
@@ -600,9 +605,9 @@ public class FileOperations {
         }
     }
 
-    
     /**
      * moves a file
+     *
      * @param sourceFile from location
      * @param destFile to location
      * @return true if moved

@@ -106,7 +106,7 @@ public class CASUALScriptParser {
             public void run() {
                 //int updateStatus;
                 log.level4Debug("CASUAL has initiated a multithreaded execution environment");
-               
+
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBarMax(LinesInScript);
                 }
@@ -214,7 +214,7 @@ public class CASUALScriptParser {
         String scriptName = CASPAC.getScriptNames()[0];
         Script s = CASPAC.getScriptByName(scriptName);
         CASPAC.setActiveScript(s);
-        Statics.CASPAC.getActiveScript().scriptContinue=true;
+        Statics.CASPAC.getActiveScript().scriptContinue = true;
         try {
             CASPAC.loadActiveScript();
         } catch (IOException ex) {
@@ -228,7 +228,7 @@ public class CASUALScriptParser {
             new Log().level0Error("@improperCASUALversion");
             return;
         }
-       
+
         try {
             ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.scriptContents.getBytes("UTF-8"));
             DataInputStream dis = new DataInputStream(scriptStream);

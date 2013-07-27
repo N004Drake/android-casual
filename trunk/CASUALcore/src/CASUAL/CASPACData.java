@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 public class CASPACData {
 
     /**
-     *minimum SVN revision required to run script
+     * minimum SVN revision required to run script
      */
     public String minSVNRevision = "0";
     /**

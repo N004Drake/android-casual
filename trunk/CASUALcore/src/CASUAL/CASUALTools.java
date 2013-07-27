@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.crypto.MD5sum;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,44 +52,43 @@ public class CASUALTools {
      * @throws IOException
      */
     /*
-    public void listScripts() throws IOException {
-        CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
-        int Count = 0;
-        ArrayList<String> list = new ArrayList<>();
-        if (Src != null) {
-            URL jar = Src.getLocation();
-            try (ZipInputStream Zip = new ZipInputStream(jar.openStream())) {
-                ZipEntry ZEntry;
-                log.level4Debug("Picking Jar File:" + jar.getFile());
-                while ((ZEntry = Zip.getNextEntry()) != null) {
+     public void listScripts() throws IOException {
+     CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
+     int Count = 0;
+     ArrayList<String> list = new ArrayList<>();
+     if (Src != null) {
+     URL jar = Src.getLocation();
+     try (ZipInputStream Zip = new ZipInputStream(jar.openStream())) {
+     ZipEntry ZEntry;
+     log.level4Debug("Picking Jar File:" + jar.getFile());
+     while ((ZEntry = Zip.getNextEntry()) != null) {
 
-                    String EntryName = ZEntry.getName();
-                    if (EntryName.endsWith(".scr")) {
+     String EntryName = ZEntry.getName();
+     if (EntryName.endsWith(".scr")) {
 
-                        list.add(EntryName);
-                    }
-                }
-                log.level4Debug("Found " + list.size() + " CASUAL scripts");
-                Statics.scriptNames = new String[list.size()];
-                for (int n = 0; n < list.size(); n++) {
-                    String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
-                    log.level4Debug("Found script: " + EntryName);
-                    Statics.scriptNames[n] = EntryName;
-                    Count++;
-                }
+     list.add(EntryName);
+     }
+     }
+     log.level4Debug("Found " + list.size() + " CASUAL scripts");
+     Statics.scriptNames = new String[list.size()];
+     for (int n = 0; n < list.size(); n++) {
+     String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
+     log.level4Debug("Found script: " + EntryName);
+     Statics.scriptNames[n] = EntryName;
+     Count++;
+     }
 
-                if (Count == 0) {
-                    Thread update = new Thread(updateMD5s);
-                    update.setName("Updating MD5s");
-                    update.start();
-                    log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
-                    //Statics.scriptLocations = new String[]{""};
-                    Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
-                }
-            }
-        }
-    }*/
-
+     if (Count == 0) {
+     Thread update = new Thread(updateMD5s);
+     update.setName("Updating MD5s");
+     update.start();
+     log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
+     //Statics.scriptLocations = new String[]{""};
+     Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
+     }
+     }
+     }
+     }*/
     /**
      * md5sumTestScript Refreshes the MD5s on the scripts in the /SCRIPTS folder
      */
@@ -101,7 +101,7 @@ public class CASUALTools {
             //Set up scripts path
             String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "SCRIPTS" + Statics.Slash;
             final File folder = new File(scriptsPath);
-            if (folder.isDirectory()){
+            if (folder.isDirectory()) {
                 for (final File fileEntry : folder.listFiles()) {
                     if (fileEntry.toString().endsWith(".meta")) {
                         InputStream in = null;
@@ -153,13 +153,12 @@ public class CASUALTools {
             }
         }
     }
-    
-    
     //CASUALZipPrep
     /**
      * thread used for preparing zip file. this should never be interrupted.
      */
     public static Thread zipPrep;
+
     /**
      * prepares the script for execution by setting up environment
      *
@@ -176,7 +175,7 @@ public class CASUALTools {
         zipPrep = new Thread() {
             @Override
             public void run() {
-                
+
                 try {
                     Statics.GUI.enableControls(false);
                 } catch (NullPointerException ex) {
@@ -212,25 +211,22 @@ public class CASUALTools {
     private boolean getIDEMode() {
         String className = getClass().getName().replace('.', '/');
         String classJar = getClass().getResource("/" + className + ".class").toString();
-        new Log().level4Debug("ClassJar:"+ classJar);
+        new Log().level4Debug("ClassJar:" + classJar);
         if (classJar.startsWith("file:")) {
             return true;
         } else {
             return false;
         }
     }
-    
     /**
      * Starts a new ADB instance
      */
-    public Runnable launchADB =new Runnable(){
+    public Runnable launchADB = new Runnable() {
         @Override
-        public void run(){
+        public void run() {
             ADBTools.startServer();
         }
     };
-    
-    
     /**
      * deploys ADB to Statics.ADBDeployed.
      */
@@ -241,8 +237,6 @@ public class CASUALTools {
             new Log().level3Verbose("ADB Server Started!!!");
         }
     };
-
-
     /**
      * Starts the GUI, should be done last and only if needed.
      */
@@ -253,9 +247,6 @@ public class CASUALTools {
             Statics.GUI.setVisible(true);
         }
     };
-    
-    
-   
     public static Runnable updateMD5s = new Runnable() {
         @Override
         public void run() {
@@ -344,9 +335,9 @@ public class CASUALTools {
             new Log().errorHandler(ex);
         }
     }
-    
+
     /**
-     * sleeps for 1000ms. 
+     * sleeps for 1000ms.
      */
     public static void sleepForOneSecond() {
         try {
@@ -355,8 +346,9 @@ public class CASUALTools {
             Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     /**
-     * sleeps for 100ms. 
+
+    /**
+     * sleeps for 100ms.
      */
     public static void sleepForOneTenthOfASecond() {
         try {

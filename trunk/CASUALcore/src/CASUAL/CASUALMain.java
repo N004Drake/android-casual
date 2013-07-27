@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-
 import CASUAL.caspac.Caspac;
 import java.io.IOException;
 import java.security.CodeSource;
@@ -29,16 +28,18 @@ import java.util.zip.ZipException;
  * @author adam
  */
 public final class CASUALMain {
+
     String[] args;
-    
+
     /**
-     * startup is where CASUAL starts its normal routines for both 
-     * @param cmd 
+     * startup is where CASUAL starts its normal routines for both
+     *
+     * @param cmd
      */
     public void startup(String[] cmd) {
         args = cmd;
         //Build Caspac
-        
+
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         Thread startGUI = null;
         if (Statics.useGUI = true) {
@@ -48,7 +49,7 @@ public final class CASUALMain {
             startGUI.start();
             CASUALConnectionStatusMonitor.DeviceCheck.start();
         }
-        
+
         new FileOperations().makeFolder(Statics.TempFolder);
         Thread adb = new Thread(new CASUALTools().adbDeployment);
         adb.setName("ADB Deployment");
@@ -57,14 +58,14 @@ public final class CASUALMain {
         Thread prepCASPAC = new Thread(setupCASUALCASPAC);
         prepCASPAC.setName("Preparing Scripts");
         prepCASPAC.start(); //scan self for embedded scripts
-        
-        
+
+
         try {
 
             prepCASPAC.join();
-            Caspac CASPAC=Statics.CASPAC;
+            Caspac CASPAC = Statics.CASPAC;
             CASPAC.setActiveScript(CASPAC.scripts.get(0));
-            Statics.CASPAC.getActiveScript().scriptContinue=true;
+            Statics.CASPAC.getActiveScript().scriptContinue = true;
             AudioHandler.playSound("/CASUAL/resources/sounds/CASUAL.wav");
             if (args.length != 0 && !Statics.useGUI) {
                 Statics.setStatus("waiting for ADB");
@@ -74,8 +75,10 @@ public final class CASUALMain {
                 prepCASPAC.join(); //wait for embedded scripts scan
                 doConsoleStartup();  //use command line args
             } else {
-                if (startGUI!=null) startGUI.join();
-                    Statics.GUI.setCASPAC(CASPAC);
+                if (startGUI != null) {
+                    startGUI.join();
+                }
+                Statics.GUI.setCASPAC(CASPAC);
             }
         } catch (InterruptedException ex) {
             new Log().errorHandler(ex);
@@ -101,8 +104,7 @@ public final class CASUALMain {
         }
         //   CASUALApp.shutdown(0);
     }
-
-     /**
+    /**
      * Scans /SCRIPTS/ Folder to locate scripts.
      */
     public Runnable setupCASUALCASPAC = new Runnable() {
@@ -112,10 +114,10 @@ public final class CASUALMain {
             CodeSource src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
             Caspac cp;
             try {
-                cp=new Caspac(src,Statics.TempFolder,1);
-                
+                cp = new Caspac(src, Statics.TempFolder, 1);
+
                 //cp.load();
-                Statics.CASPAC=cp;
+                Statics.CASPAC = cp;
             } catch (ZipException ex) {
                 Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {

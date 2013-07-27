@@ -16,15 +16,14 @@
  */
 package CASUAL;
 
-import java.io.IOException;
-import java.io.File;
 import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
-
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -48,6 +47,7 @@ public class Unzip {
      * <p>
      * The File f will be converted to a ZipFile, and all other operations will
      * be preformed on this ZipFile.
+     *
      * @param f java file object to be unziped.
      * @throws ZipException
      * @throws IOException
@@ -65,8 +65,9 @@ public class Unzip {
     /**
      * Unzip class is used to create a wrapper for unziping .zip files.
      * <p>
-     * The String f will be converted into a file, then that file will be 
+     * The String f will be converted into a file, then that file will be
      * converted into a ZipFile.
+     *
      * @param f String location of file to be unziped.
      * @throws ZipException
      * @throws IOException
@@ -80,10 +81,11 @@ public class Unzip {
             new Log().errorHandler(e);
         }
     }
-    
+
     /**
      * Unzips the current file, and then if any zip files are found within the
      * zip, they are then unziped as a recursive function.
+     *
      * @deprecated As of now method is not functioning nor needed
      * @param outputFolder String of folder location to output to.
      * @throws ZipException
@@ -120,10 +122,11 @@ public class Unzip {
 
     /**
      * Unzips the ZipFile that was specified in the constructor of the class.
+     *
      * @param outputFolder folder to be unzipped to
      * @throws ZipException
      * @throws IOException
-     * @see CASUAL.Unzip#Unzip(File) 
+     * @see CASUAL.Unzip#Unzip(File)
      */
     public void unzipFile(String outputFolder) throws ZipException, IOException {
         unzipFileToFolder(outputFolder);
@@ -158,15 +161,17 @@ public class Unzip {
     /**
      * Unzips a resource.
      * <p>
-     * Within a java package there is a folder called resources, used to store things
-     * such as internalized strings, sounds, and other important static files. This function
-     * takes in the name of the resource and then outputs it into the output folder.
+     * Within a java package there is a folder called resources, used to store
+     * things such as internalized strings, sounds, and other important static
+     * files. This function takes in the name of the resource and then outputs
+     * it into the output folder.
+     *
      * @param zipResource name of the java resource to be unzipped
      * @param outputFolder folder to unzip to
      * @throws FileNotFoundException
      * @throws IOException
-     * @see java.lang.Class#getResource(String) 
-     * 
+     * @see java.lang.Class#getResource(String)
+     *
      */
     public static void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
         InputStream zStream;
@@ -174,17 +179,18 @@ public class Unzip {
         unZipInputStream(zStream, outputFolder);
         zStream.close();
     }
-    
+
     /**
      * Unzips an InputStream.
      * <p>
-     * Takes in an InputStream, converts it to a ZipInputStream, and then 
-     * iterates through all of the ZipEntries, writing each one of them to 
-     * a file with the name provided by the ZipEntry.
+     * Takes in an InputStream, converts it to a ZipInputStream, and then
+     * iterates through all of the ZipEntries, writing each one of them to a
+     * file with the name provided by the ZipEntry.
+     *
      * @param ZStream input stream to unzip
      * @param outputFolder output folder to unzip to
      * @throws FileNotFoundException
-     * @throws IOException 
+     * @throws IOException
      * @see InputStream
      * @see ZipEntry
      * @see ZipInputStream
@@ -243,6 +249,7 @@ public class Unzip {
      * Deploys a single file from a zip.
      * <p>
      * Takes in an ZipEntry, and writes that single zip entry out to a folder
+     *
      * @param entry entry file to deploy
      * @param outputFolder folder to be deployed to
      * @return
@@ -260,7 +267,9 @@ public class Unzip {
     /**
      * Gets a stream of a specified file from a zip.
      * <p>
-     * Static method used to stream a file form a zip that is not an Unzip object.
+     * Static method used to stream a file form a zip that is not an Unzip
+     * object.
+     *
      * @param zipFile file to stream from
      * @param entry entry to stream
      * @return stream of file
@@ -291,8 +300,10 @@ public class Unzip {
         dest.close();
         is.close();
     }
+
     /**
-     * Retrieves a BufferedInputStream for a specific zip entry in a file. 
+     * Retrieves a BufferedInputStream for a specific zip entry in a file.
+     *
      * @param entry ZipEntry that is to be pulled from ZipFile to Stream.
      * @return BufferedInputStream of the specified ZipEntry.
      * @throws ZipException
@@ -304,29 +315,31 @@ public class Unzip {
     public BufferedInputStream streamFileFromZip(Object entry) throws ZipException, IOException {
         return new BufferedInputStream(zip.getInputStream((ZipEntry) entry));
     }
-    
+
     /**
-     * Takes in a ZipEntry as an object and returns the string of the corresponding
-     * file name for the entry.
-     * @param entry the ZipEntry Object 
-     * @return name of the file contained in the 
-     * @see ZipEntry#getName() 
+     * Takes in a ZipEntry as an object and returns the string of the
+     * corresponding file name for the entry.
+     *
+     * @param entry the ZipEntry Object
+     * @return name of the file contained in the
+     * @see ZipEntry#getName()
      */
-    public String getEntryName(Object entry){
-        ZipEntry zipEntry = (ZipEntry)entry;
-        String name=zipEntry.getName();
+    public String getEntryName(Object entry) {
+        ZipEntry zipEntry = (ZipEntry) entry;
+        String name = zipEntry.getName();
         return name;
-        
+
     }
-    
+
     /**
-     * Takes in an ZipEntry as an object and returns the ZipEntry for the 
+     * Takes in an ZipEntry as an object and returns the ZipEntry for the
      * Object.
+     *
      * @param entry the ZipEntry Object
      * @return the ZipEntry
      * @see ZipEntry
      */
     public ZipEntry getEntry(Object entry) {
-        return (ZipEntry)entry;
-    }   
+        return (ZipEntry) entry;
+    }
 }

@@ -21,20 +21,40 @@ package CASUAL;
  * @author adam
  */
 public class BooleanOperations {
-    public static boolean containsTrue(boolean[] array){
-        for(boolean b : array) if(b) return true;
+
+    public static boolean containsTrue(boolean[] array) {
+        for (boolean b : array) {
+            if (b) {
+                return true;
+            }
+        }
         return false;
     }
-    public static boolean containsFalse(boolean[] array){
-        for(boolean b : array) if(!b) return true;
+
+    public static boolean containsFalse(boolean[] array) {
+        for (boolean b : array) {
+            if (!b) {
+                return true;
+            }
+        }
         return false;
     }
-    public static boolean containsAllTrue(boolean[] array){
-        for(boolean b : array) if(!b) return false;
+
+    public static boolean containsAllTrue(boolean[] array) {
+        for (boolean b : array) {
+            if (!b) {
+                return false;
+            }
+        }
         return true;
     }
-    public static boolean containsAllFalse(boolean[] array){
-        for(boolean b : array) if(b) return false;
+
+    public static boolean containsAllFalse(boolean[] array) {
+        for (boolean b : array) {
+            if (b) {
+                return false;
+            }
+        }
         return true;
-    }    
+    }
 }

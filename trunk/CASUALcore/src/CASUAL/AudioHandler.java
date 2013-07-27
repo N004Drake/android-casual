@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
@@ -32,10 +31,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class AudioHandler {
-    public static boolean useSound=false;
+
+    public static boolean useSound = false;
 
     /**
-     *playSound plays sounds
+     * playSound plays sounds
+     *
      * @param URL path to sound
      */
     public static synchronized void playSound(final String URL) {
@@ -60,7 +61,7 @@ public class AudioHandler {
                         line.close();
                         IS.close();
                         //Don't worry about autio exceptions.  Just turn off audio
-                    } catch (            IllegalArgumentException | UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                    } catch (IllegalArgumentException | UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                         useSound = false;
                     }
                 }
@@ -72,6 +73,7 @@ public class AudioHandler {
 
     /**
      * plays multiple sounds
+     *
      * @param URLs array of paths to sound
      */
     public static synchronized void playMultipleInputStreams(final String[] URLs) {

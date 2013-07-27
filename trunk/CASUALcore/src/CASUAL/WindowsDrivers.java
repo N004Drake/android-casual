@@ -19,15 +19,14 @@ package CASUAL;
 
 /**
  * TODOs:
- * 
- * class-wide:
- * Javadoc launchOldFaithful, getDeviceList, removeOrphanedDevices, uninstallCADI
- * 
+ *
+ * class-wide: Javadoc launchOldFaithful, getDeviceList, removeOrphanedDevices,
+ * uninstallCADI
+ *
  * Q:Possible to install WinUSB in same manner if this has been run before?
- * A:Possible, but overly complicated and probably unreliable without parsing all 
- *   matching *.inf's contents
+ * A:Possible, but overly complicated and probably unreliable without parsing
+ * all matching *.inf's contents
  */
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -36,7 +35,7 @@ import java.util.regex.Pattern;
 /**
  * **************************************************************************
  * @author Jeremy Loper jrloper@gmail.com
- * @author Adam Outler  adamoutler@gmail.com
+ * @author Adam Outler adamoutler@gmail.com
  * *************************************************************************
  */
 public class WindowsDrivers {
@@ -44,62 +43,58 @@ public class WindowsDrivers {
     private Log log = new Log();
     private final String pathToCADI;
     private final String[] windowsDriverBlanket;
-     /**
+    /**
      * true if driver has been prepared.
      */
     protected static volatile boolean driverExtracted = false;
-    
-     /**
-     * Should driver be removed on script completion?
-     * 0 - Unset (will prompt user)
-     * 1 - Do not remove driver on completion
-     * 2 - Remove driver on script completion
+    /**
+     * Should driver be removed on script completion? 0 - Unset (will prompt
+     * user) 1 - Do not remove driver on completion 2 - Remove driver on script
+     * completion
      */
     protected static volatile int removeDriverOnCompletion;
-    
+
     /**
      * WindowsDrivers instantiates the windows driver class.
      *
-     * @param promptInit    initializes removeDriverOnCompletion member and subsequent 
-     *                      prompting action.
-     *                      0 - Unset (will prompt user) (default)
-     *                      1 - Do not remove driver on completion
-     *                      2 - Remove driver on script completion
+     * @param promptInit initializes removeDriverOnCompletion member and
+     * subsequent prompting action. 0 - Unset (will prompt user) (default) 1 -
+     * Do not remove driver on completion 2 - Remove driver on script completion
      */
     public WindowsDrivers(int promptInit) {
         removeDriverOnCompletion = promptInit;
         log.level4Debug("WindowsDrivers() Initializing");
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
         this.pathToCADI = Statics.TempFolder + "CADI" + Statics.Slash;
-        if (removeDriverOnCompletion == 0){ //so it only asks once
+        if (removeDriverOnCompletion == 0) { //so it only asks once
             removeDriverOnCompletion = new CASUALInteraction("@interactionInstallingCADI").showYesNoOption() ? 2 : 1; //set value as 2 if true and 1 if false
         }
     }
 
     /**
-     * main is the default execution entrypoint, however In this class it is 
+     * main is the default execution entrypoint, however In this class it is
      * used only for testing purposes and should not be called externally.
-     * 
-     * @param args 
+     *
+     * @param args
      */
     public static void main(String[] args) {
         WindowsDrivers wd = new WindowsDrivers(0);
         wd.installDriverBlanket(null);
         wd.uninstallCADI();
-     }
-    
+    }
+
     /**
-     * installDriverBlanket parses VID String Array windowsDriverBlanket and calls
-     * installDriver() method for each.
-     * 
-     * @param additionalVIDs    optional String Array of additional VIDs to be scanned 
-     *                          for should normally always be null.
+     * installDriverBlanket parses VID String Array windowsDriverBlanket and
+     * calls installDriver() method for each.
+     *
+     * @param additionalVIDs optional String Array of additional VIDs to be
+     * scanned for should normally always be null.
      */
     public void installDriverBlanket(String[] additionalVIDs) {
         for (int x = 0; windowsDriverBlanket.length > x; x++) {
             installDriver(windowsDriverBlanket[x]);
         }
-        if(additionalVIDs != null) {
+        if (additionalVIDs != null) {
             for (int x = 0; additionalVIDs.length > x; x++) {
                 installDriver(additionalVIDs[x]);
             }
@@ -108,18 +103,19 @@ public class WindowsDrivers {
 
     /**
      * driverExtract extracts the contents of CADI.zip from CASUAL's resources
-     * @param   pathToExtract           the desired destination folders full path.
-     * 
-     * @throws  FileNotFoundException
-     * @throws  IOException 
+     *
+     * @param pathToExtract the desired destination folders full path.
+     *
+     * @throws FileNotFoundException
+     * @throws IOException
      */
     private void driverExtract(String pathToExtract) throws FileNotFoundException, IOException {
-        if(Statics.OSName().contains("Windows XP")){
-            if(new FileOperations().makeFolder(pathToCADI)) {
-            log.level4Debug("driverExtract() Unzipping CADI for xp");
-            Unzip.unZipResource("/CASUAL/resources/heimdall/xp/CADI.zip", pathToExtract);
+        if (Statics.OSName().contains("Windows XP")) {
+            if (new FileOperations().makeFolder(pathToCADI)) {
+                log.level4Debug("driverExtract() Unzipping CADI for xp");
+                Unzip.unZipResource("/CASUAL/resources/heimdall/xp/CADI.zip", pathToExtract);
             }
-        } else if(new FileOperations().makeFolder(pathToCADI)) {
+        } else if (new FileOperations().makeFolder(pathToCADI)) {
             log.level4Debug("driverExtract() Unzipping CADI");
             Unzip.unZipResource("/CASUAL/resources/heimdall/CADI.zip", pathToExtract);
         }
@@ -127,11 +123,12 @@ public class WindowsDrivers {
 
     /**
      * installDriver parses devcon output for connected devices matching the VID
-     * parameter, and attempts to install LibusbK device driver (cadi.inf) via devcon
-     * on devcon failure (only for Samsung) libwdi will attempt to install the driver.
-     * 
-     * @param VID   target VID to scan & install drivers for.
-     * @return      
+     * parameter, and attempts to install LibusbK device driver (cadi.inf) via
+     * devcon on devcon failure (only for Samsung) libwdi will attempt to
+     * install the driver.
+     *
+     * @param VID target VID to scan & install drivers for.
+     * @return
      */
     public boolean installDriver(String VID) {
         if (VID.equals("")) {
@@ -149,21 +146,21 @@ public class WindowsDrivers {
                         installedPreviously = true; //flags a redundant HWID
                     }
                 }
-                if (!installedPreviously){ //checks if current HWID is redundant
+                if (!installedPreviously) { //checks if current HWID is redundant
                     String retVal = devconCommand("update " + pathToCADI + "cadi.inf " + "\"" + dList[x] + "\"");
                     if (retVal == null) {
                         log.level0Error("installDriver() devcon returned null!");
                         return false;
                     } else if (!retVal.contains("Drivers installed successfully") || retVal.contains(" failed")) {
-                        log.level0Error("installDriver() failed for "+ "\"" + dList[x] + "\"!");
-                        if(VID.equals("04E8")) {
+                        log.level0Error("installDriver() failed for " + "\"" + dList[x] + "\"!");
+                        if (VID.equals("04E8")) {
                             return launchOldFaithful();
                         } else {
                             return false;
                         }
                     }
-                pastInstalls[x] = dList[x]; //add installed HWID to redundancy list
-                } 
+                    pastInstalls[x] = dList[x]; //add installed HWID to redundancy list
+                }
             }
         } else {
             log.level0Error("installDriver() no target devices for VID: " + VID);
@@ -171,16 +168,16 @@ public class WindowsDrivers {
         }
         return true;
     }
-    
+
     /**
      * launchOldFaithful
-     * 
-     * @return 
+     *
+     * @return
      */
     private boolean launchOldFaithful() {
         String exec = "";
         try {
-            if(Statics.OSName().contains("Windows XP")) {
+            if (Statics.OSName().contains("Windows XP")) {
                 if (new FileOperations().verifyResource(Statics.WinDriverResource2)) {
                     exec = Statics.TempFolder + "CADI.exe";
                     new FileOperations().copyFromResourceToFile(Statics.WinDriverResource2, exec);
@@ -205,10 +202,10 @@ public class WindowsDrivers {
             return true;
         }
     }
-    
+
     /**
      * uninstallCADI
-     * 
+     *
      */
     public void uninstallCADI() {
         log.level2Information("uninstallCADI() Initializing");
@@ -219,7 +216,7 @@ public class WindowsDrivers {
         for (int x = 0; windowsDriverBlanket.length > x; x++) {
             removeOrphanedDevices(windowsDriverBlanket[x]);
         }
-        
+
         log.level2Information("removeDriver() Windows will now scan for hardware changes");
         if (devconCommand("rescan") == null) {
             log.level0Error("removeDriver() devcon returned null!");
@@ -228,9 +225,10 @@ public class WindowsDrivers {
 
     /**
      * getDeviceList
-     * 
-     * @param   VID     a String containing a four character USB vendor ID code in hexadecimal
-     * @return 
+     *
+     * @param VID a String containing a four character USB vendor ID code in
+     * hexadecimal
+     * @return
      */
     private String[] getDeviceList(String VID) {
         if (!VID.equals("")) {
@@ -241,7 +239,7 @@ public class WindowsDrivers {
                     Matcher matcher = pattern.matcher(outputBuffer);
                     String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
                     pattern = getRegExPattern("install");
-                    
+
                     if (pattern != null) {
                         matcher = pattern.matcher(outputBuffer);
                         for (int x = 0; matcher.find(); x++) {
@@ -268,9 +266,10 @@ public class WindowsDrivers {
 
     /**
      * removeOrphanedDevices
-     * 
-     * @param   VID     a String containing a four character USB vendor ID code in hexadecimal
-     * @return 
+     *
+     * @param VID a String containing a four character USB vendor ID code in
+     * hexadecimal
+     * @return
      */
     private void removeOrphanedDevices(String VID) {
         if (!VID.equals("")) {
@@ -278,15 +277,15 @@ public class WindowsDrivers {
             if (pattern != null) {
                 String outputBuffer = devconCommand("findall *USB\\VID_" + VID + "*");
                 if (outputBuffer != null) {
-  
+
                     pattern = getRegExPattern("orphans");
                     if (pattern != null) {
                         Matcher matcher = pattern.matcher(outputBuffer);
                         while (matcher.find()) {
                             log.level2Information("removeOrphanedDevices() Removing orphaned device " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
                             if (devconCommand("remove " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"") == null) {
-                                    log.level0Error("removeOrphanedDevices() devcon returned null!");
-                                }
+                                log.level0Error("removeOrphanedDevices() devcon returned null!");
+                            }
                         }
                     } else {
                         log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
@@ -303,12 +302,11 @@ public class WindowsDrivers {
     }
 
     /**
-     * deleteOemInf parses output from devconCommand
-     * via regex to extract the name of the *.inf file from Windows
-     * driver store. Extraction of the file name is determined by setup classes 
-     * & provider names.
-     * 
-     * @return      a String Array of *.inf files matching the search criteria.
+     * deleteOemInf parses output from devconCommand via regex to extract the
+     * name of the *.inf file from Windows driver store. Extraction of the file
+     * name is determined by setup classes & provider names.
+     *
+     * @return a String Array of *.inf files matching the search criteria.
      */
     private void deleteOemInf() {
         log.level2Information("deleteOemInf() Enumerating installed driver packages");
@@ -333,14 +331,14 @@ public class WindowsDrivers {
     }
 
     /**
-     * devconCommand executes Devcon (x86 or x64 depending upon
-     * detected Windows architecture) using the callers arguments.
-     * 
-     * @param   args    a String of arguments (space delimited) to be passed to Devcon 
-     * @return          the console output of the executed command. 
-     *                  Error messages and null may also be returned 
-     *                  should the command fail to execute or the method was called
-     *                  improperly.
+     * devconCommand executes Devcon (x86 or x64 depending upon detected Windows
+     * architecture) using the callers arguments.
+     *
+     * @param args a String of arguments (space delimited) to be passed to
+     * Devcon
+     * @return the console output of the executed command. Error messages and
+     * null may also be returned should the command fail to execute or the
+     * method was called improperly.
      */
     private String devconCommand(String args) {
         if (!args.equals("")) {
@@ -358,20 +356,21 @@ public class WindowsDrivers {
             }
             String exec = pathToCADI + (Statics.is64bitSystem() ? "driver_x64.exe " : "driver_x86.exe ") + args;
             String retval;
-            retval = new Shell().timeoutShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""},90000); //1000 milliseconds — one second
+            retval = new Shell().timeoutShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""}, 90000); //1000 milliseconds — one second
             log.level2Information(retval);
             return retval;
         } else {
             log.level0Error("devconCommand() no command specified");
             return null;
-        } 
+        }
     }
-    
+
     /**
      * getRegExPattern returns a Pattern Object of the requested REGEX pattern.
-     * 
-     * @param `whatPattern  a predefined String name for a REGEX pattern.
-     * @return              a compiled REGEX Pattern if requested pattern exists, otherwise null.
+     *
+     * @param `whatPattern a predefined String name for a REGEX pattern.
+     * @return a compiled REGEX Pattern if requested pattern exists, otherwise
+     * null.
      */
     private Pattern getRegExPattern(String whatPattern) {
         if (!whatPattern.equals("")) {

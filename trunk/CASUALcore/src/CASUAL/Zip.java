@@ -32,8 +32,6 @@ import java.nio.channels.FileChannel;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -236,10 +234,12 @@ public class Zip {
     public void injectZip(File injectionZip, String injectionPath) {
         try {
             if (!injectionPath.equals("")) {
-                if (injectionPath.startsWith(Statics.Slash))
+                if (injectionPath.startsWith(Statics.Slash)) {
                     injectionPath = injectionPath.replaceFirst(Statics.Slash, "");
-                if (!injectionPath.endsWith(Statics.Slash))
+                }
+                if (!injectionPath.endsWith(Statics.Slash)) {
                     injectionPath = injectionPath.concat(Statics.Slash);
+                }
             }
             byte[] buf = new byte[1024];
             ZipInputStream zin = new ZipInputStream(new FileInputStream(injectionZip));
@@ -262,10 +262,12 @@ public class Zip {
             entry = zin.getNextEntry();
             while (entry != null){
                 String name = entry.getName();
-                if (injectionPath.equals(""))
+                if (injectionPath.equals("")) {
                     out.putNextEntry(entry);
-                else 
+                }
+                else {
                     out.putNextEntry(new ZipEntry(injectionPath+name));
+                }
                 int len;
                 while ((len = zin.read(buf)) > 0) {
                     out.write(buf, 0, len);

@@ -44,28 +44,29 @@ import java.util.regex.Pattern;
 public class Pastebin {
 
     /**
-     * Notice: The following users should be considered a 
-     * threat to data logging integrity because they do 
-     * really stupid things like changing variables and 
-     * introducing errors in the code on a regular basis
-     * so they are hereby banned from submitting any further
-     * reports to the Pastebin.
+     * Notice: The following users should be considered a threat to data logging
+     * integrity because they do really stupid things like changing variables
+     * and introducing errors in the code on a regular basis so they are hereby
+     * banned from submitting any further reports to the Pastebin.
      */
-    final private String[] incompetentUsers={"adamoutler", "adam","Jeremy","loganludington"};
-    
+    final private String[] incompetentUsers = {"adamoutler", "adam", "Jeremy", "loganludington"};
     //Pastebin User DEV API Key
     final private String devKey = "027c63663a6023d774b5392f380e5923";
     final private String user = "CASUAL-Automated";
     final private String passwd = "2J2y7SK172p46m1";
     final private String format = "text";
+
     /**
      * Automatically prompts the user for their XDA username and submits a
      * pasting to Pastebin
-     * @throws IOException 
-     * @throws URISyntaxException 
+     *
+     * @throws IOException
+     * @throws URISyntaxException
      */
     public void doPosting() throws IOException, URISyntaxException {
-        if (Statics.debugMode) return;
+        if (Statics.debugMode) {
+            return;
+        }
         String xdaUsername = new CASUALInteraction("@interactionPastebinError").inputDialog();
         if (xdaUsername != null) {//CANCEL_OPTION will rerturn a null String
             API paste = new API(devKey);
@@ -97,33 +98,36 @@ public class Pastebin {
 
     /**
      * strips user info and pastes an anonymous log to pastebin
+     *
      * @throws MalformedURLException
      */
     public void pasteAnonymousLog() throws MalformedURLException {
         Pattern svnRev = Pattern.compile("(?=[setViewedRevision]?.{2})[0-9]{3,4}");
         FileOperations fO = new FileOperations();
-        if(!fO.verifyExists(Statics.TempFolder + "log.txt")) return;
+        if (!fO.verifyExists(Statics.TempFolder + "log.txt")) {
+            return;
+        }
         String casualLog = fO.readFile(Statics.TempFolder + "log.txt");
         Matcher matcher;
         try {
             matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));
-        } catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             return;
         }
         int SVNrev = Integer.parseInt(matcher.find() ? matcher.group(0) : "5");
         int CASRev = Integer.parseInt(CASPACData.getSVNRevision());
-        if ((SVNrev - 5) >= CASRev && casualLog.contains("failed") || casualLog.contains("FAILED")|| casualLog.contains("ERROR")) { //build.prop contains the word error on some devices so error is not a good word to track. 
-            String slashrep=Statics.isWindows() ? "\\" : "//";
-            String userhome=System.getProperty("user.home");
-            casualLog = casualLog.replace(userhome,slashrep + "USERHOME" + (userhome.endsWith(Statics.Slash) ? slashrep : ""));
-             String username=System.getProperty("user.name");
-            if (username==null||username.equals("")){
-                username=System.getenv("USERNAME");
+        if ((SVNrev - 5) >= CASRev && casualLog.contains("failed") || casualLog.contains("FAILED") || casualLog.contains("ERROR")) { //build.prop contains the word error on some devices so error is not a good word to track. 
+            String slashrep = Statics.isWindows() ? "\\" : "//";
+            String userhome = System.getProperty("user.home");
+            casualLog = casualLog.replace(userhome, slashrep + "USERHOME" + (userhome.endsWith(Statics.Slash) ? slashrep : ""));
+            String username = System.getProperty("user.name");
+            if (username == null || username.equals("")) {
+                username = System.getenv("USERNAME");
             }
-            if (username!=null && casualLog.contains(username)){
-                casualLog = casualLog.replace(username,"USER");
+            if (username != null && casualLog.contains(username)) {
+                casualLog = casualLog.replace(username, "USER");
             }
-            if (Statics.debugMode|| Arrays.asList(incompetentUsers).contains(username)){
+            if (Statics.debugMode || Arrays.asList(incompetentUsers).contains(username)) {
                 return; //only log results from non-devs :)
             }
 
@@ -135,7 +139,9 @@ public class Pastebin {
                 } else {
                     paste.setToken(lResult);
                 }
-                if(casualLog.equals("")) return;
+                if (casualLog.equals("")) {
+                    return;
+                }
                 paste.makePaste(casualLog, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-Anonymous", format);
             } catch (IOException ex) {
                 new Log().errorHandler(ex);
@@ -157,7 +163,7 @@ public class Pastebin {
 
         private API() {
         }
-        
+
         private API(String devkey) {
             this.devkey = devkey;
         }
@@ -174,7 +180,9 @@ public class Pastebin {
             String api_user_password = URLEncoder.encode(password, "UTF-8");
             String data = "api_dev_key=" + this.devkey + "&api_user_name=" + api_user_name + "&api_user_password=" + api_user_password;
             String response = this.page(this.loginURL, data);
-            if (!this.checkResponse(response)) return "false";
+            if (!this.checkResponse(response)) {
+                return "false";
+            }
 
             this.token = response;
             return response;
@@ -185,7 +193,9 @@ public class Pastebin {
             String title = URLEncoder.encode(name, "UTF-8");
             String data = "api_option=paste&api_user_key=" + this.token + "&api_paste_private=0&api_paste_name=" + title + "&api_paste_expire_date=N&api_paste_format=" + format + "&api_dev_key=" + this.devkey + "&api_paste_code=" + content;
             String response = this.page(this.pasteURL, data);
-            if (!this.checkResponse(response)) return response.substring(17);
+            if (!this.checkResponse(response)) {
+                return response.substring(17);
+            }
             return response;
         }
 
@@ -220,7 +230,7 @@ public class Pastebin {
             }
             return null;
         }
-        
+
         private String getPage(String uri) throws MalformedURLException {
             try {
                 // Create connection
@@ -234,7 +244,7 @@ public class Pastebin {
                     String inputLine;
                     html = new StringBuffer();
                     while ((inputLine = in.readLine()) != null) {
-                            html.append(inputLine);
+                        html.append(inputLine);
                     }
                 }
                 return html.toString();

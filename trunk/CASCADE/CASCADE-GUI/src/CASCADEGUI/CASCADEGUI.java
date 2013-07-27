@@ -20,7 +20,7 @@
  */
 package CASCADEGUI;
 //Dependencies must be built or there will be errors.. Build the project first.
-import CASUAL.CipherHandler;
+import CASUAL.crypto.AES128Handler;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
@@ -1189,7 +1189,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             if (useEncryption.isSelected()) {
                 File temp = new File(cp.CASPAC.getAbsolutePath() + ".tmp");
                 new FileOperations().copyFile(file, temp);
-                new CipherHandler(temp).encrypt(file.getAbsolutePath(), getPassword());
+                new AES128Handler(temp).encrypt(file.getAbsolutePath(), getPassword());
             }
 
             enableCasual();
@@ -1435,7 +1435,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             return;
         }
         try {
-            if (CipherHandler.getCASPACHeaderLength(file)>20){
+            if (AES128Handler.getCASPACHeaderLength(file)>20){
                 cp = new Caspac(file, Statics.TempFolder, 0,getPassword());
             } else {
                 cp = new Caspac(file, Statics.TempFolder, 0);
