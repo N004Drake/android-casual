@@ -35,8 +35,13 @@ public class CASUALConnectionStatusMonitor {
     private static int LastState = 0;  //last state detected
     private static int cycles = 0; //number of cycles
     private static boolean hasConnected = false; //device was detected since startup
-
+    public static int adbLockedUp=0;
     final static int TIMERINTERVAL = 1000; 
+    
+    
+    CASUALConnectionStatusMonitor(){
+        adbLockedUp=0;
+    }
     
     /**
      * Starts and stops the ADB timer reference with
@@ -203,6 +208,15 @@ public class CASUALConnectionStatusMonitor {
 
         private String getConnectedDevices() {
             String devices = ADBTools.getDevices().replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
+            if (devices.startsWith("Timeout!!! ")){
+                devices=devices.replace("Timeout!!! ", "");
+                CASUALConnectionStatusMonitor.adbLockedUp++;
+                if (adbLockedUp==10){
+                    new CASUALInteraction("@interactionADBLockedUp").showErrorDialog();
+                }
+            } else {
+                adbLockedUp=0;
+            }
             return devices;
 
         }

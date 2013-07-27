@@ -125,10 +125,10 @@ public class CASUALApp {
                 
                 
                 i++;
-                if (password!=null){
-                    new CASPACHandler().loadCASUALPack(args[i],password.toCharArray());    
-                } else {
+                if (password==null){
                     new CASPACHandler().loadCASUALPack(args[i]);
+                } else {
+                    new CASPACHandler().loadCASUALPack(args[i],password.toCharArray());    
                 }
                 new Log().level2Information("CASPAC completed.");
                 CASUALApp.shutdown(0);
@@ -149,10 +149,12 @@ public class CASUALApp {
     public static void shutdown(int i) {
         new Log().level4Debug("Shutting Down");
         Log.out.flush();
-        Statics.CASPAC.getActiveScript().scriptContinue=false;
+        if (Statics.CASPAC !=null && Statics.CASPAC.getActiveScript()!=null){
+            Statics.CASPAC.getActiveScript().scriptContinue=false;
+        }
         CASUALConnectionStatusMonitor.DeviceCheck.stop();
         ADBTools.killADBserver();
-        if (! new CASUALTools().IDEMode && !Statics.useGUI){
+        if (!CASUALTools.IDEMode && !Statics.useGUI){
             try {
 
                 new Pastebin().pasteAnonymousLog();

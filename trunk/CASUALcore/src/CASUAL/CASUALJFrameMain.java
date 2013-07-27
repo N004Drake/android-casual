@@ -302,7 +302,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         //execute
         if (Statics.TargetScriptIsResource) {
             log.level4Debug("Loading internal resource: " + script);
-            caspac.getActiveScript().scriptContinue=true;
+            Statics.CASPAC.getActiveScript().scriptContinue=true;
             new CASUALScriptParser().executeSelectedScript(caspac, true);
         }
 

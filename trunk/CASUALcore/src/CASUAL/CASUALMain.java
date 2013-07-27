@@ -64,7 +64,7 @@ public final class CASUALMain {
             prepCASPAC.join();
             Caspac CASPAC=Statics.CASPAC;
             CASPAC.setActiveScript(CASPAC.scripts.get(0));
-            CASPAC.getActiveScript().scriptContinue=true;
+            Statics.CASPAC.getActiveScript().scriptContinue=true;
             AudioHandler.playSound("/CASUAL/resources/sounds/CASUAL.wav");
             if (args.length != 0 && !Statics.useGUI) {
                 Statics.setStatus("waiting for ADB");

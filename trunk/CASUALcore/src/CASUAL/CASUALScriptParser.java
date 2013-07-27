@@ -98,7 +98,7 @@ public class CASUALScriptParser {
         Statics.scriptRunLock = true;
         Statics.ReactionEvents = new ArrayList<>();
         Statics.ActionEvents = new ArrayList<>();
-        caspac.getActiveScript().scriptContinue = true;
+        Statics.CASPAC.getActiveScript().scriptContinue = true;
         scriptInput = new DataInputStream(StringOperations.convertStringToStream(caspac.getActiveScript().scriptContents));
         log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
         Runnable r = new Runnable() {
@@ -224,7 +224,7 @@ public class CASUALScriptParser {
         try {
             ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.scriptContents.getBytes("UTF-8"));
             DataInputStream dis = new DataInputStream(scriptStream);
-            new CASUALLanguage(s.name, s.tempDir).beginScriptingHandler(dis);
+            new CASUALLanguage(CASPAC, s.name, s.tempDir).beginScriptingHandler(dis);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }

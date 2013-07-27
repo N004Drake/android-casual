@@ -66,7 +66,7 @@ public class CASUALLanguage {
 
             bReader.mark(1);
             while ((strLine = bReader.readLine()) != null) {
-                if (CASPAC.getActiveScript().scriptContinue=false) return;
+                if (Statics.CASPAC.getActiveScript().scriptContinue=false) return;
                 CurrentLine++;
                 if (Statics.useGUI) {
                     Statics.GUI.setProgressBar(CurrentLine);
@@ -204,7 +204,7 @@ public class CASUALLanguage {
          }
          */
         if (line.startsWith("$HALT")) {
-            CASPAC.getActiveScript().scriptContinue = false;
+            Statics.CASPAC.getActiveScript().scriptContinue = false;
 
             //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
@@ -398,7 +398,7 @@ public class CASUALLanguage {
             if (n == 0) {
                 log.level0Error(ScriptName);
                 log.level0Error("@canceledAtUserRequest");
-                CASPAC.getActiveScript().scriptContinue = false;
+                Statics.CASPAC.getActiveScript().scriptContinue = false;
                 return "";
             }
             return "";
@@ -414,7 +414,7 @@ public class CASUALLanguage {
             if (n == 0) {
                 log.level0Error(ScriptName);
                 log.level0Error("@haltedPerformActions");
-                CASPAC.getActiveScript().scriptContinue = false;
+                Statics.CASPAC.getActiveScript().scriptContinue = false;
                 return "";
             }
             return "";
@@ -671,7 +671,7 @@ public class CASUALLanguage {
         if (n == 1) {
             log.level0Error(ScriptName);
             log.level0Error("@canceledDueToMissingFiles");
-            CASPAC.getActiveScript().scriptContinue = false;
+            Statics.CASPAC.getActiveScript().scriptContinue = false;
         }
     }
 
