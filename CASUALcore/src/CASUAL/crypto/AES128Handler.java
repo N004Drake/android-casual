@@ -14,8 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.crypto;
 
+import CASUAL.FileOperations;
+import CASUAL.Log;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -24,8 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -56,7 +56,7 @@ import javax.crypto.spec.SecretKeySpec;
  * http://stackoverflow.com/questions/1220751/how-to-choose-an-aes-encryption-mode-cbc-ecb-ctr-ocb-cfb
  * severely beaten several times by Pulser
  */
-public class CipherHandler {
+public class AES128Handler {
 
     final File targetFile;
     Log log = new Log();
@@ -69,7 +69,7 @@ public class CipherHandler {
     final static private String casualID = "EncryptedCASPAC-CASUAL-Revision";
     private static String header = casualID + revision.length() + revision;
 
-    public CipherHandler(File targetFile) {
+    public AES128Handler(File targetFile) {
         this.targetFile = targetFile;
     }
 
@@ -135,11 +135,7 @@ public class CipherHandler {
 
     private String writeCipherFile(InputStream fis, byte[] iv, String output, char[] key, int mode) throws NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, FileNotFoundException, IOException {
         byte[] bkey = oneWayHash(key);
-        char[] newKey = new char[bkey.length];
-        for (int i = 0; i < bkey.length; i++) {
-            newKey[i] = (char) bkey[i];
-        }
-        Cipher c = getCipher(newKey, iv, mode);
+        Cipher c = getCipher(bkey, iv, mode);
         CipherInputStream cis = new CipherInputStream(fis, c);
 
         if (mode == Cipher.ENCRYPT_MODE) {
@@ -188,13 +184,13 @@ public class CipherHandler {
             Key key = factory.generateSecret(keyspec);
             return key.getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            Logger.getLogger(CipherHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AES128Handler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
 
-    public Cipher getCipher(char[] key, byte[] iv, int mode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException {
-        SecretKeySpec skey = new SecretKeySpec(oneWayHash(key), "AES");
+    public Cipher getCipher(byte[] key, byte[] iv, int mode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException {
+        SecretKeySpec skey = new SecretKeySpec(key, "AES");
         IvParameterSpec ivspec = new IvParameterSpec(iv);
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(mode, skey, ivspec);
@@ -210,7 +206,7 @@ public class CipherHandler {
      * @throws IOException
      */
     public static int getCASPACHeaderLength(File f) throws FileNotFoundException, IOException {
-        CipherHandler c = new CipherHandler(f);
+        AES128Handler c = new AES128Handler(f);
         FileInputStream fis = new FileInputStream(f);
         byte[] chartest = new byte[casualID.length()];
         byte[] headert = casualID.getBytes();

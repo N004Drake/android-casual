@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.crypto;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -166,7 +166,7 @@ public class MD5sum {
         return NameMD5;
     }
 
-    String md5sum(String string) {
+    public String md5sum(String string) {
         return md5sum(new File(string));
 
     }
