@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.crypto;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -52,6 +53,7 @@ public class SHA256sum {
     public SHA256sum(String s) throws IOException {
         ByteArrayInputStream bas = new ByteArrayInputStream(s.getBytes());
         toBeSHA256 = bas;
+        toBeSHA256.mark(0);
     }
 
     public SHA256sum(InputStream is) throws IOException {
@@ -64,6 +66,7 @@ public class SHA256sum {
         }
         ByteArrayInputStream bin = new ByteArrayInputStream(bao.toByteArray());
         toBeSHA256 = bin;
+        toBeSHA256.mark(0);
     }
 
     public SHA256sum(File f) throws FileNotFoundException, IOException {
@@ -74,6 +77,7 @@ public class SHA256sum {
         ra.read(b);
         ByteArrayInputStream bas = new ByteArrayInputStream(b);
         toBeSHA256 = bas;
+        toBeSHA256.mark(0);
     }
 
     public static String getLinuxSum(File file) {
@@ -114,15 +118,28 @@ public class SHA256sum {
      * @throws NoSuchAlgorithmException
      */
     public String getSha256() throws IOException, NoSuchAlgorithmException {
-        ByteBuffer bb=ByteBuffer.allocate(512);
-       
-        byte[] buffer = new byte[8120];
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        while (toBeSHA256.read(bb.array()) > 0) {
-            md.update(bb);
+      toBeSHA256.reset();
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = toBeSHA256.read(buffer)) > 0) {
+                digest.update(buffer, 0, read);
+            }
+            byte[] md5sum = digest.digest();
+            BigInteger bigInt = new BigInteger(1, md5sum);
+            String output = bigInt.toString(16);
+            while (output.length() != 64) {
+                output = "0" + output;
+            }
+            return output;
+        } catch (NoSuchAlgorithmException ex) {
+            return "ERROR0NoSuchAlgorythemException0";
+
+        } catch (IOException ex) {
+            return "ERROR00IOException00000000000000";
         }
-        String sha256sum = bytesToHex(md.digest());
-        return sha256sum;
     }
 
     public static String bytesToHex(byte[] bytes) {
