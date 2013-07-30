@@ -43,7 +43,7 @@ public class Log {
 
 
     private void sendToGUI(String data) {
-        if (Statics.useGUI && !"".equals(data)&& !"\n".equals(data)) {
+        if (Statics.useGUI || Statics.dumbTerminalGUI && !"".equals(data)&& !"\n".equals(data)) {
             try {
                     Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
                     Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());

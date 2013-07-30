@@ -4,9 +4,11 @@
  */
 package CASUAL.crypto;
 
-import CASUAL.crypto.SHA256sum;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,18 +47,6 @@ public class SHA256sumTest {
     String expname = "logo.xcf";
     String expsum = "ad5f9292c7bd44068b5465b48b38bf18c98b4d133e80307957e5f5c372a36f7d";
     File file = new File("../logo.xcf");
-
-    /**
-     * Test of getLinuxSum method, of class SHA256sum.
-     */
-    @Test
-    public void testGetLinuxSum() {
-        System.out.println("getLinuxSum");
-        String result = SHA256sum.getLinuxSum(file);
-        //TODO get proper result
-        //assertEquals(expsum,result);
-
-    }
 
     /**
      * Test of getName method, of class SHA256sum.
@@ -134,5 +124,90 @@ public class SHA256sumTest {
         byte[] bytes = {-47, 1, 16, 84, 2, 101, 110, 83, 111, 109, 101, 32, 78, 70, 67, 32, 68, 97, 116, 97};
         String result = SHA256sum.bytesToHex(bytes);
         assertEquals("D101105402656E536F6D65204E46432044617461".toLowerCase(), result);
+    }
+
+    @Test
+    public void getLinuxTestSum() {
+        /*Test vector: "abc" without a new line
+         * adam@adam-desktop:~$ echo -n abc|sha256sum
+         * ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  -
+         */
+        byte[] testVector = "abc".getBytes();
+        String expectedResult = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  -";
+        ByteArrayInputStream bas = new ByteArrayInputStream(testVector);
+        try {
+            SHA256sum s = new SHA256sum((InputStream) bas);
+            String result = s.getLinuxSum("");
+            assertEquals(expectedResult, result);
+            result = s.getLinuxSum("");
+            assertEquals(expectedResult, result);
+        } catch (IOException ex) {
+            fail("error while summing");
+        }
+    }
+
+    @Test
+    public void falseEqualsTrue() {
+        if (false == true) { //\u000a\u007d\u007b
+
+        
+            System.out.println("false is true!!");
+            if (!false && true) {
+                assert (true);
+            } else {
+                fail("It turns out false isn't true"); //won't happen.
+            }
+
+        }
+    }
+
+    @Test
+    public void getLinuxTestSumFromString() {
+        /*Test vector: "abc" without a new line
+         * adam@adam-desktop:~/code/android-casual/trunk/CASPAC$ echo -n "CASUAL"|sha256sum
+         * ff2fb9e38104483a510ea3333890fef15029b28e27c92fdafbc3edadc077df8c  -
+         */
+        String testVector = "CASUAL";
+        String expectedResult = "ff2fb9e38104483a510ea3333890fef15029b28e27c92fdafbc3edadc077df8c  -";
+        try {
+            SHA256sum s = new SHA256sum(testVector);
+            String result = s.getLinuxSum("");
+            System.out.println("Testing sumfromstring\n" + expectedResult + "\n" + result);
+            assertEquals(expectedResult, result);
+            result = s.getLinuxSum("");
+            assertEquals(expectedResult, result);
+        } catch (IOException ex) {
+            fail("error while summing");
+        }
+    }
+
+    @Test
+    public void getLinuxTestSumFromFile() {
+        try {
+            /*Test vector: "abc" without a new line
+             * adam@adam-desktop:~$ echo -n abc>./test
+             * adam@adam-desktop:~$ sha256sum ./test
+             * ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  ./test
+             */
+            byte[] testVector = "abc".getBytes();
+            String expectedResult = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  test";
+            File f = new File("test");
+            //create file containing "abc"
+            f.createNewFile();
+            try (FileOutputStream fos = new FileOutputStream(f)) {
+                fos.write(testVector);
+            }
+
+            String result = SHA256sum.getLinuxSum(f);
+            System.out.println("result " + result);
+            System.out.println("expected " + expectedResult);
+            assertEquals(expectedResult, result);
+            f.deleteOnExit();
+
+        } catch (IOException ex) {
+            fail("error while reading/writing files");
+        }
+
+
     }
 }

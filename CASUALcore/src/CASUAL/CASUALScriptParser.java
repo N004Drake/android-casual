@@ -19,7 +19,6 @@ package CASUAL;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -131,73 +130,7 @@ public class CASUALScriptParser {
 
             }
 
-            private boolean checkForUpdates(String testString) {
-                Statics.setStatus("Checking for Updates");
-                int updateStatus;
-                if (caspac.getActiveScript().extractionMethod != 0) {
-                    try {
-                        //String[] IDStrings = CASUALIDString.split("\n");
-                        //This is where we hold the local information to be compared to the update
-                        CASPACData localInformation = new CASPACData(testString);
-
-                        updateStatus = 0;
-                        /*
-                         * checks for updates returns: 0=no updates found
-                         * 1=random error 2=Script Update Required 3=CASUAL
-                         * update required- cannot continue. 4=download
-                         * failed *
-                         */
-                        switch (updateStatus) {
-                            //no updates found
-                            case 0: //do nothing
-                                break;
-                            //random error with URL formatting
-                            case 1: //do nothing
-                                break;
-                            //script update performed
-                            case 2:
-                                Statics.TargetScriptIsResource = false;
-                                //TODO: switch input stream to file
-                                break;
-                            //CASUAL must be update    
-                            case 3:
-                                log.level0Error(Statics.webInformation.updateMessage);
-                                log.level0Error("@killSwitchMessage");
-                                new CASUALInteraction("@interactionKillSwitchMessage\n" + Statics.webInformation.updateMessage).showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"Take me to the Support Site"}, 0);
-                                new LinkLauncher(Statics.webInformation.supportURL).launch();
-                                CASUALApp.shutdown(0);
-                                return true;
-                            //download error
-                            case 4:
-                                log.level0Error("@problemDownloading");
-                                //HALT script
-                                return true;
-                            case 5:
-                                log.level0Error("@problemDownlaodingFile");
-                                new CASUALInteraction("@interactionDownloadFileFailure").showTimeoutDialog(60, null, CASUALInteraction.ERROR_MESSAGE, CASUALInteraction.ERROR_MESSAGE, new String[]{"OK"}, "ok");
-                                try {
-                                    JavaSystem.restart(new String[]{""});
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                //HALT script
-                                return true;
-                            default: //unknown error do nothing
-                                log.level0Error("@executeScriptError");
-                                break;
-                        }
-                    } catch (MalformedURLException ex) {
-                        log.level0Error("@couldNotFindScript");
-                        log.level0Error(caspac.getActiveScript().name);
-                        log.level0Error("@reportThisError");
-                        log.errorHandler(ex);
-                    } catch (IOException ex) {
-                        log.level0Error("@ioExceptionInExecuteScript");
-                        log.errorHandler(ex);
-                    }
-                }
-                return false;
-            }
+           
         };
         if (startThreaded) {
             Thread ExecuteScript = new Thread(r);

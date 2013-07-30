@@ -255,13 +255,17 @@ public class CASUALTools {
     };
 
     //This is only used in IDE mode for development
-    void rewriteMD5OnCASPAC(File CASPAC, CASPACHandler caspacHandler) {
+    void rewriteMD5OnCASPAC(File CASPAC) {
         new Log().level3Verbose("Writing new CASUAL Package Data!");
         incrementBuildNumber();
         ArrayList list;
         Enumeration zippedFiles;
         String CASUALMeta;
         Unzip unzip;
+        
+        //TODO: load CASPAC, update MD5s in CASPAC, then write out.
+        
+        /**
         try {
             unzip = new Unzip(CASPAC);
             zippedFiles = unzip.zipFileEntries;
@@ -316,6 +320,7 @@ public class CASUALTools {
         } catch (IOException ex) {
             new Log().errorHandler(ex);
         }
+        */
     }
 
     //This is only used in IDE mode for development

@@ -115,7 +115,7 @@ public class Pastebin {
             return;
         }
         int SVNrev = Integer.parseInt(matcher.find() ? matcher.group(0) : "5");
-        int CASRev = Integer.parseInt(CASPACData.getSVNRevision());
+        int CASRev = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
         if ((SVNrev - 5) >= CASRev && casualLog.contains("failed") || casualLog.contains("FAILED") || casualLog.contains("ERROR")) { //build.prop contains the word error on some devices so error is not a good word to track. 
             String slashrep = Statics.isWindows() ? "\\" : "//";
             String userhome = System.getProperty("user.home");

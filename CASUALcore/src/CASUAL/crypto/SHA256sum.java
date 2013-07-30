@@ -27,6 +27,8 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -79,6 +81,23 @@ public class SHA256sum {
         toBeSHA256 = bas;
         toBeSHA256.mark(0);
     }
+    public String getLinuxSum(String filename){
+        if (filename.isEmpty()) {
+            filename="-";
+        }
+        try {
+            String sha=getSha256();
+            return sha+LINUXSPACER+filename;
+        } catch (IOException ex) {
+            return null;
+        } catch (NoSuchAlgorithmException ex) {
+            return null;
+        }
+        
+        
+        
+    }
+    
 
     public static String getLinuxSum(File file) {
         String name = file.getName();
