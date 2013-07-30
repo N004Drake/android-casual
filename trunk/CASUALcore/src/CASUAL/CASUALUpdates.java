@@ -50,81 +50,7 @@ public class CASUALUpdates {
      */
     Log Log = new Log();
 
-    /**
-     * performs an update to CASUAL script
-     *
-     * @param script script to check
-     * @param localInformation local meta file
-     * @return integer value to be processed as return 0 no update required 1
-     * error during update 2 update occured 3 SVN version cannot handle new
-     * script 4 bad download
-     *
-     * @throws MalformedURLException
-     * @throws IOException
-     */
-    public int checkOfficialRepo(Script script) throws MalformedURLException, IOException {
-        //compareMD5StringsFromLinuxFormatToFilenames(String[] LinuxFormat, String[] MD5Filenames){
-        CASPACData localInformation = new CASPACData(script.metaData.metaProp.toString());
-        CASPACData webInformation;
-        try {
-            webInformation = new CASPACData(getWebData(CASUALRepo + script + ".meta"));
-        } catch (URISyntaxException ex) {
-            return 1;
-
-        } catch (IOException ex) {
-            Log.level4Debug(script + " not found in repository.");
-            return 1;
-        }
-        Log.level4Debug("***WEB VERSION***\nIDString:" + webInformation.uniqueIdentifier + "\nSVNRevision:" + webInformation.minSVNRevision + "\nScriptRevision:" + webInformation.scriptRevision + "\nsupportURL:" + webInformation.supportURL + "updateMessage" + webInformation.updateMessage);
-        Statics.webInformation = webInformation;
-        try {
-            if (localInformation.uniqueIdentifier.equals(webInformation.uniqueIdentifier)) {
-                if (!webInformation.isOurSVNHighEnoughToRunThisScript(Integer.parseInt(localInformation.minSVNRevision))) {
-                    //update SVN
-                    Log.level0Error("@casualIsOutOfDate");
-                    Log.level0Error(webInformation.supportURL);
-                    return 3;
-                }
-                if (checkVersionInformation(webInformation.scriptRevision, localInformation.scriptRevision)) {
-
-                    Log.level2Information("@scriptIsOutOfDate");
-                    //ugly code dealing with /SCRIPTS/ folder on computer.
-                    new FileOperations().makeFolder(Statics.TempFolder + "SCRIPTS" + Statics.Slash);
-                    int status = downloadUpdates(script.name, webInformation);
-                    if (status == 0) {
-                        Log.level2Information("@md5sVerified");
-                        return 2;
-                    } else {
-                        return 4;
-                    }
-                }
-            }
-            return 0;
-        } catch (NullPointerException ex) {
-            Log.level0Error("@metaDataMalformed");
-            return 0;
-        }
-    }
-    /*
-     * used to check CASUAL Version Information returns true if update is
-     * required
-     */
-
-    private boolean checkVersionInformation(String webVersion, String localVersion) {
-        int wv = Integer.parseInt(webVersion);
-        int lv = Integer.parseInt(localVersion);
-        if (wv != 0) {
-            if (wv > lv) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-
-    }
-
+    
     /**
      * downloads a file
      *
@@ -263,67 +189,7 @@ public class CASUALUpdates {
         return url.openStream();
     }
 
-    /*
-     * Takes CASUAL ID String Returns: SVN Revision, Script Revision, Script
-     * Identification, support URL, message to user
-     * returns 0-update applied
-     * 1- update not available
-     * 2- update error
-     */
-    private int downloadUpdates(String scriptname, CASPACData webInformation) {
-        URL url;
-        try {
-            url = stringToFormattedURL(CASUALRepo + scriptname);
-        } catch (MalformedURLException ex) {
-            Log.level4Debug("malformedURL exception while CASUALUpdates.downloadUpdates() " + CASUALRepo + scriptname);
-            return 1;
-        } catch (URISyntaxException ex) {
-            Log.level4Debug("URISyntaxException exception while CASUALUpdates.downloadUpdates() " + CASUALRepo + scriptname);
-            return 1;
-        }
-        Log.level0Error("@downloadingUpdates");
-        String[] md5lines = StringOperations.convertArrayListToStringArray(webInformation.md5s);
-
-        try {
-            ArrayList<String> list = new ArrayList<>();
-            String localfile = Statics.TempFolder + scriptname;
-            String ext;
-            for (int n = 0; n < md5lines.length; n++) {
-                //get download extension from md5sum;
-
-                try {
-                    String[] md5 = md5lines[n].split("  ");
-                    if (md5.length == 2) {
-                        String fileName = md5[1];
-                        ext = "." + fileName.split("\\.")[1];
-                        if (downloadFileFromInternet(new URL(url + ext), localfile + ext, scriptname + ext)) {
-                            list.add(Statics.TempFolder + scriptname + ext);
-                        }
-                    }
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    Log.level0Error("@invalidMD5String");
-                    continue;
-                } catch (NullPointerException ex) {
-                    Log.level0Error("@invalidMD5String");
-                    continue;
-                }
-
-
-            }
-
-            String[] files = list.toArray(new String[list.size()]);
-            if (new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(md5lines, files)) {
-                return 0;//success
-            } else {
-                return 2;//failure
-            }
-
-
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(CASUALUpdates.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 1;//no update available
-    }
+ 
     /*
      * String Properties File
      * Returns location of first downloaded file

@@ -118,28 +118,7 @@ public class CASUALApp {
                 CASUALApp.shutdown(0);
                 return true;
             }
-            if (args[i].contains("--password") || args[i].contains("-p")) {
-                i++;
-                password = args[i];
-            }
-
-            if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
-
-
-                i++;
-                if (password == null) {
-                    new CASPACHandler().loadCASUALPack(args[i]);
-                } else {
-                    new CASPACHandler().loadCASUALPack(args[i], password.toCharArray());
-                }
-                new Log().level2Information("CASPAC completed.");
-                CASUALApp.shutdown(0);
-                return true;
-            }
-            if (args[i].contains("--gui") || args[i].contains("-g")) {
-                Statics.useGUI = true;
-            }
-
+          
         }
         return false;
     }
@@ -167,6 +146,9 @@ public class CASUALApp {
         }
 
         try {
+            if (Statics.GUI!=null){
+                Statics.GUI.dispose();
+            }
             CASUALInteraction.in.close();
             Statics.initializeStatics();
         } catch (IOException ex) {

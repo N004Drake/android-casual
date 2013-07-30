@@ -28,6 +28,8 @@ import CASUAL.StringOperations;
 import CASUAL.Unzip;
 import CASUAL.Zip;
 import CASUAL.crypto.AES128Handler;
+import CASUAL.crypto.MD5sum;
+
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -143,10 +145,12 @@ public final class Caspac {
                 log.level4Debug("Picking Jar File:" + jar.getFile() +" ..scanning.");
                 while ((ZEntry = zip.getNextEntry()) != null) {
                     String entry = ZEntry.getName();
+                    getScriptByFilename(entry).actualMD5s.add(new MD5sum().getLinuxMD5Sum(StringOperations.convertStringToStream(fo.readTextFromResource("/"+entry)), entry.replace("SCRIPTS/","")));
+              
                     if (entry.startsWith("SCRIPTS/")){ //part of CASPAC
                         log.level4Debug("parsing "+entry);
                         handleCASPACJarFiles(entry);
-                    }
+                      }
                 }
             }
         }
@@ -478,8 +482,7 @@ public final class Caspac {
     }
 
     private void handleCASPACScriptFiles(String filename, Unzip pack, Object entry) throws IOException {
-
-        
+        MD5sum md5sum =new MD5sum();
         if (filename.toString().endsWith(".meta")) {
 
             Script script = getScriptInstanceByFilename(filename.toString());
@@ -505,26 +508,21 @@ public final class Caspac {
             Script script = getScriptInstanceByFilename(filename.toString());
             script.scriptContents= fo.readTextFromStream(pack.streamFileFromZip(entry));
             log.level4Debug("Added Script for " + script.name + ".");
+            script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.scriptContents), filename));
            
         } else if (filename.toString().endsWith(".zip")) {
             Script script = getScriptInstanceByFilename(filename.toString());
-            /*fo.writeStreamToFile(pack.streamFileFromZip(entry), TempFolder + filename);
-            
-            script.zipFile
-            unzipQueue.add(new File(TempFolder + filename));
-            */
             script.scriptZipFile=entry;
             script.zipfile=pack;
             this.unzipThreads.add(new Thread(script.getExtractionRunnable()));
             log.level4Debug("Added .zip to " + script.name + ". It will be unziped at end of unpacking.");
-            //for (File f:new File(TempFolder + slash + "IncludeExplode"+slash).listFiles())
-            //    script.includeFiles.add(f);
-
+            
         } else if (filename.toString().endsWith(".txt")) {
             Script script = getScriptInstanceByFilename(filename.toString());
             String description = fo.readTextFromStream(pack.streamFileFromZip(entry));
             script.discription=description;
             log.level4Debug("Added Description to " + script.name + ".");
+            script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.scriptContents), filename));
         }
     }
 
@@ -558,7 +556,6 @@ public final class Caspac {
                     .getResourceAsStream(entry);
             this.getScriptByFilename(entry).discription = fo.readTextFromResource(entry);
         } else if (entry.endsWith(".scr")) {
-            
             this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource("/"+entry);
         } else if (entry.endsWith(".meta")) {
             System.out.println("loading meta "+entry);
@@ -571,6 +568,7 @@ public final class Caspac {
             log.level3Verbose("found zip at "+entry);
             this.getScriptByFilename(entry).scriptZipFile=entry;
         }
+        new MD5sum().getLinuxMD5Sum(StringOperations.convertStringToStream(fo.readTextFromResource("/"+entry)), entry);
     }
 
     private void setupIDEModeScriptForCASUAL(String defaultPackage) {

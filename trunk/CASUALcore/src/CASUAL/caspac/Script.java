@@ -16,6 +16,7 @@
  */
 package CASUAL.caspac;
 
+import CASUAL.CASUALInteraction;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
@@ -48,16 +49,16 @@ import java.util.zip.ZipException;
  *
  * @author loganludington
  */
-public class Script{
+public class Script {
     /*
      * extractionMethod = 
      * 0 for CASPAC  (File, zipFile/zipFile)
      * 1 for CASUAL  (Resource, /SCRIPTS/zipFile
      * 2 for Filesystem (File, zipFile)
      */
+
     final public int extractionMethod;
     public Object scriptZipFile; //zipFile Entry, Resource or File on disk
-    
     public Unzip zipfile; //CASPAC only.
     final public String name;
     final public String tempDir;
@@ -65,21 +66,21 @@ public class Script{
     public List<File> individualFiles = new ArrayList<>();
     public meta metaData = new meta();
     public String discription = "";
-    public boolean scriptContinue=false;
+    public boolean scriptContinue = false;
     private static String slash = System.getProperty("file.separator");
     Map<? extends String, ? extends InputStream> getAllAsStringAndInputStream;
+    public List<String> actualMD5s = new ArrayList<>();
 
-    
-    public Script (Script s){
+    public Script(Script s) {
         this.name = s.name;
         this.tempDir = s.tempDir;
         this.extractionMethod = 2;
-        this.metaData=s.metaData;
-        this.individualFiles=s.individualFiles;
-        this.zipfile=s.zipfile;
-        this.discription=s.discription;
-        this.scriptContinue=s.scriptContinue;
-        this.getAllAsStringAndInputStream=s.getAllAsStringAndInputStream;
+        this.metaData = s.metaData;
+        this.individualFiles = s.individualFiles;
+        this.zipfile = s.zipfile;
+        this.discription = s.discription;
+        this.scriptContinue = s.scriptContinue;
+        this.getAllAsStringAndInputStream = s.getAllAsStringAndInputStream;
     }
     
     public Script(String name, String tempDir) {
@@ -87,11 +88,13 @@ public class Script{
         this.tempDir = tempDir;
         this.extractionMethod = 0;
     }
-    public Script(String name, String tempDir,int type) {
+
+    public Script(String name, String tempDir, int type) {
         this.name = name;
         this.tempDir = tempDir;
         this.extractionMethod = type;
     }
+
     public Script(String name, String script, String discription, List<File> includeFiles, String tempDir) {
         this.discription = discription;
         this.name = name;
@@ -141,8 +144,8 @@ public class Script{
         return testingBool;
     }
 
-    public DataInputStream getScriptContents(){
-        InputStream is=StringOperations.convertStringToStream(scriptContents);
+    public DataInputStream getScriptContents() {
+        InputStream is = StringOperations.convertStringToStream(scriptContents);
         return new DataInputStream(is);
     }
 
@@ -150,23 +153,24 @@ public class Script{
     public String toString() {
         return name;
     }
+
     private void addMD5ToMeta(String linuxMD5, int md5Position) {
         new Log().level3Verbose("evaluated MD5 to " + linuxMD5);
         metaData.metaProp.setProperty("Script.MD5[" + md5Position + "]", linuxMD5);
     }
+
     private void addMD5ToMeta(MD5sum md5sum, String filePath, int md5Position) {
         String linuxMD5 = md5sum.getLinuxMD5Sum(new File(filePath));
         new Log().level3Verbose("evaluated MD5 to " + linuxMD5);
         metaData.metaProp.setProperty("Script.MD5[" + md5Position + "]", linuxMD5);
     }
 
-    
     /*
      * extracts includedFiles from zip
      */
     public Runnable getExtractionRunnable() {
-        if (this.extractionMethod==0){  //This is a CASPAC
-            final Unzip CASPAC=this.zipfile;
+        if (this.extractionMethod == 0) {  //This is a CASPAC
+            final Unzip CASPAC = this.zipfile;
             final Object entry = this.scriptZipFile;
             Runnable r = new Runnable() {
                 @Override
@@ -175,11 +179,14 @@ public class Script{
                     try {
                         Log log = new Log();
                         new Log().level4Debug("Unzipping " + name);
-                        log.level3Verbose("Grabbing Entry "+CASPAC.getEntryName(entry));
+                        log.level3Verbose("Grabbing Entry " + CASPAC.getEntryName(entry));
                         bis = CASPAC.streamFileFromZip(entry);
-                        log.level4Debug("Setup InputStream. Extracting to"+tempDir);
+                        //bis.mark(0);
+                        actualMD5s.add(new MD5sum().getLinuxMD5Sum(bis, entry.toString()));
+                        bis = CASPAC.streamFileFromZip(entry);
+                        log.level4Debug("Setup InputStream. Extracting to" + tempDir);
                         Unzip.unZipInputStream(bis, tempDir);
-                        log.level4Debug("Extracted entry "+CASPAC.getEntryName(entry) + "to "+tempDir);
+                        log.level4Debug("Extracted entry " + CASPAC.getEntryName(entry) + "to " + tempDir);
 
                     } catch (ZipException ex) {
                         Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
@@ -187,56 +194,73 @@ public class Script{
                         Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                     } finally {
                         try {
-                            if (bis!=null) {
+                            if (bis != null) {
                                 bis.close();
                             }
                         } catch (IOException ex) {
                             Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    File[] files =new File(tempDir).listFiles();
+                    File[] files = new File(tempDir).listFiles();
                     individualFiles.addAll(Arrays.asList(files));
+                    /*for (String md5 : metaData.md5s) {
+                        if (!actualMD5s.contains(md5)) {
+                            new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
+                            scriptContents = "";
+                        }
+                    }*/
                 }
             };
             return r;
         }
-        if (this.extractionMethod==1){  //This is a CASUAL
+        if (this.extractionMethod == 1) {  //This is a CASUAL
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    if (scriptZipFile!=null){
-                        if (new CASUALTools().IDEMode){
+                    if (scriptZipFile != null) {
+                        if (new CASUALTools().IDEMode) {
                             try {
-                                Unzip unzip=new Unzip(new File((String)scriptZipFile));
+                                actualMD5s.add(new MD5sum().getLinuxMD5Sum(new File((String) scriptZipFile)));
+                                Unzip unzip = new Unzip(new File((String) scriptZipFile));
                                 unzip.unzipFile(tempDir);
                             } catch (ZipException ex) {
                                 Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (IOException ex) {
                                 Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
-                            }                        
+                            }
                         } else {
                             try {
-                                new Log().level4Debug("unzip of "+scriptZipFile.toString()+" is beginning.");   
-                                Unzip.unZipResource("/"+scriptZipFile.toString(), tempDir);
+                                actualMD5s.add(new MD5sum().getLinuxMD5Sum(getClass().getResourceAsStream((String) scriptZipFile), (String) scriptZipFile));
+                                new Log().level4Debug("unzip of " + scriptZipFile.toString() + " is beginning.");
+                                Unzip.unZipResource("/" + scriptZipFile.toString(), tempDir);
                             } catch (FileNotFoundException ex) {
                                 Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (IOException ex) {
                                 Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            new Log().level4Debug("unzip of "+name+" is complete.");
+                            new Log().level4Debug("unzip of " + name + " is complete.");
                         }
-                    } else { 
-                      new Log().level3Verbose("script Zipfile was null");
+                    } else {
+                        new Log().level3Verbose("script Zipfile was null");
                     }
+                    /*
+                    for (String md5 : metaData.md5s) {
+                        if (!actualMD5s.contains(md5)) {
+                            new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
+                            scriptContents = "";
+                        }
+                    }
+                    */
                 }
             };
             return r;
         }
-        if (this.extractionMethod==2){ //This is running on the filesystem
+        if (this.extractionMethod == 2) { //This is running on the filesystem
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    String ziplocation=scriptZipFile.toString();
+                    actualMD5s.add(new MD5sum().getLinuxMD5Sum(new File(scriptZipFile.toString())));
+                    String ziplocation = scriptZipFile.toString();
                     try {
                         Unzip unzip = new Unzip(ziplocation);
                         unzip.unzipFile(tempDir);
@@ -245,78 +269,82 @@ public class Script{
                     } catch (IOException ex) {
                         Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+                    for (String md5 : metaData.md5s) {
+                        if (!actualMD5s.contains(md5)) {
+                            new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
+                            scriptContents = "";
+                        }
+                    }
                 }
             };
             return r;
         }
-        
+
         Runnable r = new Runnable() {
             @Override
             public void run() {
-
             }
         };
-        
-        
+
+
         return r;
 
     }
 
-    Map<String,InputStream> getScriptAsMapForCASPAC() {
+    Map<String, InputStream> getScriptAsMapForCASPAC() {
         CASUAL.Log log = new CASUAL.Log();
         int md5Position = 0;
         CASUAL.crypto.MD5sum md5sum = new CASUAL.crypto.MD5sum();
-        Map<String, InputStream> scriptEntries=new HashMap<>();
-        ArrayList<String> tempMD5s=new ArrayList<>();
-        
+        Map<String, InputStream> scriptEntries = new HashMap<>();
+        ArrayList<String> tempMD5s = new ArrayList<>();
+
         //get md5 and stream for script
-        tempMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(scriptContents),name+".scr"));
-        scriptEntries.put(name+".scr", StringOperations.convertStringToStream(scriptContents));
-        
+        tempMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(scriptContents), name + ".scr"));
+        scriptEntries.put(name + ".scr", StringOperations.convertStringToStream(scriptContents));
+
         //get md5 and stream for txt
-        tempMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(this.discription),name+".txt"));
-        scriptEntries.put(name+".txt", StringOperations.convertStringToStream(this.discription));
-        
+        tempMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(this.discription), name + ".txt"));
+        scriptEntries.put(name + ".txt", StringOperations.convertStringToStream(this.discription));
+
         //get md5 and stream for zip
         //go to folder above and create stream
-        File masterTempDir=new File(tempDir).getParentFile();
-        File instanceZip=new File(masterTempDir+Statics.Slash+name+".zip");
-        if (! instanceZip.exists()){
+        File masterTempDir = new File(tempDir).getParentFile();
+        File instanceZip = new File(masterTempDir + Statics.Slash + name + ".zip");
+        if (!instanceZip.exists()) {
             try {
                 instanceZip.createNewFile();
             } catch (IOException ex) {
                 Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        new Log().level3Verbose("set script $ZIPFILE to "+instanceZip.getAbsolutePath());
+        new Log().level3Verbose("set script $ZIPFILE to " + instanceZip.getAbsolutePath());
         try {
             Zip zip;
 
             zip = new Zip(instanceZip);
             zip.addFilesToExistingZip(individualFiles.toArray(new File[individualFiles.size()]));
-            log.level3Verbose("Adding zip:"+instanceZip.getAbsolutePath());
-            scriptEntries.put(name+".zip",new FileInputStream(instanceZip.getAbsoluteFile()));
+            log.level3Verbose("Adding zip:" + instanceZip.getAbsolutePath());
+            scriptEntries.put(name + ".zip", new FileInputStream(instanceZip.getAbsoluteFile()));
         } catch (IOException ex) {
             Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
         }
 
 
-        
+
         //update MD5s and update meta
-        for (int i=0; i<tempMD5s.size();i++){
+        for (int i = 0; i < tempMD5s.size(); i++) {
             this.addMD5ToMeta(tempMD5s.get(i), md5Position);
         }
-        
+
         //get meta
-        scriptEntries.put(name+".meta",this.metaData.getMetaInputStream());         
+        scriptEntries.put(name + ".meta", this.metaData.getMetaInputStream());
 
         return scriptEntries;
-       
+
     }
 
     public void performUnzipAfterScriptZipfileUpdate() throws ZipException, IOException {
-       this.getExtractionRunnable().run();
+        this.getExtractionRunnable().run();
     }
 
     public class meta {
@@ -360,7 +388,8 @@ public class Script{
             return testingBool;
 
         }
-        public InputStream getMetaInputStream(){
+
+        public InputStream getMetaInputStream() {
             setPropsFromVariables();
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             try {
@@ -371,6 +400,7 @@ public class Script{
             return new ByteArrayInputStream(output.toByteArray());
 
         }
+
         /**
          * writes meta properties to a file
          *
@@ -401,7 +431,7 @@ public class Script{
 
         void doMd5Sum() {
             MD5sum md5sum = new MD5sum();
-            
+
             //TODO: zip resources in this class
             //TODO: get md5sum the script.zip file
             //TODO: get md5sum for the script.scr file
@@ -433,19 +463,20 @@ public class Script{
             updateMessage = prop.getProperty("Script.UpdateMessage", "");
             killSwitchMessage = prop.getProperty("Script.KillSwitchMessage", "");
             md5s = new ArrayList<>();
-            int i=0;
-            while (!prop.getProperty("Script.MD5["+i+"]", "").equals("")){
-                md5s.add(prop.getProperty("Script.MD5["+i+"]"));
+            int i = 0;
+            while (!prop.getProperty("Script.MD5[" + i + "]", "").equals("")) {
+                md5s.add(prop.getProperty("Script.MD5[" + i + "]"));
                 i++;
             }
-                
-              
+
+
         }
 
-        public void load(Properties prop){
-            this.metaProp=prop;
+        public void load(Properties prop) {
+            this.metaProp = prop;
             setVariablesFromProperties(metaProp);
         }
+
         void load(BufferedInputStream streamFileFromZip) {
             try {
                 this.metaProp.load(streamFileFromZip);
@@ -459,7 +490,5 @@ public class Script{
         public int minSVNversion() {
             return Integer.parseInt(minSVNversion);
         }
-
     }
-    
 }

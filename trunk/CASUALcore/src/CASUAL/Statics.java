@@ -61,8 +61,7 @@ public class Statics {
     public static ArrayList<String> LiveSendCommand = new ArrayList<>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by Log class
-    public static CASPACData localInformation;
-    public static CASPACData webInformation;
+
     public static ArrayList<String> runnableMD5list = new ArrayList<>();
 
     //Form data
@@ -283,8 +282,7 @@ public class Statics {
         OutFile=null;
         LogCreated = false;
 
-        localInformation=null;
-        webInformation=null;
+
         TargetScriptIsResource = true;  
        
         ProgressPane = new JTextPane(); 
