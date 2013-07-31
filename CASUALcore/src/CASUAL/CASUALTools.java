@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.caspac.Caspac;
 import CASUAL.crypto.MD5sum;
 import java.io.BufferedReader;
 import java.io.File;
@@ -211,8 +212,9 @@ public class CASUALTools {
     private boolean getIDEMode() {
         String className = getClass().getName().replace('.', '/');
         String classJar = getClass().getResource("/" + className + ".class").toString();
-        new Log().level4Debug("ClassJar:" + classJar);
-        if (classJar.startsWith("file:")) {
+        String path=new File(".").getAbsolutePath();
+        boolean isSource=path.contains("src") && path.contains("CASUALcore");
+        if (classJar.startsWith("file:") && isSource) {
             return true;
         } else {
             return false;
@@ -255,72 +257,18 @@ public class CASUALTools {
     };
 
     //This is only used in IDE mode for development
-    void rewriteMD5OnCASPAC(File CASPAC) {
-        new Log().level3Verbose("Writing new CASUAL Package Data!");
-        incrementBuildNumber();
-        ArrayList list;
-        Enumeration zippedFiles;
-        String CASUALMeta;
-        Unzip unzip;
-        
-        //TODO: load CASPAC, update MD5s in CASPAC, then write out.
-        
-        /**
+    public static void rewriteMD5OnCASPAC(File CASPAC) {
+     
+        Caspac caspac;
         try {
-            unzip = new Unzip(CASPAC);
-            zippedFiles = unzip.zipFileEntries;
-            CASUALMeta = Statics.TempFolder + caspacHandler.getMetaName(zippedFiles);
-            if (CASUALMeta == null) {
-                return;
-            }
-            list = caspacHandler.getMD5sfromCASPAC(CASPAC.toString(), CASUALMeta);
-        } catch (ZipException ex) {
-            new Log().level3Verbose("Could not read meta");
-            return;
+            caspac = new Caspac(CASPAC,Statics.TempFolder,0);
+            caspac.load();
+            caspac.write();
+            System.exit(0);
+    
         } catch (IOException ex) {
-            new Log().level3Verbose("Could not read meta");
-            return;
+            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            BufferedReader buildfile;
-            String line;
-            String output = "";
-            buildfile = new BufferedReader(new FileReader(CASUALMeta));
-            MD5sum md5sum = new MD5sum();
-            while ((line = buildfile.readLine()) != null) {
-
-                if (md5sum.lineContainsMD5(line)) {
-                    unzip = new Unzip(CASPAC);
-                    new Log().level3Verbose("MD5" + line);
-                    String mdstring = md5sum.pickNewMD5fromArrayList(list, line);
-                    String filetocheck = mdstring.split("  ")[1];
-                    Enumeration entries = unzip.zipFileEntries;
-                    while (entries.hasMoreElements()) {
-                        Object e = entries.nextElement();
-                        new Log().level3Verbose(e.toString());
-                        if (filetocheck.contains(e.toString())) {
-                            String newMD5 = new MD5sum().md5sum(Unzip.streamFileFromZip(CASPAC, e));
-                            output = output + new MD5sum().convertMD5andFiletoLinuxMD5Sum(newMD5, e.toString() + "\n");
-                        }
-                    }
-                } else {
-                    output = output + line + "\n";
-                }
-            }
-            new FileOperations().overwriteFile(output, CASUALMeta);
-            new Log().level3Verbose(output);
-        } catch (IOException ex) {
-            new Log().errorHandler(ex);
-        } finally {
-            unzip.close();
-        }
-        try {
-
-            new Zip(CASPAC).addFilesToExistingZip(caspacHandler.meta);
-        } catch (IOException ex) {
-            new Log().errorHandler(ex);
-        }
-        */
     }
 
     //This is only used in IDE mode for development

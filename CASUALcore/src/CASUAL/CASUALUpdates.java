@@ -273,15 +273,17 @@ public class CASUALUpdates {
             System.out.println(url);
 
             String localFilename = tempFolder + targetFilename;
-
+   
             if (targetFilename.endsWith(".scr")) {
                 script.scriptContents = StringOperations.convertStreamToString(url.openStream());
+                script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.scriptContents), targetFilename));
             } else if (targetFilename.endsWith(".txt")) {
                 script.discription = StringOperations.convertStreamToString(url.openStream());
+                script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.discription), targetFilename));
             } else if (targetFilename.endsWith(".zip")) {
                 this.downloadFileFromInternet(url, localFilename, targetFilename);
                 script.scriptZipFile = localFilename;
-                script.performUnzipAfterScriptZipfileUpdate();
+                 //MD5 is performed during unzip and checked at that time. 
             }
 
         }
