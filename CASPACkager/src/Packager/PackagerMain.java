@@ -111,7 +111,7 @@ public class PackagerMain {
     public void mergeCaspacCasual(String caspacLoc, String outputDir){
         try {
             File outputFile;
-            String outputFileName = caspacLoc.substring(caspacLoc.lastIndexOf(Statics.Slash), caspacLoc.lastIndexOf("."))+ "-CASUAL-R" + CASUAL.CASPACData.getSVNRevision() + "b";
+            String outputFileName = caspacLoc.substring(caspacLoc.lastIndexOf(Statics.Slash), caspacLoc.lastIndexOf("."))+ "-CASUAL-R" + CASUAL.CASUALTools.getSVNVersion() + "b";
             if (!appendToName.isEmpty()){
                 outputFileName=outputFileName+"-"+appendToName;
             }
