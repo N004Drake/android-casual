@@ -196,6 +196,11 @@ public final class Caspac {
      * @throws IOException
      */
     public void write() throws IOException {
+        if (type ==0 ){
+            for (Script s:this.scripts){
+                s.metaData.md5s=s.actualMD5s;
+            }
+        }
         Map<String, InputStream> nameStream=new HashMap<>();
         if (!CASPAC.exists()){
             CASPAC.createNewFile();
@@ -290,6 +295,7 @@ public final class Caspac {
      */
     public void load() throws ZipException, IOException {
 
+        
         if (type ==1){
             Script s=this.scripts.get(0);
             InputStream in = getClass().getClassLoader()
@@ -498,11 +504,6 @@ public final class Caspac {
             script.metaData.load(pack.streamFileFromZip(entry));
             log.level4Debug("Added METADATA to " + script.name + ".");
             int md5ArrayPosition = 0;
-            String md5;
-            while ((md5 = script.metaData.metaProp.getProperty("Script.MD5[" + md5ArrayPosition + "]")) != null) {
-                script.metaData.md5s.add(md5);
-                md5ArrayPosition++;
-            }
             scripts.set(i, script);
         } else if (filename.toString().endsWith(".scr")) {
             Script script = getScriptInstanceByFilename(filename.toString());
@@ -522,7 +523,7 @@ public final class Caspac {
             String description = fo.readTextFromStream(pack.streamFileFromZip(entry));
             script.discription=description;
             log.level4Debug("Added Description to " + script.name + ".");
-            script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.scriptContents), filename));
+            script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.discription), filename));
         }
     }
 

@@ -169,22 +169,20 @@ public class Script {
      * extracts includedFiles from zip
      */
     public Runnable getExtractionRunnable() {
+        final Log log = new Log();
         if (this.extractionMethod == 0) {  //This is a CASPAC
             final Unzip CASPAC = this.zipfile;
             final Object entry = this.scriptZipFile;
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
+                    log.level4Debug("Examining CASPAC mode package contents");
                     BufferedInputStream bis = null;
                     try {
-                        Log log = new Log();
-                        new Log().level4Debug("Unzipping " + name);
-                        log.level3Verbose("Grabbing Entry " + CASPAC.getEntryName(entry));
+                        new Log().level4Debug("Unzipping CASPAC member " + name);
                         bis = CASPAC.streamFileFromZip(entry);
-                        //bis.mark(0);
                         actualMD5s.add(new MD5sum().getLinuxMD5Sum(bis, entry.toString()));
                         bis = CASPAC.streamFileFromZip(entry);
-                        log.level4Debug("Setup InputStream. Extracting to" + tempDir);
                         Unzip.unZipInputStream(bis, tempDir);
                         log.level4Debug("Extracted entry " + CASPAC.getEntryName(entry) + "to " + tempDir);
 
@@ -203,12 +201,12 @@ public class Script {
                     }
                     File[] files = new File(tempDir).listFiles();
                     individualFiles.addAll(Arrays.asList(files));
-                    /*for (String md5 : metaData.md5s) {
+                    for (String md5 : metaData.md5s) {
                         if (!actualMD5s.contains(md5)) {
                             new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
                             scriptContents = "";
                         }
-                    }*/
+                    }
                 }
             };
             return r;
@@ -220,6 +218,7 @@ public class Script {
                     if (scriptZipFile != null) {
                         if (new CASUALTools().IDEMode) {
                             try {
+                                log.level4Debug("Examining IDE mode script contents");
                                 actualMD5s.add(new MD5sum().getLinuxMD5Sum(new File((String) scriptZipFile)));
                                 Unzip unzip = new Unzip(new File((String) scriptZipFile));
                                 unzip.unzipFile(tempDir);
@@ -230,6 +229,7 @@ public class Script {
                             }
                         } else {
                             try {
+                                log.level4Debug("Examining CASUAL mode script contents");
                                 actualMD5s.add(new MD5sum().getLinuxMD5Sum(getClass().getResourceAsStream((String) scriptZipFile), (String) scriptZipFile));
                                 new Log().level4Debug("unzip of " + scriptZipFile.toString() + " is beginning.");
                                 Unzip.unZipResource("/" + scriptZipFile.toString(), tempDir);
@@ -244,12 +244,7 @@ public class Script {
                         new Log().level3Verbose("script Zipfile was null");
                     }
                     /*
-                    for (String md5 : metaData.md5s) {
-                        if (!actualMD5s.contains(md5)) {
-                            new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
-                            scriptContents = "";
-                        }
-                    }
+                     * CASUAL do not receive MD5s
                     */
                 }
             };
@@ -259,21 +254,30 @@ public class Script {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
+                    log.level4Debug("Examining updated script contents on filesystem");
                     actualMD5s.add(new MD5sum().getLinuxMD5Sum(new File(scriptZipFile.toString())));
                     String ziplocation = scriptZipFile.toString();
                     try {
                         Unzip unzip = new Unzip(ziplocation);
+                        log.level4Debug("Unzipping from "+ziplocation+" to "+tempDir);
                         unzip.unzipFile(tempDir);
                     } catch (ZipException ex) {
                         Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
                         Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    log.level4Debug("examining MD5s");
                     for (String md5 : metaData.md5s) {
                         if (!actualMD5s.contains(md5)) {
-                            new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
+                            log.level4Debug("Md5 mismatch!!  Expected:" +md5);
+                            
                             scriptContents = "";
                         }
+                    }
+                    if (!scriptContents.equals("")){
+                        new Log().level4Debug("Update sucessful.  MD5s matched server.");
+                    } else {
+                        new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
                     }
                 }
             };
