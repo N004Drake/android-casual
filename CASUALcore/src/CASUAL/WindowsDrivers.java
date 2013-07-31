@@ -110,7 +110,7 @@ public class WindowsDrivers {
      * @throws IOException
      */
     private void driverExtract(String pathToExtract) throws FileNotFoundException, IOException {
-        if (Statics.OSName().contains("Windows XP")) {
+        if (OSTools.OSName().contains("Windows XP")) {
             if (new FileOperations().makeFolder(pathToCADI)) {
                 log.level4Debug("driverExtract() Unzipping CADI for xp");
                 Unzip.unZipResource("/CASUAL/resources/heimdall/xp/CADI.zip", pathToExtract);
@@ -177,7 +177,7 @@ public class WindowsDrivers {
     private boolean launchOldFaithful() {
         String exec = "";
         try {
-            if (Statics.OSName().contains("Windows XP")) {
+            if (OSTools.OSName().contains("Windows XP")) {
                 if (new FileOperations().verifyResource(Statics.WinDriverResource2)) {
                     exec = Statics.TempFolder + "CADI.exe";
                     new FileOperations().copyFromResourceToFile(Statics.WinDriverResource2, exec);
@@ -354,7 +354,7 @@ public class WindowsDrivers {
                 }
                 driverExtracted = true;
             }
-            String exec = pathToCADI + (Statics.is64bitSystem() ? "driver_x64.exe " : "driver_x86.exe ") + args;
+            String exec = pathToCADI + (OSTools.is64bitSystem() ? "driver_x64.exe " : "driver_x86.exe ") + args;
             String retval;
             retval = new Shell().timeoutShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""}, 90000); //1000 milliseconds — one second
             log.level2Information(retval);

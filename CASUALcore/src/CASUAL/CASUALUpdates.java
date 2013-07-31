@@ -209,10 +209,10 @@ public class CASUALUpdates {
      * @throws InterruptedException
      */
     public String CASUALRepoDownload(String propertiesFileInCASUALOnlineRepo) throws FileNotFoundException, IOException, InterruptedException {
-        arch = Statics.is64bitSystem() ? "64" : "32";
-        system = Statics.isWindows() ? "win" : system;
-        system = Statics.isLinux() ? "linux" : system;
-        system = Statics.isMac() ? "mac" : system;
+        arch = OSTools.is64bitSystem() ? "64" : "32";
+        system = OSTools.isWindows() ? "win" : system;
+        system = OSTools.isLinux() ? "linux" : system;
+        system = OSTools.isMac() ? "mac" : system;
         Log.level3Verbose("Found " + system + " " + arch + "computer");
         String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
         //download location, md5, and version information

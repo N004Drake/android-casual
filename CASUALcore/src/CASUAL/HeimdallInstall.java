@@ -84,11 +84,11 @@ public class HeimdallInstall {
     }
 
     private boolean installLinuxHeimdall() {
-
+        
         FileOperations fo = new FileOperations();
-        Statics.checkLinuxArch();
+        String arch=OSTools.checkLinuxArch();
 //Linux64
-        if (Statics.arch.contains("x86_64")) {
+        if (arch.contains("x86_64")) {
             Statics.heimdallResource = Statics.heimdallLinuxamd64;
             fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallStaging);
             fo.setExecutableBit(Statics.heimdallStaging);
@@ -101,7 +101,7 @@ public class HeimdallInstall {
                 return false;
             }
 //Linux32
-        } else if (Statics.arch.contains("i686")) {
+        } else if (arch.contains("i686")) {
             Statics.heimdallResource = Statics.heimdallLinuxi386;
             fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallStaging);
             fo.setExecutableBit(Statics.heimdallStaging);
@@ -134,9 +134,9 @@ public class HeimdallInstall {
         if (Statics.isHeimdallDeployed) { //if heimdall is installed, return true
             return true;
         } else { //attempt to correct the issue
-            if (Statics.isLinux()) {
+            if (OSTools.isLinux()) {
                 return new HeimdallInstall().installLinuxHeimdall();
-            } else if (Statics.isWindows()) {
+            } else if (OSTools.isWindows()) {
                 if (new HeimdallInstall().checkHeimdallVersion()) {
                     return true;
                 } else {
@@ -149,7 +149,7 @@ public class HeimdallInstall {
                 }
 
                 //Mac          
-            } else if (Statics.isMac()) {
+            } else if (OSTools.isMac()) {
 
                 Statics.heimdallDeployed = HeimdallTools.getHeimdallCommand();
                 String retval = new Shell().silentShellCommand(new String[]{HeimdallTools.getHeimdallCommand()});
@@ -168,7 +168,7 @@ public class HeimdallInstall {
     }
 
     private void installHeimdallMac() {
-        if (Statics.isMac()) {
+        if (OSTools.isMac()) {
             String exec = "";
             try {
                 exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
@@ -304,7 +304,7 @@ public class HeimdallInstall {
      * obtainable
      */
     public void displayWindowsPermissionsMessageAndExit() {
-        if (Statics.isWindows()) {
+        if (OSTools.isWindows()) {
             new CASUALInteraction("@interactionwindowsRunAsMessage" + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString()).showErrorDialog();
         }
         CASUALApp.shutdown(0);
@@ -327,7 +327,7 @@ public class HeimdallInstall {
         if (Statics.isHeimdallDeployed) {
             return true;
         } else {
-            if (Statics.isWindows()) {
+            if (OSTools.isWindows()) {
                 return new HeimdallInstall().deployHeimdallForWindows();
             } else {
 

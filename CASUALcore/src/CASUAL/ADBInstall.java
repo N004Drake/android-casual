@@ -32,15 +32,15 @@ class ADBInstall {
             return;
         }
 
-        if (Statics.isLinux()) {
+        if (OSTools.isLinux()) {
             Log.level4Debug("Found Linux Computer");
             Statics.adbDeployed = Statics.TempFolder + "adb";
             fo.copyFromResourceToFile(Statics.LinuxADB(), Statics.adbDeployed);
-        } else if (Statics.isMac()) {
+        } else if (OSTools.isMac()) {
             Log.level4Debug("Found Mac Computer");
             Statics.adbDeployed = Statics.TempFolder + "adb";
             fo.copyFromResourceToFile(Statics.MacADB, Statics.adbDeployed);
-        } else if (Statics.isWindows()) {
+        } else if (OSTools.isWindows()) {
             Log.level4Debug("Found Windows Computer");
             fo.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
             Statics.adbDeployed = Statics.TempFolder + "adb.exe";
@@ -62,10 +62,10 @@ class ADBInstall {
     private void updateADBini() {
         FileOperations fo = new FileOperations();
         String adbIniDeployed = "";
-        if (Statics.isLinux() || Statics.isMac()) {
+        if (OSTools.isLinux() || OSTools.isMac()) {
             adbIniDeployed = Statics.FilesystemAdbIniLocationLinuxMac;
         }
-        if (Statics.isWindows()) {
+        if (OSTools.isWindows()) {
             adbIniDeployed = Statics.FilesystemAdbIniLocationWindows;
         }
         if (!fo.verifyExists(adbIniDeployed)) {

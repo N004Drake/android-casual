@@ -110,7 +110,7 @@ public class CASUALConnectionStatusMonitor {
                     }
                     //insufficient permissions
 
-                    if (DeviceList.contains("????????????") && !Statics.isWindows()) {
+                    if (DeviceList.contains("????????????") && !OSTools.isWindows()) {
                         DeviceCheck.stop();
                         log.level4Debug("@sleepingfor4Seconds");
                         sleepForFourSeconds();
@@ -192,11 +192,11 @@ public class CASUALConnectionStatusMonitor {
         private void messageUser() {
             cycles++;
             if (cycles == 30) {
-                if (Statics.isWindows()) {
+                if (OSTools.isWindows()) {
                     new CASUALInteraction("@interactionWindowsDeviceNotDetected").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-                } else if (Statics.isLinux()) {
+                } else if (OSTools.isLinux()) {
                     new CASUALInteraction("@interactionLinuxDeviceNotDetected").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-                } else if (Statics.isMac()) {
+                } else if (OSTools.isMac()) {
                     new CASUALInteraction("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
                 }
                 hasConnected = true;

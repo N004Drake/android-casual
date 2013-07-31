@@ -125,7 +125,7 @@ public class CASUALLanguage {
          * Command may include $HALT and any other command like $ECHO
          */
         if (line.startsWith("$LINUXMAC")) {
-            if (Statics.isLinux() || Statics.isMac()) {
+            if (OSTools.isLinux() || OSTools.isMac()) {
                 String removeCommand = "$LINUXMAC";
                 line = processIdentifiedCommand(removeCommand, line);
                 log.progress("Linux Or Mac Detected: ");
@@ -135,7 +135,7 @@ public class CASUALLanguage {
             }
         }
         if (line.startsWith("$LINUXWINDOWS")) {
-            if (Statics.isLinux() || Statics.isWindows()) {
+            if (OSTools.isLinux() || OSTools.isWindows()) {
                 String removeCommand = "$LINUXWINDOWS";
                 line = processIdentifiedCommand(removeCommand, line);
                 log.progress("Windows or Linux Detected: ");
@@ -145,7 +145,7 @@ public class CASUALLanguage {
             }
         }
         if (line.startsWith("$WINDOWSMAC")) {
-            if (Statics.isWindows() || Statics.isMac()) {
+            if (OSTools.isWindows() || OSTools.isMac()) {
                 String removeCommand = "$WINDOWSMAC";
                 line = processIdentifiedCommand(removeCommand, line);
                 log.progress("Mac or Windows Detected: ");
@@ -155,7 +155,7 @@ public class CASUALLanguage {
             }
         }
         if (line.startsWith("$LINUX")) {
-            if (Statics.isLinux()) {
+            if (OSTools.isLinux()) {
                 String removeCommand = "$LINUX";
                 line = processIdentifiedCommand(removeCommand, line);
                 log.progress("Linux Detected: ");
@@ -165,7 +165,7 @@ public class CASUALLanguage {
             }
         }
         if (line.startsWith("$WINDOWS")) {
-            if (Statics.isWindows()) {
+            if (OSTools.isWindows()) {
                 log.progress("Windows Detected: ");
                 String removeCommand = "$WINDOWS";
                 line = processIdentifiedCommand(removeCommand, line);
@@ -175,7 +175,7 @@ public class CASUALLanguage {
             }
         }
         if (line.startsWith("$MAC")) {
-            if (Statics.isMac()) {
+            if (OSTools.isMac()) {
                 log.progress("Mac Detected: ");
                 String removeCommand = "$MAC";
                 line = processIdentifiedCommand(removeCommand, line);
@@ -542,7 +542,7 @@ public class CASUALLanguage {
             log.level4Debug("deploying fastboot.");
             FastbootTools.checkAndDeployFastboot();
             log.level2Information("@waitingForDownloadModeDevice");
-            if (Statics.isLinux()) {
+            if (OSTools.isLinux()) {
                 log.level2Information("@linuxPermissionsElevation");
                 AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
                 //TODO: make something like Shell.timeoutShellCommand but it must also test for values
