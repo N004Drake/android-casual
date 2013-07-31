@@ -301,7 +301,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
 
         //execute
-        if (Statics.TargetScriptIsResource) {
+        if (Statics.CASPAC.getActiveScript().extractionMethod!=2) { //not on filesystem
             log.level4Debug("Loading internal resource: " + script);
             Statics.CASPAC.getActiveScript().scriptContinue = true;
             new CASUALScriptParser().executeSelectedScript(caspac, true);
@@ -364,7 +364,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
                 ComboBoxValue = getFilenameWithoutExtension(FileName);
                 comboBoxScriptSelector.setSelectedItem(ComboBoxValue);
                 comboBoxScriptSelector.setEditable(false);
-                Statics.TargetScriptIsResource = false;
                 CASUALConnectionStatusMonitor.DeviceCheck.start();
             } catch (IOException ex) {
                 log.errorHandler(ex);
@@ -374,7 +373,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemOpenScriptActionPerformed
 
     private void MenuItemShowAboutBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemShowAboutBoxActionPerformed
-        Statics.TargetScriptIsResource = true;
         CASUALJFrameAboutBox CAB = new CASUALJFrameAboutBox();
         CAB.setVisible(true);
     }//GEN-LAST:event_MenuItemShowAboutBoxActionPerformed

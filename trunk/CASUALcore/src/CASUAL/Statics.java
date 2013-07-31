@@ -65,7 +65,7 @@ public class Statics {
     public static ArrayList<String> runnableMD5list = new ArrayList<>();
 
     //Form data
-    public static boolean TargetScriptIsResource = true;  //true if resource, false if file
+    //public static boolean TargetScriptIsResource = true;  //true if resource, false if file
     public static CASUALJFrameMain GUI; //Static reference to GUI input/output device
     public static JTextPane ProgressPane = new JTextPane(); //used by log to update Progress
     final public static String Slash = System.getProperty("file.separator"); //file separator for system \ or /
@@ -103,10 +103,11 @@ public class Statics {
 
     //ADB
     public static String LinuxADB() {
-        if (Statics.arch.equals("x86_64")) {
+        String arch=OSTools.checkLinuxArch();
+        if (arch.equals("x86_64")) {
             return Linux64ADB;
         }
-        if (Statics.arch.equals("ARMv6")) {
+        if (arch.equals("ARMv6")) {
             return LinuxARMv6ADB;
         }
         return Linux32ADB;  //defautlt to 32bit ADB
@@ -160,51 +161,6 @@ public class Statics {
      */
     //Check for windows
 
-    public static boolean isWindows() {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("XP")) {
-            displayWindowsXPDiscontinued();
-        }
-        return os.indexOf("win") >= 0;
-    }
-    //Check for Mac
-
-    public static boolean isMac() {
-        String os = System.getProperty("os.name").toLowerCase();
-        return os.indexOf("mac") >= 0;
-    }
-    //Check for Linux
-
-    public static boolean isLinux() {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.indexOf("nux") >= 0) {
-            if (arch.equals("")) {
-                checkLinuxArch();
-            }
-            return true;
-        }
-
-        return false;
-    }
-
-    public static void displayWindowsXPDiscontinued() {
-        /*int dResult = new CASUALInteraction("Your Operating System is Not Fully Supported", "Windows XP is a " + (Calendar.getInstance().get(Calendar.YEAR) - 2001) + " year old Operating system.\n"
-                + "CASUAL is not able to handle problems caused by this.\n"
-                + "Certain critial operations may not work. Please run as\n"
-                + "an Administrator if you wish to continue.... However,\n"
-                + "I recommend letting this window timeout, quit CASUAL and upgrade.\n"
-                 ).showTimeoutDialog(
-                60, //timeout
-                null, //parentComponent
-                CASUALInteraction.OK_OPTION, // Options buttons
-                CASUALInteraction.INFORMATION_MESSAGE, //Icon
-                new String[]{"Continue At Your Own Risk!!"}, // option buttons
-                "Quit"); //Default{
-        if (dResult != 0) {
-            CASUALApp.shutdown(1);
-        }*/
-    }
-
     //script data
     public static ArrayList<String> ActionEvents = new ArrayList<>(); //Action events for $ON command. set by script
     public static ArrayList<String> ReactionEvents = new ArrayList<>(); //Reactions for $ON command. . set by script
@@ -213,7 +169,7 @@ public class Statics {
 
  
     //fastboot
-    static boolean isFastbootDeployed = false;  // if fastboot has been deployed
+    //static boolean isFastbootDeployed = false;  // if fastboot has been deployed
     public static String fastbootResource = ""; //location to fastboot set from final values above
     public static String fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
     //heimdall  
@@ -224,52 +180,6 @@ public class Statics {
     static String[] resourceHeimdallVersion;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
-    
-    public static boolean is64bitSystem() {
-        if (isWindows()) {
-            return isWindows64Arch();
-        } else {
-            return isMacLinux64Arch();
-        }
-    }
-
-    private static boolean isWindows64Arch() {
-        return System.getenv("ProgramFiles(x86)") != null;
-    }
-
-    private static boolean isMacLinux64Arch() {
-        String[] CommandArch = {"arch"};
-        return new Shell().silentShellCommand(CommandArch).contains("64");
-    }
-
-    static String arch = ""; //system archetecture.
-    public static void checkLinuxArch() {
-        Shell shell = new Shell();
-        String[] Command = {"dpkg", "--help"};
-        String dpkgResults = shell.silentShellCommand(Command);
-        if (dpkgResults.contains("aptitude") || dpkgResults.contains("debian") || dpkgResults.contains("deb")) {
-            String[] CommandArch = {"arch"};
-            String rawArch = shell.silentShellCommand(CommandArch);
-            if (rawArch.contains("armv6")) {
-                Statics.heimdallResource = heimdallLinuxARMv6;
-                Statics.arch = "armv6";
-            } else if (rawArch.contains("i686")) {
-                Statics.heimdallResource = Statics.heimdallLinuxi386;
-                Statics.arch = "i686";
-            } else if (rawArch.contains("x86_64")) {
-                Statics.heimdallResource = Statics.heimdallLinuxamd64;
-
-                Statics.arch = "x86_64";
-            } else {
-                Statics.arch = "Linux";
-            }
-        } else {
-            Statics.arch = "Linux";
-        }
-    }
-    public static String OSName(){//windows, linux, mac....
-        return System.getProperty("os.name");
-    } 
     public static void initializeStatics(){
         GUIIsAvailable = false;
         useGUI = false;
@@ -277,14 +187,9 @@ public class Statics {
         setStatus("working");
         GUIVerboseLevel = 2;
         CommandLineVerboseLevel = 4;
-
         LiveSendCommand = new ArrayList<>();
         OutFile=null;
         LogCreated = false;
-
-
-        TargetScriptIsResource = true;  
-       
         ProgressPane = new JTextPane(); 
         PreProgress = "";
         ProgressDoc=null;
@@ -298,8 +203,6 @@ public class Statics {
         runnableMD5list = new ArrayList<>();
         ActionEvents = new ArrayList<>();
         ReactionEvents = new ArrayList<>();
-
-        isFastbootDeployed = false;  // if fastboot has been deployed
         fastbootResource = ""; //location to fastboot set from final values above
         fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
         isHeimdallDeployed = false; //if fastboot has been deployed
@@ -308,7 +211,6 @@ public class Statics {
         heimdallDeployed = ""; //location of heimdall once deployed
         resourceHeimdallVersion=null;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
         installedHeimdallVersion=null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
-        arch = "";
         CASUALLanguage.GOTO = "";
         if (CASPAC!=null){
             Statics.CASPAC.getActiveScript().scriptContinue=false;
@@ -322,6 +224,9 @@ public class Statics {
         if (GUIIsAvailable){
             GUI.setInformationScrollBorderText(status);
         }
+    }
+    public static String getStatus(){
+        return currentStatus;
     }
  
 }

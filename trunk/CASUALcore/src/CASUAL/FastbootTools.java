@@ -28,23 +28,22 @@ public class FastbootTools {
      * deploys and verifies fastboot
      */
     public static void checkAndDeployFastboot() {
-        if (!Statics.isFastbootDeployed) {
-            if (Statics.isLinux()) {
+        if (new FileOperations().verifyExists(Statics.fastbootDeployed)) {
+            if (OSTools.isLinux()) {
                 Statics.fastbootResource = getFastbootLinuxResource();
             }
-            if (Statics.isWindows()) {
+            if (OSTools.isWindows()) {
                 Statics.fastbootResource = Statics.fastbootWindows;
             }
-            if (Statics.isMac()) {
+            if (OSTools.isMac()) {
                 Statics.fastbootResource = Statics.fastbootMac;
             }
             Statics.Log.level2Information("@deployingFastboot");
             Statics.Log.level3Verbose("Deploying Fastboot from " + Statics.fastbootResource + " to " + Statics.fastbootDeployed);
             new FileOperations().copyFromResourceToFile(Statics.fastbootResource, Statics.fastbootDeployed);
-            if (Statics.isLinux() || Statics.isMac()) {
+            if (OSTools.isLinux() || OSTools.isMac()) {
                 new FileOperations().setExecutableBit(Statics.fastbootDeployed);
             }
-            Statics.isFastbootDeployed = true;
             Statics.Log.level2Information("@fastbootDeployed");
         }
     }
@@ -55,11 +54,13 @@ public class FastbootTools {
      * @return path to resource
      */
     public static String getFastbootLinuxResource() {
-        if (Statics.arch.equals("x86_64")) {
+        String arch=OSTools.checkLinuxArch();
+        
+        if (arch.equals("x86_64")) {
             new Log().level3Verbose("found x86-64 bit arch");
             return Statics.fastbootLinux64;
         }
-        if (Statics.arch.equals("ARMv6")) {
+        if (arch.equals("ARMv6")) {
             new Log().level3Verbose("found ARMv6 arch");
             return Statics.fastbootLinuxARMv6;
         }

@@ -145,12 +145,12 @@ public class ADBTools {
      */
     public void checkADBerrorMessages(String DeviceList) throws HeadlessException {
 
-        if (Statics.isLinux() && DeviceList.contains("something about UDEV rules")) { //Don't know how to handle this yet
+        if (OSTools.isLinux() && DeviceList.contains("something about UDEV rules")) { //Don't know how to handle this yet
             //handle add udevrule
         }
 
         //handle libusb -3
-        if (Statics.isLinux() && DeviceList.contains("ERROR-3")) { //Don't know how to handle this yet
+        if (OSTools.isLinux() && DeviceList.contains("ERROR-3")) { //Don't know how to handle this yet
             Shell shell = new Shell();
             log.level0Error("@permissionsElevationRequired");
             shell.silentShellCommand(getKillServerCmd());
@@ -166,7 +166,7 @@ public class ADBTools {
             log.level4Debug("Restarting ADB slowly");
             restartADBserver();
             DeviceList = new Shell().silentShellCommand(getDevicesCmd()).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
-            if (!Statics.isWindows() && DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
+            if (!OSTools.isWindows() && DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
                 log.level4Debug("Permissions problem detected. Requesting CASUAL permissions escillation.");
                 killADBserver();
                 elevateADBserver();

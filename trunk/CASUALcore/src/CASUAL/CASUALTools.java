@@ -165,44 +165,7 @@ public class CASUALTools {
      *
      * @param scriptName
      */
-    public void startZipPrepThreadOnZipFile(String scriptName) {
-        Statics.SelectedScriptFolder = Statics.TempFolder + Statics.Slash + scriptName;
-        //set the ZipResource
-        final String ZipResource = Statics.TargetScriptIsResource ? Statics.ScriptLocation + scriptName + ".zip" : scriptName + ".zip";
-
-        log.level4Debug("Created zipResource at " + ZipResource);
-
-
-        zipPrep = new Thread() {
-            @Override
-            public void run() {
-
-                try {
-                    Statics.GUI.enableControls(false);
-                } catch (NullPointerException ex) {
-                    log.level4Debug("attempted to lock controls but controls are not availble yet");
-                }
-                Statics.lockGUIunzip = true;
-                if (!new FileOperations().verifyExists(Statics.SelectedScriptFolder)) {
-                    new FileOperations().makeFolder(Statics.SelectedScriptFolder);
-                }
-                log.level4Debug("Extracting archive....");
-                if (getClass().getResource(ZipResource) != null) {
-                    log.level4Debug("Target Script Is resource");
-                    try {
-                        Unzip.unZipResource(ZipResource.toString(), Statics.SelectedScriptFolder);
-                    } catch (FileNotFoundException ex) {
-                        log.errorHandler(ex);
-                    } catch (IOException ex) {
-                        log.errorHandler(ex);
-                    }
-                }
-                Statics.lockGUIunzip = false;
-            }
-        };
-        zipPrep.setName("Script Preparation");
-        zipPrep.start();
-    }
+   
 
     /**
      * tells if CASUAL is running in Development or Execution mode

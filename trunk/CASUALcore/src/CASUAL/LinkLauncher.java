@@ -65,7 +65,7 @@ public class LinkLauncher {
                 }
             } else {
                 Shell Shell = new Shell();
-                if (Statics.isMac()) {
+                if (OSTools.isMac()) {
                     //separate mac because open is used on different platforms
                     Shell.sendShellCommand(new String[]{"open", link});
                 } else {

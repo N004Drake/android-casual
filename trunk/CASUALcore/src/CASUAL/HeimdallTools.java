@@ -61,7 +61,7 @@ public class HeimdallTools {
             shellReturn = Shell.silentShellCommand(stringCommand);
         }
         connectionTimer.stop();
-        if (Statics.isWindows()) {
+        if (OSTools.isWindows()) {
             try {
                 Thread.sleep(4000);
             } catch (InterruptedException ex) {
@@ -142,10 +142,10 @@ public class HeimdallTools {
         }
         if (result.contains("Attempting to continue")) {
             permissionEscillationAttempt++;
-            if (Statics.isLinux()) {
+            if (OSTools.isLinux()) {
                 log.level2Information("@permissionsElevationRequired");
                 returnRead = returnRead + doElevatedHeimdallShellCommand();
-            } else if (Statics.isWindows() || Statics.isMac()) {
+            } else if (OSTools.isWindows() || OSTools.isMac()) {
                 if (permissionEscillationAttempt < 5) {
                     returnRead = returnRead + doHeimdallShellCommand();
                 } else {
@@ -240,7 +240,7 @@ public class HeimdallTools {
                                     return "'LIBUSB_ERROR_NO_MEM' Error not handled; Attempting to continue";
                                 }
                                 case '2': {// -12 
-                                    if (Statics.isWindows()) {
+                                    if (OSTools.isWindows()) {
                                         new HeimdallInstall().installWindowsDrivers();
                                     }
                                     return "'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue";
@@ -295,7 +295,7 @@ public class HeimdallTools {
      * @return string path to heimdall
      */
     public static String getHeimdallCommand() {
-        if (Statics.isMac()) {
+        if (OSTools.isMac()) {
             Shell shell = new Shell();
             String cmd = "/usr/local/bin/heimdall";
             String check = shell.silentShellCommand(new String[]{cmd});
