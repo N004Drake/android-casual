@@ -310,4 +310,8 @@ public class CASUALTools {
             Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static String getSVNVersion(){
+        return java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+    }
 }

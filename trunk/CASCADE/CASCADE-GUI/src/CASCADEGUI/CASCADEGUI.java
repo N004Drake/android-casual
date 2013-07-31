@@ -1813,7 +1813,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
 
         if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion = (CASUAL.CASPACData.getSVNRevision());
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion = (CASUAL.CASUALTools.getSVNVersion());
         }
         this.minSVNversion.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion);
 
