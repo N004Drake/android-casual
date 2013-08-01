@@ -34,7 +34,7 @@ import javax.swing.text.StyledDocument;
  */
 public class Statics {
 
-    public static final String BUILDPROPERTIES = "SCRIPTS/-build";
+    
     public static boolean GUIIsAvailable = false; //used to tell if the GUI is up yet.
     public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
@@ -77,9 +77,9 @@ public class Statics {
 
     //Folders
     public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
-    private static String TempF = null; //TempF is the actual tempfolder, it's served by getTempFolder
-    public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     
+    public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
+    private static String TempF = null; //TempF is the actual tempfolder, it's served by getTempFolder
     final public static String TempFolder = getTempFolder();
     private static String getTempFolder() {
         if (TempF == null) {
@@ -88,7 +88,12 @@ public class Statics {
             tf=tf.endsWith(Slash)?tf:tf+Slash;  //make sure temp folder has a slash
             SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
             TempF= tf +"CASUAL"+user+sdf.format(new Date()).toString()+ Slash; //set /temp/usernameRandom/
-            new FileOperations().makeFolder(TempF);
+            FileOperations fo = new FileOperations();
+            fo.makeFolder(TempF);
+            if (! fo.verifyExists(TempF) || !fo.verifyWritePermissionsRecursive(TempF)){
+                new Log().level0Error("@couldNotCreateTempFolderProperly");
+                CASUALApp.shutdown(1);
+            }
         }
         return TempF;
     }
