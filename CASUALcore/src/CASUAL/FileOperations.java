@@ -114,7 +114,7 @@ public class FileOperations {
      * @param path
      * @return true if permission to write
      */
-    public boolean verifyReadPermissionsRecursive(String path) {
+    public boolean verifyWritePermissionsRecursive(String path) {
         File Check = new File(path);
         File[] c = Check.listFiles();
         if (Check.exists()) {
@@ -127,6 +127,7 @@ public class FileOperations {
         }
         return true;
     }
+    
 
     /**
      * takes a path and a name returns qualified path to file
