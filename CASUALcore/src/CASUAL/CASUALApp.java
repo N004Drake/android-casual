@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.network.Pastebin;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,7 +34,8 @@ public class CASUALApp {
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
-    final private static String[] overrideArguments = new String[]{"-e", "\"$HEIMDALL close-pc-screen\""};
+    final private static String[] overrideArguments = new String[]{"--temp","C:\\Users\\adam\\Desktop\\CASUALProject\\TestHarness\\DPAutoTesting\\Tester\\TempDPData\\8da9"};
+    
     static String[] arguments;
 
     /**
@@ -63,6 +65,7 @@ public class CASUALApp {
         String CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
         String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
+        boolean shutdown = checkModeSwitchArgs(args);
         new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
                 + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
                 + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
@@ -72,8 +75,10 @@ public class CASUALApp {
                 + "    for details. http://android-casual.googlecode.com for source.");
 
 
-        boolean shutdown = checkModeSwitchArgs(args);
+
         if (!shutdown) {
+                    System.out.println(Statics.TempFolder);
+
             new CASUALMain().startup(args);
         }
     }
@@ -87,9 +92,13 @@ public class CASUALApp {
      * @return true if shutdown is commanded;
      */
     private static boolean checkModeSwitchArgs(String args[]) {
-        String password = null;
         for (int i = 0; i < args.length; i++) {
-
+            if (args[i].contains("--temp")|| args[i].contains("-t")){
+                i++;
+                Statics.setTempFolder(args[i]);
+                System.out.println(Statics.TempFolder);
+                System.out.println(Statics.TempFolder);
+            }
             if (args[i].equals("--help") || args[i].equals("-v?")) {
                 new Log().level2Information("\n"
                         + " Usage: casual.jar [optional parameters]\n"
@@ -130,6 +139,7 @@ public class CASUALApp {
      */
     public static void shutdown(int i) {
         new Log().level4Debug("Shutting Down");
+        AudioHandler.useSound=false;
         Log.out.flush();
         if (Statics.CASPAC != null && Statics.CASPAC.getActiveScript() != null) {
             Statics.CASPAC.getActiveScript().scriptContinue = false;
@@ -137,7 +147,7 @@ public class CASUALApp {
         CASUALConnectionStatusMonitor.DeviceCheck.stop();
         ADBTools.killADBserver();
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
-        if (!CASUALTools.IDEMode && !Statics.useGUI && Statics.CASPAC.type != 0) {
+        if (!CASUALTools.IDEMode && !Statics.GUIIsAvailable && Statics.CASPAC.type != 0) {
             try {
                 new Pastebin().pasteAnonymousLog();
             } catch (MalformedURLException ex) {

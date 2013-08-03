@@ -37,7 +37,7 @@ public class CASUALInteractionsjUnitTest {
         String message = "Testing Message";
         //InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
 
-        CASUAL.Statics.useGUI = false;
+        CASUAL.Statics.GUIIsAvailable = false;
         CASUAL.CASUALInteraction ci = new CASUAL.CASUALInteraction(title, message);
         setContinue();
         assertEquals("", ci.inputDialog());
@@ -58,8 +58,9 @@ public class CASUALInteractionsjUnitTest {
         assertEquals(0, ci.showUserCancelOption());
         setContinue();
         ci.showUserNotification();
-        CASUAL.Statics.useGUI = true;
+        CASUAL.Statics.GUIIsAvailable = true;
         int x = new CASUAL.CASUALInteraction("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
+        CASUAL.Statics.GUIIsAvailable = false;
         if (x == 0) {
             ci = new CASUAL.CASUALInteraction("Text Input", "Press\n1");
             assertEquals("1", ci.inputDialog());

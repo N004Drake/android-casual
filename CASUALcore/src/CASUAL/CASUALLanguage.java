@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import CASUAL.network.CASUALUpdates;
+import CASUAL.network.Pastebin;
 import CASUAL.caspac.Caspac;
 import CASUAL.crypto.MD5sum;
 import java.io.BufferedReader;
@@ -75,7 +77,7 @@ public class CASUALLanguage {
                     return;
                 }
                 CurrentLine++;
-                if (Statics.useGUI) {
+                if (Statics.GUIIsAvailable) {
                     Statics.GUI.setProgressBar(CurrentLine);
                 }
                 if (!GOTO.equals("")) {

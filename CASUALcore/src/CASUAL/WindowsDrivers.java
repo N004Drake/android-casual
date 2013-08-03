@@ -27,6 +27,7 @@ package CASUAL;
  * A:Possible, but overly complicated and probably unreliable without parsing
  * all matching *.inf's contents
  */
+import CASUAL.network.CASUALUpdates;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.regex.Matcher;

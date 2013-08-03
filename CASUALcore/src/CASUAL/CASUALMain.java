@@ -35,20 +35,20 @@ public final class CASUALMain {
     File caspacLocation;
     boolean exitWhenDone=false;
     boolean execute=false;
+    boolean useGUI=false;
     private void doArgsCheck(String[] args){
         for (int i=0; i<args.length; i++){
             if (args[i].contains("--password") || args[i].contains("-p")) {
-                i++;
-                password = args[i];
+                password = args[++i];
             }
             if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
                caspacLocation=new File(args[++i]);
             }
             if (args[i].contains("--gui") || args[i].contains("-g")) {
-                Statics.useGUI = true;
+                useGUI = true;
             }
             if (args[i].contains("--nosound") || args[i].contains("-n")) {
-                Statics.useSound=false;
+                AudioHandler.useSound=false;
             }
             if (args[i].contains("--execute") || args[i].contains("-e")) {
                execute=true;
@@ -73,7 +73,7 @@ public final class CASUALMain {
         if (args.length>0){
             doArgsCheck(args);
         }  else {
-            Statics.useGUI=true;
+            useGUI=true;
         }
         //prepare the CASPAC
         Thread prepCASPAC = prepareCaspac();
@@ -93,7 +93,7 @@ public final class CASUALMain {
                 Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
                 Statics.CASPAC.getActiveScript().scriptContinue = true;
             }
-            if (args.length != 0 && !Statics.useGUI) {
+            if (args.length != 0 && !useGUI) {
                 //Using command line mode
                 Statics.setStatus("waiting for ADB");
                 adb.join(); //wait for adb deployment
@@ -177,7 +177,7 @@ public final class CASUALMain {
     };
 
     public Thread startGUI(Thread startGUI) {
-        if (Statics.useGUI|| Statics.dumbTerminalGUI) {
+        if (useGUI|| Statics.dumbTerminalGUI) {
             startGUI = new Thread(new CASUALTools().GUI);
             startGUI.setName("CASUAL GUI");
             Statics.setStatus("launching GUI");

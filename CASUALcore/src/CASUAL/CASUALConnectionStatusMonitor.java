@@ -103,7 +103,7 @@ public class CASUALConnectionStatusMonitor {
                             DeviceCheck.start();
                         }
                     } else {
-                        if (Statics.useGUI && !Statics.GUI.getControlStatus()) {
+                        if (Statics.GUIIsAvailable && !Statics.GUI.getControlStatus()) {
                             Statics.GUI.enableControls(true);
                         }
                         stateSwitcher(1);

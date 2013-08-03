@@ -36,12 +36,11 @@ public class Statics {
 
     
     public static boolean GUIIsAvailable = false; //used to tell if the GUI is up yet.
-    public static boolean useGUI = false; //used by CASPAC mode to use terminal only
+    //public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
     private static String currentStatus="working";
     public static boolean debugMode=false;
     public static Caspac CASPAC;
-    public static boolean useSound=true;
     
     
     
@@ -66,7 +65,7 @@ public class Statics {
 
     //Form data
     //public static boolean TargetScriptIsResource = true;  //true if resource, false if file
-    public static CASUALJFrameMain GUI; //Static reference to GUI input/output device
+    public static iCASUALGUI GUI; //Static reference to GUI input/output device
     public static JTextPane ProgressPane = new JTextPane(); //used by log to update Progress
     final public static String Slash = System.getProperty("file.separator"); //file separator for system \ or /
     /**
@@ -80,26 +79,26 @@ public class Statics {
     
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     private static String TempF = null; //TempF is the actual tempfolder, it's served by getTempFolder
-    final public static String TempFolder = getTempFolder();
+    public static String TempFolder = getTempFolder();
     private static String getTempFolder() {
-        if (TempF == null) {
+        if (TempFolder == null) {
             String user = System.getProperty("user.name");  //username
             String tf = System.getProperty("java.io.tmpdir"); //tempfolder
             tf=tf.endsWith(Slash)?tf:tf+Slash;  //make sure temp folder has a slash
             SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
-            TempF= tf +"CASUAL"+user+sdf.format(new Date()).toString()+ Slash; //set /temp/usernameRandom/
+            TempFolder= tf +"CASUAL"+user+sdf.format(new Date()).toString()+ Slash; //set /temp/usernameRandom/
             FileOperations fo = new FileOperations();
-            fo.makeFolder(TempF);
-            if (! fo.verifyExists(TempF) || !fo.verifyWritePermissionsRecursive(TempF)){
+            fo.makeFolder(TempFolder);
+            if (! fo.verifyExists(TempFolder) || !fo.verifyWritePermissionsRecursive(TempFolder)){
                 new Log().level0Error("@couldNotCreateTempFolderProperly");
                 CASUALApp.shutdown(1);
             }
         }
-        return TempF;
+        return TempFolder;
     }
     public static String setTempFolder(String folder){
-        TempF=folder;
-        return TempF;
+        TempFolder=folder;
+        return TempFolder;
     }
     //Cross-Platform data storage
     public static String adbDeployed; //location of ADB after deployment
@@ -187,7 +186,6 @@ public class Statics {
 
     public static void initializeStatics(){
         GUIIsAvailable = false;
-        useGUI = false;
         dumbTerminalGUI = false;
         setStatus("working");
         GUIVerboseLevel = 2;
@@ -198,7 +196,6 @@ public class Statics {
         ProgressPane = new JTextPane(); 
         PreProgress = "";
         ProgressDoc=null;
-        TempF = null;
         adbDeployed=null;
         SelectedScriptFolder="";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
@@ -220,7 +217,6 @@ public class Statics {
         if (CASPAC!=null){
             Statics.CASPAC.getActiveScript().scriptContinue=false;
         }
-        Caspac.useSound=false;
     }
     
     public static void setStatus(String status){

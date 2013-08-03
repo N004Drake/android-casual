@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.GUI.TimeOutOptionPane;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.io.BufferedReader;
@@ -96,7 +97,7 @@ public class CASUALInteraction extends JOptionPane {
         if (!originalMessage.equals("")) {
             logPretranslated("[STANDARDMESSAGE]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
-        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
+        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             return new TimeOutOptionPane().timeoutDialog(PRESET_TIME, parentComponent, messageText, title, optionType, messageType, options, initialValue);
         } else {
             new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText + "\n[RESPONSEEXPECTED]");
@@ -146,12 +147,12 @@ public class CASUALInteraction extends JOptionPane {
         }
         new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText + "\n[RESPONSEEXPECTED]");
         messageText = "<html>" + messageText.replace("\\n", "\n");
-        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
+        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             if (title == null) {
 
-                return (String) JOptionPane.showInputDialog(Statics.GUI, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
+                return (String) JOptionPane.showInputDialog((Component) Statics.GUI, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
             } else {
-                return (String) JOptionPane.showInputDialog(Statics.GUI, messageText, title, JOptionPane.QUESTION_MESSAGE);
+                return (String) JOptionPane.showInputDialog((Component) Statics.GUI, messageText, title, JOptionPane.QUESTION_MESSAGE);
             }
         } else {
             new Log().Level1Interaction("[INPUT][ANY]" + title + messageText + "\n input:");
@@ -171,12 +172,12 @@ public class CASUALInteraction extends JOptionPane {
         }
         new Log().level4Debug("Displaying Action Is Required Dialog:" + messageText);
         int n = 9999;
-        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
+        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             Object[] Options = {"I did it", "I didn't do it"};
             messageText = "<html>" + messageText.replace("\\n", "<BR>");
 
             n = JOptionPane.showOptionDialog(
-                    Statics.GUI,
+                    (Component) Statics.GUI,
                     messageText,
                     "Dont click through this!",
                     JOptionPane.YES_NO_OPTION,
@@ -213,10 +214,10 @@ public class CASUALInteraction extends JOptionPane {
 
         int n;
         Object[] Options = {"Continue", "Stop"};
-        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
+        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             if (title == null) {
                 n = JOptionPane.showOptionDialog(
-                        Statics.GUI,
+                        (Component)Statics.GUI,
                         messageText,
                         "Do you wish to continue?",
                         JOptionPane.YES_NO_OPTION,
@@ -226,7 +227,7 @@ public class CASUALInteraction extends JOptionPane {
                         Options[1]);
             } else {
                 n = JOptionPane.showOptionDialog(
-                        Statics.GUI,
+                        (Component)Statics.GUI,
                         messageText,
                         title,
                         JOptionPane.YES_NO_OPTION,
@@ -257,14 +258,14 @@ public class CASUALInteraction extends JOptionPane {
         }
         new Log().level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
 
-        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
+        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             if (title != null) {
-                JOptionPane.showMessageDialog(Statics.GUI,
+                JOptionPane.showMessageDialog((Component) Statics.GUI,
                         messageText,
                         title,
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(Statics.GUI,
+                JOptionPane.showMessageDialog((Component) Statics.GUI,
                         messageText,
                         "Information",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -284,8 +285,8 @@ public class CASUALInteraction extends JOptionPane {
         if (!originalMessage.equals("")) {
             logPretranslated("[INFOMESSAGE][RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
-        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-            JOptionPane.showMessageDialog(Statics.GUI,
+        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+            JOptionPane.showMessageDialog((Component) Statics.GUI,
                     messageText, title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -303,8 +304,8 @@ public class CASUALInteraction extends JOptionPane {
         if (!originalMessage.equals("")) {
             logPretranslated("[ERRORMESSAGE][RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
-        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
-            JOptionPane.showMessageDialog(Statics.GUI, messageText, title, JOptionPane.ERROR_MESSAGE);
+        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+            JOptionPane.showMessageDialog((Component) Statics.GUI, messageText, title, JOptionPane.ERROR_MESSAGE);
         } else {
             new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
@@ -321,12 +322,12 @@ public class CASUALInteraction extends JOptionPane {
             logPretranslated("[YESNOOPTION][RETURN or n]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
         new Log().level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
-        if (Statics.useGUI && !Statics.dumbTerminalGUI) {
+        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             if (title == null) {
                 title = "Yes or No";
             }
             boolean retval = (JOptionPane.showConfirmDialog(
-                    Statics.GUI,
+                    (Component) Statics.GUI,
                     messageText,
                     title,
                     JOptionPane.YES_NO_OPTION) == YES_OPTION) ? true : false;

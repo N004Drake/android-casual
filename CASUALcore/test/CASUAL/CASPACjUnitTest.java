@@ -25,8 +25,6 @@ public class CASPACjUnitTest {
 
     @Test
     public void testCASPACOperations() {
-        
-        CASUAL.Statics.useGUI = true;
         CASUALApp.shutdown(0);
         CASUAL.Statics.dumbTerminalGUI=true;
         String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
@@ -39,7 +37,6 @@ public class CASPACjUnitTest {
         System.out.println("TESTING SECOND ROUND");
         System.out.println("TESTING SECOND ROUND");
         System.out.println("TESTING SECOND ROUND");
-        CASUAL.Statics.useGUI = false;
         CASUAL.Statics.dumbTerminalGUI=true;
         casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         badValues = new String[]{"ERROR"};

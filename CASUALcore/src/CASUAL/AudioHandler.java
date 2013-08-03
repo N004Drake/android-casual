@@ -32,7 +32,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class AudioHandler {
 
-    public static boolean useSound = false;
+    public static volatile boolean useSound = false;
 
     /**
      * playSound plays sounds

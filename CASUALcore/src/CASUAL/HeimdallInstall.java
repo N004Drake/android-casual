@@ -20,6 +20,7 @@
  */
 package CASUAL;
 
+import CASUAL.network.CASUALUpdates;
 import java.io.IOException;
 
 /**
