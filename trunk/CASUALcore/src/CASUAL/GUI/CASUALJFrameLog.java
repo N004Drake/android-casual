@@ -14,8 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.GUI;
 
+import CASUAL.FileOperations;
+import CASUAL.Log;
+import CASUAL.network.Pastebin;
+import CASUAL.Statics;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;

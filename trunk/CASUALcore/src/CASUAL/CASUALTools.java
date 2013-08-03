@@ -16,22 +16,18 @@
  */
 package CASUAL;
 
+import CASUAL.GUI.CASUALJFrameMain;
 import CASUAL.caspac.Caspac;
 import CASUAL.crypto.MD5sum;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipException;
 
 /**
  *

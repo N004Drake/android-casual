@@ -32,7 +32,6 @@ public class WindowsDriversTest {
 
     @Before
     public void setUp() {
-        Statics.useGUI = true;
     }
 
     @After
@@ -57,6 +56,7 @@ public class WindowsDriversTest {
      */
     @Test
     public void testInstallDriverBlanket() {
+        CASUAL.Statics.GUIIsAvailable = true;
         if (OSTools.isWindows()) {
             System.out.println("installDriverBlanket");
             WindowsDrivers instance = new WindowsDrivers(1);

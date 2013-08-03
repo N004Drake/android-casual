@@ -20,7 +20,7 @@ import CASUAL.AudioHandler;
 import CASUAL.BooleanOperations;
 import CASUAL.CASUALApp;
 import CASUAL.CASUALTools;
-import CASUAL.CASUALUpdates;
+import CASUAL.network.CASUALUpdates;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
@@ -88,7 +88,6 @@ public final class Caspac {
     public Log log = new Log();
     FileOperations fo = new FileOperations();
     private ArrayList<Thread> unzipThreads = new ArrayList<>();
-    public static boolean useSound=true;
     //For CASUAL mode
     private Script activeScript;
     public boolean caspacShouldBeDeletedAfterExtraction=false;
@@ -347,7 +346,7 @@ public final class Caspac {
         if (this.caspacShouldBeDeletedAfterExtraction){
             this.CASPAC.delete();
         }
-        if (Statics.useGUI){
+        if (Statics.GUIIsAvailable){
             Statics.GUI.setCASPAC(this);
         }
         log.level4Debug("Unzipping complete.");
@@ -729,7 +728,7 @@ public final class Caspac {
     public String bannerPic = "";
     public String bannerText = "";
     public String executeButtonText = "Do It";
-    public boolean audioEnabled = Caspac.useSound;
+    public boolean audioEnabled = AudioHandler.useSound;
     public boolean alwaysEnableControls = false;
     public Properties buildProp = new Properties();
 

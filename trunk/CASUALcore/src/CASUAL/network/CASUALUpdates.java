@@ -14,8 +14,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.network;
 
+import CASUAL.CASUALApp;
+import CASUAL.CASUALInteraction;
+import CASUAL.CASUALTools;
+import CASUAL.FileOperations;
+import CASUAL.Log;
+import CASUAL.OSTools;
+import CASUAL.Statics;
+import CASUAL.StringOperations;
 import CASUAL.caspac.Script;
 import CASUAL.crypto.MD5sum;
 import java.io.*;
@@ -26,10 +34,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
@@ -104,7 +109,7 @@ public class CASUALUpdates {
                     bytes = bytes + bytesRead;
                     kilobytes = bytes / 1024;
                     if (Statics.ProgressDoc != null) {
-                        Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
+                        new CASUAL.Log().replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
                     }
                     lastlength = 6 + Integer.toString(kilobytes).length();
 

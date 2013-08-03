@@ -14,8 +14,20 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.GUI;
 
+import CASUAL.iCASUALGUI;
+import CASUAL.ADBTools;
+import CASUAL.CASUALApp;
+import CASUAL.CASUALConnectionStatusMonitor;
+import CASUAL.CASUALInteraction;
+import CASUAL.CASUALScrFilter;
+import CASUAL.CASUALScriptParser;
+import CASUAL.FileOperations;
+import CASUAL.network.LinkLauncher;
+import CASUAL.Log;
+import CASUAL.Statics;
+import CASUAL.Unzip;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import java.awt.event.WindowAdapter;
@@ -31,7 +43,7 @@ import javax.swing.border.TitledBorder;
  *
  * @author adam
  */
-public final class CASUALJFrameMain extends javax.swing.JFrame {
+public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUALGUI {
 
     Caspac caspac;
     String nonResourceFileName;
@@ -115,12 +127,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
 
         comboBoxScriptSelector.setEnabled(false);
         comboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         comboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
@@ -273,7 +285,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -291,6 +303,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
     /**
      * the start button was pressed.
      */
+    @Override
     public void StartButtonActionPerformed() {
         log.level4Debug("StartButtonActionPerformed() Script Activated");
         log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
@@ -314,6 +327,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      *
      * @param value value for progress bar
      */
+    @Override
     public void setProgressBar(int value) {
         progressBar.setValue(value);
     }
@@ -323,6 +337,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      *
      * @param value maximum
      */
+    @Override
     public void setProgressBarMax(int value) {
         progressBar.setMaximum(value);
     }
@@ -404,6 +419,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      *
      * @return selected item in combobox
      */
+    @Override
     public String comboBoxGetSelectedItem() {
         return (String) comboBoxScriptSelector.getSelectedItem();
     }
@@ -413,6 +429,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      *
      * @param item item to add
      */
+    @Override
     public void comboBoxScriptSelectorAddNewItem(String item) {
         comboBoxScriptSelector.addItem(item);
     }
@@ -509,6 +526,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      * @param Icon resource to be displayed
      * @param Text text if icon is missing
      */
+    @Override
     public void setStatusLabelIcon(String Icon, String Text) {
         StatusLabel.setIcon(createImageIcon(Icon, Text));
     }
@@ -544,6 +562,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      *
      * @param text label text
      */
+    @Override
     public void setStatusMessageLabel(String text) {
         this.StatusLabel.setText(text);
     }
@@ -553,6 +572,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      *
      * @return true if enabled
      */
+    @Override
     public boolean getControlStatus() {
         return startButton.isEnabled() && comboBoxScriptSelector.isEnabled();
     }
@@ -563,6 +583,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      * @param status commanded value
      * @return true if enabled false if not
      */
+    @Override
     public boolean enableControls(boolean status) {
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
         if (caspac != null) {
@@ -599,7 +620,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
             } else {
                 return false;
             }
-        } else if (Statics.useGUI) {  //if gui is not available yet
+        } else if (Statics.GUIIsAvailable) {  //if gui is not available yet
             return false;
         }
         return true; //gui is not used for this CASUAL.
@@ -611,6 +632,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      *
      * @param text text to display as banner
      */
+    @Override
     public void setWindowBannerText(String text) {
         windowBanner.setText(text);
     }
@@ -620,6 +642,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      *
      * @param text text for main execution button
      */
+    @Override
     public void setStartButtonText(String text) {
         startButton.setText(text);
     }
@@ -635,6 +658,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
      * @param icon
      * @param text
      */
+    @Override
     public void setWindowBannerImage(BufferedImage icon, String text) {
         windowBanner.setIcon(new ImageIcon(icon, text));
 
@@ -649,9 +673,11 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         CASUALApp.shutdown(0);
     }
 
+    @Override
     public void setScript(Script s) {
     }
 
+    @Override
     public void setCASPAC(Caspac caspac) {
         this.setInformationScrollBorderText("Important Information");
         this.caspac = caspac;
@@ -693,9 +719,14 @@ public final class CASUALJFrameMain extends javax.swing.JFrame {
         }
     }
 
+    @Override
     public void setInformationScrollBorderText(String title) {
         TitledBorder info = (TitledBorder) this.informationScrollPanel.getBorder();
         info.setTitle(title);
         this.repaint();
     }
+    public void setVisibile(boolean v){
+        this.setVisible(v);
+    }
+    
 }
