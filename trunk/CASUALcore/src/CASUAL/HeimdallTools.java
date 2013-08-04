@@ -51,7 +51,7 @@ public class HeimdallTools {
         Timer connectionTimer = new Timer(60000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                new CASUALInteraction("@interactionDownloadModeNotDetected").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, 2, new String[]{"I did it"}, 0);
+                new CASUALMessageObject("@interactionDownloadModeNotDetected").showTimeoutDialog(60, null, CASUALMessageObject.OK_OPTION, 2, new String[]{"I did it"}, 0);
             }
         });
         connectionTimer.start();
@@ -180,7 +180,7 @@ public class HeimdallTools {
         for (String code : errFail) { //halt
             if (stdErrLog.contains(code)) {
                 if (heimdallRetries <= 3) {  //only loop thrice
-                    new CASUALInteraction("@interactionRestartDownloadMode").showActionRequiredDialog();
+                    new CASUALMessageObject("@interactionRestartDownloadMode").showActionRequiredDialog();
                     return "Heimdall continuable error; Attempting to continue";
                 } else {
                     return "Heimdall uncontinuable error; Script halted";
@@ -193,7 +193,7 @@ public class HeimdallTools {
 
 
         if (stdErrLog.contains("Failed to detect compatible download-mode device")) {
-            if (new CASUALInteraction("@interactionUnableToDetectDownloadMode").showUserCancelOption() == 0) {
+            if (new CASUALMessageObject("@interactionUnableToDetectDownloadMode").showUserCancelOption() == 0) {
                 return "Heimdall uncontinuable error; Script halted";
             }
             return "Heimdall continuable error; Attempting to continue";
@@ -201,7 +201,7 @@ public class HeimdallTools {
 
         if (stdErrLog.contains(" failed!")) {
             if (stdErrLog.contains("Claiming interface failed!")) {
-                new CASUALInteraction(null, "@interactionRestartDownloadMode").showActionRequiredDialog();
+                new CASUALMessageObject(null, "@interactionRestartDownloadMode").showActionRequiredDialog();
                 return "Heimdall failed to claim interface; Attempting to continue";
             }
 

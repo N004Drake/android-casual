@@ -17,7 +17,7 @@
  */
 package CASUAL.network;
 
-import CASUAL.CASUALInteraction;
+import CASUAL.CASUALMessageObject;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
@@ -72,7 +72,7 @@ public class Pastebin {
         if (Statics.debugMode) {
             return;
         }
-        String xdaUsername = new CASUALInteraction("@interactionPastebinError").inputDialog();
+        String xdaUsername = new CASUALMessageObject("@interactionPastebinError").inputDialog();
         if (xdaUsername != null) {//CANCEL_OPTION will rerturn a null String
             API paste = new API(devKey);
             Log log = new Log();
@@ -92,7 +92,7 @@ public class Pastebin {
                     StringSelection stringSelection = new StringSelection(output);
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
-                    new CASUALInteraction("@interactionThankyouForPastebin").showInformationMessage();
+                    new CASUALMessageObject("@interactionThankyouForPastebin").showInformationMessage();
                     log.level4Debug(output);
                 } else {
                     log.level4Debug(output);

@@ -75,7 +75,7 @@ public class Shell {
                 String[] testPKexec = {"which", "pkexec"};
                 testReturn = Shell.silentShellCommand(testPKexec);
                 if (testReturn.contains("CritERROR!!!") || testReturn.equals("\n") || testReturn.isEmpty()) {
-                    new CASUALInteraction("@interactionPermissionNotFound").showTimeoutDialog(60, null, CASUALInteraction.OK_OPTION, CASUALInteraction.ERROR_MESSAGE, null, null);
+                    new CASUALMessageObject("@interactionPermissionNotFound").showTimeoutDialog(60, null, CASUALMessageObject.OK_OPTION, CASUALMessageObject.ERROR_MESSAGE, null, null);
                 }
             }
 
@@ -132,7 +132,7 @@ public class Shell {
 
             //check if a virus scanner trashed CASUAL's Elevate.exe file. 
             if (!new FileOperations().verifyExists(Statics.WinElevatorInTempFolder)) {
-                new CASUALInteraction("@interactionCASUALCorrupt").showUserCancelOption();
+                new CASUALMessageObject("@interactionCASUALCorrupt").showUserCancelOption();
             }
 
             for (int i = 2; i < cmd.length + 2; i++) {

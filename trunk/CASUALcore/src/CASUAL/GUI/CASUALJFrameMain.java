@@ -20,7 +20,7 @@ import CASUAL.iCASUALGUI;
 import CASUAL.ADBTools;
 import CASUAL.CASUALApp;
 import CASUAL.CASUALConnectionStatusMonitor;
-import CASUAL.CASUALInteraction;
+import CASUAL.CASUALMessageObject;
 import CASUAL.misc.CASUALScrFilter;
 import CASUAL.CASUALScriptParser;
 import CASUAL.FileOperations;
@@ -398,13 +398,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
         this.setInformationScrollBorderText("Donate");
-        int DResult = new CASUALInteraction("Donate to the developers", "This application was developed by " + caspac.build.developerName + " using CASUAL framework.\n"
+        int DResult = new CASUALMessageObject("Donate to the developers", "This application was developed by " + caspac.build.developerName + " using CASUAL framework.\n"
                 + "Donations give developers a tangeble reason to continue quality software development\n").showTimeoutDialog(
                 60, //timeout
                 null, //parentComponent
                 //DisplayTitle
-                CASUALInteraction.OK_OPTION, // Options buttons
-                CASUALInteraction.INFORMATION_MESSAGE, //Icon
+                CASUALMessageObject.OK_OPTION, // Options buttons
+                CASUALMessageObject.INFORMATION_MESSAGE, //Icon
                 new String[]{"Donate To CASUAL", "Donate To " + caspac.build.developerName}, // option buttons
                 "No"); //Default{
         if (DResult == 0) {

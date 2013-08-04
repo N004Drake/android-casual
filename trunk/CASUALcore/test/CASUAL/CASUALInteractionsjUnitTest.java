@@ -4,6 +4,7 @@
  */
 package CASUAL;
 
+import CASUAL.GUI.CASUALShowJFrameMessageObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,11 +20,11 @@ import org.junit.Test;
 public class CASUALInteractionsjUnitTest {
 
     public CASUALInteractionsjUnitTest() {
+        CASUAL.Statics.interaction=new CASUALShowJFrameMessageObject();
     }
 
     @BeforeClass
     public static void setUpClass() {
-        CASUAL.CASUALApp.shutdown(0);
     }
 
     @AfterClass
@@ -38,7 +39,7 @@ public class CASUALInteractionsjUnitTest {
         //InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
 
         CASUAL.Statics.GUIIsAvailable = false;
-        CASUAL.CASUALInteraction ci = new CASUAL.CASUALInteraction(title, message);
+        CASUAL.CASUALMessageObject ci = new CASUAL.CASUALMessageObject(title, message);
         setContinue();
         assertEquals("", ci.inputDialog());
         setQuit();
@@ -59,24 +60,24 @@ public class CASUALInteractionsjUnitTest {
         setContinue();
         ci.showUserNotification();
         CASUAL.Statics.GUIIsAvailable = true;
-        int x = new CASUAL.CASUALInteraction("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
-        CASUAL.Statics.GUIIsAvailable = false;
+        int x = new CASUAL.CASUALMessageObject("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
+        CASUAL.Statics.GUIIsAvailable = true;
         if (x == 0) {
-            ci = new CASUAL.CASUALInteraction("Text Input", "Press\n1");
+            ci = new CASUAL.CASUALMessageObject("Text Input", "Press\n1");
             assertEquals("1", ci.inputDialog());
-            ci = new CASUAL.CASUALInteraction("Action Required", "Select\nI didn't do it!");
+            ci = new CASUAL.CASUALMessageObject("Action Required", "Select\nI didn't do it!");
             assertEquals(1, ci.showActionRequiredDialog());
-            ci = new CASUAL.CASUALInteraction("Action Required", "Select\nI did it!");
+            ci = new CASUAL.CASUALMessageObject("Action Required", "Select\nI did it!");
             assertEquals(0, ci.showActionRequiredDialog());
-            ci = new CASUAL.CASUALInteraction("Cancel Option", "hit\nStop!");
+            ci = new CASUAL.CASUALMessageObject("Cancel Option", "hit\nStop!");
             assertEquals(1, ci.showUserCancelOption());
-            ci = new CASUAL.CASUALInteraction("Cancel Option ", "hit\nContinue!");
+            ci = new CASUAL.CASUALMessageObject("Cancel Option ", "hit\nContinue!");
             assertEquals(0, ci.showUserCancelOption());
-            ci = new CASUAL.CASUALInteraction("Error Dialog", "hit\nOK!");
+            ci = new CASUAL.CASUALMessageObject("Error Dialog", "hit\nOK!");
             ci.showErrorDialog();
-            ci = new CASUAL.CASUALInteraction("Information Dialog", "hit\nOK!");
+            ci = new CASUAL.CASUALMessageObject("Information Dialog", "hit\nOK!");
             ci.showInformationMessage();
-            ci = new CASUAL.CASUALInteraction("Notification Dialog", "hit OK!");
+            ci = new CASUAL.CASUALMessageObject("Notification Dialog", "hit OK!");
             ci.showUserNotification();
         }
     }
@@ -84,12 +85,12 @@ public class CASUALInteractionsjUnitTest {
     private void setContinue() {
         String string = "\n";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
+        CASUAL.Statics.in = new BufferedReader(new InputStreamReader(stringStream));
     }
 
     private void setQuit() {
         String string = "q";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
+        CASUAL.Statics.in = new BufferedReader(new InputStreamReader(stringStream));
     }
 }

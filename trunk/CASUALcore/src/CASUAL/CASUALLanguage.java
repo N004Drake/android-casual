@@ -394,7 +394,7 @@ public class CASUALLanguage {
         } else if (line.startsWith("$USERNOTIFICATION")) {
             AudioHandler.playSound("/CASUAL/resources/sounds/Notification.wav");
             line = line.replace("$USERNOTIFICATION", "");
-            new CASUALInteraction(line.replaceFirst(",", ">>>")).showUserNotification();
+            new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserNotification();
             return "";
 
 // $USERCANCELOPTION will give the user the option to halt the script
@@ -405,7 +405,7 @@ public class CASUALLanguage {
             AudioHandler.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
             int n;
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
-            n = new CASUALInteraction(line.replaceFirst(",", ">>>")).showUserCancelOption();
+            n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserCancelOption();
             if (n == 1) {
                 log.level0Error(ScriptName);
                 log.level0Error("@canceledAtUserRequest");
@@ -421,7 +421,7 @@ public class CASUALLanguage {
         } else if (line.startsWith("$ACTIONREQUIRED")) {
             AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
-            int n = new CASUALInteraction(line.replaceFirst(",", ">>>")).showActionRequiredDialog();
+            int n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showActionRequiredDialog();
             if (n == 1) {
                 log.level0Error(ScriptName);
                 log.level0Error("@haltedPerformActions");
@@ -437,7 +437,7 @@ public class CASUALLanguage {
             AudioHandler.playSound("/CASUAL/resources/sounds/InputRequested.wav");
             //line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",", 3);
-            String inputBoxText = new CASUALInteraction(Message[0] + ">>>" + Message[1]).inputDialog();
+            String inputBoxText = new CASUALMessageObject(Message[0] + ">>>" + Message[1]).inputDialog();
             if (inputBoxText == null) {
                 inputBoxText = "";
             }
@@ -678,7 +678,7 @@ public class CASUALLanguage {
     }
 
     private void fileNotFound() {
-        int n = new CASUALInteraction("@interactionMissingFileVirusScanner").showUserCancelOption();
+        int n = new CASUALMessageObject("@interactionMissingFileVirusScanner").showUserCancelOption();
         if (n == 1) {
             log.level0Error(ScriptName);
             log.level0Error("@canceledDueToMissingFiles");

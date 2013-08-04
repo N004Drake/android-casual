@@ -50,7 +50,7 @@ class ADBInstall {
             fo.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
             fo.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
         } else {
-            new CASUALInteraction("@interactionsystemNotNativelySupported").showInformationMessage();
+            new CASUALMessageObject("@interactionsystemNotNativelySupported").showInformationMessage();
             Statics.adbDeployed = "adb";
         }
 

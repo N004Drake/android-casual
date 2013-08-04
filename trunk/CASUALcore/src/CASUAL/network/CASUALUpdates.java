@@ -17,7 +17,7 @@
 package CASUAL.network;
 
 import CASUAL.CASUALApp;
-import CASUAL.CASUALInteraction;
+import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
@@ -255,7 +255,7 @@ public class CASUALUpdates {
             //if MD5 does not match
             if (expectedMD5.length() >= 31 && !new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)) {
                 //show message and exit
-                new CASUALInteraction("@interactionBadDownload").showErrorDialog();
+                new CASUALMessageObject("@interactionBadDownload").showErrorDialog();
                 CASUALApp.shutdown(0);
             }
             counter++;

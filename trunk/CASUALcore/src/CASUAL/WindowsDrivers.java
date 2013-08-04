@@ -70,7 +70,7 @@ public class WindowsDrivers {
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
         this.pathToCADI = Statics.TempFolder + "CADI" + Statics.Slash;
         if (removeDriverOnCompletion == 0) { //so it only asks once
-            removeDriverOnCompletion = new CASUALInteraction("@interactionInstallingCADI").showYesNoOption() ? 2 : 1; //set value as 2 if true and 1 if false
+            removeDriverOnCompletion = new CASUALMessageObject("@interactionInstallingCADI").showYesNoOption() ? 2 : 1; //set value as 2 if true and 1 if false
         }
     }
 

@@ -242,9 +242,15 @@ public final class Caspac {
         while (unzip.zipFileEntries.hasMoreElements()) {
             Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
             String filename = unzip.getEntryName(entry);
-            boolean isScript=!handleCASPACInformationFiles(filename, unzip, entry);
-            if ((isScript && scriptName.isEmpty()) || (isScript && scriptName.equals(entry) )){ //ugly
+            
+            //detect if file is Overview, Logo, or build.properties, otherwise its a script
+            boolean isScript=! Arrays.asList(controlFiles).contains(entry.toString()); 
+            
+            //if it's a script, and we havent set a script, or if it's a script and it matches the script we set
+            if (isScript && scriptName.isEmpty() || isScript && scriptName.equals(activeScript.name) ){ 
                 handleCASPACScriptFiles(filename, unzip, entry);
+                //entry.toString().subst
+                scriptName=entry.toString().substring(0,entry.toString().lastIndexOf("."));
                 this.activeScript=this.getScriptByFilename(filename);
             }
         }
@@ -613,6 +619,7 @@ public final class Caspac {
         getScriptByName(defaultPackage).scriptZipFile=(scriptPath+".zip");
     }
 
+    private String controlFiles[]={"-Overview.txt","-build.properties","-logo.png"};
     private void loadCASPACcontrolFilesFromCASPAC() throws IOException {
         //if the CASPAC exists lets try to grab the non-script files 
         if (fo.verifyExists(CASPAC.getAbsolutePath()) && CASPAC.canRead()) {

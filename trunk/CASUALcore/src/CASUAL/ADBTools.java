@@ -158,7 +158,7 @@ public class ADBTools {
         }
 
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
-            new CASUALInteraction("@interactionELFCLASS64Error").showInformationMessage();
+            new CASUALMessageObject("@interactionELFCLASS64Error").showInformationMessage();
 
         }
 

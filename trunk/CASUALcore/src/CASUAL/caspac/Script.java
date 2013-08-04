@@ -16,7 +16,7 @@
  */
 package CASUAL.caspac;
 
-import CASUAL.CASUALInteraction;
+import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
@@ -203,7 +203,7 @@ public class Script {
                     individualFiles.addAll(Arrays.asList(files));
                     for (String md5 : metaData.md5s) {
                         if (!actualMD5s.contains(md5)) {
-                            new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
+                            new CASUALMessageObject("@interactionPackageCorrupt").showErrorDialog();
                             scriptContents = "";
                         }
                     }
@@ -277,7 +277,7 @@ public class Script {
                     if (!scriptContents.equals("")){
                         new Log().level4Debug("Update sucessful.  MD5s matched server.");
                     } else {
-                        new CASUALInteraction("@interactionPackageCorrupt").showErrorDialog();
+                        new CASUALMessageObject("@interactionPackageCorrupt").showErrorDialog();
                     }
                 }
             };

@@ -81,12 +81,12 @@ public class WindowsDriversTest {
     public void setContinue() {
         String string = "\n";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
+        CASUAL.Statics.in = new BufferedReader(new InputStreamReader(stringStream));
     }
 
     public void setQuit() {
         String string = "q";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
+        CASUAL.Statics.in = new BufferedReader(new InputStreamReader(stringStream));
     }
 }
