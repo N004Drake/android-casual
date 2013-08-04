@@ -27,6 +27,8 @@ package CASUAL;
  * A:Possible, but overly complicated and probably unreliable without parsing
  * all matching *.inf's contents
  */
+import CASUAL.misc.StringOperations;
+import zip.Unzip;
 import CASUAL.network.CASUALUpdates;
 import java.io.FileNotFoundException;
 import java.io.IOException;

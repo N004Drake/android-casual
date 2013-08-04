@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.misc.StringOperations;
 import java.util.ArrayList;
 
 /**

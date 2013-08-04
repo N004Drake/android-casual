@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import CASUAL.misc.StringOperations;
+import CASUAL.misc.CountLines;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import java.io.*;

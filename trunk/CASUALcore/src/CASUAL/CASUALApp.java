@@ -34,7 +34,7 @@ public class CASUALApp {
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
-    final private static String[] overrideArguments = new String[]{"--temp","C:\\Users\\adam\\Desktop\\CASUALProject\\TestHarness\\DPAutoTesting\\Tester\\TempDPData\\8da9"};
+    final private static String[] overrideArguments = new String[]{};
     
     static String[] arguments;
 

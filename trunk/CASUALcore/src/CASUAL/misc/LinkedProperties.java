@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.misc;
 
 import java.util.Collections;
 import java.util.Enumeration;
@@ -27,7 +27,7 @@ import java.util.Set;
  * @author adam inspiredBy
  * http://stackoverflow.com/questions/1312383/pulling-values-from-a-java-properties-file-in-order
  */
-class LinkedProperties extends Properties {
+public class LinkedProperties extends Properties {
 
     private final LinkedHashSet<Object> keys = new LinkedHashSet<>();
 

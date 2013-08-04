@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
 import CASUAL.network.Pastebin;
 import CASUAL.caspac.Caspac;

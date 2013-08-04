@@ -4,7 +4,7 @@
  */
 package CASUAL.crypto;
 
-import CASUAL.StringOperations;
+import CASUAL.misc.StringOperations;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
