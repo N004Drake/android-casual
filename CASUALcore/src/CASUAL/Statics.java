@@ -82,8 +82,8 @@ public class Statics {
     
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     private static String TempF = null; //TempF is the actual tempfolder, it's served by getTempFolder
-    public static String TempFolder = getTempFolder();
-    private static String getTempFolder() {
+    public static String TempFolder;
+    public static String getTempFolder() {
         if (TempFolder == null) {
             String user = System.getProperty("user.name");  //username
             String tf = System.getProperty("java.io.tmpdir"); //tempfolder
@@ -99,10 +99,7 @@ public class Statics {
         }
         return TempFolder;
     }
-    public static String setTempFolder(String folder){
-        TempFolder=folder;
-        return TempFolder;
-    }
+    
     //Cross-Platform data storage
     public static String adbDeployed; //location of ADB after deployment
     public static String SelectedScriptFolder;//Used for script locations on disk
@@ -232,5 +229,12 @@ public class Statics {
     public static String getStatus(){
         return currentStatus;
     }
- 
+ public static String setTempFolder(String folder){
+        TempFolder=folder;
+        WinElevatorInTempFolder = TempFolder + "Elevate.exe";
+        fastbootDeployed = TempFolder + "fastboot";
+        heimdallStaging = TempFolder + "heimdallStage";
+        heimdallDeployed = "";
+        return TempFolder;
+    }
 }

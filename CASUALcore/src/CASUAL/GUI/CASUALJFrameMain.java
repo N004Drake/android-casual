@@ -403,8 +403,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
                 60, //timeout
                 null, //parentComponent
                 //DisplayTitle
-                CASUALMessageObject.OK_OPTION, // Options buttons
-                CASUALMessageObject.INFORMATION_MESSAGE, //Icon
+                javax.swing.JOptionPane.OK_OPTION, // Options buttons
+                javax.swing.JOptionPane.INFORMATION_MESSAGE, //Icon
                 new String[]{"Donate To CASUAL", "Donate To " + caspac.build.developerName}, // option buttons
                 "No"); //Default{
         if (DResult == 0) {

@@ -75,7 +75,7 @@ public class Shell {
                 String[] testPKexec = {"which", "pkexec"};
                 testReturn = Shell.silentShellCommand(testPKexec);
                 if (testReturn.contains("CritERROR!!!") || testReturn.equals("\n") || testReturn.isEmpty()) {
-                    new CASUALMessageObject("@interactionPermissionNotFound").showTimeoutDialog(60, null, CASUALMessageObject.OK_OPTION, CASUALMessageObject.ERROR_MESSAGE, null, null);
+                    new CASUALMessageObject("@interactionPermissionNotFound").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.ERROR_MESSAGE, null, null);
                 }
             }
 

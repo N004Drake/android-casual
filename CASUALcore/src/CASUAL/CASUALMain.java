@@ -67,6 +67,8 @@ public final class CASUALMain {
      */
     public void startup(String[] args) {
         //make the temp folder
+        if (Statics.TempFolder==null)Statics.TempFolder=Statics.getTempFolder();
+        
         new FileOperations().makeFolder(Statics.TempFolder);
 
         //parse args
@@ -135,7 +137,7 @@ public final class CASUALMain {
                 Statics.setStatus("Complete");
                 new Log().level2Information("@scriptComplete");
             } else {
-                Statics.setStatus("Invalid CASUAL Startup  Argument");
+                Statics.setStatus("Invalid CASUAL Startup argument "+args[i]);
                 new Log().level0Error("@unrecognizedCommand");
             }
 

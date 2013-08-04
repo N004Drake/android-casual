@@ -165,6 +165,7 @@ public class DiffTextFiles {
                 new PrintStream(FileOut).println(currentString);
             }
             new PrintStream(FileOut).println(Diff);
+            OriginalFileBuffer.close();
             FR.close();
             FileOut.close();
         } catch (IOException ex) {

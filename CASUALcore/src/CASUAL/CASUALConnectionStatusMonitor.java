@@ -97,7 +97,7 @@ public class CASUALConnectionStatusMonitor {
                         DeviceList = getConnectedDevices();
                         if (DeviceList.contains("offline")) {
                             String[] ok = {"All set and done!"};
-                            new CASUALMessageObject("@interactionOfflineNotification").showTimeoutDialog(120, null, CASUALMessageObject.OK_OPTION, 2, ok, 0);
+                            new CASUALMessageObject("@interactionOfflineNotification").showTimeoutDialog(120, null, javax.swing.JOptionPane.OK_OPTION, 2, ok, 0);
                             log.level0Error("@disconnectAndReconnect");
                             DeviceList = ADBTools.getDevices();
                             DeviceCheck.start();
@@ -124,7 +124,7 @@ public class CASUALConnectionStatusMonitor {
                             //notify user that permissions will be requested and what they are used for
                             String[] ok = {"ok"};
                             AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
-                            new CASUALMessageObject("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, CASUALMessageObject.OK_OPTION, 2, ok, 0);
+                            new CASUALMessageObject("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, 2, ok, 0);
 
                             DeviceList = ADBTools.getDevices();
                             // if permissions elevation was sucessful
@@ -193,11 +193,11 @@ public class CASUALConnectionStatusMonitor {
             cycles++;
             if (cycles == 30) {
                 if (OSTools.isWindows()) {
-                    new CASUALMessageObject("@interactionWindowsDeviceNotDetected").showTimeoutDialog(60, null, CASUALMessageObject.OK_OPTION, CASUALMessageObject.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                    new CASUALMessageObject("@interactionWindowsDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
                 } else if (OSTools.isLinux()) {
-                    new CASUALMessageObject("@interactionLinuxDeviceNotDetected").showTimeoutDialog(60, null, CASUALMessageObject.OK_OPTION, CASUALMessageObject.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                    new CASUALMessageObject("@interactionLinuxDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
                 } else if (OSTools.isMac()) {
-                    new CASUALMessageObject("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null, CASUALMessageObject.OK_OPTION, CASUALMessageObject.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                    new CASUALMessageObject("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null,javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
                 }
                 hasConnected = true;
             }
