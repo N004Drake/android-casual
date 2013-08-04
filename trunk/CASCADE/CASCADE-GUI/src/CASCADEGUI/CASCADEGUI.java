@@ -24,7 +24,7 @@ import CASUAL.crypto.AES128Handler;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
-import CASUAL.StringOperations;
+import CASUAL.misc.StringOperations;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import Packager.PackagerMain;

@@ -5,7 +5,7 @@
 package CASCADEGUI;
 
 import CASCADEGUI.CASCADEGUI;
-import CASUAL.Zip;
+import zip.Zip;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.DefaultListModel;
