@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.misc.StringOperations;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;

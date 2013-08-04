@@ -95,7 +95,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, int optionType, int messageType, Object[] options, final Object initialValue) {
         if (!originalMessage.equals("")) {
-            logPretranslated("[STANDARDMESSAGE]" + originalMessage + "\n[RESPONSEEXPECTED]");
+            sendLog("[STANDARDMESSAGE]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
         if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             return new TimeOutOptionPane().timeoutDialog(PRESET_TIME, parentComponent, messageText, title, optionType, messageType, options, initialValue);
@@ -143,7 +143,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public String inputDialog() throws HeadlessException {
         if (!originalMessage.equals("")) {
-            logPretranslated("[INPUT][ANY]" + originalMessage);
+            sendLog("[INPUT][ANY]" + originalMessage);
         }
         new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText + "\n[RESPONSEEXPECTED]");
         messageText = "<html>" + messageText.replace("\\n", "\n");
@@ -168,7 +168,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public int showActionRequiredDialog() throws HeadlessException {
         if (!originalMessage.equals("")) {
-            logPretranslated("[USERTASK][Q or RETURN][CRITICAL]" + originalMessage + "\n[RESPONSEEXPECTED]");
+            sendLog("[USERTASK][Q or RETURN][CRITICAL]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
         new Log().level4Debug("Displaying Action Is Required Dialog:" + messageText);
         int n = 9999;
@@ -208,7 +208,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public int showUserCancelOption() {
         if (!originalMessage.equals("")) {
-            logPretranslated("[CANCELOPTION][Q or RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
+            sendLog("[CANCELOPTION][Q or RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
         new Log().level4Debug("Displaying User Cancel Option Dialog title: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
 
@@ -254,7 +254,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public void showUserNotification() throws HeadlessException {
         if (!originalMessage.equals("")) {
-            logPretranslated("[NOTIFICATION][RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
+            sendLog("[NOTIFICATION][RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
         new Log().level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
 
@@ -283,7 +283,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public void showInformationMessage() throws HeadlessException {
         if (!originalMessage.equals("")) {
-            logPretranslated("[INFOMESSAGE][RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
+            sendLog("[INFOMESSAGE][RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
         if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog((Component) Statics.GUI,
@@ -302,7 +302,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public void showErrorDialog() throws HeadlessException {
         if (!originalMessage.equals("")) {
-            logPretranslated("[ERRORMESSAGE][RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
+            sendLog("[ERRORMESSAGE][RETURN]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
         if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog((Component) Statics.GUI, messageText, title, JOptionPane.ERROR_MESSAGE);
@@ -319,7 +319,7 @@ public class CASUALInteraction extends JOptionPane {
      */
     public boolean showYesNoOption() {
         if (!originalMessage.equals("")) {
-            logPretranslated("[YESNOOPTION][RETURN or n]" + originalMessage + "\n[RESPONSEEXPECTED]");
+            sendLog("[YESNOOPTION][RETURN or n]" + originalMessage + "\n[RESPONSEEXPECTED]");
         }
         new Log().level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
         if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
@@ -348,7 +348,7 @@ public class CASUALInteraction extends JOptionPane {
         }
     }
 
-    private void logPretranslated(String messageText) {
+    private void sendLog(String messageText) {
         new Log().level4Debug(messageText);
     }
 }

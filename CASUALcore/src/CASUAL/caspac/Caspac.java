@@ -17,16 +17,16 @@
 package CASUAL.caspac;
 
 import CASUAL.AudioHandler;
-import CASUAL.BooleanOperations;
+import CASUAL.misc.BooleanOperations;
 import CASUAL.CASUALApp;
 import CASUAL.CASUALTools;
 import CASUAL.network.CASUALUpdates;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
-import CASUAL.StringOperations;
-import CASUAL.Unzip;
-import CASUAL.Zip;
+import CASUAL.misc.StringOperations;
+import zip.Unzip;
+import zip.Zip;
 import CASUAL.crypto.AES128Handler;
 import CASUAL.crypto.MD5sum;
 

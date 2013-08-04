@@ -23,7 +23,7 @@ import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Statics;
-import CASUAL.StringOperations;
+import CASUAL.misc.StringOperations;
 import CASUAL.caspac.Script;
 import CASUAL.crypto.MD5sum;
 import java.io.*;

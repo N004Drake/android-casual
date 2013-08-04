@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.misc.LinkedProperties;
 import CASUAL.GUI.CASUALJFrameMain;
 import CASUAL.caspac.Caspac;
 import CASUAL.crypto.MD5sum;

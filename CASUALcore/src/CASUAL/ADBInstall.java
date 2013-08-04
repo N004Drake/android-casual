@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import CASUAL.misc.DiffTextFiles;
+
 
 /**
  *
