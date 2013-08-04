@@ -19,7 +19,7 @@ package Packager;
 
 import CASUAL.Log;
 import CASUAL.Statics;
-import CASUAL.StringOperations;
+import CASUAL.misc.StringOperations;
 import static Packager.PackagerMain.hasProcessedFolder;
 import static Packager.PackagerMain.packagerMain;
 import java.io.File;
