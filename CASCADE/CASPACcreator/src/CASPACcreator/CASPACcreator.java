@@ -17,13 +17,14 @@
 package CASPACcreator;
 
 import CASUAL.Log;
-import CASUAL.Zip;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import zip.Zip;
 
 /**
  *
@@ -48,16 +49,14 @@ public class CASPACcreator {
 
     private void doWork(String[] args) {
         argProcessor(args);
-        if (shutdown) {
-            return;
-        } else {
+        if (!shutdown) {
             try {
                 Zip zip = new Zip(new File(outputfile));
                 zip.addFilesToExistingZip(inputfiles.toArray(new File[inputfiles.size()]));
             } catch (IOException ex) {
                 Logger.getLogger(CASPACcreator.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        } 
     }
 
     /**
