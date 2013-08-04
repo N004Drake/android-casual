@@ -59,8 +59,8 @@ public class FileOperations {
                         log.level0Error("@failedToWriteFile");
                         return false;
                     }
-
                 } else {
+                    resourceAsStream.close();
                     log.level0Error("@criticalErrorWhileCopying " + Resource);
                 }
             } catch (NullPointerException e) {

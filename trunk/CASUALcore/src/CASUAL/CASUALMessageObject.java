@@ -18,23 +18,22 @@ package CASUAL;
 
 import java.awt.Component;
 import java.awt.HeadlessException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.YES_OPTION;
+import java.util.Arrays;
 
 /**
  *
  * @author adam
  */
-public class CASUALMessageObject extends JOptionPane implements iCASUALInteraction {
+public class CASUALMessageObject {
 
+    
+    public String originalMessage = ""; //for use with translations
+    
+    public String expectedReturn="";
     public String title;
     public String messageText;
-    String originalMessage = "";
     public int messageType;
-
+    public String message;
     //for timeout option pane
     public int timeoutOptionType;
     public Object timeoutInitialValue;
@@ -62,6 +61,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
             }
         } else {
             if (messageInput.contains(">>>")) {
+                originalMessage = messageInput;
                 String[] s = messageInput.split(">>>", 2);
                 //messageText=s[1].replace("\n","\\n");
                 title = s[0];
@@ -106,6 +106,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
         this.timeoutInitialValue=initialValue;
         this.timeoutPresetTime=PRESET_TIME;
         this.messageType=iCASUALInteraction.INTERACTION_TIME_OUT;
+        expectedReturn="(String)int from "+Arrays.asList(options).toString();
         return Integer.parseInt(Statics.interaction.displayMessage(this));
     }
 
@@ -122,6 +123,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
      */
     public String inputDialog() throws HeadlessException {
         this.messageType=iCASUALInteraction.INTERACTION_INPUT_DIALOG;
+        expectedReturn="Any String";
         return Statics.interaction.displayMessage(this);
     }
 
@@ -133,6 +135,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
      */
     public int showActionRequiredDialog() throws HeadlessException {
         this.messageType=iCASUALInteraction.INTERACTION_ACTION_REUIRED;
+        expectedReturn="String 0-continue, 1-stop";
         return Integer.parseInt(Statics.interaction.displayMessage(this));
     }
 
@@ -143,6 +146,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
      */
     public int showUserCancelOption() {
         this.messageType=iCASUALInteraction.INTERACTION_USER_CANCEL_OPTION;
+        expectedReturn="String 0-continue, 1-stop";
         return Integer.parseInt(Statics.interaction.displayMessage(this));
     }
 
@@ -153,6 +157,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
      */
     public void showUserNotification() throws HeadlessException {
         this.messageType=iCASUALInteraction.INTERACTION_USER_NOTIFICATION;
+        expectedReturn="Empty";
         Statics.interaction.displayMessage(this);
         return;
     }
@@ -164,6 +169,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
      */
     public void showInformationMessage() throws HeadlessException {
         this.messageType=iCASUALInteraction.INTERACTION_SHOW_INFORMATION;
+        expectedReturn="Empty";
         Statics.interaction.displayMessage(this);
         return;
     }
@@ -175,6 +181,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
      */
     public void showErrorDialog() throws HeadlessException {
         this.messageType=iCASUALInteraction.INTERACTION_SHOW_ERROR;
+        expectedReturn="Empty";
         Statics.interaction.displayMessage(this);
         return;
         
@@ -189,12 +196,7 @@ public class CASUALMessageObject extends JOptionPane implements iCASUALInteracti
     public boolean showYesNoOption() {
         this.messageType=iCASUALInteraction.INTERACTION_SHOW_ERROR;
         Boolean retval=Statics.interaction.displayMessage(this).equals("true");
+        expectedReturn="String 0-yes, 1-no";
         return retval;
-    }
-
-   
-    @Override
-    public String displayMessage(CASUALMessageObject messageObject) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

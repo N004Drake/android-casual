@@ -51,7 +51,7 @@ public class HeimdallTools {
         Timer connectionTimer = new Timer(60000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                new CASUALMessageObject("@interactionDownloadModeNotDetected").showTimeoutDialog(60, null, CASUALMessageObject.OK_OPTION, 2, new String[]{"I did it"}, 0);
+                new CASUALMessageObject("@interactionDownloadModeNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, 2, new String[]{"I did it"}, 0);
             }
         });
         connectionTimer.start();
