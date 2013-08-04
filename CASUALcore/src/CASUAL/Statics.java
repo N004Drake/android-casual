@@ -18,6 +18,8 @@ package CASUAL;
 
 //import java.awt.Color;
 import CASUAL.caspac.Caspac;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +54,8 @@ public class Statics {
      */
     public static int GUIVerboseLevel = 2; //userdata is output to console
     public static int CommandLineVerboseLevel = 4; //all logs are output to file
-  
+    public static iCASUALInteraction interaction;
+    public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     /*
      * miscellanious variables
      */    

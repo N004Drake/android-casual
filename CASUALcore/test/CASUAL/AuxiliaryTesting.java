@@ -48,7 +48,7 @@ public class AuxiliaryTesting {
         CASUALApp.main(new String[]{"-e", "$ADB devices"});
         //Testing ADB reboot download
         CASUAL.Statics.GUIIsAvailable = true;
-        if (new CASUAL.CASUALInteraction("Testing Heimdall", "Connect an ODIN capable device in ADB mode").showUserCancelOption() == 0) {
+        if (new CASUAL.CASUALMessageObject("Testing Heimdall", "Connect an ODIN capable device in ADB mode").showUserCancelOption() == 0) {
             CASUAL.Statics.GUIIsAvailable = false;
             String returnval = new CASUAL.CASUALScriptParser().executeOneShotCommand("$ADB reboot download");
             assert returnval.equals("") || returnval.equals("\n ");
@@ -57,7 +57,7 @@ public class AuxiliaryTesting {
 
         //Testing Heimdall close-pc-screen
         CASUAL.Statics.GUIIsAvailable= true;
-        if (new CASUAL.CASUALInteraction("Testing Heimdall", "Connect a device in ODIN mode").showUserCancelOption() == 0) {
+        if (new CASUAL.CASUALMessageObject("Testing Heimdall", "Connect a device in ODIN mode").showUserCancelOption() == 0) {
             CASUAL.Statics.GUIIsAvailable = false;
             setContinue();
             setContinue();
@@ -69,7 +69,7 @@ public class AuxiliaryTesting {
 
         //testing ADB reboot bootloader
         CASUAL.Statics.GUIIsAvailable = true;
-        if (new CASUAL.CASUALInteraction("Testing Fastboot", "Connect a FASTBOOT capable device in ADB mode").showUserCancelOption() ==0 ) {
+        if (new CASUAL.CASUALMessageObject("Testing Fastboot", "Connect a FASTBOOT capable device in ADB mode").showUserCancelOption() ==0 ) {
             CASUAL.Statics.GUIIsAvailable = false;
             CASUALApp.main(new String[]{"-e", "$ADB reboot bootloader"});
             CASUALApp.shutdown(0);
@@ -77,7 +77,7 @@ public class AuxiliaryTesting {
 
         //testing Fastboot reboot
         CASUAL.Statics.GUIIsAvailable = true;
-        if (new CASUAL.CASUALInteraction("Testing Fastboot", "Connect a device in FASTBOOT mode").showUserCancelOption() == 0) {
+        if (new CASUAL.CASUALMessageObject("Testing Fastboot", "Connect a device in FASTBOOT mode").showUserCancelOption() == 0) {
             CASUAL.Statics.GUIIsAvailable = false;
             String returnval = new CASUAL.CASUALScriptParser().executeOneShotCommand("$FASTBOOT reboot");
             CASUALApp.shutdown(0);
@@ -85,7 +85,7 @@ public class AuxiliaryTesting {
         }
 
         CASUAL.Statics.GUIIsAvailable = true;
-        if (new CASUAL.CASUALInteraction("Overall Test", "Connect a device in ADB mode").showUserCancelOption() == 0) {
+        if (new CASUAL.CASUALMessageObject("Overall Test", "Connect a device in ADB mode").showUserCancelOption() == 0) {
             CASUAL.Statics.GUIIsAvailable = false;
             CASUAL.Statics.dumbTerminalGUI = true;
             String[] casualParams = new String[]{"--execute", "$ECHO hi"};
@@ -99,6 +99,6 @@ public class AuxiliaryTesting {
     public void setContinue() {
         String string = "\n";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.CASUALInteraction.in = new BufferedReader(new InputStreamReader(stringStream));
+        CASUAL.Statics.in = new BufferedReader(new InputStreamReader(stringStream));
     }
 }

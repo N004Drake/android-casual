@@ -177,7 +177,7 @@ public class HeimdallInstall {
                 log.errorHandler(ex);
             }
             new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
-            new CASUALInteraction("@interactionUnplugItAndPlugItBackIn").showErrorDialog();
+            new CASUALMessageObject("@interactionUnplugItAndPlugItBackIn").showErrorDialog();
         }
     }
 
@@ -306,7 +306,7 @@ public class HeimdallInstall {
      */
     public void displayWindowsPermissionsMessageAndExit() {
         if (OSTools.isWindows()) {
-            new CASUALInteraction("@interactionwindowsRunAsMessage" + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString()).showErrorDialog();
+            new CASUALMessageObject("@interactionwindowsRunAsMessage" + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString()).showErrorDialog();
         }
         CASUALApp.shutdown(0);
     }
