@@ -84,7 +84,7 @@ public class Pastebin {
                     paste.setToken(lResult);
                     log.level4Debug("Pastebin Login Successful");
                 }
-                String pasteData = new FileOperations().readFile(Statics.TempFolder + "log.txt");
+                String pasteData = new FileOperations().readFile(Statics.getTempFolder() + "log.txt");
 
                 String output = paste.makePaste(pasteData, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-" + xdaUsername, format);
                 if (output.substring(0, 4).equals("http")) {
@@ -109,10 +109,10 @@ public class Pastebin {
     public void pasteAnonymousLog() throws MalformedURLException {
         Pattern svnRev = Pattern.compile("(?=[setViewedRevision]?.{2})[0-9]{3,4}");
         FileOperations fO = new FileOperations();
-        if (!fO.verifyExists(Statics.TempFolder + "log.txt")) {
+        if (!fO.verifyExists(Statics.getTempFolder() + "log.txt")) {
             return;
         }
-        String casualLog = fO.readFile(Statics.TempFolder + "log.txt");
+        String casualLog = fO.readFile(Statics.getTempFolder() + "log.txt");
         Matcher matcher;
         try {
             matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));

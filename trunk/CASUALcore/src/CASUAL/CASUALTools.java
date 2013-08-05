@@ -221,7 +221,7 @@ public class CASUALTools {
      
         Caspac caspac;
         try {
-            caspac = new Caspac(CASPAC,Statics.TempFolder,0);
+            caspac = new Caspac(CASPAC,Statics.getTempFolder(),0);
             caspac.load();
             caspac.write();
             System.exit(0);

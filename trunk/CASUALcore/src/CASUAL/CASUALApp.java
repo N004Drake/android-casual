@@ -66,7 +66,7 @@ public class CASUALApp {
         String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
         boolean shutdown = checkModeSwitchArgs(args);
-        new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.TempFolder
+        new Log().level2Information("We are running " + System.getProperty("os.name") + "\nCreating Temp Folder in:" + Statics.getTempFolder()
                 + "CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
                 + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
                 + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
@@ -76,9 +76,7 @@ public class CASUALApp {
 
 
 
-        if (!shutdown) {
-                    System.out.println(Statics.TempFolder);
-
+        if (!shutdown) { //shutdown may be commanded by modeswitch
             new CASUALMain().startup(args);
         }
     }
@@ -96,8 +94,7 @@ public class CASUALApp {
             if (args[i].contains("--temp")|| args[i].contains("-t")){
                 i++;
                 Statics.setTempFolder(args[i]);
-                System.out.println(Statics.TempFolder);
-                System.out.println(Statics.TempFolder);
+
             }
             if (args[i].equals("--help") || args[i].equals("-v?")) {
                 new Log().level2Information("\n"

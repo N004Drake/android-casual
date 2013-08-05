@@ -221,11 +221,11 @@ public class CASUALUpdates {
         Log.level3Verbose("Found " + system + " " + arch + "computer");
         String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
         //download location, md5, and version information
-        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.TempFolder + basename, "locating files");
+        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.getTempFolder() + basename, "locating files");
         Log.level3Verbose("downloaded" + propertiesFileInCASUALOnlineRepo);
         //Set properties file
         Properties prop = new Properties();
-        prop.load(new FileInputStream(Statics.TempFolder + basename));
+        prop.load(new FileInputStream(Statics.getTempFolder() + basename));
         // get information from properties file
         int counter = 1;
         String filenumber = "";
@@ -244,7 +244,7 @@ public class CASUALUpdates {
 
             String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/') + 1, downloadURL.length());
             String availableVersion = prop.getProperty(system + arch + filenumber + "Version");
-            String downloadedFile = Statics.TempFolder + downloadBasename;
+            String downloadedFile = Statics.getTempFolder() + downloadBasename;
             //download update based on information available.
 
             downloadFileFromInternet(downloadURL, downloadedFile, downloadBasename + " ver" + availableVersion);
@@ -263,7 +263,7 @@ public class CASUALUpdates {
         }
         String downloadURL = prop.getProperty(system + arch);
         String downloadBasename = new File(downloadURL).getName();
-        return Statics.TempFolder + downloadBasename;
+        return Statics.getTempFolder() + downloadBasename;
 
     }
 

@@ -68,7 +68,7 @@ public class WindowsDrivers {
         removeDriverOnCompletion = promptInit;
         log.level4Debug("WindowsDrivers() Initializing");
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
-        this.pathToCADI = Statics.TempFolder + "CADI" + Statics.Slash;
+        this.pathToCADI = Statics.getTempFolder() + "CADI" + Statics.Slash;
         if (removeDriverOnCompletion == 0) { //so it only asks once
             removeDriverOnCompletion = new CASUALMessageObject("@interactionInstallingCADI").showYesNoOption() ? 2 : 1; //set value as 2 if true and 1 if false
         }
@@ -182,12 +182,12 @@ public class WindowsDrivers {
         try {
             if (OSTools.OSName().contains("Windows XP")) {
                 if (new FileOperations().verifyResource(Statics.WinDriverResource2)) {
-                    exec = Statics.TempFolder + "CADI.exe";
+                    exec = Statics.getTempFolder() + "CADI.exe";
                     new FileOperations().copyFromResourceToFile(Statics.WinDriverResource2, exec);
                 }
             } else {
                 if (new FileOperations().verifyResource(Statics.WinDriverResource)) {
-                    exec = Statics.TempFolder + "CADI.exe";
+                    exec = Statics.getTempFolder() + "CADI.exe";
                     new FileOperations().copyFromResourceToFile(Statics.WinDriverResource, exec);
                 } else {
                     exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");

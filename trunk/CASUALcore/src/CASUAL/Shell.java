@@ -80,7 +80,7 @@ public class Shell {
             }
 
 
-            String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
+            String ScriptFile = Statics.getTempFolder() + "ElevateScript.sh";
             FileOperations.deleteFile(ScriptFile);
             try {
                 FileOperations.writeToFile("#!/bin/sh\n" + Command, ScriptFile);
@@ -111,7 +111,7 @@ public class Shell {
             }
 
         } else if (OSTools.isMac()) {
-            String ScriptFile = Statics.TempFolder + "ElevateScript.sh";
+            String ScriptFile = Statics.getTempFolder() + "ElevateScript.sh";
             try {
                 FileOperations.writeToFile(""
                         + "#!/bin/sh \n"

@@ -33,12 +33,12 @@ public class AuxiliaryTesting {
     @Test
     public void testFileOperationsFailures() {
 
-        assertEquals(true, new CASUAL.FileOperations().copyFromResourceToFile(CASUAL.Statics.ADBini, CASUAL.Statics.TempFolder + "new"));
+        assertEquals(true, new CASUAL.FileOperations().copyFromResourceToFile(CASUAL.Statics.ADBini, CASUAL.Statics.getTempFolder() + "new"));
         assertEquals(false, new CASUAL.FileOperations().copyFromResourceToFile(null, null));
-        assertEquals(true, new CASUAL.FileOperations().makeFolder(CASUAL.Statics.TempFolder + "new" + CASUAL.Statics.Slash));
+        assertEquals(true, new CASUAL.FileOperations().makeFolder(CASUAL.Statics.getTempFolder() + "new" + CASUAL.Statics.Slash));
         assertEquals(false, new CASUAL.FileOperations().makeFolder(null));
-        assertEquals(true, new CASUAL.FileOperations().verifyExists(CASUAL.Statics.TempFolder + "new" + CASUAL.Statics.Slash));
-        assertEquals(false, new CASUAL.FileOperations().verifyExists(CASUAL.Statics.TempFolder + "asfdadfasfd" + CASUAL.Statics.Slash));
+        assertEquals(true, new CASUAL.FileOperations().verifyExists(CASUAL.Statics.getTempFolder() + "new" + CASUAL.Statics.Slash));
+        assertEquals(false, new CASUAL.FileOperations().verifyExists(CASUAL.Statics.getTempFolder() + "asfdadfasfd" + CASUAL.Statics.Slash));
     }
 
     @Test

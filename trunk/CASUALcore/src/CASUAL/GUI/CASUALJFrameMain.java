@@ -370,7 +370,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
                     log.level2Information("@textResourceNotFound");
                 }
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
-                Statics.SelectedScriptFolder = Statics.TempFolder + new File(nonResourceFileName).getName() + Statics.Slash;
+                Statics.SelectedScriptFolder = Statics.getTempFolder() + new File(nonResourceFileName).getName() + Statics.Slash;
                 if (new FileOperations().verifyFileExists(nonResourceFileName.toString() + ".zip")) {
                     new Unzip(nonResourceFileName.toString() + ".zip").unzipFile(Statics.SelectedScriptFolder);
                 }

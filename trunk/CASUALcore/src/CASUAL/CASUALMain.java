@@ -67,9 +67,9 @@ public final class CASUALMain {
      */
     public void startup(String[] args) {
         //make the temp folder
-        if (Statics.TempFolder==null)Statics.TempFolder=Statics.getTempFolder();
+        if (Statics.getTempFolder()==null)Statics.setTempFolder(Statics.getTempFolder());
         
-        new FileOperations().makeFolder(Statics.TempFolder);
+        new FileOperations().makeFolder(Statics.getTempFolder());
 
         //parse args
         if (args.length>0){
@@ -153,7 +153,7 @@ public final class CASUALMain {
             
             if (caspacLocation!=null){
                 try {
-                    Caspac cp=new Caspac(caspacLocation,Statics.TempFolder,0);
+                    Caspac cp=new Caspac(caspacLocation,Statics.getTempFolder(),0);
                     cp.loadFirstScriptFromCASPAC();
                     Statics.CASPAC=cp;
                 } catch (IOException ex) {
@@ -165,7 +165,7 @@ public final class CASUALMain {
                 CodeSource src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
                 Caspac cp;
                 try {
-                    cp = new Caspac(src, Statics.TempFolder, 1);
+                    cp = new Caspac(src, Statics.getTempFolder(), 1);
 
                     //cp.load();
                     Statics.CASPAC = cp;
