@@ -36,19 +36,19 @@ class ADBInstall {
 
         if (OSTools.isLinux()) {
             Log.level4Debug("Found Linux Computer");
-            Statics.adbDeployed = Statics.TempFolder + "adb";
+            Statics.adbDeployed = Statics.getTempFolder() + "adb";
             fo.copyFromResourceToFile(Statics.LinuxADB(), Statics.adbDeployed);
         } else if (OSTools.isMac()) {
             Log.level4Debug("Found Mac Computer");
-            Statics.adbDeployed = Statics.TempFolder + "adb";
+            Statics.adbDeployed = Statics.getTempFolder() + "adb";
             fo.copyFromResourceToFile(Statics.MacADB, Statics.adbDeployed);
         } else if (OSTools.isWindows()) {
             Log.level4Debug("Found Windows Computer");
             fo.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
-            Statics.adbDeployed = Statics.TempFolder + "adb.exe";
+            Statics.adbDeployed = Statics.getTempFolder() + "adb.exe";
             fo.copyFromResourceToFile(Statics.WinADB, Statics.adbDeployed);
-            fo.copyFromResourceToFile(Statics.WinADB2, Statics.TempFolder + "AdbWinApi.dll");
-            fo.copyFromResourceToFile(Statics.WinADB3, Statics.TempFolder + "AdbWinUsbApi.dll");
+            fo.copyFromResourceToFile(Statics.WinADB2, Statics.getTempFolder() + "AdbWinApi.dll");
+            fo.copyFromResourceToFile(Statics.WinADB3, Statics.getTempFolder() + "AdbWinUsbApi.dll");
         } else {
             new CASUALMessageObject("@interactionsystemNotNativelySupported").showInformationMessage();
             Statics.adbDeployed = "adb";

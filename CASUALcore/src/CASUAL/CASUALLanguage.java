@@ -485,8 +485,8 @@ public class CASUALLanguage {
             log.level4Debug("Downloading " + downloadCommand[2]);
             log.level4Debug("From " + downloadCommand[0]);
             log.level4Debug("to " + downloadCommand[1]);
-            if (!fo.verifyExists(Statics.TempFolder + "download" + Statics.Slash)) {
-                fo.makeFolder(Statics.TempFolder + "download" + Statics.Slash);
+            if (!fo.verifyExists(Statics.getTempFolder() + "download" + Statics.Slash)) {
+                fo.makeFolder(Statics.getTempFolder() + "download" + Statics.Slash);
             }
             if (downloadCommand.length == 2) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);

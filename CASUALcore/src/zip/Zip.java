@@ -46,7 +46,7 @@ public class Zip {
 
     private final File outputZip;
     private Log log = new Log();
-    private String TempFolder = Statics.TempFolder;
+    private String TempFolder = Statics.getTempFolder();
     byte[] BUFFER = new byte[4096];
 
     /**

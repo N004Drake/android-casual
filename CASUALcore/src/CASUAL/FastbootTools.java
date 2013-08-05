@@ -39,13 +39,13 @@ public class FastbootTools {
             if (OSTools.isMac()) {
                 Statics.fastbootResource = Statics.fastbootMac;
             }
-            Statics.Log.level2Information("@deployingFastboot");
-            Statics.Log.level3Verbose("Deploying Fastboot from " + Statics.fastbootResource + " to " + Statics.fastbootDeployed);
+            Statics.log.level2Information("@deployingFastboot");
+            Statics.log.level3Verbose("Deploying Fastboot from " + Statics.fastbootResource + " to " + Statics.fastbootDeployed);
             new FileOperations().copyFromResourceToFile(Statics.fastbootResource, Statics.fastbootDeployed);
             if (OSTools.isLinux() || OSTools.isMac()) {
                 new FileOperations().setExecutableBit(Statics.fastbootDeployed);
             }
-            Statics.Log.level2Information("@fastbootDeployed");
+            Statics.log.level2Information("@fastbootDeployed");
         }
     }
 

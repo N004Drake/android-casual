@@ -26,6 +26,7 @@ public class CASPACjUnitTest {
     @Test
     public void testCASPACOperations() {
         CASUALApp.shutdown(0);
+        
         CASUAL.Statics.dumbTerminalGUI=true;
         String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         String[] badValues = new String[]{"ERROR"};

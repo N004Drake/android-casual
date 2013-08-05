@@ -43,7 +43,7 @@ public class ElevateUAC {
      */
     public void doElevate() {
         //create batch file in temporary directory as we have access to it regardless of UAC status
-        File file = new File(Statics.TempFolder + batName);
+        File file = new File(Statics.getTempFolder() + batName);
         file.deleteOnExit();
         createBatchFile(file);
         runBatchFile();
@@ -56,7 +56,7 @@ public class ElevateUAC {
     private void runBatchFile() {
 
         Runtime runtime = Runtime.getRuntime();
-        String[] cmd = new String[]{"cmd.exe", "/C", Statics.TempFolder + batName + " java -jar " + getJarLocation()};
+        String[] cmd = new String[]{"cmd.exe", "/C", Statics.getTempFolder() + batName + " java -jar " + getJarLocation()};
         try {
             runtime.exec(cmd);
         } catch (Exception ex) {

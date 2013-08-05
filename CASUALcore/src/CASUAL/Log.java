@@ -166,7 +166,7 @@ public class Log {
     private void writeOutToLog(String data) {
         FileWriter WriteFile;
         try {
-            WriteFile = new FileWriter(Statics.TempFolder + "log.txt", true);
+            WriteFile = new FileWriter(Statics.getTempFolder() + "log.txt", true);
         } catch (IOException ex) {
             out.println("Attempted to write to log but could not.");
             return;

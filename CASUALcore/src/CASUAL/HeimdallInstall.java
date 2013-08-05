@@ -47,12 +47,12 @@ public class HeimdallInstall {
     public boolean deployHeimdallForWindows() {
         FileOperations fo = new FileOperations();
         Statics.heimdallResource = Statics.heimdallWin2;
-        fo.copyFromResourceToFile(Statics.heimdallResource, Statics.TempFolder + "libusb-1.0.dll");
+        fo.copyFromResourceToFile(Statics.heimdallResource, Statics.getTempFolder() + "libusb-1.0.dll");
         Statics.heimdallResource = Statics.heimdallWin;
-        Statics.heimdallDeployed = Statics.TempFolder + "heimdall.exe";
+        Statics.heimdallDeployed = Statics.getTempFolder() + "heimdall.exe";
         fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
-        fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.TempFolder + "msvcp110.dll");
-        fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.TempFolder + "msvcr110.dll");
+        fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.getTempFolder() + "msvcp110.dll");
+        fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.getTempFolder() + "msvcr110.dll");
 
         log.level4Debug("deployHeimdallForWindows- verifying Heimdall deployment");
         if (checkHeimdall()) { //try with redist files

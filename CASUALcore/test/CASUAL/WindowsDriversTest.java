@@ -41,16 +41,7 @@ public class WindowsDriversTest {
     /**
      * Test of main method, of class WindowsDrivers.
      */
-    @Test
-    public void testMain() {
-        if (OSTools.isWindows()) {
-            System.out.println("main");
-            String[] args = null;
-            setContinue();
-            WindowsDrivers.main(args);
-        }
-    }
-
+ 
     /**
      * Test of installDriverBlanket method, of class WindowsDrivers.
      */

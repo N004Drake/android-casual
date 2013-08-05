@@ -166,6 +166,6 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
 
     private void refreshLog() {
         final FileOperations FileOperations = new FileOperations();
-        this.jTextArea1.setText(FileOperations.readFile(Statics.TempFolder + "log.txt"));
+        this.jTextArea1.setText(FileOperations.readFile(Statics.getTempFolder() + "log.txt"));
     }
 }

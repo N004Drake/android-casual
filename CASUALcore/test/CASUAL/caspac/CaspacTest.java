@@ -27,7 +27,7 @@ public class CaspacTest {
     public CaspacTest() {
         try {
             
-            this.instance = new Caspac(new File("../../CASPAC/testpak.zip"), Statics.TempFolder,0);
+            this.instance = new Caspac(new File("../../CASPAC/testpak.zip"), Statics.getTempFolder(),0);
             System.out.println(instance.CASPAC.getCanonicalPath());
         } catch (IOException ex) {
             Logger.getLogger(CaspacTest.class.getName()).log(Level.SEVERE, null, ex);
