@@ -1234,7 +1234,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
         if (!(s.isEmpty())) {
 
-            scriptList.addElement(new Script(s, Statics.TempFolder + s));
+            scriptList.addElement(new Script(s, Statics.getTempFolder() + s));
 
             //Set that script as current script
             this.scriptListJList.setSelectedIndex(scriptList.getSize() - 1);
@@ -1436,9 +1436,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
         }
         try {
             if (AES128Handler.getCASPACHeaderLength(file)>20){
-                cp = new Caspac(file, Statics.TempFolder, 0,getPassword());
+                cp = new Caspac(file, Statics.getTempFolder(), 0,getPassword());
             } else {
-                cp = new Caspac(file, Statics.TempFolder, 0);
+                cp = new Caspac(file, Statics.getTempFolder(), 0);
             }
         } catch (IOException ex) {
             Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -1767,7 +1767,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
 
     private Caspac buildCASPAC() throws IOException {
         log.level2Information("Creating CASPAC file");
-        Caspac casp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.TempFolder, 0);
+        Caspac casp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.getTempFolder(), 0);
         log.level2Information("Setting CASPAC build");
         casp.setBuild(buildMaker());
         casp.logo = logo;
