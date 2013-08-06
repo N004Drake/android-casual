@@ -140,30 +140,23 @@ public class FileOperations {
     public String findRecursive(String PathToSearch, String FileName) {
         File Check = new File(PathToSearch);
         File[] c = Check.listFiles();
+        String s="";
         if (Check.exists()) {
             log.level3Verbose("Searching for file in folder:" + PathToSearch.toString());
             for (File file : c) {
                 if (file.isDirectory()) {
-                    log.level4Debug("Searching " + file.toString());
-                    File[] subdir = file.listFiles();
-                    for (File sub : subdir) {
-                        if (sub.isDirectory()) {
-                            String FoundFile = findRecursive(sub.toString(), FileName);
-                            if (FoundFile != null && FoundFile.toString().endsWith(FileName)) {
-                                return FoundFile;
-                            }
-                        } else {
-                            if (sub.toString().equals(FileName)) {
-                                return sub.toString();
-                            }
-                        }
+                    try {
+                        s=findRecursive(file.getCanonicalPath(),FileName);
+                    } catch (IOException ex) {
+                        Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else if (file.getName().equals(FileName)) {
-                    return file.getAbsoluteFile().toString();
+                    s=file.getAbsolutePath();
+                    return s;
                 }
             }
         }
-        return null;
+        return s;
     }
 
     /**
@@ -348,19 +341,18 @@ public class FileOperations {
      * @return true if all files were deleted false and halts on error
      */
     public boolean deleteStringArrayOfFiles(String[] cleanUp) {
-        int x = 0;
-        if (cleanUp[x] != null) {
-            //log.level4Debug("[doCASUALWork()]Folder is not empty, deleting files");
-            while (cleanUp[x] != null) {
-                if (!deleteFile(cleanUp[x])) {
-                    return false;
-                }
-                x++;
+        for (String s:cleanUp){
+            if (s!=null){
+                new File(s).delete();
+            } else {
+                continue;
             }
-        }
-        return true;
+            if (this.verifyExists(s)){
+                return false;
+            }
+       } //all files were deleted
+       return true;   
     }
-
     /**
      * copies a file from a source to a destination
      *
