@@ -45,12 +45,13 @@ public class ADBToolsTest {
     public void testWaitForDevice() 
     {   Statics.GUIIsAvailable=true;
         Statics.interaction=new CASUAL.GUI.CASUALShowJFrameMessageObject();
-        new CASUALMessageObject("Disconnect>>>Disconnect Your Device, wait 5 seconds and then reconnect.\n").showInformationMessage();
-        System.out.println("waitForDevice");
-        String expResult = "";
-        String result = ADBTools.waitForDevice();
-        assert(!result.contains("CRIT"));
-
+        int x=new CASUALMessageObject("Disconnect>>>Disconnect Your Device, wait 5 seconds and then reconnect.\n").showTimeoutDialog(10, null, 1, 1, new Object[]{"ok","cancel"}, "ok");
+        if (x==1){
+            System.out.println("waitForDevice");
+            String expResult = "";
+            String result = ADBTools.waitForDevice();
+            assert(!result.contains("CRIT"));
+        }
     }
 
     /**
