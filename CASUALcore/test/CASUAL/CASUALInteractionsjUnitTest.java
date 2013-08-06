@@ -29,7 +29,6 @@ public class CASUALInteractionsjUnitTest {
 
     @AfterClass
     public static void tearDownClass() {
-        CASUAL.CASUALApp.shutdown(0);
     }
 
     @Test

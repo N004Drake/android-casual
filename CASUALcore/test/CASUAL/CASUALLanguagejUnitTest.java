@@ -17,12 +17,10 @@ public class CASUALLanguagejUnitTest {
 
     @BeforeClass
     public static void setUpClass() {
-        CASUALApp.shutdown(0);
     }
 
     @AfterClass
     public static void tearDownClass() {
-        CASUALApp.shutdown(0);
     }
 
     @Test
