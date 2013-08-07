@@ -18,8 +18,6 @@ import org.junit.Test;
  */
 public class AuxiliaryTesting {
 
-    public AuxiliaryTesting() {
-    }
 
     @BeforeClass
     public static void setUpClass() {

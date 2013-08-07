@@ -144,11 +144,10 @@ public final class Caspac {
                 log.level4Debug("Picking Jar File:" + jar.getFile() +" ..scanning.");
                 while ((ZEntry = zip.getNextEntry()) != null) {
                     String entry = ZEntry.getName();
-                    getScriptByFilename(entry).actualMD5s.add(new MD5sum().getLinuxMD5Sum(StringOperations.convertStringToStream(fo.readTextFromResource("/"+entry)), entry.replace("SCRIPTS/","")));
-              
-                    if (entry.startsWith("SCRIPTS/")){ //part of CASPAC
+                      if (entry.startsWith("SCRIPTS/")){ //part of CASPAC
                         log.level4Debug("parsing "+entry);
                         handleCASPACJarFiles(entry);
+                        
                       }
                 }
             }
@@ -399,17 +398,23 @@ public final class Caspac {
      * @return script instance of script to be processed null if not found
      */
     public Script getScriptByFilename(String fileName) {
-        
-       try{ String scriptName=fileName.substring(0, fileName.lastIndexOf("."));
+       log.level4Debug("Looking up "+fileName);
+       String scriptName="";
+       try{
+        scriptName=fileName.substring(0, fileName.lastIndexOf("."));
         for (Script s : scripts) {
             if (s.name.equals(scriptName)) {
                 return s;
             }
         }
-        Script s=new Script(scriptName,this.TempFolder+scriptName+Statics.Slash,this.type);
-        this.scripts.add(s);
-        return this.scripts.get(scripts.size()-1);
-       } catch (ArrayIndexOutOfBoundsException ex){
+
+       } catch (Exception ex){
+       }
+       if (!scriptName.isEmpty()){
+           Script s=new Script(scriptName,this.TempFolder+scriptName+Statics.Slash,this.type);
+           this.scripts.add(s);
+           return this.scripts.get(scripts.size()-1);
+       } else {
            return null;
        }
     }

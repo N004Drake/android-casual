@@ -99,6 +99,9 @@ public class Statics {
         }
         return TempFolder;
     }
+    public String getTempFolderInstance(){
+        return TempFolder;
+    }
     
     //Cross-Platform data storage
     public static String adbDeployed; //location of ADB after deployment

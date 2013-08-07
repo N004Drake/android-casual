@@ -215,10 +215,10 @@ public class Script {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    if (scriptZipFile != null) {
+                    if (scriptZipFile != null && !scriptZipFile.toString().isEmpty()) {
                         if (new CASUALTools().IDEMode) {
                             try {
-                                log.level4Debug("Examining IDE mode script contents");
+                                log.level4Debug("Examining IDE mode script contents" +scriptZipFile.toString());
                                 actualMD5s.add(new MD5sum().getLinuxMD5Sum(new File((String) scriptZipFile)));
                                 Unzip unzip = new Unzip(new File((String) scriptZipFile));
                                 unzip.unzipFile(tempDir);
@@ -229,8 +229,8 @@ public class Script {
                             }
                         } else {
                             try {
-                                log.level4Debug("Examining CASUAL mode script contents");
-                                actualMD5s.add(new MD5sum().getLinuxMD5Sum(getClass().getResourceAsStream((String) scriptZipFile), (String) scriptZipFile));
+                                log.level4Debug("Examining CASUAL mode script contents:" +scriptZipFile.toString() );
+                                actualMD5s.add(new MD5sum().getLinuxMD5Sum(getClass().getResourceAsStream( "/"+scriptZipFile.toString()), scriptZipFile.toString()));
                                 new Log().level4Debug("unzip of " + scriptZipFile.toString() + " is beginning.");
                                 Unzip.unZipResource("/" + scriptZipFile.toString(), tempDir);
                             } catch (FileNotFoundException ex) {

@@ -75,7 +75,6 @@ public class MD5sum {
      * @return md5 of stream
      */
     public String md5sumStream(InputStream is) {
-
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
 
@@ -94,7 +93,9 @@ public class MD5sum {
                 return output;
 
             } finally {
-                is.close();
+                if (is!=null ){
+                    is.close();
+                }
             }
 
         } catch (NoSuchAlgorithmException ex) {

@@ -165,6 +165,7 @@ public final class CASUALMain {
                 CodeSource src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
                 Caspac cp;
                 try {
+                    new Log().level4Debug("codesource: " + src.toString());
                     cp = new Caspac(src, Statics.getTempFolder(), 1);
 
                     //cp.load();
