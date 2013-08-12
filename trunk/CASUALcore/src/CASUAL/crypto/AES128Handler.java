@@ -1,4 +1,4 @@
-/*CipherHandler provides a way to encrypt and decrypt given a password
+/*AES128Handler provides a way to encrypt and decrypt given a password
  *Copyright (C) 2013  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -149,17 +149,18 @@ public class AES128Handler {
     }
 
     private byte[] secureRandomCharGen(char[] key, int numberOfChars) throws NoSuchAlgorithmException {
-        String alphabet = "!@#$%^&*()_+,./:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        int len = alphabet.length();
+        
         log.level4Debug("Generating randomness");
         SecureRandom random = new SecureRandom(SecureRandom.getSeed(key.length));
         byte bytes[] = new byte[numberOfChars];
         random.nextBytes(bytes);  //burn some bits
-        String retval = "";
+        byte[] temp=new byte[1];
         for (int i = 0; i < numberOfChars - 1; i++) {
-            bytes[i] = (byte) alphabet.charAt(random.nextInt(len));
-            retval = retval + alphabet.charAt(random.nextInt(len));
-
+            random.nextBytes(temp);
+            bytes[i]=temp[0];
+            //generate a new random generator
+            random =new SecureRandom();
+            random.nextBytes(new byte[key.length]);//burn bits
         }
         return bytes;
     }

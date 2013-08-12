@@ -83,6 +83,7 @@ public class Statics {
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     private static String TempFolder;
     public static String getTempFolder() {
+        FileOperations fo = new FileOperations();
         if (TempFolder == null) {
             String user = System.getProperty("user.name");  //username
             String tf = System.getProperty("java.io.tmpdir"); //tempfolder
@@ -90,13 +91,9 @@ public class Statics {
             SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
             TempFolder= tf +"CASUAL"+user+sdf.format(new Date()).toString()+ Slash; //set /temp/usernameRandom/
             setTempFolder(TempFolder);
-            FileOperations fo = new FileOperations();
             fo.makeFolder(TempFolder);
-            if (! fo.verifyExists(TempFolder) || !fo.verifyWritePermissionsRecursive(TempFolder)){
-                new Log().level0Error("@couldNotCreateTempFolderProperly");
-                CASUALApp.shutdown(1);
-            }
         }
+        fo.makeFolder(TempFolder);
         return TempFolder;
     }
     public String getTempFolderInstance(){
