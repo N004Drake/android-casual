@@ -93,12 +93,15 @@ public class FileOperationsTest {
         File testpath = new File(Statics.getTempFolder()+"s"+Statics.Slash+"s"+Statics.Slash+"s"+Statics.Slash+"test");
         File testFile=new File(testpath.getAbsolutePath()+Statics.Slash+"woot");
         testpath.mkdirs();
+        new File(Statics.getTempFolder()+"s"+Statics.Slash+"test").createNewFile();
         testFile.createNewFile();
         String PathToSearch = Statics.getTempFolder();
-        FileOperations instance = new FileOperations();
+        FileOperations instance =new FileOperations();
+        System.out.println("performing recursive search");
         String result = instance.findRecursive(PathToSearch, "woot");
-        
-        assertEquals(testpath+Statics.Slash+"woot", result);
+     System.out.println("result: "+result);
+        System.out.println("result: "+result);
+        assertEquals(testpath.getCanonicalPath()+Statics.Slash+"woot", result);
         instance.recursiveDelete(Statics.getTempFolder());
 
     }

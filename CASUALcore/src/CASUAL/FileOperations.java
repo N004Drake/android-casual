@@ -145,14 +145,14 @@ public class FileOperations {
             log.level3Verbose("Searching for file in folder:" + PathToSearch.toString());
             for (File file : c) {
                 if (file.isDirectory()) {
+                    return findRecursive(file.getAbsolutePath(),FileName);
+                } else if (file.getName().equals(FileName)) {
                     try {
-                        s=findRecursive(file.getCanonicalPath(),FileName);
+                        return file.getCanonicalPath();
                     } catch (IOException ex) {
                         Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else if (file.getName().equals(FileName)) {
-                    s=file.getAbsolutePath();
-                    return s;
+                    
                 }
             }
         }
@@ -214,12 +214,16 @@ public class FileOperations {
             return false;
         }
         File folder = new File(Folder);
-        folder.mkdirs();
         if (folder.exists()) {
             return true;
         } else {
-            log.level0Error("@couldNotCreateFolder " + Folder);
-            return false;
+            folder.mkdirs();
+            if (folder.exists()){
+                return true;
+            } else {
+                log.level0Error("@couldNotCreateFolder " + Folder);
+                return false;
+            }
         }
     }
 
