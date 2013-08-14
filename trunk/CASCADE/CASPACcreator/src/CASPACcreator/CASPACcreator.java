@@ -17,7 +17,6 @@
 package CASPACcreator;
 
 import CASUAL.Log;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
