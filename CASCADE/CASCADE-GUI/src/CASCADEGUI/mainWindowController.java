@@ -4,14 +4,13 @@
  */
 package CASCADEGUI;
 
-import CASCADEGUI.CASCADEGUI;
-import zip.Zip;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import zip.Zip;
 
 /**
  *
