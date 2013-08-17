@@ -181,7 +181,7 @@ public class Shell {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + "\nreturnval:" + AllText);
+            log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + "\nreturnval:" + AllText);
             return "CritERROR!!!";
         }
 
@@ -200,7 +200,7 @@ public class Shell {
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (Exception ex) {
-            log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + "returnval:" + AllText);
+            log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + "returnval:" + AllText);
             return "CritERROR!!!";
         }
 
@@ -227,15 +227,6 @@ public class Shell {
             return "CritError!!!";
         }
 
-    }
-
-    public String arrayToString(String[] stringarray) {
-        String str = " ";
-        for (int i = 0; i < stringarray.length; i++) {
-            str = str + " " + stringarray[i];
-        }
-        log.level4Debug("arrayToString " + stringarray + " expanded to: " + str);
-        return str;
     }
 
     public String liveShellCommand(String[] params, boolean display) {
@@ -376,7 +367,7 @@ public class Shell {
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
                 } catch (Exception ex) {
-                    log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + " " + tos.AllText);
+                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
                 }
             }
         };
@@ -437,7 +428,7 @@ public class Shell {
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
                 } catch (Exception ex) {
-                    log.level0Error("@problemWhileExecutingCommand " + arrayToString(cmd) + " " + tos.AllText);
+                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
                 }
             }
         };

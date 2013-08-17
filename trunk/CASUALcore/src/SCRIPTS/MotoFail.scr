@@ -6,11 +6,11 @@ wait-for-device
 $ECHO [*] Device found.
 
 $ECHO [*] Deploying payload...
-push "$ZIPFILEmotofail" /data/local/motofail
-shell "chmod 755 /data/local/motofail"
+push "$ZIPFILEmotofail" /data/local/tmp/motofail
+shell "chmod 755 /data/local/tmp/motofail"
 
 $ECHO [*] Owning phone...
-shell "/data/local/motofail exploit"
+shell "/data/local/tmp/motofail exploit"
 
 $ECHO [*] Rebooting device...
 reboot
@@ -29,8 +29,8 @@ shell "/system/xbin/busybox --install /system/xbin"
 push "$ZIPFILESuperuser.apk" /system/app/Superuser.apk
 
 $ECHO [*] Cleaning up...
-shell "/data/local/motofail clean"
-shell "rm /data/local/motofail"
+shell "/data/local/tmp/motofail clean"
+shell "rm /data/local/tmp/motofail"
 
 $ECHO [*] Rebooting...
 reboot

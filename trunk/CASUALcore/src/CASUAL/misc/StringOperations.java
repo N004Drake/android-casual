@@ -16,6 +16,7 @@
  */
 package CASUAL.misc;
 
+import CASUAL.Log;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -163,5 +164,19 @@ public class StringOperations {
             random = random + chars[new Random().nextInt(chars.length)];
         }
         return random;
+    }
+
+    /**
+     * Converts an array to a string delimited by a space.
+     * @param stringarray
+     * @return string representaition of an array.
+     */
+    public static String arrayToString(String[] stringarray) {
+        String str = " ";
+        for (int i = 0; i < stringarray.length; i++) {
+            str = str + " " + stringarray[i];
+        }
+        new Log().level4Debug("arrayToString " + stringarray + " expanded to: " + str);
+        return str;
     }
 }
