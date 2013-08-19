@@ -55,12 +55,13 @@ import javax.swing.UIManager;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-public class CASCADEGUI extends javax.swing.JFrame {
+public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI {
 
     /**
      * Creates new form mainWindow
      */
     private Log log = new Log();
+    
     //Stores the list of current include files. NOTE: only for current script
     private DefaultListModel<File> fileList = new DefaultListModel<>();
     /*Stores the list of the current scripts
@@ -80,6 +81,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
      */
     public CASCADEGUI() {
         initComponents();
+        CASUAL.caspac.Caspac.debug=true;
+        CASUAL.Statics.GUI=this;
+        CASUAL.Statics.interaction=new CASCADEInteractionDummy();
         this.setLocationRelativeTo(null); //Centers Container to Screen
         //this.resourcesForScriptList.setDropTarget(dt);
         jList1.setModel(listModel);
@@ -273,8 +277,13 @@ public class CASCADEGUI extends javax.swing.JFrame {
         outputFIle.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.outputFIle.border.title"))); // NOI18N
         outputFIle.setName("outputFIle"); // NOI18N
 
-        caspacOutputFile.setText(System.getProperty("user.dir"));
+        caspacOutputFile.setText(bundle.getString("CASCADEGUI.caspacOutputFile.text")); // NOI18N
         caspacOutputFile.setName("caspacOutputFile"); // NOI18N
+        caspacOutputFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                caspacOutputFileActionPerformed(evt);
+            }
+        });
 
         makeCASPAC.setText(bundle.getString("CASCADEGUI.makeCASPAC.text")); // NOI18N
         makeCASPAC.setEnabled(false);
@@ -310,28 +319,27 @@ public class CASCADEGUI extends javax.swing.JFrame {
         outputFIleLayout.setHorizontalGroup(
             outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputFIleLayout.createSequentialGroup()
-                .addComponent(loadButton)
+                .addComponent(caspacOutputBrowseButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(caspacOutputFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(caspacOutputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(loadButton)
+                .addGap(54, 54, 54)
+                .addComponent(makeCASPAC)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(makeCASPAC, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(useEncryption)
-                .addGap(12, 12, 12))
+                .addComponent(useEncryption, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         outputFIleLayout.setVerticalGroup(
             outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputFIleLayout.createSequentialGroup()
-                .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(makeCASPAC, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(outputFIleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(useEncryption)
+                        .addComponent(makeCASPAC)
                         .addComponent(loadButton)
                         .addComponent(caspacOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(useEncryption)
-                    .addComponent(caspacOutputBrowseButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(caspacOutputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         CASPACkagerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.CASPACkagerPanel.border.title"))); // NOI18N
@@ -400,11 +408,11 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addGap(1, 1, 1)
                 .addGroup(CASPACkagerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(casualOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(casualOutputBrowseButton)
                     .addComponent(typeTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(typeCheckBox)
                     .addComponent(makeItCasualButton))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(casualOutputBrowseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         workArea.setName(""); // NOI18N
@@ -496,7 +504,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
         );
 
         scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
@@ -684,7 +692,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(editScriptNameButton)
@@ -700,7 +708,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(addScriptButton)
@@ -730,11 +738,11 @@ public class CASCADEGUI extends javax.swing.JFrame {
         script.setLayout(scriptLayout);
         scriptLayout.setHorizontalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1117, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 939, Short.MAX_VALUE)
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -803,7 +811,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             dontateLinkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dontateLinkPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 799, Short.MAX_VALUE)
+                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
                 .addContainerGap())
         );
         dontateLinkPanelLayout.setVerticalGroup(
@@ -948,7 +956,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             bannerTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerTextPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 863, Short.MAX_VALUE)
+                .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
                 .addContainerGap())
         );
         bannerTextPanelLayout.setVerticalGroup(
@@ -986,7 +994,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerPicPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
+                .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(browseLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -1093,7 +1101,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
             .addGroup(buildPropertiesPanelLayout.createSequentialGroup()
                 .addGap(119, 119, 119)
                 .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 805, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(214, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         buildPropertiesPanelLayout.setVerticalGroup(
             buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1105,7 +1113,7 @@ public class CASCADEGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1468,7 +1476,9 @@ public class CASCADEGUI extends javax.swing.JFrame {
         //Rerender all of the Info to current script
         loadScript();
         updateBuildAndOverview(cp);
-        logoLabel.setIcon(new ImageIcon(logo));
+        if (logo!=null){
+            logoLabel.setIcon(new ImageIcon(logo));
+        }
         this.scriptListJList.setSelectedIndex(this.scriptListJList.getLastVisibleIndex());
         enableCasual();
 
@@ -1613,6 +1623,10 @@ public class CASCADEGUI extends javax.swing.JFrame {
     private void bannerPicCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_bannerPicCaretUpdate
         disableCasual();
     }//GEN-LAST:event_bannerPicCaretUpdate
+
+    private void caspacOutputFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caspacOutputFileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_caspacOutputFileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1962,6 +1976,69 @@ public class CASCADEGUI extends javax.swing.JFrame {
         this.bannerText.setText(cp.build.bannerText);
         this.overviewWorkArea.setText(cp.overview);
         this.logo = cp.logo;
+    }
+
+    @Override
+    public void StartButtonActionPerformed() {
+    }
+
+    @Override
+    public String comboBoxGetSelectedItem() {
+        return "";
+    }
+
+    @Override
+    public void comboBoxScriptSelectorAddNewItem(String item) {
+    }
+
+    @Override
+    public boolean enableControls(boolean status) {
+        return true;
+    }
+
+    @Override
+    public boolean getControlStatus() {
+        return true;
+    }
+
+    @Override
+    public void setCASPAC(Caspac caspac) {
+    }
+
+    @Override
+    public void setInformationScrollBorderText(String title) {
+    }
+
+    @Override
+    public void setProgressBar(int value) {
+    }
+
+    @Override
+    public void setProgressBarMax(int value) {
+    }
+
+    @Override
+    public void setScript(Script s) {
+    }
+
+    @Override
+    public void setStartButtonText(String text) {
+    }
+
+    @Override
+    public void setStatusLabelIcon(String Icon, String Text) {
+    }
+
+    @Override
+    public void setStatusMessageLabel(String text) {
+    }
+
+    @Override
+    public void setWindowBannerImage(BufferedImage icon, String text) {
+    }
+
+    @Override
+    public void setWindowBannerText(String text) {
     }
 
     /*
