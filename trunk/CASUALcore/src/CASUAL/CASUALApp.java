@@ -47,6 +47,7 @@ public class CASUALApp {
         arguments = args;
         //Initialize statics
         Statics.initializeStatics();
+        CASUALTools.setJavaDesktopMessage();
         //Override args for test modes
         if (useOverrideArgs) {
             args = overrideArguments;
@@ -61,7 +62,6 @@ public class CASUALApp {
      * @param args
      */
     public static void beginCASUAL(String[] args) {
-        Statics.interaction=new CASUAL.GUI.CASUALShowJFrameMessageObject();
         String CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
         String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");

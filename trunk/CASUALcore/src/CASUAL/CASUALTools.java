@@ -274,4 +274,8 @@ public class CASUALTools {
     public static String getSVNVersion(){
         return java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
     }
+    
+    public static void setJavaDesktopMessage(){
+        CASUAL.Statics.interaction=new CASUAL.GUI.CASUALShowJFrameMessageObject();
+    }
 }
