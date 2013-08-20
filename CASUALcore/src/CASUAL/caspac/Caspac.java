@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -91,7 +92,7 @@ public final class Caspac {
     //For CASUAL mode
     private Script activeScript;
     public boolean caspacShouldBeDeletedAfterExtraction=false;
-    
+    public static boolean debug=false;
     /*
      * Constructor for Caspac
      */
@@ -194,11 +195,6 @@ public final class Caspac {
      * @throws IOException
      */
     public void write() throws IOException {
-        if (type ==0 ){
-            for (Script s:this.scripts){
-                s.metaData.md5s=s.actualMD5s;
-            }
-        }
         Map<String, InputStream> nameStream=new HashMap<>();
         if (!CASPAC.exists()){
             CASPAC.createNewFile();
@@ -280,7 +276,9 @@ public final class Caspac {
             replaceScriptByName(activeScript);
 
             unzipThreads=new ArrayList<>();
-            this.unzipThreads.add(new Thread(activeScript.getExtractionRunnable()));
+            Thread t=new Thread(activeScript.getExtractionRunnable());
+            t.setName("Active Script Preparation");
+            this.unzipThreads.add(t);
             performUnzipOnQueue();
         }
         
@@ -525,7 +523,10 @@ public final class Caspac {
             Script script = getScriptInstanceByFilename(filename.toString());
             script.scriptZipFile=entry;
             script.zipfile=pack;
-            this.unzipThreads.add(new Thread(script.getExtractionRunnable()));
+            Thread t=new Thread(script.getExtractionRunnable());
+            t.setName("zip File Preparation "+unzipThreads.size());
+            this.unzipThreads.add(t);
+
             log.level4Debug("Added .zip to " + script.name + ". It will be unziped at end of unpacking.");
             
         } else if (filename.toString().endsWith(".txt")) {

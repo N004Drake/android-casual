@@ -202,9 +202,12 @@ public class Script {
                     File[] files = new File(tempDir).listFiles();
                     individualFiles.addAll(Arrays.asList(files));
                     for (String md5 : metaData.md5s) {
-                        if (!actualMD5s.contains(md5)) {
+                        if (!Arrays.asList(actualMD5s.toArray(new String[]{})).contains(md5)) {
+                            new Log().level4Debug("Could not find " +md5+" in list "+ StringOperations.arrayToString(actualMD5s.toArray(new String[]{})));
                             new CASUALMessageObject("@interactionPackageCorrupt").showErrorDialog();
-                            scriptContents = "";
+                            if (! Caspac.debug){
+                                scriptContents = "";
+                            }
                         }
                     }
                 }
@@ -268,10 +271,12 @@ public class Script {
                     }
                     log.level4Debug("examining MD5s");
                     for (String md5 : metaData.md5s) {
-                        if (!actualMD5s.contains(md5)) {
+                        if (!(Arrays.asList(actualMD5s.toArray()).contains(md5))) {
                             log.level4Debug("Md5 mismatch!!  Expected:" +md5);
                             
-                            scriptContents = "";
+                            if (! Caspac.debug){
+                                scriptContents = "";
+                            }
                         }
                     }
                     if (!scriptContents.equals("")){
@@ -327,19 +332,25 @@ public class Script {
 
             zip = new Zip(instanceZip);
             zip.addFilesToExistingZip(individualFiles.toArray(new File[individualFiles.size()]));
+
+
+
             log.level3Verbose("Adding zip:" + instanceZip.getAbsolutePath());
+
+            tempMD5s.add(new CASUAL.crypto.MD5sum().getLinuxMD5Sum(instanceZip));
             scriptEntries.put(name + ".zip", new FileInputStream(instanceZip.getAbsoluteFile()));
+
         } catch (IOException ex) {
             Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
 
 
         //update MD5s and update meta
         for (int i = 0; i < tempMD5s.size(); i++) {
-            this.addMD5ToMeta(tempMD5s.get(i), md5Position);
+            this.addMD5ToMeta(tempMD5s.get(i), i);
         }
-
+        this.actualMD5s=tempMD5s;
         //get meta
         scriptEntries.put(name + ".meta", this.metaData.getMetaInputStream());
 
@@ -433,19 +444,11 @@ public class Script {
             return new FileOperations().verifyExists(output.toString());
         }
 
-        void doMd5Sum() {
-            MD5sum md5sum = new MD5sum();
-
-            //TODO: zip resources in this class
-            //TODO: get md5sum the script.zip file
-            //TODO: get md5sum for the script.scr file
-
-        }
 
         /**
          * sets the properties object from local variables for writing
          */
-        private void setPropsFromVariables() {
+        public void setPropsFromVariables() {
             metaProp.setProperty("CASUAL.minSVN", minSVNversion);
             metaProp.setProperty("Script.Revision", scriptRevision);
             metaProp.setProperty("Script.ID", uniqueIdentifier);

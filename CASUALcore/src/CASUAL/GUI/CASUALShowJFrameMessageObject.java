@@ -197,7 +197,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
 
     private void showErrorInteraction(String messageText, String title) throws HeadlessException {
         if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
-            JOptionPane.showMessageDialog((Component) Statics.GUI, messageText, title, JOptionPane.ERROR_MESSAGE);
+           JOptionPane.showMessageDialog( (Component) Statics.GUI, messageText, title, ERROR_MESSAGE);
         } else {
             new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
