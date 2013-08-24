@@ -32,7 +32,7 @@ public class CASUALApp {
     /**
      * the default package used for IDE mode or if no scripts are found
      */
-    final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
+    final public static String defaultPackage = "MotoFail"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{};
     
