@@ -34,7 +34,7 @@ public class CASUALApp {
      */
     final public static String defaultPackage = "MotoFail"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
-    final private static String[] overrideArguments = new String[]{};
+    final private static String[] overrideArguments = new String[]{""};
     
     static String[] arguments;
 

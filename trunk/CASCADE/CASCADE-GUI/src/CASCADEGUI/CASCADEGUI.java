@@ -1216,7 +1216,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         panel.add(label);
         panel.add(pass);
         String[] options = new String[]{"OK", "Cancel"};
-        int option = JOptionPane.showOptionDialog(null, panel, "The title",
+        int option = JOptionPane.showOptionDialog(this, panel, "Enter Password",
                 JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, options, options[1]);
         if (option == 0) // pressing OK button
@@ -1392,6 +1392,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         java.awt.Point point = evt.getPoint();
         int index = jList1.locationToIndex(point);
         if (jList1.isSelectedIndex(index)) {
+            File f=(File) listModel.get(index);
+            if (f.exists()){
+                f.delete();
+            }
             listModel.remove(index);
             scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.remove(index);
             disableCasual();
@@ -1501,6 +1505,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 this.caspacOutputFile.setText(jc.getSelectedFile().toString());
             }
             disableCasual();
+            this.loadCaspacActionPerformed(evt);
         }
     }//GEN-LAST:event_caspacOutputBrowseButtonActionPerformed
 

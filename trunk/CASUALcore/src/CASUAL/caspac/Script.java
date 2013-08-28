@@ -200,13 +200,15 @@ public class Script {
                         }
                     }
                     File[] files = new File(tempDir).listFiles();
-                    individualFiles.addAll(Arrays.asList(files));
-                    for (String md5 : metaData.md5s) {
-                        if (!Arrays.asList(actualMD5s.toArray(new String[]{})).contains(md5)) {
-                            new Log().level4Debug("Could not find " +md5+" in list "+ StringOperations.arrayToString(actualMD5s.toArray(new String[]{})));
-                            new CASUALMessageObject("@interactionPackageCorrupt").showErrorDialog();
-                            if (! Caspac.debug){
-                                scriptContents = "";
+                    if (files!=null){
+                        individualFiles.addAll(Arrays.asList(files));
+                        for (String md5 : metaData.md5s) {
+                            if (!Arrays.asList(actualMD5s.toArray(new String[]{})).contains(md5)) {
+                                new Log().level4Debug("Could not find " +md5+" in list "+ StringOperations.arrayToString(actualMD5s.toArray(new String[]{})));
+                                new CASUALMessageObject("@interactionPackageCorrupt").showErrorDialog();
+                                if (! Caspac.debug){
+                                    scriptContents = "";
+                                }
                             }
                         }
                     }

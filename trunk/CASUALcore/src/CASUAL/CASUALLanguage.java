@@ -690,7 +690,7 @@ public class CASUALLanguage {
         //break commandline into an array of arguments
         //verify zipfile reference exists
         //allow echo of zipfile
-        if (!line.startsWith("$ECHO")) {
+        if (!line.startsWith("$ECHO") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
             String[] lineArray = line.split(" ");
             //loop through line, locate positions of $ZIPFILE and test
             int pos = 0;
