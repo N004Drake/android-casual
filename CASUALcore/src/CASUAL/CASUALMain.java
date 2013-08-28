@@ -108,7 +108,9 @@ public final class CASUALMain {
                 if (execute ){
                     doConsoleStartup(args);
                 } else {
+                    CASUALConnectionStatusMonitor.DeviceCheck.stop();
                     Statics.CASPAC.waitForUnzipComplete();
+                    
                     new CASUALScriptParser().executeFirstScriptInCASPAC(Statics.CASPAC);
                     CASUALApp.shutdown(0);
                 }  //use command line args
