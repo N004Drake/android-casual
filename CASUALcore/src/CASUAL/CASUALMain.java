@@ -42,7 +42,14 @@ public final class CASUALMain {
                 password = args[++i];
             }
             if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
-               caspacLocation=new File(args[++i]);
+               if (new File(args[++i]).exists()){
+                   caspacLocation=new File(args[i]);
+                   new Log().level4Debug("Setting CASPAC location to "+caspacLocation.getAbsolutePath());
+               } else {
+                   new Log().level0Error("@fileNotFound");
+                   return;
+               }
+               
             }
             if (args[i].contains("--gui") || args[i].contains("-g")) {
                 useGUI = true;
@@ -92,6 +99,7 @@ public final class CASUALMain {
             prepCASPAC.join();
             //if not a single commmand, then load up the active script
             if (!execute ){
+                
                 Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
                 Statics.CASPAC.getActiveScript().scriptContinue = true;
             }
@@ -155,11 +163,20 @@ public final class CASUALMain {
             
             if (caspacLocation!=null){
                 try {
-                    Caspac cp=new Caspac(caspacLocation,Statics.getTempFolder(),0);
+                    Caspac cp;
+                    if (caspacLocation !=null && caspacLocation.exists()&& !password.isEmpty()){
+                        cp=new Caspac(caspacLocation,Statics.getTempFolder(),0,password.toCharArray());
+                        password="";
+                    } else {
+                        cp=new Caspac(caspacLocation,Statics.getTempFolder(),0);
+                    
+                    }
                     cp.loadFirstScriptFromCASPAC();
                     Statics.CASPAC=cp;
                 } catch (IOException ex) {
                     new Log().errorHandler(ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
             } else if (!execute) {   //execute is for single commands
