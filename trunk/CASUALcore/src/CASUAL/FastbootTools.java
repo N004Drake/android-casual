@@ -29,7 +29,7 @@ public class FastbootTools {
      * deploys and verifies fastboot
      */
     public static void checkAndDeployFastboot() {
-        if (new FileOperations().verifyExists(Statics.fastbootDeployed)) {
+        if (! new FileOperations().verifyExists(Statics.fastbootDeployed)) {
             if (OSTools.isLinux()) {
                 Statics.fastbootResource = getFastbootLinuxResource();
             }
@@ -77,7 +77,6 @@ public class FastbootTools {
      */
     public String doFastbootShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
-
         Shell Shell = new Shell();
         ArrayList<String> ShellCommand = new ArrayList<>();
         ShellCommand.add(Statics.fastbootDeployed);
