@@ -170,7 +170,9 @@ public class CASUALMessageObject {
     public void showInformationMessage() throws HeadlessException {
         this.messageType=iCASUALInteraction.INTERACTION_SHOW_INFORMATION;
         expectedReturn="Empty";
+        new Log().level3Verbose("showing information message object");
         Statics.interaction.displayMessage(this);
+        new Log().level3Verbose("Done with message object");
         return;
     }
 

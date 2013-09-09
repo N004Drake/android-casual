@@ -34,6 +34,8 @@ public class FastbootTools {
                 Statics.fastbootResource = getFastbootLinuxResource();
             }
             if (OSTools.isWindows()) {
+                new CASUALMessageObject("@interactionInstallFastbootDrivers").showInformationMessage();
+                Statics.fastbootDeployed=Statics.fastbootDeployed+".exe";
                 Statics.fastbootResource = Statics.fastbootWindows;
             }
             if (OSTools.isMac()) {
