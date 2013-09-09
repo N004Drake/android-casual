@@ -31,7 +31,7 @@ import java.util.zip.ZipException;
 public final class CASUALMain {
 
 
-    String password;
+    String password="";
     File caspacLocation;
     boolean exitWhenDone=false;
     boolean execute=false;
@@ -99,9 +99,10 @@ public final class CASUALMain {
             prepCASPAC.join();
             //if not a single commmand, then load up the active script
             if (!execute ){
-                
-                Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
-                Statics.CASPAC.getActiveScript().scriptContinue = true;
+                if (Statics.CASPAC!=null && Statics.CASPAC.scripts!=null && Statics.CASPAC.scripts.size()>=1){
+                    Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
+                    Statics.CASPAC.getActiveScript().scriptContinue = true;
+                }
             }
             if (args.length != 0 && !useGUI) {
                 //Using command line mode
@@ -161,15 +162,17 @@ public final class CASUALMain {
         @Override
         public void run() {
             
-            if (caspacLocation!=null){
+            if (caspacLocation!=null && caspacLocation.exists()){
                 try {
                     Caspac cp;
-                    if (caspacLocation !=null && caspacLocation.exists()&& !password.isEmpty()){
+                    if (caspacLocation !=null && caspacLocation.exists() && !password.isEmpty()){
                         cp=new Caspac(caspacLocation,Statics.getTempFolder(),0,password.toCharArray());
                         password="";
-                    } else {
+                    } else if (caspacLocation !=null && caspacLocation.exists()){
                         cp=new Caspac(caspacLocation,Statics.getTempFolder(),0);
                     
+                    } else {
+                        return;
                     }
                     cp.loadFirstScriptFromCASPAC();
                     Statics.CASPAC=cp;

@@ -102,6 +102,7 @@ public class CASUALLanguage {
         } catch (Exception e) {//Catch exception if any
             log.level0Error("@problemParsingScript");
             log.level0Error(strLine);
+            System.out.println(e.getCause());
             log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
             log.level0Error("@problemParsingScript");
             log.level0Error(strLine);

@@ -33,8 +33,8 @@ public class CASUALApp {
      * the default package used for IDE mode or if no scripts are found
      */
     final public static String defaultPackage = "MotoFail"; //note this will be used for IDE only.
-    final private static boolean useOverrideArgs = false; // this will use overrideArguments.
-    final private static String[] overrideArguments = new String[]{""};
+    final private static boolean useOverrideArgs = true; // this will use overrideArguments.
+    final private static String[] overrideArguments = new String[]{"--password","test","--caspac","C:\\Users\\adam\\Desktop\\CASUALProject\\TestHarness\\dp\\bin\\Debug\\CASUAL\\CASPACs\\Samsung\\SGH-I897\\DP_Cisconnect.zip"};
     
     static String[] arguments;
 
@@ -152,15 +152,11 @@ public class CASUALApp {
             }
         }
 
-        try {
             if (Statics.GUI!=null){
                 Statics.GUI.dispose();
             }
-            Statics.in.close();
+
             Statics.initializeStatics();
-        } catch (IOException ex) {
-            Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
     }
 }

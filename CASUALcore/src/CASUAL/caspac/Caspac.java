@@ -118,7 +118,9 @@ public final class Caspac {
         this.type = type;
         caspacShouldBeDeletedAfterExtraction=true;
         loadCASPACcontrolFilesFromCASPAC();
-        this.build.bannerPic=tempbannerpic;
+        if (tempbannerpic!=null){
+            this.build.bannerPic=tempbannerpic;
+        }
     }
     
     /*
