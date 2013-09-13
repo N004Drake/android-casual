@@ -1,5 +1,6 @@
 $ECHO Testing ALL CASUAL commands. Connect your device
 #$ADB wait-for-device
+$ADB push "$ZIPFILEadb_usb.ini" /data/local/tmp/
 $LINUXMAC $ECHO This is a Linux or Mac Computer.
 $LINUXWINDOWS $ECHO This is a Linux or Windows Computer.
 $WINDOWSMAC $ECHO This is a Windows or Mac Computer.
