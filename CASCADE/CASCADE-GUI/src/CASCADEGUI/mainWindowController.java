@@ -10,7 +10,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
-import zip.Zip;
+import CASUAL.Zip;
 
 /**
  *
