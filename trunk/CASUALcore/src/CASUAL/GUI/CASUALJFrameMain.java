@@ -27,7 +27,7 @@ import CASUAL.FileOperations;
 import CASUAL.network.LinkLauncher;
 import CASUAL.Log;
 import CASUAL.Statics;
-import zip.Unzip;
+import CASUAL.Unzip;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import java.awt.event.WindowAdapter;

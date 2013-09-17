@@ -28,7 +28,6 @@ package CASUAL;
  * all matching *.inf's contents
  */
 import CASUAL.misc.StringOperations;
-import zip.Unzip;
 import CASUAL.network.CASUALUpdates;
 import java.io.FileNotFoundException;
 import java.io.IOException;

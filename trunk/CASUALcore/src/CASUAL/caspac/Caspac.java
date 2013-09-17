@@ -25,8 +25,8 @@ import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.misc.StringOperations;
-import zip.Unzip;
-import zip.Zip;
+import CASUAL.Unzip;
+import CASUAL.Zip;
 import CASUAL.crypto.AES128Handler;
 import CASUAL.crypto.MD5sum;
 
