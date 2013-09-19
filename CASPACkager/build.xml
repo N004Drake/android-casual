@@ -72,15 +72,16 @@
     nbproject/build-impl.xml file. 
 
     -->
-    
-    <target name="-pre-jar">
+     
+    <target name="-pre-compile">
+         <echo>packager pre-compile grabbing new CASUAL.jar</echo>
         <copy file="$DIST../../../CASUALcore/dist/CASUAL.jar" tofile="src/Packager/resources/CASUAL.jar"/>
          
     </target>
     
     
     <target name="-post-jar">
-    
+         <echo>packager post-jar</echo>
          <jar jarfile="dist/PackagerDist.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*"/>
             <manifest>
