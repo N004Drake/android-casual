@@ -155,6 +155,7 @@ public class PackagerMain {
             }
             out.close();
             log.level4Debug("created "+outputFile);
+            outputFile.setExecutable(true);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

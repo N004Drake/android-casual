@@ -10,7 +10,7 @@ import CASUAL.CASUALMessageObject;
  *
  * @author adam
  */
-public class CASCADEInteractionDummy implements CASUAL.iCASUALInteraction {
+public class CASCADEInteractions implements CASUAL.iCASUALInteraction {
 
     @Override
     public String displayMessage(CASUALMessageObject messageObject) {
