@@ -83,7 +83,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         initComponents();
         CASUAL.caspac.Caspac.debug=true;
         CASUAL.Statics.GUI=this;
-        CASUAL.Statics.interaction=new CASCADEInteractionDummy();
+        CASUAL.Statics.interaction=new CASCADEInteractions();
         this.setLocationRelativeTo(null); //Centers Container to Screen
         //this.resourcesForScriptList.setDropTarget(dt);
         jList1.setModel(listModel);

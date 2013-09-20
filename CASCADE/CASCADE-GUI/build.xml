@@ -74,14 +74,17 @@
     
     
     <target name="-post-jar">
+        <echo>preparing final CASCADE binary</echo>
         <loadproperties srcfile="../../CASUALcore/src/CASUAL/resources/CASUALApp.properties"/>
-<!--        <jar jarfile="dist/CASCADE-r${Application.revision}-dist.jar">
+        <jar jarfile="dist/CASCADE-r${Application.revision}-dist.jar">
                 <zipfileset src="${dist.jar}" excludes="META-INF/*" />
                 <zipfileset src="dist/lib/CASUALcoreNoResources.jar" excludes="META-INF/*" />
                 <zipfileset src="dist/lib/CASPACcreator.jar" excludes="META-INF/*" />
+                <zipfileset src="dist/lib/PACKAGER.jar" excludes="META-INF/*" />
+                <zipfileset src="dist/lib/swing-layout-1.0.4.jar" excludes="META-INF/*" />
             <manifest>
-                <attribute name="Main-Class" value="com.example.mypackage.Main"/>
+                <attribute name="Main-Class" value="CASCADEGUI.main"/>
             </manifest>
-        </jar>-->
+        </jar>
     </target>
 </project>
