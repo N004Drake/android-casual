@@ -29,4 +29,10 @@ public class CASUALLanguagejUnitTest {
         String x = new CASUAL.CASUALScriptParser().executeOneShotCommand("$IFNOTCONTAINS d2cafdan $INCOMMAND shell \"cat /system/build.prop\" $DO $IFNOTCONTAINS d2asdfgtt $INCOMMAND shell \"cat /system/build.prop\" $DO $ECHO hi");
         assert x.contains("hi");
     }
+    @Test
+    public void testCommandNotification(){
+        CASUAL.Statics.interaction=new CASUAL.GUI.CASUALShowJFrameMessageObject();
+        String x=new CASUAL.CASUALScriptParser().executeOneShotCommand("$COMMANDNOTIFICATION woot,$ADB shell \"ls /\"");
+        assert x.contains("dev");
+    }
 }

@@ -43,7 +43,7 @@ public class CASUALInteractionsjUnitTest {
         assertEquals("", ci.inputDialog());
         setQuit();
         assertEquals("q", ci.inputDialog());
-
+         
         setQuit();
         assertEquals(1, ci.showActionRequiredDialog());
         setContinue();
