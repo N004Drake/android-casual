@@ -31,6 +31,7 @@ public interface iCASUALInteraction {
     final int INTERACTION_SHOW_ERROR = 5;
     final int INTERACTION_SHOW_YES_NO = 6;
     final int INTERACTION_INPUT_DIALOG = 7;
+    final int INTERACTION_COMMAND_NOTIFICATION=8;
     /**
      * Takes a message object and displays to user
      * @param messageObject defined by CASUAL

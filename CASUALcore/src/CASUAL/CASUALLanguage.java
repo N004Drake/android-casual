@@ -388,7 +388,26 @@ public class CASUALLanguage {
             log.level4Debug("Creating Folder: " + line);
             new File(line).mkdirs();
             return "";
-
+// Takes a value from a command and returns to text box        
+        } else if (line.startsWith("$COMMANDNOTIFICATION")) {
+            line = line.replace("$COMMANDNOTIFICATION", "");
+            String[] cmdSplit;
+            if (line.contains(">>>")){
+                cmdSplit=line.split(">>>",2);
+            }else if (line.contains(",")){
+                cmdSplit=line.split(",",2);
+            } else {
+                cmdSplit=new String[]{line};
+            }
+            String title="Return Value";
+            if (cmdSplit.length>1){
+               title=cmdSplit[0];
+            } 
+            String retval=commandHandler(cmdSplit[cmdSplit.length-1]);
+            new CASUALMessageObject(title+">>>"+retval).showCommandNotification();
+            return retval;
+            
+            
 
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 

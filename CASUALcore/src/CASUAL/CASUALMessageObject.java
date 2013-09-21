@@ -149,7 +149,17 @@ public class CASUALMessageObject {
         expectedReturn="String 0-continue, 1-stop";
         return Integer.parseInt(Statics.interaction.displayMessage(this));
     }
-
+    /**
+     * displays command notification
+     *
+     * @throws HeadlessException
+     */
+    public void showCommandNotification() throws HeadlessException {
+        this.messageType=iCASUALInteraction.INTERACTION_COMMAND_NOTIFICATION;
+        expectedReturn="Empty";
+        Statics.interaction.displayMessage(this);
+        return;
+    }
     /**
      * displays user notification
      *
