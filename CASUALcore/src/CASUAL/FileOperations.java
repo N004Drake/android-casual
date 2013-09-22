@@ -471,7 +471,7 @@ public class FileOperations {
      * @return string contents of resource
      */
     public String readTextFromResource(String Resource) {
-        InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(Resource);
         StringBuilder text = new StringBuilder();
         try {
             InputStreamReader in;

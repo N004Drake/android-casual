@@ -18,10 +18,7 @@ package CASUAL;
 
 import CASUAL.network.Pastebin;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The main class of the application.
@@ -155,7 +152,7 @@ public class CASUALApp {
             if (Statics.GUI!=null){
                 Statics.GUI.dispose();
             }
-
+            
             Statics.initializeStatics();
 
     }

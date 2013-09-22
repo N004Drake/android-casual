@@ -147,8 +147,7 @@ public final class Caspac {
                 log.level4Debug("Picking Jar File:" + jar.getFile() +" ..scanning.");
                 while ((ZEntry = zip.getNextEntry()) != null) {
                     String entry = ZEntry.getName();
-                      if (entry.startsWith("SCRIPTS/")){ //part of CASPAC
-                        log.level4Debug("parsing "+entry);
+                      if (entry.startsWith("SCRIPTS/")||entry.startsWith("SCRIPTS\\")){ //part of CASPAC
                         handleCASPACJarFiles(entry);
                         
                       }
@@ -251,6 +250,7 @@ public final class Caspac {
                 this.activeScript=this.getScriptByFilename(filename);
             }
         }
+        new Log().level4Debug("loading CASPAC script");
         performUnzipOnQueue();
     }
     
@@ -544,34 +544,44 @@ public final class Caspac {
         Properties prop=new Properties();
         prop.load(in);
         this.setBuild(prop);
+        log.level4Debug(StringOperations.convertStreamToString(this.build.getBuildPropInputStream()));
+        
     
 
 }
 
     private void handleCASPACJarFiles(String entry) throws IOException {
         FileOperations fo=new FileOperations();
+            if (entry.startsWith("/")){
+                entry=entry.replaceFirst("/", "");
+            }
         
-        if (entry.equals("SCRIPTS/-Overview.txt")) {
-            entry="/"+entry;
-            System.out.println("Attempting to read resource:" +entry);
+        if (entry.equals("SCRIPTS/-Overview.txt")||entry.equals("SCRIPTS\\-Overview.txt")) {
+            
+            log.level4Debug("processing:"+entry);
             this.overview = fo.readTextFromResource(entry);
             System.out.println("overview "+overview);
-        } else if (entry.equals("SCRIPTS/-build.properties")) {
+        } else if (entry.equals("SCRIPTS/-build.properties") ||entry.equals("SCRIPTS\\-build.properties")) {
+            log.level4Debug("processing:"+entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             setBuild(in);
-        } else if (entry.equals("SCRIPTS/-logo.png")) {
+        } else if (entry.equals("SCRIPTS/-logo.png")||entry.equals("SCRIPTS/-logo.png")) {
+            log.level4Debug("processing:"+entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             logo = ImageIO.read(ImageIO.createImageInputStream(in));
             build.bannerPic = entry;
-        } else if (entry.endsWith("SCRIPTS/.txt")) {
+        } else if (entry.endsWith(".txt")) {
+            log.level4Debug("processing:"+entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             this.getScriptByFilename(entry).discription = fo.readTextFromResource(entry);
         } else if (entry.endsWith(".scr")) {
+            log.level4Debug("processing:"+entry);
             this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource("/"+entry);
         } else if (entry.endsWith(".meta")) {
+            log.level4Debug("processing:"+entry);
             System.out.println("loading meta "+entry);
                         InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
@@ -579,10 +589,12 @@ public final class Caspac {
             prop.load(in);
             this.getScriptByFilename(entry).metaData.load(prop);
         }  else if (entry.endsWith(".zip")) {
+            log.level4Debug("processing:"+entry);
             log.level3Verbose("found zip at "+entry);
             this.getScriptByFilename(entry).scriptZipFile=entry;
         }
-        new MD5sum().getLinuxMD5Sum(StringOperations.convertStringToStream(fo.readTextFromResource("/"+entry)), entry);
+        log.level4Debug("getting MD5 for:"+entry);
+        new MD5sum().getLinuxMD5Sum(StringOperations.convertStringToStream(fo.readTextFromResource(entry)), entry);
     }
 
     private void setupIDEModeScriptForCASUAL(String defaultPackage) {
@@ -748,6 +760,7 @@ public final class Caspac {
     public Properties buildProp = new Properties();
 
     public Build(InputStream prop) throws IOException {
+        log.level4Debug("Loading build information from inputstream");
         buildProp.load(prop);
     }
 
@@ -757,6 +770,7 @@ public final class Caspac {
      * @param prop build.properties file
      */
     public Build(Properties prop) {
+        log.level4Debug("Loading build information from prop information");
         this.buildProp = prop;
     }
 
