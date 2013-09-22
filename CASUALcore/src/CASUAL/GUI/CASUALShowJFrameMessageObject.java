@@ -55,6 +55,9 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
                 return showInputDialog(title, messageText);
             //break; unreachable
 
+            case INTERACTION_COMMAND_NOTIFICATION:
+                showUserNotificationInteraction(title,messageText);
+                return messageText;
         }
         return retval;
     }

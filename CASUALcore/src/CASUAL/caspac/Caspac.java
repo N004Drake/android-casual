@@ -160,14 +160,15 @@ public final class Caspac {
     public void setActiveScript(Script s){
         if (type == 1) {  //CASUAL checks for updates
             try {
+                log.level3Verbose("Setting script "+s.name+ " as active and loading");
                 activeScript=s;
                 loadActiveScript();
                 //update script
 
             } catch (MalformedURLException ex) {
-                log.level0Error("@problemDownloading");
+                return;
             } catch (IOException ex) {
-                log.level0Error("@problemDownloading");
+                return;
             }
 
         } else {
@@ -232,7 +233,7 @@ public final class Caspac {
     }
     
     public void loadFirstScriptFromCASPAC() throws ZipException, IOException{
-        log.level4Debug("\n\n\nStarting CASPAC unzip on "+CASPAC.getAbsolutePath());
+        log.level4Debug("Starting loadFirstScriptFromCASPAC unzip on "+CASPAC.getAbsolutePath());
         String scriptName="";
         Unzip unzip = new Unzip(CASPAC);
         while (unzip.zipFileEntries.hasMoreElements()) {
@@ -255,7 +256,7 @@ public final class Caspac {
     }
     
     public void loadActiveScript() throws IOException{
-         log.level4Debug("\n\n\nStarting CASPAC unzip.");
+         log.level4Debug("Starting loadActiveScript CASPAC unzip.");
         String scriptName=activeScript.name;
 
         if (type==0){
@@ -269,11 +270,13 @@ public final class Caspac {
             }
     
         } else if (type==1){
+             log.level3Verbose("This is a CASUAL jar with resources");
              try {
                  activeScript=updateIfRequired(activeScript);
              } catch (     MalformedURLException | URISyntaxException ex) {
                  Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
              }
+             log.level4Debug("returned from checking updates.");
             //no need to update again because it is being updated
             replaceScriptByName(activeScript);
 
@@ -310,7 +313,7 @@ public final class Caspac {
             return;
         } 
         //Type 0
-        log.level4Debug("\n\n\nStarting CASPAC unzip.");
+        log.level4Debug("Starting commanded Load CASPAC unzip.");
         Unzip unzip = new Unzip(CASPAC);
         while (unzip.zipFileEntries.hasMoreElements()) {
             Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
@@ -451,6 +454,7 @@ public final class Caspac {
 
 
     private void performUnzipOnQueue() {
+            log.level3Verbose("Performing unzip of resources.");
             for (Thread t :this.unzipThreads){
                 t.start();
             }
@@ -579,7 +583,10 @@ public final class Caspac {
             this.getScriptByFilename(entry).discription = fo.readTextFromResource(entry);
         } else if (entry.endsWith(".scr")) {
             log.level4Debug("processing:"+entry);
-            this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource("/"+entry);
+            System.out.println("SCRIPT CONTENTS:"+fo.readTextFromResource(entry));
+            this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource(entry);
+            
+            
         } else if (entry.endsWith(".meta")) {
             log.level4Debug("processing:"+entry);
             System.out.println("loading meta "+entry);
@@ -684,6 +691,10 @@ public final class Caspac {
      * @return true if script can continue.  false if halt is recommended.
      */
     public Script updateIfRequired(Script s) throws MalformedURLException, URISyntaxException, IOException{
+        return s;
+    }
+        /*
+        Log log = new Log();
         if (s.metaData.minSVNversion.isEmpty()) {
             return s;
         }
@@ -694,14 +705,20 @@ public final class Caspac {
         String myScriptName=s.name;
         CASUALUpdates ci=new CASUALUpdates();
         Properties updatedprop=new Properties();
-        
+        log.level3Verbose("creating new script instance to compare against online version");
         Script updatedScript=new Script(s);
         new File(s.tempDir).mkdirs();
-        updatedprop.load((InputStream)ci.downloadMetaFromRepoForScript(s));
+        log.level3Verbose("getting updated script version info");
+        
+        //TODO: downloadMetaFromRepoForScript hangs.  Script will not complte unzip because of this.  
+        //TODO: Fix this. 
+        updatedprop.load(ci.downloadMetaFromRepoForScript(s));
+        log.level3Verbose("updating meta");
         updatedScript.metaData.load(updatedprop);
+        
         int updatedSVNVersion=Integer.parseInt(updatedScript.metaData.minSVNversion);
         int updatedScriptVersion=Integer.parseInt(updatedScript.metaData.scriptRevision);
-        
+        log.level3Verbose("comparing script information");
         if (mySVNVersion<updatedSVNVersion){
             updatedScript.scriptContents="";
             log.level2Information("\n"+updatedScript.metaData.killSwitchMessage);
