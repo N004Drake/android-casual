@@ -111,7 +111,13 @@ public class PackagerMain {
     public void mergeCaspacCasual(String caspacLoc, String outputDir){
         try {
             File outputFile;
-            String outputFileName = caspacLoc.substring(caspacLoc.lastIndexOf(Statics.Slash), caspacLoc.lastIndexOf("."))+ "-CASUAL-R" + CASUAL.CASUALTools.getSVNVersion() + "b";
+            String rev=CASUAL.CASUALTools.getSVNVersion();
+            int lastSlash=caspacLoc.lastIndexOf("/");
+            if (lastSlash==-1){
+                lastSlash=caspacLoc.lastIndexOf("\\");
+            }
+            int lastDot=caspacLoc.lastIndexOf(".");
+            String outputFileName = caspacLoc.substring(lastSlash, lastDot)+ "-CASUAL-R" + rev + "b";
             if (!appendToName.isEmpty()){
                 outputFileName=outputFileName+"-"+appendToName;
             }
@@ -146,7 +152,7 @@ public class PackagerMain {
             entry = zin.getNextEntry();
             while (entry != null){
                 String name = entry.getName();
-                out.putNextEntry(new ZipEntry("SCRIPTS"+Statics.Slash+name));
+                out.putNextEntry(new ZipEntry("SCRIPTS/"+name));
                 int len;
                 while ((len = zin.read(buf)) > 0) {
                     out.write(buf, 0, len);
