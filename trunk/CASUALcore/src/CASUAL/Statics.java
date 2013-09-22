@@ -215,7 +215,9 @@ public class Statics {
         installedHeimdallVersion=null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
         CASUALLanguage.GOTO = "";
         if (CASPAC!=null){
-            Statics.CASPAC.getActiveScript().scriptContinue=false;
+            if (CASPAC.scripts!=null){
+                Statics.CASPAC.getActiveScript().scriptContinue=false;
+            }
         }
     }
     

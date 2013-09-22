@@ -100,6 +100,7 @@ public final class CASUALMain {
             //if not a single commmand, then load up the active script
             if (!execute ){
                 if (Statics.CASPAC!=null && Statics.CASPAC.scripts!=null && Statics.CASPAC.scripts.size()>=1){
+                    new Log().level4Debug("Finalizing active script up to be run");
                     Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
                     Statics.CASPAC.getActiveScript().scriptContinue = true;
                 }
@@ -172,6 +173,7 @@ public final class CASUALMain {
                         cp=new Caspac(caspacLocation,Statics.getTempFolder(),0);
                     
                     } else {
+                        new Log().level4Debug("exiting setupCASUALCASPAC().  Nothing to be done");
                         return;
                     }
                     cp.loadFirstScriptFromCASPAC();
@@ -187,7 +189,6 @@ public final class CASUALMain {
                 CodeSource src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
                 Caspac cp;
                 try {
-                    new Log().level4Debug("codesource: " + src.toString());
                     cp = new Caspac(src, Statics.getTempFolder(), 1);
 
                     //cp.load();

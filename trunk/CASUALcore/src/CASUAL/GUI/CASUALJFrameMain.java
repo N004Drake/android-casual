@@ -66,7 +66,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
 
-        log.level4Debug("Searching for scripts");
 
         Statics.lockGUIformPrep = false;
 
@@ -487,7 +486,15 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     }//GEN-LAST:event_StatusLabelMouseClicked
 
     private void StatusLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseExited
-        this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
+        try {
+            this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
+        } catch (java.util.MissingResourceException ex){
+            try {
+                this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS\\-build").getString("Window.ExecuteButtonText"));
+            } catch (java.util.MissingResourceException er){ 
+                this.startButton.setText(Statics.CASPAC.build.executeButtonText);
+            }
+        }
         buttonEnableStage = false;
     }//GEN-LAST:event_StatusLabelMouseExited
 
@@ -684,9 +691,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         Statics.GUIIsAvailable = true;
 
         log.level2Information(caspac.overview);
-        if (caspac.build.usePictureForBanner) {
+        /* if (caspac.build.usePictureForBanner) {
             //setup banner with CASPAC.logo
-        }
+        }*/
         if (caspac.build.alwaysEnableControls) {
             enableControls(true);
         }
