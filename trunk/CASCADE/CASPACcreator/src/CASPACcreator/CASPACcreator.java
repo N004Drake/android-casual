@@ -118,7 +118,7 @@ public class CASPACcreator {
 
     private void usage(String error) {
         log.level0Error(error);
-        log.level2Information("Usage: java -jar CASthezipper.jar  [-fi]  --output output_zipfile inputfile1 ... inputfileN");
+        log.level2Information("Usage: java -jar CASPACCreator-dist.jar  [-fi]  --output output_zipfile inputfile1 ... inputfileN");
         log.level2Information("       -f: Will overwrite existing output_zipfile");
         log.level2Information("       -i: Will ignore nonexisting input files");
         shutdown = true;
