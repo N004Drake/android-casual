@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -182,11 +183,18 @@ public class CASUALUpdates {
         if (CASUALTools.IDEMode) {
             url = stringToFormattedURL(CASUALRepo + "/SCRIPTS/" + meta);
         } else {
-
-            url = stringToFormattedURL(CASUALRepo + "/" + meta);
+            new Log().level3Verbose(CASUALRepo + meta);
+            url = stringToFormattedURL(CASUALRepo + meta);
             System.out.println(url.toString());
         }
-        return url.openStream();
+        new Log().level3Verbose("opening download stream");
+        
+        URLConnection con = url.openConnection();
+        con.setConnectTimeout(300);
+        con.setReadTimeout(300);
+
+        return con.getInputStream();
+        
     }
 
     public InputStream streamFileFromNet(String link) throws MalformedURLException, URISyntaxException, IOException {

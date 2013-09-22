@@ -45,6 +45,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
+
+
 /**
  *
  * @author loganludington
@@ -57,6 +59,10 @@ public class Script {
      * 2 for Filesystem (File, zipFile)
      */
 
+    final int CASPAC=0;
+    final int CASUAL=1;
+    final int FILE=2;
+            
     final public int extractionMethod;
     public Object scriptZipFile; //zipFile Entry, Resource or File on disk
     public Unzip zipfile; //CASPAC only.
@@ -72,6 +78,7 @@ public class Script {
     public List<String> actualMD5s = new ArrayList<>();
 
     public Script(Script s) {
+        new Log().level4Debug("Setting up script " +s.name+" from preexisting script");
         this.name = s.name;
         this.tempDir = s.tempDir;
         this.extractionMethod = 2;
@@ -84,18 +91,21 @@ public class Script {
     }
     
     public Script(String name, String tempDir) {
+        new Log().level4Debug("Setting up script " +name+" with name and tempdir");
         this.name = name;
         this.tempDir = tempDir;
         this.extractionMethod = 0;
     }
 
     public Script(String name, String tempDir, int type) {
+        new Log().level4Debug("Setting up script " +name+" with name, tempdir and type");
         this.name = name;
         this.tempDir = tempDir;
         this.extractionMethod = type;
     }
 
     public Script(String name, String script, String discription, List<File> includeFiles, String tempDir) {
+        new Log().level4Debug("Setting up script " +name+" with name, script, description, included files and tempdir");
         this.discription = discription;
         this.name = name;
         this.scriptContents = script;
@@ -106,6 +116,7 @@ public class Script {
 
     public Script(String name, String script, String discription,
             List<File> includeFiles, Properties prop, String tempDir, int type) {
+        new Log().level4Debug("Setting up script " +name+" with name, script, description, included files, propeties, type and tempdir");
         this.discription = discription;
         this.name = name;
         this.scriptContents = script;
@@ -117,6 +128,7 @@ public class Script {
 
     public Script(String name, String script, String discription,
             List<File> includeFiles, Properties prop, String tempDir) {
+        new Log().level4Debug("Setting up script " +name+" with name, script, description includedFiles, properties, and tempdir");
         this.discription = discription;
         this.name = name;
         this.scriptContents = script;
@@ -127,6 +139,7 @@ public class Script {
     }
 
     public Script(String name, String script, String discription, String tempDir) {
+        new Log().level4Debug("Setting up script " +name+" with name, script, description and tempdir");
         this.name = name;
         this.scriptContents = script;
         this.discription = discription;
@@ -170,7 +183,7 @@ public class Script {
      */
     public Runnable getExtractionRunnable() {
         final Log log = new Log();
-        if (this.extractionMethod == 0) {  //This is a CASPAC
+        if (this.extractionMethod == CASPAC) {  //This is a CASPAC
             final Unzip CASPAC = this.zipfile;
             final Object entry = this.scriptZipFile;
             Runnable r = new Runnable() {
@@ -216,7 +229,7 @@ public class Script {
             };
             return r;
         }
-        if (this.extractionMethod == 1) {  //This is a CASUAL
+        if (this.extractionMethod == CASUAL) {  //This is a CASUAL
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
@@ -255,7 +268,7 @@ public class Script {
             };
             return r;
         }
-        if (this.extractionMethod == 2) { //This is running on the filesystem
+        if (this.extractionMethod == FILE) { //This is running on the filesystem
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
