@@ -1519,11 +1519,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         jc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = jc.showOpenDialog(this);
         if (returnVal == JFileChooser.OPEN_DIALOG) {
-            if (!jc.getSelectedFile().toString().endsWith(".jar")) {
-                this.casualOutputFile.setText(jc.getSelectedFile().toString() + ".jar");
-            } else {
-                this.casualOutputFile.setText(jc.getSelectedFile().toString());
-            }
+            this.casualOutputFile.setText(jc.getSelectedFile().toString());
         }
     }//GEN-LAST:event_casualOutputBrowseButtonActionPerformed
 
