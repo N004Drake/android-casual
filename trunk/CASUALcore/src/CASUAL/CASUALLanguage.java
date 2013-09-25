@@ -370,9 +370,16 @@ public class CASUALLanguage {
         } else if (line.startsWith("$LISTDIR")) {
             line = line.replace("$LISTDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
+            if (OSTools.isLinux()||OSTools.isMac()){
+                
+            } else {
+                line=line.replace("/", Statics.Slash);
+            }
             File[] files = new File(line).listFiles();
-            if (files.length > 0) {
+            String retval="";
+            if (files !=null && files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
+                    retval=retval + files[i].getAbsolutePath()+"\n";
                     try {
                         commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
                     } catch (IOException ex) {
@@ -380,6 +387,9 @@ public class CASUALLanguage {
                     }
                 }
             }
+            return retval;
+            
+            
 // $MAKEDIR will make a folder
         } else if (line.startsWith("$MAKEDIR")) {
             line = line.replace("$MAKEDIR", "");
@@ -387,6 +397,14 @@ public class CASUALLanguage {
             log.level4Debug("Creating Folder: " + line);
             new File(line).mkdirs();
             return "";
+// $REMOVEDIR will make a folder
+        } else if (line.startsWith("$REMOVEDIR")) {
+            line = line.replace("$REMOVEDIR", "");
+            line = StringOperations.removeLeadingSpaces(line);
+            log.level4Debug("Creating Folder: " + line);
+            new FileOperations().recursiveDelete(line);
+            return "";
+                
 // Takes a value from a command and returns to text box        
         } else if (line.startsWith("$COMMANDNOTIFICATION")) {
             line = line.replace("$COMMANDNOTIFICATION", "");
@@ -709,7 +727,7 @@ public class CASUALLanguage {
         //break commandline into an array of arguments
         //verify zipfile reference exists
         //allow echo of zipfile
-        if (!line.startsWith("$ECHO") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
+        if (!line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
             String[] lineArray = line.split(" ");
             //loop through line, locate positions of $ZIPFILE and test
             int pos = 0;
