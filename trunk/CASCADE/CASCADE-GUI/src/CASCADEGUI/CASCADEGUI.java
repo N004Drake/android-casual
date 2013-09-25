@@ -352,7 +352,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
             }
         });
 
-        casualOutputFile.setText(System.getProperty("user.dir"));
+        casualOutputFile.setText(System.getProperty("user.dir")+Statics.Slash+"generatedCASUALs");
         casualOutputFile.setEnabled(CASPACkagerPanel.isEnabled());
         casualOutputFile.setName("casualOutputFile"); // NOI18N
 
