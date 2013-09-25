@@ -1199,6 +1199,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 File temp = new File(cp.CASPAC.getAbsolutePath() + ".tmp");
                 new FileOperations().copyFile(file, temp);
                 new AES128Handler(temp).encrypt(file.getAbsolutePath(), getPassword());
+                temp.delete();
             }
 
             enableCasual();
