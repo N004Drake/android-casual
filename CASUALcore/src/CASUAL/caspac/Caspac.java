@@ -575,7 +575,6 @@ public final class Caspac {
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             logo = ImageIO.read(ImageIO.createImageInputStream(in));
-            build.bannerPic = entry;
         } else if (entry.endsWith(".txt")) {
             log.level4Debug("processing:"+entry);
             InputStream in = getClass().getClassLoader()
