@@ -214,6 +214,21 @@ public final class Caspac {
         }
         for (Script s : scripts) {
             //individualFiles.toArray();
+            for (File test: new File(s.tempDir).listFiles()){
+                boolean delete=true;
+                for (File f:s.individualFiles){
+                    if (test.getCanonicalFile().equals(f.getCanonicalFile())){
+                        delete=false;
+                    }
+                }    
+                if (delete){
+                    if (test.toString().contains(s.tempDir)){
+                        test.delete();
+                    }
+                    
+                } 
+            }
+            
             nameStream.putAll(s.getScriptAsMapForCASPAC());
         }
         

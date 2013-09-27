@@ -23,6 +23,7 @@ package CASCADEGUI;
 import CASUAL.crypto.AES128Handler;
 import CASUAL.FileOperations;
 import CASUAL.Log;
+import CASUAL.OSTools;
 import CASUAL.Statics;
 import CASUAL.misc.StringOperations;
 import CASUAL.caspac.Caspac;
@@ -79,6 +80,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     /**
      * initializes window
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public CASCADEGUI() {
         initComponents();
         CASUAL.caspac.Caspac.debug=true;
@@ -196,6 +198,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         casualOutputBrowseButton = new javax.swing.JButton();
         typeCheckBox = new javax.swing.JCheckBox();
         typeTextBox = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         workArea = new javax.swing.JTabbedPane();
         scriptGroup = new javax.swing.JTabbedPane();
         scriptOverview = new javax.swing.JPanel();
@@ -324,7 +327,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 .addComponent(caspacOutputFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loadButton)
-                .addGap(54, 54, 54)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(makeCASPAC)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(useEncryption, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -387,6 +390,14 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         typeTextBox.setEnabled(false);
         typeTextBox.setName("typeTextBox"); // NOI18N
 
+        jButton1.setText(bundle.getString("CASCADEGUI.jButton1.text")); // NOI18N
+        jButton1.setName("jButton1"); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout CASPACkagerPanelLayout = new javax.swing.GroupLayout(CASPACkagerPanel);
         CASPACkagerPanel.setLayout(CASPACkagerPanelLayout);
         CASPACkagerPanelLayout.setHorizontalGroup(
@@ -395,12 +406,14 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 .addComponent(casualOutputFile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(casualOutputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(typeTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(typeTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(typeCheckBox)
+                .addGap(10, 10, 10)
+                .addComponent(makeItCasualButton, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(makeItCasualButton))
+                .addComponent(jButton1))
         );
         CASPACkagerPanelLayout.setVerticalGroup(
             CASPACkagerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -410,9 +423,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                     .addComponent(casualOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(typeTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(typeCheckBox)
-                    .addComponent(makeItCasualButton))
+                    .addComponent(makeItCasualButton)
+                    .addComponent(casualOutputBrowseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(casualOutputBrowseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         workArea.setName(""); // NOI18N
@@ -1494,12 +1508,13 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
     private void caspacOutputBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caspacOutputBrowseButtonActionPerformed
         JFileChooser jc;
+
         if (new File(this.caspacOutputFile.getText()).exists()) {
             jc = new JFileChooser(this.caspacOutputFile.getText());
         } else {
             jc = new JFileChooser();
         }
-        int returnVal = jc.showSaveDialog(this);
+        int returnVal = jc.showOpenDialog(this);
         if (returnVal == JFileChooser.OPEN_DIALOG) {
             if (!jc.getSelectedFile().toString().endsWith(".zip")) {
                 this.caspacOutputFile.setText(jc.getSelectedFile().toString() + ".zip");
@@ -1631,6 +1646,51 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         // TODO add your handling code here:
     }//GEN-LAST:event_caspacOutputFileActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String args[]=argBuilder();
+        final String filename=CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf("/")+1), ".zip", "");
+        final String version=CASUAL.CASUALTools.getSVNVersion();
+        final String folder=this.casualOutputFile.getText();
+        
+        String[] tempFileList= new File(folder).list();
+        for (final String file:tempFileList){
+            if (file.startsWith(filename+"-CASUAL-R"+version)){
+                String exe="";
+                if (OSTools.isWindows()){
+                   exe=".exe";
+                }
+                final String executable=exe;
+                final String outputFile=this.casualOutputFile.getText();
+                Runnable r=new Runnable(){
+                
+                    @Override
+                    public void run() {
+                        try {
+                            //CASUAL.JavaSystem.restart(new String[]{outputFile+Statics.Slash+file});
+                            
+                            ProcessBuilder pb;
+                            if (OSTools.isWindows()) {
+                                pb= new ProcessBuilder(new String[]{"cmd.exe","/c","start ", outputFile+Statics.Slash+file});
+                            } else {
+                                pb= new ProcessBuilder(new String[]{"sh",System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file});
+                                
+                            }
+                            pb.directory(new File(new File( "." ).getCanonicalPath()));
+                            Process p = pb.start();
+                            
+                        //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file});
+                        } catch (IOException ex) {
+                            Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }  
+                };
+                Thread t=new Thread(r);
+                t.start();
+                return;
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1687,6 +1747,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     private javax.swing.JPanel dontateLinkPanel;
     private javax.swing.JPanel dontateTextPanel;
     private javax.swing.JButton editScriptNameButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

@@ -317,7 +317,6 @@ public class Script {
 
     Map<String, InputStream> getScriptAsMapForCASPAC() {
         CASUAL.Log log = new CASUAL.Log();
-        int md5Position = 0;
         CASUAL.crypto.MD5sum md5sum = new CASUAL.crypto.MD5sum();
         Map<String, InputStream> scriptEntries = new HashMap<>();
         ArrayList<String> tempMD5s = new ArrayList<>();
