@@ -515,7 +515,7 @@ public class CASUALLanguage {
              at CASUAL.CASUALLanguage.commandHandler(CASUALLa
              */
         } else if (line.startsWith("$DOWNLOAD")) {
-            line = line.replaceFirst("$DOWNLOAD", "");
+            line = line.replace("$DOWNLOAD", "");
             line = StringOperations.removeLeadingSpaces(line);
             String[] downloadCommand = line.split(",");
             FileOperations fo = new FileOperations();
@@ -525,10 +525,10 @@ public class CASUALLanguage {
             if (!fo.verifyExists(Statics.getTempFolder() + "download" + Statics.Slash)) {
                 fo.makeFolder(Statics.getTempFolder() + "download" + Statics.Slash);
             }
-            if (downloadCommand.length == 2) {
+            if (downloadCommand.length == 3) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 return "";
-            } else if (downloadCommand.length == 3) {
+            } else if (downloadCommand.length == 4) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 if (!new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{downloadCommand[3]}, new String[]{downloadCommand[1]})) {
                     new CASUALScriptParser().executeOneShotCommand("$HALT HALTING Downloaded md5sum did not check out");
@@ -727,7 +727,7 @@ public class CASUALLanguage {
         //break commandline into an array of arguments
         //verify zipfile reference exists
         //allow echo of zipfile
-        if (!line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
+        if (!line.startsWith("$DOWNLOAD") && !line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
             String[] lineArray = line.split(" ");
             //loop through line, locate positions of $ZIPFILE and test
             int pos = 0;
