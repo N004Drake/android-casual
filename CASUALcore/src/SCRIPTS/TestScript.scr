@@ -62,10 +62,10 @@ $ECHO Making a folder in HOMEFOLDER called foo.
 $MAKEDIR $HOMEFOLDERfoo
 
 #$ECHO Downloading a file into foo
-#do we need this? $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java, $HOMEFOLDERfoo,  a file from CASUAL rep/
+$DOWNLOAD http://android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java, $ZIPFILEfoo,  a file from CASUAL rep/
 #Same for $EXECUTE
-#$ECHO attempting to execute 'ls' command
-#$EXECUTE ls
+$ECHO attempting to execute 'ls' command
+$LINUX $EXECUTE ls
 
 
 $ECHO This is a LISTDIR on HOMEFOLDER and you should see something in there.

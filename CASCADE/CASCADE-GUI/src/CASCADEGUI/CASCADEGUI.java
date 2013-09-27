@@ -1672,7 +1672,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                             if (OSTools.isWindows()) {
                                 pb= new ProcessBuilder(new String[]{"cmd.exe","/c","start ", outputFile+Statics.Slash+file});
                             } else {
-                                pb= new ProcessBuilder(new String[]{"sh",System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file});
+                                pb= new ProcessBuilder(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file});
                                 
                             }
                             pb.directory(new File(new File( "." ).getCanonicalPath()));
