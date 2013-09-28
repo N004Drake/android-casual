@@ -197,6 +197,7 @@ public class Script {
                         actualMD5s.add(new MD5sum().getLinuxMD5Sum(bis, entry.toString()));
                         bis = CASPAC.streamFileFromZip(entry);
                         Unzip.unZipInputStream(bis, tempDir);
+                        bis.close();
                         log.level4Debug("Extracted entry " + CASPAC.getEntryName(entry) + "to " + tempDir);
 
                     } catch (ZipException ex) {

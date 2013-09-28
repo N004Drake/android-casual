@@ -325,6 +325,7 @@ public final class Caspac {
             InputStream in = getClass().getClassLoader()
                                 .getResourceAsStream(s.scriptZipFile.toString());
             Unzip.unZipInputStream(in, s.tempDir);
+            in.close();
             this.activeScript=s;
             
             return;
