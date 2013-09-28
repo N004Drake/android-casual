@@ -87,18 +87,15 @@ public class PackagerMain {
      */
     public static void main(final String[] args) {
         processCommandline(args);
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
                 packagerMain = new PackagerMain();
                 log.level2Information("[CASPACkager] Command line utility started");
-                if (hasProcessedFolder)
+                if (hasProcessedFolder){
                     packagerMain.processFolder();
-                else
+                }else{
                     packagerMain.mergeCaspacCasual();
-            }
-        });
+                }
     }
+    
     
     public void mergeCaspacCasual() {
         mergeCaspacCasual(caspacWithPath, userOutputDir);
