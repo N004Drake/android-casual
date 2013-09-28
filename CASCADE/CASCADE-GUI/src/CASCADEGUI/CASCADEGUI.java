@@ -72,6 +72,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     //Used to keep track of currently selected script
     //int currentScriptIndex = -1;
     DefaultListModel listModel = new DefaultListModel();
+    List<String> scriptFiles=new ArrayList<>();
     private boolean dropEventEnable = false;
     private String slash = System.getProperty("file.separator");
     private Caspac cp;
@@ -122,7 +123,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                         for (File f : files) {
                             String file = f.getCanonicalPath();
                             scriptList.getElementAt(scriptListJList.getSelectedIndex()).individualFiles.add(f);
-                            listModel.addElement(file);
+                            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.Slash)+1), "$ZIPFILE"));
+                            
                         }
 
                     } catch (IOException | UnsupportedFlavorException ex) {
@@ -198,7 +200,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         casualOutputBrowseButton = new javax.swing.JButton();
         typeCheckBox = new javax.swing.JCheckBox();
         typeTextBox = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        saveCreateRunCASUAL = new javax.swing.JButton();
         workArea = new javax.swing.JTabbedPane();
         scriptGroup = new javax.swing.JTabbedPane();
         scriptOverview = new javax.swing.JPanel();
@@ -390,11 +392,11 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         typeTextBox.setEnabled(false);
         typeTextBox.setName("typeTextBox"); // NOI18N
 
-        jButton1.setText(bundle.getString("CASCADEGUI.jButton1.text")); // NOI18N
-        jButton1.setName("jButton1"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        saveCreateRunCASUAL.setText(bundle.getString("CASCADEGUI.saveCreateRunCASUAL.text")); // NOI18N
+        saveCreateRunCASUAL.setName("saveCreateRunCASUAL"); // NOI18N
+        saveCreateRunCASUAL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                saveCreateRunCASUALActionPerformed(evt);
             }
         });
 
@@ -410,10 +412,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 .addComponent(typeTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(typeCheckBox)
-                .addGap(10, 10, 10)
-                .addComponent(makeItCasualButton, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1))
+                .addComponent(makeItCasualButton, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveCreateRunCASUAL))
         );
         CASPACkagerPanelLayout.setVerticalGroup(
             CASPACkagerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -425,7 +427,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                     .addComponent(typeCheckBox)
                     .addComponent(makeItCasualButton)
                     .addComponent(casualOutputBrowseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1))
+                    .addComponent(saveCreateRunCASUAL))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -518,7 +520,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
         );
 
         scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
@@ -722,7 +724,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 .addContainerGap()
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(addScriptButton)
@@ -753,11 +755,11 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         script.setLayout(scriptLayout);
         scriptLayout.setHorizontalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1003, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1011, Short.MAX_VALUE)
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -826,7 +828,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
             dontateLinkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dontateLinkPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                 .addContainerGap())
         );
         dontateLinkPanelLayout.setVerticalGroup(
@@ -1017,7 +1019,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         bannerPicPanelLayout.setVerticalGroup(
             bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerPicPanelLayout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
+                .addContainerGap(27, Short.MAX_VALUE)
                 .addGroup(bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(bannerPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseLogo)))
@@ -1128,7 +1130,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1147,7 +1149,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addComponent(workArea)
+                .addComponent(workArea, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputFIle, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1172,53 +1174,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
      * Listener set up to listen for the CASPACme button
      */
     private void makeCASPACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeCASPACActionPerformed
-        try {
-            //Create new file In memory with name from the JTextField
-            File file = new File(this.caspacOutputFile.getText());
-
-
-            if (!file.toString().endsWith(".zip")) {
-                JOptionPane.showMessageDialog(this, "The file: \n"
-                        + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
-                        + "Please make sure that the file ends in a .zip", "File output error",
-                        JOptionPane.ERROR_MESSAGE);
-                log.level0Error("Output zip file not valid: \n \t" + this.caspacOutputFile.getText());
-                return;
-            }
-
-            //File overwrite check
-            if (file.exists()) {
-                log.level2Information("File exist prompting for overwrite");
-                int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.caspacOutputFile.getText()
-                        + " already exists are you sure you wish to continue.\n Any "
-                        + "previous files will be overridden.", "Overwrite existing file?",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                if (i == JOptionPane.NO_OPTION) {
-                    log.level0Error("File override declined");
-                    return;
-                } else {
-                    file.delete();
-                }
-            }
-
-            cp = buildCASPAC();
-            log.level2Information("Attempting CASCPAC write");
-            try {
-                cp.write();
-            } catch (IOException ex) {
-                log.errorHandler(ex);
-            }
-            log.level2Information("CASPAC write successfull!!!");
-            if (useEncryption.isSelected()) {
-                File temp = new File(cp.CASPAC.getAbsolutePath() + ".tmp");
-                new FileOperations().copyFile(file, temp);
-                new AES128Handler(temp).encrypt(file.getAbsolutePath(), getPassword());
-                temp.delete();
-            }
-
-            enableCasual();
-        } catch (IOException ex) {
-            Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+        if (saveCASPAC()) {
+            return;
         }
 
 
@@ -1408,8 +1365,14 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         java.awt.Point point = evt.getPoint();
         int index = jList1.locationToIndex(point);
         if (jList1.isSelectedIndex(index)) {
-            File f=(File) listModel.get(index);
-            if (f.exists()){
+            
+            
+            
+            
+            File f =(File)scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.get(index);
+            
+            
+            if (f.exists() && f.getAbsolutePath().contains(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).tempDir)){
                 f.delete();
             }
             listModel.remove(index);
@@ -1541,37 +1504,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }//GEN-LAST:event_casualOutputBrowseButtonActionPerformed
 
     private void makeItCasualButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeItCasualButtonActionPerformed
-        File caspacin = new File(this.caspacOutputFile.getText());
-        File casualout = new File(this.casualOutputFile.getText());
-        if (!caspacin.toString().endsWith(".zip")) {
-            JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.caspacOutputFile.getText() + "\n is not a valid CASPAC file.\n"
-                    + "Please make sure that the file ends in a .zip, and is a valid CASPAC", "File read error",
-                    JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input CASPAC file not valid: \n \t" + this.caspacOutputFile.getText());
+        this.saveCASPAC();
+        if (saveCASUAL()) {
             return;
         }
-        if (!caspacin.exists()) {
-            JOptionPane.showMessageDialog(this, "The file: \n"
-                    + this.caspacOutputFile.getText() + "\n is not a valid CASPAC file.\n"
-                    + "Ensure the CASPAC exists.", "File Not Found",
-                    JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input CASPAC file not found: \n \t" + this.caspacOutputFile.getText());
-            return;
-        }
-
-        if (casualout.isFile()) {
-            JOptionPane.showMessageDialog(this, "ERROR:" + this.caspacOutputFile.getText()
-                    + " is a file, and must be a folder to place the pregenerated"
-                    + "named file into.\n Please select a valid ouput folder and try again.", "Output should be directory",
-                    JOptionPane.ERROR);
-
-
-        }
-
-
-        String[] args = argBuilder();
-        PackagerMain.main(args);
     }//GEN-LAST:event_makeItCasualButtonActionPerformed
 
     private void typeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeCheckBoxActionPerformed
@@ -1646,12 +1582,13 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         // TODO add your handling code here:
     }//GEN-LAST:event_caspacOutputFileActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void saveCreateRunCASUALActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveCreateRunCASUALActionPerformed
+        this.saveCASPAC();
+        this.saveCASUAL();
         String args[]=argBuilder();
         final String filename=CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf("/")+1), ".zip", "");
         final String version=CASUAL.CASUALTools.getSVNVersion();
         final String folder=this.casualOutputFile.getText();
-        
         String[] tempFileList= new File(folder).list();
         for (final String file:tempFileList){
             if (file.startsWith(filename+"-CASUAL-R"+version)){
@@ -1665,31 +1602,31 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 
                     @Override
                     public void run() {
-                        try {
-                            //CASUAL.JavaSystem.restart(new String[]{outputFile+Statics.Slash+file});
-                            
-                            ProcessBuilder pb;
-                            if (OSTools.isWindows()) {
-                                pb= new ProcessBuilder(new String[]{"cmd.exe","/c","start ", outputFile+Statics.Slash+file});
-                            } else {
-                                pb= new ProcessBuilder(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file});
-                                
-                            }
-                            pb.directory(new File(new File( "." ).getCanonicalPath()));
-                            Process p = pb.start();
-                            
-                        //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file});
-                        } catch (IOException ex) {
-                            Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+
+                        //CASUAL.JavaSystem.restart(new String[]{outputFile+Statics.Slash+file});
+
+                        ProcessBuilder pb;
+                        if (OSTools.isWindows()) {
+                            pb= new ProcessBuilder(new String[]{"cmd.exe","/c","start ", outputFile+Statics.Slash+file});
+                        } else {
+                            new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file},true);
+
+                        }
+                       // pb.directory(new File(new File( "." ).getCanonicalPath()));
+                        //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
+                       //Process p = pb.start();
+
+                    //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file});
+
                     }  
                 };
                 Thread t=new Thread(r);
+                
                 t.start();
                 return;
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_saveCreateRunCASUALActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1747,7 +1684,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     private javax.swing.JPanel dontateLinkPanel;
     private javax.swing.JPanel dontateTextPanel;
     private javax.swing.JButton editScriptNameButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1771,6 +1707,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     private javax.swing.JTextArea overviewWorkArea;
     private javax.swing.JPopupMenu popupMenuForZipManagement;
     private javax.swing.JMenuItem removeZipFile;
+    private javax.swing.JButton saveCreateRunCASUAL;
     private javax.swing.JPanel script;
     private javax.swing.JTextArea scriptDescriptionJText;
     private javax.swing.JTabbedPane scriptGroup;
@@ -1920,7 +1857,9 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
         listModel.removeAllElements();
         for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles) {
-            listModel.addElement(f);
+            String file=f.toString();
+            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.Slash)+1), "$ZIPFILE"));
+            //listModel.addElement(f);
         }
 
     }
@@ -1938,6 +1877,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         this.casualOutputBrowseButton.setEnabled(true);
         this.typeCheckBox.setEnabled(true);
         this.makeItCasualButton.setEnabled(true);
+        saveCreateRunCASUAL.setEnabled(true);
     }
 
     private void disableCasualComponents() {
@@ -1945,6 +1885,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         this.casualOutputBrowseButton.setEnabled(false);
         this.typeCheckBox.setEnabled(false);
         this.makeItCasualButton.setEnabled(false);
+        saveCreateRunCASUAL.setEnabled(false);
+                
     }
     /*
      * Disables those items that can not be used if there is no loaded script
@@ -2103,6 +2045,84 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
     @Override
     public void setWindowBannerText(String text) {
+    }
+
+    public boolean saveCASPAC() throws HeadlessException {
+        try {
+            //Create new file In memory with name from the JTextField
+            File file = new File(this.caspacOutputFile.getText());
+            if (!file.toString().endsWith(".zip")) {
+                JOptionPane.showMessageDialog(this, "The file: \n"
+                        + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
+                        + "Please make sure that the file ends in a .zip", "File output error",
+                        JOptionPane.ERROR_MESSAGE);
+                log.level0Error("Output zip file not valid: \n \t" + this.caspacOutputFile.getText());
+                return true;
+            }
+            //File overwrite check
+            if (file.exists()) {
+                log.level2Information("File exist prompting for overwrite");
+                int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.caspacOutputFile.getText()
+                        + " already exists are you sure you wish to continue.\n Any "
+                        + "previous files will be overridden.", "Overwrite existing file?",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (i == JOptionPane.NO_OPTION) {
+                    log.level0Error("File override declined");
+                    return true;
+                } else {
+                    file.delete();
+                }
+            }
+            cp = buildCASPAC();
+            log.level2Information("Attempting CASCPAC write");
+            try {
+                cp.write();
+            } catch (IOException ex) {
+                log.errorHandler(ex);
+            }
+            log.level2Information("CASPAC write successfull!!!");
+            if (useEncryption.isSelected()) {
+                File temp = new File(cp.CASPAC.getAbsolutePath() + ".tmp");
+                new FileOperations().copyFile(file, temp);
+                new AES128Handler(temp).encrypt(file.getAbsolutePath(), getPassword());
+                temp.delete();
+            }
+            enableCasual();
+        }catch (IOException ex) {
+           Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+       }return false;
+    }
+
+    public boolean saveCASUAL() throws HeadlessException {
+        File caspacin = new File(this.caspacOutputFile.getText());
+        File casualout = new File(this.casualOutputFile.getText());
+        if (!caspacin.toString().endsWith(".zip")) {
+            JOptionPane.showMessageDialog(this, "The file: \n"
+                    + this.caspacOutputFile.getText() + "\n is not a valid CASPAC file.\n"
+                    + "Please make sure that the file ends in a .zip, and is a valid CASPAC", "File read error",
+                    JOptionPane.ERROR_MESSAGE);
+            log.level0Error("Input CASPAC file not valid: \n \t" + this.caspacOutputFile.getText());
+            return true;
+        }
+        if (!caspacin.exists()) {
+            JOptionPane.showMessageDialog(this, "The file: \n"
+                    + this.caspacOutputFile.getText() + "\n is not a valid CASPAC file.\n"
+                    + "Ensure the CASPAC exists.", "File Not Found",
+                    JOptionPane.ERROR_MESSAGE);
+            log.level0Error("Input CASPAC file not found: \n \t" + this.caspacOutputFile.getText());
+            return true;
+        }
+        if (casualout.isFile()) {
+            JOptionPane.showMessageDialog(this, "ERROR:" + this.caspacOutputFile.getText()
+                    + " is a file, and must be a folder to place the pregenerated"
+                    + "named file into.\n Please select a valid ouput folder and try again.", "Output should be directory",
+                    JOptionPane.ERROR);
+
+
+        }
+        String[] args = argBuilder();
+        PackagerMain.main(args);
+        return false;
     }
 
     /*
