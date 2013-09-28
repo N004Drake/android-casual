@@ -30,7 +30,7 @@ public class PackagerMainTest {
     @Test
     public void testMain() {
         System.out.println("main");
-        String[] args = new String[]{"--CASPAC" , "../CASPAC/fastbootRecoveryTest.zip", "--type" ,"CASPACkager Test Build", "--output", "../CASPAC/CASUAL", "--replaceReference","--Recovery--","MY Recovery","--replaceReference","--DeviceFriendlyName--"," YOUR device"};
+        String[] args = new String[]{"--CASPAC" , "../CASPAC/fastbootRecoveryTest.zip", "--type" ,"CASPACkager Test Build", "--output", "../CASPAC/CASUAL", "--replaceReference","--Recovery--","MY Recovery","--replaceReference","--DeviceFriendlyName--"," YOUR device", "--replaceFile" ,"recovry.img", "../repo/driver.properties"};
         PackagerMain.main(args);
         
         

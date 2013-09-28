@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -64,6 +65,7 @@ public class PackagerMain {
     static boolean hasProcessedFolder = false;
     public static PackagerMain packagerMain;
     static ArrayList<String[]> replaceText;
+    static ArrayList<String[]> replaceFile;
 
     /**
      * Packages a CASPAC into a CASUAL.
@@ -146,16 +148,24 @@ public class PackagerMain {
                 log.level0Error("The file " + caspacLoc + " doesn't exist please make sure it is the right location.");
                 return;
             }
-            
+
             //start CASPAC merge
             zin = new ZipInputStream(new FileInputStream(new File(caspacLoc)));
             entry = zin.getNextEntry();
             while (entry != null) {
                 InputStream entryStream = zin;
                 String name;
-                
+
+
+                //if there are files to be replaced, then replace the files
+                if (entry != null && replaceFile != null && entry.getName().endsWith(".zip")) {
+
+                    entryStream = replaceFileIfNeeded(entryStream, entry);
+
+                }
+
                 //if there are entries to be replaced, then replace the entries
-                if (entry != null && replaceText != null){
+                if (entry != null && replaceText != null) {
                     //loop through all text to be replaced
                     for (String[] replace : replaceText) {
                         //dont modify zip files
@@ -170,7 +180,7 @@ public class PackagerMain {
                         }
                         //Modify all filenames
                         name = entry.getName();
-                        if (name.contains(replace[0]) && (name.endsWith(".scr") ||name.endsWith(".zip") || name.endsWith(".meta") || name.endsWith(".txt") || name.endsWith(".properties"))) {
+                        if (name.contains(replace[0]) && (name.endsWith(".scr") || name.endsWith(".zip") || name.endsWith(".meta") || name.endsWith(".txt") || name.endsWith(".properties"))) {
                             entry = new ZipEntry(entry.getName().replaceAll(replace[0], replace[1]));
                         }
                     }
@@ -214,6 +224,20 @@ public class PackagerMain {
                 String replaceThis = args[++i];
                 String withThis = args[++i];
                 replaceText.add(new String[]{replaceThis, withThis});
+            } else if (args[i].contains("--replaceFile")) {
+                if (replaceFile == null) {
+                    replaceFile = new ArrayList<>();
+                }
+                String replaceThis = args[++i];
+                String withThis = args[++i];
+                if (!new File(withThis).exists()) {
+                    log.level0Error("File Does Not Exist:" + withThis);
+                    showMessageAndExit();
+                }
+                replaceFile.add(new String[]{replaceThis, withThis});
+
+
+
             } else {
                 log.level0Error(args[i] + " is an unrecognized command.");
                 showMessageAndExit();
@@ -375,6 +399,39 @@ public class PackagerMain {
                 log.level4Debug("processing " + f.getAbsolutePath());
                 packagerMain.mergeCaspacCasual(f.toString(), userOutputDir);
             }
+        }
+    }
+
+    private InputStream replaceFileIfNeeded(InputStream zin, ZipEntry entry) {
+        String working = Statics.getTempFolder() + "extractionof" + entry + Statics.Slash;
+        new File(working).mkdirs();
+        try {
+            CASUAL.Unzip.unZipInputStream(zin, working);
+            String[] extractList = new File(working).list();
+            for (String[] fReplacement : replaceFile) {
+                for (String fileCheck : extractList) {
+                    if (fileCheck.equals(fReplacement[0])) {
+                        new CASUAL.FileOperations().copyFile(fReplacement[1], working+fReplacement[0] );
+                    }
+                }
+            }
+            return repackEntry(entry, working);
+        } catch (ZipException ex) {
+             return repackEntry(entry, working);
+        } catch (IOException ex) {
+             return repackEntry(entry, working);
+        }
+
+
+    }
+
+    public InputStream repackEntry(ZipEntry entry, String working){
+        try {
+            CASUAL.Zip zip=new CASUAL.Zip(new File(Statics.getTempFolder()+entry.getName()));
+            zip.compressZipDir(working);
+            return new FileInputStream(Statics.getTempFolder()+entry.getName());
+        } catch (IOException ex) {
+            return null;
         }
     }
 }

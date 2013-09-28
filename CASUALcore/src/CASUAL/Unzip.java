@@ -229,8 +229,6 @@ public class Unzip {
             Destination.flush();
             Destination.close();
         }
-        ZipInput.close();
-        zStream.close();
         new Log().level3Verbose("Unzip Complete");
     }
 
