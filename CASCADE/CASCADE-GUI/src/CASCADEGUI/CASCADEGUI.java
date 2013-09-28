@@ -1585,6 +1585,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     private void saveCreateRunCASUALActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveCreateRunCASUALActionPerformed
         this.saveCASPAC();
         this.saveCASUAL();
+
+        //TODO: move this to CASPACkager. --execute or --launch paramater should launch from command line.
         String args[]=argBuilder();
         final String filename=CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf("/")+1), ".zip", "");
         final String version=CASUAL.CASUALTools.getSVNVersion();
