@@ -56,7 +56,6 @@ public class CASUALUpdates {
      */
     Log Log = new Log();
 
-    
     /**
      * downloads a file
      *
@@ -68,8 +67,10 @@ public class CASUALUpdates {
     public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
         try {
             downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
-        } catch (MalformedURLException | URISyntaxException ex) {
+        } catch (MalformedURLException ex) {
             Log.errorHandler(ex);
+        } catch (URISyntaxException ex) {
+            new Log().errorHandler(ex);
         }
         return true;
     }
@@ -159,20 +160,20 @@ public class CASUALUpdates {
     public String getWebData(String script) throws MalformedURLException, IOException, URISyntaxException {
         URL url = stringToFormattedURL(script);
         String webData;
-        try (ReadableByteChannel rbc = Channels.newChannel(url.openStream())) {
-            ByteBuffer buf = ByteBuffer.allocateDirect(10);
-            webData = "";
-            int numRead = 0;
-            while (numRead >= 0) {
-                buf.rewind();
-                numRead = rbc.read(buf);
-                buf.rewind();
-                for (int i = 0; i < numRead; i++) {
-                    byte b = buf.get();
-                    webData = webData + new String(new byte[]{b});
-                }
+        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+        ByteBuffer buf = ByteBuffer.allocateDirect(10);
+        webData = "";
+        int numRead = 0;
+        while (numRead >= 0) {
+            buf.rewind();
+            numRead = rbc.read(buf);
+            buf.rewind();
+            for (int i = 0; i < numRead; i++) {
+                byte b = buf.get();
+                webData = webData + new String(new byte[]{b});
             }
         }
+
         return webData;
     }
 
@@ -188,21 +189,19 @@ public class CASUALUpdates {
             System.out.println(url.toString());
         }
         new Log().level3Verbose("opening download stream");
-        
+
         URLConnection con = url.openConnection();
         con.setConnectTimeout(300);
         con.setReadTimeout(300);
 
         return con.getInputStream();
-        
+
     }
 
     public InputStream streamFileFromNet(String link) throws MalformedURLException, URISyntaxException, IOException {
         URL url = new URL(link);
         return url.openStream();
     }
-
- 
     /*
      * String Properties File
      * Returns location of first downloaded file
@@ -286,7 +285,7 @@ public class CASUALUpdates {
             System.out.println(url);
 
             String localFilename = tempFolder + targetFilename;
-   
+
             if (targetFilename.endsWith(".scr")) {
                 script.scriptContents = StringOperations.convertStreamToString(url.openStream());
                 script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.scriptContents), targetFilename));
@@ -296,7 +295,7 @@ public class CASUALUpdates {
             } else if (targetFilename.endsWith(".zip")) {
                 this.downloadFileFromInternet(url, localFilename, targetFilename);
                 script.scriptZipFile = localFilename;
-                 //MD5 is performed during unzip and checked at that time. 
+                //MD5 is performed during unzip and checked at that time. 
             }
 
         }

@@ -24,23 +24,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 /**
  *
  * @author adam
  */
 /**
- * attempts to replicates linux's sha256sum..  there appears to be a problem with
- * *Linux* when tested against test vectors from this page: http://www.nsrl.nist.gov/testdata/
- * I will need to review all data and figure out how to implement this later
- * 
- * This will need to be examined further. 
+ * attempts to replicates linux's sha256sum.. there appears to be a problem with
+ * *Linux* when tested against test vectors from this page:
+ * http://www.nsrl.nist.gov/testdata/ I will need to review all data and figure
+ * out how to implement this later
+ *
+ * This will need to be examined further.
  * adam@adam-desktop:~/code/android-casual/trunk/CASUALcore$ sha256sum build.xml
  * b34f8085b81991bfa95b872fb69fb25ec8041e220a0184093dbc9dee10edac48 build.xml
  *
@@ -81,23 +78,23 @@ public class SHA256sum {
         toBeSHA256 = bas;
         toBeSHA256.mark(0);
     }
-    public String getLinuxSum(String filename){
+
+    public String getLinuxSum(String filename) {
         if (filename.isEmpty()) {
-            filename="-";
+            filename = "-";
         }
         try {
-            String sha=getSha256();
-            return sha+LINUXSPACER+filename;
+            String sha = getSha256();
+            return sha + LINUXSPACER + filename;
         } catch (IOException ex) {
             return null;
         } catch (NoSuchAlgorithmException ex) {
             return null;
         }
-        
-        
-        
+
+
+
     }
-    
 
     public static String getLinuxSum(File file) {
         String name = file.getName();
@@ -108,7 +105,11 @@ public class SHA256sum {
             String linuxSHA256;
             linuxSHA256 = formatLinuxOutputSHA256Sum(sum, name);
             return linuxSHA256;
-        } catch (IOException | NoSuchAlgorithmException ex) {
+        } catch (FileNotFoundException ex) {
+            return "";
+        } catch (NoSuchAlgorithmException ex) {
+            return "";
+        } catch (IOException ex) {
             return "";
         }
     }
@@ -137,7 +138,7 @@ public class SHA256sum {
      * @throws NoSuchAlgorithmException
      */
     public String getSha256() throws IOException, NoSuchAlgorithmException {
-      toBeSHA256.reset();
+        toBeSHA256.reset();
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
@@ -162,11 +163,11 @@ public class SHA256sum {
     }
 
     public static String bytesToHex(byte[] bytes) {
-    StringBuilder sb = new StringBuilder();
-    for(byte b : bytes) {
-        sb.append(String.format("%02x", b));
-    }
-    return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
     }
 
     public static String formatLinuxOutputSHA256Sum(String sum, String name) {

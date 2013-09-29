@@ -237,9 +237,10 @@ public class CASUALLanguage {
             }
             try {
                 new Pastebin().doPosting();
-            } catch (IOException | URISyntaxException ex) {
-                Log logThis = new Log();
-                logThis.errorHandler(ex);
+            } catch (IOException ex) {
+                new Log().errorHandler(ex);
+            } catch (URISyntaxException ex) {
+                new Log().errorHandler(ex);
             }
             return "";
         }
@@ -279,8 +280,8 @@ public class CASUALLanguage {
 
         // $CLEARON will remove all actions/reactions
         if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList<>();
-            Statics.ReactionEvents = new ArrayList<>();
+            Statics.ActionEvents = new ArrayList<String>();
+            Statics.ReactionEvents = new ArrayList<String>();
             log.level4Debug("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return "";
         }
@@ -370,16 +371,15 @@ public class CASUALLanguage {
         } else if (line.startsWith("$LISTDIR")) {
             line = line.replace("$LISTDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
-            if (OSTools.isLinux()||OSTools.isMac()){
-                
+            if (OSTools.isLinux() || OSTools.isMac()) {
             } else {
-                line=line.replace("/", Statics.Slash);
+                line = line.replace("/", Statics.Slash);
             }
             File[] files = new File(line).listFiles();
-            String retval="";
-            if (files !=null && files.length > 0) {
+            String retval = "";
+            if (files != null && files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
-                    retval=retval + files[i].getAbsolutePath()+"\n";
+                    retval = retval + files[i].getAbsolutePath() + "\n";
                     try {
                         commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
                     } catch (IOException ex) {
@@ -388,8 +388,8 @@ public class CASUALLanguage {
                 }
             }
             return retval;
-            
-            
+
+
 // $MAKEDIR will make a folder
         } else if (line.startsWith("$MAKEDIR")) {
             line = line.replace("$MAKEDIR", "");
@@ -404,27 +404,27 @@ public class CASUALLanguage {
             log.level4Debug("Creating Folder: " + line);
             new FileOperations().recursiveDelete(line);
             return "";
-                
+
 // Takes a value from a command and returns to text box        
         } else if (line.startsWith("$COMMANDNOTIFICATION")) {
             line = line.replace("$COMMANDNOTIFICATION", "");
             String[] cmdSplit;
-            if (line.contains(">>>")){
-                cmdSplit=line.split(">>>",2);
-            }else if (line.contains(",")){
-                cmdSplit=line.split(",",2);
+            if (line.contains(">>>")) {
+                cmdSplit = line.split(">>>", 2);
+            } else if (line.contains(",")) {
+                cmdSplit = line.split(",", 2);
             } else {
-                cmdSplit=new String[]{line};
+                cmdSplit = new String[]{line};
             }
-            String title="Return Value";
-            if (cmdSplit.length>1){
-               title=cmdSplit[0];
-            } 
-            String retval=commandHandler(cmdSplit[cmdSplit.length-1]);
-            new CASUALMessageObject(title+">>>"+retval).showCommandNotification();
+            String title = "Return Value";
+            if (cmdSplit.length > 1) {
+                title = cmdSplit[0];
+            }
+            String retval = commandHandler(cmdSplit[cmdSplit.length - 1]);
+            new CASUALMessageObject(title + ">>>" + retval).showCommandNotification();
             return retval;
-            
-            
+
+
 
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 
@@ -686,7 +686,7 @@ public class CASUALLanguage {
         }
 
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<>();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(ADBTools.getADBCommand());
         ShellCommand.addAll(new ShellTools().parseCommandLine(Line));
         String StringCommand[] = StringOperations.convertArrayListToStringArray(ShellCommand);

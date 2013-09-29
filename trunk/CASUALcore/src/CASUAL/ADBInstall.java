@@ -18,7 +18,6 @@ package CASUAL;
 
 import CASUAL.misc.DiffTextFiles;
 
-
 /**
  *
  * @author adam
@@ -29,8 +28,8 @@ class ADBInstall {
     Log Log = new Log();
 
     public void deployADB() { //This is called by getADBCommand() so it must not use that command
-        FileOperations fo=new FileOperations();
-        if ( Statics.adbDeployed!=null && fo.verifyExists(Statics.adbDeployed) ){
+        FileOperations fo = new FileOperations();
+        if (Statics.adbDeployed != null && fo.verifyExists(Statics.adbDeployed)) {
             return;
         }
 
@@ -79,6 +78,4 @@ class ADBInstall {
             DTF.appendDiffToFile(adbIniDeployed, DTF.diffResourceVersusFile(Statics.ADBini, adbIniDeployed));
         }
     }
-   
-    
 }

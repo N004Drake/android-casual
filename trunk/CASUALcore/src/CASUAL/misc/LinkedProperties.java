@@ -29,7 +29,7 @@ import java.util.Set;
  */
 public class LinkedProperties extends Properties {
 
-    private final LinkedHashSet<Object> keys = new LinkedHashSet<>();
+    private final LinkedHashSet<Object> keys = new LinkedHashSet<Object>();
 
     @Override
     public Enumeration<Object> keys() {
@@ -44,7 +44,7 @@ public class LinkedProperties extends Properties {
 
     @Override
     public Set<String> stringPropertyNames() {
-        Set<String> set = new LinkedHashSet<>();
+        Set<String> set = new LinkedHashSet<String>();
 
         for (Object key : this.keys) {
             set.add((String) key);

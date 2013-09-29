@@ -26,6 +26,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URISyntaxException;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -139,9 +140,11 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
     private void jPastebinSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPastebinSubmitActionPerformed
         try {
             new Pastebin().doPosting();
-        } catch (IOException | URISyntaxException ex) {
+        } catch (URISyntaxException ex) {
             Log logThis = new Log();
             logThis.errorHandler(ex);
+        } catch (IOException ex) {
+            new Log().errorHandler(ex);
         }
     }//GEN-LAST:event_jPastebinSubmitActionPerformed
 

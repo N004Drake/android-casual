@@ -27,8 +27,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -40,7 +38,7 @@ public class CASUALTools {
     /**
      *
      */
-    public static boolean IDEMode = new CASUALTools().getIDEMode();
+    final public static boolean IDEMode = new CASUALTools().getIDEMode();
     Log log = new Log();
 
     /**
@@ -126,24 +124,26 @@ public class CASUALTools {
                                 prop.setProperty(entry, newMD5 + "  " + md5File[1]);
                                 pos++;
                             }
+
                             if (md5Changed) {
                                 new Log().level4Debug("MD5s for " + fileEntry + " changed. Updating...");
-                                try (FileOutputStream fos = new FileOutputStream(fileEntry)) {
-                                    prop.store(fos, null);
-                                    fos.close();
-                                }
+                                FileOutputStream fos = new FileOutputStream(fileEntry);
+                                prop.store(fos, null);
+                                fos.close();
+
+
                             }
                         } catch (FileNotFoundException ex) {
-                            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                            new Log().errorHandler(ex);
                         } catch (IOException ex) {
-                            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                            new Log().errorHandler(ex);
                         } finally {
                             try {
                                 if (in != null) {
                                     in.close();
                                 }
                             } catch (IOException ex) {
-                                Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                                new Log().errorHandler(ex);
                             }
                         }
                     }
@@ -162,8 +162,6 @@ public class CASUALTools {
      *
      * @param scriptName
      */
-   
-
     /**
      * tells if CASUAL is running in Development or Execution mode
      *
@@ -172,8 +170,8 @@ public class CASUALTools {
     private boolean getIDEMode() {
         String className = getClass().getName().replace('.', '/');
         String classJar = getClass().getResource("/" + className + ".class").toString();
-        String path=new File(".").getAbsolutePath();
-        boolean isSource=path.contains("src") && path.contains("CASUALcore");
+        String path = new File(".").getAbsolutePath();
+        boolean isSource = path.contains("src") && path.contains("CASUALcore");
         if (classJar.startsWith("file:") && isSource) {
             return true;
         } else {
@@ -218,16 +216,16 @@ public class CASUALTools {
 
     //This is only used in IDE mode for development
     public static void rewriteMD5OnCASPAC(File CASPAC) {
-     
+
         Caspac caspac;
         try {
-            caspac = new Caspac(CASPAC,Statics.getTempFolder(),0);
+            caspac = new Caspac(CASPAC, Statics.getTempFolder(), 0);
             caspac.load();
             caspac.write();
             System.exit(0);
-    
+
         } catch (IOException ex) {
-            Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
     }
 
@@ -256,7 +254,7 @@ public class CASUALTools {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
-            Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
     }
 
@@ -267,15 +265,15 @@ public class CASUALTools {
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
-            Logger.getLogger(CASUALApp.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
     }
-    
-    public static String getSVNVersion(){
+
+    public static String getSVNVersion() {
         return java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
     }
-    
-    public static void setJavaDesktopMessage(){
-        CASUAL.Statics.interaction=new CASUAL.GUI.CASUALShowJFrameMessageObject();
+
+    public static void setJavaDesktopMessage() {
+        CASUAL.Statics.interaction = new CASUAL.GUI.CASUALShowJFrameMessageObject();
     }
 }

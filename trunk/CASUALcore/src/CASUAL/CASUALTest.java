@@ -23,8 +23,6 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -124,7 +122,7 @@ public class CASUALTest {
         try {
             launch.join();
         } catch (InterruptedException ex) {
-            Logger.getLogger(CASUALTest.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
     }
     /**

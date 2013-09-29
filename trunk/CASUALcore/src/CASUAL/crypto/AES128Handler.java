@@ -36,8 +36,6 @@ import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.NoSuchPaddingException;
@@ -95,8 +93,18 @@ public class AES128Handler {
             new Log().level2Information("obtaining key...");
             InputStream is = new SequenceInputStream(Collections.enumeration(streams));
             writeCipherFile(is, randomness, output, key, Cipher.ENCRYPT_MODE);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IOException ex) {
+        } catch (NoSuchAlgorithmException ex) {
             return false;
+        } catch (FileNotFoundException ex) {
+            new Log().errorHandler(ex);
+        } catch (NoSuchPaddingException ex) {
+            new Log().errorHandler(ex);
+        } catch (InvalidKeyException ex) {
+            new Log().errorHandler(ex);
+        } catch (InvalidAlgorithmParameterException ex) {
+            new Log().errorHandler(ex);
+        } catch (IOException ex) {
+            new Log().errorHandler(ex);
         }
         //key is returned.
         return true;
@@ -121,7 +129,7 @@ public class AES128Handler {
             byte[] IV = new byte[16];
             fis.read(IV);
             return writeCipherFile(fis, IV, output, key, Cipher.DECRYPT_MODE);
-        } catch (IOException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchAlgorithmException ex) {
+        } catch (NoSuchAlgorithmException ex) {
             return null;
         }
     }
@@ -149,17 +157,17 @@ public class AES128Handler {
     }
 
     private byte[] secureRandomCharGen(char[] key, int numberOfChars) throws NoSuchAlgorithmException {
-        
+
         log.level4Debug("Generating randomness");
         SecureRandom random = new SecureRandom(SecureRandom.getSeed(key.length));
         byte bytes[] = new byte[numberOfChars];
         random.nextBytes(bytes);  //burn some bits
-        byte[] temp=new byte[1];
+        byte[] temp = new byte[1];
         for (int i = 0; i < numberOfChars - 1; i++) {
             random.nextBytes(temp);
-            bytes[i]=temp[0];
+            bytes[i] = temp[0];
             //generate a new random generator
-            random =new SecureRandom();
+            random = new SecureRandom();
             random.nextBytes(new byte[key.length]);//burn bits
         }
         return bytes;
@@ -184,8 +192,10 @@ public class AES128Handler {
             KeySpec keyspec = new PBEKeySpec(input, "--salt--".getBytes(), 100000, maxSecurity);
             Key key = factory.generateSecret(keyspec);
             return key.getEncoded();
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            Logger.getLogger(AES128Handler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            new Log().errorHandler(ex);
+        } catch (InvalidKeySpecException ex) {
+            new Log().errorHandler(ex);
         }
         return null;
     }

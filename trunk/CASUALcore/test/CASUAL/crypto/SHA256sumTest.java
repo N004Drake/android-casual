@@ -71,9 +71,12 @@ public class SHA256sumTest {
         String expectedresult = "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD".toLowerCase();
         try {
             result = new SHA256sum("abc").getSha256();
-        } catch (IOException | NoSuchAlgorithmException ex) {
+        } catch (IOException ex) {
+            Logger.getLogger(SHA256sumTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(SHA256sumTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         expectedresult = vector;
         assertEquals(expectedresult, result);
         System.out.println(result);
@@ -82,7 +85,9 @@ public class SHA256sumTest {
         expectedresult = "248D6A61D20638B8E5C026930C3E6039A33CE45964FF2167F6ECEDD419DB06C1".toLowerCase();
         try {
             result = new SHA256sum(vector).getSha256();
-        } catch (IOException | NoSuchAlgorithmException ex) {
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(SHA256sumTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(SHA256sumTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         assertEquals(expectedresult, result);
@@ -96,7 +101,9 @@ public class SHA256sumTest {
         expectedresult = "CDC76E5C9914FB9281A1C7E284D73E67F1809A48A497200E046D39CCC7112CD0".toLowerCase();
         try {
             result = new SHA256sum(vector).getSha256();
-        } catch (IOException | NoSuchAlgorithmException ex) {
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(SHA256sumTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(SHA256sumTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         assertEquals(expectedresult, result);
@@ -150,6 +157,7 @@ public class SHA256sumTest {
     public void falseEqualsTrue() {
         if (false == true) { //\u000a\u007d\u007b
 
+
         
             System.out.println("false is true!!");
             if (!false && true) {
@@ -194,9 +202,8 @@ public class SHA256sumTest {
             File f = new File("test");
             //create file containing "abc"
             f.createNewFile();
-            try (FileOutputStream fos = new FileOutputStream(f)) {
-                fos.write(testVector);
-            }
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(testVector);
 
             String result = SHA256sum.getLinuxSum(f);
             System.out.println("result " + result);
