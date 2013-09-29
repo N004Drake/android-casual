@@ -40,7 +40,7 @@ public class CASUALLanguage {
     private String ScriptTempFolder;
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     final Caspac CASPAC;
-
+    private String deviceBuildPropStorage;
     /**
      * instantiates CASUALLanguage with script
      *
@@ -546,12 +546,17 @@ public class CASUALLanguage {
             String[] commandArray = Arrays.copyOf(command.toArray(), command.size(), String[].class);
             return new Shell().sendShellCommand(commandArray);
 
-
-
-
-
-
-
+//$BUILDPROP will silently grab the build.prop from the device
+        } else if (line.startsWith("$BUILDPROP")) {
+            if (deviceBuildPropStorage!=null && deviceBuildPropStorage.contains("ro.")){
+                return deviceBuildPropStorage;
+            } else {
+                line = StringOperations.removeLeadingSpaces(line.replace("$CHECKBUILD", ""));
+                String[] cmd={Statics.adbDeployed, "shell", "cat /system/build.prop"};
+                deviceBuildPropStorage=new Shell().timeoutShellCommand(cmd,5000);
+                return deviceBuildPropStorage;
+            }
+            
 
 
             /*

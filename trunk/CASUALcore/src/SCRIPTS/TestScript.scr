@@ -44,11 +44,12 @@ $ECHO [PASS] done with ON testing.
 
 #this is just in case I want to use the word woot again while writing this.
 $CLEARON
-
-$IFCONTAINS foo $INCOMMAND $ADB shell "echo woot `pwd`" $DO $HALT $ECHO Failure
-$IFCONTAINS foo $INCOMMAND $ADB shell "echo foo" $DO $ECHO [PASS] IFCONTAINS
-$IFNOTCONTAINS woot $INCOMMAND $ADB shell "echo woot `pwd`" $DO $HALT $ECHO Failure
-$IFNOTCONTAINS foo $INCOMMAND $ADB shell "echo woot `pwd`" $DO $ECHO [PASS] IFNOTCONTAINS
+$IFCONTAINS adfadfa $INCOMMAND $BUILDPROP $DO $HALT $ECHO Failure
+$IFNOTCONTAINS ro.builasfdadfad $INCOMMAND $BUILDPROP $DO $ECHO [PASS] IFNOTCONTAINS
+$IFCONTAINS ro.buiasdasald. $INCOMMAND $BUILDPROP $DO $HALT $ECHO Failure
+$IFCONTAINS ro.build. $INCOMMAND $BUILDPROP $DO $ECHO [PASS] IFCONTAINS
+$IFNOTCONTAINS ro.build. $INCOMMAND $BUILDPROP $DO $HALT $ECHO Failure
+$IFNOTCONTAINS ro.builadfadfd. $INCOMMAND $BUILDPROP $DO $ECHO [PASS] IFNOTCONTAINS
 
 $ECHO This is ZIPFILE reference $ZIPFILE.
 $ADB shell "echo $ZIPFILEadb usb.ini $ZIPFILEadb_usb.ini $ZIPFILE and $ZIPFILE $ZIPFILE"
