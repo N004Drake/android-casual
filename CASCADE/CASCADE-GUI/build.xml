@@ -78,10 +78,10 @@
         <loadproperties srcfile="../../CASUALcore/src/CASUAL/resources/CASUALApp.properties"/>
         <jar jarfile="dist/CASCADE-r${Application.revision}-dist.jar">
                 <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-                <zipfileset src="dist/lib/CASUALcoreNoResources.jar" excludes="META-INF/*" />
-                <zipfileset src="dist/lib/CASPACcreator.jar" excludes="META-INF/*" />
-                <zipfileset src="dist/lib/PACKAGER.jar" excludes="META-INF/*" />
-                <zipfileset src="dist/lib/swing-layout-1.0.4.jar" excludes="META-INF/*" />
+                <zipfileset src="../../CASUALcore/dist/CASUALcoreNoResources.jar" excludes="META-INF/*" />
+                <zipfileset src="../../CASCADE/CASPACcreator/dist/CASPACcreator.jar" excludes="META-INF/*" />
+                <zipfileset src="../../CASPACkager/dist/PACKAGER.jar" excludes="META-INF/*" />
+                
             <manifest>
                 <attribute name="Main-Class" value="CASCADEGUI.main"/>
             </manifest>

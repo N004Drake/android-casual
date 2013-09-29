@@ -18,7 +18,7 @@ import CASUAL.Zip;
  */
 public class mainWindowController {
     
-    private DefaultListModel<String> fileList = new DefaultListModel<>();
+    private DefaultListModel<String> fileList = new DefaultListModel<String>();
     private Zip zip;
     private JFrame mw;
     private boolean force = false;
