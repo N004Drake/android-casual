@@ -23,19 +23,17 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @author loganludington
  */
 public class ScriptTimelineWindow extends javax.swing.JFrame {
-    ArrayList<Command> commandArrayList = new ArrayList<>();
+
+    ArrayList<Command> commandArrayList = new ArrayList<Command>();
     DefaultMutableTreeNode commandList = new DefaultMutableTreeNode("Command List Types");
     DefaultMutableTreeNode commands = new DefaultMutableTreeNode("Commands");
     DefaultMutableTreeNode conditionals = new DefaultMutableTreeNode("Conditionals");
     DefaultMutableTreeNode prompts = new DefaultMutableTreeNode("Prompts");
     DefaultMutableTreeNode statics = new DefaultMutableTreeNode("Statics");
     DefaultMutableTreeNode controls = new DefaultMutableTreeNode("Controls");
-    
-    
-    
 
     /**
-     * Creates new form CASCADEGUIScriptTimeline 
+     * Creates new form CASCADEGUIScriptTimeline
      */
     public ScriptTimelineWindow() {
         initComponents();
@@ -46,8 +44,8 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
         commandList.add(controls);
         makeCommandList();
         blankOutJLabels();
-        
-        
+
+
     }
 
     /**
@@ -260,8 +258,9 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
-            if (commandArrayList.contains(jTree1.getSelectionPath().getLastPathComponent().toString()))
-                System.out.println("test");
+        if (commandArrayList.contains(jTree1.getSelectionPath().getLastPathComponent().toString())) {
+            System.out.println("test");
+        }
     }//GEN-LAST:event_jTree1ValueChanged
 
     /**
@@ -319,7 +318,7 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
     private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 
-    public final void makeCommandList(){
+    public final void makeCommandList() {
         Properties prop = new Properties();
         try {
             prop.load(CASCADEGUI.CASCADEGUI.class.getClassLoader().getResourceAsStream("CASCADEGUI/resources/Commands.properties"));
@@ -328,73 +327,60 @@ public class ScriptTimelineWindow extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(ScriptTimelineWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        for (String s: prop.stringPropertyNames()) {
-            if (s.contains(".Name"))
-            {
+        for (String s : prop.stringPropertyNames()) {
+            if (s.contains(".Name")) {
                 commandArrayList.add(new Command(prop.getProperty(s), prop));
             }
-          
+
         }
-        for (Command c : commandArrayList)
-        {
-            switch(c.type){
-                case "Control":
-                    controls.add(new DefaultMutableTreeNode(c));
-                    break;
-                case "Command":
-                    commands.add(new DefaultMutableTreeNode(c));
-                    break;
-                case "Static":
-                    statics.add(new DefaultMutableTreeNode(c));
-                    break;
-                case "Conditional":
-                    conditionals.add(new DefaultMutableTreeNode(c));
-                    break;
-                case "Prompt":
-                    prompts.add(new DefaultMutableTreeNode(c));
-                    break;
-                default:
-                    break;
+
+
+        for (Command c : commandArrayList) {
+            if (c.equals("Control")) {
+                controls.add(new DefaultMutableTreeNode(c));
+            } else if (c.equals("Command")) {
+                commands.add(new DefaultMutableTreeNode(c));
+            } else if (c.equals("Static")) {
+                statics.add(new DefaultMutableTreeNode(c));
+            } else if (c.equals("Conditional")) {
+                conditionals.add(new DefaultMutableTreeNode(c));
+            } else if (c.equals("Prompt")) {
+                prompts.add(new DefaultMutableTreeNode(c));
+
+
             }
         }
     }
-    
-    private void blankOutJLabels()
-    {
+
+    private void blankOutJLabels() {
         this.commandNameLabel.setText("");
         this.commandSyntaxLabel.setText("");
         this.commandTypeLabel.setText("");
         this.commandDescriptionTextArea.setText("");
     }
 
+    public class Command {
 
-        
-        public class Command {
-            public String name = "";
-            public String type = "";
-            public String script="";
-            public String syntax="";
-            public String description="";
-            
-            public Command(String name, Properties prop){
-                this.name = name.trim();
-                this.type = prop.getProperty("Commands."+ name + ".Type");
-                this.script = prop.getProperty("Commands."+ name + ".Script");
-                this.syntax = prop.getProperty("Commands."+ name + ".Syntax");
-                this.description = prop.getProperty("Commands."+ name + ".Description");
-            }
-            public Command() {
-                
-            }
-            
-            
-            @Override
-            public String toString()
-            {
-                return name;
-            }
+        public String name = "";
+        public String type = "";
+        public String script = "";
+        public String syntax = "";
+        public String description = "";
+
+        public Command(String name, Properties prop) {
+            this.name = name.trim();
+            this.type = prop.getProperty("Commands." + name + ".Type");
+            this.script = prop.getProperty("Commands." + name + ".Script");
+            this.syntax = prop.getProperty("Commands." + name + ".Syntax");
+            this.description = prop.getProperty("Commands." + name + ".Description");
         }
-    
-    
 
+        public Command() {
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 }

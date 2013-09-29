@@ -436,7 +436,6 @@ public class Zip {
     }
 
     /**
-     * @deprecated No longer used. Replaced with addFilesToExistingZip.
      * @param file
      * @throws IOException
      */
