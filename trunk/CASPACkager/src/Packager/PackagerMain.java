@@ -158,14 +158,14 @@ public class PackagerMain {
 
 
                 //if there are files to be replaced, then replace the files
-                if (entry != null && replaceFile != null && entry.getName().endsWith(".zip")) {
+                if ( replaceFile != null && entry.getName().endsWith(".zip")) {
 
                     entryStream = replaceFileIfNeeded(entryStream, entry);
 
                 }
 
                 //if there are entries to be replaced, then replace the entries
-                if (entry != null && replaceText != null) {
+                if (replaceText != null) {
                     //loop through all text to be replaced
                     for (String[] replace : replaceText) {
                         //dont modify zip files
@@ -219,14 +219,14 @@ public class PackagerMain {
                 processFolder = StringOperations.removeLeadingAndTrailingSpaces(args[++i]);
             } else if (args[i].contains("--replaceReference")) {
                 if (replaceText == null) {
-                    replaceText = new ArrayList<>();
+                    replaceText = new ArrayList<String[]>();
                 }
                 String replaceThis = args[++i];
                 String withThis = args[++i];
                 replaceText.add(new String[]{replaceThis, withThis});
             } else if (args[i].contains("--replaceFile")) {
                 if (replaceFile == null) {
-                    replaceFile = new ArrayList<>();
+                    replaceFile = new ArrayList<String[]>();
                 }
                 String replaceThis = args[++i];
                 String withThis = args[++i];
@@ -318,7 +318,7 @@ public class PackagerMain {
     }
 
     public String[] getCaspacFileList(String caspacLoc) {
-        ArrayList<String> fileList = new ArrayList<>();
+        ArrayList<String> fileList = new ArrayList<String>();
         if (!new File(caspacLoc).exists()) {
             log.level0Error("CASPAC requested not a valid file.");
             return null;
@@ -411,25 +411,25 @@ public class PackagerMain {
             for (String[] fReplacement : replaceFile) {
                 for (String fileCheck : extractList) {
                     if (fileCheck.equals(fReplacement[0])) {
-                        new CASUAL.FileOperations().copyFile(fReplacement[1], working+fReplacement[0] );
+                        new CASUAL.FileOperations().copyFile(fReplacement[1], working + fReplacement[0]);
                     }
                 }
             }
             return repackEntry(entry, working);
         } catch (ZipException ex) {
-             return repackEntry(entry, working);
+            return repackEntry(entry, working);
         } catch (IOException ex) {
-             return repackEntry(entry, working);
+            return repackEntry(entry, working);
         }
 
 
     }
 
-    public InputStream repackEntry(ZipEntry entry, String working){
+    public InputStream repackEntry(ZipEntry entry, String working) {
         try {
-            CASUAL.Zip zip=new CASUAL.Zip(new File(Statics.getTempFolder()+entry.getName()));
+            CASUAL.Zip zip = new CASUAL.Zip(new File(Statics.getTempFolder() + entry.getName()));
             zip.compressZipDir(working);
-            return new FileInputStream(Statics.getTempFolder()+entry.getName());
+            return new FileInputStream(Statics.getTempFolder() + entry.getName());
         } catch (IOException ex) {
             return null;
         }
