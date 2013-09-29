@@ -30,7 +30,7 @@ public class PackagerMainTest {
     @Test
     public void testMain() {
         System.out.println("main");
-        String[] args = new String[]{"--CASPAC" , "../CASPAC/fastbootRecoveryTest.zip", "--type" ,"CASPACkager Test Build", "--output", "../CASPAC/CASUAL", "--replaceReference","--Recovery--","TWRP Recovery","--replaceReference","--DeviceFriendlyName--","Nexus 7 2012", "--replaceReference", "--ProductName--","ro.product.name=nakasi", "--replaceFile" ,"recovery.img", "test/Packager/openrecovery-twrp-2.6.3.0-grouper.img"};
+        String[] args = new String[]{"--CASPAC", "../CASPAC/fastbootRecoveryTest.zip", "--type", "CASPACkager Test Build", "--output", "../CASPAC/CASUAL", "--replaceReference", "--Recovery--", "TWRP Recovery", "--replaceReference", "--DeviceFriendlyName--", "Nexus 7 2012", "--replaceReference", "--ProductName--", "ro.product.name=nakasi", "--replaceFile", "recovery.img", "test/Packager/openrecovery-twrp-2.6.3.0-grouper.img"};
         PackagerMain.main(args);
         
         

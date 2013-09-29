@@ -42,7 +42,7 @@ public class CASPACcreator {
     public boolean ignore = false;
 
     private String outputfile = null;
-    List<File> inputfiles = new ArrayList<>();  //temp holding for collecting files.
+    List<File> inputfiles = new ArrayList<File>();  //temp holding for collecting files.
     boolean shutdown = false;
     Log log = new Log();
 
