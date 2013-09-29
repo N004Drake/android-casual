@@ -192,8 +192,12 @@ public class WindowsDrivers {
                     exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/driver.properties");
                 }
             }
-        } catch (IOException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             log.level0Error("@problemWithOnlineRepo");
+        } catch (FileNotFoundException ex) {
+            new Log().errorHandler(ex);
+        } catch (IOException ex) {
+            new Log().errorHandler(ex);
         }
         //verify MD5
         String driverreturn = new Shell().sendShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""});
@@ -376,18 +380,17 @@ public class WindowsDrivers {
      */
     private Pattern getRegExPattern(String whatPattern) {
         if (!whatPattern.equals("")) {
-            switch (whatPattern) {
-                case "orphans":
-                    return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:\\s[CASUAL's|Samsung]+\\s[Android\\sDevice])");
-                case "inf":
-                    return Pattern.compile("[o|Oe|Em|M]{3}[0-9]{1,4}\\.inf(?=\\s*Provider:\\slibusbK\\s*Class:\\s*libusbK USB Devices)");
-                case "install":
-                    return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}(?=.*:)");
-                case "Matching devices":
-                    return Pattern.compile("(?<=\\s)[0-9]{1,3}?(?=[\\smatching\\sdevice\\(s\\)\\sfound])");
-                default:
-                    log.level0Error("getRegExPattern() no known pattern requested");
-                    return null;
+            if (whatPattern.equals("orphans")) {
+                return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:\\s[CASUAL's|Samsung]+\\s[Android\\sDevice])");
+            } else if (whatPattern.equals("inf")) {
+                return Pattern.compile("[o|Oe|Em|M]{3}[0-9]{1,4}\\.inf(?=\\s*Provider:\\slibusbK\\s*Class:\\s*libusbK USB Devices)");
+            } else if (whatPattern.equals("install")) {
+                return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}(?=.*:)");
+            } else if (whatPattern.equals("Matching devices")) {
+                return Pattern.compile("(?<=\\s)[0-9]{1,3}?(?=[\\smatching\\sdevice\\(s\\)\\sfound])");
+            } else {
+                log.level0Error("getRegExPattern() no known pattern requested");
+                return null;
             }
         } else {
             log.level0Error("getRegExPattern() no pattern requested");

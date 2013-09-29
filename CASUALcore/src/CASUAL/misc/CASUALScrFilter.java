@@ -26,6 +26,7 @@ public class CASUALScrFilter extends javax.swing.filechooser.FileFilter {
 
     /**
      * chooses only valid script files
+     *
      * @param file file to test
      * @return true if file is a script
      */
@@ -37,6 +38,7 @@ public class CASUALScrFilter extends javax.swing.filechooser.FileFilter {
 
     /**
      * files to be listed
+     *
      * @return casual scripts only
      */
     @Override

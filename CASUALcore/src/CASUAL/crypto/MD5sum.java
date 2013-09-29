@@ -33,6 +33,7 @@ public class MD5sum {
 
     /**
      * compares an MD5 to a file
+     *
      * @param f file to be compared
      * @param MD5 expected MD5
      * @return true if matches
@@ -47,6 +48,7 @@ public class MD5sum {
 
     /**
      * gets MD5 of input stream
+     *
      * @param is stream to be MD5d
      * @return md5 of stream
      */
@@ -56,6 +58,7 @@ public class MD5sum {
 
     /**
      * MD5s a file
+     *
      * @param f file to MD5
      * @return md5 of file
      */
@@ -71,6 +74,7 @@ public class MD5sum {
 
     /**
      * md5s an input stream
+     *
      * @param is stream to MD5
      * @return md5 of stream
      */
@@ -93,7 +97,7 @@ public class MD5sum {
                 return output;
 
             } finally {
-                if (is!=null ){
+                if (is != null) {
                     is.close();
                 }
             }
@@ -109,6 +113,7 @@ public class MD5sum {
 
     /**
      * compares files to MD5 to verify at least one matches
+     *
      * @param LinuxFormat MD5 to compare
      * @param MD5Filenames filenames to be checked
      * @return true if all MD5s were matched to files
@@ -174,6 +179,7 @@ public class MD5sum {
 
     /**
      * splits a Linux MD5sum value into a md5 and a filename
+     *
      * @param md5 linux md5 sum
      * @return md5,filename
      */
@@ -184,42 +190,47 @@ public class MD5sum {
 
     /**
      * returns MD5 from a linux md5sum
+     *
      * @param md5 linux MD5sum
      * @return md5
      */
     public String getMD5fromLinuxMD5String(String md5) {
         return splitMD5String(md5)[0];
     }
-    
+
     /**
-     * Returns the standard md5sum found on Linux as though the file were
-     * in the same directory
+     * Returns the standard md5sum found on Linux as though the file were in the
+     * same directory
+     *
      * @param file to be MD5sum'd
-     * @return 32digitMd5Sum+"  "+file.Name
+     * @return 32digitMd5Sum+" "+file.Name
      */
-    public String getLinuxMD5Sum(File file){
-        String md5=this.md5sum(file);
-        String filename=file.getName();
-        return convertMD5andFiletoLinuxMD5Sum(md5,filename);
-        
-        
-    } 
+    public String getLinuxMD5Sum(File file) {
+        String md5 = this.md5sum(file);
+        String filename = file.getName();
+        return convertMD5andFiletoLinuxMD5Sum(md5, filename);
+
+
+    }
+
     /**
-     * Returns the standard md5sum found on Linux as though the file were
-     * in the same directory
+     * Returns the standard md5sum found on Linux as though the file were in the
+     * same directory
+     *
      * @param file to be MD5sum'd
-     * @return 32digitMd5Sum+"  "+file.Name
+     * @return 32digitMd5Sum+" "+file.Name
      */
-    public String getLinuxMD5Sum(InputStream stream,String filename){
-        String md5=this.md5sum(stream);
-        return convertMD5andFiletoLinuxMD5Sum(md5,filename);
-        
-        
-        
+    public String getLinuxMD5Sum(InputStream stream, String filename) {
+        String md5 = this.md5sum(stream);
+        return convertMD5andFiletoLinuxMD5Sum(md5, filename);
+
+
+
     }
 
     /**
      * gets filename from linux md5sum
+     *
      * @param md5 linux md5sum
      * @return filename of md5sum input
      */
@@ -233,6 +244,7 @@ public class MD5sum {
 
     /**
      * returns a standard md5sum
+     *
      * @param md5 md5 to be inserted
      * @param filename filename to be appended
      * @return linux md5sum
@@ -242,7 +254,8 @@ public class MD5sum {
     }
 
     /**
-     * tests to see if a line matches an md5sum 
+     * tests to see if a line matches an md5sum
+     *
      * @param testLine line in question
      * @return true if this is contains a 32 byte hex string
      */
@@ -252,7 +265,8 @@ public class MD5sum {
     }
 
     /**
-     * picks the new MD5 if available 
+     * picks the new MD5 if available
+     *
      * @param newMd5List new MD5s
      * @param OldMD5 old md5s
      * @return new md5s if available

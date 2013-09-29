@@ -20,8 +20,6 @@ import CASUAL.caspac.Caspac;
 import java.io.File;
 import java.io.IOException;
 import java.security.CodeSource;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
@@ -30,43 +28,44 @@ import java.util.zip.ZipException;
  */
 public final class CASUALMain {
 
-
-    String password="";
+    String password = "";
     File caspacLocation;
-    boolean exitWhenDone=false;
-    boolean execute=false;
-    boolean useGUI=false;
-    private void doArgsCheck(String[] args){
-        for (int i=0; i<args.length; i++){
+    boolean exitWhenDone = false;
+    boolean execute = false;
+    boolean useGUI = false;
+
+    private void doArgsCheck(String[] args) {
+        for (int i = 0; i < args.length; i++) {
             if (args[i].contains("--password") || args[i].contains("-p")) {
                 password = args[++i];
             }
             if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
-               if (new File(args[++i]).exists()){
-                   caspacLocation=new File(args[i]);
-                   new Log().level4Debug("Setting CASPAC location to "+caspacLocation.getAbsolutePath());
-               } else {
-                   new Log().level0Error("@fileNotFound");
-                   return;
-               }
-               
+                if (new File(args[++i]).exists()) {
+                    caspacLocation = new File(args[i]);
+                    new Log().level4Debug("Setting CASPAC location to " + caspacLocation.getAbsolutePath());
+                } else {
+                    new Log().level0Error("@fileNotFound");
+                    return;
+                }
+
             }
             if (args[i].contains("--gui") || args[i].contains("-g")) {
                 useGUI = true;
             }
             if (args[i].contains("--nosound") || args[i].contains("-n")) {
-                AudioHandler.useSound=false;
+                AudioHandler.useSound = false;
             }
             if (args[i].contains("--execute") || args[i].contains("-e")) {
-               execute=true;
-               i++;
+                execute = true;
+                i++;
             }
 
         }
-        
-        
-        
+
+
+
     }
+
     /**
      * startup is where CASUAL starts its normal routines for both
      *
@@ -74,15 +73,17 @@ public final class CASUALMain {
      */
     public void startup(String[] args) {
         //make the temp folder
-        if (Statics.getTempFolder()==null)Statics.setTempFolder(Statics.getTempFolder());
-        
+        if (Statics.getTempFolder() == null) {
+            Statics.setTempFolder(Statics.getTempFolder());
+        }
+
         new FileOperations().makeFolder(Statics.getTempFolder());
 
         //parse args
-        if (args.length>0){
+        if (args.length > 0) {
             doArgsCheck(args);
-        }  else {
-            useGUI=true;
+        } else {
+            useGUI = true;
         }
         //prepare the CASPAC
         Thread prepCASPAC = prepareCaspac();
@@ -90,16 +91,16 @@ public final class CASUALMain {
         //start the GUI if required
         Thread startGUI = null;
         startGUI = startGUI(startGUI);//starts the GUI if required
-        
+
         //deploy ADB
         Thread adb = startADB();
         Statics.lockGUIformPrep = true;
-                         
+
         try {
             prepCASPAC.join();
             //if not a single commmand, then load up the active script
-            if (!execute ){
-                if (Statics.CASPAC!=null && Statics.CASPAC.scripts!=null && Statics.CASPAC.scripts.size()>=1){
+            if (!execute) {
+                if (Statics.CASPAC != null && Statics.CASPAC.scripts != null && Statics.CASPAC.scripts.size() >= 1) {
                     new Log().level4Debug("Finalizing active script up to be run");
                     Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
                     Statics.CASPAC.getActiveScript().scriptContinue = true;
@@ -109,18 +110,18 @@ public final class CASUALMain {
                 //Using command line mode
                 Statics.setStatus("waiting for ADB");
                 adb.join(); //wait for adb deployment
-                
+
                 //start the device monitor
                 CASUALConnectionStatusMonitor.DeviceCheck.start();
-                
+
                 //wait for complete;
-                
-                if (execute ){
+
+                if (execute) {
                     doConsoleStartup(args);
                 } else {
                     CASUALConnectionStatusMonitor.DeviceCheck.stop();
                     Statics.CASPAC.waitForUnzipComplete();
-                    
+
                     new CASUALScriptParser().executeFirstScriptInCASPAC(Statics.CASPAC);
                     CASUALApp.shutdown(0);
                 }  //use command line args
@@ -149,7 +150,7 @@ public final class CASUALMain {
                 Statics.setStatus("Complete");
                 new Log().level2Information("@scriptComplete");
             } else {
-                Statics.setStatus("Invalid CASUAL Startup argument "+args[i]);
+                Statics.setStatus("Invalid CASUAL Startup argument " + args[i]);
                 new Log().level0Error("@unrecognizedCommand");
             }
 
@@ -162,28 +163,28 @@ public final class CASUALMain {
     public Runnable setupCASUALCASPAC = new Runnable() {
         @Override
         public void run() {
-            
-            if (caspacLocation!=null && caspacLocation.exists()){
+
+            if (caspacLocation != null && caspacLocation.exists()) {
                 try {
                     Caspac cp;
-                    if (caspacLocation !=null && caspacLocation.exists() && !password.isEmpty()){
-                        cp=new Caspac(caspacLocation,Statics.getTempFolder(),0,password.toCharArray());
-                        password="";
-                    } else if (caspacLocation !=null && caspacLocation.exists()){
-                        cp=new Caspac(caspacLocation,Statics.getTempFolder(),0);
-                    
+                    if (caspacLocation != null && caspacLocation.exists() && !password.isEmpty()) {
+                        cp = new Caspac(caspacLocation, Statics.getTempFolder(), 0, password.toCharArray());
+                        password = "";
+                    } else if (caspacLocation != null && caspacLocation.exists()) {
+                        cp = new Caspac(caspacLocation, Statics.getTempFolder(), 0);
+
                     } else {
                         new Log().level4Debug("exiting setupCASUALCASPAC().  Nothing to be done");
                         return;
                     }
                     cp.loadFirstScriptFromCASPAC();
-                    Statics.CASPAC=cp;
+                    Statics.CASPAC = cp;
                 } catch (IOException ex) {
                     new Log().errorHandler(ex);
                 } catch (Exception ex) {
-                    Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+                    new Log().errorHandler(ex);
                 }
-                
+
             } else if (!execute) {   //execute is for single commands
                 //Build a CASPAC from the SCRIPTS folder
                 CodeSource src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
@@ -194,16 +195,16 @@ public final class CASUALMain {
                     //cp.load();
                     Statics.CASPAC = cp;
                 } catch (ZipException ex) {
-                    Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                    new Log().errorHandler(ex);
                 } catch (IOException ex) {
-                    Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+                    new Log().errorHandler(ex);
                 }
             }
         }
     };
 
     public Thread startGUI(Thread startGUI) {
-        if (useGUI|| Statics.dumbTerminalGUI) {
+        if (useGUI || Statics.dumbTerminalGUI) {
             startGUI = new Thread(new CASUALTools().GUI);
             startGUI.setName("CASUAL GUI");
             Statics.setStatus("launching GUI");

@@ -20,7 +20,6 @@ import CASUAL.AudioHandler;
 import CASUAL.misc.BooleanOperations;
 import CASUAL.CASUALApp;
 import CASUAL.CASUALTools;
-import CASUAL.network.CASUALUpdates;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
@@ -29,7 +28,6 @@ import CASUAL.Unzip;
 import CASUAL.Zip;
 import CASUAL.crypto.AES128Handler;
 import CASUAL.crypto.MD5sum;
-
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -48,11 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -63,15 +58,14 @@ import javax.imageio.ImageIO;
  * @author adam
  */
 public final class Caspac {
-/*TODO: update this.build.bannerPic=tempbannerpic;
- * at the end of every load operation involving loading
- * build.properties files.  This is important because
- * the logo.png location is stored on the filesystem,
- * not in the caspac.  Once caspac is loaded, if build.properties 
- * is loaded last, it will be an invalid file reference.
- */
+    /*TODO: update this.build.bannerPic=tempbannerpic;
+     * at the end of every load operation involving loading
+     * build.properties files.  This is important because
+     * the logo.png location is stored on the filesystem,
+     * not in the caspac.  Once caspac is loaded, if build.properties 
+     * is loaded last, it will be an invalid file reference.
+     */
 
-    
     /* Loads a CASPAC
      * Types 0 CASPAC
      * Type 1 CASUAL
@@ -82,47 +76,47 @@ public final class Caspac {
     public BufferedImage logo;
     public final File CASPAC;
     public final CodeSource CASPACsrc;
-    public String overview="";
+    public String overview = "";
     public Build build;
-    public ArrayList<Script> scripts = new ArrayList<>();
+    public ArrayList<Script> scripts = new ArrayList<Script>();
     public final String TempFolder;
     public Log log = new Log();
     FileOperations fo = new FileOperations();
-    private ArrayList<Thread> unzipThreads = new ArrayList<>();
+    private ArrayList<Thread> unzipThreads = new ArrayList<Thread>();
     //For CASUAL mode
     private Script activeScript;
-    public boolean caspacShouldBeDeletedAfterExtraction=false;
-    public static boolean debug=false;
+    public boolean caspacShouldBeDeletedAfterExtraction = false;
+    public static boolean debug = false;
     /*
      * Constructor for Caspac
      */
-    
+
     public Caspac(File caspac, String tempDir, int type) throws IOException {
         this.CASPAC = caspac;
-        this.CASPACsrc=null;
+        this.CASPACsrc = null;
         this.TempFolder = tempDir;
         this.type = type;
         loadCASPACcontrolFilesFromCASPAC();
     }
-    
+
     /*
      * secure constructor for Caspac 
      * always call waitForUnzipComplete in order to delete file and maintain security
      */
     public Caspac(File caspac, String tempDir, int type, char[] securityKey) throws IOException, Exception {
-        AES128Handler ch=new AES128Handler(caspac);
-        ch.decrypt(tempDir+caspac.getName(), securityKey);
-        this.CASPAC = new File(tempDir+caspac.getName());
-        this.CASPACsrc=null;
+        AES128Handler ch = new AES128Handler(caspac);
+        ch.decrypt(tempDir + caspac.getName(), securityKey);
+        this.CASPAC = new File(tempDir + caspac.getName());
+        this.CASPACsrc = null;
         this.TempFolder = tempDir;
         this.type = type;
-        caspacShouldBeDeletedAfterExtraction=true;
+        caspacShouldBeDeletedAfterExtraction = true;
         loadCASPACcontrolFilesFromCASPAC();
-        if (tempbannerpic!=null){
-            this.build.bannerPic=tempbannerpic;
+        if (tempbannerpic != null) {
+            this.build.bannerPic = tempbannerpic;
         }
     }
-    
+
     /*
      * Constructor for CASUAL
      */
@@ -135,47 +129,45 @@ public final class Caspac {
         CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
         FileOperations fileOps = new FileOperations();
         int Count = 0;
-        ArrayList<String> list = new ArrayList<>();
-        if (CASUALTools.IDEMode){
+        ArrayList<String> list = new ArrayList<String>();
+        if (CASUALTools.IDEMode) {
             updateMD5s();
             //Statics.scriptLocations = new String[]{""};
             setupIDEModeScriptForCASUAL(CASUALApp.defaultPackage);
         } else {
 
-            try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
-                ZipEntry ZEntry;
-                log.level4Debug("Picking Jar File:" + jar.getFile() +" ..scanning.");
-                while ((ZEntry = zip.getNextEntry()) != null) {
-                    String entry = ZEntry.getName();
-                      if (entry.startsWith("SCRIPTS/")||entry.startsWith("SCRIPTS\\")){ //part of CASPAC
-                        handleCASPACJarFiles(entry);
-                        
-                      }
+            ZipInputStream zip = new ZipInputStream(jar.openStream());
+            ZipEntry ZEntry;
+            log.level4Debug("Picking Jar File:" + jar.getFile() + " ..scanning.");
+            while ((ZEntry = zip.getNextEntry()) != null) {
+                String entry = ZEntry.getName();
+                if (entry.startsWith("SCRIPTS/") || entry.startsWith("SCRIPTS\\")) { //part of CASPAC
+                    handleCASPACJarFiles(entry);
+
                 }
             }
+
         }
     }
 
-
-    public void setActiveScript(Script s){
+    public void setActiveScript(Script s) {
         if (type == 1) {  //CASUAL checks for updates
             try {
-                log.level3Verbose("Setting script "+s.name+ " as active and loading");
-                activeScript=s;
+                log.level3Verbose("Setting script " + s.name + " as active and loading");
+                activeScript = s;
                 loadActiveScript();
                 //update script
 
             } catch (MalformedURLException ex) {
-                return;
             } catch (IOException ex) {
-                return;
             }
 
         } else {
-            activeScript=s;
+            activeScript = s;
         }
     }
-    public Script getActiveScript(){
+
+    public Script getActiveScript() {
         return this.activeScript;
     }
 
@@ -197,16 +189,16 @@ public final class Caspac {
      * @throws IOException
      */
     public void write() throws IOException {
-        Map<String, InputStream> nameStream=new HashMap<>();
-        if (!CASPAC.exists()){
+        Map<String, InputStream> nameStream = new HashMap<String, InputStream>();
+        if (!CASPAC.exists()) {
             CASPAC.createNewFile();
         }
         Zip zip = new Zip(CASPAC);
         //write Properties File
-        nameStream.put("-build.properties",build.getBuildPropInputStream());
+        nameStream.put("-build.properties", build.getBuildPropInputStream());
         nameStream.put("-Overview.txt", StringOperations.convertStringToStream(overview));
-        
-        if (logo!=null){
+
+        if (logo != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(logo, "png", baos);
             InputStream is = new ByteArrayInputStream(baos.toByteArray());
@@ -214,26 +206,26 @@ public final class Caspac {
         }
         for (Script s : scripts) {
             //individualFiles.toArray();
-            File[] list=new File(s.tempDir).listFiles();
-            if (list!=null){
-                for (File test: list){
-                    boolean delete=true;
-                    for (File f:s.individualFiles){
-                        if (test.getCanonicalFile().equals(f.getCanonicalFile())){
-                            delete=false;
+            File[] list = new File(s.tempDir).listFiles();
+            if (list != null) {
+                for (File test : list) {
+                    boolean delete = true;
+                    for (File f : s.individualFiles) {
+                        if (test.getCanonicalFile().equals(f.getCanonicalFile())) {
+                            delete = false;
                         }
-                    }    
-                    if (delete){
-                        if (test.toString().contains(s.tempDir)){
+                    }
+                    if (delete) {
+                        if (test.toString().contains(s.tempDir)) {
                             test.delete();
                         }
 
-                    } 
+                    }
                 }
             }
             nameStream.putAll(s.getScriptAsMapForCASPAC());
         }
-        
+
 
         log.level4Debug("Placeing the following files in the caspac Zip");
         zip.streamEntryToExistingZip(nameStream);
@@ -248,68 +240,66 @@ public final class Caspac {
         build = new Build(prop);
         build.loadPropsToVariables();
     }
-    
-    public void loadFirstScriptFromCASPAC() throws ZipException, IOException{
-        log.level4Debug("Starting loadFirstScriptFromCASPAC unzip on "+CASPAC.getAbsolutePath());
-        String scriptName="";
+
+    public void loadFirstScriptFromCASPAC() throws ZipException, IOException {
+        log.level4Debug("Starting loadFirstScriptFromCASPAC unzip on " + CASPAC.getAbsolutePath());
+        String scriptName = "";
         Unzip unzip = new Unzip(CASPAC);
         while (unzip.zipFileEntries.hasMoreElements()) {
             Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
             String filename = unzip.getEntryName(entry);
-            
+
             //detect if file is Overview, Logo, or build.properties, otherwise its a script
-            boolean isScript=! Arrays.asList(controlFiles).contains(entry.toString()); 
-            
+            boolean isScript = !Arrays.asList(controlFiles).contains(entry.toString());
+
             //if it's a script, and we havent set a script, or if it's a script and it matches the script we set
-            if (isScript && scriptName.isEmpty() || isScript && scriptName.equals(activeScript.name) ){ 
+            if (isScript && scriptName.isEmpty() || isScript && scriptName.equals(activeScript.name)) {
                 handleCASPACScriptFiles(filename, unzip, entry);
                 //entry.toString().subst
-                scriptName=entry.toString().substring(0,entry.toString().lastIndexOf("."));
-                this.activeScript=this.getScriptByFilename(filename);
+                scriptName = entry.toString().substring(0, entry.toString().lastIndexOf("."));
+                this.activeScript = this.getScriptByFilename(filename);
             }
         }
         new Log().level4Debug("loading CASPAC script");
         performUnzipOnQueue();
     }
-    
-    public void loadActiveScript() throws IOException{
-         log.level4Debug("Starting loadActiveScript CASPAC unzip.");
-        String scriptName=activeScript.name;
 
-        if (type==0){
+    public void loadActiveScript() throws IOException {
+        log.level4Debug("Starting loadActiveScript CASPAC unzip.");
+        String scriptName = activeScript.name;
+
+        if (type == 0) {
             Unzip unzip = new Unzip(CASPAC);
             while (unzip.zipFileEntries.hasMoreElements()) {
                 Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
                 String filename = unzip.getEntryName(entry);
-                if (entry.toString().startsWith(scriptName)){
+                if (entry.toString().startsWith(scriptName)) {
                     handleCASPACScriptFiles(filename, unzip, entry);
                 }
             }
-    
-        } else if (type==1){
-             log.level3Verbose("This is a CASUAL jar with resources");
-             try {
-                 activeScript=updateIfRequired(activeScript);
-             } catch (     MalformedURLException | URISyntaxException ex) {
-                 Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
-             }
-             log.level4Debug("returned from checking updates.");
+
+        } else if (type == 1) {
+            log.level3Verbose("This is a CASUAL jar with resources");
+            try {
+                activeScript = updateIfRequired(activeScript);
+            } catch (URISyntaxException ex) {
+                new Log().errorHandler(ex);
+            }
+            log.level4Debug("returned from checking updates.");
             //no need to update again because it is being updated
             replaceScriptByName(activeScript);
 
-            unzipThreads=new ArrayList<>();
-            Thread t=new Thread(activeScript.getExtractionRunnable());
+            unzipThreads = new ArrayList<Thread>();
+            Thread t = new Thread(activeScript.getExtractionRunnable());
             t.setName("Active Script Preparation");
             this.unzipThreads.add(t);
             performUnzipOnQueue();
         }
-        
-        
-        
-        
-    }
 
-    
+
+
+
+    }
 
     /**
      * loads a CASPAC.zip file
@@ -319,17 +309,17 @@ public final class Caspac {
      */
     public void load() throws ZipException, IOException {
 
-        
-        if (type ==1){
-            Script s=this.scripts.get(0);
+
+        if (type == 1) {
+            Script s = this.scripts.get(0);
             InputStream in = getClass().getClassLoader()
-                                .getResourceAsStream(s.scriptZipFile.toString());
+                    .getResourceAsStream(s.scriptZipFile.toString());
             Unzip.unZipInputStream(in, s.tempDir);
             in.close();
-            this.activeScript=s;
-            
+            this.activeScript = s;
+
             return;
-        } 
+        }
         //Type 0
         log.level4Debug("Starting commanded Load CASPAC unzip.");
         Unzip unzip = new Unzip(CASPAC);
@@ -342,37 +332,39 @@ public final class Caspac {
         log.level4Debug("CASPAC load completed.");
     }
 
-    public void waitForUnzipAndRun(Runnable action){
-        waitForUnzipAndRun(action,false, null);
+    public void waitForUnzipAndRun(Runnable action) {
+        waitForUnzipAndRun(action, false, null);
     }
-    public void waitForUnzipAndRun(Runnable action, boolean onASeparateThread, String ThreadName){
+
+    public void waitForUnzipAndRun(Runnable action, boolean onASeparateThread, String ThreadName) {
         waitForUnzipComplete();
-        if (onASeparateThread){
-            Thread t=new Thread(action);
+        if (onASeparateThread) {
+            Thread t = new Thread(action);
             t.setName(ThreadName);
             t.start();
-        }  else {
+        } else {
             action.run();
         }
-        
-        
+
+
     }
-    public void waitForUnzipComplete(){
-        boolean[] isUnzipping=new boolean[unzipThreads.size()];
+
+    public void waitForUnzipComplete() {
+        boolean[] isUnzipping = new boolean[unzipThreads.size()];
         Arrays.fill(isUnzipping, Boolean.TRUE);
-        log.level4Debug("Currently waiting for Threads:"+ Integer.toString(isUnzipping.length));
-        while (BooleanOperations.containsTrue(isUnzipping)){
+        log.level4Debug("Currently waiting for Threads:" + Integer.toString(isUnzipping.length));
+        while (BooleanOperations.containsTrue(isUnzipping)) {
             CASUALTools.sleepForOneTenthOfASecond();
-            for (int i = 0; i<isUnzipping.length; i++){
-                if (!unzipThreads.get(i).isAlive()){
-                    isUnzipping[i]=false;
+            for (int i = 0; i < isUnzipping.length; i++) {
+                if (!unzipThreads.get(i).isAlive()) {
+                    isUnzipping[i] = false;
                 }
             }
         }
-        if (this.caspacShouldBeDeletedAfterExtraction){
+        if (this.caspacShouldBeDeletedAfterExtraction) {
             this.CASPAC.delete();
         }
-        if (Statics.GUIIsAvailable){
+        if (Statics.GUIIsAvailable) {
             Statics.GUI.setCASPAC(this);
         }
         log.level4Debug("Unzipping complete.");
@@ -389,14 +381,15 @@ public final class Caspac {
 
         //get the filename from the entry
         String filename = pack.getEntryName(entry);
-        boolean isScript=!handleCASPACInformationFiles(filename, pack, entry);
-        if (isScript){
+        boolean isScript = !handleCASPACInformationFiles(filename, pack, entry);
+        if (isScript) {
             handleCASPACScriptFiles(filename, pack, entry);
         }
     }
 
     /**
-     * script instance which is being referenced. creates a new script if not found
+     * script instance which is being referenced. creates a new script if not
+     * found
      *
      * @param fileName filename of script
      * @return script instance of script to be processed
@@ -407,11 +400,12 @@ public final class Caspac {
                 return s;
             }
         }
-        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder+fileName+Statics.Slash,this.type);
+        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + Statics.Slash, this.type);
         //Add script 
         scripts.add(script);
         return scripts.get(scripts.indexOf(script));
     }
+
     /**
      * script instance which is being referenced
      *
@@ -419,63 +413,62 @@ public final class Caspac {
      * @return script instance of script to be processed null if not found
      */
     public Script getScriptByFilename(String fileName) {
-       log.level4Debug("Looking up "+fileName);
-       String scriptName="";
-       try{
-        scriptName=fileName.substring(0, fileName.lastIndexOf("."));
-        for (Script s : scripts) {
-            if (s.name.equals(scriptName)) {
-                return s;
+        log.level4Debug("Looking up " + fileName);
+        String scriptName = "";
+        try {
+            scriptName = fileName.substring(0, fileName.lastIndexOf("."));
+            for (Script s : scripts) {
+                if (s.name.equals(scriptName)) {
+                    return s;
+                }
             }
-        }
 
-       } catch (Exception ex){
-       }
-       if (!scriptName.isEmpty()){
-           Script s=new Script(scriptName,this.TempFolder+scriptName+Statics.Slash,this.type);
-           this.scripts.add(s);
-           return this.scripts.get(scripts.size()-1);
-       } else {
-           return null;
-       }
+        } catch (Exception ex) {
+        }
+        if (!scriptName.isEmpty()) {
+            Script s = new Script(scriptName, this.TempFolder + scriptName + Statics.Slash, this.type);
+            this.scripts.add(s);
+            return this.scripts.get(scripts.size() - 1);
+        } else {
+            return null;
+        }
     }
 
-    
     /**
      * returns all script names
      *
      * @return list of script names
      */
     public String[] getScriptNames() { //TODO: examine this to figure out why we are iterating "scripts" and adding a slash while getting names
-        ArrayList<String> scriptNames = new ArrayList<>();
+        ArrayList<String> scriptNames = new ArrayList<String>();
         for (Script s : scripts) {
             scriptNames.add(s.name);
         }
         return StringOperations.convertArrayListToStringArray(scriptNames);
     }
-    
+
     /**
      * gets script by name
+     *
      * @param name name of script to be pulled
      * @return Script object or null
      */
-    public Script getScriptByName(String name){
+    public Script getScriptByName(String name) {
         for (Script s : scripts) {
-            if (s.name.equals(name)){
+            if (s.name.equals(name)) {
                 return s;
             }
         }
-        Script s=new Script(name,this.TempFolder+Statics.Slash+name+Statics.Slash,this.type);
+        Script s = new Script(name, this.TempFolder + Statics.Slash + name + Statics.Slash, this.type);
         this.scripts.add(s);
-        return this.scripts.get(scripts.size()-1);
+        return this.scripts.get(scripts.size() - 1);
     }
 
-
     private void performUnzipOnQueue() {
-            log.level3Verbose("Performing unzip of resources.");
-            for (Thread t :this.unzipThreads){
-                t.start();
-            }
+        log.level3Verbose("Performing unzip of resources.");
+        for (Thread t : this.unzipThreads) {
+            t.start();
+        }
     }
 
     private void setBuildPropInformation(Unzip pack, Object entry) throws IOException {
@@ -488,39 +481,39 @@ public final class Caspac {
     private void extractCASPACBanner(Unzip pack, Object entry, String filename) throws IOException {
         log.level4Debug("Found logo adding information to "
                 + "CASPAC");
-        logo=ImageIO.read(ImageIO.createImageInputStream(pack.streamFileFromZip(entry)));
+        logo = ImageIO.read(ImageIO.createImageInputStream(pack.streamFileFromZip(entry)));
         if (filename.isEmpty()) {
-            filename=this.TempFolder+"-logo.png";
+            filename = this.TempFolder + "-logo.png";
         }
-        if (build!=null){
+        if (build != null) {
             build.bannerPic = filename;
         } else {
-            tempbannerpic=filename;
+            tempbannerpic = filename;
         }
-        
+
     }
     private String tempbannerpic;
 
     private boolean handleCASPACInformationFiles(String filename, Unzip pack, Object entry) throws IOException {
-        boolean isAControlFile=false;
+        boolean isAControlFile = false;
         if (filename.equals("-build.properties")) {
             setBuildPropInformation(pack, entry);
-            isAControlFile=true;
+            isAControlFile = true;
         } else if (filename.endsWith(".png")) {
             if (filename.equals("")) {
-                filename=this.TempFolder+"-logo.png";
+                filename = this.TempFolder + "-logo.png";
             }
             extractCASPACBanner(pack, entry, filename);
-            isAControlFile=true;
+            isAControlFile = true;
         } else if (filename.toString().equals("-Overview.txt")) {
-            overview=StringOperations.convertStreamToString(pack.streamFileFromZip(entry));
-            isAControlFile=true;
+            overview = StringOperations.convertStreamToString(pack.streamFileFromZip(entry));
+            isAControlFile = true;
         }
         return isAControlFile;
     }
 
     private void handleCASPACScriptFiles(String filename, Unzip pack, Object entry) throws IOException {
-        MD5sum md5sum =new MD5sum();
+        MD5sum md5sum = new MD5sum();
         if (filename.toString().endsWith(".meta")) {
 
             Script script = getScriptInstanceByFilename(filename.toString());
@@ -539,131 +532,129 @@ public final class Caspac {
             scripts.set(i, script);
         } else if (filename.toString().endsWith(".scr")) {
             Script script = getScriptInstanceByFilename(filename.toString());
-            script.scriptContents= fo.readTextFromStream(pack.streamFileFromZip(entry));
+            script.scriptContents = fo.readTextFromStream(pack.streamFileFromZip(entry));
             log.level4Debug("Added Script for " + script.name + ".");
             script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.scriptContents), filename));
-           
+
         } else if (filename.toString().endsWith(".zip")) {
             Script script = getScriptInstanceByFilename(filename.toString());
-            script.scriptZipFile=entry;
-            script.zipfile=pack;
-            Thread t=new Thread(script.getExtractionRunnable());
-            t.setName("zip File Preparation "+unzipThreads.size());
+            script.scriptZipFile = entry;
+            script.zipfile = pack;
+            Thread t = new Thread(script.getExtractionRunnable());
+            t.setName("zip File Preparation " + unzipThreads.size());
             this.unzipThreads.add(t);
 
             log.level4Debug("Added .zip to " + script.name + ". It will be unziped at end of unpacking.");
-            
+
         } else if (filename.toString().endsWith(".txt")) {
             Script script = getScriptInstanceByFilename(filename.toString());
             String description = fo.readTextFromStream(pack.streamFileFromZip(entry));
-            script.discription=description;
+            script.discription = description;
             log.level4Debug("Added Description to " + script.name + ".");
             script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.discription), filename));
         }
     }
 
     private void setBuild(InputStream in) throws IOException {
-        Properties prop=new Properties();
+        Properties prop = new Properties();
         prop.load(in);
         this.setBuild(prop);
         log.level4Debug(StringOperations.convertStreamToString(this.build.getBuildPropInputStream()));
-        
-    
 
-}
+
+
+    }
 
     private void handleCASPACJarFiles(String entry) throws IOException {
-        FileOperations fo=new FileOperations();
-            if (entry.startsWith("/")){
-                entry=entry.replaceFirst("/", "");
-            }
-        
-        if (entry.equals("SCRIPTS/-Overview.txt")||entry.equals("SCRIPTS\\-Overview.txt")) {
-            
-            log.level4Debug("processing:"+entry);
+        if (entry.startsWith("/")) {
+            entry = entry.replaceFirst("/", "");
+        }
+
+        if (entry.equals("SCRIPTS/-Overview.txt") || entry.equals("SCRIPTS\\-Overview.txt")) {
+
+            log.level4Debug("processing:" + entry);
             this.overview = fo.readTextFromResource(entry);
-            System.out.println("overview "+overview);
-        } else if (entry.equals("SCRIPTS/-build.properties") ||entry.equals("SCRIPTS\\-build.properties")) {
-            log.level4Debug("processing:"+entry);
+            System.out.println("overview " + overview);
+        } else if (entry.equals("SCRIPTS/-build.properties") || entry.equals("SCRIPTS\\-build.properties")) {
+            log.level4Debug("processing:" + entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             setBuild(in);
-        } else if (entry.equals("SCRIPTS/-logo.png")||entry.equals("SCRIPTS/-logo.png")) {
-            log.level4Debug("processing:"+entry);
+        } else if (entry.equals("SCRIPTS/-logo.png") || entry.equals("SCRIPTS/-logo.png")) {
+            log.level4Debug("processing:" + entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             logo = ImageIO.read(ImageIO.createImageInputStream(in));
         } else if (entry.endsWith(".txt")) {
-            log.level4Debug("processing:"+entry);
+            log.level4Debug("processing:" + entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             this.getScriptByFilename(entry).discription = fo.readTextFromResource(entry);
         } else if (entry.endsWith(".scr")) {
-            log.level4Debug("processing:"+entry);
-            System.out.println("SCRIPT CONTENTS:"+fo.readTextFromResource(entry));
+            log.level4Debug("processing:" + entry);
+            System.out.println("SCRIPT CONTENTS:" + fo.readTextFromResource(entry));
             this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource(entry);
-            
-            
+
+
         } else if (entry.endsWith(".meta")) {
-            log.level4Debug("processing:"+entry);
-            System.out.println("loading meta "+entry);
-                        InputStream in = getClass().getClassLoader()
+            log.level4Debug("processing:" + entry);
+            System.out.println("loading meta " + entry);
+            InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             Properties prop = new Properties();
             prop.load(in);
             this.getScriptByFilename(entry).metaData.load(prop);
-        }  else if (entry.endsWith(".zip")) {
-            log.level4Debug("processing:"+entry);
-            log.level3Verbose("found zip at "+entry);
-            this.getScriptByFilename(entry).scriptZipFile=entry;
+        } else if (entry.endsWith(".zip")) {
+            log.level4Debug("processing:" + entry);
+            log.level3Verbose("found zip at " + entry);
+            this.getScriptByFilename(entry).scriptZipFile = entry;
         }
-        log.level4Debug("getting MD5 for:"+entry);
+        log.level4Debug("getting MD5 for:" + entry);
         new MD5sum().getLinuxMD5Sum(StringOperations.convertStringToStream(fo.readTextFromResource(entry)), entry);
     }
 
     private void setupIDEModeScriptForCASUAL(String defaultPackage) {
-        Script script=this.getScriptByName(defaultPackage);
-        FileOperations fo = new FileOperations();
-        
-        String caspacPath="SCRIPTS/";
+        Script script = this.getScriptByName(defaultPackage);
+
+        String caspacPath = "SCRIPTS/";
         try {
-            File f=new File(".");
-            caspacPath = f.getCanonicalPath()+"/SCRIPTS/";
+            File f = new File(".");
+            caspacPath = f.getCanonicalPath() + "/SCRIPTS/";
         } catch (IOException ex) {
-            Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
-        String scriptPath=caspacPath+defaultPackage;
+        String scriptPath = caspacPath + defaultPackage;
         try {
-            this.setBuild(new BufferedInputStream(new FileInputStream(caspacPath+"-build.properties")));
+            this.setBuild(new BufferedInputStream(new FileInputStream(caspacPath + "-build.properties")));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         } catch (IOException ex) {
-            Logger.getLogger(Caspac.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
-        this.overview=fo.readFile(caspacPath+"-Overview.txt");
-        String logof=caspacPath+"-logo.png";
-        
+        this.overview = fo.readFile(caspacPath + "-Overview.txt");
+        String logof = caspacPath + "-logo.png";
+
         try {
-         
+
             InputStream in = new FileInputStream(logof);
             logo = ImageIO.read(ImageIO.createImageInputStream(in));
         } catch (IOException ex) {
             //no logo for this CASPAC
         }
-            build.bannerPic = logof;
-        
-        log.level4Debug("IDE MODE PATH="+scriptPath);
-        getScriptByName(defaultPackage).scriptContents=fo.readFile(scriptPath+".scr");
-        getScriptByName(defaultPackage).discription=fo.readFile(scriptPath+".txt");
+        build.bannerPic = logof;
+
+        log.level4Debug("IDE MODE PATH=" + scriptPath);
+        getScriptByName(defaultPackage).scriptContents = fo.readFile(scriptPath + ".scr");
+        getScriptByName(defaultPackage).discription = fo.readFile(scriptPath + ".txt");
         try {
-            getScriptByName(defaultPackage).metaData.load(new BufferedInputStream(new FileInputStream(new File(scriptPath+".meta"))));
+            getScriptByName(defaultPackage).metaData.load(new BufferedInputStream(new FileInputStream(new File(scriptPath + ".meta"))));
         } catch (FileNotFoundException ex) {
             //no meta, its not requried
         }
-        getScriptByName(defaultPackage).scriptZipFile=(scriptPath+".zip");
+        getScriptByName(defaultPackage).scriptZipFile = (scriptPath + ".zip");
     }
+    private String controlFiles[] = {"-Overview.txt", "-build.properties", "-logo.png"};
 
-    private String controlFiles[]={"-Overview.txt","-build.properties","-logo.png"};
     private void loadCASPACcontrolFilesFromCASPAC() throws IOException {
         //if the CASPAC exists lets try to grab the non-script files 
         if (fo.verifyExists(CASPAC.getAbsolutePath()) && CASPAC.canRead()) {
@@ -701,187 +692,178 @@ public final class Caspac {
         log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
     }
 
-    
-        
     /**
-     * checks for updates.  
-     * @return true if script can continue.  false if halt is recommended.
+     * checks for updates.
+     *
+     * @return true if script can continue. false if halt is recommended.
      */
-    public Script updateIfRequired(Script s) throws MalformedURLException, URISyntaxException, IOException{
+    public Script updateIfRequired(Script s) throws MalformedURLException, URISyntaxException, IOException {
         return s;
     }
-        /*
-        Log log = new Log();
-        if (s.metaData.minSVNversion.isEmpty()) {
-            return s;
-        }
-        int mySVNVersion=Integer.parseInt(java.util.ResourceBundle
-                .getBundle("CASUAL/resources/CASUALApp")
-                .getString("Application.revision"));
-        int myScriptVersion=Integer.parseInt(s.metaData.scriptRevision);
-        String myScriptName=s.name;
-        CASUALUpdates ci=new CASUALUpdates();
-        Properties updatedprop=new Properties();
-        log.level3Verbose("creating new script instance to compare against online version");
-        Script updatedScript=new Script(s);
-        new File(s.tempDir).mkdirs();
-        log.level3Verbose("getting updated script version info");
+    /*
+     Log log = new Log();
+     if (s.metaData.minSVNversion.isEmpty()) {
+     return s;
+     }
+     int mySVNVersion=Integer.parseInt(java.util.ResourceBundle
+     .getBundle("CASUAL/resources/CASUALApp")
+     .getString("Application.revision"));
+     int myScriptVersion=Integer.parseInt(s.metaData.scriptRevision);
+     String myScriptName=s.name;
+     CASUALUpdates ci=new CASUALUpdates();
+     Properties updatedprop=new Properties();
+     log.level3Verbose("creating new script instance to compare against online version");
+     Script updatedScript=new Script(s);
+     new File(s.tempDir).mkdirs();
+     log.level3Verbose("getting updated script version info");
         
-        //TODO: downloadMetaFromRepoForScript hangs.  Script will not complte unzip because of this.  
-        //TODO: Fix this. 
-        updatedprop.load(ci.downloadMetaFromRepoForScript(s));
-        log.level3Verbose("updating meta");
-        updatedScript.metaData.load(updatedprop);
+     //TODO: downloadMetaFromRepoForScript hangs.  Script will not complte unzip because of this.  
+     //TODO: Fix this. 
+     updatedprop.load(ci.downloadMetaFromRepoForScript(s));
+     log.level3Verbose("updating meta");
+     updatedScript.metaData.load(updatedprop);
         
-        int updatedSVNVersion=Integer.parseInt(updatedScript.metaData.minSVNversion);
-        int updatedScriptVersion=Integer.parseInt(updatedScript.metaData.scriptRevision);
-        log.level3Verbose("comparing script information");
-        if (mySVNVersion<updatedSVNVersion){
-            updatedScript.scriptContents="";
-            log.level2Information("\n"+updatedScript.metaData.killSwitchMessage);
-            return updatedScript;
-        } else if (myScriptVersion< updatedScriptVersion){
-            log.level2Information("@scriptIsOutOfDate");
-            log.level2Information("\n"+updatedScript.metaData.updateMessage);
-            updatedScript=ci.updateScript(updatedScript,this.TempFolder);
-            return updatedScript;
-        } else {
-            log.level2Information("@noUpdateRequired");
-            return s;
-        }
+     int updatedSVNVersion=Integer.parseInt(updatedScript.metaData.minSVNversion);
+     int updatedScriptVersion=Integer.parseInt(updatedScript.metaData.scriptRevision);
+     log.level3Verbose("comparing script information");
+     if (mySVNVersion<updatedSVNVersion){
+     updatedScript.scriptContents="";
+     log.level2Information("\n"+updatedScript.metaData.killSwitchMessage);
+     return updatedScript;
+     } else if (myScriptVersion< updatedScriptVersion){
+     log.level2Information("@scriptIsOutOfDate");
+     log.level2Information("\n"+updatedScript.metaData.updateMessage);
+     updatedScript=ci.updateScript(updatedScript,this.TempFolder);
+     return updatedScript;
+     } else {
+     log.level2Information("@noUpdateRequired");
+     return s;
+     }
 
-    }
+     }
  
-    /**
+     /**
      * replaces a script in list array
      * @param s script to replace
      */
+
     public int replaceScriptByName(Script s) {
-        String name=s.name;
-        for (int i=0; i<this.scripts.size();i++){
-            if (scripts.get(i).name.equals(name)){
+        String name = s.name;
+        for (int i = 0; i < this.scripts.size(); i++) {
+            if (scripts.get(i).name.equals(name)) {
                 scripts.set(i, s);
                 return i;
             }
         }
         return -1;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     /**
      * build class is a reference to handle -build.properties information
      */
     public class Build {
 
-    public String developerName = "";
-    public String developerDonateButtonText = "";
-    public String donateLink = "";
-    public String windowTitle = "";
-    public boolean usePictureForBanner = false;
-    public String bannerPic = "";
-    public String bannerText = "";
-    public String executeButtonText = "Do It";
-    public boolean audioEnabled = AudioHandler.useSound;
-    public boolean alwaysEnableControls = false;
-    public Properties buildProp = new Properties();
+        public String developerName = "";
+        public String developerDonateButtonText = "";
+        public String donateLink = "";
+        public String windowTitle = "";
+        public boolean usePictureForBanner = false;
+        public String bannerPic = "";
+        public String bannerText = "";
+        public String executeButtonText = "Do It";
+        public boolean audioEnabled = AudioHandler.useSound;
+        public boolean alwaysEnableControls = false;
+        public Properties buildProp = new Properties();
 
-    public Build(InputStream prop) throws IOException {
-        log.level4Debug("Loading build information from inputstream");
-        buildProp.load(prop);
-    }
-
-    /**
-     * loads and sets properties file
-     *
-     * @param prop build.properties file
-     */
-    public Build(Properties prop) {
-        log.level4Debug("Loading build information from prop information");
-        this.buildProp = prop;
-    }
-
-    /**
-     * writes build properties to a file
-     *
-     * @param output file to write
-     * @return true if file was written
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public boolean write(String output) throws FileNotFoundException, IOException {
-        File f = new File(output);
-        return write(f);
-    }
-
-    /**
-     * writes build properties to a file
-     *
-     * @param output file to write
-     * @return true if file was written
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public boolean write(File output) throws FileNotFoundException, IOException {
-        setPropsFromVariables();
-        FileOutputStream fos = new FileOutputStream(output);
-        buildProp.store(fos, "This properties file was generated by CASUAL");
-        return fo.verifyExists(output.toString());
-    }
-
-    public InputStream getBuildPropInputStream() throws IOException {
-        setPropsFromVariables();
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        buildProp.store(output, "This properties file was generated by CASUAL");
-        return new ByteArrayInputStream(output.toByteArray());
-
-    }
-
-    /**
-     * loads build properties from a map
-     *
-     * @param buildMap key,value pairs
-     */
-    private void setPropsFromVariables() {
-        buildProp.setProperty("Window.UsePictureForBanner", usePictureForBanner ? "True" : "False");
-        buildProp.setProperty("Audio.Enabled", audioEnabled ? "True" : "False");
-        buildProp.setProperty("Application.AlwaysEnableControls", alwaysEnableControls ? "True" : "False");
-        buildProp.setProperty("Developer.DonateLink", donateLink);
-        buildProp.setProperty("Developer.DonateToButtonText", developerDonateButtonText);
-        buildProp.setProperty("Developer.Name", developerName);
-        buildProp.setProperty("Window.ExecuteButtonText", executeButtonText);
-        buildProp.setProperty("Window.BannerText", bannerText);
-        buildProp.setProperty("Window.BannerPic", bannerPic);
-        buildProp.setProperty("Window.Title", windowTitle);
-        
-    }
-
-    /**
-     * sets properties to values stored in build.properties file.
-     */
-    private void loadPropsToVariables() {
-        if (buildProp.containsKey("Audio.Enabled")) {
-            audioEnabled = buildProp.getProperty("Audio.Enabled", "").contains("rue");
-            AudioHandler.useSound=audioEnabled;
+        public Build(InputStream prop) throws IOException {
+            log.level4Debug("Loading build information from inputstream");
+            buildProp.load(prop);
         }
-        usePictureForBanner = buildProp.getProperty("Window.UsePictureForBanner", "").contains("rue");
-        
-        developerDonateButtonText = buildProp.getProperty("Developer.DonateToButtonText", "");
-        developerName = buildProp.getProperty("Developer.Name", "");
-        donateLink = buildProp.getProperty("Developer.DonateLink", "");
-        donateLink = buildProp.getProperty("Developer.DonateLink", "");
-        executeButtonText = buildProp.getProperty("Window.ExecuteButtonText", "");
-        bannerText = buildProp.getProperty("Window.BannerText", "");
-        alwaysEnableControls = buildProp.getProperty("Application.AlwaysEnableControls", "").contains("rue");
-        windowTitle = buildProp.getProperty("Window.Title", "");
 
-    }
+        /**
+         * loads and sets properties file
+         *
+         * @param prop build.properties file
+         */
+        public Build(Properties prop) {
+            log.level4Debug("Loading build information from prop information");
+            this.buildProp = prop;
+        }
+
+        /**
+         * writes build properties to a file
+         *
+         * @param output file to write
+         * @return true if file was written
+         * @throws FileNotFoundException
+         * @throws IOException
+         */
+        public boolean write(String output) throws FileNotFoundException, IOException {
+            File f = new File(output);
+            return write(f);
+        }
+
+        /**
+         * writes build properties to a file
+         *
+         * @param output file to write
+         * @return true if file was written
+         * @throws FileNotFoundException
+         * @throws IOException
+         */
+        public boolean write(File output) throws FileNotFoundException, IOException {
+            setPropsFromVariables();
+            FileOutputStream fos = new FileOutputStream(output);
+            buildProp.store(fos, "This properties file was generated by CASUAL");
+            return fo.verifyExists(output.toString());
+        }
+
+        public InputStream getBuildPropInputStream() throws IOException {
+            setPropsFromVariables();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            buildProp.store(output, "This properties file was generated by CASUAL");
+            return new ByteArrayInputStream(output.toByteArray());
+
+        }
+
+        /**
+         * loads build properties from a map
+         *
+         * @param buildMap key,value pairs
+         */
+        private void setPropsFromVariables() {
+            buildProp.setProperty("Window.UsePictureForBanner", usePictureForBanner ? "True" : "False");
+            buildProp.setProperty("Audio.Enabled", audioEnabled ? "True" : "False");
+            buildProp.setProperty("Application.AlwaysEnableControls", alwaysEnableControls ? "True" : "False");
+            buildProp.setProperty("Developer.DonateLink", donateLink);
+            buildProp.setProperty("Developer.DonateToButtonText", developerDonateButtonText);
+            buildProp.setProperty("Developer.Name", developerName);
+            buildProp.setProperty("Window.ExecuteButtonText", executeButtonText);
+            buildProp.setProperty("Window.BannerText", bannerText);
+            buildProp.setProperty("Window.BannerPic", bannerPic);
+            buildProp.setProperty("Window.Title", windowTitle);
+
+        }
+
+        /**
+         * sets properties to values stored in build.properties file.
+         */
+        private void loadPropsToVariables() {
+            if (buildProp.containsKey("Audio.Enabled")) {
+                audioEnabled = buildProp.getProperty("Audio.Enabled", "").contains("rue");
+                AudioHandler.useSound = audioEnabled;
+            }
+            usePictureForBanner = buildProp.getProperty("Window.UsePictureForBanner", "").contains("rue");
+
+            developerDonateButtonText = buildProp.getProperty("Developer.DonateToButtonText", "");
+            developerName = buildProp.getProperty("Developer.Name", "");
+            donateLink = buildProp.getProperty("Developer.DonateLink", "");
+            donateLink = buildProp.getProperty("Developer.DonateLink", "");
+            executeButtonText = buildProp.getProperty("Window.ExecuteButtonText", "");
+            bannerText = buildProp.getProperty("Window.BannerText", "");
+            alwaysEnableControls = buildProp.getProperty("Application.AlwaysEnableControls", "").contains("rue");
+            windowTitle = buildProp.getProperty("Window.Title", "");
+
+        }
     }
 }

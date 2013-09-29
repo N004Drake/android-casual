@@ -94,7 +94,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox<>();
+        comboBoxScriptSelector = new javax.swing.JComboBox<String>();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -126,12 +126,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         comboBoxScriptSelector.setEnabled(false);
         comboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
-            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         comboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
@@ -284,7 +284,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -313,7 +313,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
 
         //execute
-        if (Statics.CASPAC.getActiveScript().extractionMethod!=2) { //not on filesystem
+        if (Statics.CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
             log.level4Debug("Loading internal resource: " + script);
             Statics.CASPAC.getActiveScript().scriptContinue = true;
             new CASUALScriptParser().executeSelectedScript(caspac, true);
@@ -488,10 +488,10 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     private void StatusLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseExited
         try {
             this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
-        } catch (java.util.MissingResourceException ex){
+        } catch (java.util.MissingResourceException ex) {
             try {
                 this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS\\-build").getString("Window.ExecuteButtonText"));
-            } catch (java.util.MissingResourceException er){ 
+            } catch (java.util.MissingResourceException er) {
                 this.startButton.setText(Statics.CASPAC.build.executeButtonText);
             }
         }
@@ -692,8 +692,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         log.level2Information(caspac.overview);
         /* if (caspac.build.usePictureForBanner) {
-            //setup banner with CASPAC.logo
-        }*/
+         //setup banner with CASPAC.logo
+         }*/
         if (caspac.build.alwaysEnableControls) {
             enableControls(true);
         }
@@ -732,8 +732,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         info.setTitle(title);
         this.repaint();
     }
-    public void setVisibile(boolean v){
+
+    public void setVisibile(boolean v) {
         this.setVisible(v);
     }
-    
 }

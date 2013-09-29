@@ -197,7 +197,7 @@ public class CASUALConnectionStatusMonitor {
                 } else if (OSTools.isLinux()) {
                     new CASUALMessageObject("@interactionLinuxDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
                 } else if (OSTools.isMac()) {
-                    new CASUALMessageObject("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null,javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+                    new CASUALMessageObject("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
                 }
                 hasConnected = true;
             }

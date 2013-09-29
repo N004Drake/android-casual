@@ -4,7 +4,6 @@
  */
 package CASUAL.crypto;
 
-
 import java.io.File;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
@@ -151,11 +150,17 @@ public class AES128HandlerTest {
 
 
 
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException ex) {
+        } catch (NoSuchPaddingException ex) {
             Logger.getLogger(AES128HandlerTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalBlockSizeException ex) {
             Logger.getLogger(AES128HandlerTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadPaddingException ex) {
+            Logger.getLogger(AES128HandlerTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(AES128HandlerTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(AES128HandlerTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidAlgorithmParameterException ex) {
             Logger.getLogger(AES128HandlerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 

@@ -21,6 +21,7 @@
 package CASUAL;
 
 import CASUAL.network.CASUALUpdates;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -85,9 +86,9 @@ public class HeimdallInstall {
     }
 
     private boolean installLinuxHeimdall() {
-        
+
         FileOperations fo = new FileOperations();
-        String arch=OSTools.checkLinuxArch();
+        String arch = OSTools.checkLinuxArch();
 //Linux64
         if (arch.contains("x86_64")) {
             Statics.heimdallResource = Statics.heimdallLinuxamd64;
@@ -173,7 +174,12 @@ public class HeimdallInstall {
             String exec = "";
             try {
                 exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
-            } catch (IOException | InterruptedException ex) {
+
+            } catch (FileNotFoundException ex) {
+                new Log().errorHandler(ex);
+            } catch (InterruptedException ex) {
+                new Log().errorHandler(ex);
+            } catch (IOException ex) {
                 log.errorHandler(ex);
             }
             new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
@@ -190,7 +196,11 @@ public class HeimdallInstall {
         String exec = "";
         try {
             exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/vcredist.properties");
-        } catch (IOException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
+            log.errorHandler(ex);
+        } catch (FileNotFoundException ex) {
+            log.errorHandler(ex);
+        } catch (IOException ex) {
             log.errorHandler(ex);
         }
         new Shell().liveShellCommand(new String[]{exec}, true);

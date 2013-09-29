@@ -29,13 +29,13 @@ public class FastbootTools {
      * deploys and verifies fastboot
      */
     public static void checkAndDeployFastboot() {
-        if (! new FileOperations().verifyExists(Statics.fastbootDeployed)) {
+        if (!new FileOperations().verifyExists(Statics.fastbootDeployed)) {
             if (OSTools.isLinux()) {
                 Statics.fastbootResource = getFastbootLinuxResource();
             }
             if (OSTools.isWindows()) {
                 new CASUALMessageObject("@interactionInstallFastbootDrivers").showInformationMessage();
-                Statics.fastbootDeployed=Statics.fastbootDeployed+".exe";
+                Statics.fastbootDeployed = Statics.fastbootDeployed + ".exe";
                 Statics.fastbootResource = Statics.fastbootWindows;
             }
             if (OSTools.isMac()) {
@@ -57,8 +57,8 @@ public class FastbootTools {
      * @return path to resource
      */
     public static String getFastbootLinuxResource() {
-        String arch=OSTools.checkLinuxArch();
-        
+        String arch = OSTools.checkLinuxArch();
+
         if (arch.equals("x86_64")) {
             new Log().level3Verbose("found x86-64 bit arch");
             return Statics.fastbootLinux64;
@@ -80,7 +80,7 @@ public class FastbootTools {
     public String doFastbootShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<>();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(line));
         String StringCommand[] = StringOperations.convertArrayListToStringArray(ShellCommand);
@@ -97,7 +97,7 @@ public class FastbootTools {
     public String doElevatedFastbootShellCommand(String line) {
         line = StringOperations.removeLeadingSpaces(line);
         Shell Shell = new Shell();
-        ArrayList<String> ShellCommand = new ArrayList<>();
+        ArrayList<String> ShellCommand = new ArrayList<String>();
         ShellCommand.add(Statics.fastbootDeployed);
         ShellCommand.addAll(new ShellTools().parseCommandLine(line));
         String StringCommand[] = StringOperations.convertArrayListToStringArray(ShellCommand);

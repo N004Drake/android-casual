@@ -36,16 +36,13 @@ import javax.swing.text.StyledDocument;
  */
 public class Statics {
 
-    
     public static boolean GUIIsAvailable = false; //used to tell if the GUI is up yet.
     //public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
-    private static String currentStatus="working";
-    public static boolean debugMode=false;
+    private static String currentStatus = "working";
+    public static boolean debugMode = false;
     public static Caspac CASPAC;
-    
-    
-    
+
     public Statics() {
     }
 
@@ -58,14 +55,12 @@ public class Statics {
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     /*
      * miscellanious variables
-     */    
+     */
     static Log log = new Log();
-    public static ArrayList<String> LiveSendCommand = new ArrayList<>();
+    public static ArrayList<String> LiveSendCommand = new ArrayList<String>();
     public static PrintWriter OutFile; //used by log class
     public static boolean LogCreated = false; //used by Log class
-
-    public static ArrayList<String> runnableMD5list = new ArrayList<>();
-
+    public static ArrayList<String> runnableMD5list = new ArrayList<String>();
     //Form data
     //public static boolean TargetScriptIsResource = true;  //true if resource, false if file
     public static iCASUALGUI GUI; //Static reference to GUI input/output device
@@ -76,30 +71,29 @@ public class Statics {
      */
     public static String PreProgress = "";  //place to log data before GUI comes up
     public static StyledDocument ProgressDoc; //anything in here is displayed to GUI. this is main output device.
-
     //Folders
     public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
-    
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     private static String TempFolder;
+
     public static String getTempFolder() {
         FileOperations fo = new FileOperations();
         if (TempFolder == null) {
             String user = System.getProperty("user.name");  //username
             String tf = System.getProperty("java.io.tmpdir"); //tempfolder
-            tf=tf.endsWith(Slash)?tf:tf+Slash;  //make sure temp folder has a slash
+            tf = tf.endsWith(Slash) ? tf : tf + Slash;  //make sure temp folder has a slash
             SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
-            TempFolder= tf +"CASUAL"+user+sdf.format(new Date()).toString()+ Slash; //set /temp/usernameRandom/
+            TempFolder = tf + "CASUAL" + user + sdf.format(new Date()).toString() + Slash; //set /temp/usernameRandom/
             setTempFolder(TempFolder);
             fo.makeFolder(TempFolder);
         }
         fo.makeFolder(TempFolder);
         return TempFolder;
     }
-    public String getTempFolderInstance(){
+
+    public String getTempFolderInstance() {
         return TempFolder;
     }
-    
     //Cross-Platform data storage
     public static String adbDeployed; //location of ADB after deployment
     public static String SelectedScriptFolder;//Used for script locations on disk
@@ -107,7 +101,7 @@ public class Statics {
 
     //ADB
     public static String LinuxADB() {
-        String arch=OSTools.checkLinuxArch();
+        String arch = OSTools.checkLinuxArch();
         if (arch.equals("x86_64")) {
             return Linux64ADB;
         }
@@ -152,8 +146,6 @@ public class Statics {
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
     //CADI location by Jeremy Loper
     final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
-    
-    
     /*
      * Project properties
      */
@@ -164,14 +156,9 @@ public class Statics {
      * Determines if Linux, Mac or Windows
      */
     //Check for windows
-
     //script data
-    public static ArrayList<String> ActionEvents = new ArrayList<>(); //Action events for $ON command. set by script
-    public static ArrayList<String> ReactionEvents = new ArrayList<>(); //Reactions for $ON command. . set by script
-  
-  
-
- 
+    public static ArrayList<String> ActionEvents = new ArrayList<String>(); //Action events for $ON command. set by script
+    public static ArrayList<String> ReactionEvents = new ArrayList<String>(); //Reactions for $ON command. . set by script
     //fastboot
     //static boolean isFastbootDeployed = false;  // if fastboot has been deployed
     public static String fastbootResource = ""; //location to fastboot set from final values above
@@ -184,55 +171,57 @@ public class Statics {
     static String[] resourceHeimdallVersion;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
-    public static void initializeStatics(){
+    public static void initializeStatics() {
         GUIIsAvailable = false;
         dumbTerminalGUI = false;
         setStatus("working");
         GUIVerboseLevel = 2;
         CommandLineVerboseLevel = 4;
-        LiveSendCommand = new ArrayList<>();
-        OutFile=null;
+        LiveSendCommand = new ArrayList<String>();
+        OutFile = null;
         LogCreated = false;
-        ProgressPane = new JTextPane(); 
+        ProgressPane = new JTextPane();
         PreProgress = "";
-        ProgressDoc=null;
-        adbDeployed=null;
-        SelectedScriptFolder="";
+        ProgressDoc = null;
+        adbDeployed = null;
+        SelectedScriptFolder = "";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         scriptRunLock = false;
         lockGUIformPrep = true;
         lockGUIunzip = false;
-        runnableMD5list = new ArrayList<>();
-        ActionEvents = new ArrayList<>();
-        ReactionEvents = new ArrayList<>();
+        runnableMD5list = new ArrayList<String>();
+        ActionEvents = new ArrayList<String>();
+        ReactionEvents = new ArrayList<String>();
         fastbootResource = ""; //location to fastboot set from final values above
         fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
         isHeimdallDeployed = false; //if fastboot has been deployed
         heimdallResource = ""; //location to heimdall set from final values above
         heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
         heimdallDeployed = ""; //location of heimdall once deployed
-        resourceHeimdallVersion=null;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
-        installedHeimdallVersion=null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
+        resourceHeimdallVersion = null;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
+        installedHeimdallVersion = null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
         CASUALLanguage.GOTO = "";
-        if (CASPAC!=null){
-            if (CASPAC.scripts!=null){
-                Statics.CASPAC.getActiveScript().scriptContinue=false;
+        if (CASPAC != null) {
+            if (CASPAC.scripts != null) {
+                Statics.CASPAC.getActiveScript().scriptContinue = false;
             }
         }
     }
-    
-    public static void setStatus(String status){
+
+    public static void setStatus(String status) {
         new Log().level4Debug(status);
-        currentStatus=status;
-        if (GUIIsAvailable){
+        currentStatus = status;
+        if (GUIIsAvailable) {
             GUI.setInformationScrollBorderText(status);
         }
     }
-    public static String getStatus(){
+
+    public static String getStatus() {
         return currentStatus;
     }
- public static String setTempFolder(String folder){
-        TempFolder=folder;
+
+    public static String setTempFolder(String folder) {
+        TempFolder = folder;
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         fastbootDeployed = TempFolder + "fastboot";
         heimdallStaging = TempFolder + "heimdallStage";

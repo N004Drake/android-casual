@@ -20,8 +20,6 @@ import CASUAL.misc.StringOperations;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -47,31 +45,27 @@ public class FileOperations {
      */
     public boolean copyFromResourceToFile(String Resource, String toFile) {
         try {
-            try (InputStream resourceAsStream = getClass().getResourceAsStream(Resource)) {
-                if (resourceAsStream.available() >= 1) {
-                    File Destination = new File(toFile);
-                    writeInputStreamToFile(resourceAsStream, Destination);
-                    if (Destination.length() >= 1) {
-                        resourceAsStream.close();
-                        return true;
-                    } else {
-                        resourceAsStream.close();
-                        log.level0Error("@failedToWriteFile");
-                        return false;
-                    }
+            InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
+            if (resourceAsStream.available() >= 1) {
+                File Destination = new File(toFile);
+                writeInputStreamToFile(resourceAsStream, Destination);
+                if (Destination.length() >= 1) {
+                    resourceAsStream.close();
+                    return true;
                 } else {
                     resourceAsStream.close();
-                    log.level0Error("@criticalErrorWhileCopying " + Resource);
+                    log.level0Error("@failedToWriteFile");
+                    return false;
                 }
-            } catch (NullPointerException e) {
-                return false;
+            } else {
+                resourceAsStream.close();
+                log.level0Error("@criticalErrorWhileCopying " + Resource);
             }
-
-
-
+        } catch (NullPointerException e) {
+            return false;
 
         } catch (IOException ex) {
-            Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
             log.level0Error("@criticalErrorWhileCopying " + Resource);
             return false;
         }
@@ -128,7 +122,6 @@ public class FileOperations {
         }
         return true;
     }
-    
 
     /**
      * takes a path and a name returns qualified path to file
@@ -140,19 +133,19 @@ public class FileOperations {
     public String findRecursive(String PathToSearch, String FileName) {
         File Check = new File(PathToSearch);
         File[] c = Check.listFiles();
-        String s="";
+        String s = "";
         if (Check.exists()) {
             log.level3Verbose("Searching for file in folder:" + PathToSearch.toString());
             for (File file : c) {
                 if (file.isDirectory()) {
-                    return findRecursive(file.getAbsolutePath(),FileName);
+                    return findRecursive(file.getAbsolutePath(), FileName);
                 } else if (file.getName().equals(FileName)) {
                     try {
                         return file.getCanonicalPath();
                     } catch (IOException ex) {
-                        Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                        new Log().errorHandler(ex);
                     }
-                    
+
                 }
             }
         }
@@ -166,7 +159,7 @@ public class FileOperations {
      * @return absolute path to folder
      */
     public ArrayList listFoldersTwoDeep(String PathToSearch) {
-        ArrayList<String[]> al = new ArrayList<>();
+        ArrayList<String[]> al = new ArrayList<String[]>();
         File rootFolder = new File(PathToSearch);
         File[] c = rootFolder.listFiles();
         if (rootFolder.exists()) {
@@ -218,7 +211,7 @@ public class FileOperations {
             return true;
         } else {
             folder.mkdirs();
-            if (folder.exists()){
+            if (folder.exists()) {
                 return true;
             } else {
                 log.level0Error("@couldNotCreateFolder " + Folder);
@@ -345,18 +338,19 @@ public class FileOperations {
      * @return true if all files were deleted false and halts on error
      */
     public boolean deleteStringArrayOfFiles(String[] cleanUp) {
-        for (String s:cleanUp){
-            if (s!=null){
+        for (String s : cleanUp) {
+            if (s != null) {
                 new File(s).delete();
             } else {
                 continue;
             }
-            if (this.verifyExists(s)){
+            if (this.verifyExists(s)) {
                 return false;
             }
-       } //all files were deleted
-       return true;   
+        } //all files were deleted
+        return true;
     }
+
     /**
      * copies a file from a source to a destination
      *
@@ -507,7 +501,7 @@ public class FileOperations {
             }
             in.close();
         } catch (IOException ex) {
-            Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
         //Log.level3(text.toString());
         return text.toString();
@@ -523,11 +517,11 @@ public class FileOperations {
         String EntireFile = "";
         try {
             String Line;
-            try (BufferedReader br = new BufferedReader(new FileReader(FileOnDisk))) {
-                while ((Line = br.readLine()) != null) {
-                    //Log.level3(Line);  
-                    EntireFile = EntireFile + "\n" + Line;
-                }
+            BufferedReader br = new BufferedReader(new FileReader(FileOnDisk));
+            while ((Line = br.readLine()) != null) {
+                //Log.level3(Line);  
+                EntireFile = EntireFile + "\n" + Line;
+
             }
         } catch (IOException ex) {
             log.level2Information("@fileNotFound " + FileOnDisk);
@@ -548,7 +542,7 @@ public class FileOperations {
             new Log().level0Error("@fileNotAFolder");
             return null;
         }
-        ArrayList<String> files = new ArrayList<>();
+        ArrayList<String> files = new ArrayList<String>();
         File[] list = dir.listFiles();
         for (int x = 0; list.length > x; x++) {
             files.add(list[x].getName());
@@ -574,7 +568,7 @@ public class FileOperations {
             try {
                 childOf[x] = list[x].getCanonicalFile().toString();
             } catch (IOException ex) {
-                Logger.getLogger(FileOperations.class.getName()).log(Level.SEVERE, null, ex);
+                new Log().errorHandler(ex);
             }
         }
         return childOf;

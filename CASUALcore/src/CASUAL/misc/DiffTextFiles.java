@@ -18,8 +18,6 @@ package CASUAL.misc;
 
 import CASUAL.Log;
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -45,17 +43,17 @@ public class DiffTextFiles {
         try {
             while ((TestStreamLine = testStream.readLine()) != null) {
                 boolean LineExists;
-                try (BufferedReader OriginalReader = new BufferedReader(new FileReader(original))) {
-                    OriginalReader.mark(0);
-                    LineExists = false;
-                    OriginalReader.reset();
-                    while ((OriginalFileLine = OriginalReader.readLine()) != null) {
-                        if (OriginalFileLine.equals(TestStreamLine)) {
-                            LineExists = true;
-                            break;
-                        }
+                BufferedReader OriginalReader = new BufferedReader(new FileReader(original));
+                OriginalReader.mark(0);
+                LineExists = false;
+                OriginalReader.reset();
+                while ((OriginalFileLine = OriginalReader.readLine()) != null) {
+                    if (OriginalFileLine.equals(TestStreamLine)) {
+                        LineExists = true;
+                        break;
                     }
                 }
+
                 if (!LineExists) {
                     Difference = Difference + "\n" + TestStreamLine;
                 }
@@ -98,24 +96,24 @@ public class DiffTextFiles {
 
         try {
             BufferedReader BROriginal;
-            try (BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff))) {
-                String line;
-                String line2;
-                BROriginal = new BufferedReader(new FileReader(Original));
-                BROriginal.mark(0);
-                while ((line = BRTestDiff.readLine()) != null) {
-                    BROriginal.reset();
-                    boolean lineExists = false;
-                    while ((line2 = BROriginal.readLine()) != null) {
-                        if (line2.equals(line)) {
-                            lineExists = true;
-                            break;
-                        }
-                    }
-                    if (!lineExists) {
-                        DifferenceFromFile1 = DifferenceFromFile1 + "\n" + line;
+            BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff));
+            String line;
+            String line2;
+            BROriginal = new BufferedReader(new FileReader(Original));
+            BROriginal.mark(0);
+            while ((line = BRTestDiff.readLine()) != null) {
+                BROriginal.reset();
+                boolean lineExists = false;
+                while ((line2 = BROriginal.readLine()) != null) {
+                    if (line2.equals(line)) {
+                        lineExists = true;
+                        break;
                     }
                 }
+                if (!lineExists) {
+                    DifferenceFromFile1 = DifferenceFromFile1 + "\n" + line;
+                }
+
             }
             BROriginal.close();
         } catch (IOException e) {
@@ -169,8 +167,7 @@ public class DiffTextFiles {
             FR.close();
             FileOut.close();
         } catch (IOException ex) {
-            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
-
+            new Log().errorHandler(ex);
         } finally {
             try {
                 OriginalFileBuffer.close();

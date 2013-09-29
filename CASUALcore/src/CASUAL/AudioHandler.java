@@ -17,23 +17,18 @@
 package CASUAL;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.TargetDataLine;
+
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
@@ -72,7 +67,13 @@ public class AudioHandler {
                         line.close();
                         IS.close();
                         //Don't worry about autio exceptions.  Just turn off audio
-                    } catch (IllegalArgumentException | UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                    } catch (IllegalArgumentException ex) {
+                        useSound = false;
+                    } catch (UnsupportedAudioFileException ex) {
+                        useSound = false;
+                    } catch (IOException ex) {
+                        useSound = false;
+                    } catch (LineUnavailableException ex) {
                         useSound = false;
                     }
                 }
@@ -88,43 +89,43 @@ public class AudioHandler {
      * @param URLs array of paths to sound
      */
     public static synchronized void playMultipleInputStreams(final String[] URLs) {
-        Thread t; 
-        t = new Thread(new Runnable() { 
+        Thread t;
+        t = new Thread(new Runnable() {
 // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
-     @Override
-     public void run() {
-         if (useSound) {
-             try {
-                 long length=150000000;
-                 
-                 AudioInputStream ex=AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URLs[0]));
-                 AudioFormat format=ex.getFormat();
-                 
-                 List<AudioInputStream> list =new ArrayList<>();
-                 for (String URL : URLs) {
-                     AudioInputStream x=AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URL));
-                     length=length+x.getFrameLength();
-                     list.add(x);
-                         
-                 }
-                 AudioInputStream appendedFiles = new AudioInputStream(new SequenceInputStream(Collections.enumeration(list)),format,length);
+            @Override
+            public void run() {
+                if (useSound) {
+                    try {
+                        long length = 150000000;
 
-                 Clip clip = AudioSystem.getClip();
-                 clip.open(appendedFiles);
-                 clip.start();
+                        AudioInputStream ex = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URLs[0]));
+                        AudioFormat format = ex.getFormat();
 
-             } catch (LineUnavailableException ex) {
-                 Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (IOException ex) {
-                 Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (UnsupportedAudioFileException ex) {
-                 Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
-             }
-         }
-     }
- });
+                        List<AudioInputStream> list = new ArrayList<AudioInputStream>();
+                        for (String URL : URLs) {
+                            AudioInputStream x = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URL));
+                            length = length + x.getFrameLength();
+                            list.add(x);
+
+                        }
+                        AudioInputStream appendedFiles = new AudioInputStream(new SequenceInputStream(Collections.enumeration(list)), format, length);
+
+                        Clip clip = AudioSystem.getClip();
+                        clip.open(appendedFiles);
+                        clip.start();
+
+                    } catch (LineUnavailableException ex) {
+                        useSound = false;
+                    } catch (IOException ex) {
+                        useSound = false;
+                    } catch (UnsupportedAudioFileException ex) {
+                        useSound = false;
+                    }
+                }
+            }
+        });
         t.setName("AudioStream");
         t.start();
-        
+
     }
 }

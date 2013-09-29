@@ -32,7 +32,6 @@ public class CASUALApp {
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{""};
-    
     static String[] arguments;
 
     /**
@@ -88,7 +87,7 @@ public class CASUALApp {
      */
     private static boolean checkModeSwitchArgs(String args[]) {
         for (int i = 0; i < args.length; i++) {
-            if (args[i].contains("--temp")|| args[i].contains("-t")){
+            if (args[i].contains("--temp") || args[i].contains("-t")) {
                 i++;
                 Statics.setTempFolder(args[i]);
 
@@ -121,7 +120,7 @@ public class CASUALApp {
                 CASUALApp.shutdown(0);
                 return true;
             }
-          
+
         }
         return false;
     }
@@ -133,7 +132,7 @@ public class CASUALApp {
      */
     public static void shutdown(int i) {
         new Log().level4Debug("Shutting Down");
-        AudioHandler.useSound=false;
+        AudioHandler.useSound = false;
         Log.out.flush();
         if (Statics.CASPAC != null && Statics.CASPAC.getActiveScript() != null) {
             Statics.CASPAC.getActiveScript().scriptContinue = false;
@@ -149,11 +148,11 @@ public class CASUALApp {
             }
         }
 
-            if (Statics.GUI!=null){
-                Statics.GUI.dispose();
-            }
-            
-            Statics.initializeStatics();
+        if (Statics.GUI != null) {
+            Statics.GUI.dispose();
+        }
+
+        Statics.initializeStatics();
 
     }
 }

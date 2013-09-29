@@ -245,13 +245,13 @@ public class Pastebin {
                 connection.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
                 connection.addRequestProperty("User-Agent", "Mozilla");
                 StringBuffer html;
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                    String inputLine;
-                    html = new StringBuffer();
-                    while ((inputLine = in.readLine()) != null) {
-                        html.append(inputLine);
-                    }
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                html = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    html.append(inputLine);
                 }
+
                 return html.toString();
             } catch (IOException ex) {
                 log.errorHandler(ex);

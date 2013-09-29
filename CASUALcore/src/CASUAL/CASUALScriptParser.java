@@ -22,8 +22,6 @@ import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -72,7 +70,7 @@ public class CASUALScriptParser {
             return null;
 
         } catch (IOException ex) {
-            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
             return null;
         }
 
@@ -97,8 +95,8 @@ public class CASUALScriptParser {
 
     public void executeSelectedScript(final Caspac caspac, boolean startThreaded) {
         Statics.scriptRunLock = true;
-        Statics.ReactionEvents = new ArrayList<>();
-        Statics.ActionEvents = new ArrayList<>();
+        Statics.ReactionEvents = new ArrayList<String>();
+        Statics.ActionEvents = new ArrayList<String>();
         Statics.CASPAC.getActiveScript().scriptContinue = true;
         scriptInput = new DataInputStream(StringOperations.convertStringToStream(caspac.getActiveScript().scriptContents));
         log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
@@ -124,15 +122,13 @@ public class CASUALScriptParser {
                 try {
                     scriptInput.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+                    new Log().errorHandler(ex);
                 }
                 Statics.scriptRunLock = false;
                 Statics.setStatus("done");
                 log.level2Information("@scriptComplete");
 
             }
-
-           
         };
         if (startThreaded) {
             Thread ExecuteScript = new Thread(r);
@@ -153,7 +149,7 @@ public class CASUALScriptParser {
         try {
             CASPAC.loadActiveScript();
         } catch (IOException ex) {
-            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
         CASPAC.waitForUnzipComplete();
         log.level2Information(s.discription);
@@ -169,7 +165,7 @@ public class CASUALScriptParser {
             DataInputStream dis = new DataInputStream(scriptStream);
             new CASUALLanguage(CASPAC, s.name, s.tempDir).beginScriptingHandler(dis);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
+            new Log().errorHandler(ex);
         }
 
     }

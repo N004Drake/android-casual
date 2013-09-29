@@ -37,16 +37,15 @@ import javax.swing.text.BadLocationException;
 public class Log {
 
     /**
-     *output device
+     * output device
      */
     public static PrintStream out = new PrintStream(System.out);
 
-
     private void sendToGUI(String data) {
-        if (Statics.GUIIsAvailable || Statics.dumbTerminalGUI && !"".equals(data)&& !"\n".equals(data)) {
+        if (Statics.GUIIsAvailable || Statics.dumbTerminalGUI && !"".equals(data) && !"\n".equals(data)) {
             try {
-                    Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
-                    Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
+                Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
+                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
             } catch (NullPointerException e) {
                 Statics.PreProgress = Statics.PreProgress + "\n" + data;
                 if (Statics.PreProgress.startsWith("\n")) {
@@ -58,13 +57,14 @@ public class Log {
         }
     }
 
-    public void clearGUI(){
+    public void clearGUI() {
         try {
             Statics.ProgressDoc.remove(0, Statics.ProgressDoc.getLength());
         } catch (BadLocationException ex) {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     /**
      * level 0 is used for errors.. basically silent. Use level 1 for for most
      * tasks
@@ -72,8 +72,8 @@ public class Log {
      * @param data is data to be written to log
      */
     public void level0Error(String data) {
-        if (data.startsWith("@")){
-            data=Translations.get(data);
+        if (data.startsWith("@")) {
+            data = Translations.get(data);
         }
         writeOutToLog("[ERROR]" + data);
         if (Statics.GUIVerboseLevel >= 0) {
@@ -92,8 +92,8 @@ public class Log {
      * @param data is data to be written to log
      */
     public void Level1Interaction(String data) {
-        if (data.startsWith("@")){
-            data=Translations.get(data);
+        if (data.startsWith("@")) {
+            data = Translations.get(data);
         }
         writeOutToLog("[INTERACTION]" + data);
         if (Statics.GUIVerboseLevel >= 1) {
@@ -113,8 +113,8 @@ public class Log {
      */
     // level 2 is for info-type data
     public void level2Information(String data) {
-        if (data.startsWith("@")){
-            data=Translations.get(data);
+        if (data.startsWith("@")) {
+            data = Translations.get(data);
         }
         writeOutToLog("[INFO]" + data);
         if (Statics.GUIVerboseLevel >= 2) {
@@ -141,7 +141,7 @@ public class Log {
     }
 
     /**
-     * 
+     *
      * @param data is data to be written to log
      */
     public void level4Debug(String data) {
@@ -156,7 +156,7 @@ public class Log {
     }
 
     /**
-     * 
+     *
      * @param data to be written to log file
      */
     public void writeToLogFile(String data) {
@@ -171,14 +171,14 @@ public class Log {
             out.println("Attempted to write to log but could not.");
             return;
         }
-        try (PrintWriter output = new PrintWriter(WriteFile)) {
-            output.write(data + "\n");
+        PrintWriter output = new PrintWriter(WriteFile);
+        output.write(data + "\n");
 
-            Statics.OutFile = output;
-            if (Statics.OutFile != null) {
-                Statics.LogCreated = true;
-            }
+        Statics.OutFile = output;
+        if (Statics.OutFile != null) {
+            Statics.LogCreated = true;
         }
+
     }
     private static String progressBuffer = "";
     int lastNewLine = 100;
@@ -236,7 +236,7 @@ public class Log {
     }
 
     /**
-     * begins a new line 
+     * begins a new line
      */
     public void beginLine() {
         out.println();
@@ -273,7 +273,4 @@ public class Log {
     void initialize() {
         out = new PrintStream(System.out);
     }
-    
-   
-    
 }
