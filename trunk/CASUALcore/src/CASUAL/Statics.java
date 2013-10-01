@@ -137,6 +137,10 @@ public class Statics {
     final public static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
     final public static String fastbootWindows = "/CASUAL/resources/fastboot/fastboot-win.exe";
     final public static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
+    //Busybox
+    final public static String busyboxARM = "/CASUAL/resources/ADB/busybox/busybox-armv4tl";
+    final public static String busyboxX86 = "/CASUAL/resources/ADB/busybox/busybox-i686";
+    
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
     final public static String ADBini = "/CASUAL/resources/ADB/adb_usb.ini";
@@ -146,6 +150,7 @@ public class Statics {
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
     //CADI location by Jeremy Loper
     final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
+    
     /*
      * Project properties
      */

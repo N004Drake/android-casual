@@ -125,6 +125,7 @@ public class CASUALScriptParser {
                     new Log().errorHandler(ex);
                 }
                 Statics.scriptRunLock = false;
+                Statics.CASPAC.getActiveScript().deviceArch = "";
                 Statics.setStatus("done");
                 log.level2Information("@scriptComplete");
 
