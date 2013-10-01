@@ -328,6 +328,13 @@ public class CASUALLanguage {
          * Environmental variables
          */
 //$SLASH will replace with "\" for windows or "/" for linux and mac
+        if (line.contains("$BUSYBOX")) {
+            line = line.replace("$BUSYBOX", BusyboxTools.getBusyboxLocation());
+            log.level4Debug("Expanded $BUSYBOX: " + line);
+        }
+        
+        
+//$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
             line = line.replace("$SLASH", Statics.Slash);
             log.level4Debug("Expanded $SLASH: " + line);

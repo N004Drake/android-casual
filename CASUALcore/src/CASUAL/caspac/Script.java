@@ -69,6 +69,7 @@ public class Script {
     public String discription = "";
     public boolean scriptContinue = false;
     private static String slash = System.getProperty("file.separator");
+    public String deviceArch = "";
     Map<? extends String, ? extends InputStream> getAllAsStringAndInputStream;
     public List<String> actualMD5s = new ArrayList<String>();
 

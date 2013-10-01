@@ -239,3 +239,102 @@ If the disclaimer of warranty and limitation of liability provided above cannot 
 END OF TERMS AND CONDITIONS
 
 
+Significant contributions to this project include 
+Jeremy Loper - Pastebin.java and SCRCustomFilter.java
+Logan Ludington - DiffTextFiles.java
+This project includes distributable forms of:
+CADI, ADB, Heimdall, Fastboot, and Busybox
+
+CASUAL  Cross-platform Android Scripting and Unified Auxiliary Loader
+Copyright (C) 2013  Adam Outler
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+This project contains CADI CASUAL Automated Driver Installer
+Copyright (C) 2013  Jeremey Loper
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+This project contains Fastboot
+Copyright (C) 2008 The Android Open Source Project
+ All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+  * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the 
+  distribution.
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED 
+ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+This project contains ADB
+Copyright (C) 2008 The Android Open Source Project
+ All rights reserved.
+  Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+  * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the 
+  distribution.
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED 
+ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+ 
+This project contains Heimdall
+Copyright (c) 2010-2012, Benjamin Dobell, Glass Echidna
+http://www.glassechidna.com.au/
+This software is provided free of charge. Copying and redistribution is
+encouraged. If you appreciate this software and you would like to support future
+development please consider donating: http://www.glassechidna.com.au/donate/
+Heimdall utilises libusb-1.0 for all USB communication:
+    http://www.libusb.org/
+libusb-1.0 is licensed under the LGPL-2.1:
+    http://www.gnu.org/licenses/licenses.html#LGPL
+
+This project contains Busybox
+BusyBox v1.20.2 (Ubuntu 1:1.20.0-8ubuntu1) multi-call binary.
+Copyright (C) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko
+and others. Licensed under GPLv2.
+See source distribution for full notice.
