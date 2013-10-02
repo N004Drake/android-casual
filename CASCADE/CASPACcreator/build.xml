@@ -76,7 +76,7 @@
     <target name="-post-jar">
         <jar jarfile="dist/CASPACcreator-dist.jar">
                 <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-                <zipfileset src="dist/lib/CASUALcoreNoResources.jar" excludes="META-INF/*" />
+                <zipfileset src="../../CASUALcore/dist/CASUALcoreNoResources.jar" excludes="META-INF/*" />
             <manifest>
                 <attribute name="Main-Class" value="com.example.mypackage.Main"/>
             </manifest>
