@@ -1593,12 +1593,16 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
         //TODO: move this to CASPACkager. --execute or --launch paramater should launch from command line.
         String args[] = argBuilder();
-        final String filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf("/") + 1), ".zip", "");
+        final String filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(Statics.Slash) + 1), ".zip", "");
         final String version = CASUAL.CASUALTools.getSVNVersion();
         final String folder = this.casualOutputFile.getText();
         String[] tempFileList = new File(folder).list();
         for (final String file : tempFileList) {
-            if (file.startsWith(filename + "-CASUAL-R" + version)) {
+            if (file.contains(filename)){
+                log.level3Verbose("found "+filename);
+            }
+            if (file.contains(filename + "-CASUAL-R" + version)) {
+                log.level3Verbose("found file. launching");
                 String exe = "";
                 if (OSTools.isWindows()) {
                     exe = ".exe";
@@ -1613,8 +1617,11 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
                         ProcessBuilder pb;
                         if (OSTools.isWindows()) {
-                            pb = new ProcessBuilder(new String[]{"cmd.exe", "/c", "start ", outputFile + Statics.Slash + file});
+                            System.out.println("executing "+"cmd.exe /c start "+ System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable+ "-jar "+ outputFile + Statics.Slash + file );
+                            new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\""+outputFile + Statics.Slash + file+"\"" },true);
                         } else {
+                            System.out.println("Executing"+System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable+ " -jar "+ outputFile + Statics.Slash + file);
+                                   
                             new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable, "-jar", outputFile + Statics.Slash + file}, true);
 
                         }
@@ -1959,6 +1966,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
             String[] args;
             String CASPACIn = this.caspacOutputFile.getText();
             String CASUALOut = this.casualOutputFile.getText();
+            File f=new File(CASUALOut);
+            if (!f.exists()){
+                  f.mkdirs();
+            }
             if (this.typeCheckBox.isSelected()) {
                 args = new String[]{"--CASPAC", CASPACIn, "--output", CASUALOut, "--type", this.typeTextBox.getText()};
             } else {
@@ -2107,6 +2118,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         }
 
         public boolean saveCASUAL() throws HeadlessException {
+            
             File caspacin = new File(this.caspacOutputFile.getText());
             File casualout = new File(this.casualOutputFile.getText());
             if (!caspacin.toString().endsWith(".zip")) {
