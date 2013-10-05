@@ -1,4 +1,6 @@
 $ECHO Testing ALL CASUAL commands. Connect your device
+$SLEEPMILLIS 3250
+
 #$ADB wait-for-device
 $ADB push "$ZIPFILEadb_usb.ini" /data/local/tmp/
 $LINUXMAC $ECHO This is a Linux or Mac Computer.
