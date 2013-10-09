@@ -17,19 +17,11 @@
 package CASUAL;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.IOException;
-import java.io.SequenceInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.*;
-import sun.audio.AudioData;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 import sun.audio.ContinuousAudioDataStream;
 
 /**
@@ -96,47 +88,22 @@ public class AudioHandler {
             @Override
             public void run() {
                 if (useSound) {
-                    /*try {
-                     long length = 1500000;
-
-                     AudioInputStream ex = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URLs[0]));
-                     AudioFormat format = ex.getFormat();
-
-                     List<AudioInputStream> list = new ArrayList<AudioInputStream>();
-                     for (String URL : URLs) {
-                     AudioInputStream x = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URL));
-                     length = length + x.getFrameLength();
-                     list.add(x);
-
-                     }
-                     AudioInputStream appendedFiles = new AudioInputStream(new SequenceInputStream(Collections.enumeration(list)), format, length);
-
-                     Clip clip = AudioSystem.getClip();
-                     clip.open(appendedFiles);
-                     clip.start();
-
-                     } catch (LineUnavailableException ex) {
-                     useSound = false;
-                     } catch (IOException ex) {
-                     useSound = false;
-                     } catch (UnsupportedAudioFileException ex) {
-                     useSound = false;
-                     }*/
+                    
                     ContinuousAudioDataStream loop = null;
                     for (String URL : URLs) {
 
                         try {
                             AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URL));
-                            
-                           AudioFormat format = audioIn.getFormat();
+
+                            AudioFormat format = audioIn.getFormat();
                             DataLine.Info info = new DataLine.Info(Clip.class, format);
-                             Clip clip = (Clip)AudioSystem.getLine(info);
-                           
-                             clip.open(audioIn);
-                             clip.start();
-                             Thread.sleep(clip.getMicrosecondLength()/1000);
-      
-   
+                            Clip clip = (Clip) AudioSystem.getLine(info);
+
+                            clip.open(audioIn);
+                            clip.start();
+                            sleepTillEndOfClip(clip);
+
+
                         } catch (IOException error) {
                             System.out.print("file not found");
                         } catch (UnsupportedAudioFileException ex) {
@@ -148,10 +115,14 @@ public class AudioHandler {
                         } catch (InterruptedException ex) {
                             Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                       
+
                     }
                 }
 
+            }
+
+            private void sleepTillEndOfClip(Clip clip) throws InterruptedException {
+                Thread.sleep(clip.getMicrosecondLength() / 1000);
             }
         });
         t.setName("AudioStream");
