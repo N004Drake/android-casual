@@ -44,8 +44,9 @@ public class BusyboxTools {
     }
 
     private boolean busyboxIsInstalled() {
+       String temp=shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "chmod 777 "+busyboxLocation+";ls " + busyboxLocation});
 
-        return shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "ls " + busyboxLocation}).contains("busybox\n");
+        return !temp.contains("No such") && !temp.contains("found");
     }
 
     public static String getBusyboxLocation() {
@@ -53,6 +54,7 @@ public class BusyboxTools {
         if (bbtools.busyboxIsInstalled()) {
             return bbtools.busyboxLocation;
         } else {
+            new Log().level4Debug("deploying busybox");
             return bbtools.deployBusybox();
         }
     }
@@ -69,7 +71,7 @@ public class BusyboxTools {
         }
         fo.copyFromResourceToFile(busyboxResource, busyboxOnHost);
         new Shell().silentShellCommand(installCmd);
-        String check = new Shell().sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "chmod 777 /data/local/tmp/busybox 2>&1 >/dev/null;ls /data/local/tmp"});
+        String check = new Shell().sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "chmod 777 /data/local/tmp/busybox;ls /data/local/tmp"});
         if (check.contains("busybox")) {
             return this.busyboxLocation;
         } else {
