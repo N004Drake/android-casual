@@ -1,7 +1,12 @@
+
 $ECHO Testing ALL CASUAL commands. Connect your device
-SLEEPMILLIS 3250
+$SLEEPMILLIS 3250
 $SLEEP 1
 $ECHO testing two lines in one
+$IFCONTAINS hi $INCOMMAND $ECHO hi $DO $HALT $ECHO testing and operator &&& $ECHO and operator sucessful
+
+
+$ADB push $ZIPFILEadb_usb.ini /sdcard
 
 $ECHO line 1;;;$ECHO line 2
 
@@ -49,7 +54,7 @@ $ECHO [PASS] done with ON testing.
 
 
 #this is just in case I want to use the word woot again while writing this.
-$CLEARON
+$CLEARON;;; $ECHO hi
 $IFCONTAINS adfadfa $INCOMMAND $BUILDPROP $DO $HALT $ECHO Failure
 $IFNOTCONTAINS ro.builasfdadfad $INCOMMAND $BUILDPROP $DO $ECHO [PASS] IFNOTCONTAINS
 $IFCONTAINS ro.buiasdasald. $INCOMMAND $BUILDPROP $DO $HALT $ECHO Failure
