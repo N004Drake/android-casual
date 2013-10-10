@@ -29,8 +29,7 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -73,9 +72,10 @@ public class CASUALLanguage {
         String strLine = "";
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
-
+            
             bReader.mark(1);
             while ((strLine = bReader.readLine()) != null) {
+
                 if (Statics.CASPAC.getActiveScript().scriptContinue == false) {
                     return;
                 }
@@ -91,8 +91,14 @@ public class CASUALLanguage {
                     }
                     GOTO = "";
                 }
-
-                commandHandler(strLine);
+                if (strLine.contains(";;;")){
+                    String[] lineArray=strLine.split(";;;");
+                    for (String line:lineArray){
+                        commandHandler(line);
+                    }
+                } else {
+                    commandHandler(strLine);
+                }
             }
             //Close the input stream
             dataIn.close();
@@ -327,6 +333,7 @@ public class CASUALLanguage {
             return doIfContainsReturnResults(line, false);
         }
         if (line.startsWith("$SLEEP")){
+            log.level3Verbose("detected sleep command: "+line);
             int sleeptime;
             line = line.replace("$SLEEP", "").trim();
             if (line.startsWith("MILLIS")){
@@ -335,11 +342,16 @@ public class CASUALLanguage {
             } else {
                 sleeptime=Integer.parseInt(line)*1000;
             }
+            if (! (Integer.parseInt(line)>=0)){
+                throw new RuntimeException();
+            }
+                    
             try {
                 log.level2Information("sleeping for "+(double)sleeptime/1000 + " seconds");
                 Thread.sleep(sleeptime);
             } catch (InterruptedException ex) {
             }
+            return line;
             
         }
         /*
@@ -576,7 +588,6 @@ public class CASUALLanguage {
             if (deviceBuildPropStorage!=null && deviceBuildPropStorage.contains("ro.")){
                 return deviceBuildPropStorage;
             } else {
-                line = StringOperations.removeLeadingSpaces(line.replace("$CHECKBUILD", ""));
                 String[] cmd={Statics.adbDeployed, "shell", "cat /system/build.prop"};
                 deviceBuildPropStorage=new Shell().timeoutShellCommand(cmd,5000);
                 return deviceBuildPropStorage;
