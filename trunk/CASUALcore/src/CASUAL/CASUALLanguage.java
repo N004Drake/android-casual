@@ -700,11 +700,23 @@ public class CASUALLanguage {
         }
         log.level4Debug("checking for results to be " + ifContains);
         log.level4Debug("requesting " + command);
+        
+        
         String returnValue = new CASUALScriptParser().executeOneShotCommand(command);
         log.level4Debug("got " + returnValue);
         String retValue = "";
+        
+        //ifnotcontains==false or ifcontains==true
         if (returnValue.contains(checkValue) == ifContains) {
-            retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
+            if (casualCommand.contains("&&&")){
+                String[] lineSplit=casualCommand.split("&&&");
+                for (String cmd:lineSplit){
+                   retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(cmd));
+                    
+                }
+            } else {
+               retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
+            }
         }
         return retValue;
     }
