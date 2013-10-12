@@ -65,7 +65,7 @@ public class Translations {
     private static void setDefaultLanguage() {
         String lang = Locale.getDefault().getDisplayLanguage();
         try {
-            translation = ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
+            translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English", Locale.getDefault());
         } catch (Exception e) {
             translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English");
             new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
