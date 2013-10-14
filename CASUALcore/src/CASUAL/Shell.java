@@ -354,7 +354,7 @@ public class Shell {
         Runnable runCommand = new Runnable() {
             @Override
             public void run() {
-                log.level4Debug("\n###executing: " + cmd[0] + "###");
+                log.level4Debug("###executing timeout command: " + cmd[0] + "###");
                 try {
                     String line;
                     ProcessBuilder p = new ProcessBuilder(cmd);
@@ -380,9 +380,6 @@ public class Shell {
         //set up timeout with calendar time in millis
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MILLISECOND, timeout);
-        log.level4Debug("Executing timeoutShellCommand");
-        log.level4Debug("The current time is: " + Calendar.getInstance().getTimeInMillis());
-        log.level4Debug("The thread will end at: " + endTime.getTimeInMillis());
         //loop while not timeout and halt if thread dies. 
         while (Calendar.getInstance().getTimeInMillis() < endTime.getTimeInMillis()) {
             if (!t.isAlive()) {

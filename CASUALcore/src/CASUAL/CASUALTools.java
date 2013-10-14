@@ -276,4 +276,24 @@ public class CASUALTools {
     public static void setJavaDesktopMessage() {
         CASUAL.Statics.interaction = new CASUAL.GUI.CASUALShowJFrameMessageObject();
     }
+    
+    public static boolean uidMatches(String expectedUID){
+        String[] cmd = new String[]{ADBTools.getADBCommand(),"shell","id -u"};
+        return new Shell().silentShellCommand(cmd).equals("\n"+expectedUID);
+    }
+    
+    public static String rootAccessCommand(){
+        if (uidMatches("0")){
+            return "";
+        }
+        if ( uidMatches("0")){
+            return "su -c ";
+        } else {
+            //TODO: pop up warning about not having access to root if it cannot be obtained or throw new exception
+            return "";
+        }
+    }
+    
+    
+    
 }

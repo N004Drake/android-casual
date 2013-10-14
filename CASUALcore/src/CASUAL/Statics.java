@@ -214,7 +214,7 @@ public class Statics {
     }
 
     public static void setStatus(String status) {
-        new Log().level4Debug(status);
+        //new Log().level4Debug(status);
         currentStatus = status;
         if (GUIIsAvailable) {
             GUI.setInformationScrollBorderText(status);
