@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -726,11 +727,16 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         }
     }
 
+    long time=System.currentTimeMillis();
     @Override
     public void setInformationScrollBorderText(String title) {
-        TitledBorder info = (TitledBorder) this.informationScrollPanel.getBorder();
-        info.setTitle(title);
-        this.repaint();
+        Border b= informationScrollPanel.getBorder();
+        ((TitledBorder)b).setTitle(title);
+        if (System.currentTimeMillis()>time+100){
+            revalidate();
+            repaint();
+            time=System.currentTimeMillis();
+        }
     }
 
     public void setVisibile(boolean v) {

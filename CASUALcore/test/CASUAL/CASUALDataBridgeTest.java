@@ -86,7 +86,7 @@ public class CASUALDataBridgeTest {
         test.delete();
         shell.sendShellCommand(new String[]{ADBTools.getADBCommand(), "push", original.getAbsolutePath(), remoteFileName});
         CASUALDataBridge instance = new CASUALDataBridge();
-        instance.getFile(test.getAbsoluteFile(), remoteFileName);
+        instance.getFile(remoteFileName,test);
         String originalmd5 = new CASUAL.crypto.MD5sum().getLinuxMD5Sum(original).split(" ")[0];
         String testmd5 = new CASUAL.crypto.MD5sum().getLinuxMD5Sum(test).split(" ")[0];
         System.out.println(test.getAbsolutePath());
