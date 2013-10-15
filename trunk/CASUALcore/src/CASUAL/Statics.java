@@ -140,7 +140,6 @@ public class Statics {
     //Busybox
     final public static String busyboxARM = "/CASUAL/resources/ADB/busybox/busybox-armv4tl";
     final public static String busyboxX86 = "/CASUAL/resources/ADB/busybox/busybox-i686";
-    
     //Windows permissions elevator
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
     final public static String ADBini = "/CASUAL/resources/ADB/adb_usb.ini";
@@ -150,7 +149,6 @@ public class Statics {
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
     //CADI location by Jeremy Loper
     final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
-    
     /*
      * Project properties
      */
@@ -213,11 +211,17 @@ public class Statics {
         }
     }
 
-    public static void setStatus(String status) {
+    public static void setStatus(final String status) {
         //new Log().level4Debug(status);
         currentStatus = status;
         if (GUIIsAvailable) {
-            GUI.setInformationScrollBorderText(status);
+            Thread t = new Thread(new Runnable() {
+                public void run() {
+                    GUI.setInformationScrollBorderText(status);
+                }
+            });
+            t.setName("Updating GUI");
+            t.start();
         }
     }
 

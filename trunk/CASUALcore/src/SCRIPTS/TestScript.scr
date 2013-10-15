@@ -3,10 +3,22 @@ $ECHO Testing ALL CASUAL commands. Connect your device
 $SLEEPMILLIS 3250
 $SLEEP 1
 $ECHO testing two lines in one
-$IFCONTAINS hi $INCOMMAND $ECHO hi $DO $HALT $ECHO testing and operator &&& $ECHO and operator sucessful
+$IFCONTAINS hi $INCOMMAND $ECHO hi $DO $ECHO testing and operator &&& $ECHO  testing AND operator was sucessful
 
+#testing flashing
+$ECHO flashing adb_usb.ini to sdcard
+$ADB shell rm /sdcard/adb_usb.ini
+$FLASH $ZIPFILEadb_usb.ini , /sdcard/adb_usb.ini
+$PULL /sdcard/adb_usb.ini, $ZIPFILEadb.ini
 
-$ADB push $ZIPFILEadb_usb.ini /sdcard
+#$ECHO verifying flash
+#$ECHO pulling recovery
+#$PULL /dev/block/platform/msm_sdcc.1/by-name/recovery , "$ZIPFILErecovery"
+#$ECHO flashing to recovery
+#$FLASH "$ZIPFILErecovery", /dev/block/platform/msm_sdcc.1/by-name/recovery
+
+$HALT
+$IFNOTCONTAINS adb_usb.ini $INCOMMAND $ADB shell "ls /sdcard/" $DO $HALT $ECHO failed to push file
 
 $ECHO line 1;;;$ECHO line 2
 

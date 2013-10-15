@@ -24,11 +24,14 @@ import CASUAL.crypto.MD5sum;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -525,32 +528,6 @@ public class CASUALLanguage {
             return "";
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
 
-
-            /*
-             * BROKEN
-             * [ERROR]no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
-             no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
-             java.net.MalformedURLException: no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
-
-             java.net.MalformedURLException: no protocol: $DOWNLOAD android-casual.googlecode.com/svn-history/r348/trunk/GUI/src/CASUAL/AudioHandler.java
-             at java.net.URL.<init>(URL.java:585)
-             at java.net.URL.<init>(URL.java:482)
-             at java.net.URL.<init>(URL.java:431)
-             at CASUAL.CASUALUpdates.stringToFormattedURL(CASUALUpdates.java:176)
-             at CASUAL.CASUALUpdates.downloadFileFromInternet(CASUALUpdates.java:120)
-             at CASUAL.CASUALLanguage.commandHandler(CASUALLanguage.java:439)
-             at CASUAL.CASUALLanguage.beginScriptingHandler(CASUALLanguage.java:54)
-             at CASUAL.CASUALScriptParser$1.run(CASUALScriptParser.java:124)
-             at java.lang.Thread.run(Thread.java:722)
-
-             [ERROR]A critical error was encoutered.  Please copy the log from About>Show Log and report this issue 
-             [ERROR]3
-             3
-             java.lang.ArrayIndexOutOfBoundsException: 3
-
-             java.lang.ArrayIndexOutOfBoundsException: 3
-             at CASUAL.CASUALLanguage.commandHandler(CASUALLa
-             */
         } else if (line.startsWith("$DOWNLOAD")) {
             line = line.replace("$DOWNLOAD", "");
             line = StringOperations.removeLeadingSpaces(line);
@@ -592,13 +569,60 @@ public class CASUALLanguage {
                 deviceBuildPropStorage=new Shell().timeoutShellCommand(cmd,5000);
                 return deviceBuildPropStorage;
             }
+//$FLASH will push a file to the specified block eg $FLASH $ZIPFILEmyFile, /dev/block/mmcblk0p5
+        } else if (line.startsWith("$FLASH")) {
+           
+           line=line.replace("$FLASH", "").trim();
+           if (! line.contains(",")){
+               log.level0Error("Missing Comma in $FLASH command");
+               throw new RuntimeException("no comma to split and specify destination");
+           }
+           String[] split=line.split(",");
+           File f=new File(split[0].replace("\"","").trim());
+            try {
+                f.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(CASUALLanguage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                int x = new CASUALDataBridge().sendFile(f, split[1].trim());
+                if (x!=f.length()){
+                    new CASUALMessageObject("@interactionUltimateFlashFailure").showErrorDialog();
+                }
+            } catch (FileNotFoundException ex) {
+                new Log().level0Error("@fileNotFound");
+                throw new RuntimeException("File not found");
+            } catch (Exception ex) {
+                new Log().level0Error("@failedToWriteFile");
+                throw new RuntimeException("Failed to write file");
+            }
+//$PULL will push a file to the specified block eg $PULL  /dev/block/mmcblk0p5 , $ZIPFILEmyFile
+            } else if (line.startsWith("$PULL")) {
+           
+           line=line.replace("$PULL", "").trim();
+           if (! line.contains(",")){
+               log.level0Error("Missing Comma in $PULL command");
+               throw new RuntimeException("no comma to split and specify destination");
+           }
+           String[] split=line.split(",");
+           File f=new File(split[1].replace("\"","").trim());
+           try {
+                f.createNewFile();
+                new CASUALDataBridge().getFile(split[0].trim(), f );
+            } catch (FileNotFoundException ex) {
+                new Log().level0Error("@fileNotFound");
+                throw new RuntimeException("File not found");
+            } catch (Exception ex) {
+                new Log().level0Error("@failedToWriteFile");
+                throw new RuntimeException("Failed to write file");
+            }
             
+            
+                 /*
+                  * SUPPORTED SHELLS
+                  */
+     // if Heimdall, Send to Heimdall shell command
 
-
-            /*
-             * SUPPORTED SHELLS
-             */
-// if Heimdall, Send to Heimdall shell command
         } else if (line.startsWith("$HEIMDALL")) {
             line = line.replace("$HEIMDALL", "");
             line = StringOperations.removeLeadingSpaces(line);
@@ -762,6 +786,12 @@ public class CASUALLanguage {
             //exists
             log.level3Verbose("verified " + testFileString + " exists");
         } else {
+            testFileString=testFileString.replace(",","");
+            if (new FileOperations().verifyExists(testFileString)) {
+                //exists
+                log.level3Verbose("verified " + testFileString + " exists");
+                return true;
+            }
             return false;
         }
         return true;
@@ -780,7 +810,7 @@ public class CASUALLanguage {
         //break commandline into an array of arguments
         //verify zipfile reference exists
         //allow echo of zipfile
-        if (!line.startsWith("$DOWNLOAD") && !line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
+        if (!line.startsWith("$PULL") && !line.startsWith("$DOWNLOAD") && !line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
             String[] lineArray = line.split(" ");
             //loop through line, locate positions of $ZIPFILE and test
             int pos = 0;

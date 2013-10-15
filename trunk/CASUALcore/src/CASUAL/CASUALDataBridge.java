@@ -38,47 +38,15 @@ import java.util.logging.Logger;
 public class CASUALDataBridge {
 
     Shell shell = new Shell();
-    //port 27825
-    //BusyboxTools.deploy
-    //adb forward tcp:27825 tcp:27825
-    // to send data
-    //adb shell "busyboxLocation nc -l 127.0.0.1:27825"
-    //adb shell "/data/local/tmp/busybox nc -l 127.0.0.1:27825
-    //    pipe data into| nc 127.0.0.1 27825
-    //String[] args=new String[]{"-p","27827","127.0.0.1"};
-    //NetCat.main(args)
-    //adb shell "/data/local/tmp/busybox nc -l 127.0.0.1:27827>file out"
-    //to retrieve data
-    // adb shell "stty raw; dd if=/sdcard/Flash\ twrp\ recovery.zip">./woot
-    //processor watch for nc: Address already in use on STDERR and use different port
-    static String port = "27825";
-    static String ip = "127.0.0.1";
-
-    private void resetCASUALConnection() {
-
-        Log log = new Log();
-        Socket socket = new Socket();
-        log.level4Debug("closing existing stream");
-        try {
-            socket.connect(new InetSocketAddress(ip, Integer.parseInt(port)), 3000);
-            socket.getOutputStream().write(0xFFFF);
-            socket.getOutputStream().flush();
-            socket.close();
-
-        } catch (ConnectException ex) {
-        } catch (IOException ex) {
-        }
-        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "forward", "--remove-all"});
-        log.level4Debug("restarting server");
-        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "stop-server"});
-        shell.timeoutShellCommand(new String[]{ADBTools.getADBCommand(), "start-server"}, 4000);
-        
-        log.level4Debug("establishing streams");
-        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "forward", "tcp:" + port, "tcp:" + port});
-        log.level3Verbose("streams established");
+    final static String port = "27825";
+    final static String ip = "127.0.0.1";
+    private static boolean deviceReady = false;
+    
+    CASUALDataBridge(){
+        deviceReady=false;
     }
 
-    public void getFile(File f, String remoteFileName) throws IOException {
+    public void getFile(String remoteFileName,File f) throws IOException {
         try {
             resetCASUALConnection();
             //setup receiving side
@@ -109,8 +77,6 @@ public class CASUALDataBridge {
     public int sendString(String send, String remoteFileName) throws InterruptedException, SocketException, IOException {
         //make a duplicate of the array, with the \n and 0x3 key to end the file transfer
         send = send + "\n"+0x04;
-
-        
 
         ByteArrayInputStream bis = new ByteArrayInputStream(send.getBytes());
 
@@ -150,14 +116,15 @@ public class CASUALDataBridge {
             byte[] buf;
             while (deviceReady) {
                 while ((buf = new byte[input.available()]).length > 0) {
+                    sent = sent + buf.length;
+                    Statics.setStatus("Sending: " + sent +"bytes");
                     input.read(buf);
                     output.write(buf);
-                    sent = sent + buf.length;
-                    Statics.setStatus("bytes: " + sent);
+
                 }
             }
             output.flush();
-            new Log().level3Verbose("sent " + sent + " bytes");
+            Statics.setStatus("Sent:" +sent +"bytes");
         } catch (IOException ex) {
             Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -171,12 +138,14 @@ public class CASUALDataBridge {
             long startTime = System.currentTimeMillis() / 1000;
             byte[] buf;
             while ((buf = new byte[input.available()]).length > 0) {
+                sent = sent + buf.length;
+                Statics.setStatus("sending: " + sent +"bytes");
                 input.read(buf);
                 output.write(buf);
-                sent = sent + buf.length;
-                Statics.setStatus("bytes: " + sent);
+
             }
             output.flush();
+            Statics.setStatus("sent: " + sent +"bytes");
             long endTime = System.currentTimeMillis() / 1000;
             double duration = (endTime - startTime);
             new Log().level3Verbose("sent " + sent + " bytes in " + duration + " seconds");
@@ -186,7 +155,7 @@ public class CASUALDataBridge {
 
         return sent;
     }
-    private static boolean deviceReady = false;
+    
 
     private Runnable openDeviceSideLinkForSend(final String remoteFileName, final boolean forWrite) {
         return new Runnable() {
@@ -204,7 +173,7 @@ public class CASUALDataBridge {
                         if (CASUALTools.rootAccessCommand().equals("")){
                             cmd = new String[]{ADBTools.getADBCommand(), "shell", BusyboxTools.getBusyboxLocation() + " stty raw;" + BusyboxTools.getBusyboxLocation() + " nc -l " + ip + ":" + port + " <\"" + remoteFileName + "\";sync;"};
                         } else {
-                            cmd = new String[]{ADBTools.getADBCommand(), "shell", BusyboxTools.getBusyboxLocation() + " stty raw;"+ CASUALTools.rootAccessCommand()+" \"" + BusyboxTools.getBusyboxLocation() + " nc -l " + ip + ":" + port + " <'" + remoteFileName + "';sync;"+"\""};
+                            cmd = new String[]{ADBTools.getADBCommand(), "shell", BusyboxTools.getBusyboxLocation() + " stty raw;"+ CASUALTools.rootAccessCommand()+" \"" + BusyboxTools.getBusyboxLocation() + " nc -l " + ip + ":" + port + "<'" + remoteFileName + "';sync;\""};
                         }
                     }
                     ProcessBuilder p = new ProcessBuilder(cmd);
@@ -241,6 +210,29 @@ public class CASUALDataBridge {
                 }
             }
         };
+    }
+    private void resetCASUALConnection() {
+
+        Log log = new Log();
+        Socket socket = new Socket();
+        log.level4Debug("closing existing stream");
+        try {
+            socket.connect(new InetSocketAddress(ip, Integer.parseInt(port)), 3000);
+            socket.getOutputStream().write(0xFFFF);
+            socket.getOutputStream().flush();
+            socket.close();
+
+        } catch (ConnectException ex) {
+        } catch (IOException ex) {
+        }
+        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "forward", "--remove-all"});
+        log.level4Debug("restarting server");
+        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "stop-server"});
+        shell.timeoutShellCommand(new String[]{ADBTools.getADBCommand(), "start-server"}, 4000);
+        
+        log.level4Debug("establishing streams");
+        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "forward", "tcp:" + port, "tcp:" + port});
+        log.level3Verbose("streams established");
     }
 
     private Thread startListener(String remoteFileName, boolean forWrite) {
