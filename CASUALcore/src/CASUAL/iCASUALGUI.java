@@ -124,5 +124,19 @@ public interface iCASUALGUI {
     void setWindowBannerText(String text);
 
     public void setVisible(boolean b);
+    /**
+     * called when device is connected
+     * @param mode adb/fastboot/heimdall/flashtool
+     */
+    void deviceConnected(String mode);
+    void deviceDisconnected();
+    void deviceMultipleConnected(int numberOfDevicesConnected);
+    void notificationPermissionsRequired();
+    void notificationCASUALSound();
+    void notificationInputRequested();
+    void notificationGeneral();
+    void notificationRequestToContinue();
+    void notificationUserActionIsRequired();
+    
     
 }

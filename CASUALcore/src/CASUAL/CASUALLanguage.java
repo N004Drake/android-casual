@@ -469,7 +469,7 @@ public class CASUALLanguage {
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 
         } else if (line.startsWith("$USERNOTIFICATION")) {
-            AudioHandler.playSound("/CASUAL/resources/sounds/Notification.wav");
+            Statics.GUI.notificationGeneral();
             line = line.replace("$USERNOTIFICATION", "");
             new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserNotification();
             return "";
@@ -479,7 +479,7 @@ public class CASUALLanguage {
             //USE: $USERCANCELOPTION Title, Message
         } else if (line.startsWith("$USERCANCELOPTION")) {
             //CASUALAudioSystem CAS = new CASUALAudioSystem();
-            AudioHandler.playSound("/CASUAL/resources/sounds/RequestToContinue.wav");
+            Statics.GUI.notificationRequestToContinue();
             int n;
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
             n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserCancelOption();
@@ -496,7 +496,7 @@ public class CASUALLanguage {
 //$ACTIONREQUIRED Message            
 
         } else if (line.startsWith("$ACTIONREQUIRED")) {
-            AudioHandler.playSound("/CASUAL/resources/sounds/UserActionIsRequired.wav");
+            Statics.GUI.notificationUserActionIsRequired();
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
             int n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showActionRequiredDialog();
             if (n == 1) {
@@ -511,7 +511,7 @@ public class CASUALLanguage {
             //Any text will be injected into the $USERINPUT variable    
             //USE: $USERINPUTBOX Title, Message, command $USERINPUT
         } else if (line.startsWith("$USERINPUTBOX")) {
-            AudioHandler.playSound("/CASUAL/resources/sounds/InputRequested.wav");
+            Statics.GUI.notificationInputRequested();
             //line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",", 3);
             String inputBoxText = new CASUALMessageObject(Message[0] + ">>>" + Message[1]).inputDialog();
@@ -649,7 +649,7 @@ public class CASUALLanguage {
             log.level2Information("@waitingForDownloadModeDevice");
             if (OSTools.isLinux()) {
                 log.level2Information("@linuxPermissionsElevation");
-                AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
+                Statics.GUI.notificationPermissionsRequired();
                 //TODO: make something like Shell.timeoutShellCommand but it must also test for values
              /*
                  * Shell.timeOutCommand(String[] cmd, String[] values, int timeDelay)

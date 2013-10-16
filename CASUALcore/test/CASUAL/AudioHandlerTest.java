@@ -33,7 +33,7 @@ public class AudioHandlerTest {
     public void testPlaySound() throws InterruptedException {
         AudioHandler.useSound=true;
         System.out.println("playSound");
-        String URL = "/CASUAL/resources/sounds/CASUAL.wav";
+        String URL = "/GUI/development/resources/sounds/CASUAL.wav";
         AudioHandler.playSound(URL);
         Thread.sleep(1000);
     }
@@ -45,7 +45,7 @@ public class AudioHandlerTest {
     public void testPlayMultipleInputStreams() throws InterruptedException {
         AudioHandler.useSound=true;
         System.out.println("playMultipleInputStreams");
-        String[] URLs = {"/CASUAL/resources/sounds/2.wav","/CASUAL/resources/sounds/3.wav","/CASUAL/resources/sounds/4.wav","/CASUAL/resources/sounds/5.wav","/CASUAL/resources/sounds/6.wav","/CASUAL/resources/sounds/7.wav","/CASUAL/resources/sounds/8.wav","/CASUAL/resources/sounds/9OrMore.wav","/CASUAL/resources/sounds/DevicesDetected.wav","/CASUAL/resources/sounds/Disconnected.wav","/CASUAL/resources/sounds/InputRequested.wav","/CASUAL/resources/sounds/Notification.wav","/CASUAL/resources/sounds/PermissionEscillation.wav","/CASUAL/resources/sounds/RequestToContinue.wav"};
+        String[] URLs = {"/GUI/development/resources/sounds/2.wav","/GUI/development/resources/sounds/3.wav","/GUI/development/resources/sounds/4.wav","/GUI/development/resources/sounds/5.wav","/GUI/development/resources/sounds/6.wav","/GUI/development/resources/sounds/7.wav","/GUI/development/resources/sounds/8.wav","/GUI/development/resources/sounds/9OrMore.wav","/GUI/development/resources/sounds/DevicesDetected.wav","/GUI/development/resources/sounds/Disconnected.wav","/GUI/development/resources/sounds/InputRequested.wav","/GUI/development/resources/sounds/Notification.wav","/GUI/development/resources/sounds/PermissionEscillation.wav","/GUI/development/resources/sounds/RequestToContinue.wav"};
         AudioHandler.playMultipleInputStreams(URLs);
         Thread.sleep(15000);
 

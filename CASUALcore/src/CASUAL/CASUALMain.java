@@ -126,10 +126,10 @@ public final class CASUALMain {
                     CASUALApp.shutdown(0);
                 }  //use command line args
             } else {
-                AudioHandler.playSound("/CASUAL/resources/sounds/CASUAL.wav");
                 //using GUI mode
                 if (startGUI != null) {
                     startGUI.join();
+                    Statics.GUI.notificationCASUALSound();
                 }
                 Statics.GUI.setCASPAC(Statics.CASPAC);
             }

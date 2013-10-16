@@ -90,7 +90,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="workArea" max="32767" attributes="0"/>
+                  <Component id="workArea" pref="747" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="outputFIle" min="-2" pref="50" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -395,7 +395,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="jScrollPane1" pref="538" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane1" pref="612" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
                                           <Component id="addScriptButton" min="-2" max="-2" attributes="0"/>
@@ -859,12 +859,12 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scriptText" alignment="0" pref="1011" max="32767" attributes="0"/>
+                          <Component id="scriptText" alignment="0" pref="1019" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scriptText" alignment="0" pref="617" max="32767" attributes="0"/>
+                          <Component id="scriptText" alignment="0" pref="671" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -972,7 +972,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="logoLabel" pref="228" max="32767" attributes="0"/>
+                          <Component id="logoLabel" pref="247" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -1075,7 +1075,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="donateLink" pref="700" max="32767" attributes="0"/>
+                                  <Component id="donateLink" pref="708" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>

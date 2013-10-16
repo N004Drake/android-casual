@@ -123,7 +123,7 @@ public class CASUALConnectionStatusMonitor {
                             ADBTools.startServer(); //send the command
                             //notify user that permissions will be requested and what they are used for
                             String[] ok = {"ok"};
-                            AudioHandler.playSound("/CASUAL/resources/sounds/PermissionEscillation.wav");
+                            Statics.GUI.notificationPermissionsRequired();
                             new CASUALMessageObject("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, 2, ok, 0);
 
                             DeviceList = ADBTools.getDevices();
@@ -146,45 +146,39 @@ public class CASUALConnectionStatusMonitor {
 
         }
 
-        private void stateSwitcher(int State) {
+        private void stateSwitcher(int state) {
             boolean stateSwitchWasSucessful; //try again later.
-            if (LastState != State) {
-                log.level4Debug("State Change Detected, The new state is: " + State);
-                switch (State) {
+            if (LastState != state) {
+                log.level4Debug("State Change Detected, The new state is: " + state);
+                switch (state) {
                     case 0:
                         log.level4Debug("@stateDisconnected");
                         Statics.setStatus("Device Removed");
-                        stateSwitchWasSucessful = Statics.GUI.enableControls(false);
-                        Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
-                        AudioHandler.playSound("/CASUAL/resources/sounds/Disconnected.wav");
+                        Statics.GUI.deviceDisconnected();
+                        stateSwitchWasSucessful=true;
+
                         break;
                     case 1:
                         Statics.setStatus("Device Connected");
                         log.level4Debug("@stateConnected");
-                        stateSwitchWasSucessful = Statics.GUI.enableControls(true);
-                        Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceConnected.png", "Device Connected");
-                        Statics.GUI.setStatusMessageLabel("Target Acquired");
-                        if (stateSwitchWasSucessful) {
-                            AudioHandler.playSound("/CASUAL/resources/sounds/Connected-SystemReady.wav");
-                        }
+                        Statics.GUI.deviceConnected("ADB");
+                        stateSwitchWasSucessful=true;
                         break;
                     default:
                         Statics.setStatus("Multiple Devices Detected");
-                        if (State == 2) {
+                        if (state == 2) {
                             log.level0Error("@stateMultipleDevices");
-                            log.level0Error("Remove " + (State - 1) + " device to continue.");
+                            log.level0Error("Remove " + (state - 1) + " device to continue.");
                         }
 
-                        log.level4Debug("State Multiple Devices Number of devices" + State);
-                        stateSwitchWasSucessful = Statics.GUI.enableControls(false);
-                        Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/TooManyDevices.png", "Target Acquired");
-                        String[] URLs = {"/CASUAL/resources/sounds/" + String.valueOf(State) + ".wav", "/CASUAL/resources/sounds/DevicesDetected.wav"};
-                        AudioHandler.playMultipleInputStreams(URLs);
+                        log.level4Debug("State Multiple Devices Number of devices" + state);
+                        Statics.GUI.deviceMultipleConnected(state);
+                        stateSwitchWasSucessful=true;
                         break;
 
                 }
                 if (stateSwitchWasSucessful) {
-                    LastState = State;
+                    LastState = state;
                 }
             }
         }
