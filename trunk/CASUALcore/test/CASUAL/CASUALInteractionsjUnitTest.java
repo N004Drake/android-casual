@@ -4,7 +4,7 @@
  */
 package CASUAL;
 
-import CASUAL.GUI.CASUALShowJFrameMessageObject;
+import GUI.development.CASUALShowJFrameMessageObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;

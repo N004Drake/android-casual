@@ -17,7 +17,7 @@
 package CASUAL;
 
 import CASUAL.misc.LinkedProperties;
-import CASUAL.GUI.CASUALJFrameMain;
+import GUI.development.CASUALJFrameMain;
 import CASUAL.caspac.Caspac;
 import CASUAL.crypto.MD5sum;
 import java.io.File;
@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,6 +41,8 @@ public class CASUALTools {
      *
      */
     final public static boolean IDEMode = new CASUALTools().getIDEMode();
+
+
     Log log = new Log();
 
     /**
@@ -203,8 +207,16 @@ public class CASUALTools {
     public Runnable GUI = new Runnable() {
         @Override
         public void run() {
-            Statics.GUI = new CASUALJFrameMain();
-            Statics.GUI.setVisible(true);
+            try {
+                setGUIAPI();
+                Statics.GUI.setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     };
     public static Runnable updateMD5s = new Runnable() {
@@ -273,9 +285,41 @@ public class CASUALTools {
         return java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
     }
 
-    public static void setJavaDesktopMessage() {
-        CASUAL.Statics.interaction = new CASUAL.GUI.CASUALShowJFrameMessageObject();
+    public static void setMessageAPI() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        String messageAPI=java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.interactions");
+        CASUAL.iCASUALInteraction clsInstance;
+        try{
+            Class<?> cls = Class.forName(messageAPI);
+            setiCASUALinteraction(cls);
+        } catch (Exception ex){
+            Class<?> cls = Class.forName("GUI.development.CASUALShowJFrameMessageObject");
+            setiCASUALinteraction(cls);
+        }
     }
+    
+    private static void setiCASUALinteraction(Class<?> cls) throws InstantiationException, IllegalAccessException {
+        iCASUALInteraction clsInstance;
+        clsInstance = (CASUAL.iCASUALInteraction) cls.newInstance();
+        CASUAL.Statics.interaction = clsInstance;
+    }
+    public static void setGUIAPI() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        String messageAPI=java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.GUI");
+        try{
+            Class<?> cls = Class.forName(messageAPI);
+            setiCASUALGUI(cls);
+        } catch (Exception ex){
+            Class<?> cls = Class.forName("GUI.development.CASUALJFrameMain");
+            setiCASUALGUI(cls);
+        }
+    }
+ 
+    private static void setiCASUALGUI(Class<?> cls) throws InstantiationException, IllegalAccessException {
+        iCASUALGUI clsInstance;
+        clsInstance = (CASUAL.iCASUALGUI) cls.newInstance();
+        CASUAL.Statics.GUI = clsInstance;
+    }
+    
+    
     
     public static boolean uidMatches(String expectedUID){
         String[] cmd = new String[]{ADBTools.getADBCommand(),"shell","id -u"};

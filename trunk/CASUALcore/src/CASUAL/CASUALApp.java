@@ -20,6 +20,7 @@ import CASUAL.network.Pastebin;
 import java.io.File;
 import java.net.MalformedURLException;
 
+
 /**
  * The main class of the application.
  */
@@ -43,7 +44,15 @@ public class CASUALApp {
         arguments = args;
         //Initialize statics
         Statics.initializeStatics();
-        CASUALTools.setJavaDesktopMessage();
+        try {
+            CASUALTools.setMessageAPI();
+        } catch (ClassNotFoundException ex) {
+            new Log().errorHandler(ex);
+        } catch (InstantiationException ex) {
+            new Log().errorHandler(ex);
+        } catch (IllegalAccessException ex) {
+            new Log().errorHandler(ex);
+        }
         //Override args for test modes
         if (useOverrideArgs) {
             args = overrideArguments;

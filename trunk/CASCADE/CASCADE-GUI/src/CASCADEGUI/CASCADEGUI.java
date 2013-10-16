@@ -2150,6 +2150,42 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
             return false;
         }
 
+    @Override
+    public void deviceConnected(String string) {
+    }
+
+    @Override
+    public void deviceDisconnected() {
+    }
+
+    @Override
+    public void deviceMultipleConnected(int i) {
+    }
+
+    @Override
+    public void notificationPermissionsRequired() {
+    }
+
+    @Override
+    public void notificationCASUALSound() {
+    }
+
+    @Override
+    public void notificationInputRequested() {
+    }
+
+    @Override
+    public void notificationGeneral() {
+    }
+
+    @Override
+    public void notificationRequestToContinue() {
+    }
+
+    @Override
+    public void notificationUserActionIsRequired() {
+    }
+
         /*
          * Listener that enables and disables script elements based on the existance
          * of scripts in list. Whenever a script is added or deleted it will check 
