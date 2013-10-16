@@ -4,7 +4,7 @@
  */
 package devicedetector;
 
-import CASUAL.FileOperations;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,20 +26,6 @@ public class DeviceDetector {
         
     }
     public void run(String[] args) {
-        System.out.println(CASUAL.ADBTools.getADBCommand());
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {  
-            @Override
-            public void run() {
-                    FileOperations FO = new CASUAL.FileOperations();
-                    FO.recursiveDelete(CASUAL.Statics.getTempFolder());
-                }  
-        }));
-        try {
-            Process p = Runtime.getRuntime().exec("ls -la");
-            BufferedReader read = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = null;
-        } catch (IOException ex) {
-            Logger.getLogger(DeviceDetector.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 }

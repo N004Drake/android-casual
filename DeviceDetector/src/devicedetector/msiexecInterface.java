@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 /**
  *
@@ -51,13 +53,18 @@ public class msiexecInterface {
     //MSI String Location
     private final String msiFile;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BackingStoreException {
+        Preferences p = Preferences.userRoot();
+        String[] keys = p.keys();
+        for (String s : keys)
+            System.out.println(s);
         msiexecInterface mi = new msiexecInterface("testing");
         mi.setLoggingOptions(LoggingOption.VERBOSE, LoggingOption.ALL_ERROR_MESSAGES);
         System.out.println(mi.getLoggingOptions());
     }
     
     public msiexecInterface(String msiFile) {
+        
         this.msiFile= msiFile;
     }
 
@@ -109,6 +116,11 @@ public class msiexecInterface {
         for (LoggingOption op : loggingOptions)
             this.loggingOptions.put(op, "true");
     }
+    
+    public void clearLoggingOptions() {
+        this.loggingOptions.clear();
+    }
+    
     
     
 
