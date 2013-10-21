@@ -375,7 +375,7 @@
                               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane1" pref="406" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" pref="414" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       <Component id="editScriptNameButton" min="-2" max="-2" attributes="0"/>
@@ -673,7 +673,7 @@
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane3" alignment="1" pref="192" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane3" alignment="1" pref="266" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -801,6 +801,9 @@
                           <Events>
                             <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="scriptListJListValueChanged"/>
                           </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value=""/>
+                          </AuxValues>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -864,7 +867,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scriptText" alignment="0" pref="671" max="32767" attributes="0"/>
+                          <Component id="scriptText" alignment="0" pref="691" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -958,7 +961,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="119" max="-2" attributes="0"/>
                           <Component id="logoLabel" min="-2" pref="805" max="-2" attributes="0"/>
-                          <EmptySpace pref="92" max="32767" attributes="0"/>
+                          <EmptySpace pref="100" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -972,7 +975,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="logoLabel" pref="247" max="32767" attributes="0"/>
+                          <Component id="logoLabel" pref="302" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
