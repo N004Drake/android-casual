@@ -241,9 +241,9 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
         messageText = "<html>" + messageText.replace("\\n", "\n");
         if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
             if (title == null) {
-                return (String) JOptionPane.showInputDialog((Component) Statics.GUI, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
+                return JOptionPane.showInputDialog((Component) Statics.GUI, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
             } else {
-                return (String) JOptionPane.showInputDialog((Component) Statics.GUI, messageText, title, JOptionPane.QUESTION_MESSAGE);
+                return JOptionPane.showInputDialog((Component) Statics.GUI, messageText, title, JOptionPane.QUESTION_MESSAGE);
             }
         } else {
             new Log().Level1Interaction("[INPUT][ANY]" + title + messageText + "\n input:");

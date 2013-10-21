@@ -117,7 +117,7 @@ public class StringOperations {
      * @param list input array list
      * @return output string array
      */
-    public static String[] convertArrayListToStringArray(ArrayList list) {
+    public static String[] convertArrayListToStringArray(ArrayList<String> list) {
         String[] StringArray = new String[list.size()];
         for (int i = 0; i <= list.size() - 1; i++) {
             StringArray[i] = list.get(i).toString();

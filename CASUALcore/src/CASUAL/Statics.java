@@ -212,7 +212,7 @@ public class Statics {
     }
 
     public static void setStatus(final String status) {
-        //new Log().level4Debug(status);
+        new Log().level4Debug(status);
         currentStatus = status;
         if (GUIIsAvailable) {
             Thread t = new Thread(new Runnable() {

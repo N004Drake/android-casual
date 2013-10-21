@@ -271,7 +271,7 @@ public class MD5sum {
      * @param OldMD5 old md5s
      * @return new md5s if available
      */
-    public String pickNewMD5fromArrayList(ArrayList newMd5List, String OldMD5) {
+    public String pickNewMD5fromArrayList(ArrayList<String> newMd5List, String OldMD5) {
         String[] md5FileSplit = OldMD5.split("  ");
         for (Object item : newMd5List.toArray()) {
             if (((String) item).endsWith(md5FileSplit[1])) {

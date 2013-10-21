@@ -117,7 +117,8 @@ public class ADBTools {
         new Log().level3Verbose("@restartingADBSlowly");
         Shell shell = new Shell();
         shell.timeoutShellCommand(getKillServerCmd(), 1000);
-        shell.timeoutShellCommand(getDevicesCmd(), 6000);
+        String retval=shell.timeoutShellCommand(getDevicesCmd(), 6000);
+        new ADBTools().checkADBerrorMessages(retval);
     }
 
     /**
@@ -142,27 +143,43 @@ public class ADBTools {
      *
      * @param DeviceList
      * @throws HeadlessException
+     * @return false if error
      */
-    public void checkADBerrorMessages(String DeviceList) throws HeadlessException {
-
-        if (OSTools.isLinux() && DeviceList.contains("something about UDEV rules")) { //Don't know how to handle this yet
-            //handle add udevrule
-        }
+    public boolean checkADBerrorMessages(String DeviceList) throws HeadlessException {
 
         //handle libusb -3
         if (OSTools.isLinux() && DeviceList.contains("ERROR-3")) { //Don't know how to handle this yet
+            adbMonitor(false);
             Shell shell = new Shell();
             log.level0Error("@permissionsElevationRequired");
             shell.silentShellCommand(getKillServerCmd());
             shell.elevateSimpleCommandWithMessage(getDevicesCmd(), "Device permissions problem detected");
+            adbMonitor(true);
+            return false;
         }
 
         if (DeviceList.contains("ELFCLASS64") && DeviceList.contains("wrong ELF")) {
+            adbMonitor(false);
             new CASUALMessageObject("@interactionELFCLASS64Error").showInformationMessage();
-
+            adbMonitor(true);
+            return false;
         }
 
+        if ( DeviceList.contains("unauthorized") || DeviceList.contains("Please check the confirmation dialog on your device." ) ){
+            adbMonitor(false);
+            new CASUALMessageObject("@interactionPairingRequired").showActionRequiredDialog();
+            adbMonitor(true);
+            return false;
+        }
+
+        if (DeviceList.contains("offline")){
+            adbMonitor(false);
+            new CASUALMessageObject("@interactionOfflineNotification").showActionRequiredDialog();
+            adbMonitor(true);
+            return false;
+        }
         if (DeviceList.contains("????????????") || DeviceList.contains("**************") || DeviceList.contains("error: cannot connect to daemon")) {
+            adbMonitor(false);
             log.level4Debug("Restarting ADB slowly");
             restartADBserver();
             DeviceList = new Shell().silentShellCommand(getDevicesCmd()).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
@@ -171,6 +188,20 @@ public class ADBTools {
                 killADBserver();
                 elevateADBserver();
             }
+            adbMonitor(true);
         }
+        return true;
+    }
+    
+    public static boolean isConnected(){
+        return new Shell().timeoutShellCommand(new String[]{ADBTools.getADBCommand(),"devices"},4000).contains("   device");
+    }
+    public void adbMonitor(boolean start){
+        if (start){
+            CASUALConnectionStatusMonitor.DeviceCheck.start();
+        } else {
+            CASUALConnectionStatusMonitor.DeviceCheck.stop();    
+        }
+        
     }
 }

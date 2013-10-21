@@ -38,12 +38,13 @@ public class BusyboxToolsTest {
 
     @Test
     public void testBusyboxCASUALCommand() {
+        if (!ADBTools.isConnected()) return;
         System.out.println("testBusyboxCASUALCommand");
         new Shell().sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "rm " + busybox});
         String result = new Shell().sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "ls " + busybox});
         assert result.contains("busybox");
-        result = new CASUALScriptParser().executeOneShotCommand("$ADB shell $BUSYBOX echo hi");
+        result = new CASUALScriptParser().executeOneShotCommand("$ADB shell $BUSYBOX mount");
 
-        assert result.equals("hi\r\n");
+        assert result.contains("rootfs on /");
     }
 }

@@ -44,6 +44,7 @@ public class BusyboxTools {
     }
 
     private boolean busyboxIsInstalled() {
+       
        String temp=shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "chmod 777 "+busyboxLocation+";ls " + busyboxLocation});
 
         return !temp.contains("No such") && !temp.contains("found");
