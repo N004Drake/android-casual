@@ -565,7 +565,7 @@ public class CASUALLanguage {
             if (deviceBuildPropStorage!=null && deviceBuildPropStorage.contains("ro.")){
                 return deviceBuildPropStorage;
             } else {
-                String[] cmd={Statics.adbDeployed, "shell", "cat /system/build.prop"};
+                String[] cmd={ADBTools.getADBCommand(), "shell", "cat /system/build.prop"};
                 deviceBuildPropStorage=new Shell().timeoutShellCommand(cmd,5000);
                 return deviceBuildPropStorage;
             }
