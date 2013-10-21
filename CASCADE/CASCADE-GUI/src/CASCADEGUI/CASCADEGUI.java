@@ -71,7 +71,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     private DefaultListModel<Script> scriptList = new DefaultListModel<Script>();
     //Used to keep track of currently selected script
     //int currentScriptIndex = -1;
-    DefaultListModel listModel = new DefaultListModel();
+    DefaultListModel<String> listModel = new DefaultListModel<String>();
     List<String> scriptFiles = new ArrayList<String>();
     private boolean dropEventEnable = false;
     private String slash = System.getProperty("file.separator");
@@ -81,7 +81,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     /**
      * initializes window
      */
-    @SuppressWarnings("LeakingThisInConstructor")
+    
+    @SuppressWarnings("unchecked") 
     public CASCADEGUI() {
         initComponents();
         CASUAL.caspac.Caspac.debug = true;
@@ -96,6 +97,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         disableAll();
         scriptList.addListDataListener(new scriptListener());
     }
+    @SuppressWarnings("unchecked") 
     DropTarget dropTargetForFileList = new DropTarget() {
         @Override
         public synchronized void drop(DropTargetDropEvent event) {
@@ -119,6 +121,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                         if (!listModel.isEmpty() && listModel.get(0).equals("Drop files here and click to remove.")) {
                             listModel.remove(0);
                         }
+                        
                         files = (List<File>) transferable.getTransferData(flavor);
                         for (File f : files) {
                             String file = f.getCanonicalPath();
@@ -140,6 +143,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
             }
         }
     };
+    @SuppressWarnings("unchecked") 
     DropTarget caspacDropTarget = new DropTarget() {
             @Override
             public synchronized void drop(DropTargetDropEvent event) {
@@ -525,7 +529,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
         );
 
         scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
@@ -713,7 +717,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(editScriptNameButton)
@@ -729,7 +733,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 .addContainerGap()
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(addScriptButton)
@@ -760,11 +764,11 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         script.setLayout(scriptLayout);
         scriptLayout.setHorizontalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1011, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1019, Short.MAX_VALUE)
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -833,7 +837,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
             dontateLinkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dontateLinkPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
+                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
                 .addContainerGap())
         );
         dontateLinkPanelLayout.setVerticalGroup(
@@ -1123,7 +1127,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
             .addGroup(buildPropertiesPanelLayout.createSequentialGroup()
                 .addGap(119, 119, 119)
                 .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 805, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
         buildPropertiesPanelLayout.setVerticalGroup(
             buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1135,7 +1139,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1154,7 +1158,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addComponent(workArea, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
+                .addComponent(workArea, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputFIle, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1374,7 +1378,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
 
 
-            File f = (File) scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.get(index);
+            File f = scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.get(index);
 
 
             if (f.exists() && f.getAbsolutePath().contains(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).tempDir)) {
