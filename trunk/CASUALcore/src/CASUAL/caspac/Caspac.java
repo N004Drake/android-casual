@@ -655,12 +655,13 @@ public final class Caspac {
     }
     private String controlFiles[] = {"-Overview.txt", "-build.properties", "-logo.png"};
 
+
     private void loadCASPACcontrolFilesFromCASPAC() throws IOException {
         //if the CASPAC exists lets try to grab the non-script files 
         if (fo.verifyExists(CASPAC.getAbsolutePath()) && CASPAC.canRead()) {
             try {
                 Unzip unzip = new Unzip(CASPAC);
-                Enumeration cpEnumeration = unzip.zipFileEntries;
+                Enumeration<? extends ZipEntry> cpEnumeration = unzip.zipFileEntries;
                 if (cpEnumeration.hasMoreElements()) {
                     while (cpEnumeration.hasMoreElements()) {
                         Object o = cpEnumeration.nextElement();

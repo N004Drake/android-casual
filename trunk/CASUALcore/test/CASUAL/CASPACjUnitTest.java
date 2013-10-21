@@ -27,6 +27,7 @@ public class CASPACjUnitTest {
 
     @Test
     public void testCASPACOperations() {
+        if (!ADBTools.isConnected()) return;
         CASUALApp.shutdown(0);
         CASUAL.Statics.interaction=new GUI.development.CASUALShowJFrameMessageObject();
         CASUAL.Statics.dumbTerminalGUI=true;

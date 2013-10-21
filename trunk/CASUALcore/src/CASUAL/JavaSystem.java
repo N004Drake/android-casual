@@ -43,6 +43,22 @@ public class JavaSystem {
         cmd.append("-cp ").append("\"").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append("\"").append(" ");
         cmd.append("\"").append(JavaSystem.class.getName()).append("\"").append(" ");
         for (String arg : args) {
+            //cmd.append("\"").append(arg).append("\"").append(" ");
+        }
+        Runtime.getRuntime().exec(cmd.toString());
+
+    }
+    
+    public static void launch(String[] args) throws IOException, InterruptedException {
+        StringBuilder cmd = new StringBuilder();
+
+        cmd.append("\"").append(System.getProperty("java.home")).append(File.separator).append("bin").append(File.separator).append("java").append("\"").append(" ");
+        for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+            cmd.append("\"").append(jvmArg).append("\"").append(" ");
+        }
+        cmd.append("-cp ").append("\"").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append("\"").append(" ");
+        cmd.append("\"").append(JavaSystem.class.getName()).append("\"").append(" ");
+        for (String arg : args) {
             cmd.append("\"").append(arg).append("\"").append(" ");
         }
         Runtime.getRuntime().exec(cmd.toString());

@@ -36,9 +36,9 @@ public class CASUALDevQueryTest {
     public void testGetData() throws Exception {
         System.out.println("getData");
         CASUALDevQuery instance = new CASUALDevQuery(BUILDPROP);
-        String expResult = "http://builds.casual-dev.com/all/EasyGlassInstaller.zip";
+        String expResult = "http://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
         List result = instance.getData();
-        assert(result.contains("http://builds.casual-dev.com/all/EasyGlassInstaller.zip"));
+        assert(result.contains(expResult));
         // TODO review the generated test code and remove the default call to fail.
     }
     

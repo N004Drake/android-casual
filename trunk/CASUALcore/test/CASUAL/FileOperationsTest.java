@@ -106,24 +106,17 @@ public class FileOperationsTest {
 
     }
 
-    /**
-     * Test of listFoldersTwoDeep method, of class FileOperations.
-     */
-    @Test
-    public void testListFoldersTwoDeep() {
-       new FileOperations().listFoldersTwoDeep(CASUAL.Statics.getTempFolder());
-        
-    }
 
     /**
      * Test of verifyExists method, of class FileOperations.
      */
     @Test
     public void testVerifyExists() throws IOException {
-        new File(Statics.getTempFolder()+"new").createNewFile();
+        File f= new File(Statics.getTempFolder()+"new");
+        f.createNewFile();
         assertEquals(true, new CASUAL.FileOperations().verifyExists(CASUAL.Statics.getTempFolder() + "new" + CASUAL.Statics.Slash));
         assertEquals(false, new CASUAL.FileOperations().verifyExists(CASUAL.Statics.getTempFolder() + "asfdadfasfd" + CASUAL.Statics.Slash));
-        
+        f.delete();
     }
 
     /**
@@ -160,10 +153,11 @@ public class FileOperationsTest {
     public void testWriteToFile() throws Exception {
         System.out.println("writeToFile");
         String Text = "woot";
-        String File = Statics.getTempFolder()+Statics.Slash+"newFile";
+        String f = Statics.getTempFolder()+Statics.Slash+"newFile";
         FileOperations instance = new FileOperations();
-        instance.writeToFile(Text, File);
-        assertEquals(Text,instance.readFile(File));
+        instance.writeToFile(Text, f);
+        assertEquals(Text,instance.readFile(f));
+        assert(instance.deleteFile(f));
     }
 
     /**
@@ -362,6 +356,7 @@ public class FileOperationsTest {
         File destFile = new File(Statics.getTempFolder()+"newfile2");
         sourceFile.createNewFile();
         FileOperations instance = new FileOperations();
+        destFile.delete();
         boolean expResult = true;
         boolean result = instance.moveFile(sourceFile, destFile);
         assertEquals(expResult, result);

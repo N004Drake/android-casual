@@ -1,4 +1,8 @@
 
+$USERINPUTBOX partition pull,give me the device name of the partition, $COMMANDNOTIFICATION $PULL $USERINPUT, "$ZIPFILEdatapull$SLASHimage.img"
+$HALT
+
+
 $ECHO Testing ALL CASUAL commands. Connect your device
 $SLEEPMILLIS 3250
 $SLEEP 1
@@ -17,7 +21,6 @@ $PULL /sdcard/adb_usb.ini, $ZIPFILEadb.ini
 #$ECHO flashing to recovery
 #$FLASH "$ZIPFILErecovery", /dev/block/platform/msm_sdcc.1/by-name/recovery
 
-$HALT
 $IFNOTCONTAINS adb_usb.ini $INCOMMAND $ADB shell "ls /sdcard/" $DO $HALT $ECHO failed to push file
 
 $ECHO line 1;;;$ECHO line 2

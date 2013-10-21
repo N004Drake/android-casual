@@ -42,11 +42,12 @@ public class ADBToolsTest {
      * Test of waitForDevice method, of class ADBTools.
      */
     @Test
-    public void testWaitForDevice() 
-    {   Statics.GUIIsAvailable=true;
+    public void testWaitForDevice(){
+        if (!ADBTools.isConnected()) return;
+        Statics.GUIIsAvailable=true;
         Statics.interaction=new GUI.development.CASUALShowJFrameMessageObject();
         int x=new CASUALMessageObject("Disconnect>>>Disconnect Your Device, wait 5 seconds and then reconnect.\n").showTimeoutDialog(10, null, 1, 1, new Object[]{"ok","cancel"}, "ok");
-        if (x==1){
+        if (x==0){
             System.out.println("waitForDevice");
             String expResult = "";
             String result = ADBTools.waitForDevice();
@@ -93,6 +94,7 @@ public class ADBToolsTest {
      */
     @Test
     public void testElevateADBserver() {
+        if (!ADBTools.isConnected()) return;
         System.out.println("elevateADBserver");
         if (!OSTools.isWindows()) ADBTools.elevateADBserver();
 

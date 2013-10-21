@@ -447,20 +447,9 @@ public class CASUALLanguage {
 
 // Takes a value from a command and returns to text box        
         } else if (line.startsWith("$COMMANDNOTIFICATION")) {
-            line = line.replace("$COMMANDNOTIFICATION", "");
-            String[] cmdSplit;
-            if (line.contains(">>>")) {
-                cmdSplit = line.split(">>>", 2);
-            } else if (line.contains(",")) {
-                cmdSplit = line.split(",", 2);
-            } else {
-                cmdSplit = new String[]{line};
-            }
+            line = line.replace("$COMMANDNOTIFICATION", "").trim();
             String title = "Return Value";
-            if (cmdSplit.length > 1) {
-                title = cmdSplit[0];
-            }
-            String retval = commandHandler(cmdSplit[cmdSplit.length - 1]);
+            String retval = commandHandler(line);
             new CASUALMessageObject(title + ">>>" + retval).showCommandNotification();
             return retval;
 
@@ -523,7 +512,8 @@ public class CASUALLanguage {
             log.level4Debug(inputBoxText);
 
             String command = Message[2].replace("$USERINPUT", inputBoxText);
-            new CASUALScriptParser().executeOneShotCommand(command);
+            this.commandHandler(command);
+            
 
             return "";
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
@@ -556,7 +546,7 @@ public class CASUALLanguage {
 //$EXECUTE will blindly execute commands into the shell.  Usefull only with $LINUX $WINDOWS or $MAC commands.
         } else if (line.startsWith("$EXECUTE")) {
             line = StringOperations.removeLeadingSpaces(line.replace("$EXECUTE", ""));
-            ArrayList command = new ShellTools().parseCommandLine(line);
+            ArrayList<String> command = new ShellTools().parseCommandLine(line);
             String[] commandArray = Arrays.copyOf(command.toArray(), command.size(), String[].class);
             return new Shell().sendShellCommand(commandArray);
 
@@ -585,10 +575,11 @@ public class CASUALLanguage {
                 Logger.getLogger(CASUALLanguage.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                int x = new CASUALDataBridge().sendFile(f, split[1].trim());
+                long x = new CASUALDataBridge().sendFile(f, split[1].trim());
                 if (x!=f.length()){
                     new CASUALMessageObject("@interactionUltimateFlashFailure").showErrorDialog();
                 }
+                return "Pushed "+x+" bytes";
             } catch (FileNotFoundException ex) {
                 new Log().level0Error("@fileNotFound");
                 throw new RuntimeException("File not found");
@@ -607,8 +598,9 @@ public class CASUALLanguage {
            String[] split=line.split(",");
            File f=new File(split[1].replace("\"","").trim());
            try {
+                new File (f.getParent()).mkdirs();
                 f.createNewFile();
-                new CASUALDataBridge().getFile(split[0].trim(), f );
+                return new CASUALDataBridge().integralGetFile(split[0].trim(), f );
             } catch (FileNotFoundException ex) {
                 new Log().level0Error("@fileNotFound");
                 throw new RuntimeException("File not found");
@@ -810,7 +802,7 @@ public class CASUALLanguage {
         //break commandline into an array of arguments
         //verify zipfile reference exists
         //allow echo of zipfile
-        if (!line.startsWith("$PULL") && !line.startsWith("$DOWNLOAD") && !line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
+        if (!line.startsWith("$USERINPUTBOX")&&!line.startsWith("$MAKEDIR") &&!line.startsWith("$PULL") && !line.startsWith("$DOWNLOAD") && !line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
             String[] lineArray = line.split(" ");
             //loop through line, locate positions of $ZIPFILE and test
             int pos = 0;

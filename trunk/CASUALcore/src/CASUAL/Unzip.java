@@ -42,7 +42,7 @@ public class Unzip {
     /**
      *
      */
-    public Enumeration zipFileEntries;
+    public Enumeration<? extends ZipEntry> zipFileEntries;
 
     /**
      * Unzip class is used to create a wrapper for unziping .zip files.
@@ -84,43 +84,6 @@ public class Unzip {
         }
     }
 
-    /**
-     * Unzips the current file, and then if any zip files are found within the
-     * zip, they are then unziped as a recursive function.
-     *
-     * @deprecated As of now method is not functioning nor needed
-     * @param outputFolder String of folder location to output to.
-     * @throws ZipException
-     * @throws IOException
-     */
-    public void recursiveUnzipFile(String outputFolder) throws ZipException, IOException {
-
-        String newPath = outputFolder + System.getProperty("file.separator");
-        new File(newPath).mkdir();
-        Enumeration zfEntries = zip.entries();
-        // Process each entry
-        while (zfEntries.hasMoreElements()) {
-            // grab a zip file entry
-            ZipEntry entry = (ZipEntry) zfEntries.nextElement();
-            String currentEntry = entry.getName();
-            File destFile = new File(newPath, currentEntry);
-            //destFile = new File(newPath, destFile.getName());
-            File destinationParent = destFile.getParentFile();
-            // create the parent directory structure if needed
-            destinationParent.mkdirs();
-            if (!entry.isDirectory()) {
-                new Log().level3Verbose("unzipping " + entry.toString());
-                writeFromZipToFile(zip, entry, newPath);
-            } else if (entry.isDirectory()) {
-                new Log().level4Debug(newPath + entry.getName());
-                new File(newPath + entry.getName()).mkdirs();
-            }
-            if (currentEntry.endsWith(".zip")) {
-                // found a zip file, try to open
-                unzipFileToFolder(outputFolder + System.getProperty("file.separator") + destFile.getAbsolutePath() + System.getProperty("file.separator"));
-            }
-        }
-    }
 
     /**
      * Unzips the ZipFile that was specified in the constructor of the class.

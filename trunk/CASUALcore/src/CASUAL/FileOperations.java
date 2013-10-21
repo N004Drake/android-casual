@@ -152,31 +152,7 @@ public class FileOperations {
         return s;
     }
 
-    /**
-     * takes a path and a name returns qualified path to file
-     *
-     * @param PathToSearch
-     * @return absolute path to folder
-     */
-    public ArrayList listFoldersTwoDeep(String PathToSearch) {
-        ArrayList<String[]> al = new ArrayList<String[]>();
-        File rootFolder = new File(PathToSearch);
-        File[] c = rootFolder.listFiles();
-        if (rootFolder.exists()) {
-            for (File file : c) {
-                if (file.isDirectory()) {
-                    File[] subdir1 = file.listFiles();
-                    for (File subdir2 : subdir1) {
-                        if (subdir2.isDirectory()) {
-                            al.add(new String[]{file.getPath(), subdir2.toString()});
-                        }
-                    }
-
-                }
-            }
-        }
-        return al;
-    }
+   
 
     /**
      * verifies file/folder exists returns a boolean value if the file exists
@@ -255,9 +231,11 @@ public class FileOperations {
      */
     public void writeToFile(String Text, String File) throws IOException {
         BufferedWriter bw;
-        bw = new BufferedWriter(new FileWriter(File, true));
+        FileWriter fw=new FileWriter(File, true);
+        bw = new BufferedWriter(fw);
         bw.write(Text);
-        bw.close();
+        bw.flush();
+        fw.close();
         log.level4Debug("Write Finished");
     }
 
@@ -523,6 +501,7 @@ public class FileOperations {
                 EntireFile = EntireFile + "\n" + Line;
 
             }
+            br.close();
         } catch (IOException ex) {
             log.level2Information("@fileNotFound " + FileOnDisk);
         }
@@ -583,18 +562,16 @@ public class FileOperations {
      */
     public boolean moveFile(File sourceFile, File destFile) throws IOException {
         FileOperations fO = new FileOperations();
-        if (fO.copyFile(sourceFile.toString(), destFile.toString())) {
-            if (fO.deleteFile(sourceFile.toString())) {
-                log.level4Debug("[moveFile()]File moved successfully");
-                return true;
-            } else {
-                log.level4Debug("[moveFile()]File copied, unable to remove source");
-                return false;
-            }
-        } else {
-            log.level4Debug("[moveFile()]Unable to copy from source");
+        if ( !destFile.getParentFile().exists()){
+            File folder=destFile.getParentFile();
+            folder.mkdirs();
+        }
+        if ( destFile.exists()){
+            log.level3Verbose("Cannot move file.  Destination file is in the way");
             return false;
         }
+        log.level4Debug("moving "+sourceFile.getAbsolutePath()+" to "+destFile.getAbsolutePath());
+        return sourceFile.renameTo(destFile);
     }
 
     /**

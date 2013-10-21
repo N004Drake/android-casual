@@ -323,15 +323,21 @@ public class CASUALTools {
     
     public static boolean uidMatches(String expectedUID){
         String[] cmd = new String[]{ADBTools.getADBCommand(),"shell","id -u"};
-        return new Shell().silentShellCommand(cmd).equals("\n"+expectedUID);
+        String retval=new Shell().silentShellCommand(cmd);
+        return retval.contains(expectedUID);
     }
     
     public static String rootAccessCommand(){
-        if (uidMatches("0")){
+        if (uidMatches("uid=0(")){
             return "";
         }
-        if ( uidMatches("0")){
-            return "su -c ";
+        if (uidMatches("2000")){
+            String retval=new Shell().silentShellCommand(new String[]{ADBTools.getADBCommand(),"shell","su -c 'id -u'"});
+            if (retval.contains("uid=0(")){
+               return "su -c ";
+            } else {
+                return "";
+            }
         } else {
             //TODO: pop up warning about not having access to root if it cannot be obtained or throw new exception
             return "";

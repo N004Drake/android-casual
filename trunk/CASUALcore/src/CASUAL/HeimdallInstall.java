@@ -60,9 +60,6 @@ public class HeimdallInstall {
             Statics.isHeimdallDeployed = true;
             log.level4Debug("heimdall install sucessful");
             return true;
-        } else {
-            log.level2Information("@additionalFilesAreRequired");
-            new HeimdallInstall().installWindowsVCRedist();
         }
 
         log.level4Debug("Verifying Heimdall deployment after Visual C++ Redistributable installation");
@@ -142,7 +139,6 @@ public class HeimdallInstall {
                 if (new HeimdallInstall().checkHeimdallVersion()) {
                     return true;
                 } else {
-                    new HeimdallInstall().installWindowsVCRedist();
                     if (checkAndDeployHeimdall()) {
                         return true;
                     }
@@ -187,28 +183,7 @@ public class HeimdallInstall {
         }
     }
 
-    /**
-     * @deprecated installs Windows Visual C++ redistributable
-     */
-    public void installWindowsVCRedist() {
-        new Log().level2Information("@installingVisualCPP");
-        String installVCResults = "CritERROR!!!";
-        String exec = "";
-        try {
-            exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/vcredist.properties");
-        } catch (InterruptedException ex) {
-            log.errorHandler(ex);
-        } catch (FileNotFoundException ex) {
-            log.errorHandler(ex);
-        } catch (IOException ex) {
-            log.errorHandler(ex);
-        }
-        new Shell().liveShellCommand(new String[]{exec}, true);
-        if (installVCResults.contains("CritERROR!!!")) {
-            displayWindowsPermissionsMessageAndExit();
-        }
-    }
-
+   
     /**
      * Installs windows drivers
      *
@@ -322,7 +297,6 @@ public class HeimdallInstall {
     }
 
     void runWinHeimdallInstallationProcedure() {
-        installWindowsVCRedist();
         installWindowsDrivers();
     }
 

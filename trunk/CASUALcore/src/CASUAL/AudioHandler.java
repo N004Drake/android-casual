@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.*;
-import sun.audio.ContinuousAudioDataStream;
+
 
 /**
  * CASUALAudioSystem handles Sounds
@@ -89,7 +89,7 @@ public class AudioHandler {
             public void run() {
                 if (useSound) {
                     
-                    ContinuousAudioDataStream loop = null;
+
                     for (String URL : URLs) {
 
                         try {

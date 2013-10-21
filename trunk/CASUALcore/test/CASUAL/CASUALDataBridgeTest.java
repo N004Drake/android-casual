@@ -23,9 +23,7 @@ import static org.junit.Assert.*;
  */
 public class CASUALDataBridgeTest {
 
-    public CASUALDataBridgeTest() {
-    }
-
+ 
     @Before
     public void setUp() {
     }
@@ -35,9 +33,11 @@ public class CASUALDataBridgeTest {
     }
     Shell shell = new Shell();
 
+ 
     @Test
     public void testSendString() {
         try {
+            if (!ADBTools.isConnected()) return;
             shell.sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "rm /sdcard/woot"});
             System.out.println("sendString");
             String send = "wooaoas";
@@ -57,28 +57,31 @@ public class CASUALDataBridgeTest {
             Logger.getLogger(CASUALDataBridgeTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @Test
     public void testSendFile() throws Exception {
+        if (!ADBTools.isConnected()) return;
         System.out.println("sendFile");
         File f = new File("../../CASPAC/testpak.zip");
         String remoteFileName = "/sdcard/testpak";
         CASUALDataBridge instance = new CASUALDataBridge();
-        instance.sendFile(f, remoteFileName);
+        long retval=instance.sendFile(f, remoteFileName);
+        assert (retval==f.length());
         shell.sendShellCommand(new String[]{ADBTools.getADBCommand(), "pull", "/sdcard/testpak", "test"});
         String originalmd5 = new CASUAL.crypto.MD5sum().getLinuxMD5Sum(f).split(" ")[0];
         File test = new File("test");
         String testmd5 = new CASUAL.crypto.MD5sum().getLinuxMD5Sum(test).split(" ")[0];
-        System.out.println(originalmd5);
-        System.out.println("test");
-        System.out.println(testmd5);
+        System.out.println("original md5:"+originalmd5);
+        System.out.println("received md5:"+testmd5);
         test.delete();
         shell.sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "rm /sdcard/testpak"});
         assert (testmd5.equals(originalmd5));
     }
 
+  
     @Test
     public void testGetFile() throws Exception {
+        if (!ADBTools.isConnected()) return;
         System.out.println("getFile");
         File original = new File("../../CASPAC/testpak.zip");
         String remoteFileName = "/sdcard/testpak.zip";
@@ -96,15 +99,17 @@ public class CASUALDataBridgeTest {
         assert (testmd5.equals(originalmd5));
     }
 
+ 
     @Test
     public void testSendStream() throws Exception {
+        if (!ADBTools.isConnected()) return;
         System.out.println("sendStream");
         String expResult = "omfg \n cool! 123456789";
         InputStream input = (InputStream) new ByteArrayInputStream(expResult.getBytes());
         String remoteFileName = "/sdcard/sendstreamtest";
         CASUALDataBridge instance = new CASUALDataBridge();
 
-        int test = instance.sendStream(input, remoteFileName);
+        long test =instance.sendStream(input, remoteFileName);
         String result = shell.sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "cat " + remoteFileName});
         shell.sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "rm " + remoteFileName});
         assert (test == expResult.length());

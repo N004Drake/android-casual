@@ -43,7 +43,7 @@ public final class JarResources {
 
     /**
      * initializes internal hash tables with Jar file resources.
-     */
+     */@SuppressWarnings("unchecked")
     private void init() {
         try {
             ZipFile zf = new ZipFile(jarFileName);

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,9 +62,9 @@ public class CASUALDevQuery {
      * @throws MalformedURLException  should never occur
      * @throws IOException possible if internet is disconnected
      */
-    public List getData() throws MalformedURLException, IOException {
+    public List<String> getData() throws MalformedURLException, IOException {
         //get the initial list from the server
-        List folders = folderList("./");
+        List<String> folders = folderList("./files/");
         //search each folder recursively
         recursiveSearch(folders);
         for (String file:availableURLs)
@@ -71,9 +72,8 @@ public class CASUALDevQuery {
         return availableURLs;
     }
 
-    private List folderList(String remoteFolder) throws MalformedURLException, IOException {
-        List<String> folderList=null;
-        List<String> fileList;
+    @SuppressWarnings("unchecked")
+    private List<String> folderList(String remoteFolder) throws MalformedURLException, IOException {
         
         //remove leading slash so it is compatible with the search format.
         if (remoteFolder.startsWith("/")) {
@@ -97,15 +97,9 @@ public class CASUALDevQuery {
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptEngine engine = factory.getEngineByName("JavaScript");
             //create Lists from javascript output
-            folderList = (List) engine.eval(folderLine);
-            fileList = (List) engine.eval(fileLine);
-
-            //clean the list data from PHP/JSONification 
-            if (folderList != null) {
-                for (String dir : folderList) {
-                    dir = dir.replaceAll("\\/", "/");
-                }
-            }
+            
+            List<String> folderList = (List<String>)engine.eval(folderLine);
+            List<String> fileList = (List<String>) engine.eval(fileLine);
             //clean and add String URL references to availableFiles
             if (fileList != null) {
                 for (String file : fileList) {
@@ -113,15 +107,26 @@ public class CASUALDevQuery {
                     availableURLs.add(file);
                 }
             }
+            //clean the list data from PHP/JSONification 
+            if (folderList != null) {
+                for (String dir : folderList) {
+                    dir = dir.replaceAll("\\/", "/");
+                }
+            }
+            return folderList;
 
         } catch (ScriptException ex) {
             Logger.getLogger(CASUALDevQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         //return list of folders received
-        return folderList;
+        return null;
     }
-
+    private static <String> Object createList(List<String> argumentList) {
+        List<String> otherList = new ArrayList<String>();
+        //do something here
+        return otherList;
+    }
     private void recursiveSearch(List<String> folders) throws MalformedURLException, IOException {
         if (folders != null) {
             //go through each folder

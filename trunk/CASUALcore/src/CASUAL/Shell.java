@@ -250,8 +250,8 @@ public class Shell {
 
                 if (!Statics.ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
-                        if (Statics.ActionEvents != null && LineRead.contains((String) Statics.ActionEvents.get(i))) {
-                            new CASUALScriptParser().executeOneShotCommand((String) Statics.ReactionEvents.get(i));
+                        if (Statics.ActionEvents != null && LineRead.contains( Statics.ActionEvents.get(i))) {
+                            new CASUALScriptParser().executeOneShotCommand( Statics.ReactionEvents.get(i));
                         }
                     }
                     LineRead = "";
@@ -358,7 +358,7 @@ public class Shell {
                 try {
                     String line;
                     ProcessBuilder p = new ProcessBuilder(cmd);
-                    p.redirectError();
+                    p.redirectErrorStream(true);
                     Process process = p.start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
