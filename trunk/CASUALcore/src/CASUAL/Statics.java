@@ -175,6 +175,7 @@ public class Statics {
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
     public static void initializeStatics() {
+        CASUALDataBridge.commandedShutdown=true;
         GUIIsAvailable = false;
         dumbTerminalGUI = false;
         setStatus("working");

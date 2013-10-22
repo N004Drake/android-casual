@@ -44,12 +44,14 @@ import javax.swing.Timer;
 public class CASUALDataBridge {
 
     Shell shell = new Shell();
+    Log log = new Log();
     final static String port = "27825";
     final static String ip = "127.0.0.1";
     final static Integer WATCHDOGINTERVAL = 2000;
     private static boolean deviceReadyForReceive = false;
     static String deviceSideMessage = "";
     static boolean shutdownBecauseOfError = false;
+    public static boolean commandedShutdown=false;
     static long bytes = 0;
     static long lastbytes = -1;
     static String status = "";
@@ -86,7 +88,7 @@ public class CASUALDataBridge {
     }
 
     public synchronized long sendFile(File f, String remoteFileName) throws FileNotFoundException, Exception {
-        new Log().level2Information("sending " + f.getName() + " to device. size=" + f.length());
+        log.level2Information("sending " + f.getName() + " to device. size=" + f.length());
         FileInputStream fis = new FileInputStream(f);
         long retval = sendStream(fis, remoteFileName);
         try {
@@ -151,7 +153,7 @@ public class CASUALDataBridge {
             BufferedInputStream bis = new BufferedInputStream(input);
             int buflen = buf.length - 1;
             //pump in 4096 byte chunks at a time. from input to output
-            while (bis.available() >= buflen) {
+            while (bis.available() >= buflen && !commandedShutdown) {
                 bis.read(buf);
                 bos.write(buf);
                 bytes = bytes + buf.length;
@@ -172,7 +174,7 @@ public class CASUALDataBridge {
             long endTime = System.currentTimeMillis();
             double duration = (endTime - startTime) / 1000.000;
             double kb = bytes / duration / 1000;
-            new Log().level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + (long) kb + " KB/s");
+            log.level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + (long) kb + " KB/s");
 
         } catch (IOException ex) {
             timeoutWatchdog.stop();
@@ -189,7 +191,7 @@ public class CASUALDataBridge {
             long startTime = System.currentTimeMillis();
             byte[] buf;
             timeoutWatchdog.start();
-            while (deviceReadyForReceive) {
+            while (deviceReadyForReceive&& !commandedShutdown) {
 
                 while ((buf = new byte[bis.available()]).length > 0) {
                     bytes = bytes + buf.length;
@@ -206,7 +208,7 @@ public class CASUALDataBridge {
             double kb = bytes / duration / 1000;
             String message;
 
-            new Log().level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + (long) kb + " KB/s");
+            log.level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + (long) kb + " KB/s");
         } catch (IOException ex) {
             timeoutWatchdog.stop();
             Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
@@ -221,8 +223,6 @@ public class CASUALDataBridge {
         deviceSideMessage = "";
         bytes = 0;
         lastbytes = -1;
-        Log log = new Log();
-
         log.level4Debug("closing existing stream");
         log.level4Debug("restarting server");
         ADBTools.restartADBserver();
@@ -243,7 +243,7 @@ public class CASUALDataBridge {
 
     private void waitForReadySignal() {
         //open the port for write
-        while (!deviceReadyForReceive) {
+        while (!deviceReadyForReceive && !commandedShutdown) {
             //wait for deviceReady signal
             sleep(100);
         }
@@ -257,15 +257,15 @@ public class CASUALDataBridge {
     }
 
     private void shutdownCommunications(Socket socket, Thread t) throws InterruptedException, IOException {
-        new Log().level4Debug("Flushing port");
+        log.level4Debug("Flushing port");
         deviceReadyForReceive = false;
         socket.getOutputStream().flush();
-        new Log().level4Debug("closing ports");
+        log.level4Debug("closing ports");
         socket.shutdownOutput();
         socket.shutdownInput();
         socket.close();
 
-        new Log().level4Debug("waiting for device-side server to shutdown");
+        log.level4Debug("waiting for device-side server to shutdown");
         t.join();
     }
 
@@ -307,9 +307,17 @@ public class CASUALDataBridge {
         return !deviceSideMessage.equals(USBDISCONNECTED) && !deviceSideMessage.equals(DEVICEDISCONNECTED) && !deviceSideMessage.startsWith(PERMISSIONERROR);
     }
 
-    String integralGetFile(String remoteFile, File f) throws IOException, InterruptedException {
-        String retval = getFile(remoteFile, f);
-        while (shutdownBecauseOfError) {
+    String integralGetFile(String remoteFile, File f) {
+        
+        String retval="";
+        try {
+            retval = getFile(remoteFile, f);
+        } catch (IOException ex) {
+            log.errorHandler(ex);
+        } catch (InterruptedException ex) {
+            log.errorHandler(ex);
+        }
+        while (shutdownBecauseOfError && !commandedShutdown) {
             deviceReadyForReceive = false;
             deviceSideMessage = "";
             shutdownBecauseOfError = false;
@@ -317,7 +325,14 @@ public class CASUALDataBridge {
             lastbytes = -1;
             String status = "";
             new CASUALMessageObject("@interactionFailedToReceive").showInformationMessage();
-            retval = getFile(remoteFile, f);
+            try {
+                return getFile(remoteFile, f);
+            } catch (IOException ex) {
+                log.errorHandler(ex);
+            } catch (InterruptedException ex) {
+                log.errorHandler(ex);
+            }
+            
         }
         return retval;
     }
@@ -401,10 +416,10 @@ public class CASUALDataBridge {
                             }
                             shutdownBecauseOfError = true;
                             deviceReadyForReceive = false;
-                            new Log().level0Error("Failed to send file. Bytes:" + bytes + " Message:" + deviceSideMessage);
+                            log.level0Error("Failed to send file. Bytes:" + bytes + " Message:" + deviceSideMessage);
                             throw new RuntimeException("Server exited improperly- received");
                         } else {
-                            new Log().level4Debug("device reported sucessful shutdown");
+                            log.level4Debug("device reported sucessful shutdown");
                         }
 
                         //signal that the device is done before this thread dies.
@@ -424,11 +439,11 @@ public class CASUALDataBridge {
                     boolean ready = false;
                     String received = "";
                     Statics.setStatus("monitoring ports on device");
-                    while (!ready) {
+                    while (!ready && !commandedShutdown) {
                         //monitor server status and detect errors
-                        while (is.available() > 0) {
+                        while (is.available() > 0 ) {
                             received = received + (char) is.read();
-                            System.out.println(received);
+                            log.level4Debug(received);
                             if (received.contains("read-only file system") ||
                                     received.contains("cannot open") || 
                                     received.contains("No such file or directory") || 
@@ -452,8 +467,7 @@ public class CASUALDataBridge {
                     shutdownBecauseOfError = true;
                     deviceSideMessage = message;
                     deviceReadyForReceive = true;
-                    new Log().level0Error(message);
-                    throw new RuntimeException();
+                    log.level0Error(message);
                 }
             };
         }

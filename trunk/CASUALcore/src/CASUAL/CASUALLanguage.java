@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author adam
@@ -45,6 +44,7 @@ public class CASUALLanguage {
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     final Caspac CASPAC;
     private String deviceBuildPropStorage;
+
     /**
      * instantiates CASUALLanguage with script
      *
@@ -75,7 +75,7 @@ public class CASUALLanguage {
         String strLine = "";
         try {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
-            
+
             bReader.mark(1);
             while ((strLine = bReader.readLine()) != null) {
 
@@ -94,9 +94,9 @@ public class CASUALLanguage {
                     }
                     GOTO = "";
                 }
-                if (strLine.contains(";;;")){
-                    String[] lineArray=strLine.split(";;;");
-                    for (String line:lineArray){
+                if (strLine.contains(";;;")) {
+                    String[] lineArray = strLine.split(";;;");
+                    for (String line : lineArray) {
                         commandHandler(line);
                     }
                 } else {
@@ -335,27 +335,27 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
             return doIfContainsReturnResults(line, false);
         }
-        if (line.startsWith("$SLEEP")){
-            log.level3Verbose("detected sleep command: "+line);
+        if (line.startsWith("$SLEEP")) {
+            log.level3Verbose("detected sleep command: " + line);
             int sleeptime;
             line = line.replace("$SLEEP", "").trim();
-            if (line.startsWith("MILLIS")){
-                line=line.replace("MILLIS","").trim();
-                sleeptime=Integer.parseInt(line);
+            if (line.startsWith("MILLIS")) {
+                line = line.replace("MILLIS", "").trim();
+                sleeptime = Integer.parseInt(line);
             } else {
-                sleeptime=Integer.parseInt(line)*1000;
+                sleeptime = Integer.parseInt(line) * 1000;
             }
-            if (! (Integer.parseInt(line)>=0)){
+            if (!(Integer.parseInt(line) >= 0)) {
                 throw new RuntimeException();
             }
-                    
+
             try {
-                log.level2Information("sleeping for "+(double)sleeptime/1000 + " seconds");
+                log.level2Information("sleeping for " + (double) sleeptime / 1000 + " seconds");
                 Thread.sleep(sleeptime);
             } catch (InterruptedException ex) {
             }
             return line;
-            
+
         }
         /*
          * Environmental variables
@@ -365,8 +365,8 @@ public class CASUALLanguage {
             line = line.replace("$BUSYBOX", BusyboxTools.getBusyboxLocation());
             log.level4Debug("Expanded $BUSYBOX: " + line);
         }
-        
-        
+
+
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
             line = line.replace("$SLASH", Statics.Slash);
@@ -513,7 +513,7 @@ public class CASUALLanguage {
 
             String command = Message[2].replace("$USERINPUT", inputBoxText);
             this.commandHandler(command);
-            
+
 
             return "";
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
@@ -552,23 +552,23 @@ public class CASUALLanguage {
 
 //$BUILDPROP will silently grab the build.prop from the device
         } else if (line.startsWith("$BUILDPROP")) {
-            if (deviceBuildPropStorage!=null && deviceBuildPropStorage.contains("ro.")){
+            if (deviceBuildPropStorage != null && deviceBuildPropStorage.contains("ro.")) {
                 return deviceBuildPropStorage;
             } else {
-                String[] cmd={ADBTools.getADBCommand(), "shell", "cat /system/build.prop"};
-                deviceBuildPropStorage=new Shell().timeoutShellCommand(cmd,5000);
+                String[] cmd = {ADBTools.getADBCommand(), "shell", "cat /system/build.prop"};
+                deviceBuildPropStorage = new Shell().timeoutShellCommand(cmd, 5000);
                 return deviceBuildPropStorage;
             }
 //$FLASH will push a file to the specified block eg $FLASH $ZIPFILEmyFile, /dev/block/mmcblk0p5
         } else if (line.startsWith("$FLASH")) {
-           
-           line=line.replace("$FLASH", "").trim();
-           if (! line.contains(",")){
-               log.level0Error("Missing Comma in $FLASH command");
-               throw new RuntimeException("no comma to split and specify destination");
-           }
-           String[] split=line.split(",");
-           File f=new File(split[0].replace("\"","").trim());
+
+            line = line.replace("$FLASH", "").trim();
+            if (!line.contains(",")) {
+                log.level0Error("Missing Comma in $FLASH command");
+                throw new RuntimeException("no comma to split and specify destination");
+            }
+            String[] split = line.split(",");
+            File f = new File(split[0].replace("\"", "").trim());
             try {
                 f.createNewFile();
             } catch (IOException ex) {
@@ -576,10 +576,10 @@ public class CASUALLanguage {
             }
             try {
                 long x = new CASUALDataBridge().sendFile(f, split[1].trim());
-                if (x!=f.length()){
+                if (x != f.length()) {
                     new CASUALMessageObject("@interactionUltimateFlashFailure").showErrorDialog();
                 }
-                return "Pushed "+x+" bytes";
+                return "Pushed " + x + " bytes";
             } catch (FileNotFoundException ex) {
                 new Log().level0Error("@fileNotFound");
                 throw new RuntimeException("File not found");
@@ -588,32 +588,29 @@ public class CASUALLanguage {
                 throw new RuntimeException("Failed to write file");
             }
 //$PULL will push a file to the specified block eg $PULL  /dev/block/mmcblk0p5 , $ZIPFILEmyFile
-            } else if (line.startsWith("$PULL")) {
-           
-           line=line.replace("$PULL", "").trim();
-           if (! line.contains(",")){
-               log.level0Error("Missing Comma in $PULL command");
-               throw new RuntimeException("no comma to split and specify destination");
-           }
-           String[] split=line.split(",");
-           File f=new File(split[1].replace("\"","").trim());
-           try {
-                new File (f.getParent()).mkdirs();
-                f.createNewFile();
-                return new CASUALDataBridge().integralGetFile(split[0].trim(), f );
-            } catch (FileNotFoundException ex) {
-                new Log().level0Error("@fileNotFound");
-                throw new RuntimeException("File not found");
-            } catch (Exception ex) {
-                new Log().level0Error("@failedToWriteFile");
-                throw new RuntimeException("Failed to write file");
+        } else if (line.startsWith("$PULL")) {
+
+            line = line.replace("$PULL", "").trim();
+            if (!line.contains(",")) {
+                log.level0Error("Missing Comma in $PULL command");
+                throw new RuntimeException("no comma to split and specify destination");
             }
-            
-            
-                 /*
-                  * SUPPORTED SHELLS
-                  */
-     // if Heimdall, Send to Heimdall shell command
+            String[] split = line.split(",");
+            File f = new File(split[1].replace("\"", "").trim());
+
+            new File(f.getParent()).mkdirs();
+            try {
+                f.createNewFile();
+            } catch (IOException ex) {
+            }
+            return new CASUALDataBridge().integralGetFile(split[0].trim(), f);
+
+
+
+            /*
+             * SUPPORTED SHELLS
+             */
+            // if Heimdall, Send to Heimdall shell command
 
         } else if (line.startsWith("$HEIMDALL")) {
             line = line.replace("$HEIMDALL", "");
@@ -716,22 +713,22 @@ public class CASUALLanguage {
         }
         log.level4Debug("checking for results to be " + ifContains);
         log.level4Debug("requesting " + command);
-        
-        
+
+
         String returnValue = new CASUALScriptParser().executeOneShotCommand(command);
         log.level4Debug("got " + returnValue);
         String retValue = "";
-        
+
         //ifnotcontains==false or ifcontains==true
         if (returnValue.contains(checkValue) == ifContains) {
-            if (casualCommand.contains("&&&")){
-                String[] lineSplit=casualCommand.split("&&&");
-                for (String cmd:lineSplit){
-                   retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(cmd));
-                    
+            if (casualCommand.contains("&&&")) {
+                String[] lineSplit = casualCommand.split("&&&");
+                for (String cmd : lineSplit) {
+                    retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(cmd));
+
                 }
             } else {
-               retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
+                retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
             }
         }
         return retValue;
@@ -778,7 +775,7 @@ public class CASUALLanguage {
             //exists
             log.level3Verbose("verified " + testFileString + " exists");
         } else {
-            testFileString=testFileString.replace(",","");
+            testFileString = testFileString.replace(",", "");
             if (new FileOperations().verifyExists(testFileString)) {
                 //exists
                 log.level3Verbose("verified " + testFileString + " exists");
@@ -802,7 +799,7 @@ public class CASUALLanguage {
         //break commandline into an array of arguments
         //verify zipfile reference exists
         //allow echo of zipfile
-        if (!line.startsWith("$USERINPUTBOX")&&!line.startsWith("$MAKEDIR") &&!line.startsWith("$PULL") && !line.startsWith("$DOWNLOAD") && !line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
+        if (!line.startsWith("$USERINPUTBOX") && !line.startsWith("$MAKEDIR") && !line.startsWith("$PULL") && !line.startsWith("$DOWNLOAD") && !line.startsWith("$ECHO") && !line.startsWith("$REMOVEDIR") && !line.startsWith("$COMMANDNOTIFICATION") && !line.startsWith("$MAKEDIR") && !line.contains(" shell echo ") && !line.startsWith("$USERNOTIFICATION") && !line.contains(" pull ")) {
             String[] lineArray = line.split(" ");
             //loop through line, locate positions of $ZIPFILE and test
             int pos = 0;
