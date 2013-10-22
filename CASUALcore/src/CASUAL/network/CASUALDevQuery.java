@@ -97,7 +97,8 @@ public class CASUALDevQuery {
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptEngine engine = factory.getEngineByName("JavaScript");
             //create Lists from javascript output
-            
+            Object foldero=engine.eval(folderLine);
+           
             List<String> folderList = (List<String>)engine.eval(folderLine);
             List<String> fileList = (List<String>) engine.eval(fileLine);
             //clean and add String URL references to availableFiles
