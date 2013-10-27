@@ -42,7 +42,7 @@ public class Log {
     public static PrintStream out = new PrintStream(System.out);
 
     private void sendToGUI(String data) {
-        if (Statics.GUIIsAvailable || Statics.dumbTerminalGUI && !"".equals(data) && !"\n".equals(data)) {
+        if (Statics.isGUIIsAvailable() || Statics.dumbTerminalGUI && !"".equals(data) && !"\n".equals(data)) {
             try {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
@@ -189,7 +189,7 @@ public class Log {
      */
     public void progress(String data) {
         progressBuffer = progressBuffer + data;
-        if (Statics.GUIIsAvailable && Statics.ProgressDoc != null) {
+        if (Statics.isGUIIsAvailable() && Statics.ProgressDoc != null) {
             try {
 
                 if (data.contains("\b")) {
@@ -224,7 +224,7 @@ public class Log {
      */
     public void LiveUpdate(String data) {
         out.println(data);
-        if (Statics.GUIIsAvailable) {
+        if (Statics.isGUIIsAvailable()) {
             try {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
@@ -240,7 +240,7 @@ public class Log {
      */
     public void beginLine() {
         out.println();
-        if (Statics.GUIIsAvailable) {
+        if (Statics.isGUIIsAvailable()) {
             progress("\n");
         }
     }
@@ -249,7 +249,7 @@ public class Log {
      * replaces a line of text
      */
     public void replaceLine(String data, int position, int length) {
-        if (Statics.GUIIsAvailable) {
+        if (Statics.isGUIIsAvailable()) {
             try {
                 Statics.ProgressDoc.remove(position, length);
                 Statics.ProgressDoc.insertString(position, data, null);

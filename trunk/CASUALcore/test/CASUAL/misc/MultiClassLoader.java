@@ -52,7 +52,7 @@ public abstract class MultiClassLoader extends ClassLoader {
         monitor(">> MultiClassLoader.loadClass(" + className + ", " + resolveIt + ")");
 
         //----- Check our local cache of classes
-        result = (Class) classes.get(className);
+        result = classes.get(className);
         if (result != null) {
             monitor(">> returning cached result.");
             return result;

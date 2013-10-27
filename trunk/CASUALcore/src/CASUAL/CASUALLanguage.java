@@ -83,7 +83,7 @@ public class CASUALLanguage {
                     return;
                 }
                 CurrentLine++;
-                if (Statics.GUIIsAvailable) {
+                if (Statics.isGUIIsAvailable()) {
                     Statics.GUI.setProgressBar(CurrentLine);
                 }
                 if (!GOTO.equals("")) {

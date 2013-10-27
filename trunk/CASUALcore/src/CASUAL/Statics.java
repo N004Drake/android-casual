@@ -36,12 +36,21 @@ import javax.swing.text.StyledDocument;
  */
 public class Statics {
 
-    public static boolean GUIIsAvailable = false; //used to tell if the GUI is up yet.
-    //public static boolean useGUI = false; //used by CASPAC mode to use terminal only
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
     private static String currentStatus = "working";
     public static boolean debugMode = false;
     public static Caspac CASPAC;
+    public static boolean guiReady=false;
+
+    /**
+     * @return the GUIIsAvailable
+     */
+    public static boolean isGUIIsAvailable() {
+        if (GUI !=null ){
+            return guiReady && !java.awt.GraphicsEnvironment.isHeadless();
+        }
+        return false;
+    }
 
     public Statics() {
     }
@@ -64,7 +73,7 @@ public class Statics {
     //Form data
     //public static boolean TargetScriptIsResource = true;  //true if resource, false if file
     public static iCASUALGUI GUI; //Static reference to GUI input/output device
-    public static JTextPane ProgressPane = new JTextPane(); //used by log to update Progress
+    public static JTextPane ProgressPane ; //used by log to update Progress
     final public static String Slash = System.getProperty("file.separator"); //file separator for system \ or /
     /**
      * ProgressDoc provides a static reference to the program output
@@ -176,7 +185,7 @@ public class Statics {
 
     public static void initializeStatics() {
         CASUALDataBridge.commandedShutdown=true;
-        GUIIsAvailable = false;
+        guiReady = false;
         dumbTerminalGUI = false;
         setStatus("working");
         GUIVerboseLevel = 2;
@@ -184,7 +193,9 @@ public class Statics {
         LiveSendCommand = new ArrayList<String>();
         OutFile = null;
         LogCreated = false;
-        ProgressPane = new JTextPane();
+        if (!!java.awt.GraphicsEnvironment.isHeadless()){
+            ProgressPane = new JTextPane();
+        };
         PreProgress = "";
         ProgressDoc = null;
         adbDeployed = null;
@@ -215,7 +226,7 @@ public class Statics {
     public static void setStatus(final String status) {
         new Log().level4Debug(status);
         currentStatus = status;
-        if (GUIIsAvailable) {
+        if (isGUIIsAvailable()) {
             Thread t = new Thread(new Runnable() {
                 public void run() {
                     GUI.setInformationScrollBorderText(status);

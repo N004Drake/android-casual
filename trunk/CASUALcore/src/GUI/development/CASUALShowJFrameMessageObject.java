@@ -83,7 +83,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
     }
 
     private String showTimeOutInteraction(CASUALMessageObject messageObject, String messageText, String title) {
-        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
             return Integer.toString(new TimeOutOptionPane().timeoutDialog(messageObject.timeoutPresetTime, (Component) Statics.GUI, messageText, title, messageObject.timeoutOptionType, messageObject.timeoutMessageType, messageObject.timeoutOptions, messageObject.timeoutInitialValue));
         } else {
             new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText + "\n[RESPONSEEXPECTED]");
@@ -99,7 +99,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
         String retval;
         new Log().level4Debug("Displaying Action Is Required Dialog:" + messageText);
         int n = 9999;
-        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
             Object[] Options = {"I did it", "I didn't do it"};
             messageText = "<html>" + messageText.replace("\\n", "<BR>");
 
@@ -132,7 +132,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
     private String showUserCancelOptionInteraction(String title, String messageText) throws HeadlessException {
         int cancelReturn;
         Object[] Options = {"Continue", "Stop"};
-        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
             if (title == null) {
                 cancelReturn = JOptionPane.showOptionDialog(
                         (Component) Statics.GUI,
@@ -169,7 +169,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
 
     private void showUserNotificationInteraction(String title, String messageText) throws HeadlessException {
         new Log().level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
-        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
             if (title != null) {
                 JOptionPane.showMessageDialog((Component) Statics.GUI,
                         messageText,
@@ -188,7 +188,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
     }
 
     private void showInformationInteraction(String messageText, String title) throws HeadlessException {
-        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
             JOptionPane.showMessageDialog((Component) Statics.GUI,
                     messageText, title,
                     JOptionPane.INFORMATION_MESSAGE);
@@ -199,7 +199,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
     }
 
     private void showErrorInteraction(String messageText, String title) throws HeadlessException {
-        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
            JOptionPane.showMessageDialog( (Component) Statics.GUI, messageText, title, ERROR_MESSAGE);
         } else {
             new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
@@ -209,7 +209,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
 
     private String showYesNoInteraction(String title, String messageText) throws HeadlessException {
         new Log().level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
-        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
             if (title == null) {
                 title = "Yes or No";
             }
@@ -239,7 +239,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
     private String showInputDialog(String title, String messageText) throws HeadlessException {
         new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText + "\n[RESPONSEEXPECTED]");
         messageText = "<html>" + messageText.replace("\\n", "\n");
-        if (Statics.GUIIsAvailable && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
             if (title == null) {
                 return JOptionPane.showInputDialog((Component) Statics.GUI, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
             } else {

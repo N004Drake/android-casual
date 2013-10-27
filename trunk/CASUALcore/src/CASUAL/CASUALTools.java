@@ -299,8 +299,11 @@ public class CASUALTools {
     
     private static void setiCASUALinteraction(Class<?> cls) throws InstantiationException, IllegalAccessException {
         iCASUALInteraction clsInstance;
-        clsInstance = (CASUAL.iCASUALInteraction) cls.newInstance();
-        CASUAL.Statics.interaction = clsInstance;
+        if (! java.awt.GraphicsEnvironment.isHeadless()){
+            clsInstance = (CASUAL.iCASUALInteraction) cls.newInstance();
+            CASUAL.Statics.interaction = clsInstance;
+        }
+
     }
     public static void setGUIAPI() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         String messageAPI=java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.GUI");

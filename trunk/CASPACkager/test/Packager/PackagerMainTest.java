@@ -4,6 +4,7 @@
  */
 package Packager;
 
+import CASPACkager.PackagerMain;
 import java.io.File;
 import org.junit.After;
 import org.junit.Before;

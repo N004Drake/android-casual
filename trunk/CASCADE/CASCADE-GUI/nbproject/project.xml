@@ -21,7 +21,7 @@
                 <id>jar</id>
             </reference>
             <reference>
-                <foreign-project>CASUAL</foreign-project>
+                <foreign-project>CASPACkager</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>
@@ -29,7 +29,7 @@
                 <id>jar</id>
             </reference>
             <reference>
-                <foreign-project>PACKAGER</foreign-project>
+                <foreign-project>CASUAL</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
                 <target>jar</target>

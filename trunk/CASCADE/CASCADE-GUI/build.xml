@@ -80,7 +80,7 @@
                 <zipfileset src="${dist.jar}" excludes="META-INF/*" />
                 <zipfileset src="../../CASUALcore/dist/CASUALcoreNoResources.jar" excludes="META-INF/*" />
                 <zipfileset src="../../CASCADE/CASPACcreator/dist/CASPACcreator.jar" excludes="META-INF/*" />
-                <zipfileset src="../../CASPACkager/dist/PACKAGER.jar" excludes="META-INF/*" />
+                <zipfileset src="../../CASPACkager/dist/CASPACkager.jar" excludes="META-INF/*" />
                 
             <manifest>
                 <attribute name="Main-Class" value="CASCADEGUI.main"/>

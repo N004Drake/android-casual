@@ -99,7 +99,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox();
+        comboBoxScriptSelector = new javax.swing.JComboBox <String>();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -519,7 +519,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox comboBoxScriptSelector;
+    private javax.swing.JComboBox <String> comboBoxScriptSelector;
     private javax.swing.JScrollPane informationScrollPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -626,13 +626,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     }
 
     private boolean checkGUIStatus(boolean expectedStatus) {
-        if (Statics.GUIIsAvailable) {
+        if (Statics.isGUIIsAvailable()) {
             if (expectedStatus == Statics.GUI.getControlStatus()) {
                 return true; //expected true = actually true;
             } else {
                 return false;
             }
-        } else if (Statics.GUIIsAvailable) {  //if gui is not available yet
+        } else if (Statics.isGUIIsAvailable()) {  //if gui is not available yet
             return false;
         }
         return true; //gui is not used for this CASUAL.
@@ -693,7 +693,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     public void setCASPAC(Caspac caspac) {
         this.setInformationScrollBorderText("Important Information");
         this.caspac = caspac;
-        Statics.GUIIsAvailable = true;
+        Statics.guiReady = true;
 
         log.level2Information(caspac.overview);
         /* if (caspac.build.usePictureForBanner) {

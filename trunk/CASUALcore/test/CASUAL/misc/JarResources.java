@@ -80,11 +80,11 @@ public final class JarResources {
                     size = ((Integer) htSizes.get(ze.getName())).intValue();
                 }
 
-                byte[] b = new byte[(int) size];
+                byte[] b = new byte[size];
                 int rb = 0;
                 int chunk;
-                while (((int) size - rb) > 0) {
-                    chunk = zis.read(b, rb, (int) size - rb);
+                while (( size - rb) > 0) {
+                    chunk = zis.read(b, rb, size - rb);
                     if (chunk == -1) {
                         break;
                     }
