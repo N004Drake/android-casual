@@ -45,7 +45,7 @@ public class ADBToolsTest {
     @Test
     public void testWaitForDevice(){
         if (!ADBTools.isConnected()) return;
-        Statics.GUIIsAvailable=true;
+        Statics.guiReady=true;
         Statics.interaction=new GUI.development.CASUALShowJFrameMessageObject();
         int x=new CASUALMessageObject("Disconnect>>>Disconnect Your Device, wait 5 seconds and then reconnect.\n").showTimeoutDialog(10, null, 1, 1, new Object[]{"ok","cancel"}, "ok");
         if (x==0){

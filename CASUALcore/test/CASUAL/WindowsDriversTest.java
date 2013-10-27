@@ -47,7 +47,7 @@ public class WindowsDriversTest {
      */
     @Test
     public void testInstallDriverBlanket() {
-        CASUAL.Statics.GUIIsAvailable = true;
+        CASUAL.Statics.guiReady = true;
         if (OSTools.isWindows()) {
             System.out.println("installDriverBlanket");
             WindowsDrivers instance = new WindowsDrivers(1);

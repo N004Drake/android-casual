@@ -149,7 +149,7 @@ public class CASUALApp {
         CASUALConnectionStatusMonitor.DeviceCheck.stop();
         ADBTools.killADBserver();
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
-        if (!CASUALTools.IDEMode && !Statics.GUIIsAvailable && Statics.CASPAC.type != 0) {
+        if (!CASUALTools.IDEMode && !Statics.isGUIIsAvailable() && Statics.CASPAC.type != 0) {
             try {
                 new Pastebin().pasteAnonymousLog();
             } catch (MalformedURLException ex) {

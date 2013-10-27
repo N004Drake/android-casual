@@ -67,7 +67,7 @@ public class CASUALConnectionStatusMonitor {
         public void run() {
 
             //setup initial state
-            if (Statics.GUIIsAvailable && (Statics.lockGUIformPrep || Statics.lockGUIunzip)) {
+            if (Statics.isGUIIsAvailable() && (Statics.lockGUIformPrep || Statics.lockGUIunzip)) {
                 Statics.GUI.enableControls(false);
                 Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                 LastState = 0;
@@ -103,7 +103,7 @@ public class CASUALConnectionStatusMonitor {
                             DeviceCheck.start();
                         }
                     } else {
-                        if (Statics.GUIIsAvailable && !Statics.GUI.getControlStatus()) {
+                        if (Statics.isGUIIsAvailable() && !Statics.GUI.getControlStatus()) {
                             Statics.GUI.enableControls(true);
                         }
                         stateSwitcher(1);

@@ -20,7 +20,9 @@ import org.junit.Test;
 public class CASUALInteractionsjUnitTest {
 
     public CASUALInteractionsjUnitTest() {
-        CASUAL.Statics.interaction=new CASUALShowJFrameMessageObject();
+        if (! java.awt.GraphicsEnvironment.isHeadless() ){
+            CASUAL.Statics.interaction=new CASUALShowJFrameMessageObject();
+        }
     }
 
     @BeforeClass
@@ -33,11 +35,14 @@ public class CASUALInteractionsjUnitTest {
 
     @Test
     public void testCASUALInteractions() {
+        if ( java.awt.GraphicsEnvironment.isHeadless()){
+            return;
+        }
         String title = "Testing Title";
         String message = "Testing Message";
         //InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
 
-        CASUAL.Statics.GUIIsAvailable = false;
+        CASUAL.Statics.guiReady = false;
         CASUAL.CASUALMessageObject ci = new CASUAL.CASUALMessageObject(title, message);
         setContinue();
         assertEquals("", ci.inputDialog());
@@ -58,26 +63,28 @@ public class CASUALInteractionsjUnitTest {
         assertEquals(0, ci.showUserCancelOption());
         setContinue();
         ci.showUserNotification();
-        CASUAL.Statics.GUIIsAvailable = true;
-        int x = new CASUAL.CASUALMessageObject("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
-        CASUAL.Statics.GUIIsAvailable = true;
-        if (x == 0) {
-            ci = new CASUAL.CASUALMessageObject("Text Input", "Press\n1");
-            assertEquals("1", ci.inputDialog());
-            ci = new CASUAL.CASUALMessageObject("Action Required", "Select\nI didn't do it!");
-            assertEquals(1, ci.showActionRequiredDialog());
-            ci = new CASUAL.CASUALMessageObject("Action Required", "Select\nI did it!");
-            assertEquals(0, ci.showActionRequiredDialog());
-            ci = new CASUAL.CASUALMessageObject("Cancel Option", "hit\nStop!");
-            assertEquals(1, ci.showUserCancelOption());
-            ci = new CASUAL.CASUALMessageObject("Cancel Option ", "hit\nContinue!");
-            assertEquals(0, ci.showUserCancelOption());
-            ci = new CASUAL.CASUALMessageObject("Error Dialog", "hit\nOK!");
-            ci.showErrorDialog();
-            ci = new CASUAL.CASUALMessageObject("Information Dialog", "hit\nOK!");
-            ci.showInformationMessage();
-            ci = new CASUAL.CASUALMessageObject("Notification Dialog", "hit OK!");
-            ci.showUserNotification();
+        CASUAL.Statics.guiReady = true;
+        if (!java.awt.GraphicsEnvironment.isHeadless()){
+            int x = new CASUAL.CASUALMessageObject("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
+            CASUAL.Statics.guiReady = true;
+            if (x == 0) {
+                ci = new CASUAL.CASUALMessageObject("Text Input", "Press\n1");
+                assertEquals("1", ci.inputDialog());
+                ci = new CASUAL.CASUALMessageObject("Action Required", "Select\nI didn't do it!");
+                assertEquals(1, ci.showActionRequiredDialog());
+                ci = new CASUAL.CASUALMessageObject("Action Required", "Select\nI did it!");
+                assertEquals(0, ci.showActionRequiredDialog());
+                ci = new CASUAL.CASUALMessageObject("Cancel Option", "hit\nStop!");
+                assertEquals(1, ci.showUserCancelOption());
+                ci = new CASUAL.CASUALMessageObject("Cancel Option ", "hit\nContinue!");
+                assertEquals(0, ci.showUserCancelOption());
+                ci = new CASUAL.CASUALMessageObject("Error Dialog", "hit\nOK!");
+                ci.showErrorDialog();
+                ci = new CASUAL.CASUALMessageObject("Information Dialog", "hit\nOK!");
+                ci.showInformationMessage();
+                ci = new CASUAL.CASUALMessageObject("Notification Dialog", "hit OK!");
+                ci.showUserNotification();
+            }
         }
     }
 

@@ -157,6 +157,9 @@ public class Zip {
      * @throws IOException
      */
     public void addFilesToExistingZip(File[] files) throws IOException {
+        if (!outputZip.exists()){
+            outputZip.createNewFile();
+        }
         // get a temp file
         File tempFile = File.createTempFile(outputZip.getName(), null);
         // delete it, otherwise you cannot rename your existing zip to it.
@@ -555,7 +558,9 @@ public class Zip {
         //if rename fails, make copy
 
         if (!renameOk) {
-            tempFile.delete();
+            if (tempFile.exists()){
+                tempFile.delete();
+            }
             tempFile.createNewFile();
             FileOutputStream out;
             FileInputStream in = new FileInputStream(outputZip);

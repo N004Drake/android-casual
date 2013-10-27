@@ -36,19 +36,12 @@ public class CASUALJUnitTest {
         Class c = jarLoader.loadClass("CASUAL.CASUALApp",true);
         Object cmain = c.newInstance();
         CASUALApp ca = (CASUALApp) cmain;
-        ca.main(new String[]{});
-        
-       Thread.sleep(7000);
+        if (java.awt.GraphicsEnvironment.isHeadless()){
+            return;
+        }
+            ca.main(new String[]{});
+            Thread.sleep(7000);
         
         System.out.println(Statics.getTempFolder());
-        
-        
-    
-        
-        
-        
-       
-        
-        
     }
 }

@@ -50,15 +50,16 @@ public class CASPACcreatorTest {
             CASPACcreator.main(args);
             String out = new File(outfile).getCanonicalPath();
             System.out.println(checking + out);
-            assertEquals(true, fo.verifyExists(out));
             System.out.println(verified + out + " exists");
 
             args = new String[]{"--force", "--output", outfile, input1, input2};
             CASPACcreator.main(args);
             System.out.println(checking + out);
             assertEquals(true, fo.verifyExists(out));
+            assert (new File(out).length()>100);
             System.out.println(verified + out + " exists");
-
+            fo.deleteFile(out);
+            fo.deleteFile(outfile);
             /* expected output
              [TEST]Verifying inputs
              [DEBUG]Deleted testtmptest

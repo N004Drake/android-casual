@@ -20,6 +20,7 @@
  */
 package CASCADEGUI;
 //Dependencies must be built or there will be errors.. Build the project first.
+import CASPACkager.PackagerMain;
 import CASUAL.crypto.AES128Handler;
 import CASUAL.FileOperations;
 import CASUAL.Log;
@@ -28,7 +29,6 @@ import CASUAL.Statics;
 import CASUAL.misc.StringOperations;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
-import Packager.PackagerMain;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
