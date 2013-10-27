@@ -15,13 +15,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **************************************************************************/
-package Packager;
+package CASPACkager;
 
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.misc.StringOperations;
-import static Packager.PackagerMain.hasProcessedFolder;
-import static Packager.PackagerMain.packagerMain;
+import static CASPACkager.PackagerMain.hasProcessedFolder;
+import static CASPACkager.PackagerMain.packagerMain;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,15 +51,15 @@ public class PackagerMain {
      */
     public PackagerMain() {
     }
-    private static boolean useOverrideArgs = false;
-    private static String[] overrideArgs = {"--fullauto", "../CASPAC/", "--type", "nightly"};
+    final private static boolean useOverrideArgs = false;
+    final private static String[] overrideArgs = {"--fullauto", "../CASPAC/", "--type", "nightly"};
     /**
      * output directory for package
      */
     protected static String userOutputDir = "";
     final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
     private static String caspacWithPath = "";
-    private static Log log = new Log();
+    final private static Log log = new Log();
     static String appendToName = "";
     static String processFolder = "";
     static boolean hasProcessedFolder = false;
@@ -124,6 +124,10 @@ public class PackagerMain {
                 outputFile = new File(outputDir + outputFileName);
             }
             if (!outputFile.exists()) {
+                File parentDir=outputFile.getParentFile();
+                if (!parentDir.exists()){
+                    parentDir.mkdirs();
+                }
                 outputFile.createNewFile();
             }
             final byte[] BUFFER = new byte[1024];
@@ -277,7 +281,7 @@ public class PackagerMain {
 
         }
 
-        if (!new File(userOutputDir).isDirectory() && !userOutputDir.equals("")) {
+        if (!new File(userOutputDir).isDirectory() && !userOutputDir.equals("") && new File(userOutputDir).exists() ) {
             log.level0Error(userOutputDir + " is a file not a directory. Please make sure to "
                     + "specify a folder not a file. The file will be named for you.");
             showMessageAndExit();
