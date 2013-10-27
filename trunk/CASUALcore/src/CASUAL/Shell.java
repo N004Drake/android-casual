@@ -416,8 +416,9 @@ public class Shell {
                 try {
                     String line;
                     ProcessBuilder p = new ProcessBuilder(cmd);
-                    p.redirectError();
+                    p.redirectErrorStream(true);
                     Process process = p.start();
+                    
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                     while ((line = STDOUT.readLine()) != null) {
