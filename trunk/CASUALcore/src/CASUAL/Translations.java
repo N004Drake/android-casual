@@ -51,7 +51,7 @@ public class Translations {
                 try {
                     retVal = line.replace(ref, translation.getString(ref));
                 } catch (java.util.MissingResourceException ex) {
-                    new Log().level3Verbose("*****MISSING TRANSLATION VALUE*****");
+                    new Log().level3Verbose("*****MISSING TRANSLATION VALUE***** for "+ref+" ");
                 }
             }
         }
