@@ -45,6 +45,11 @@ public class FileOperations {
      */
     public boolean copyFromResourceToFile(String Resource, String toFile) {
         try {
+            File destination=new File(toFile);
+            //check if destination directory exists and make it if needed. 
+            if (!destination.getParentFile().exists()){
+                destination.getParentFile().mkdirs();
+            }
             InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
             if (resourceAsStream.available() >= 1) {
                 File Destination = new File(toFile);

@@ -42,9 +42,9 @@ public class ResolveSVNConflicts {
                 Properties prop = new Properties();
                 try {
                     System.out.println("loading: "+ path + "/" + f);
-                    try (FileInputStream fis = new FileInputStream(path + "/" + f)) {
-                        prop.load(fis);
-                    }
+                    FileInputStream fis = new FileInputStream(path + "/" + f);
+                    prop.load(fis);
+                    
                     String buildStr = prop.getProperty("Application.buildnumber");
                     String svnStr = prop.getProperty("Application.revision");
                     System.out.println("Checking: build=" + buildStr + " revision=" + svnStr);

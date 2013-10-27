@@ -99,7 +99,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox<String>();
+        comboBoxScriptSelector = new javax.swing.JComboBox();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -131,12 +131,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         comboBoxScriptSelector.setEnabled(false);
         comboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         comboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
@@ -289,7 +289,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(windowBanner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                .addComponent(informationScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxScriptSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -519,7 +519,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox<String> comboBoxScriptSelector;
+    private javax.swing.JComboBox comboBoxScriptSelector;
     private javax.swing.JScrollPane informationScrollPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -737,7 +737,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         Border b = informationScrollPanel.getBorder();
         ((TitledBorder) b).setTitle(title);
         if (System.currentTimeMillis() > time + 100) {
-            revalidate();
             repaint();
             time = System.currentTimeMillis();
         }
