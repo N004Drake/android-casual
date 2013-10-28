@@ -22,12 +22,16 @@ import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author adam
  */
 public class CASUALScriptParser {
+
+    static Caspac oneShotCaspac;
 
     /**
      * If true, script will continue. False to shutdown.
@@ -84,8 +88,22 @@ public class CASUALScriptParser {
      */
     public String executeOneShotCommand(String Line) {
         Statics.setStatus("Executing");
-        String x = new CASUALLanguage(this.ScriptName, this.ScriptTempFolder).commandHandler(Line);
-        return x;
+        String retvalue = "";
+        if (Statics.CASPAC==null){
+            ScriptName = "oneShot";
+            ScriptTempFolder = Statics.getTempFolder();
+        }
+        
+        if (Line.contains(";;;")) {
+            String[] lineArray = Line.split(";;;");
+            for (String linesplit : lineArray) {
+                retvalue = retvalue + new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(linesplit)+ "\n" ;
+            }
+        } else {
+            retvalue = new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(Line);
+        }
+
+        return retvalue;
     }
 
     /*

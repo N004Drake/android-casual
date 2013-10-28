@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 public class CASUALLanguage {
 
     String ScriptName;
-    private String ScriptTempFolder;
+    final private String ScriptTempFolder;
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     final Caspac CASPAC;
     private String deviceBuildPropStorage;
@@ -48,6 +48,7 @@ public class CASUALLanguage {
     /**
      * instantiates CASUALLanguage with script
      *
+     * @param caspac the CASPAC used for the script
      * @param ScriptName name of script
      * @param ScriptTempFolder temp folder to use for script
      */
@@ -226,8 +227,7 @@ public class CASUALLanguage {
          }
          */
         if (line.startsWith("$HALT")) {
-            Statics.CASPAC.getActiveScript().scriptContinue = false;
-
+            if (Statics.CASPAC !=null)Statics.CASPAC.getActiveScript().scriptContinue = false;
             //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
             log.level4Debug("HALT RECEIVED");
@@ -436,14 +436,14 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line);
             log.level4Debug("Creating Folder: " + line);
             new File(line).mkdirs();
-            return "";
+            return line;
 // $REMOVEDIR will make a folder
         } else if (line.startsWith("$REMOVEDIR")) {
             line = line.replace("$REMOVEDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
             log.level4Debug("Creating Folder: " + line);
             new FileOperations().recursiveDelete(line);
-            return "";
+            return line;
 
 // Takes a value from a command and returns to text box        
         } else if (line.startsWith("$COMMANDNOTIFICATION")) {
@@ -531,7 +531,7 @@ public class CASUALLanguage {
             }
             if (downloadCommand.length == 3) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
-                return "";
+                return downloadCommand[1];
             } else if (downloadCommand.length == 4) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 if (!new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{downloadCommand[3]}, new String[]{downloadCommand[1]})) {

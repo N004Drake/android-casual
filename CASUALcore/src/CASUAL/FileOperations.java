@@ -95,13 +95,14 @@ public class FileOperations {
         File[] c = path.listFiles();
         if (path.exists()) {
             log.level4Debug("Removing folder and contents:" + path.toString());
-
-            for (File file : c) {
-                if (file.isDirectory()) {
-                    recursiveDelete(file);
-                    file.delete();
-                } else {
-                    file.delete();
+            if (c !=null && c.length>0){
+                for (File file : c) {
+                    if (file.isDirectory()) {
+                        recursiveDelete(file);
+                        file.delete();
+                    } else {
+                        file.delete();
+                    }
                 }
             }
             path.delete();
