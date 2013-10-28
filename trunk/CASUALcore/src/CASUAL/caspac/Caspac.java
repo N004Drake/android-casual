@@ -150,6 +150,14 @@ public final class Caspac {
         }
     }
 
+    final public static Caspac makeGenericCaspac() throws IOException{
+        File f=new File(Statics.getTempFolder()+"newfile");
+        Caspac c = new Caspac(f,Statics.getTempFolder(),2);
+        Script s=new Script("oneshot",Statics.getTempFolder());
+        
+        return c;
+    }
+    
     public void setActiveScript(Script s) {
         if (type == 1) {  //CASUAL checks for updates
             try {
