@@ -75,7 +75,7 @@
      
     <target name="-pre-compile">
          <echo>packager pre-compile grabbing new CASUAL.jar</echo>
-        <copy file="$DIST../../../CASUALcore/dist/CASUAL.jar" tofile="src/Packager/resources/CASUAL.jar"/>
+        <copy file="$DIST../../../CASUALcore/dist/CASUAL.jar" tofile="src/CASPACkager/resources/CASUAL.jar"/>
          
     </target>
     
@@ -85,7 +85,7 @@
          <jar jarfile="dist/PackagerDist.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*"/>
             <manifest>
-                <attribute name="Main-Class" value="Packager.PackagerMain"/>
+                <attribute name="Main-Class" value="CASPACkager.PackagerMain"/>
             </manifest>
             <zipfileset src="$DIST../../../CASUALcore/dist/CASUALcoreNoResources.jar" excludes="META-INF/*" /> 
             
