@@ -27,9 +27,6 @@ import java.util.ArrayList;
  */
 public class FileOperations {
 
-    Log log = new Log();
-    Shell shellCommand = new Shell();
-
     /**
      * performs file operations
      */
@@ -44,10 +41,11 @@ public class FileOperations {
      * @return true if complete
      */
     public boolean copyFromResourceToFile(String Resource, String toFile) {
+        Log log = new Log();
         try {
-            File destination=new File(toFile);
+            File destination = new File(toFile);
             //check if destination directory exists and make it if needed. 
-            if (!destination.getParentFile().exists()){
+            if (!destination.getParentFile().exists()) {
                 destination.getParentFile().mkdirs();
             }
             InputStream resourceAsStream = getClass().getResourceAsStream(Resource);
@@ -92,10 +90,11 @@ public class FileOperations {
      * @param path
      */
     public void recursiveDelete(File path) {
+        Log log = new Log();
         File[] c = path.listFiles();
         if (path.exists()) {
             log.level4Debug("Removing folder and contents:" + path.toString());
-            if (c !=null && c.length>0){
+            if (c != null && c.length > 0) {
                 for (File file : c) {
                     if (file.isDirectory()) {
                         recursiveDelete(file);
@@ -116,6 +115,7 @@ public class FileOperations {
      * @return true if permission to write
      */
     public boolean verifyWritePermissionsRecursive(String path) {
+        Log log = new Log();
         File Check = new File(path);
         File[] c = Check.listFiles();
         if (Check.exists()) {
@@ -137,6 +137,7 @@ public class FileOperations {
      * @return absolute path to folder
      */
     public String findRecursive(String PathToSearch, String FileName) {
+        Log log = new Log();
         File Check = new File(PathToSearch);
         File[] c = Check.listFiles();
         String s = "";
@@ -157,8 +158,6 @@ public class FileOperations {
         }
         return s;
     }
-
-   
 
     /**
      * verifies file/folder exists returns a boolean value if the file exists
@@ -185,6 +184,7 @@ public class FileOperations {
      * @return true if folder was created
      */
     public boolean makeFolder(String Folder) {
+        Log log = new Log();
         if (Folder == null) {
             return false;
         }
@@ -236,8 +236,9 @@ public class FileOperations {
      * @throws IOException
      */
     public void writeToFile(String Text, String File) throws IOException {
+        Log log = new Log();
         BufferedWriter bw;
-        FileWriter fw=new FileWriter(File, true);
+        FileWriter fw = new FileWriter(File, true);
         bw = new BufferedWriter(fw);
         bw.write(Text);
         bw.flush();
@@ -253,6 +254,7 @@ public class FileOperations {
      * @throws IOException
      */
     public void overwriteFile(String Text, String File) throws IOException {
+        Log log = new Log();
         BufferedWriter bw;
         bw = new BufferedWriter(new FileWriter(File, false));
         bw.write(Text);
@@ -261,6 +263,7 @@ public class FileOperations {
     }
 
     private boolean writeInputStreamToFile(InputStream is, File file) {
+        Log log = new Log();
         log.level4Debug("Attempting to write " + file.getPath());
         try {
             BufferedOutputStream out;
@@ -299,6 +302,7 @@ public class FileOperations {
      * @return true if file was deleted
      */
     public Boolean deleteFile(String FileName) {
+        Log log = new Log();
         Boolean Deleted;
         File file = new File(FileName);
         if (file.exists()) {
@@ -343,6 +347,7 @@ public class FileOperations {
      * @throws IOException
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
+        Log log = new Log();
 
         log.level4Debug("Copying " + sourceFile.getPath() + " to " + destFile.getPath());
         if (!destFile.exists()) {
@@ -364,7 +369,6 @@ public class FileOperations {
 
         }
 
-
     }
 
     /**
@@ -373,6 +377,7 @@ public class FileOperations {
      * @return current folder
      */
     public String currentDir() {
+        Log log = new Log();
         String CurrentDir = new File(".").getAbsolutePath();
         log.level4Debug("Detected current folder: " + CurrentDir);
         if (CurrentDir.endsWith(".")) {
@@ -408,6 +413,7 @@ public class FileOperations {
      * @return true if file exists
      */
     public boolean verifyFileExists(String Folder) {
+        Log log = new Log();
         File FileFolder = new File(Folder);
         boolean Result = FileFolder.length() >= 1;
         log.level4Debug("Verifying " + Folder + " .  Result=" + Result);
@@ -422,6 +428,7 @@ public class FileOperations {
      * @return true if executable bit was set
      */
     public boolean setExecutableBit(String Executable) {
+        Log log = new Log();
         File Exe = new File(Executable);
         boolean Result = Exe.setExecutable(true);
         log.level4Debug("Setting executable " + Exe + ". Result=" + Result);
@@ -435,11 +442,7 @@ public class FileOperations {
      * @return true if resource exists
      */
     public boolean verifyResource(String res) {
-        if (getClass().getResource(res) == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return getClass().getResource(res) != null;
     }
 
     /**
@@ -449,6 +452,7 @@ public class FileOperations {
      * @return string contents of resource
      */
     public String readTextFromResource(String Resource) {
+        Log log = new Log();
         InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(Resource);
         StringBuilder text = new StringBuilder();
         try {
@@ -498,6 +502,7 @@ public class FileOperations {
      * @return string representation of file
      */
     public String readFile(String FileOnDisk) {
+        Log log = new Log();
         String EntireFile = "";
         try {
             String Line;
@@ -567,16 +572,17 @@ public class FileOperations {
      * @throws IOException
      */
     public boolean moveFile(File sourceFile, File destFile) throws IOException {
+        Log log = new Log();
         FileOperations fO = new FileOperations();
-        if ( !destFile.getParentFile().exists()){
-            File folder=destFile.getParentFile();
+        if (!destFile.getParentFile().exists()) {
+            File folder = destFile.getParentFile();
             folder.mkdirs();
         }
-        if ( destFile.exists()){
+        if (destFile.exists()) {
             log.level3Verbose("Cannot move file.  Destination file is in the way");
             return false;
         }
-        log.level4Debug("moving "+sourceFile.getAbsolutePath()+" to "+destFile.getAbsolutePath());
+        log.level4Debug("moving " + sourceFile.getAbsolutePath() + " to " + destFile.getAbsolutePath());
         return sourceFile.renameTo(destFile);
     }
 
@@ -589,6 +595,7 @@ public class FileOperations {
      * @throws IOException
      */
     public boolean moveFile(String sourceFile, String destFile) throws IOException {
+        Log log = new Log();
         FileOperations fo = new FileOperations();
         if (!fo.verifyExists(sourceFile)) {
             log.level4Debug("[moveFile()] Source doesn't exist");

@@ -22,10 +22,11 @@ import org.junit.Test;
  * @author adam
  */
 public class CaspacTest {
-
+    Caspac test;
     public CaspacTest() {
         try {
-
+            test=new Caspac(new File("../../CASPAC/QualityControl/echoTest.zip"),Statics.getTempFolder(),0);
+            test.loadFirstScriptFromCASPAC();
             this.instance = new Caspac(new File("../../CASPAC/testpak.zip"), Statics.getTempFolder(), 0);
             System.out.println(instance.CASPAC.getCanonicalPath());
         } catch (IOException ex) {
@@ -92,16 +93,6 @@ public class CaspacTest {
         assert (result.name.equals(instance.scripts.get(instance.scripts.size() - 1).name));
     }
 
-    @Test
-    public void testWrite() throws Exception {
-        System.out.println("write");
-        //instance.CASPAC=new File("./cool");
-
-        //TODO: how do we change the output folder?  the file is final.
-
-        //instance.write();
-
-    }
 
     @Test
     public void testSetBuild() {
@@ -110,5 +101,44 @@ public class CaspacTest {
         p.setProperty("Developer.DonateLink", "OMFG");
         instance.setBuild(p);
         assert (instance.build.donateLink.equals("OMFG"));
+    }
+    
+    @Test
+    public void testEchoTestVerification() throws Exception {
+        System.out.println("write");
+        assert test.type==0;
+        assert test.logo==null;
+        assert test.CASPACsrc==null;
+        assert test.overview.equals("test");
+        assert test.build.developerName.equals("test");
+        assert test.build.donateLink.equals("test");
+        assert test.build.windowTitle.equals("test");
+        assert test.build.bannerPic.equals("");
+        assert test.build.bannerText.equals("test");
+        assert test.build.executeButtonText.equals("test");
+        assert test.build.audioEnabled==true;
+        assert test.build.usePictureForBanner==false;
+        assert test.build.alwaysEnableControls==false;
+        assert test.TempFolder.equals(Statics.getTempFolder());
+        assert test.build.developerDonateButtonText.equals("test");
+        assert test.build.developerDonateButtonText.equals("test");
+        assert test.CASPAC.getCanonicalFile().equals(new File("../../CASPAC/QualityControl/echoTest.zip").getCanonicalFile());
+        assert test.scripts.get(0).extractionMethod==0;
+        assert test.scripts.get(0).name.equals("echoTest");
+        String x=test.scripts.get(0).tempDir;
+        assert test.scripts.get(0).tempDir.contains(Statics.getTempFolder()+test.scripts.get(0).name);
+        assert test.scripts.get(0).scriptContents.equals("$ECHO test");
+        assert test.scripts.get(0).individualFiles.size() ==0;
+        assert test.scripts.get(0).metaData.minSVNversion.equals("0");
+        assert test.scripts.get(0).metaData.scriptRevision.equals("0");
+        assert test.scripts.get(0).metaData.uniqueIdentifier.equals("test");
+        assert test.scripts.get(0).metaData.supportURL.equals("test");
+        assert test.scripts.get(0).metaData.updateMessage.equals("test");
+        assert test.scripts.get(0).metaData.killSwitchMessage.equals("test");
+        assert test.scripts.get(0).metaData.md5s.contains("c9aa2a1d8bce6a47bc7599d62c475658  echoTest.scr");
+        assert test.scripts.get(0).metaData.md5s.contains("58eba1c6a6b700f8b42b143f82942176  echoTest.txt");
+        assert test.scripts.get(0).metaData.md5s.contains("76cdb2bad9582d23c1f6f4d868218d6c  echoTest.zip");
+        assert test.scripts.get(0).discription.equals("Describe your script here");
+        assert test.scripts.get(0).scriptContinue==false;
     }
 }
