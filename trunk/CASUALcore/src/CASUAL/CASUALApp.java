@@ -146,7 +146,8 @@ public class CASUALApp {
         if (Statics.CASPAC != null && Statics.CASPAC.getActiveScript() != null) {
             Statics.CASPAC.getActiveScript().scriptContinue = false;
         }
-        CASUALConnectionStatusMonitor.DeviceCheck.stop();
+        ADBTools.adbMonitor(false);
+                
         ADBTools.killADBserver();
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
         if (!CASUALTools.IDEMode && !Statics.isGUIIsAvailable() && Statics.CASPAC.type != 0) {
