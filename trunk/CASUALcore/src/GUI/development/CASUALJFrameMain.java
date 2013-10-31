@@ -71,10 +71,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         Statics.ProgressDoc = Statics.ProgressPane.getStyledDocument();
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
-
-
         Statics.lockGUIformPrep = false;
-
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -99,7 +96,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox <String>();
+        comboBoxScriptSelector = new javax.swing.JComboBox();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -312,10 +309,9 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         log.level4Debug("StartButtonActionPerformed() Script Activated");
         log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
 
-        CASUALConnectionStatusMonitor.DeviceCheck.stop();
+        ADBTools.adbMonitor(false);
         enableControls(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
-
 
         //execute
         if (Statics.CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
@@ -334,6 +330,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     @Override
     public void setProgressBar(int value) {
         progressBar.setValue(value);
+        this.repaint();
     }
 
     /**
@@ -363,7 +360,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                CASUALConnectionStatusMonitor.DeviceCheck.stop();
+                ADBTools.adbMonitor(false);
                 this.enableControls(false);
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
@@ -383,7 +380,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
                 ComboBoxValue = getFilenameWithoutExtension(FileName);
                 comboBoxScriptSelector.setSelectedItem(ComboBoxValue);
                 comboBoxScriptSelector.setEditable(false);
-                CASUALConnectionStatusMonitor.DeviceCheck.start();
+                ADBTools.adbMonitor(true);
             } catch (IOException ex) {
                 log.errorHandler(ex);
             }
@@ -404,13 +401,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         this.setInformationScrollBorderText("Donate");
         int DResult = new CASUALMessageObject("Donate to the developers", "This application was developed by " + caspac.build.developerName + " using CASUAL framework.\n"
                 + "Donations give developers a tangeble reason to continue quality software development\n").showTimeoutDialog(
-                60, //timeout
-                null, //parentComponent
-                //DisplayTitle
-                javax.swing.JOptionPane.OK_OPTION, // Options buttons
-                javax.swing.JOptionPane.INFORMATION_MESSAGE, //Icon
-                new String[]{"Donate To CASUAL", "Donate To " + caspac.build.developerName}, // option buttons
-                "No"); //Default{
+                        60, //timeout
+                        null, //parentComponent
+                        //DisplayTitle
+                        javax.swing.JOptionPane.OK_OPTION, // Options buttons
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE, //Icon
+                        new String[]{"Donate To CASUAL", "Donate To " + caspac.build.developerName}, // option buttons
+                        "No"); //Default{
         if (DResult == 0) {
             launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
         } else if (DResult == 1) {
@@ -439,7 +436,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     }
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
-        CASUALConnectionStatusMonitor.DeviceCheck.stop();
+        ADBTools.adbMonitor(false);
         this.enableControls(false);
         Statics.lockGUIunzip = true;
         String selectedScript = comboBoxScriptSelector.getSelectedItem().toString();
@@ -448,9 +445,8 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         log.level2Information(caspac.getActiveScript().discription);
         caspac.waitForUnzipComplete();
 
-
         Statics.lockGUIunzip = false;
-        CASUALConnectionStatusMonitor.DeviceCheck.start();
+        ADBTools.adbMonitor(true);
 
 
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
@@ -461,7 +457,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        CASUALConnectionStatusMonitor.DeviceCheck.stop();
+        ADBTools.adbMonitor(false);
         ADBTools.killADBserver();
     }//GEN-LAST:event_formWindowClosing
     boolean buttonEnableStage = false;
@@ -484,8 +480,6 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
             log.level4Debug("Control system override clicked");
             startButton.setText("Click again to enable all controls");
             buttonEnableStage = true;
-
-
 
         }
     }//GEN-LAST:event_StatusLabelMouseClicked
@@ -519,7 +513,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox <String> comboBoxScriptSelector;
+    private javax.swing.JComboBox comboBoxScriptSelector;
     private javax.swing.JScrollPane informationScrollPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
