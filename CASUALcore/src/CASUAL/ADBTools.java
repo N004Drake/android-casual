@@ -196,8 +196,12 @@ public class ADBTools {
     public static boolean isConnected(){
         return new Shell().timeoutShellCommand(new String[]{ADBTools.getADBCommand(),"devices"},4000).contains("   device");
     }
-    public void adbMonitor(boolean start){
+    public static void adbMonitor(boolean start){
         if (start){
+            if (Statics.CASPAC!=null|| Statics.GUI!=null){
+                Statics.CASPAC.waitForUnzipComplete();
+            }
+
             CASUALConnectionStatusMonitor.DeviceCheck.start();
         } else {
             CASUALConnectionStatusMonitor.DeviceCheck.stop();    

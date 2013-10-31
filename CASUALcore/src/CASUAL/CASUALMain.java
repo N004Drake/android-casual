@@ -62,8 +62,6 @@ public final class CASUALMain {
 
         }
 
-
-
     }
 
     /**
@@ -112,14 +110,13 @@ public final class CASUALMain {
                 adb.join(); //wait for adb deployment
 
                 //start the device monitor
-                CASUALConnectionStatusMonitor.DeviceCheck.start();
+                ADBTools.adbMonitor(true);
 
                 //wait for complete;
-
                 if (execute) {
                     doConsoleStartup(args);
                 } else {
-                    CASUALConnectionStatusMonitor.DeviceCheck.stop();
+                    ADBTools.adbMonitor(false);
                     Statics.CASPAC.waitForUnzipComplete();
 
                     new CASUALScriptParser().executeFirstScriptInCASPAC(Statics.CASPAC);
@@ -144,7 +141,7 @@ public final class CASUALMain {
             Statics.setStatus("parsing");
             if (args[i].contains("--execute") || args[i].contains("-e")) {
                 i++;
-                CASUALConnectionStatusMonitor.DeviceCheck.stop();
+                ADBTools.adbMonitor(false);
                 CASUALScriptParser csp = new CASUALScriptParser();
                 csp.executeOneShotCommand(args[i]);
                 Statics.setStatus("Complete");
@@ -209,7 +206,7 @@ public final class CASUALMain {
             startGUI.setName("CASUAL GUI");
             Statics.setStatus("launching GUI");
             startGUI.start();
-            CASUALConnectionStatusMonitor.DeviceCheck.start();
+            ADBTools.adbMonitor(true);
         }
         return startGUI;
     }

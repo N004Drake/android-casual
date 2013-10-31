@@ -89,15 +89,15 @@ public class CASUALScriptParser {
     public String executeOneShotCommand(String Line) {
         Statics.setStatus("Executing");
         String retvalue = "";
-        if (Statics.CASPAC==null){
+        if (Statics.CASPAC == null) {
             ScriptName = "oneShot";
             ScriptTempFolder = Statics.getTempFolder();
         }
-        
+
         if (Line.contains(";;;")) {
             String[] lineArray = Line.split(";;;");
             for (String linesplit : lineArray) {
-                retvalue = retvalue + new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(linesplit)+ "\n" ;
+                retvalue = retvalue + new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(linesplit) + "\n";
             }
         } else {
             retvalue = new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(Line);
@@ -132,10 +132,10 @@ public class CASUALScriptParser {
 
                 if (Statics.isGUIIsAvailable()) {
                     //return to normal.
-                    CASUALConnectionStatusMonitor.DeviceCheck.start();
+                    ADBTools.adbMonitor(true);
                 } else {
                     //just in case something started the device monitor
-                    CASUALConnectionStatusMonitor.DeviceCheck.stop();
+                    ADBTools.adbMonitor(false);
                 }
                 try {
                     scriptInput.close();

@@ -125,16 +125,13 @@ public final class Caspac {
         this.CASPAC = new File(tempDir + jar.getFile().toString());
         this.TempFolder = tempDir;
         this.type = type;
-        CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
-        FileOperations fileOps = new FileOperations();
-        int Count = 0;
         ArrayList<String> list = new ArrayList<String>();
         if (CASUALTools.IDEMode) {
             updateMD5s();
             //Statics.scriptLocations = new String[]{""};
             setupIDEModeScriptForCASUAL(CASUALApp.defaultPackage);
         } else {
-
+            log.level4Debug("Opening self as stream for scan");
             ZipInputStream zip = new ZipInputStream(jar.openStream());
             ZipEntry ZEntry;
             log.level4Debug("Picking Jar File:" + jar.getFile() + " ..scanning.");
@@ -619,7 +616,7 @@ public final class Caspac {
             this.getScriptByFilename(entry).scriptZipFile = entry;
         }
         log.level4Debug("getting MD5 for:" + entry);
-        new MD5sum().getLinuxMD5Sum(StringOperations.convertStringToStream(fo.readTextFromResource(entry)), entry);
+        new MD5sum().getLinuxMD5Sum(Caspac.class.getClassLoader().getResourceAsStream(entry),entry);
     }
 
     private void setupIDEModeScriptForCASUAL(String defaultPackage) {
@@ -791,6 +788,7 @@ public final class Caspac {
             log.level4Debug("Loading build information from inputstream");
             buildProp.load(prop);
             loadPropsToVariables();
+            log.level4Debug(windowTitle +" - "+bannerText+" - "+developerName);
         }
 
         /**

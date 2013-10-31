@@ -186,8 +186,16 @@ public class Unzip {
             BufferedInputStream BufferedInputStream = new BufferedInputStream(ZipInput);
             BufferedOutputStream Destination;
             Destination = new BufferedOutputStream(FileOut);
+            int numberOfCycles=(int)(ZipEntryInstance.getSize()/BUFFER);
+            boolean updateGUI=false;
+            if (Statics.GUI!=null && Statics.guiReady){
+                updateGUI=true;
+                Statics.GUI.setProgressBarMax(numberOfCycles);
+            }
+            int currentCycle=0;
             while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
                 Destination.write(data, 0, currentByte);
+                if (updateGUI) Statics.GUI.setProgressBar(++currentCycle);
             }
             Destination.flush();
             Destination.close();
