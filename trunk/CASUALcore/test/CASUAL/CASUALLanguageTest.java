@@ -237,12 +237,10 @@ public class CASUALLanguageTest {
         System.out.println("$Download");
         String expResult = Statics.getTempFolder();
         String result = csp.executeOneShotCommand("$DOWNLOAD https://android-casual.googlecode.com/svn/trunk/README , $ZIPFILEreadme, CASUAL SVN readme file");
-        try {
-            String sha256sum=new CASUAL.crypto.SHA256sum(new File(result)).getLinuxSum(new File(result));
-            assertEquals (sha256sum, "b2db2359cb7ea18bec6189b26e06775abf253f36ffb00402a9cf4faa1a2b6982  readme");
-        } catch (IOException ex) {
-            Logger.getLogger(CASUALLanguageTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        String sha256sum=CASUAL.crypto.SHA256sum.getLinuxSum(new File(result));
+        assertEquals (sha256sum, "b2db2359cb7ea18bec6189b26e06775abf253f36ffb00402a9cf4faa1a2b6982  readme");
+
         new File(result).delete();
         
         

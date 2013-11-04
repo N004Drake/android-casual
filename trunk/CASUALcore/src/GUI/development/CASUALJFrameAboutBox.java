@@ -16,7 +16,6 @@
  */
 package GUI.development;
 
-import CASUAL.CASUALApp;
 import CASUAL.Log;
 import CASUAL.Statics;
 import java.io.File;
@@ -32,7 +31,6 @@ public class CASUALJFrameAboutBox extends javax.swing.JFrame {
      */
     public CASUALJFrameAboutBox() {
         initComponents();
-        String CASUALFileName = new File(new CASUALApp().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
         String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
 

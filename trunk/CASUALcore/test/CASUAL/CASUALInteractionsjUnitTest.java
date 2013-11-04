@@ -22,6 +22,7 @@ public class CASUALInteractionsjUnitTest {
     public CASUALInteractionsjUnitTest() {
         if (! java.awt.GraphicsEnvironment.isHeadless() ){
             CASUAL.Statics.interaction=new CASUALShowJFrameMessageObject();
+            CASUAL.Statics.GUI=new GUI.development.CASUALJFrameMain();
         }
     }
 

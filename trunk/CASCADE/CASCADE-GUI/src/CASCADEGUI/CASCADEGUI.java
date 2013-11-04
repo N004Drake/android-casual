@@ -293,11 +293,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
         caspacOutputFile.setText(bundle.getString("CASCADEGUI.caspacOutputFile.text")); // NOI18N
         caspacOutputFile.setName("caspacOutputFile"); // NOI18N
-        caspacOutputFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                caspacOutputFileActionPerformed(evt);
-            }
-        });
 
         makeCASPAC.setText(bundle.getString("CASCADEGUI.makeCASPAC.text")); // NOI18N
         makeCASPAC.setEnabled(false);
@@ -1158,7 +1153,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addComponent(workArea, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
+                .addComponent(workArea)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputFIle, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1586,10 +1581,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     private void bannerPicCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_bannerPicCaretUpdate
         disableCasual();
     }//GEN-LAST:event_bannerPicCaretUpdate
-
-    private void caspacOutputFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caspacOutputFileActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_caspacOutputFileActionPerformed
 
     private void saveCreateRunCASUALActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveCreateRunCASUALActionPerformed
         this.saveCASPAC();

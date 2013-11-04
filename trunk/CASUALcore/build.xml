@@ -135,7 +135,7 @@
         <jar jarfile="dist/CASUAL-Revision${svna.version}b.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*"/>
             <manifest>
-                <attribute name="Main-Class" value="CASUAL.CASUALApp"/>
+                <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
             <fileset dir="src/" includes="SCRIPTS/-Overview.txt" />
             <fileset dir="src/" includes="SCRIPTS/-build.properties" />

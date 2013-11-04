@@ -28,7 +28,7 @@ public class CASPACjUnitTest {
     @Test
     public void testCASPACOperations() {
         if (!ADBTools.isConnected()) return;
-        CASUALApp.shutdown(0);
+        CASUAL.CASUALMain.shutdown(0);
         CASUAL.Statics.interaction=new GUI.development.CASUALShowJFrameMessageObject();
         CASUAL.Statics.dumbTerminalGUI=true;
         String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
@@ -36,7 +36,7 @@ public class CASPACjUnitTest {
         String[] goodValues = new String[]{"echo [PASS]"};
         CASUALTest ct=new CASUALTest(casualParams, goodValues, badValues);
         assertEquals(true, ct.checkTestPoints());
-        CASUALApp.shutdown(0);
+        CASUAL.CASUALMain.shutdown(0);
         try {
             CASUAL.CASUALTools.setMessageAPI();
         } catch (ClassNotFoundException ex) {

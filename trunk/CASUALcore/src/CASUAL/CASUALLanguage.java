@@ -421,6 +421,11 @@ public class CASUALLanguage {
                 for (int i = 0; i < files.length; i++) {
                     retval = retval + files[i].getAbsolutePath() + "\n";
                     try {
+                        //TODO: create a method which will parse $ON action/reaction events
+                        //or parse $ON events from CASUALScriptParser
+                        //this method can create a problem if the device is in recovery mode.
+                        //the problem could be solved by creating a new method which will
+                        //parse $ON action/reaction events which is the purpose for this.. 
                         commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
                     } catch (IOException ex) {
                         log.errorHandler(ex);
@@ -522,13 +527,17 @@ public class CASUALLanguage {
             line = line.replace("$DOWNLOAD", "");
             line = StringOperations.removeLeadingSpaces(line);
             String[] downloadCommand = line.split(",");
+            for (int i=0;i<downloadCommand.length; i++){
+                downloadCommand[i]=downloadCommand[i].trim();
+            }
             FileOperations fo = new FileOperations();
             log.level4Debug("Downloading " + downloadCommand[2]);
             log.level4Debug("From " + downloadCommand[0]);
             log.level4Debug("to " + downloadCommand[1]);
-            if (!fo.verifyExists(Statics.getTempFolder() + "download" + Statics.Slash)) {
-                fo.makeFolder(Statics.getTempFolder() + "download" + Statics.Slash);
+            if (!new File(downloadCommand[1]).getParentFile().exists()){
+                new File(downloadCommand[1]).getParentFile().mkdirs();
             }
+            
             if (downloadCommand.length == 3) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 return downloadCommand[1];

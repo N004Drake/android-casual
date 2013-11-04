@@ -18,9 +18,9 @@ package CASUAL.caspac;
 
 import CASUAL.AudioHandler;
 import CASUAL.misc.BooleanOperations;
-import CASUAL.CASUALApp;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
+import CASUAL.Locks;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.misc.StringOperations;
@@ -58,6 +58,8 @@ import javax.imageio.ImageIO;
  * @author adam
  */
 public final class Caspac {
+
+
     /*TODO: update this.build.bannerPic=tempbannerpic;
      * at the end of every load operation involving loading
      * build.properties files.  This is important because
@@ -81,7 +83,7 @@ public final class Caspac {
     public ArrayList<Script> scripts = new ArrayList<Script>();
     public final String TempFolder;
     public Log log = new Log();
-    private ArrayList<Thread> unzipThreads = new ArrayList<Thread>();
+    private ArrayList<CASUAL.misc.MandatoryThread> unzipThreads = new ArrayList<CASUAL.misc.MandatoryThread>();
     //For CASUAL mode
     private Script activeScript;
     public boolean caspacShouldBeDeletedAfterExtraction = false;
@@ -125,11 +127,10 @@ public final class Caspac {
         this.CASPAC = new File(tempDir + jar.getFile().toString());
         this.TempFolder = tempDir;
         this.type = type;
-        ArrayList<String> list = new ArrayList<String>();
         if (CASUALTools.IDEMode) {
             updateMD5s();
             //Statics.scriptLocations = new String[]{""};
-            setupIDEModeScriptForCASUAL(CASUALApp.defaultPackage);
+            setupIDEModeScriptForCASUAL(CASUAL.CASUALMain.defaultPackage);
         } else {
             log.level4Debug("Opening self as stream for scan");
             ZipInputStream zip = new ZipInputStream(jar.openStream());
@@ -155,6 +156,7 @@ public final class Caspac {
     }
     
     public void setActiveScript(Script s) {
+        Locks.caspacScriptPrepLock=true;
         if (type == 1) {  //CASUAL checks for updates
             try {
                 log.level3Verbose("Setting script " + s.name + " as active and loading");
@@ -293,8 +295,8 @@ public final class Caspac {
             //no need to update again because it is being updated
             replaceScriptByName(activeScript);
 
-            unzipThreads = new ArrayList<Thread>();
-            Thread t = new Thread(activeScript.getExtractionRunnable());
+            unzipThreads = new ArrayList<CASUAL.misc.MandatoryThread>();
+            CASUAL.misc.MandatoryThread t = new CASUAL.misc.MandatoryThread(activeScript.getExtractionRunnable());
             t.setName("Active Script Preparation");
             this.unzipThreads.add(t);
             performUnzipOnQueue();
@@ -349,22 +351,16 @@ public final class Caspac {
         } else {
             action.run();
         }
-
-
     }
 
     public void waitForUnzipComplete() {
         boolean[] isUnzipping = new boolean[unzipThreads.size()];
-        Arrays.fill(isUnzipping, Boolean.TRUE);
         log.level4Debug("Currently waiting for Threads:" + Integer.toString(isUnzipping.length));
-        while (BooleanOperations.containsTrue(isUnzipping)) {
-            CASUALTools.sleepForOneTenthOfASecond();
-            for (int i = 0; i < isUnzipping.length; i++) {
-                if (!unzipThreads.get(i).isAlive()) {
-                    isUnzipping[i] = false;
-                }
-            }
+        for (CASUAL.misc.MandatoryThread t : unzipThreads){
+            t.waitFor();
+            log.level4Debug("Unzip completed!");
         }
+
         if (this.caspacShouldBeDeletedAfterExtraction) {
             this.CASPAC.delete();
         }
@@ -545,7 +541,7 @@ public final class Caspac {
             Script script = getScriptInstanceByFilename(filename.toString());
             script.scriptZipFile = entry;
             script.zipfile = pack;
-            Thread t = new Thread(script.getExtractionRunnable());
+            CASUAL.misc.MandatoryThread t = new CASUAL.misc.MandatoryThread(script.getExtractionRunnable());
             t.setName("zip File Preparation " + unzipThreads.size());
             this.unzipThreads.add(t);
 
@@ -698,13 +694,16 @@ public final class Caspac {
         update = new Thread(CASUALTools.updateMD5s);
         update.setName("Updating MD5s");
         update.start(); //ugly  move this to somewhere else
-        log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
+        log.level3Verbose("IDE Mode: Using " + CASUAL.CASUALMain.defaultPackage + ".scr ONLY!");
     }
 
     /**
      * checks for updates.
      *
+     * @param s Script to be checked
      * @return true if script can continue. false if halt is recommended.
+     * @throws java.net.MalformedURLException
+     * @throws java.net.URISyntaxException
      */
     public Script updateIfRequired(Script s) throws MalformedURLException, URISyntaxException, IOException {
         return s;
