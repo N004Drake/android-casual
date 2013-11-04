@@ -16,7 +16,6 @@
  */
 package CASUAL.network;
 
-import CASUAL.CASUALApp;
 import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
@@ -121,7 +120,7 @@ public class CASUALUpdates {
                 output.close();
 
             }
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             Log.level4Debug("Error Downloading " + ex.getMessage());
             return false;
         }
@@ -263,7 +262,7 @@ public class CASUALUpdates {
             if (expectedMD5.length() >= 31 && !new MD5sum().compareFileToMD5(new File(downloadedFile), expectedMD5)) {
                 //show message and exit
                 new CASUALMessageObject("@interactionBadDownload").showErrorDialog();
-                CASUALApp.shutdown(0);
+                CASUAL.CASUALMain.shutdown(0);
             }
             counter++;
             filenumber = "-" + Integer.toString(counter);

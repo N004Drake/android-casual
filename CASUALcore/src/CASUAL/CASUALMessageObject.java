@@ -95,7 +95,7 @@ public class CASUALMessageObject {
      * @param timeOutMessageType jOptionPane.MESSAGETYPE
      * @param options array of options
      * @param initialValue value to choose if none other are chosen
-     * @return
+     * @return value chosen 0 for first, 1 for second...
      */
     public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, int optionType, int timeOutMessageType, Object[] options, final Object initialValue) {
         this.timeoutOptionType = optionType;

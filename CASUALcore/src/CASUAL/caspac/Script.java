@@ -19,6 +19,7 @@ package CASUAL.caspac;
 import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
+import CASUAL.Locks;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.misc.StringOperations;
@@ -224,6 +225,7 @@ public class Script {
                     }
                 }
             };
+            Locks.caspacScriptPrepLock=false;
             return r;
         }
         if (this.extractionMethod == CASUAL) {  //This is a CASUAL
@@ -263,6 +265,7 @@ public class Script {
                      */
                 }
             };
+            Locks.caspacScriptPrepLock=false;
             return r;
         }
         if (this.extractionMethod == FILE) { //This is running on the filesystem
@@ -298,6 +301,7 @@ public class Script {
                     }
                 }
             };
+            Locks.caspacScriptPrepLock=false;
             return r;
         }
 
@@ -307,7 +311,7 @@ public class Script {
             }
         };
 
-
+        Locks.caspacScriptPrepLock=false;
         return r;
 
     }

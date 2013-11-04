@@ -293,7 +293,7 @@ public class HeimdallInstall {
         if (OSTools.isWindows()) {
             new CASUALMessageObject("@interactionwindowsRunAsMessage" + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString()).showErrorDialog();
         }
-        CASUALApp.shutdown(0);
+        CASUALMain.shutdown(0);
     }
 
     void runWinHeimdallInstallationProcedure() {

@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-import CASUAL.CASUALApp;
 import CASUAL.Log;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -140,7 +139,7 @@ public class Unzip {
      */
     public static void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
         InputStream zStream;
-        zStream = new CASUALApp().getClass().getResourceAsStream(zipResource);
+        zStream = new CASUALMain().getClass().getResourceAsStream(zipResource);
         unZipInputStream(zStream, outputFolder);
         zStream.close();
     }
@@ -152,7 +151,7 @@ public class Unzip {
      * iterates through all of the ZipEntries, writing each one of them to a
      * file with the name provided by the ZipEntry.
      *
-     * @param ZStream input stream to unzip
+     * @param zStream input stream to unzip
      * @param outputFolder output folder to unzip to
      * @throws FileNotFoundException
      * @throws IOException
@@ -223,7 +222,7 @@ public class Unzip {
      *
      * @param entry entry file to deploy
      * @param outputFolder folder to be deployed to
-     * @return
+     * @return location of entry deployed
      * @throws ZipException
      * @throws IOException
      */

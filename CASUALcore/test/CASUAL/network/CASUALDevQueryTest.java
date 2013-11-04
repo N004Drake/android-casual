@@ -33,6 +33,7 @@ public class CASUALDevQueryTest {
 
 
     @Test
+    @SuppressWarnings({"rawtypes"})
     public void testGetData() throws Exception {
         System.out.println("getData");
         CASUALDevQuery instance = new CASUALDevQuery(BUILDPROP);

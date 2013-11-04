@@ -4,7 +4,8 @@
  */
 package CASUAL.misc;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+
 
 /**
  * http://www.javaworld.com/javaworld/javatips/javatip70/MultiClassLoader.java A
@@ -24,26 +25,34 @@ import java.util.Hashtable;
 public abstract class MultiClassLoader extends ClassLoader {
 
 //---------- Fields --------------------------------------
-    private Hashtable<String, Class> classes = new Hashtable<String, Class>();
+    @SuppressWarnings({"unchecked","rawtypes"})
+    private final HashMap<String, Class> classes;
     private char classNameReplacementChar;
     protected boolean monitorOn = false;
     protected boolean sourceMonitorOn = true;
 
 //---------- Initialization ------------------------------
+    @SuppressWarnings({"unchecked","rawtypes"})
     public MultiClassLoader() {
+        this.classes = new HashMap<String, Class>();
     }
 //---------- Superclass Overrides ------------------------
 
     /**
      * This is a simple version for external clients since they will always want
      * the class resolved before it is returned to them.
+     * @param className
+     * @return 
+     * @throws java.lang.ClassNotFoundException
      */
     @Override
+    @SuppressWarnings({"unchecked","rawtypes"})
     public Class loadClass(String className) throws ClassNotFoundException {
         return (loadClass(className, true));
     }
 //---------- Abstract Implementation ---------------------
     @Override
+    @SuppressWarnings({"unchecked","rawtypes"})
     public synchronized Class loadClass(String className,
             boolean resolveIt) throws ClassNotFoundException {
 
@@ -95,8 +104,9 @@ public abstract class MultiClassLoader extends ClassLoader {
     /**
      * This optional call allows a class name such as "COM.test.Hello" to be
      * changed to "COM_test_Hello", which is useful for storing classes from
-     * different packages in the same retrival directory. In the above example
+     * different packages in the same retrieval directory. In the above example
      * the char would be '_'.
+     * @param replacement
      */
     public void setClassNameReplacementChar(char replacement) {
         classNameReplacementChar = replacement;

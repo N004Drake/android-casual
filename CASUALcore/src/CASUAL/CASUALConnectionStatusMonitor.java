@@ -44,6 +44,7 @@ public class CASUALConnectionStatusMonitor {
     /**
      * Starts and stops the ADB timer reference with
      * Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
+     * @param mode  sets the monitoring mode
      */
     public static void setMode(String mode) {
         mode = "mode";
@@ -67,7 +68,7 @@ public class CASUALConnectionStatusMonitor {
         public void run() {
 
             //setup initial state
-            if (Statics.isGUIIsAvailable() && (Statics.lockGUIformPrep || Statics.lockGUIunzip)) {
+            if (Statics.isGUIIsAvailable() && (Locks.lockGUIformPrep || Locks.lockGUIunzip)) {
                 Statics.GUI.enableControls(false);
                 Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
                 LastState = 0;

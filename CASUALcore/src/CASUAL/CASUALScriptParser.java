@@ -22,8 +22,7 @@ import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -44,8 +43,7 @@ public class CASUALScriptParser {
     /**
      * executes a CASUAL script from a file
      *
-     * @param File CASUAL.scr file
-     * @param script script name
+     * @param caspac Caspac used for the script
      * @param multiThreaded false executes on main thread
      */
     public void loadFileAndExecute(Caspac caspac, boolean multiThreaded) {
@@ -112,7 +110,6 @@ public class CASUALScriptParser {
     DataInputStream scriptInput;
 
     public void executeSelectedScript(final Caspac caspac, boolean startThreaded) {
-        Statics.scriptRunLock = true;
         Statics.ReactionEvents = new ArrayList<String>();
         Statics.ActionEvents = new ArrayList<String>();
         Statics.CASPAC.getActiveScript().scriptContinue = true;
@@ -142,7 +139,6 @@ public class CASUALScriptParser {
                 } catch (IOException ex) {
                     new Log().errorHandler(ex);
                 }
-                Statics.scriptRunLock = false;
                 Statics.CASPAC.getActiveScript().deviceArch = "";
                 Statics.setStatus("done");
                 log.level2Information("@scriptComplete");
@@ -150,10 +146,10 @@ public class CASUALScriptParser {
             }
         };
         if (startThreaded) {
-            Thread ExecuteScript = new Thread(r);
+            Locks.scriptRunLock = new CASUAL.misc.MandatoryThread(r);
             Statics.setStatus("Executing");
-            ExecuteScript.setName("CASUAL Script Executor");
-            ExecuteScript.start();
+            Locks.scriptRunLock.setName("CASUAL Script Executor");
+            Locks.scriptRunLock.start();
         } else {
             r.run();
 

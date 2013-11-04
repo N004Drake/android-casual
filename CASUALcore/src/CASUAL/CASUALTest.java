@@ -222,9 +222,9 @@ public class CASUALTest {
     Runnable launchCASUAL = new Runnable() {
         @Override
         public void run() {
-            CASUAL.CASUALApp.beginCASUAL(args);
+            CASUAL.CASUALMain.beginCASUAL(args);
             shutdown = true;
-            CASUAL.CASUALApp.shutdown(0);
+            CASUAL.CASUALMain.shutdown(0);
             shutdown = false;
         }
     };

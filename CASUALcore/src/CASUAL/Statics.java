@@ -96,7 +96,6 @@ public class Statics {
             setTempFolder(TempFolder);
             fo.makeFolder(TempFolder);
         }
-        fo.makeFolder(TempFolder);
         return TempFolder;
     }
 
@@ -106,7 +105,7 @@ public class Statics {
     //Cross-Platform data storage
     public static String adbDeployed; //location of ADB after deployment
     public static String SelectedScriptFolder;//Used for script locations on disk
-    public static String WinElevatorInTempFolder = TempFolder + "Elevate.exe"; //location of elevate.exe after deployed
+    public static String WinElevatorInTempFolder = getTempFolder() + "Elevate.exe"; //location of elevate.exe after deployed
 
     //ADB
     public static String LinuxADB() {
@@ -158,12 +157,7 @@ public class Statics {
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
     //CADI location by Jeremy Loper
     final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
-    /*
-     * Project properties
-     */
-    public static boolean scriptRunLock = false;
-    public static boolean lockGUIformPrep = true;
-    public static boolean lockGUIunzip = false;
+
     /*
      * Determines if Linux, Mac or Windows
      */
@@ -174,11 +168,11 @@ public class Statics {
     //fastboot
     //static boolean isFastbootDeployed = false;  // if fastboot has been deployed
     public static String fastbootResource = ""; //location to fastboot set from final values above
-    public static String fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
+    public static String fastbootDeployed = getTempFolder() + "fastboot"; //deployed fastboot
     //heimdall  
     static boolean isHeimdallDeployed = false; //if fastboot has been deployed
     static String heimdallResource = ""; //location to heimdall set from final values above
-    static String heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
+    static String heimdallStaging = getTempFolder() + "heimdallStage";//location for heimdall files while deploying on Linux
     static String heimdallDeployed = ""; //location of heimdall once deployed
     static String[] resourceHeimdallVersion;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
@@ -193,17 +187,16 @@ public class Statics {
         LiveSendCommand = new ArrayList<String>();
         OutFile = null;
         LogCreated = false;
-        if (!!java.awt.GraphicsEnvironment.isHeadless()){
+        if (!java.awt.GraphicsEnvironment.isHeadless()){
             ProgressPane = new JTextPane();
-        };
+        }
         PreProgress = "";
         ProgressDoc = null;
         adbDeployed = null;
         SelectedScriptFolder = "";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
-        scriptRunLock = false;
-        lockGUIformPrep = true;
-        lockGUIunzip = false;
+        Locks.scriptRunLock=new CASUAL.misc.MandatoryThread();
+        Locks.lockGUIunzip = false;
         runnableMD5list = new ArrayList<String>();
         ActionEvents = new ArrayList<String>();
         ReactionEvents = new ArrayList<String>();
@@ -228,6 +221,7 @@ public class Statics {
         currentStatus = status;
         if (isGUIIsAvailable()) {
             Thread t = new Thread(new Runnable() {
+                @Override
                 public void run() {
                     GUI.setInformationScrollBorderText(status);
                 }

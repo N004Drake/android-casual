@@ -217,7 +217,8 @@ public class MD5sum {
      * Returns the standard md5sum found on Linux as though the file were in the
      * same directory
      *
-     * @param file to be MD5sum'd
+     * @param stream to be MD5sum'd
+     * @param filename to append to the stream
      * @return 32digitMd5Sum+" "+file.Name
      */
     public String getLinuxMD5Sum(InputStream stream, String filename) {

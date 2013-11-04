@@ -11,6 +11,7 @@ import java.util.zip.*;
  * JarResources: JarResources maps all resources included in a Zip or Jar file.
  * Additionaly, it provides a method to extract one as a blob.
  */
+@SuppressWarnings({"unchecked","rawtypes"})
 public final class JarResources {
 
     // external debug flag
@@ -43,7 +44,7 @@ public final class JarResources {
 
     /**
      * initializes internal hash tables with Jar file resources.
-     */@SuppressWarnings("unchecked")
+     */@SuppressWarnings({"unchecked","rawtypes"})
     private void init() {
         try {
             ZipFile zf = new ZipFile(jarFileName);

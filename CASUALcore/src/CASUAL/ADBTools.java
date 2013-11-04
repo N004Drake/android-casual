@@ -17,6 +17,8 @@
 package CASUAL;
 
 import java.awt.HeadlessException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -64,8 +66,8 @@ public class ADBTools {
 
     /**
      * returns the location of ADB
-     *
-     * @return
+     * deploys if needed
+     * @return location of ADBa
      */
     public static String getADBCommand() {
         FileOperations fo = new FileOperations();
@@ -198,9 +200,18 @@ public class ADBTools {
     }
     public static void adbMonitor(boolean start){
         if (start){
-            if (Statics.CASPAC!=null|| Statics.GUI!=null){
-                Statics.CASPAC.waitForUnzipComplete();
+            while (Statics.CASPAC==null){
+                CASUALTools.sleepForOneTenthOfASecond();
             }
+            try {
+                Locks.caspacPrepLock.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ADBTools.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            while ( Locks.caspacScriptPrepLock){
+                    CASUALTools.sleepForOneTenthOfASecond();
+            }
+            Statics.CASPAC.waitForUnzipComplete();
 
             CASUALConnectionStatusMonitor.DeviceCheck.start();
         } else {
