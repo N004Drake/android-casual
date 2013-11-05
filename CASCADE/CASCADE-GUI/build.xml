@@ -72,8 +72,7 @@
 
     -->
     
-    
-    <target name="-post-jar">
+    <target name="-do-jar-with-libraries">
         <echo>preparing final CASCADE binary</echo>
         <loadproperties srcfile="../../CASUALcore/src/CASUAL/resources/CASUALApp.properties"/>
         <jar jarfile="dist/CASCADE-r${Application.revision}-dist.jar">
@@ -87,4 +86,9 @@
             </manifest>
         </jar>
     </target>
+    <target name="-post-jar">
+        <chmod file="${dist.jar}" perm="755"/>
+        <chmod file="dist/CASCADE-r${Application.revision}-dist.jar" perm="755"/>
+    </target>
+    
 </project>

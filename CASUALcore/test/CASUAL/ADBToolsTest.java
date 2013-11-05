@@ -65,7 +65,6 @@ public class ADBToolsTest {
         String expResult = "List of devices attached";
         String result = ADBTools.getDevices();
         assert(result.contains(expResult));
-        // TODO review the generated test code and remove the default call to fail.
     }
 
     /**

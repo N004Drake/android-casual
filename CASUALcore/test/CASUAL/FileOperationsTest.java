@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -55,7 +56,6 @@ public class FileOperationsTest {
         FileOperations instance = new FileOperations();
         new File(testpath).mkdirs();
         instance.recursiveDelete(path);
-        // TODO review the generated test code and remove the default call to fail.
         assert(!instance.verifyExists(testpath));
     }
 
@@ -174,7 +174,6 @@ public class FileOperationsTest {
         boolean expResult = true;
         boolean result = instance.deleteStringArrayOfFiles(cleanUp);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
         
     }
 
@@ -311,11 +310,11 @@ public class FileOperationsTest {
     @Test
     public void testReadFile() {
         System.out.println("readFile");
-        String FileOnDisk = "";
+        String FileOnDisk = "README.txt";
         FileOperations instance = new FileOperations();
-        String expResult = "";
+        String expResult = "YOU'RE DOING IT WRONG!";
         String result = instance.readFile(FileOnDisk);
-        assertEquals(expResult, result);
+        assert(result.contains(expResult));
 
     }
 
@@ -325,9 +324,9 @@ public class FileOperationsTest {
     @Test
     public void testListFolderFiles() {
         System.out.println("listFolderFiles");
-        String folder = "";
+        String folder = "./";
         FileOperations instance = new FileOperations();
-        String[] expResult = null;
+        String[] expResult = new File(folder).list();
         String[] result = instance.listFolderFiles(folder);
         assertArrayEquals(expResult, result);
 
@@ -339,11 +338,11 @@ public class FileOperationsTest {
     @Test
     public void testListFolderFilesCannonically() {
         System.out.println("listFolderFilesCannonically");
-        String folder = "";
+        String folder = "./";
         FileOperations instance = new FileOperations();
-        String[] expResult = null;
+        String expResult = "/home/adamoutler/code/android-casual/trunk/CASUALcore/src/META-INF";
         String[] result = instance.listFolderFilesCannonically(folder);
-        assertArrayEquals(expResult, result);
+        assert(Arrays.asList(result).contains(expResult));
     }
 
     /**

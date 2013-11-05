@@ -77,7 +77,6 @@ public class CASUALLanguageTest {
             assertEquals("",csp.executeOneShotCommand("$LINUX $ECHO testing"));
             assertEquals("",csp.executeOneShotCommand("$LINUXMAC $ECHO testing"));
             assertEquals("",csp.executeOneShotCommand("$MAC $ECHO testing"));        }
-        // TODO review the generated test code and remove the default call to fail.
  
     }
     @Test
