@@ -349,7 +349,7 @@ public class FileOperations {
     public void copyFile(File sourceFile, File destFile) throws IOException {
         Log log = new Log();
 
-        log.level4Debug("Copying " + sourceFile.getPath() + " to " + destFile.getPath());
+        log.level4Debug("Copying " + sourceFile.getCanonicalPath() + " to " + destFile.getCanonicalPath());
         if (!destFile.exists()) {
             destFile.createNewFile();
         }
@@ -412,7 +412,7 @@ public class FileOperations {
      * @param Folder
      * @return true if file exists
      */
-    public boolean verifyFileExists(String Folder) {
+    public boolean verifyFolderExists(String Folder) {
         Log log = new Log();
         File FileFolder = new File(Folder);
         boolean Result = FileFolder.length() >= 1;
