@@ -131,7 +131,7 @@ public class PackagerMain {
                 outputFile.createNewFile();
             }
             final byte[] BUFFER = new byte[1024];
-            ZipInputStream zin = new ZipInputStream(getClass().getResource("/Packager/resources/CASUAL.jar").openStream());
+            ZipInputStream zin = new ZipInputStream(getClass().getResource("/CASPACkager/resources/CASUAL.jar").openStream());
             if (replaceText != null) {
             }
             ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outputFile));
