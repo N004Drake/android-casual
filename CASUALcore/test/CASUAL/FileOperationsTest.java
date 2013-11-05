@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -340,7 +342,12 @@ public class FileOperationsTest {
         System.out.println("listFolderFilesCannonically");
         String folder = "./";
         FileOperations instance = new FileOperations();
-        String expResult = "/home/adamoutler/code/android-casual/trunk/CASUALcore/src/META-INF";
+        String expResult="";
+        try {
+            expResult = new File("../src/META-INF").getCanonicalPath();
+        } catch (IOException ex) {
+            Logger.getLogger(FileOperationsTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String[] result = instance.listFolderFilesCannonically(folder);
         assert(Arrays.asList(result).contains(expResult));
     }
