@@ -19,6 +19,7 @@ package CASUAL;
 //import java.awt.Color;
 import CASUAL.caspac.Caspac;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -95,6 +96,10 @@ public class Statics {
             TempFolder = tf + "CASUAL" + user + sdf.format(new Date()).toString() + Slash; //set /temp/usernameRandom/
             setTempFolder(TempFolder);
             fo.makeFolder(TempFolder);
+        }
+        
+        if (!new File(TempFolder).exists()){
+           new File(TempFolder).mkdirs();
         }
         return TempFolder;
     }
