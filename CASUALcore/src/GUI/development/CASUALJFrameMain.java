@@ -368,7 +368,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
                 }
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
                 Statics.SelectedScriptFolder = Statics.getTempFolder() + new File(nonResourceFileName).getName() + Statics.Slash;
-                if (new FileOperations().verifyFileExists(nonResourceFileName.toString() + ".zip")) {
+                if (new FileOperations().verifyFolderExists(nonResourceFileName.toString() + ".zip")) {
                     new Unzip(nonResourceFileName.toString() + ".zip").unzipFile(Statics.SelectedScriptFolder);
                 }
                 Statics.ScriptLocation = Statics.SelectedScriptFolder;

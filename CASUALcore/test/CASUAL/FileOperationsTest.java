@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -228,13 +230,15 @@ public class FileOperationsTest {
      * Test of verifyFileExists method, of class FileOperations.
      */
     @Test
-    public void testVerifyFileExists() {
-        System.out.println("verifyFileExists");
-        String Folder = "";
+    public void testVerifyFolderExists() {
+        System.out.println("verifyFolderExists");
+        String file = "newFolder";
         FileOperations instance = new FileOperations();
-        boolean expResult = false;
-        boolean result = instance.verifyFileExists(Folder);
-        assertEquals(expResult, result);
+        File f= new File(file);
+        f.mkdir();
+        boolean result = instance.verifyFolderExists(file);
+        assert(result);
+        f.delete();
 
     }
 
