@@ -62,7 +62,6 @@ public class CASPACcreator {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
         CASPACcreator creator = new CASPACcreator();
         creator.doWork(args);
     }
