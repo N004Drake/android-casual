@@ -371,12 +371,16 @@ public class FileOperationsTest {
     @Test
     public void testMoveFile_String_String() throws Exception {
         System.out.println("moveFile");
-        String sourceFile = "";
-        String destFile = "";
+        String sourceFile = Statics.getTempFolder()+"newFile";
+        String destFile = Statics.getTempFolder()+"newFile2";
+        new File(sourceFile).createNewFile();
         FileOperations instance = new FileOperations();
-        boolean expResult = false;
+        
         boolean result = instance.moveFile(sourceFile, destFile);
-        assertEquals(expResult, result);
-
+        assert(result);
+        assert(!new File(sourceFile).exists());
+        assert(new File(destFile).exists());
+        new File(sourceFile).delete();
+        new File(destFile).delete();
     }
 }

@@ -40,7 +40,6 @@ public class CASUALDevQueryTest {
         String expResult = "http://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
         List result = instance.getData();
         assert(result.contains(expResult));
-        // TODO review the generated test code and remove the default call to fail.
     }
     
 //build prop from oppo x909    
