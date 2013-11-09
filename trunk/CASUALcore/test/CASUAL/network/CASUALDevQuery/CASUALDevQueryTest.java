@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL.network;
+package CASUAL.network.CASUALDevQuery;
 
 
-import java.util.List;
+import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +30,28 @@ public class CASUALDevQueryTest {
     @After
     public void tearDown() {
     }
-
-
+    
     @Test
+    @SuppressWarnings({"rawtypes"})
+    public void testDoPropertySearch() throws Exception {
+        System.out.println("getData");
+        CASUALDevQuery instance = new CASUALDevQuery(BUILDPROP, new String[]{"CASUAL"});
+        String expResult = "http://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
+        String[] result=new String[]{};
+        //for (int i=0; i<30; i++){
+            result=instance.recursiveFolderSearch();
+        //}
+        
+        for (String name:result){
+            System.out.println(name);
+        }
+        System.out.println("Result returned "+result.length + " packages available");
+        assert(Arrays.asList(result).contains(expResult));
+
+    }
+    
+    
+    /*@Test
     @SuppressWarnings({"rawtypes"})
     public void testGetData() throws Exception {
         System.out.println("getData");
@@ -40,7 +59,7 @@ public class CASUALDevQueryTest {
         String expResult = "http://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
         List result = instance.getData();
         assert(result.contains(expResult));
-    }
+    }*/
     
 //build prop from oppo x909    
 final static String BUILDPROP="\"# begin build properties\n" +
