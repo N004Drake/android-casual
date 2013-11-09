@@ -50,9 +50,8 @@ public class MD5sumTest {
         expResult = "7707D6AE4E027C70EEA2A935C2296F21".toLowerCase();
         result = instance.md5sum(StringOperations.convertStringToStream(vector));
         assertEquals(expResult, result);
-        System.out.println("result");
+        System.out.println(result);
         
-        // TODO review the generated test code and remove the default call to fail.
     }
 
 }

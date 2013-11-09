@@ -77,8 +77,6 @@ public class CaspacTest {
         instance.setActiveScript(s);
         assert (instance.getActiveScript().name.equals("foobar"));
 
-        // TODO review the generated test code and remove the default call to fail.
-
     }
 
     @Test

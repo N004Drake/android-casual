@@ -30,6 +30,10 @@ public class MandatoryThread extends Thread{
         
         notify();
     }
+    
+    public boolean isComplete(){
+        return hasStarted.get() && ! super.isAlive();
+    }
 
     public synchronized void waitFor() {
         try {
@@ -39,7 +43,9 @@ public class MandatoryThread extends Thread{
             while (!hasStarted.get()){
                 wait();
             }
-            super.join();
+            if (this.isAlive()){
+                super.join();
+            }
         } catch (InterruptedException ex) {
             
         }
