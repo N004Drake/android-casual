@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  *
  * @author adam
  */
-public class CASUALDevQuery {
+public class CASUALDevQuerier {
 
     static String BUILDPROP;
     static ArrayList<MandatoryThread> searches = new ArrayList<MandatoryThread>();
@@ -47,7 +47,7 @@ public class CASUALDevQuery {
      * @param deviceBuildProp from an android device.
      * @param additionalProps additional properties to blacklist
      */
-    public CASUALDevQuery(String deviceBuildProp,String[] additionalProps) {
+    public CASUALDevQuerier(String deviceBuildProp,String[] additionalProps) {
         //clean out the buildprop.  / is a folder here. 
         BUILDPROP = deviceBuildProp.replace("/", "");
         for (String prop:additionalProps){
@@ -139,7 +139,7 @@ public class CASUALDevQuery {
                     System.out.println("Folder: "+name);
                 }
             } catch (IOException ex) {
-                Logger.getLogger(CASUALDevQuery.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CASUALDevQuerier.class.getName()).log(Level.SEVERE, null, ex);
             }
             dispatchThreads(worklist, availableURLs);
         }
@@ -163,7 +163,7 @@ public class CASUALDevQuery {
             //no b.prop to read so we won't blacklist
             return false;
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CASUALDevQuery.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CASUALDevQuerier.class.getName()).log(Level.SEVERE, null, ex);
         }
         //set the blacklist if there is a whitelist
         blacklisted = !buildprop.getProperty("w[0]", "").isEmpty();
@@ -232,7 +232,7 @@ public class CASUALDevQuery {
            
             return folderList;
         } catch (URISyntaxException ex) {
-            Logger.getLogger(CASUALDevQuery.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CASUALDevQuerier.class.getName()).log(Level.SEVERE, null, ex);
         }
      return new String[]{};
     }
