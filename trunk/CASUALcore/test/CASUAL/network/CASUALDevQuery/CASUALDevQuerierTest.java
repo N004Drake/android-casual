@@ -18,9 +18,9 @@ import org.junit.Test;
  *
  * @author adam
  */
-public class CASUALDevQueryTest {
+public class CASUALDevQuerierTest {
     
-    public CASUALDevQueryTest() {
+    public CASUALDevQuerierTest() {
     }
     
     @Before
@@ -35,7 +35,7 @@ public class CASUALDevQueryTest {
     @SuppressWarnings({"rawtypes"})
     public void testDoPropertySearch() throws Exception {
         System.out.println("getData");
-        CASUALDevQuery instance = new CASUALDevQuery(BUILDPROP, new String[]{"CASUAL"});
+        CASUALDevQuerier instance = new CASUALDevQuerier(BUILDPROP, new String[]{"CASUAL"});
         String expResult = "http://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
         String[] result=new String[]{};
         //for (int i=0; i<30; i++){
