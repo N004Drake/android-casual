@@ -492,7 +492,6 @@ public class Zip {
     public void compressZipDir(String file) throws FileNotFoundException, IOException {
         zipDir(file, "");
     }
-    //TODO: Make the files work if directories are empty.
 
     /**
      * Compresses the TempFolder into a .zip file

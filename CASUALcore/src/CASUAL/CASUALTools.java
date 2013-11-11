@@ -17,7 +17,6 @@
 package CASUAL;
 
 import CASUAL.misc.LinkedProperties;
-import GUI.development.CASUALJFrameMain;
 import CASUAL.caspac.Caspac;
 import CASUAL.crypto.MD5sum;
 import java.io.File;
@@ -176,11 +175,7 @@ public class CASUALTools {
         String classJar = getClass().getResource("/" + className + ".class").toString();
         String path = new File(".").getAbsolutePath();
         boolean isSource = path.contains("src") && path.contains("CASUALcore");
-        if (classJar.startsWith("file:") && isSource) {
-            return true;
-        } else {
-            return false;
-        }
+        return classJar.startsWith("file:") && isSource;
     }
     /**
      * Starts a new ADB instance
@@ -291,7 +286,13 @@ public class CASUALTools {
         try{
             Class<?> cls = Class.forName(messageAPI);
             setiCASUALinteraction(cls);
-        } catch (Exception ex){
+        } catch (ClassNotFoundException ex){
+            Class<?> cls = Class.forName("GUI.development.CASUALShowJFrameMessageObject");
+            setiCASUALinteraction(cls);
+        } catch (InstantiationException ex) {
+            Class<?> cls = Class.forName("GUI.development.CASUALShowJFrameMessageObject");
+            setiCASUALinteraction(cls);
+        } catch (IllegalAccessException ex) {
             Class<?> cls = Class.forName("GUI.development.CASUALShowJFrameMessageObject");
             setiCASUALinteraction(cls);
         }
@@ -310,7 +311,13 @@ public class CASUALTools {
         try{
             Class<?> cls = Class.forName(messageAPI);
             setiCASUALGUI(cls);
-        } catch (Exception ex){
+        } catch (ClassNotFoundException ex){
+            Class<?> cls = Class.forName("GUI.development.CASUALJFrameMain");
+            setiCASUALGUI(cls);
+        } catch (InstantiationException ex) {
+            Class<?> cls = Class.forName("GUI.development.CASUALJFrameMain");
+            setiCASUALGUI(cls);
+        } catch (IllegalAccessException ex) {
             Class<?> cls = Class.forName("GUI.development.CASUALJFrameMain");
             setiCASUALGUI(cls);
         }
@@ -342,7 +349,7 @@ public class CASUALTools {
                 return "";
             }
         } else {
-            //TODO: pop up warning about not having access to root if it cannot be obtained or throw new exception
+            new CASUALMessageObject("@couldNotObtainRootOnDevice").showErrorDialog();
             return "";
         }
     }
