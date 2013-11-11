@@ -144,6 +144,17 @@ public class Script {
         extractionMethod = 0;
     }
 
+    public Script copyOf(String newScriptName,String newTempDir){
+        new Log().level4Debug("Setting up script " + newScriptName + " from preexisting script");
+        Script s=new Script(newScriptName,tempDir);
+        s.metaData = metaData;
+        s.individualFiles = individualFiles;
+        s.zipfile = zipfile;
+        s.discription = discription;
+        s.scriptContinue = scriptContinue;
+        s.getAllAsStringAndInputStream = getAllAsStringAndInputStream;
+        return s;
+    }
     public boolean verifyScript() {
         boolean testingBool = true;
         testingBool = !(name.isEmpty()) && testingBool;
