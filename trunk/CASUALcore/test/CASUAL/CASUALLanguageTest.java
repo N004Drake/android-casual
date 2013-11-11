@@ -187,7 +187,6 @@ public class CASUALLanguageTest {
         String expResult = Statics.getTempFolder();
         String result = csp.executeOneShotCommand("$ECHO $ZIPFILE");
         System.out.println(result);
-        //TODO: this will be null if there is no CASPAC.
         assert(result.contains(expResult));
     }   
     @Test
@@ -241,9 +240,6 @@ public class CASUALLanguageTest {
         assertEquals (sha256sum, "b2db2359cb7ea18bec6189b26e06775abf253f36ffb00402a9cf4faa1a2b6982  readme");
 
         new File(result).delete();
-        
-        
-        //TODO: this will be null if there is no CASPAC.
         assert(result.contains(expResult));
     }   
     

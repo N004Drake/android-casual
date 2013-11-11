@@ -59,15 +59,6 @@ import javax.imageio.ImageIO;
  */
 public final class Caspac {
 
-
-    /*TODO: update this.build.bannerPic=tempbannerpic;
-     * at the end of every load operation involving loading
-     * build.properties files.  This is important because
-     * the logo.png location is stored on the filesystem,
-     * not in the caspac.  Once caspac is loaded, if build.properties 
-     * is loaded last, it will be an invalid file reference.
-     */
-
     /* Loads a CASPAC
      * Types 0 CASPAC
      * Type 1 CASUAL
@@ -439,7 +430,7 @@ public final class Caspac {
      *
      * @return list of script names
      */
-    public String[] getScriptNames() { //TODO: examine this to figure out why we are iterating "scripts" and adding a slash while getting names
+    public String[] getScriptNames() { 
         ArrayList<String> scriptNames = new ArrayList<String>();
         for (Script s : scripts) {
             scriptNames.add(s.name);
@@ -725,8 +716,7 @@ public final class Caspac {
      new File(s.tempDir).mkdirs();
      log.level3Verbose("getting updated script version info");
         
-     //TODO: downloadMetaFromRepoForScript hangs.  Script will not complte unzip because of this.  
-     //TODO: Fix this. 
+     //TODO: downloadMetaFromRepoForScript hangs.  Script will not complte unzip because of this.  Updates are down
      updatedprop.load(ci.downloadMetaFromRepoForScript(s));
      log.level3Verbose("updating meta");
      updatedScript.metaData.load(updatedprop);
@@ -788,6 +778,7 @@ public final class Caspac {
             buildProp.load(prop);
             loadPropsToVariables();
             log.level4Debug(windowTitle +" - "+bannerText+" - "+developerName);
+            
         }
 
         /**
@@ -854,7 +845,6 @@ public final class Caspac {
             buildProp.setProperty("Window.BannerText", bannerText);
             buildProp.setProperty("Window.BannerPic", bannerPic);
             buildProp.setProperty("Window.Title", windowTitle);
-
         }
 
         /**

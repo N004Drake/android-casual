@@ -16,11 +16,16 @@
  */
 package CASUAL;
 
+import static CASUAL.CASUALConnectionStatusMonitor.TIMERINTERVAL;
 import CASUAL.misc.StringOperations;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Calendar;
+import javax.swing.Timer;
 
 /**
  *
@@ -52,8 +57,8 @@ public class Shell {
 
 
         String Command = "";
-        for (int i = 0; i < cmd.length; i++) {
-            Command = Command + "\"" + cmd[i] + "\" ";
+        for (String cmd1 : cmd) {
+            Command = Command + "\"" + cmd1 + "\" ";
         }
 
         String[] newCmd;
@@ -178,7 +183,7 @@ public class Shell {
             }
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + "\nreturnval:" + AllText);
             return "CritERROR!!!";
         }
@@ -197,7 +202,7 @@ public class Shell {
             }
             //log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + "returnval:" + AllText);
             return "CritERROR!!!";
         }
@@ -344,7 +349,6 @@ public class Shell {
      * @param cmd cmd to be executed
      * @param timeout in millis
      * @return any text from the command
-     * @throws TimeoutException
      */
     public String timeoutShellCommand(final String[] cmd, int timeout) {
         //final object for runnable to write out to.
@@ -366,7 +370,7 @@ public class Shell {
                         tos.AllText = tos.AllText + line + "\n";
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
-                } catch (Exception ex) {
+                } catch (IOException ex) {
                     log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
                 }
             }
@@ -403,7 +407,6 @@ public class Shell {
      * @param cmd cmd to be executed
      * @param timeout in millis
      * @return any text from the command
-     * @throws TimeoutException
      */
     public String silentTimeoutShellCommand(final String[] cmd, int timeout) {
         //final object for runnable to write out to.
@@ -425,7 +428,7 @@ public class Shell {
                         tos.AllText = tos.AllText + line + "\n";
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
-                } catch (Exception ex) {
+                } catch (IOException ex) {
                     log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
                 }
             }
@@ -451,6 +454,90 @@ public class Shell {
         //return values logged from TimeoutString class above
         return tos.AllText;
 
+    }
+
+    /**
+     * same as timeoutShellCommand but only times out if there is a certain value last seen
+     * @param cmd
+     * @param startTimerOnThisInLine
+     * @param timeout
+     * @return
+     */
+    
+    //TODO: write automated test code for this for CASUALLanguage line 653.  Can be tested with fastboot flash test test without device connected
+    public String timeoutValueCheckingShellCommand(final String[] cmd,final String[] startTimerOnThisInLine, final int timeout) {
+          //final object for runnable to write out to.
+        final TimeoutString tos = new TimeoutString();
+
+        //static class to be passed in as reference to value
+        class Timeout{
+            boolean value=false;
+        }
+        final Timeout isTimedOut=new Timeout();
+        //Runnable executes in the background
+        Runnable runCommand = new Runnable() {
+            @Override
+            public void run() {
+                log.level4Debug("###executing timeout command: " + cmd[0] + "###");
+                try {
+                    //timer will begin on startTimerOnThisInLine detected and stop if it is not in a line
+                    Timer t=new Timer(timeout, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent evt) {
+                           //tells the app to stop waiting
+                           isTimedOut.value=true; 
+                        }
+                    });
+                    
+                    String line;
+                    ProcessBuilder p = new ProcessBuilder(cmd);
+                    p.redirectErrorStream(true);
+                    Process process = p.start();
+                    BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+                    
+                    while ((line = STDOUT.readLine()) != null) {
+                        tos.AllText = tos.AllText + line + "\n";
+                        // check for value to start timer in string
+                        boolean contained=false;
+                        for (String value:startTimerOnThisInLine){
+                            if (line.contains(value)){
+                                t.start();
+                                contained=true;
+                            }
+                        }
+                        if (contained==false){
+                            //stop timer
+                            t.stop();
+                        }
+                    }
+                    //log.level0(cmd[0]+"\":"+AllText);
+                } catch (IOException ex) {
+                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
+                }
+            }
+        };
+        //t executes the runnable on a different thread
+        Thread t = new Thread(runCommand);
+        t.setDaemon(true);
+        t.setName("TimeOutShell " + cmd[0] + timeout + "ms abandon time");
+        t.start();
+
+        //set up timeout with calendar time in millis
+        Calendar endTime = Calendar.getInstance();
+        endTime.add(Calendar.MILLISECOND, timeout);
+        //loop while not timeout and halt if thread dies. 
+        while (!isTimedOut.value) {
+            if (!t.isAlive()) {
+                break;
+            }
+        }
+        if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
+            log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
+            return "Timeout!!! " + tos.AllText;
+        }
+        //return values logged from TimeoutString class above
+        return tos.AllText;
     }
 
     /**

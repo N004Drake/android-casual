@@ -421,7 +421,7 @@ public class CASUALLanguage {
                 for (int i = 0; i < files.length; i++) {
                     retval = retval + files[i].getAbsolutePath() + "\n";
                     try {
-                        //TODO: create a method which will parse $ON action/reaction events
+                        //TODO: create a method which will parse $ON action/reaction events.  This is currently implemented in Shell() but should be moved to ScriptParser or script spooler. 
                         //or parse $ON events from CASUALScriptParser
                         //this method can create a problem if the device is in recovery mode.
                         //the problem could be solved by creating a new method which will
@@ -648,26 +648,16 @@ public class CASUALLanguage {
             if (OSTools.isLinux()) {
                 log.level2Information("@linuxPermissionsElevation");
                 Statics.GUI.notificationPermissionsRequired();
-                //TODO: make something like Shell.timeoutShellCommand but it must also test for values
-             /*
-                 * Shell.timeOutCommand(String[] cmd, String[] values, int timeDelay)
-                 * timeDelayClass{
-                 * int timer=0
-                 * new secondTimer(String testValues {"< waiting for device >"}, int timeDelay){
-                 *    if Arrays.asList(values).contains(line)
-                 *    timer++;
-                 * }
-                 * }
-                 *   do Threaded shell command and pass line into time delay class
-                 * while  timeDelayClass.timer < timeDelay && thread.isAlive()
-                 *  do nothing
-                 * if timer>timedelay return whatever is in que to be returned
-                 */
-                String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
-                if (!returnValue.contentEquals("\n")) {
-                    return returnValue;
-                }
-            } else {
+                //Todo write checks for this
+                //String retval=new Shell().timeoutValueCheckingShellCommand(new String[]{line.replaceAll("\"", "\\\"")},new String[]{"< waiting for device >"},30000);
+                //if (retval.endsWith("< waiting for device >")){
+                    String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
+                    if (!returnValue.contentEquals("\n")) {
+                        return returnValue;
+                    }
+                //}
+     
+                } else {
                 return new FastbootTools().doFastbootShellCommand(line);
             }
 
