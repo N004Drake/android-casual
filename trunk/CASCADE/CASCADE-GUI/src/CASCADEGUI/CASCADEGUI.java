@@ -52,6 +52,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.ListModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListDataEvent;
@@ -1265,7 +1266,21 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
             return;
         }
         if (!(scriptName.isEmpty())) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex());
+            //get original script selected
+            Script orig=scriptList.getElementAt(this.scriptListJList.getSelectedIndex());
+            //make a copy with a new name
+            Script newScript=orig.copyOf(scriptName, orig.tempDir);
+            //add the new script
+            cp.scripts.set(cp.scripts.indexOf(cp.getScriptByName(orig.name)), newScript);
+            //remove the original
+            cp.scripts.remove(orig);
+            //get the list
+            DefaultListModel<String> lm=new DefaultListModel();
+            for (Script s:cp.scripts){
+                lm.addElement(s.name);
+            }
+            this.scriptListJList.setModel(lm);
+            
             loadScript();
             disableCasual();
         }
