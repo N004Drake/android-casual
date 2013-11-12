@@ -590,6 +590,10 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
      */
     @Override
     public boolean enableControls(boolean status) {
+        
+        if (! Locks.scriptRunLock.isComplete()){
+            return false;
+        }
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
         if (caspac != null) {
              if (caspac.build.alwaysEnableControls) {
