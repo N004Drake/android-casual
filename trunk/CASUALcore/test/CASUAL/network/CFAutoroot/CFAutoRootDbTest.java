@@ -3,8 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL.network.CASUALDevIntegration;
+package CASUAL.network.CFAutoroot;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,11 +46,17 @@ public class CFAutoRootDbTest {
      */
     @Test
     public void testReturnForMyDevice() {
-        System.out.println("returnForMyDevice");
-        CFAutoRootDb instance = new CFAutoRootDb(BUILDPROP);
-        String expContains = "http://download.chainfire.eu/313/CF-Root/CF-Auto-Root/";
-        String result = instance.returnForMyDevice();
-        assert(result.contains(expContains));
+        try {
+            System.out.println("returnForMyDevice");
+            CFAutoRootDb instance = new CFAutoRootDb(BUILDPROP);
+            String expContains = "http://download.chainfire.eu/313/CF-Root/CF-Auto-Root/";
+            String result = instance.returnForMyDevice();
+            assert(result.contains(expContains));
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(CFAutoRootDbTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(CFAutoRootDbTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     
