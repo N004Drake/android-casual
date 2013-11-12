@@ -210,6 +210,8 @@ public final class CASUALMain {
      * @param args commmand line args
      */
     public void startup(String[] args) {
+        //starts the scriptRunLock so that the lock will not be enabled when checked for the first time. 
+        Locks.scriptRunLock.start();
         //make the temp folder
         if (Statics.getTempFolder() == null) {
             Statics.setTempFolder(Statics.getTempFolder());
