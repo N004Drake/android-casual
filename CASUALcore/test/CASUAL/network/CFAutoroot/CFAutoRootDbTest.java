@@ -6,6 +6,7 @@
 package CASUAL.network.CFAutoroot;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,6 +56,8 @@ public class CFAutoRootDbTest {
         } catch (URISyntaxException ex) {
             Logger.getLogger(CFAutoRootDbTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(CFAutoRootDbTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CFAutorootTableException ex) {
             Logger.getLogger(CFAutoRootDbTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

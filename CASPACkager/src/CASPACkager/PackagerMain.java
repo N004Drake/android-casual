@@ -410,7 +410,7 @@ public class PackagerMain {
         String working = Statics.getTempFolder() + "extractionof" + entry + Statics.Slash;
         new File(working).mkdirs();
         try {
-            CASUAL.Unzip.unZipInputStream(zin, working);
+            CASUAL.archiving.Unzip.unZipInputStream(zin, working);
             String[] extractList = new File(working).list();
             for (String[] fReplacement : replaceFile) {
                 for (String fileCheck : extractList) {
@@ -431,7 +431,7 @@ public class PackagerMain {
 
     public InputStream repackEntry(ZipEntry entry, String working) {
         try {
-            CASUAL.Zip zip = new CASUAL.Zip(new File(Statics.getTempFolder() + entry.getName()));
+            CASUAL.archiving.Zip zip = new CASUAL.archiving.Zip(new File(Statics.getTempFolder() + entry.getName()));
             zip.compressZipDir(working);
             return new FileInputStream(Statics.getTempFolder() + entry.getName());
         } catch (IOException ex) {
