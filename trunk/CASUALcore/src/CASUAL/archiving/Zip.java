@@ -17,9 +17,11 @@
  * parts of this file are from http://stackoverflow.com/questions/3048669/how-can-i-add-entries-to-an-existing-zip-file-in-java
  * 
  */
-package CASUAL;
+package CASUAL.archiving;
 
 import CASUAL.Log;
+import CASUAL.Log;
+import CASUAL.Statics;
 import CASUAL.Statics;
 import java.io.Closeable;
 import java.io.File;
