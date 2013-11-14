@@ -17,16 +17,6 @@
  ***************************************************************************/
 package CASUAL;
 
-/**
- * TODOs:
- *
- * class-wide: Javadoc launchOldFaithful, getDeviceList, removeOrphanedDevices,
- * uninstallCADI
- *
- * Q:Possible to install WinUSB in same manner if this has been run before?
- * A:Possible, but overly complicated and probably unreliable without parsing
- * all matching *.inf's contents
- */
 import CASUAL.archiving.Unzip;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
@@ -81,7 +71,7 @@ public class WindowsDrivers {
      * @param args
      */
     public static void main(String[] args) {
-        WindowsDrivers wd = new WindowsDrivers(0);
+        WindowsDrivers wd = new WindowsDrivers(1);
         wd.installDriverBlanket(null);
         wd.uninstallCADI();
     }
@@ -173,9 +163,12 @@ public class WindowsDrivers {
     }
 
     /**
-     * launchOldFaithful
+     * launchOldFaithful is used as plan-B if driver installations fail via devcon,
+     * CADIv1 will be launched as a child process and will attempt to install the 
+     * driver in a different manner (via libwdi).
      *
-     * @return
+     * @return will be True if process was launched successfully, false otherwise
+     * (the return value does not elude to whether the driver install was successful)
      */
     private boolean launchOldFaithful() {
         String exec = "";
@@ -211,7 +204,8 @@ public class WindowsDrivers {
     }
 
     /**
-     * uninstallCADI
+     * uninstallCADI attempts to remove any existing or previous remnants of CADIv1
+     * or CADIv2
      *
      */
     public void uninstallCADI() {
@@ -231,11 +225,12 @@ public class WindowsDrivers {
     }
 
     /**
-     * getDeviceList
+     * getDeviceList parses devcon output of attached USB devices for the specified
+     * VID. Any connected matching devices are stored for return in a String Array. 
      *
      * @param VID a String containing a four character USB vendor ID code in
      * hexadecimal
-     * @return
+     * @return is a String Array of matching connected devices, null otherwise
      */
     private String[] getDeviceList(String VID) {
         if (!VID.equals("")) {
@@ -272,13 +267,16 @@ public class WindowsDrivers {
     }
 
     /**
-     * removeOrphanedDevices
+     * removeOrphanedDevices parses devcon output of any current or previously installed
+     * USB device drivers for the specified VID. Any matching device drivers are uninstalled 
      *
      * @param VID a String containing a four character USB vendor ID code in
      * hexadecimal
-     * @return
+     * @return a String Array of devcon output from attempted uninstalls of drivers
      */
-    private void removeOrphanedDevices(String VID) {
+    private String[] removeOrphanedDevices(String VID) {
+        int i = 0;
+        String[] retval = new String[9];
         if (!VID.equals("")) {
             Pattern pattern = getRegExPattern("Matching devices");
             if (pattern != null) {
@@ -290,9 +288,12 @@ public class WindowsDrivers {
                         Matcher matcher = pattern.matcher(outputBuffer);
                         while (matcher.find()) {
                             log.level2Information("removeOrphanedDevices() Removing orphaned device " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
-                            if (devconCommand("remove " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"") == null) {
+                            retval[i] = devconCommand("remove " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
+                            if (retval[i].equals("")) {
                                 log.level0Error("removeOrphanedDevices() devcon returned null!");
                             }
+                            i++;
+                            //The 1 device(s) are ready to be removed. To remove the devices, reboot the system.
                         }
                     } else {
                         log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
@@ -306,6 +307,7 @@ public class WindowsDrivers {
         } else {
             log.level0Error("removeOrphanedDevices() no VID specified");
         }
+        return retval;
     }
 
     /**
@@ -322,12 +324,12 @@ public class WindowsDrivers {
             String outputBuffer = devconCommand("dp_enum");
             if (outputBuffer != null) {
                 Matcher matcher = pattern.matcher(outputBuffer);
-                //TODO: examine this to find out why we are iterating through but only using "0"
-                for (int x = 0; matcher.find(); x++) {
+                while(matcher.find()) {
                     log.level2Information("removeDriver() Forcing removal of driver package" + matcher.group(0));
                     if (devconCommand("-f dp_delete " + matcher.group(0)) == null) {
                         log.level0Error("removeDriver() devcon returned null!");
                     }
+                    //Driver package 'oem229.inf' deleted.
                 }
             } else {
                 log.level0Error("deleteOemInf() devcon returned null!");
