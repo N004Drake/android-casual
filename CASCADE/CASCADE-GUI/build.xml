@@ -75,9 +75,9 @@
     <target name="-do-jar-with-libraries">
         <echo>preparing final CASCADE binary</echo>
         <loadproperties srcfile="../../CASUALcore/src/CASUAL/resources/CASUALApp.properties"/>
-        <jar jarfile="dist/CASCADE-r${Application.revision}-dist.jar">
+        <jar jarfile="dist/CASCADE-r${Application.revision}-dist.jar" level="0" compress="false">
                 <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-                <zipfileset src="../../CASUALcore/dist/CASUALcoreNoResources.jar" excludes="META-INF/*" />
+                <zipfileset src="../../CASUALcore/dist/CASUALcore.jar" excludes="META-INF/*" />
                 <zipfileset src="../../CASCADE/CASPACcreator/dist/CASPACcreator.jar" excludes="META-INF/*" />
                 <zipfileset src="../../CASPACkager/dist/CASPACkager.jar" excludes="META-INF/*" />
                 

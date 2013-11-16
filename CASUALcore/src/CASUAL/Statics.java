@@ -214,10 +214,10 @@ public class Statics {
         resourceHeimdallVersion = null;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
         installedHeimdallVersion = null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
         CASUALLanguage.GOTO = "";
-        if (CASPAC != null) {
-            if (CASPAC.scripts != null) {
+        try{
                 Statics.CASPAC.getActiveScript().scriptContinue = false;
-            }
+        } catch (NullPointerException ex){
+            //do nothing at all 
         }
     }
 
