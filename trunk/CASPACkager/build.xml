@@ -75,19 +75,19 @@
      
     <target name="-pre-compile">
          <echo>packager pre-compile grabbing new CASUAL.jar</echo>
-        <copy file="$DIST../../../CASUALcore/dist/CASUALcoreNoScripts.jar" tofile="src/CASPACkager/resources/CASUAL.jar"/>
+        <copy file="$DIST../../../CASUALcore/dist/CASUALcoreEmptyScripts.jar" tofile="src/CASPACkager/resources/CASUAL.jar"/>
          
     </target>
     
     
     <target name="-do-jar-with-libraries">
          <echo>packager post-jar</echo>
-         <jar jarfile="dist/PackagerDist.jar">
+         <jar jarfile="dist/PackagerDist.jar" level="0" compress="false">
             <zipfileset src="${dist.jar}" excludes="META-INF/*"/>
             <manifest>
                 <attribute name="Main-Class" value="CASPACkager.PackagerMain"/>
             </manifest>
-            <zipfileset src="$DIST../../../CASUALcore/dist/CASUALcoreNoResources.jar" excludes="META-INF/*" /> 
+            <zipfileset src="$DIST../../../CASUALcore/dist/CASUALcore.jar" excludes="META-INF/*" /> 
             
         </jar>
     </target>

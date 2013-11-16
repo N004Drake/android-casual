@@ -23,6 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.CodeSource;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
@@ -172,8 +175,26 @@ public final class CASUALMain {
 
         Statics.initializeStatics();
 
+        /*Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+
+        while (threadSet.size()>0){
+            System.out.println("---List of open threads---");
+            threadSet = Thread.getAllStackTraces().keySet();
+            Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+            for (Thread t:threadArray){
+                System.out.println("Awaiting shutdown of thread "+t.getName());
+            }
+            doSleep(); 
+        }*/
     }
 
+    private static void doSleep(){
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     private void doArgsCheck(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].contains("--password") || args[i].contains("-p")) {
