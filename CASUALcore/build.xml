@@ -77,7 +77,7 @@
         <javac includeantruntime="last" failonerror="no" srcdir="BuildTasks/" destdir="BuildTasks"/>
         <java fork="false" failonerror="no" classname="ResolveSVNConflicts">
             <classpath>
-               <pathelement location="BuildTasks"/>
+                <pathelement location="BuildTasks"/>
             </classpath>
             <arg line="src/CASUAL/resources/"/>
         </java>
@@ -112,7 +112,7 @@
         <echo>Loaded property value: ${svna.version}</echo>
         <echo>revision after loaded property: ${svna.version}</echo>
         <propertyfile file="src/CASUAL/resources/CASUALApp.properties">
-          <entry  key="Application.revision" value="${svna.version}"/>
+            <entry  key="Application.revision" value="${svna.version}"/>
         </propertyfile>
         
         
@@ -152,8 +152,9 @@
             <fileset dir="build/classes"/>
         </jar>
 
+       
 
-       <echo>Creating CASUAL without Scripts folder for CASPACkager</echo>
+        <echo>Creating CASUAL without Scripts folder for CASPACkager</echo>
         <jar jarfile="dist/CASUALcoreEmptyScripts.jar" level="0" compress="false">
             <zipfileset src="${CASUALJAR}">
                 <exclude name="SCRIPTS/*"/>
@@ -164,7 +165,7 @@
         </jar>
         
         
-       <echo>Creating distributable CASUAL</echo>
+        <echo>Creating distributable CASUAL</echo>
         <jar jarfile="dist/CASUAL-Revision${svna.version}b.jar" level="0" compress="false">
             <zipfileset src="${CASUALJAR}" excludes="META-INF/*"/>
             <manifest>
@@ -181,13 +182,35 @@
             <fileset dir="src/" includes="SCRIPTS/Simple Reboot.txt" />
         </jar>
         
-                <property name="casual" value="dist/CASUAL.jar"/>
+        <property name="casual" value="dist/CASUAL.jar"/>
         
         <echo>creating static distributable CASUAL </echo>
         <copy file="dist/CASUAL-Revision${svna.version}b.jar" tofile="dist/CASUALstatic.jar"/> 
         <chmod file="${dist.jar}" perm="755"/>
         <chmod file="dist/CASUAL-Revision${svna.version}b.jar" perm="755"/>
         <chmod file="dist/CASUALstatic.jar" perm="755"/>
+        <echo>Recreating Creating CASUALcore in Ant</echo>
+        <delete file="dist/CASUALcore.jar}"/>
+        
+        <echo>recreating CASUALcore for ant jobs </echo>
+        <jar destfile="dist/CASUALcore.jar" level="0" compress="false">
+            <manifest>
+                <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
+            </manifest>
+            <fileset dir="build/classes">
+                <exclude name="SCRIPTS/*"/>
+                <exclude name="**/*.java"/>
+                <exclude name="**/*.form"/>
+                <exclude name="**/SCRIPTS/*"/>
+                <exclude name="CASUAL/resources/fastboot/**"/>
+                <exclude name="CASUAL/resources/heimdall/**"/>
+                <exclude name="CASUAL/resources/sounds/**"/>
+                <exclude name="CASUAL/resources/ADB/**"/>
+                <exclude name="CASUAL/resources/icons/**"/>
+                <exclude name="GUI/development/resources/**"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </jar>
         
         
         
