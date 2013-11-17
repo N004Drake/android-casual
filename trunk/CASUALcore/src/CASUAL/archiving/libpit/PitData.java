@@ -23,6 +23,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+ /** 
+  * Pitdata provides a way to work with the header information of the PIT file 
+ * Original Files may be found here: 
+ * https://github.com/Benjamin-Dobell/libpit--Java-/tree/master/libpit/src/au/com/glassechidna/libpit
+ * modified by:
+ * @author adam
+ */
+
 public class PitData
 {
         public static final int FILE_IDENTIFIER = 0x12349876;
@@ -42,7 +50,7 @@ public class PitData
         private short unknown8; // 0x1A
 
         // Entries start at 0x1C
-        private ArrayList<PitEntry> entries = new ArrayList<PitEntry>();
+        private final ArrayList<PitEntry> entries = new ArrayList<PitEntry>();
 
         public PitData()
         {
@@ -84,7 +92,7 @@ public class PitData
                                 entries.add(entry);
         
                                 integerValue = pitInputStream.readInt();
-                                entry.setUnused((integerValue != 0) ? true : false);
+                                entry.setUnused((integerValue != 0));
         
                                 integerValue = pitInputStream.readInt();
                                 entry.setPartitionType(integerValue);
@@ -147,7 +155,6 @@ public class PitData
                 }
                 catch (IOException e)
                 {
-                        e.printStackTrace();
                         return (false);
                 }
         }
@@ -213,7 +220,6 @@ public class PitData
                 }
                 catch (IOException e)
                 {
-                        e.printStackTrace();
                         return (false);
                 }
         }
