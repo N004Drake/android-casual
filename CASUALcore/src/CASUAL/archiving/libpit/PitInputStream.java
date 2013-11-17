@@ -21,10 +21,17 @@ package CASUAL.archiving.libpit;
  */
 import java.io.IOException;
 import java.io.InputStream;
-
+ 
+/** 
+ * PitInputStream provides tools used for writing a pit file
+ * Original Files may be found here: 
+ * https://github.com/Benjamin-Dobell/libpit--Java-/tree/master/libpit/src/au/com/glassechidna/libpit
+ * modified by:
+ * @author adam
+ */
 public class PitInputStream
 {
-        private InputStream inputStream;
+        private final InputStream inputStream;
         
         public PitInputStream(InputStream inputStream)
         {

@@ -22,10 +22,20 @@ package CASUAL.archiving.libpit;
 import java.io.IOException;
 import java.io.OutputStream;
 
+
+
+/**
+ *PitOutputStream provides a set of tools designed to assist with reading PIT files
+ * 
+ * Original Files may be found here: 
+ * https://github.com/Benjamin-Dobell/libpit--Java-/tree/master/libpit/src/au/com/glassechidna/libpit
+ * modified by:
+ * @author adam
+ */
 public class PitOutputStream
 {
-        private OutputStream outputStream;
-        private byte[] writeBuffer = new byte[4];
+        private final OutputStream outputStream;
+        private final byte[] writeBuffer = new byte[4];
         
         public PitOutputStream(OutputStream outputStream)
         {

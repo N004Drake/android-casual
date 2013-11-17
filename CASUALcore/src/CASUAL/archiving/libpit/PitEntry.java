@@ -19,6 +19,16 @@ package CASUAL.archiving.libpit;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+
+
+/** 
+ * PitEntry provides a method of organizing PIT entries and storing data
+ * Original Files may be found here: 
+ * https://github.com/Benjamin-Dobell/libpit--Java-/tree/master/libpit/src/au/com/glassechidna/libpit
+ * modified by:
+ * @author adam
+ */
 public class PitEntry
 {
         public static final int DATA_SIZE = 132;
