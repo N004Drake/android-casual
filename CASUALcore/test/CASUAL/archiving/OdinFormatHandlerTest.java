@@ -13,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -42,12 +41,13 @@ public class OdinFormatHandlerTest {
 
     /**
      * Test of open method, of class OdinDecompressor.
+     * @throws java.lang.Exception
      */
     @Test
     public void testOpen() throws Exception {
         System.out.println("open");
         File F=new File(".");
-        OdinFormatHandler instance = new OdinFormatHandler("../test/CASUAL/network/CASUALDevIntegration/resources/CF-Auto-Root-gd1-gd1xx-ekgc100.tar.md5");
+        OdinFile instance = new OdinFile("../test/CASUAL/network/CASUALDevIntegration/resources/CF-Auto-Root-gd1-gd1xx-ekgc100.tar.md5");
         File[] result = instance.extractOdinContents(Statics.getTempFolder());
         assert( result.length==2);
         //test successive calls

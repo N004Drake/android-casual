@@ -51,7 +51,6 @@ public class PitData {
 
     public PitData(PitInputStream pis) throws PitFormatException {
         unpack(pis);
-        System.out.println("woot");
     }
 
     public PitData(File pit) throws FileNotFoundException, PitFormatException {
