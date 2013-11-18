@@ -1,103 +1,58 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/*WindowsDriversTest.java
+ * **************************************************************************
+ *Copyright (C) 2013  Adam Outler
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ***************************************************************************/
+
 package CASUAL;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.junit.After;
+import java.util.regex.Pattern;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assume.*;
 import org.junit.BeforeClass;
-import org.junit.*;
-import static org.junit.Assert.fail;
 
 /**
  *
- * @author adam
+ * @author Jeremy
  */
 public class WindowsDriversTest {
-
+    
+    public static WindowsDrivers instance = null;
+    
     public WindowsDriversTest() {
+        assumeTrue(OSTools.isWindows());
     }
-
+    
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUp() {
+        instance = new WindowsDrivers(1);
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
     }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-        //new WindowsDrivers(2).uninstallCADI();
-    }
-
-    /**
-     * Test of main method, of class WindowsDrivers.
-     */
- 
+    
     /**
      * Test of installDriverBlanket method, of class WindowsDrivers.
      */
     @Test
     public void testInstallDriverBlanket() {
-        CASUAL.Statics.guiReady = true;
-        if (OSTools.isWindows()) {
-            System.out.println("installDriverBlanket");
-            WindowsDrivers instance = new WindowsDrivers(1);
-            setContinue();
-            instance.installDriverBlanket(null);
-        }
-    }
-
-    /**
-     * Test of removeDriver method, of class WindowsDrivers.
-     */
-    @Test
-    public void testRemoveDriver() {
-        if (OSTools.isWindows()) {
-            System.out.println("uninstallCADI");
-            WindowsDrivers instance = new WindowsDrivers(1);
-            instance.uninstallCADI();
-        }
-
-    }
-
-    public void setContinue() {
-        String string = "\n";
-        InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.Statics.in = new BufferedReader(new InputStreamReader(stringStream));
-    }
-
-    public void setQuit() {
-        String string = "q";
-        InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.Statics.in = new BufferedReader(new InputStreamReader(stringStream));
-    }
-
-    /**
-     * Test of main method, of class WindowsDrivers.
-     */
-    @Test
-    public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        WindowsDrivers.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("installDriverBlanket");
+        String[] additionalVIDs = new String[0];
+        assert(instance.installDriverBlanket(additionalVIDs));
     }
 
     /**
@@ -106,71 +61,73 @@ public class WindowsDriversTest {
     @Test
     public void testInstallDriver() {
         System.out.println("installDriver");
-        String VID = "";
-        WindowsDrivers instance = null;
-        boolean expResult = false;
-        boolean result = instance.installDriver(VID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assert(instance.installDriver("") == false);
     }
 
     /**
-     * Test of uninstallCADI method, of class WindowsDrivers.
-     */
+    * Test of uninstallCADI method, of class WindowsDrivers.
+    */
     @Test
     public void testUninstallCADI() {
         System.out.println("uninstallCADI");
-        WindowsDrivers instance = null;
-        instance.uninstallCADI();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
-    
-    //The following are utilities for this class
-    
-    //returns true if reboot was sucessful. fails if error.
-    public boolean rebootDownload(){
-        ADBTools.restartADBserver();
-        String[] cmd=new String[]{ADBTools.getADBCommand(),"reboot","download"};
-        String s=new Shell().sendShellCommand(cmd);
-        assert s.trim().equals("");
-        return s.equals("");
-        
-        
-    }
-    
-    //returns true if close-pc-screen does not error.  fails if error
-    public boolean doHeimdallCheck(){
-        String[] cmd=new String[]{HeimdallTools.getHeimdallCommand(),"close-pc-screen"};
-        String retval=new Shell().sendShellCommand(cmd);
-        assert (!retval.contains("ERROR"));
-        return !retval.contains("ERROR");
-    }
-    
-    /*Returns true if Samsung device and Windows host 
-     runs at the start of each method
-      if(!isValidSetup)return;
-    */
-    public boolean isValidSetup(){
-        if (! OSTools.isWindows()){
-            //not playing if it's not windows. 
-            return false;
-        }
-        
-        String[] cmd = {ADBTools.getADBCommand(), "shell", "cat /system/build.prop"};
-        Properties p= new Properties();
-        try {
-            //load device build.prop into properties file
-            p.load(CASUAL.misc.StringOperations.convertStringToStream(new Shell().timeoutShellCommand(cmd,5000)));
-            //pull ro.product.manfacturer
-            String mfg=p.getProperty("ro.product.manufacturer","");
-            //test that it contains Samsung, SAMSUNG or samsung.
-            return mfg.contains("amsung")|| mfg.equals("AMSUNG");
-        } catch (IOException ex) {
-            return false;
-        }
+        assert(instance.uninstallCADI());
     }
 
+    /**
+     * Test of driverExtract method, of class WindowsDrivers.
+     */
+    @Test
+    public void testDriverExtract() throws Exception {
+        System.out.println("driverExtract");
+        String pathToExtract = instance.pathToCADI;
+        assert(instance.driverExtract(pathToExtract));
+    }
+
+    /**
+     * Test of getDeviceList method, of class WindowsDrivers.
+     */
+    @Test
+    public void testGetDeviceList() {
+        System.out.println("getDeviceList");
+        String VID = "";
+        assert(instance.getDeviceList(VID) == null);
+    }
+
+    /**
+     * Test of removeOrphanedDevices method, of class WindowsDrivers.
+     */
+    @Test
+    public void testRemoveOrphanedDevices() {
+        System.out.println("removeOrphanedDevices");
+        assert(!instance.removeOrphanedDevices(""));
+    }
+
+    /**
+     * Test of deleteOemInf method, of class WindowsDrivers.
+     */
+    @Test
+    public void testDeleteOemInf() {
+        System.out.println("deleteOemInf");
+        assert(!instance.deleteOemInf());
+    }
+
+    /**
+     * Test of devconCommand method, of class WindowsDrivers.
+     */
+    @Test
+    public void testDevconCommand() {
+        System.out.println("devconCommand");
+        String result = instance.devconCommand("help");
+        assert(result.contains("Device Console Help:"));
+    }
+
+    /**
+     * Test of getRegExPattern method, of class WindowsDrivers.
+     */
+    @Test
+    public void testGetRegExPattern() {
+        System.out.println("getRegExPattern");
+        String whatPattern = "install";
+        assert(instance.getRegExPattern(whatPattern) != null);
+    }
 }
