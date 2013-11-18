@@ -20,6 +20,7 @@ package CASUAL.archiving.libpit;
  * THE SOFTWARE.
  */
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Pitdata provides a way to work with the header information of the PIT file
@@ -45,7 +47,7 @@ public class PitData {
 
     // Entries start at 0x1C
     private final ArrayList<PitEntry> entries = new ArrayList<PitEntry>();
-
+    ByteArrayOutputStream signature = new ByteArrayOutputStream();
     public PitData() {
     }
 
@@ -108,9 +110,12 @@ public class PitData {
                 //read fota name
                 pitInputStream.read(buffer, 0, PitEntry.FOTA_NAME_MAX_LENGTH);
                 entry.setFotaName(new String(buffer, 0, PitEntry.FOTA_NAME_MAX_LENGTH));
-
             }
 
+            int byteRead;
+            while ((byteRead= pitInputStream.read())!=-1){
+                signature.write(byteRead);
+            }
             return (true);
         } catch (IOException e) {
             return (false);
@@ -144,8 +149,8 @@ public class PitData {
                 dataOutputStream.write(get32CharArray(entry.getPartitionName()));
                 dataOutputStream.write(get32CharArray(entry.getFilename()));
                 dataOutputStream.write(get32CharArray(entry.getFotaName()));
-
             }
+            dataOutputStream.write(signature.toByteArray());
 
             return (true);
         } catch (IOException e) {
