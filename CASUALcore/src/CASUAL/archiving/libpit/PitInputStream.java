@@ -21,6 +21,7 @@ package CASUAL.archiving.libpit;
  */
 import java.io.IOException;
 import java.io.InputStream;
+
  
 /** 
  * PitInputStream provides tools used for writing a pit file
@@ -52,5 +53,12 @@ public class PitInputStream
         public int read(byte[] buffer, int offset, int length) throws IOException
         {
                 return (inputStream.read(buffer, offset, length));
+        }
+        public int read(){
+            try {
+                return inputStream.read();
+            } catch (IOException ex) {
+                return -1; //if this happens the whole thing blew up or we are at the end
+            }
         }
 }
