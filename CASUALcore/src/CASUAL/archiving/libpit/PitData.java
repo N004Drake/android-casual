@@ -123,15 +123,15 @@ public class PitData {
 
                 //read partition name
                 pitInputStream.read(buffer, 0, PitEntry.PARTITION_NAME_MAX_LENGTH);
-                entry.part_name = entry.convertByteArrayToCharArray(buffer);
+                entry.setPartitionName(buffer);
 
                 //read filename
                 pitInputStream.read(buffer, 0, PitEntry.FILENAME_MAX_LENGTH);
-                entry.file_name = entry.convertByteArrayToCharArray(buffer);
+                entry.setFilename(buffer);
 
                 //read fota name
                 pitInputStream.read(buffer, 0, PitEntry.FOTA_NAME_MAX_LENGTH);
-                entry.fota_name = entry.convertByteArrayToCharArray(buffer);
+                entry.setPartitionName(buffer);
 
             }
 
@@ -174,9 +174,9 @@ public class PitData {
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getBlockCount()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getFileOffset()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getFileSize()));
-                dataOutputStream.write(entry.convertCharArrayToByteArray(entry.part_name));
-                dataOutputStream.write(entry.convertCharArrayToByteArray(entry.file_name));
-                dataOutputStream.write(entry.convertCharArrayToByteArray(entry.fota_name));
+                dataOutputStream.write(entry.getPartitionNameBytes());
+                dataOutputStream.write(entry.getFileNameBytes());
+                dataOutputStream.write(entry.getFotaNameBytes());
             }
             dataOutputStream.write(signature.toByteArray());
 
@@ -184,16 +184,6 @@ public class PitData {
         } catch (IOException e) {
             return (false);
         }
-    }
-
-    byte[] get32CharArray(String value) {
-        char[] a = value.toCharArray();
-        byte[] byteArray = new byte[32];
-        Arrays.fill(byteArray, (byte) 0);
-        for (int i = 0; i < value.length(); i++) {
-            byteArray[i] = (byte) (a[i]);
-        }
-        return byteArray;
     }
 
     /**

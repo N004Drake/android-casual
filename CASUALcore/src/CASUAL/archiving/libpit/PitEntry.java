@@ -283,12 +283,7 @@ public class PitEntry {
      */
     public String getPartitionName() {
         String partitionName = "";
-        for (int i = 0; i < part_name.length; i++) {
-            if (part_name[i] != 0) {
-                partitionName = partitionName + part_name[i];
-            }
-        }
-        return (partitionName);
+        return new String(part_name).trim();
     }
 
     /**
