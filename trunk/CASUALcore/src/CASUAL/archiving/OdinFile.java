@@ -57,6 +57,7 @@ public class OdinFile {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws NoSuchAlgorithmException
+     * @throws org.apache.commons.compress.archivers.ArchiveException
      */
     public OdinFile(File odinFile) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CorruptOdinFileException, ArchiveException {
         this.odinFile = odinFile;
@@ -102,10 +103,13 @@ public class OdinFile {
      * @throws FileNotFoundException
      * @throws IOException
      * @throws NoSuchAlgorithmException
+     * @throws org.apache.commons.compress.archivers.ArchiveException
      */
     public OdinFile(String odinFile) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CorruptOdinFileException, ArchiveException {
         this(new File(odinFile));
     }
+
+
 
     /**
      * Extracts Odin contents to outputDir
@@ -182,14 +186,14 @@ public class OdinFile {
         //Create actual MD5sum from messageDigest
         byte[] md5sum = digest.digest();
         BigInteger bigInt = new BigInteger(1, md5sum);
-        String actualMd5 = bigInt.toString(16);
-        while (actualMd5.length() != 32) {
-            actualMd5 = "0" + actualMd5;
+        String localactualMd5 = bigInt.toString(16);
+        while (localactualMd5.length() != 32) {
+            localactualMd5 = "0" + localactualMd5;
         }
         
         //split expectedMd5sum from filename and only check sum
         expectedMd5=expectedMd5.split("  ")[0];
-        return actualMd5;
+        return localactualMd5;
     }
 
 

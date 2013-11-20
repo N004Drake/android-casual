@@ -48,6 +48,7 @@ public class PitDataTest {
     static File pitFile;
 
 
+
     /**
      * Test of pack method, of class PitData.
      */
@@ -65,8 +66,6 @@ public class PitDataTest {
             String s=instance.getEntry(0).getFilename();
             assert(s.equals("NON-HLOS.bin"));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -91,8 +90,6 @@ public class PitDataTest {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         instance.clear();
         assert(instance.getEntryCount()==0);
@@ -108,8 +105,6 @@ public class PitDataTest {
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         String test=instance.getEntry(0).getFilename();
@@ -180,8 +175,6 @@ public class PitDataTest {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         String expResult = "md5.img";
         PitEntry result = instance.findEntry(partitionName);
@@ -206,8 +199,6 @@ public class PitDataTest {
             assertEquals("SBL1", result.getPartitionName());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -225,8 +216,6 @@ public class PitDataTest {
             PitEntry result=instance.getEntry(27);
             assert (result.getPartitionName().equals(expresult.getPartitionName()));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -250,8 +239,6 @@ public class PitDataTest {
             assertEquals(expResult+3, instance.getEntryCount());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -268,8 +255,6 @@ public class PitDataTest {
             assertArrayEquals(expResult, result);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -285,8 +270,6 @@ public class PitDataTest {
             char[] result = instance.getPhone();
             assertArrayEquals(expResult, result);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PitFormatException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -1,5 +1,5 @@
 package CASUAL.archiving.libpit;
- /*Copyright (c) 2010-2011 Benjamin Dobell, Glass Echidna
+/*Copyright (c) 2010-2011 Benjamin Dobell, Glass Echidna
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,46 +19,80 @@ package CASUAL.archiving.libpit;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 import java.io.IOException;
 import java.io.InputStream;
 
- 
-/** 
- * PitInputStream provides tools used for writing a pit file
- * Original Files may be found here: 
+/**
+ * PitInputStream provides tools used for writing a pit file Original Files may
+ * be found here:
  * https://github.com/Benjamin-Dobell/libpit--Java-/tree/master/libpit/src/au/com/glassechidna/libpit
  * modified by:
+ *
  * @author adam
  */
-public class PitInputStream
-{
-        private final InputStream inputStream;
-        
-        public PitInputStream(InputStream inputStream)
-        {
-                this.inputStream = inputStream;
-        }
+public class PitInputStream {
 
-        public int readInt() throws IOException
-        {                
-                return (inputStream.read() | (inputStream.read() << 8) | (inputStream.read() << 16)
-                        | (inputStream.read() << 24));
-        }
+    private final InputStream inputStream;
 
-        public short readShort() throws IOException
-        {
-                return ((short)(inputStream.read() | (inputStream.read() << 8)));
+    /**
+     * Constructs a PitInputStream
+     *
+     * @see InputStream
+     * @param inputStream
+     */
+    public PitInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    /**
+     * reads an int (four bytes) from the input stream
+     *
+     * @return
+     * @see InputStream
+     * @throws IOException
+     */
+    public int readInt() throws IOException {
+        return (inputStream.read() | (inputStream.read() << 8) | (inputStream.read() << 16)
+                | (inputStream.read() << 24));
+    }
+
+    /**
+     * reads a short (two bytes) from the inputstream
+     *
+     * @return
+     * @see InputStream
+     * @throws IOException
+     */
+    public short readShort() throws IOException {
+        return ((short) (inputStream.read() | (inputStream.read() << 8)));
+    }
+
+    /**
+     * reads parameterized bytes from the InputStream
+     *
+     * @param buffer
+     * @param offset
+     * @param length
+     * @return
+     * @see InputStream
+     * @throws IOException
+     */
+    public int read(byte[] buffer, int offset, int length) throws IOException {
+        return (inputStream.read(buffer, offset, length));
+    }
+
+    /**
+     * reads a byte from the InputStream
+     *
+     * @see InputStream
+     * @return
+     */
+    public int read() {
+        try {
+            return inputStream.read();
+        } catch (IOException ex) {
+            return -1; //if this happens the whole thing blew up or we are at the end
         }
-        
-        public int read(byte[] buffer, int offset, int length) throws IOException
-        {
-                return (inputStream.read(buffer, offset, length));
-        }
-        public int read(){
-            try {
-                return inputStream.read();
-            } catch (IOException ex) {
-                return -1; //if this happens the whole thing blew up or we are at the end
-            }
-        }
+    }
 }
