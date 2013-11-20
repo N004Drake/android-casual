@@ -38,10 +38,23 @@ public class PitOutputStream {
     private final OutputStream outputStream;
     private final byte[] writeBuffer = new byte[4];
 
+    /**
+     * creates an OutputStream for a PIT file
+     *
+     * @see OutputStream
+     * @param outputStream
+     */
     public PitOutputStream(OutputStream outputStream) {
         this.outputStream = outputStream;
     }
 
+    /**
+     * writes an integer as four bytes to the outputStream
+     *
+     * @param value
+     * @see OutputStream
+     * @throws IOException
+     */
     public void writeInt(int value) throws IOException {
         writeBuffer[0] = (byte) (value & 0xFF);
         writeBuffer[1] = (byte) ((value >> 8) & 0xFF);
@@ -51,6 +64,13 @@ public class PitOutputStream {
         outputStream.write(writeBuffer);
     }
 
+    /**
+     * writes a short value as two bytes to the OutputStream
+     *
+     * @see OutputStream
+     * @param value
+     * @throws IOException
+     */
     public void writeShort(short value) throws IOException {
         writeBuffer[0] = (byte) (value & 0xFF);
         writeBuffer[1] = (byte) (value >> 8);
@@ -58,6 +78,15 @@ public class PitOutputStream {
         outputStream.write(writeBuffer, 0, 2);
     }
 
+    /**
+     * writes a parameterized buffer to the outputstream
+     *
+     * @param buffer the data.
+     * @param offset the start offset in the data.
+     * @param length the number of bytes to write.
+     * @see OutputStream
+     * @throws IOException
+     */
     public void write(byte[] buffer, int offset, int length) throws IOException {
         outputStream.write(buffer, offset, length);
     }

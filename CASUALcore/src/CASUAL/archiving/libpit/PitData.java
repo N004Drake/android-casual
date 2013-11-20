@@ -28,7 +28,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Pitdata provides a way to work with the header information of the PIT file
@@ -40,6 +39,9 @@ import java.util.List;
  */
 public class PitData {
 
+    /**
+     * Magic Number to identify an Odin File
+     */
     public static final int FILE_IDENTIFIER = 0x12349876;
     private int entryCount; // 0x04
     char[] fileType = new char[8];
@@ -48,18 +50,38 @@ public class PitData {
     // Entries start at 0x1C
     private final ArrayList<PitEntry> entries = new ArrayList<PitEntry>();
     ByteArrayOutputStream signature = new ByteArrayOutputStream();
+
+    /**
+     * Constructor for new PIT file
+     */
     public PitData() {
     }
 
-    public PitData(PitInputStream pis) throws PitFormatException {
-        unpack(pis);
+    /**
+     * Constructor to grab PIT file from an InputStream
+     *
+     * @param PitStream inputStream containing a PIT file only
+     */
+    public PitData(PitInputStream PitStream) {
+        unpack(PitStream);
     }
 
-    public PitData(File pit) throws FileNotFoundException, PitFormatException {
+    /**
+     * Constructor to grab PIT file from a File
+     *
+     * @param pit PIT file
+     * @throws FileNotFoundException
+     */
+    public PitData(File pit) throws FileNotFoundException {
         this(new PitInputStream(new FileInputStream(pit)));
-
     }
 
+    /**
+     * unpacks a PIT into the PitData and its PitEntry classes
+     *
+     * @param pitInputStream InputStream containing only a Pit FIle
+     * @return true if unpack was performed
+     */
     public final boolean unpack(PitInputStream pitInputStream) {
         try {
             int pitID = pitInputStream.readInt();
@@ -97,23 +119,24 @@ public class PitData {
                 entry.setBlockStart(pitInputStream.readInt());
                 entry.setBlockCount(pitInputStream.readInt());
                 entry.setFileOffset(pitInputStream.readInt());
-                entry.getFileSize(pitInputStream.readInt());
+                entry.setFileSize(pitInputStream.readInt());
 
                 //read partition name
                 pitInputStream.read(buffer, 0, PitEntry.PARTITION_NAME_MAX_LENGTH);
-                entry.setPartitionName(new String(buffer, 0, PitEntry.PARTITION_NAME_MAX_LENGTH));
+                entry.part_name = entry.convertByteArrayToCharArray(buffer);
 
                 //read filename
                 pitInputStream.read(buffer, 0, PitEntry.FILENAME_MAX_LENGTH);
-                entry.setFilename(new String(buffer, 0, PitEntry.FILENAME_MAX_LENGTH));
+                entry.file_name = entry.convertByteArrayToCharArray(buffer);
 
                 //read fota name
                 pitInputStream.read(buffer, 0, PitEntry.FOTA_NAME_MAX_LENGTH);
-                entry.setFotaName(new String(buffer, 0, PitEntry.FOTA_NAME_MAX_LENGTH));
+                entry.fota_name = entry.convertByteArrayToCharArray(buffer);
+
             }
 
             int byteRead;
-            while ((byteRead= pitInputStream.read())!=-1){
+            while ((byteRead = pitInputStream.read()) != -1) {
                 signature.write(byteRead);
             }
             return (true);
@@ -122,6 +145,11 @@ public class PitData {
         }
     }
 
+    /**
+     *
+     * @param dataOutputStream
+     * @return
+     */
     public boolean pack(DataOutputStream dataOutputStream) {
         try {
 
@@ -146,9 +174,9 @@ public class PitData {
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getBlockCount()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getFileOffset()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getFileSize()));
-                dataOutputStream.write(get32CharArray(entry.getPartitionName()));
-                dataOutputStream.write(get32CharArray(entry.getFilename()));
-                dataOutputStream.write(get32CharArray(entry.getFotaName()));
+                dataOutputStream.write(entry.convertCharArrayToByteArray(entry.part_name));
+                dataOutputStream.write(entry.convertCharArrayToByteArray(entry.file_name));
+                dataOutputStream.write(entry.convertCharArrayToByteArray(entry.fota_name));
             }
             dataOutputStream.write(signature.toByteArray());
 
@@ -168,6 +196,11 @@ public class PitData {
         return byteArray;
     }
 
+    /**
+     *
+     * @param otherPitData
+     * @return
+     */
     public boolean matches(PitData otherPitData) {
 
         if (entryCount == otherPitData.entryCount && Arrays.equals(pitName, otherPitData.pitName) && Arrays.equals(fileType, otherPitData.fileType)) {
@@ -183,6 +216,9 @@ public class PitData {
         }
     }
 
+    /**
+     *
+     */
     public void clear() {
         entryCount = 0;
         fileType = new char[8];
@@ -190,10 +226,20 @@ public class PitData {
         entries.clear();
     }
 
+    /**
+     *
+     * @param index
+     * @return
+     */
     public PitEntry getEntry(int index) {
         return (entries.get(index));
     }
 
+    /**
+     *
+     * @param partitionName
+     * @return
+     */
     public PitEntry findEntry(String partitionName) {
         for (int i = 0; i < entries.size(); i++) {
             PitEntry entry = entries.get(i);
@@ -207,6 +253,35 @@ public class PitData {
         return (null);
     }
 
+    /**
+     *
+     * @param filename
+     * @return
+     */
+    public PitEntry findEntryByFilename(String filename) {
+        for (int i = 0; i < entries.size(); i++) {
+            PitEntry entry = entries.get(i);
+            String nameCheck = "";
+            for (char c : entry.file_name) {
+                if (c == 0) {  //character signifying the end of the name and the beginning of modifier "md5"
+                    break;
+                } else {
+                    nameCheck = nameCheck + c;
+                }
+            }
+
+            if (filename.equals(nameCheck)) {
+                return (entry);
+            }
+        }
+        return (null);
+    }
+
+    /**
+     *
+     * @param partitionIdentifier
+     * @return
+     */
     public PitEntry findEntry(int partitionIdentifier) {
         for (int i = 0; i < entries.size(); i++) {
             PitEntry entry = entries.get(i);
@@ -219,19 +294,53 @@ public class PitData {
         return (null);
     }
 
+    /**
+     *
+     * @param entry
+     */
     public void addEntry(PitEntry entry) {
         entries.add(entryCount++, entry);
     }
 
+    /**
+     *
+     * @return
+     */
     public int getEntryCount() {
         return (entryCount);
     }
 
+    /**
+     *
+     * @return
+     */
     public char[] getFileType() {
         return fileType;
     }
 
+    /**
+     *
+     * @return
+     */
     public char[] getPhone() {
         return pitName;
     }
+
+    @Override
+    public String toString() {
+        String n = System.getProperty("line.separator");
+        StringBuilder sb = new StringBuilder();
+        sb.append(n);
+        sb.append("PIT Name: ").append(this.pitName).append(n);
+        sb.append("Entry Count: ").append(this.entryCount).append(n);
+        sb.append("File Type: ").append(this.fileType).append(n);
+        sb.append(n);
+        sb.append(n);
+        for (int i = 0; i < this.entries.size(); i++) {
+            sb.append("--- Entry #").append(i).append(" ---").append(n);
+            sb.append(entries.get(i).toString());
+        }
+        return sb.toString();
+    }
+
 }

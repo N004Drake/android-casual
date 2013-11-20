@@ -9,7 +9,7 @@ package CASUAL.archiving;
  *
  * @author adamoutler
  */
-class CorruptOdinFileException extends Exception {
+public class CorruptOdinFileException extends Exception {
     public CorruptOdinFileException(String error) {
         System.out.println("The odin File Is corrupt.");
         System.out.println(error);
