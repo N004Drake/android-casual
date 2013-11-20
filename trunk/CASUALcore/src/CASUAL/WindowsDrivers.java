@@ -30,9 +30,6 @@ import java.util.regex.Pattern;
  * @author Adam Outler adamoutler@gmail.com
  * *************************************************************************
  */
-
-// TODO: New method int installedCount(VID) returning an integer result of devices running CASUAL's driver
-
 public class WindowsDrivers {
 
     public Log log = new Log();
@@ -72,13 +69,13 @@ public class WindowsDrivers {
      *
      * @param additionalVIDs optional String Array of additional VIDs to be
      * scanned for should normally always be null.
-     * 
+     *
      * @return a boolean sum of result. Value greater than 0 == success
      */
     public boolean installDriverBlanket(String[] additionalVIDs) {
         int resultSum = 0;
         for (int x = 0; windowsDriverBlanket.length > x; x++) {
-             resultSum += (installDriver(windowsDriverBlanket[x]) ? 1 : 0);
+            resultSum += (installDriver(windowsDriverBlanket[x]) ? 1 : 0);
         }
         if (additionalVIDs != null) {
             for (int x = 0; additionalVIDs.length > x; x++) {
@@ -95,7 +92,7 @@ public class WindowsDrivers {
      *
      * @throws FileNotFoundException
      * @throws IOException
-     * 
+     *
      * @return true if successful, false otherwise
      */
     public boolean driverExtract(String pathToExtract) throws FileNotFoundException, IOException {
@@ -158,19 +155,23 @@ public class WindowsDrivers {
     }
 
     /**
-     * uninstallCADI attempts to remove any existing or previous remnants of CADIv1
-     * or CADIv2
+     * uninstallCADI attempts to remove any existing or previous remnants of
+     * CADIv1 or CADIv2
      *
      */
     public boolean uninstallCADI() {
         int resultSum = 0;
         log.level2Information("uninstallCADI() Initializing");
         log.level2Information("uninstallCADI() Scanning for CADI driver package(s)");
-            if(deleteOemInf()) resultSum++;
+        if (deleteOemInf()) {
+            resultSum++;
+        }
 
         log.level2Information("uninstallCADI() Scanning for orphaned devices");
         for (int x = 0; windowsDriverBlanket.length > x; x++) {
-            if(removeOrphanedDevices(windowsDriverBlanket[x])) resultSum++;
+            if (removeOrphanedDevices(windowsDriverBlanket[x])) {
+                resultSum++;
+            }
         }
 
         log.level2Information("removeDriver() Windows will now scan for hardware changes");
@@ -181,8 +182,9 @@ public class WindowsDrivers {
     }
 
     /**
-     * getDeviceList parses devcon output of attached USB devices for the specified
-     * VID. Any connected matching devices are stored for return in a String Array. 
+     * getDeviceList parses devcon output for connected USB devices of the
+     * specified VID; Any matching devices are stored for return in a String
+     * Array.
      *
      * @param VID a String containing a four character USB vendor ID code in
      * hexadecimal
@@ -223,12 +225,148 @@ public class WindowsDrivers {
     }
 
     /**
-     * removeOrphanedDevices parses devcon output of any current or previously installed
-     * USB device drivers for the specified VID. Any matching device drivers are uninstalled 
+     * getDeviceList parses devcon output for devices specified Any matching
+     * devices are stored for return in a String Array.
+     *
+     * @param onlyConnected boolean for presently connected devices only
+     * @param onlyUSB boolean for USB devices only
+     * @return is a String Array of matching devices, null otherwise
+     */
+    public String[] getDeviceList(boolean onlyConnected, boolean onlyUSB) {
+        if (onlyConnected) { //Only presently connected devices
+            if (onlyUSB) { //All present USB devices
+                String outputBuffer = devconCommand("find USB*");
+                if (outputBuffer != null) {
+                    Pattern pattern = getRegExPattern("Matching devices");
+                    if (pattern != null) {
+                        Matcher matcher = pattern.matcher(outputBuffer);
+                        String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
+                        pattern = getRegExPattern("All devices");
+                        if (pattern != null) {
+                            matcher = pattern.matcher(outputBuffer);
+                            for (int x = 0; matcher.find(); x++) {
+                                dList[x] = StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", ""));
+                            }
+                            return dList;
+                        }
+                    } else {
+                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        return null;
+                    }
+                } else {
+                    log.level0Error("getDeviceList() devcon returned null!");
+                    return null;
+                }
+            } else { //All present devices
+                String outputBuffer = devconCommand("find *");
+                if (outputBuffer != null) {
+                    Pattern pattern = getRegExPattern("Matching devices");
+                    if (pattern != null) {
+                        Matcher matcher = pattern.matcher(outputBuffer);
+                        String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
+                        pattern = getRegExPattern("All devices");
+                        if (pattern != null) {
+                            matcher = pattern.matcher(outputBuffer);
+                            for (int x = 0; matcher.find(); x++) {
+                                dList[x] = StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", ""));
+                            }
+                            return dList;
+                        }
+                    } else {
+                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        return null;
+                    }
+                } else {
+                    log.level0Error("getDeviceList() devcon returned null!");
+                    return null;
+                }
+            }
+        } else { //Past & present devices
+            if (onlyUSB) { //All past & present USB devices
+                String outputBuffer = devconCommand("findall USB*");
+                if (outputBuffer != null) {
+                    Pattern pattern = getRegExPattern("Matching devices");
+                    if (pattern != null) {
+                        Matcher matcher = pattern.matcher(outputBuffer);
+                        String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
+                        pattern = getRegExPattern("All devices");
+                        if (pattern != null) {
+                            matcher = pattern.matcher(outputBuffer);
+                            for (int x = 0; matcher.find(); x++) {
+                                dList[x] = StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", ""));
+                            }
+                            return dList;
+                        }
+                    } else {
+                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        return null;
+                    }
+                } else {
+                    log.level0Error("getDeviceList() devcon returned null!");
+                    return null;
+                }
+            } else { //All past & present devices
+                String outputBuffer = devconCommand("findall *");
+                if (outputBuffer != null) {
+                    Pattern pattern = getRegExPattern("Matching devices");
+                    if (pattern != null) {
+                        Matcher matcher = pattern.matcher(outputBuffer);
+                        String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
+                        pattern = getRegExPattern("All devices");
+                        if (pattern != null) {
+                            matcher = pattern.matcher(outputBuffer);
+                            for (int x = 0; matcher.find(); x++) {
+                                dList[x] = StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", ""));
+                            }
+                            return dList;
+                        }
+                    } else {
+                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        return null;
+                    }
+                } else {
+                    log.level0Error("getDeviceList() devcon returned null!");
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * getCASUALDriverCount parses devcon output for all CASUAL driver installations
+     * and returns an integer count
+     * 
+     * @return integer count of CASUAL driver installs
+     */
+    public int getCASUALDriverCount() {
+        int devCount = 0;
+        String outputBuffer = devconCommand("findall USB*");
+        if (outputBuffer != null) {
+            Pattern pattern = getRegExPattern("CASUAL driver");
+            if (pattern != null) {
+                Matcher matcher = pattern.matcher(outputBuffer);
+                while(matcher.find()) devCount++;
+            } else {
+                log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
+                return 0;
+            }
+        } else {
+            log.level0Error("removeOrphanedDevices() devcon returned null!");
+            return 0;
+        }
+        return devCount;
+    }
+
+    /**
+     * removeOrphanedDevices parses devcon output of any current or previously
+     * installed USB device drivers for the specified VID. Any matching device
+     * drivers are uninstalled
      *
      * @param VID a String containing a four character USB vendor ID code in
      * hexadecimal
-     * @return a String Array of devcon output from attempted uninstalls of drivers
+     * @return a String Array of devcon output from attempted uninstalls of
+     * drivers
      */
     public boolean removeOrphanedDevices(String VID) {
         int i = 0;
@@ -283,13 +421,13 @@ public class WindowsDrivers {
             String outputBuffer = devconCommand("dp_enum");
             if (outputBuffer != null) {
                 Matcher matcher = pattern.matcher(outputBuffer);
-                while(matcher.find()) {
+                while (matcher.find()) {
                     log.level2Information("removeDriver() Forcing removal of driver package" + matcher.group(0));
                     String result = devconCommand("-f dp_delete " + matcher.group(0));
-                    if(result == null || result.contains("Driver package")) {
-                        log.level0Error("removeDriver() devcon returned null!");  
+                    if (result == null || result.contains("Driver package")) {
+                        log.level0Error("removeDriver() devcon returned null!");
                     }
-                    resultSum++;                     
+                    resultSum++;
                 }
             } else {
                 log.level0Error("deleteOemInf() devcon returned null!");
@@ -345,7 +483,7 @@ public class WindowsDrivers {
      */
     public Pattern getRegExPattern(String whatPattern) {
         if (!whatPattern.equals("")) {
-            if (whatPattern.equals("orphans")) {
+            if (whatPattern.equals("orphans") || whatPattern.equals("CASUAL driver")) {
                 return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:\\s[CASUAL's|Samsung]+\\s[Android\\sDevice])");
             } else if (whatPattern.equals("inf")) {
                 return Pattern.compile("[o|Oe|Em|M]{3}[0-9]{1,4}\\.inf(?=\\s*Provider:\\slibusbK\\s*Class:\\s*libusbK USB Devices)");
@@ -353,6 +491,8 @@ public class WindowsDrivers {
                 return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}(?=.*:)");
             } else if (whatPattern.equals("Matching devices")) {
                 return Pattern.compile("(?<=\\s)[0-9]{1,3}?(?=[\\smatching\\sdevice\\(s\\)\\sfound])");
+            } else if (whatPattern.equals("All devices")) {
+                return Pattern.compile("\\S+(?=\\s*:\\s)");
             } else {
                 log.level0Error("getRegExPattern() no known pattern requested");
                 return null;
