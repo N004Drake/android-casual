@@ -46,6 +46,16 @@ public class WindowsDriversTest {
     }
     
     /**
+     * Test of getDeviceList(BOOL, BOOL) method, of class WindowsDrivers.
+     */
+    @Test
+    public void testGetDeviceList() {
+        System.out.println("getDeviceList(BOOL,BOOL)");
+        String[] dList = instance.getDeviceList(false, true);
+        assert(dList.length > 1 && dList[0].contains("USB"));
+    }
+
+    /**
      * Test of installDriverBlanket method, of class WindowsDrivers.
      */
     @Test
@@ -55,6 +65,15 @@ public class WindowsDriversTest {
         assert(instance.installDriverBlanket(additionalVIDs));
     }
 
+    /**
+     * Test of getCASUALDriverCount method, of class WindowsDrivers.
+     */    
+    @Test
+    public void testGetCASUALDriverCount() {
+        System.out.println("getCASUALDriverCount");
+        assert(instance.getCASUALDriverCount() > 0);
+    }    
+    
     /**
      * Test of installDriver method, of class WindowsDrivers.
      */
@@ -75,6 +94,7 @@ public class WindowsDriversTest {
 
     /**
      * Test of driverExtract method, of class WindowsDrivers.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDriverExtract() throws Exception {
@@ -84,11 +104,11 @@ public class WindowsDriversTest {
     }
 
     /**
-     * Test of getDeviceList method, of class WindowsDrivers.
+     * Test of getDeviceList(VID) method, of class WindowsDrivers.
      */
     @Test
-    public void testGetDeviceList() {
-        System.out.println("getDeviceList");
+    public void testGetDeviceList1() {
+        System.out.println("getDeviceList(VID)");
         String VID = "";
         assert(instance.getDeviceList(VID) == null);
     }
