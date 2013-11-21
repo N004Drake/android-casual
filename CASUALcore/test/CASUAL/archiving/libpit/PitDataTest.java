@@ -188,9 +188,9 @@ public class PitDataTest {
     public void testFindEntry_int() {
         try {
             System.out.println("findEntry");
-            int partitionIdentifier = 10;
+            int partitionIdentifier = 4;
             PitData instance = new PitData(pitFile);
-            String expResult = "PARAM";
+            String expResult = "SBL3";
             PitEntry result = instance.findEntry(partitionIdentifier);
             assertEquals(expResult, result.getPartitionName());
             result = instance.findEntry(6);

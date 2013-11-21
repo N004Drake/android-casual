@@ -56,7 +56,7 @@ public class TimeOutOptionPane extends JOptionPane {
      * @param messageType JOptionPane.TYPE
      * @param options button values
      * @param initialValue default value to select if time runs out
-     * @return
+     * @return integer representing user selection
      */
     public int timeoutDialog(final int time, Component parentComponent, Object message, final String title, int optionType,
             int messageType, Object[] options, final Object initialValue) {

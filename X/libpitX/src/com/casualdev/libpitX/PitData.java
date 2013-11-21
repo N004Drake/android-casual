@@ -131,7 +131,7 @@ public class PitData {
 
                 //read fota name
                 pitInputStream.read(buffer, 0, PitEntry.FOTA_NAME_MAX_LENGTH);
-                entry.setFotaName(buffer);
+                entry.setPartitionName(buffer);
 
             }
 
@@ -233,9 +233,9 @@ public class PitData {
     public PitEntry findEntry(String partitionName) {
         for (int i = 0; i < entries.size(); i++) {
             PitEntry entry = entries.get(i);
-            String s = entry.getPartitionName().trim();
+            String s = entry.getPartitionName();
 
-            if (new String(entry.getPartitionName()).equals(partitionName)) {
+            if (entry.getPartitionName().equals(partitionName)) {
                 return (entry);
             }
         }

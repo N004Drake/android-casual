@@ -118,7 +118,7 @@ public class WindowsDrivers {
      * install the driver.
      *
      * @param VID target VID to scan & install drivers for.
-     * @return
+     * @return true if driver is installed
      */
     public boolean installDriver(String VID) {
         if (VID.equals("")) {

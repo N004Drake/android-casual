@@ -157,7 +157,7 @@ public class OdinFile {
     /**
      * runs through a file and builds an MD5 of the actual file. Stops when last
      * block size is not 512 bytes as a Tar will be 512. 
-     * @return
+     * @return OdinFile's actual MD5
      * @throws IOException
      * @throws FileNotFoundException
      * @throws NoSuchAlgorithmException 
