@@ -1,4 +1,4 @@
-package CASUAL.archiving.libpit;
+package com.casualdev.libpitX;
 /*Copyright (c) 2010-2011 Benjamin Dobell, Glass Echidna
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -131,7 +131,7 @@ public class PitData {
 
                 //read fota name
                 pitInputStream.read(buffer, 0, PitEntry.FOTA_NAME_MAX_LENGTH);
-                entry.setPartitionName(buffer);
+                entry.setFotaName(buffer);
 
             }
 
@@ -233,9 +233,9 @@ public class PitData {
     public PitEntry findEntry(String partitionName) {
         for (int i = 0; i < entries.size(); i++) {
             PitEntry entry = entries.get(i);
-            String s = entry.getPartitionName();
+            String s = entry.getPartitionName().trim();
 
-            if (entry.getPartitionName().equals(partitionName)) {
+            if (new String(entry.getPartitionName()).equals(partitionName)) {
                 return (entry);
             }
         }

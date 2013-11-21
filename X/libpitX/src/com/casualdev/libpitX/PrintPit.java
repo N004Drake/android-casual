@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL.archiving.libpit;
+package com.casualdev.libpitX;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,21 +31,19 @@ public class PrintPit {
      * @param args filename to analyze
      */
     public static void main(String args[]) {
-        if (args.length==0) showMessage();
+        if (args.length==0)showMessage();
         try {
             System.out.println(new PitData(new File(args[0])).toString());
         } catch (FileNotFoundException ex) {
             showMessage();
-        } catch (NullPointerException ex) {
-            showMessage();
         }
-
     }
 
     static void showMessage() {
         System.err.println("File Not Found");
         System.out.println("PrintPit prints the pit file provided");
         System.out.println("  usage: printpit path/to/pitFile.pit");
+        System.exit(1);
 
     }
 }

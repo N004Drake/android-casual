@@ -1,4 +1,4 @@
-package CASUAL.archiving.libpit;
+package com.casualdev.libpitX;
 
 import java.util.Arrays;
 
