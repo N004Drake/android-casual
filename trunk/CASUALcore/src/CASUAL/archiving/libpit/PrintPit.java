@@ -31,21 +31,19 @@ public class PrintPit {
      * @param args filename to analyze
      */
     public static void main(String args[]) {
-        if (args.length==0) showMessage();
+        if (args.length==0)showMessage();
         try {
             System.out.println(new PitData(new File(args[0])).toString());
         } catch (FileNotFoundException ex) {
             showMessage();
-        } catch (NullPointerException ex) {
-            showMessage();
         }
-
     }
 
     static void showMessage() {
         System.err.println("File Not Found");
         System.out.println("PrintPit prints the pit file provided");
         System.out.println("  usage: printpit path/to/pitFile.pit");
+        System.exit(1);
 
     }
 }

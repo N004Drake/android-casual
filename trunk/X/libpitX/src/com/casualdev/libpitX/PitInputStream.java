@@ -1,4 +1,4 @@
-package CASUAL.archiving.libpit;
+package com.casualdev.libpitX;
 /*Copyright (c) 2010-2011 Benjamin Dobell, Glass Echidna
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy

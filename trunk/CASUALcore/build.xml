@@ -93,16 +93,16 @@
         -->    
         <echo>generating LibPitX project sources from CASUAL.archiving/libpit</echo>
         <delete failonerror="false">
-            <fileset dir="../X/libpitX/src/com/casualdev/libpitX/" includes="**/*.java"/>
+            <fileset dir="../X/libpitX/src/com/casualdev/libpitX" includes="**/*"/>
         </delete>
-        <copy toDir="../X/libpitX/src/com/casualdev/libpitX/" failonerror="false">
+        <copy toDir="../X/libpitX/src/com/casualdev/libpitX" failonerror="false">
             <fileset dir="src/CASUAL/archiving/libpit">
                 <include name="*/**"/>
             </fileset>
         </copy>
         <echo>Running package name changer</echo>
         <javac includeantruntime="last" failonerror="yes" srcdir="BuildTasks/" destdir="BuildTasks"/>
-        <java fork="false" failonerror="yes" classname="ResolveSVNConflicts">
+        <java fork="false" failonerror="yes" classname="ReplaceLineInFile">
             <arg value="../X/libpitX/src/com/casualdev/libpitX"/>
             <arg value="package CASUAL.archiving.libpit;"/>
             <arg value="package com.casualdev.libpitX;"/>
