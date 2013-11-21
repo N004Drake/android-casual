@@ -48,7 +48,7 @@ public class PitInputStream {
     /**
      * reads an int (four bytes) from the input stream
      *
-     * @return
+     * @return integer value from four bytes
      * @see InputStream
      * @throws IOException
      */
@@ -60,7 +60,7 @@ public class PitInputStream {
     /**
      * reads a short (two bytes) from the inputstream
      *
-     * @return
+     * @return short value from two bytes
      * @see InputStream
      * @throws IOException
      */
@@ -74,7 +74,7 @@ public class PitInputStream {
      * @param buffer
      * @param offset
      * @param length
-     * @return
+     * @return value requested from stream, specified by buffer, offset and length
      * @see InputStream
      * @throws IOException
      */
@@ -86,7 +86,7 @@ public class PitInputStream {
      * reads a byte from the InputStream
      *
      * @see InputStream
-     * @return
+     * @return one byte
      */
     public int read() {
         try {

@@ -70,10 +70,11 @@
     the compile target as the regular run target does. Again, for a list of available 
     properties which you can use, check the target you are overriding in the
     nbproject/build-impl.xml file. 
+        <taskdef resource="net/sf/antcontrib/antlib.xml" />
 
     -->
-    <target name="-pre-init" description="sorts out properties files and selects higher revisions">
-        
+    <target name="-pre-compile" description="sorts out properties files and selects higher revisions">
+        <echo>Running build number resolver</echo>
         <javac includeantruntime="last" failonerror="no" srcdir="BuildTasks/" destdir="BuildTasks"/>
         <java fork="false" failonerror="no" classname="ResolveSVNConflicts">
             <classpath>
@@ -83,12 +84,34 @@
         </java>
         
     </target>
+    
+    
+    <target name="-post-compile" description="performs various actions after compilation">
 
+        <!--
+        updates sources for libpit
+        -->    
+        <echo>generating LibPitX project sources from CASUAL.archiving/libpit</echo>
+        <delete failonerror="false">
+            <fileset dir="../X/libpitX/src/com/casualdev/libpitX/" includes="**/*.java"/>
+        </delete>
+        <copy toDir="../X/libpitX/src/com/casualdev/libpitX/" failonerror="false">
+            <fileset dir="src/CASUAL/archiving/libpit">
+                <include name="*/**"/>
+            </fileset>
+        </copy>
+        <echo>Running package name changer</echo>
+        <javac includeantruntime="last" failonerror="yes" srcdir="BuildTasks/" destdir="BuildTasks"/>
+        <java fork="false" failonerror="yes" classname="ResolveSVNConflicts">
+            <arg value="../X/libpitX/src/com/casualdev/libpitX"/>
+            <arg value="package CASUAL.archiving.libpit;"/>
+            <arg value="package com.casualdev.libpitX;"/>
+            <classpath>
+                <pathelement location="BuildTasks"/>
+            </classpath>
+        </java>
 
     
-            
-    <target name="-pre-compile" description="Sets the buildversion for the current build">
-
         <exec outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
             <arg value="-c" />
             <redirector>

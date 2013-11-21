@@ -131,7 +131,7 @@ public class PitData {
 
                 //read fota name
                 pitInputStream.read(buffer, 0, PitEntry.FOTA_NAME_MAX_LENGTH);
-                entry.setPartitionName(buffer);
+                entry.setFotaName(buffer);
 
             }
 
@@ -146,9 +146,9 @@ public class PitData {
     }
 
     /**
-     *
-     * @param dataOutputStream
-     * @return
+     * Packs current object into a PIT file
+     * @param dataOutputStream dataoutputstream to write to
+     * @return true if sucessful
      */
     public boolean pack(DataOutputStream dataOutputStream) {
         try {
@@ -187,9 +187,9 @@ public class PitData {
     }
 
     /**
-     *
-     * @param otherPitData
-     * @return
+     * tests for a match on a PitData
+     * @param otherPitData second pit data to be ested
+     * @return true if match
      */
     public boolean matches(PitData otherPitData) {
 
@@ -217,25 +217,25 @@ public class PitData {
     }
 
     /**
-     *
-     * @param index
-     * @return
+     * Gets a PitEntry by index
+     * @param index index of entry
+     * @return PitEntry at index
      */
     public PitEntry getEntry(int index) {
         return (entries.get(index));
     }
 
     /**
-     *
-     * @param partitionName
-     * @return
+     * gets a PitEntry by Partition name 
+     * @param partitionName partition name to be matched
+     * @return PitEntry matched by name
      */
     public PitEntry findEntry(String partitionName) {
         for (int i = 0; i < entries.size(); i++) {
             PitEntry entry = entries.get(i);
-            String s = entry.getPartitionName();
+            String s = entry.getPartitionName().trim();
 
-            if (entry.getPartitionName().equals(partitionName)) {
+            if (new String(entry.getPartitionName()).equals(partitionName)) {
                 return (entry);
             }
         }
@@ -244,9 +244,9 @@ public class PitData {
     }
 
     /**
-     *
-     * @param filename
-     * @return
+     * gets a PitEntry by filename
+     * @param filename filename in pit entry
+     * @return PitEntry matched on filename
      */
     public PitEntry findEntryByFilename(String filename) {
         for (int i = 0; i < entries.size(); i++) {
@@ -268,9 +268,9 @@ public class PitData {
     }
 
     /**
-     *
-     * @param partitionIdentifier
-     * @return
+     * Gets a PitEntry based on partition ID
+     * @param partitionIdentifier identifier to match
+     * @return PitEntry matched on PartitionIdentifier
      */
     public PitEntry findEntry(int partitionIdentifier) {
         for (int i = 0; i < entries.size(); i++) {
@@ -285,32 +285,40 @@ public class PitData {
     }
 
     /**
-     *
-     * @param entry
+     * Removes a PitEntry from the list of PitEntries
+     * @param entry entry to be removed
+     */
+    public void removeEntry(PitEntry entry){
+        entries.remove(entry);
+    }
+    
+    /**
+     * Adds a PitEntry to the list of entries
+     * @param entry entry to be added
      */
     public void addEntry(PitEntry entry) {
         entries.add(entryCount++, entry);
     }
 
     /**
-     *
-     * @return
+     * gets the number of entries
+     * @return entry count
      */
     public int getEntryCount() {
         return (entryCount);
     }
 
     /**
-     *
-     * @return
+     * returns the file type
+     * @return file type
      */
     public char[] getFileType() {
         return fileType;
     }
 
     /**
-     *
-     * @return
+     * gets the name of the intended platform
+     * @return platform name
      */
     public char[] getPhone() {
         return pitName;

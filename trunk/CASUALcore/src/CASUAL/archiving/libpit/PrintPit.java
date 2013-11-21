@@ -31,6 +31,7 @@ public class PrintPit {
      * @param args filename to analyze
      */
     public static void main(String args[]) {
+        if (args.length==0) showMessage();
         try {
             System.out.println(new PitData(new File(args[0])).toString());
         } catch (FileNotFoundException ex) {

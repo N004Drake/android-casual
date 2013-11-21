@@ -92,7 +92,7 @@ public class PitEntry {
      * matches this entries parameters against another to detect equivalence.
      *
      * @param otherPitEntry
-     * @return
+     * @return true if match
      */
     public boolean matches(PitEntry otherPitEntry) {
         if (dev_type == otherPitEntry.dev_type && block_start == otherPitEntry.block_start && part_id == otherPitEntry.part_id
@@ -108,7 +108,7 @@ public class PitEntry {
     /**
      * binary type
      *
-     * @return
+     * @return type of binary
      */
     public int getBinType() {
         return bin_type;
@@ -126,7 +126,7 @@ public class PitEntry {
     /**
      * Device Type differs per-device. generally 0=emmc.
      *
-     * @return
+     * @return device type
      */
     public int getDevType() {
         return dev_type;
@@ -135,7 +135,7 @@ public class PitEntry {
     /**
      * Device Type differs per-device. generally 0=emmc.
      *
-     * @param devType
+     * @param devType 
      */
     public void setDevType(int devType) {
         this.dev_type = devType;
@@ -144,7 +144,7 @@ public class PitEntry {
     /**
      * Partition ID is a number which identifies the partition
      *
-     * @return
+     * @return partition identifier
      */
     public int getPartID() {
         return (part_id);
@@ -162,7 +162,7 @@ public class PitEntry {
     /**
      * Partition Attributes
      *
-     * @return
+     * @return attributes field in PIT
      */
     public int getAttributes() {
         return (attributes);
@@ -180,7 +180,7 @@ public class PitEntry {
     /**
      * rfs=0 raw=1 ext4=2
      *
-     * @return filesystem type
+     * @return filesystem type 
      */
     public int getFilesystem() {
         return fileSystem;
@@ -216,7 +216,7 @@ public class PitEntry {
     /**
      * number of 512b blocks in partition
      *
-     * @return
+     * @return block count
      */
     public int getBlockCount() {
         return (block_count);
@@ -234,7 +234,7 @@ public class PitEntry {
     /**
      * number of blocks to offset in partition before beginning write
      *
-     * @return
+     * @return block offset
      */
     public int getFileOffset() {
         return (file_offset);
@@ -252,7 +252,7 @@ public class PitEntry {
     /**
      * size of file in bytes
      *
-     * @return
+     * @return partition size in bytes
      */
     public int getFileSize() {
         return (file_size);
@@ -270,7 +270,7 @@ public class PitEntry {
     /**
      * Proper name of partition used to reference flash location
      *
-     * @return
+     * @return byte representation of partition name
      */
     public byte[] getPartitionNameBytes() {
         return convertCharArrayToByteArray(part_name);
@@ -279,7 +279,7 @@ public class PitEntry {
     /**
      * Proper name of partition used to reference flash location
      *
-     * @return
+     * @return partition name
      */
     public String getPartitionName() {
         String partitionName = "";
@@ -312,7 +312,7 @@ public class PitEntry {
     /**
      * Name of file when transferred from device
      *
-     * @return
+     * @return byte representation of filename
      */
     public byte[] getFileNameBytes() {
         return convertCharArrayToByteArray(file_name);
@@ -321,7 +321,7 @@ public class PitEntry {
     /**
      * Name of file when transferred from device
      *
-     * @return
+     * @return file name
      */
     public String getFilename() {
         String filename = "";
@@ -359,7 +359,7 @@ public class PitEntry {
     /**
      * Name of file when receiving an OTA update
      *
-     * @return
+     * @return byte representation of FOTA name
      */
     public byte[] getFotaNameBytes() {
         return convertCharArrayToByteArray(fota_name);
@@ -368,7 +368,7 @@ public class PitEntry {
     /**
      * Name of file when receiving an OTA update
      *
-     * @return
+     * @return FOTA name
      */
     public String getFotaName() {
         String fotaname = "";
@@ -443,7 +443,7 @@ public class PitEntry {
      * converts a byte array to an equivalent char array
      *
      * @param byteArray
-     * @return
+     * @return byte representation of char array
      */
     public char[] convertByteArrayToCharArray(byte[] byteArray) {
         char[] retval = new char[byteArray.length];
@@ -457,7 +457,7 @@ public class PitEntry {
      * converts a char array to an equivalent byte array
      *
      * @param charArray
-     * @return
+     * @return byte representation of char array
      */
     public byte[] convertCharArrayToByteArray(char[] charArray) {
         byte[] retval = new byte[charArray.length];

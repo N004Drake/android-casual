@@ -93,7 +93,7 @@ public class Unzip {
      * @param outputFolder folder to be unzipped to
      * @throws ZipException
      * @throws IOException
-     * @see CASUAL.Unzip#Unzip(File)
+     * @see CASUAL.archiving.Unzip#Unzip(File)
      */
     public void unzipFile(String outputFolder) throws ZipException, IOException {
         unzipFileToFolder(outputFolder);

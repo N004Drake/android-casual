@@ -461,7 +461,7 @@ public class Shell {
      * @param cmd
      * @param startTimerOnThisInLine
      * @param timeout
-     * @return
+     * @return text received from command
      */
     
     //TODO: write automated test code for this for CASUALLanguage line 653.  Can be tested with fastboot flash test test without device connected
