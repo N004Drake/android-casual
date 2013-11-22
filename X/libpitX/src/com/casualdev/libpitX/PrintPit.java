@@ -23,7 +23,7 @@ import java.io.FileNotFoundException;
  *
  * @author adamoutler
  */
-public class main {
+public class PrintPit {
 
     /**
      * Analyzes and prints a pit file in print-pit format.
