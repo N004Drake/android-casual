@@ -10,6 +10,8 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -30,7 +32,7 @@ public class PitDataTest {
     
     @BeforeClass
     public static void setUpClass() throws Exception {
-            pitFile=new File("../test/CASUAL/network/CASUALDevIntegration/resources/sch-i535-32gb.pit");
+            pitFile=new File("../test/CASUAL/archiving/resources/ekgc100part.pit");
     }
     
     @AfterClass
@@ -56,7 +58,6 @@ public class PitDataTest {
     public void testPack(){
         try {
             System.out.println("pack");
-            DataOutputStream dataOutputStream = null;
             String testFile=CASUAL.Statics.getTempFolder()+"test.pit";
             PitData instance = new PitData(pitFile);
             instance.pack(new DataOutputStream(new FileOutputStream(testFile)));
@@ -64,8 +65,17 @@ public class PitDataTest {
             PitData test=new PitData(new File(testFile));
             assert(test.matches(instance));
             String s=instance.getEntry(0).getFilename();
-            assert(s.equals("NON-HLOS.bin"));
+            assert(s.equals("sboot.binmd5"));
+            String origSHA256sum=new CASUAL.crypto.SHA256sum(new File(testFile)).getSha256();
+            String newSHA256sum=new CASUAL.crypto.SHA256sum(pitFile).getSha256();
+            assert newSHA256sum.equals(origSHA256sum);
+            
+            
         } catch (FileNotFoundException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -108,9 +118,9 @@ public class PitDataTest {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         String test=instance.getEntry(0).getFilename();
-        assert(test.equals("NON-HLOS.bin"));
+        assert(test.equals("BOOTLOADER"));
         test=instance.getEntry(1).getFilename();
-        assert(test.equals("sbl1.mbn"));
+        assert(test.equals("PIT"));
         test=instance.getEntry(2).getFilename();
         assert(test.equals("sbl2.mbn"));
         test=instance.getEntry(3).getFilename();
@@ -169,14 +179,14 @@ public class PitDataTest {
     @Test
     public void testFindEntry_String() {
         System.out.println("findEntry");
-        String partitionName = "MD5";
+        String partitionName = "BOOTLOADER";
         PitData instance = new PitData();
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String expResult = "md5.img";
+        String expResult = "sboot.binmd5";
         PitEntry result = instance.findEntry(partitionName);
         assertEquals(expResult, result.getFilename());
     }
@@ -190,13 +200,13 @@ public class PitDataTest {
             System.out.println("findEntry");
             int partitionIdentifier = 4;
             PitData instance = new PitData(pitFile);
-            String expResult = "SBL3";
+            String expResult = "PARAM";
             PitEntry result = instance.findEntry(partitionIdentifier);
             assertEquals(expResult, result.getPartitionName());
             result = instance.findEntry(6);
-            assertEquals("RPM", result.getPartitionName());
+            assertEquals("RECOVERY", result.getPartitionName());
             result = instance.findEntry(2);
-            assertEquals("SBL1", result.getPartitionName());
+            assertEquals("BOTA1", result.getPartitionName());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -211,9 +221,10 @@ public class PitDataTest {
             System.out.println("addEntry");
             PitEntry entry = null;
             PitData instance = new PitData(pitFile);
+            int size=instance.getEntryCount();
             PitEntry expresult = instance.findEntry(10);
             instance.addEntry(expresult);
-            PitEntry result=instance.getEntry(27);
+            PitEntry result=instance.getEntry(size);
             assert (result.getPartitionName().equals(expresult.getPartitionName()));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -228,7 +239,7 @@ public class PitDataTest {
         try {
             System.out.println("getEntryCount");
             PitData instance = new PitData(pitFile);
-            int expResult = 27;
+            int expResult = 17;
             int result = instance.getEntryCount();
             assertEquals(expResult, result);
             instance.addEntry(new PitEntry());
@@ -266,7 +277,7 @@ public class PitDataTest {
         try {
             System.out.println("getPhone");
             PitData instance = new PitData(pitFile);
-            char[] expResult = new char[]{'M','S','M','8','9','6','0',' ',' ',' ',' ',' '};
+            char[] expResult = new char[]{'M','x',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
             char[] result = instance.getPhone();
             assertArrayEquals(expResult, result);
         } catch (FileNotFoundException ex) {

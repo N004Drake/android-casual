@@ -1,3 +1,4 @@
+package CASPACcreator;
 /*CASPACcreator creates a CASPAC using command-line args.
  *Copyright (C) 2013  Logan Ludington
  *
@@ -14,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASPACcreator;
+
 
 import CASUAL.Log;
 import java.io.File;

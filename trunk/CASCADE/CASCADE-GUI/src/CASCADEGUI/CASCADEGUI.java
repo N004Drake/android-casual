@@ -1,3 +1,4 @@
+package CASCADEGUI;
 /*CASCADEGUI is CASUAL's Automated Scripting Action Development Environment GUI
  *Copyright (C) 2013  Adam Outler & Logan Ludington
  *
@@ -18,7 +19,6 @@
  *
  * @author loganludington
  */
-package CASCADEGUI;
 //Dependencies must be built or there will be errors.. Build the project first.
 import CASPACkager.PackagerMain;
 import CASUAL.crypto.AES128Handler;

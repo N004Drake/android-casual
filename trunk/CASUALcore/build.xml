@@ -93,9 +93,9 @@
         -->    
         <echo>generating LibPitX project sources from CASUAL.archiving/libpit</echo>
         <delete failonerror="false">
-            <fileset dir="../X/libpitX/src/com/casualdev/libpitX" includes="**/*"/>
+            <fileset dir="../X/libpitX/src/com/casual_dev/libpitX" includes="**/*" excludes="**/package-info.java" />
         </delete>
-        <copy toDir="../X/libpitX/src/com/casualdev/libpitX" failonerror="false">
+        <copy toDir="../X/libpitX/src/com/casual_dev/libpitX" failonerror="false">
             <fileset dir="src/CASUAL/archiving/libpit">
                 <include name="*/**"/>
             </fileset>
@@ -103,9 +103,9 @@
         <echo>Running package name changer</echo>
         <javac includeantruntime="last" failonerror="yes" srcdir="BuildTasks/" destdir="BuildTasks"/>
         <java fork="false" failonerror="yes" classname="ReplaceLineInFile">
-            <arg value="../X/libpitX/src/com/casualdev/libpitX"/>
+            <arg value="../X/libpitX/src/com/casual_dev/libpitX"/>
             <arg value="package CASUAL.archiving.libpit;"/>
-            <arg value="package com.casualdev.libpitX;"/>
+            <arg value="package com.casual_dev.libpitX;"/>
             <classpath>
                 <pathelement location="BuildTasks"/>
             </classpath>
