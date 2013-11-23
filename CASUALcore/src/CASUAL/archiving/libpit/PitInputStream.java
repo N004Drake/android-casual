@@ -39,7 +39,7 @@ public class PitInputStream {
      * Constructs a PitInputStream
      *
      * @see InputStream
-     * @param inputStream
+     * @param inputStream PIT as InputStream
      */
     public PitInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -71,9 +71,9 @@ public class PitInputStream {
     /**
      * reads parameterized bytes from the InputStream
      *
-     * @param buffer
-     * @param offset
-     * @param length
+     * @param buffer byte buffer
+     * @param offset bytes to discard
+     * @param length number of bytes to read
      * @return value requested from stream, specified by buffer, offset and length
      * @see InputStream
      * @throws IOException

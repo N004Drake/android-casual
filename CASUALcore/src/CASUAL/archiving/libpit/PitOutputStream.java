@@ -51,7 +51,7 @@ public class PitOutputStream {
     /**
      * writes an integer as four bytes to the outputStream
      *
-     * @param value
+     * @param value an integer or four bytes to be written
      * @see OutputStream
      * @throws IOException
      */
@@ -68,7 +68,7 @@ public class PitOutputStream {
      * writes a short value as two bytes to the OutputStream
      *
      * @see OutputStream
-     * @param value
+     * @param value short value to be written
      * @throws IOException
      */
     public void writeShort(short value) throws IOException {

@@ -48,10 +48,10 @@ public class PitEntry {
     public static final int FOTA_NAME_MAX_LENGTH = 32;
 
     private int bin_type;
-    private int dev_type;
+    private int device_type;
     private int part_id;
-    private int attributes;
-    private int fileSystem;
+    private int part_type;
+    private int filesystem;
     private int block_start;
     private int block_count;
     private int file_offset;
@@ -77,32 +77,25 @@ public class PitEntry {
      */
     public PitEntry() {
 
-        dev_type = 0;
+        device_type = 0;
         block_start = 0;
         part_id = 0;
-        attributes = 0;
+        part_type = 0;
         file_offset = 0;
         file_size = 0;
         block_count = 0;
-        fileSystem = 0;
+        filesystem = 0;
         bin_type = 0;
     }
 
     /**
      * matches this entries parameters against another to detect equivalence.
      *
-     * @param otherPitEntry
+     * @param otherPitEntry entry to match against
      * @return true if match
      */
     public boolean matches(PitEntry otherPitEntry) {
-        if (dev_type == otherPitEntry.dev_type && block_start == otherPitEntry.block_start && part_id == otherPitEntry.part_id
-                && attributes == otherPitEntry.attributes && file_offset == otherPitEntry.file_offset && file_size == otherPitEntry.file_size
-                && block_count == otherPitEntry.block_count && fileSystem == otherPitEntry.fileSystem && bin_type == otherPitEntry.bin_type
-                && getPartitionName().equals(otherPitEntry.getPartitionName()) && getFilename().equals(otherPitEntry.getFilename())) {
-            return (true);
-        } else {
-            return (false);
-        }
+        return this.toString().equals(otherPitEntry.toString());
     }
 
     /**
@@ -117,7 +110,7 @@ public class PitEntry {
     /**
      * binary type
      *
-     * @param binType
+     * @param binType unsigned integer
      */
     public void setBinType(int binType) {
         this.bin_type = binType;
@@ -129,16 +122,16 @@ public class PitEntry {
      * @return device type
      */
     public int getDevType() {
-        return dev_type;
+        return device_type;
     }
 
     /**
      * Device Type differs per-device. generally 0=emmc.
      *
-     * @param devType 
+     * @param devType unsigned integer
      */
-    public void setDevType(int devType) {
-        this.dev_type = devType;
+    public void setDeviceType(int devType) {
+        this.device_type = devType;
     }
 
     /**
@@ -153,7 +146,7 @@ public class PitEntry {
     /**
      * Partition ID is a number which identifies the partition
      *
-     * @param partitionIdentifier
+     * @param partitionIdentifier unsigned integer
      */
     public void setPartID(int partitionIdentifier) {
         this.part_id = partitionIdentifier;
@@ -165,34 +158,34 @@ public class PitEntry {
      * @return attributes field in PIT
      */
     public int getAttributes() {
-        return (attributes);
+        return (part_type);
     }
 
     /**
      * Partition Attributes
      *
-     * @param partitionFlags
+     * @param partitionFlags unsigned integer
      */
-    public void setAttributes(int partitionFlags) {
-        this.attributes = partitionFlags;
+    public void setPartitionType(int partitionFlags) {
+        this.part_type = partitionFlags;
     }
 
     /**
      * rfs=0 raw=1 ext4=2
      *
-     * @return filesystem type 
+     * @return filesystem type
      */
     public int getFilesystem() {
-        return fileSystem;
+        return filesystem;
     }
 
     /**
      * sets filesystem type rfs=0 raw=1 ext4=2
      *
-     * @param filesystem
+     * @param filesystem unsigned integer
      */
     public void setFilesystem(int filesystem) {
-        this.fileSystem = filesystem;
+        this.filesystem = filesystem;
     }
 
     /**
@@ -207,7 +200,7 @@ public class PitEntry {
     /**
      * starting block on EMMC in 512b blocks
      *
-     * @param blockStart
+     * @param blockStart unsigned integer
      */
     public void setBlockStart(int blockStart) {
         this.block_start = blockStart;
@@ -225,7 +218,7 @@ public class PitEntry {
     /**
      * number of 512b blocks in partition
      *
-     * @param partitionBlockCount
+     * @param partitionBlockCount unsigned integer
      */
     public void setBlockCount(int partitionBlockCount) {
         this.block_count = partitionBlockCount;
@@ -243,7 +236,7 @@ public class PitEntry {
     /**
      * number of blocks to offset in partition before beginning write
      *
-     * @param fileOffset
+     * @param fileOffset unsigned integer
      */
     public void setFileOffset(int fileOffset) {
         this.file_offset = fileOffset;
@@ -261,7 +254,7 @@ public class PitEntry {
     /**
      * size of file in bytes
      *
-     * @param partitionBlockSize
+     * @param partitionBlockSize unsigned integer
      */
     public void setFileSize(int partitionBlockSize) {
         this.file_size = partitionBlockSize;
@@ -289,7 +282,7 @@ public class PitEntry {
     /**
      * Proper name of partition used to reference flash location
      *
-     * @param partitionName
+     * @param partitionName unsigned integer
      */
     public void setPartitionName(byte[] partitionName) {
         part_name = convertByteArrayToCharArray(partitionName);
@@ -298,7 +291,7 @@ public class PitEntry {
     /**
      * Proper name of partition used to reference flash location
      *
-     * @param partitionName
+     * @param partitionName unsigned integer
      */
     public void setPartitionName(String partitionName) {
         if (partitionName.length() < part_name.length) { // "Less than" due to null byte.
@@ -403,10 +396,88 @@ public class PitEntry {
         }
     }
 
+    public String getPartitionTypeFriendlyName() {
+        switch (this.part_type) {
+            case 1:
+                return "Bct";
+            case 2:
+                return "Bootloader";
+            case 4:
+                return "Data";
+            case 5:
+                return "Data";
+            case 6:
+                return "MBR";
+            case 7:
+                return "EBR";
+            case 8:
+                return "GP1";
+            case 9:
+                return "GPT";
+            default:
+                return "unknown";
+        }
+    }
+
+    public String getFilesystemTypeFriendlyName() {
+        switch (this.filesystem) {
+            case 0:
+                return "raw";
+            case 1:
+                return "Basic";
+            case 2:
+                return "Enhanced";
+            case 3:
+                return "EXT2";
+            case 4:
+                return "YAFFS2";
+            case 5:
+                return "EXT4";
+            default:
+                return "unknown";
+        }
+    }
+
+    public String getHardwareTypeFriendlyName() {
+        switch (this.device_type) {
+            case 1:
+                return "NAND";
+            case 2:
+                return "EMMC";
+            case 3:
+                return "SPI";
+            case 4:
+                return "IDE";
+            case 5:
+                return "NAND_X16";
+            default:
+                return "unknwon";
+
+        }
+    }
+
+    //http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
+    /**
+     * convert block count into human-readable form.
+     *
+     * @param si use SI units (KB=1000B) or binary (KiB=1024B)
+     * @return human readable bytes from block count
+     */
+    public String getBlockCountFriendly(boolean si) {
+        long bytes = (long) block_count * 512;
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) {
+            return bytes + " B";
+        }
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+
+    }
+
     @Override
     public String toString() {
-        /*
-         --- Entry #26 ---
+        /*  original entry from Heimdall
          Binary Type: 0 (AP)
          Device Type: 2 (MMC)
          Identifier: 73
@@ -422,21 +493,29 @@ public class PitEntry {
          */
         StringBuilder sb = new StringBuilder();
         String n = System.getProperty("line.separator");
-
-        sb.append("Binary Type: ").append(this.bin_type).append(n);
-        sb.append("Device Type: ").append(this.dev_type).append(n);
-        sb.append("Identifier: ").append(this.part_id).append(n);
-        sb.append("Filesystem Type: ").append(this.fileSystem).append(n);
-        sb.append("Attributes: ").append(this.attributes).append(n);
-        sb.append("Partition Block Size/Offset: ").append(this.file_offset).append(n);
-        sb.append("Partition Block Count: ").append(this.block_count).append(n);
-        sb.append("File Offset (Obsolete):").append(this.file_offset).append(n);
-        sb.append("File Size (Obsolete): ").append(this.file_size).append(n);
+        sb.append("Partition ID: ").append(this.part_id).append(n);
         sb.append("Partition Name: ").append(this.getPartitionName()).append(n);
         sb.append("Flash Filename: ").append(this.getFilename()).append(n);
+        sb.append("Block Count: ").append(this.block_count).append(" (").append(getBlockCountFriendly(true)).append(")").append(n);
+        sb.append("Block Start: ").append(this.block_start).append(n);
+        sb.append("Last Block: ").append(getPartitionEndBlock()).append(n);
+        sb.append("Filesystem Type: ").append(this.filesystem).append(" (").append(this.getFilesystemTypeFriendlyName()).append(")").append(n);
+        sb.append("Partition Type: ").append(this.part_type).append(" (").append(this.getPartitionTypeFriendlyName()).append(")").append(n);
+        sb.append("Device Type: ").append(this.device_type).append(" (").append(this.getHardwareTypeFriendlyName()).append(")").append(n);
+        sb.append("Binary Type: ").append(this.bin_type).append(n);
         sb.append("FOTA Filename: ").append(this.getFotaName()).append(n);
         sb.append(n).append(n);
         return sb.toString();
+    }
+
+    /**
+     * calculated value for partition start + partition size -1 to account for
+     * first block's usage.
+     *
+     * @return last block used by partition
+     */
+    private int getPartitionEndBlock() {
+        return this.block_start + this.block_count - 1;
     }
 
     /**

@@ -96,7 +96,7 @@ public class PitEntryTest {
         System.out.println("getDevType");
         PitEntry instance = new PitEntry();
         int expResult = 89;
-        instance.setDevType(expResult);
+        instance.setDeviceType(expResult);
         int result = instance.getDevType();
         assertEquals(expResult, result);
     }
@@ -122,7 +122,7 @@ public class PitEntryTest {
         System.out.println("getAttributes");
         PitEntry instance = new PitEntry();
         int expResult = 93;
-        instance.setAttributes(expResult);
+        instance.setPartitionType(expResult);
         int result = instance.getAttributes();
         assertEquals(expResult, result);
     }

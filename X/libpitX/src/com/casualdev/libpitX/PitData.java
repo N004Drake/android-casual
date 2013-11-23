@@ -27,7 +27,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Pitdata provides a way to work with the header information of the PIT file
@@ -112,9 +111,9 @@ public class PitData {
                 entries.add(entry);
 
                 entry.setBinType(pitInputStream.readInt());
-                entry.setDevType(pitInputStream.readInt());
+                entry.setDeviceType(pitInputStream.readInt());
                 entry.setPartID(pitInputStream.readInt());
-                entry.setAttributes(pitInputStream.readInt());
+                entry.setPartitionType(pitInputStream.readInt());
                 entry.setFilesystem(pitInputStream.readInt());
                 entry.setBlockStart(pitInputStream.readInt());
                 entry.setBlockCount(pitInputStream.readInt());
@@ -147,6 +146,7 @@ public class PitData {
 
     /**
      * Packs current object into a PIT file
+     *
      * @param dataOutputStream dataoutputstream to write to
      * @return true if sucessful
      */
@@ -188,22 +188,12 @@ public class PitData {
 
     /**
      * tests for a match on a PitData
+     *
      * @param otherPitData second pit data to be ested
      * @return true if match
      */
     public boolean matches(PitData otherPitData) {
-
-        if (entryCount == otherPitData.entryCount && Arrays.equals(pitName, otherPitData.pitName) && Arrays.equals(fileType, otherPitData.fileType)) {
-            for (int i = 0; i < entryCount; i++) {
-                if (!entries.get(i).matches(otherPitData.entries.get(i))) {
-                    return (false);
-                }
-            }
-
-            return (true);
-        } else {
-            return (false);
-        }
+        return this.toString().equals(otherPitData.toString());
     }
 
     /**
@@ -218,6 +208,7 @@ public class PitData {
 
     /**
      * Gets a PitEntry by index
+     *
      * @param index index of entry
      * @return PitEntry at index
      */
@@ -226,7 +217,8 @@ public class PitData {
     }
 
     /**
-     * gets a PitEntry by Partition name 
+     * gets a PitEntry by Partition name
+     *
      * @param partitionName partition name to be matched
      * @return PitEntry matched by name
      */
@@ -245,6 +237,7 @@ public class PitData {
 
     /**
      * gets a PitEntry by filename
+     *
      * @param filename filename in pit entry
      * @return PitEntry matched on filename
      */
@@ -269,6 +262,7 @@ public class PitData {
 
     /**
      * Gets a PitEntry based on partition ID
+     *
      * @param partitionIdentifier identifier to match
      * @return PitEntry matched on PartitionIdentifier
      */
@@ -286,14 +280,16 @@ public class PitData {
 
     /**
      * Removes a PitEntry from the list of PitEntries
+     *
      * @param entry entry to be removed
      */
-    public void removeEntry(PitEntry entry){
+    public void removeEntry(PitEntry entry) {
         entries.remove(entry);
     }
-    
+
     /**
      * Adds a PitEntry to the list of entries
+     *
      * @param entry entry to be added
      */
     public void addEntry(PitEntry entry) {
@@ -302,6 +298,7 @@ public class PitData {
 
     /**
      * gets the number of entries
+     *
      * @return entry count
      */
     public int getEntryCount() {
@@ -310,6 +307,7 @@ public class PitData {
 
     /**
      * returns the file type
+     *
      * @return file type
      */
     public char[] getFileType() {
@@ -318,6 +316,7 @@ public class PitData {
 
     /**
      * gets the name of the intended platform
+     *
      * @return platform name
      */
     public char[] getPhone() {
