@@ -306,7 +306,7 @@ public class PitEntry {
                 while(part_name[i]==0 && i<part_name.length-1){
                     i++;
                     if (part_name[i]!=0){
-                        filename=filename+"\nPartition Parameter: "+part_name[i];
+                        filename=filename+"   param: "+part_name[i];
                         break;
                     }
                 }
@@ -377,7 +377,7 @@ public class PitEntry {
                 while(file_name[i]==0 && i<file_name.length-1){
                     i++;
                     if (file_name[i]!=0){
-                        filename=filename+"\nFilename Parameter: "+file_name[i];
+                        filename=filename+"   param: "+file_name[i];
                         break;
                     }
                 }
@@ -448,7 +448,7 @@ public class PitEntry {
                 while(fota_name[i]==0 && i<fota_name.length-1){
                     i++;
                     if (fota_name[i]!=0){
-                        fotaname=fotaname+"\nFOTA Parameter: "+part_name[i];
+                        fotaname=fotaname+"   param: "+part_name[i];
                         break;
                     }
                 }
@@ -604,9 +604,14 @@ public class PitEntry {
         sb.append("Filename: ").append(this.getFriendlyFileName()).append(n);
         sb.append("Block Size: ").append(this.block_count).append(" (").append(getBlockCountFriendly(true)).append(")").append(n);
         sb.append("Block range: ").append(this.block_start).append(" - ").append(getPartitionEndBlock());
-        sb.append("(ofs 0x").append(Integer.toHexString(this.block_start)).append(" - 0x").append(Integer.toHexString(getPartitionEndBlock())).append(")").append(n); 
-        sb.append("Part/Dev/Filesystem/Bin/:").append(this.part_type).append(this.bin_type).append(this.filesystem).append(this.bin_type).append(n);
-        sb.append("FOTA Filename: ").append(this.getFotaName()).append(n);
+        sb.append(" (hex 0x").append(Integer.toHexString(this.block_start)).append(" - 0x").append(Integer.toHexString(getPartitionEndBlock())).append(")").append(n); 
+        sb.append("PartType: ").append(this.part_type);
+        sb.append("   DevType: ").append(this.device_type);
+        sb.append("   FilesystemType: ").append(this.filesystem);
+        sb.append("   BinType: ").append(this.bin_type).append(n);
+        sb.append("Offset:").append(this.file_offset);
+        sb.append("   Size: ").append(this.file_size);
+        sb.append("   FOTA: ").append(this.getFotaName()).append(n);
         sb.append(getPartitionDescritpion());
         if (this.getFotaName().contains("remained")){
             sb.append(" and the partition will expand to fill the remainder of the ").append(this.getHardwareTypeFriendlyName());
