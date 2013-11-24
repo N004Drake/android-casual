@@ -27,7 +27,7 @@ public class PitEntryTest {
 
     public PitEntryTest() {
         try {
-            pitFile = new PitData(new File("../test/CASUAL/network/CASUALDevIntegration/resources/sch-i535-32gb.pit"));
+            pitFile = new PitData(new File("../test/CASUAL/archiving/resources/ekgc100part.pit"));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitEntryTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -278,7 +278,7 @@ public class PitEntryTest {
     }
 
     /**
-     * Test of getFilename method, of class PitEntry.
+     * Test of getFilenameString method, of class PitEntry.
      */
     @Test
     public void testGetFilename() {
@@ -286,7 +286,7 @@ public class PitEntryTest {
         PitEntry instance = new PitEntry();
         String expResult = "testatest";
         instance.setFilename(expResult);
-        String result = instance.getFilename();
+        String result = instance.getFilenameString();
         assertEquals(expResult, result);
     }
 

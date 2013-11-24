@@ -197,7 +197,7 @@ public class PitData {
     }
 
     /**
-     *
+     * clears all data in the pit file.
      */
     public void clear() {
         entryCount = 0;
@@ -323,20 +323,65 @@ public class PitData {
         return pitName;
     }
 
+    /**
+     * returns pit name with parameters
+     * @return PIT friendly name with parameters
+     */
+    public String getPITFriendlyName() {
+        String pitFriendlyName = "";
+        for (int i = 0; i < pitName.length; i++) {
+            //first part of file will be filename
+            if (pitName[i] != 0) {
+                pitFriendlyName = pitFriendlyName + pitName[i];
+            } else { //anything after first 0 byte will be a parameter
+                while (pitName[i] == 0 && i < pitName.length - 1) {
+                    i++;
+                    if (pitName[i] != 0) {
+                        pitFriendlyName = pitFriendlyName + "\nPIT Parameter: " + pitName[i];
+                        break;
+                    }
+                }
+            }
+        }
+        return pitFriendlyName;
+    }
+    /**
+     * returns filetype friendly name with parameters 
+     * @return File Type friendly name with parameters
+     */
+    public String getFileTypeFriendlyName() {
+        String filetypeFriendlyName = "";
+        for (int i = 0; i < fileType.length; i++) {
+            //first part of file will be filename
+            if (fileType[i] != 0) {
+                filetypeFriendlyName = filetypeFriendlyName + fileType[i];
+            } else { //anything after first 0 byte will be a parameter
+                while (fileType[i] == 0 && i < fileType.length - 1) {
+                    i++;
+                    if (fileType[i] != 0) {
+                        filetypeFriendlyName = filetypeFriendlyName + "\nPIT Parameter: " + fileType[i];
+                        break;
+                    }
+                }
+            }
+        }
+        return filetypeFriendlyName;
+    }
     @Override
     public String toString() {
         String n = System.getProperty("line.separator");
         StringBuilder sb = new StringBuilder();
         sb.append(n);
-        sb.append("PIT Name: ").append(this.pitName).append(n);
+        sb.append("PIT Name: ").append(getPITFriendlyName()).append(n);
         sb.append("Entry Count: ").append(this.entryCount).append(n);
-        sb.append("File Type: ").append(this.fileType).append(n);
+        sb.append("File Type: ").append(getFileTypeFriendlyName()).append(n);
         sb.append(n);
         sb.append(n);
         for (int i = 0; i < this.entries.size(); i++) {
             sb.append("--- Entry #").append(i).append(" ---").append(n);
             sb.append(entries.get(i).toString());
         }
+        sb.append(n).append(n);
         return sb.toString();
     }
 
