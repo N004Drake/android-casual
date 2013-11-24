@@ -1,3 +1,4 @@
+package CASUAL.archiving.libpit;
 /*PrintPit prints the pit file provided
  *Copyright (C) 2013  Adam Outler
  *
@@ -14,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL.archiving.libpit;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
