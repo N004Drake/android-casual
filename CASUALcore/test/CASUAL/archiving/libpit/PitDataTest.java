@@ -64,7 +64,7 @@ public class PitDataTest {
             System.out.println("packed " +testFile);
             PitData test=new PitData(new File(testFile));
             assert(test.matches(instance));
-            String s=instance.getEntry(0).getFilename();
+            String s=instance.getEntry(0).getFilenameString();
             assert(s.equals("sboot.binmd5"));
             String origSHA256sum=new CASUAL.crypto.SHA256sum(new File(testFile)).getSha256();
             String newSHA256sum=new CASUAL.crypto.SHA256sum(pitFile).getSha256();
@@ -117,60 +117,40 @@ public class PitDataTest {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String test=instance.getEntry(0).getFilename();
-        assert(test.equals("BOOTLOADER"));
-        test=instance.getEntry(1).getFilename();
-        assert(test.equals("PIT"));
-        test=instance.getEntry(2).getFilename();
-        assert(test.equals("sbl2.mbn"));
-        test=instance.getEntry(3).getFilename();
-        assert(test.equals("sbl3.mbn"));
-        test=instance.getEntry(4).getFilename();
-        assert(test.equals("aboot.mbn"));
-        test=instance.getEntry(5).getFilename();
-        assert(test.equals("rpm.mbn"));
-        test=instance.getEntry(6).getFilename();
-        assert(test.equals("boot.img"));
-        test=instance.getEntry(7).getFilename();
-        assert(test.equals("tz.mbn"));
-        test=instance.getEntry(8).getFilename();
-        assert(test.equals(""));
-        test=instance.getEntry(9).getFilename();
-        assert(test.equals(""));
-        test=instance.getEntry(10).getFilename();
-        assert(test.equals("efs.img.ext4"));
-        test=instance.getEntry(11).getFilename();
-        assert(test.equals("nvrebuild1.bin"));
-        test=instance.getEntry(12).getFilename();
-        assert(test.equals("nvrebuild2.bin"));
-        test=instance.getEntry(13).getFilename();
-        assert(test.equals("system.img.ext4"));
-        test=instance.getEntry(14).getFilename();
-        assert(test.equals("userdata.img.ext4"));
-        test=instance.getEntry(15).getFilename();
-        assert(test.equals("persist.img.ext4"));
-        test=instance.getEntry(16).getFilename();
-        assert(test.equals("cache.img.ext4"));
-        test=instance.getEntry(17).getFilename();
-        assert(test.equals("recovery.img"));
-        test=instance.getEntry(18).getFilename();
-        assert(test.equals(""));
-        test=instance.getEntry(19).getFilename();
-        assert(test.equals(""));
-        test=instance.getEntry(20).getFilename();
-        assert(test.equals(""));
-        test=instance.getEntry(21).getFilename();
-        assert(test.equals(""));
-        test=instance.getEntry(22).getFilename();
-        assert(test.equals(""));
-        test=instance.getEntry(23).getFilename();
-        assert(test.equals("pgpt.img"));
-        test=instance.getEntry(24).getFilename();
-        assert(test.equals("MSM8960.pit"));
-        test=instance.getEntry(25).getFilename();
-        assert(test.equals("md5.img"));
-        test=instance.getEntry(26).getFilename();
-        assert(test.equals("sgpt.img"));
+        String test=instance.getEntry(0).getFilenameString();
+        assert(test.equals("sboot.binmd5"));
+        test=instance.getEntry(1).getFilenameString();
+        assert(test.equals("tz.imgmd5"));
+        test=instance.getEntry(2).getFilenameString();
+        assert(test.equals("camera.pit"));
+        test=instance.getEntry(3).getFilenameString();
+        assert(test.equals("md5.imgin.md5"));
+        test=instance.getEntry(4).getFilenameString();
+        assert(test.equals("-"));
+        test=instance.getEntry(5).getFilenameString();
+        assert(test.equals("-"));
+        test=instance.getEntry(6).getFilenameString();
+        assert(test.equals("efs.imgmd5"));
+        test=instance.getEntry(7).getFilenameString();
+        assert(test.equals("param.binmd5"));
+        test=instance.getEntry(8).getFilenameString();
+        assert(test.equals("boot.imgmd5"));
+        test=instance.getEntry(9).getFilenameString();
+        assert(test.equals("recovery.imgmd5"));
+        test=instance.getEntry(10).getFilenameString();
+        assert(test.equals("modem.binmd5"));
+        test=instance.getEntry(11).getFilenameString();
+        assert(test.equals("cache.imgmd5"));
+        test=instance.getEntry(12).getFilenameString();
+        assert(test.equals("system.imgmd5"));
+        test=instance.getEntry(13).getFilenameString();
+        assert(test.equals("hidden.imgmd5"));
+        test=instance.getEntry(14).getFilenameString();
+        assert(test.equals("-"));
+        test=instance.getEntry(15).getFilenameString();
+        assert(test.equals("-erdata.imgmd5"));
+        test=instance.getEntry(16).getFilenameString();
+        assert(test.equals("userdata.img"));
     }
 
     /**
@@ -188,7 +168,7 @@ public class PitDataTest {
         }
         String expResult = "sboot.binmd5";
         PitEntry result = instance.findEntry(partitionName);
-        assertEquals(expResult, result.getFilename());
+        assertEquals(expResult, result.getFilenameString());
     }
 
     /**

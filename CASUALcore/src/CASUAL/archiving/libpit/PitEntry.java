@@ -106,6 +106,19 @@ public class PitEntry {
     public int getBinType() {
         return bin_type;
     }
+    
+    /**
+     * gets the friendly name of bin
+     * AP or CP
+     * @return AP or CP
+     */
+    public String getBinFriendlyType(){
+        if (bin_type==0){
+            return "AP";
+        } else {
+            return "CP";
+        }
+    }
 
     /**
      * binary type
@@ -278,7 +291,30 @@ public class PitEntry {
         String partitionName = "";
         return new String(part_name).trim();
     }
-
+        /**
+     * Proper Friendly name and parameters of partition used to reference flash location
+     *
+     * @return partition name
+     */
+    public String getPartitionFriendlyName() {
+ String filename = "";
+        for (int i = 0; i < part_name.length; i++) {
+            //first part of file will be filename
+            if (part_name[i] != 0) {
+                filename = filename + part_name[i];
+            } else { //anything after first 0 byte will be a parameter
+                while(part_name[i]==0 && i<part_name.length-1){
+                    i++;
+                    if (part_name[i]!=0){
+                        filename=filename+"\nPartition Parameter: "+part_name[i];
+                        break;
+                    }
+                }
+            }
+            
+        }
+        return (filename);
+    }
     /**
      * Proper name of partition used to reference flash location
      *
@@ -316,12 +352,37 @@ public class PitEntry {
      *
      * @return file name
      */
-    public String getFilename() {
+    public String getFilenameString() {
         String filename = "";
         for (int i = 0; i < file_name.length; i++) {
             if (file_name[i] != 0) {
                 filename = filename + file_name[i];
             }
+        }
+        return (filename);
+    }
+    
+     /**
+     * Name of file when transferred from device
+     *
+     * @return file name
+     */
+    public String getFriendlyFileName() {
+        String filename = "";
+        for (int i = 0; i < file_name.length; i++) {
+            //first part of file will be filename
+            if (file_name[i] != 0) {
+                filename = filename + file_name[i];
+            } else { //anything after first 0 byte will be a parameter
+                while(file_name[i]==0 && i<file_name.length-1){
+                    i++;
+                    if (file_name[i]!=0){
+                        filename=filename+"\nFilename Parameter: "+file_name[i];
+                        break;
+                    }
+                }
+            }
+            
         }
         return (filename);
     }
@@ -372,7 +433,30 @@ public class PitEntry {
         }
         return fotaname;
     }
-
+        /**
+     * Proper Friendly name and parameters of partition used to reference flash location
+     *
+     * @return partition name
+     */
+    public String getFOTAFriendlyName() {
+ String fotaname = "";
+        for (int i = 0; i < fota_name.length; i++) {
+            //first part of file will be filename
+            if (fota_name[i] != 0) {
+                fotaname = fotaname + fota_name[i];
+            } else { //anything after first 0 byte will be a parameter
+                while(fota_name[i]==0 && i<fota_name.length-1){
+                    i++;
+                    if (fota_name[i]!=0){
+                        fotaname=fotaname+"\nFOTA Parameter: "+part_name[i];
+                        break;
+                    }
+                }
+            }
+            
+        }
+        return (fotaname);
+    }
     /**
      * Name of file when receiving an OTA update
      *
@@ -396,6 +480,11 @@ public class PitEntry {
         }
     }
 
+    /**
+     * returns partition type friendly name
+     *  bct, bootloader, data, mbr, ebr, gp1, gpt, unknown
+     * @return friendly name of the partition type
+     */
     public String getPartitionTypeFriendlyName() {
         switch (this.part_type) {
             case 1:
@@ -418,7 +507,11 @@ public class PitEntry {
                 return "unknown";
         }
     }
-
+    /**
+     * gets the friendly name of the filesystem type
+     * raw, basic, enhanced, ext2, yaffs2, unknown
+     * @return friendly filesystem type name
+     */
     public String getFilesystemTypeFriendlyName() {
         switch (this.filesystem) {
             case 0:
@@ -438,6 +531,11 @@ public class PitEntry {
         }
     }
 
+    /**
+     * returns the friendly hardware type
+     * nand, emmc, spi, ide, nand_x16, unknown
+     * @return the name of the hardware device
+     */
     public String getHardwareTypeFriendlyName() {
         switch (this.device_type) {
             case 1:
@@ -475,6 +573,14 @@ public class PitEntry {
 
     }
 
+    
+    public String getPartitionDescritpion(){
+        String n = System.getProperty("line.separator");
+        StringBuilder sb=new StringBuilder();
+        sb.append("This ").append(this.getPartitionTypeFriendlyName()).append(" partion has a ").append(this.getFilesystemTypeFriendlyName()).append(" partition and resides on the ").append(this.getBinFriendlyType()).append(" ").append(this.getHardwareTypeFriendlyName());
+        return sb.toString();
+    }
+    
     @Override
     public String toString() {
         /*  original entry from Heimdall
@@ -494,17 +600,18 @@ public class PitEntry {
         StringBuilder sb = new StringBuilder();
         String n = System.getProperty("line.separator");
         sb.append("Partition ID: ").append(this.part_id).append(n);
-        sb.append("Partition Name: ").append(this.getPartitionName()).append(n);
-        sb.append("Flash Filename: ").append(this.getFilename()).append(n);
-        sb.append("Block Count: ").append(this.block_count).append(" (").append(getBlockCountFriendly(true)).append(")").append(n);
-        sb.append("Block Start: ").append(this.block_start).append(n);
-        sb.append("Last Block: ").append(getPartitionEndBlock()).append(n);
-        sb.append("Filesystem Type: ").append(this.filesystem).append(" (").append(this.getFilesystemTypeFriendlyName()).append(")").append(n);
-        sb.append("Partition Type: ").append(this.part_type).append(" (").append(this.getPartitionTypeFriendlyName()).append(")").append(n);
-        sb.append("Device Type: ").append(this.device_type).append(" (").append(this.getHardwareTypeFriendlyName()).append(")").append(n);
-        sb.append("Binary Type: ").append(this.bin_type).append(n);
+        sb.append("Partition Name: ").append(this.getPartitionFriendlyName()).append(n);
+        sb.append("Filename: ").append(this.getFriendlyFileName()).append(n);
+        sb.append("Block Size: ").append(this.block_count).append(" (").append(getBlockCountFriendly(true)).append(")").append(n);
+        sb.append("Block range: ").append(this.block_start).append(" - ").append(getPartitionEndBlock());
+        sb.append("(ofs 0x").append(Integer.toHexString(this.block_start)).append(" - 0x").append(Integer.toHexString(getPartitionEndBlock())).append(")").append(n); 
+        sb.append("Part/Dev/Filesystem/Bin/:").append(this.part_type).append(this.bin_type).append(this.filesystem).append(this.bin_type).append(n);
         sb.append("FOTA Filename: ").append(this.getFotaName()).append(n);
-        sb.append(n).append(n);
+        sb.append(getPartitionDescritpion());
+        if (this.getFotaName().contains("remained")){
+            sb.append(" and the partition will expand to fill the remainder of the ").append(this.getHardwareTypeFriendlyName());
+        }
+        sb.append(n).append(n).append(n);
         return sb.toString();
     }
 

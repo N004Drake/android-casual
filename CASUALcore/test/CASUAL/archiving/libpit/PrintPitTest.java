@@ -43,7 +43,7 @@ public class PrintPitTest {
     @Test
     public void testMain() {
         System.out.println("main");
-        String[] args = new String[]{"../test/CASUAL/network/CASUALDevIntegration/resources/sch-i535-32gb.pit"};
+        String[] args = new String[]{"../test/CASUAL/archiving/resources/ekgc100part.pit"};
         PrintPit instance = new PrintPit();
         instance.main(args);
 
