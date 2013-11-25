@@ -16,7 +16,6 @@ package CASUAL.archiving.libpit;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -25,7 +24,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/** Pitdata provides a way to work with the header information of the PIT file
+/**
+ * Pitdata provides a way to work with the header information of the PIT file
  * Original Files may be found here:
  * https://github.com/Benjamin-Dobell/libpit--Java-/tree/master/libpit/src/au/com/glassechidna/libpit
  * modified by: Adam Outler
@@ -321,6 +321,7 @@ public class PitData {
 
     /**
      * returns pit name with parameters
+     *
      * @return PIT friendly name with parameters
      */
     public String getPITFriendlyName() {
@@ -341,8 +342,10 @@ public class PitData {
         }
         return pitFriendlyName;
     }
+
     /**
-     * returns filetype friendly name with parameters 
+     * returns filetype friendly name with parameters
+     *
      * @return File Type friendly name with parameters
      */
     public String getFileTypeFriendlyName() {
@@ -363,6 +366,7 @@ public class PitData {
         }
         return filetypeFriendlyName;
     }
+
     @Override
     public String toString() {
         String n = System.getProperty("line.separator");

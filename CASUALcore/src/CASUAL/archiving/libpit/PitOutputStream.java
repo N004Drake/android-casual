@@ -16,12 +16,12 @@ package CASUAL.archiving.libpit;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import java.io.IOException;
 import java.io.OutputStream;
 
-/** PitOutputStream provides a set of tools designed to assist with reading PIT files
- * Original Files may be found here:
+/**
+ * PitOutputStream provides a set of tools designed to assist with reading PIT
+ * files Original Files may be found here:
  * https://github.com/Benjamin-Dobell/libpit--Java-/tree/master/libpit/src/au/com/glassechidna/libpit
  * modified by: Adam Outler
  *

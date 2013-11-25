@@ -16,7 +16,7 @@
  *@author Benjamin Dobell benjamindobell@gmail.com
  *@author Lee Harrison ralekdev@gmail.com
  *@author Dominik Marsk dmarszk@gmail.com
- *\copyright mixed GPLv3 and MIT.
+ *\copyright mixed GPLv3.
  */
 package com.casual_dev.libpitX;
 
