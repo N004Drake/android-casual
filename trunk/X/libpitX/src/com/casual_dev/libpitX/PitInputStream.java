@@ -19,8 +19,9 @@ package com.casual_dev.libpitX;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**PitInputStream provides tools used for writing a pit.
- * Original Files may be found here:
+/**
+ * PitInputStream provides tools used for writing a pit. Original Files may be
+ * found here:
  * https://github.com/Benjamin-Dobell/libpit--Java-/tree/master/libpit/src/au/com/glassechidna/libpit
  * modified by: Adam Outler
  *
@@ -69,7 +70,8 @@ public class PitInputStream {
      * @param buffer byte buffer
      * @param offset bytes to discard
      * @param length number of bytes to read
-     * @return value requested from stream, specified by buffer, offset and length
+     * @return value requested from stream, specified by buffer, offset and
+     * length
      * @see InputStream
      * @throws IOException
      */
