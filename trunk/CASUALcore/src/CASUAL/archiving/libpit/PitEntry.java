@@ -449,7 +449,7 @@ public class PitEntry {
                 while (fota_name[i] == 0 && i < fota_name.length - 1) {
                     i++;
                     if (fota_name[i] != 0) {
-                        fotaname = fotaname + "   param: " + part_name[i];
+                        fotaname = fotaname + "   param: " + fota_name[i];
                         break;
                     }
                 }
