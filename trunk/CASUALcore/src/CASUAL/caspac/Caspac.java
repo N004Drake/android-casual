@@ -573,7 +573,7 @@ public final class Caspac {
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             setBuild(in);
-        } else if (entry.equals("SCRIPTS/-logo.png") || entry.equals("SCRIPTS/-logo.png")) {
+        } else if (entry.equals("SCRIPTS/-logo.png") || entry.equals("SCRIPTS\\-logo.png")) {
             log.level4Debug("processing:" + entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
