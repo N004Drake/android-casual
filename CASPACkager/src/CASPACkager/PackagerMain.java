@@ -66,7 +66,7 @@ public class PackagerMain {
     public static PackagerMain packagerMain;
     static ArrayList<String[]> replaceText;
     static ArrayList<String[]> replaceFile;
-
+    private final String slash = Statics.Slash;
     /**
      * Packages a CASPAC into a CASUAL.
      *
@@ -190,7 +190,7 @@ public class PackagerMain {
                     }
                 }
                 name = entry.getName();
-                out.putNextEntry(new ZipEntry("SCRIPTS/" + name));
+                out.putNextEntry(new ZipEntry("SCRIPTS"+ slash + name));
                 int bufferSize;
                 while ((bufferSize = entryStream.read(BUFFER)) > 0) {
                     out.write(BUFFER, 0, bufferSize);
