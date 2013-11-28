@@ -16,27 +16,119 @@
  */
 package CASUAL;
 
-
-
 /**
+ * iCASUALInteraction is a class which provides a means of handling
+ * CASUALMessageObjects. The intent is to abstract the CASUAL Messaging System
+ * using this class so a developer may implement their own GUI using any means
+ * they like. This class provides notifications which will halt the progress of
+ * the script and present information to the user. This allows the user to
+ * interact with CASUAL.
+ *
+ * In order to change the Messaging API for CASUAL, there is a static reference
+ * which is located in CASUAL.resources.CASUALApp.properties the property name
+ * change required is Application.interactions. This should match the desired
+ * class which can handle CASUALMessageObjects
+ *
+ * It is recommended that any class implementing iCASUALInteraction handle the
+ * following items at a minimum: 
+ * 1. CASUALMessageObject.messageText 
+ * 2. * CASUALMessageObject.title 
+ * 
+ * The return value for any CASUAL Message Object
+ * aside from those which execute commmands or specifically state they return
+ * string results: 
+ * 0- yes, ok, continue 
+ * 1- no, cancel, stop
  *
  * @author adam
  */
 public interface iCASUALInteraction {
-    final int INTERACTION_TIME_OUT = 0;
-    final int INTERACTION_ACTION_REUIRED = 1;
-    final int INTERACTION_USER_CANCEL_OPTION = 2;
-    final int INTERACTION_USER_NOTIFICATION = 3;
-    final int INTERACTION_SHOW_INFORMATION = 4;
-    final int INTERACTION_SHOW_ERROR = 5;
-    final int INTERACTION_SHOW_YES_NO = 6;
-    final int INTERACTION_INPUT_DIALOG = 7;
-    final int INTERACTION_COMMAND_NOTIFICATION=8;
+
     /**
-     * Takes a message object and displays to user
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface. Type 0 is a non-critical time-based message object which will
+     * time out and dismiss itself.
+     * returns 0
+     */
+    final int INTERACTION_TIME_OUT = 0;
+
+    /**
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface. Type 1 is a message object which mandates the user do
+     * something in order to advance the process.  User is assinged a task
+     * and given two buttons "I did it" and "I didn't do it".
+     * returns 0 if user completed task. 1 if the user failed to do it. 
+     */
+    final int INTERACTION_ACTION_REUIRED = 1;
+
+    /**
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface. Type 2 requests the user's permission to continue and gives
+     * the option to halt the active script
+     * returns 1 if user wishes to cancel
+     */
+    final int INTERACTION_USER_CANCEL_OPTION = 2;
+
+    /**
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface. Type 3 is a general purpose notification which displays
+     * information and halts the flow of the script until dismissed.
+     * returns 0.
+     */
+    final int INTERACTION_USER_NOTIFICATION = 3;
+
+    /**
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface. Type 4 is similar to type 3 in that it displays a notification
+     * and halts the flow, but a type 3 will change the user interaction type
+     * from notification to information style.
+     * returns 0.
+     */
+    final int INTERACTION_SHOW_INFORMATION = 4;
+
+    /**
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface. Type 5 is intended to halt the flow of operation and show
+     * an error notification.  
+     * returns 0
+     */
+    final int INTERACTION_SHOW_ERROR = 5;
+
+    /**
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface. Halts all script operations and shows the user a Yes/No 
+     * dialog.
+     * returns 0 if yes and 1 if no.
+     */
+    final int INTERACTION_SHOW_YES_NO = 6;
+
+    /**
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface.  Requests input from the user in the form of text.  The return
+     * from this type of dialog will be a string value representing user-entered
+     * text.
+     * returns 0.
+     */
+    final int INTERACTION_INPUT_DIALOG = 7;
+
+    /**
+     * MessageType used by CASUALMessageObject and any class implementing this
+     * interface.  A command notification will run a CASUAL command and return
+     * the results in the CASUALMessageObject.messageText variable.  The results
+     * should be displayed to the user.  
+     * 
+     * returns 0. 
+     */
+    final int INTERACTION_COMMAND_NOTIFICATION = 8;
+
+    /**
+     * Takes a message object and displays to user. To properly implement this 
+     * class the displayMessage should, at a minimum handle both 
+     * CASUALMessageObject.title and CASUALMessageObject.messageText.
+     *
      * @param messageObject defined by CASUAL
      * @return string value which must be interpereted
      */
     String displayMessage(CASUALMessageObject messageObject);
-    
+
 }
