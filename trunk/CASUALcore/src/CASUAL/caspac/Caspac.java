@@ -17,7 +17,6 @@
 package CASUAL.caspac;
 
 import CASUAL.AudioHandler;
-import CASUAL.misc.BooleanOperations;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Locks;
@@ -867,5 +866,16 @@ public final class Caspac {
             windowTitle = buildProp.getProperty("Window.Title", "");
 
         }
+    }
+    @Override
+    public String toString(){
+        StringBuilder sb =new StringBuilder();
+        String n=System.getProperty("line.separator");
+        sb.append("Scripts:").append(this.scripts.size()).append(n);
+        sb.append("Working Dir: ").append(this.TempFolder).append(n);
+        sb.append(this.build.buildProp.toString());
+        
+        
+        return "";
     }
 }
