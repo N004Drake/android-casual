@@ -4,18 +4,13 @@
  */
 package CASCADEGUI.ScriptTimeline;
 
-import java.awt.Color;
-import java.awt.Component;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JList;
-import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.ListCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**

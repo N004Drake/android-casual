@@ -26,6 +26,10 @@ import java.awt.image.BufferedImage;
  */
 public interface iCASUALGUI {
 
+    /**
+     * disposes the current window.
+     * should be used to terminate application.
+     */
     void dispose();
     /**
      * the start button was pressed.
@@ -61,8 +65,16 @@ public interface iCASUALGUI {
      */
     boolean getControlStatus();
 
+    /**
+     * Sets a reference to the current CASPAC so information can be displayed
+     * @param caspac caspac to reference
+     */
     void setCASPAC(Caspac caspac);
 
+    /**
+     * Sets the current status of the window. 
+     * @param title current status
+     */
     void setInformationScrollBorderText(String title);
 
     /**
@@ -79,6 +91,10 @@ public interface iCASUALGUI {
      */
     void setProgressBarMax(int value);
 
+    /**
+     * Sets the active script for the window
+     * @param s script which is now active
+     */
     void setScript(Script s);
 
     /**
@@ -123,19 +139,56 @@ public interface iCASUALGUI {
      */
     void setWindowBannerText(String text);
 
+    /**
+     * sets the window visibility 
+     * @param b true if visibility is commanded
+     */
     public void setVisible(boolean b);
     /**
      * called when device is connected
      * @param mode adb/fastboot/heimdall/flashtool
      */
     void deviceConnected(String mode);
+
+    /**
+     * Device has disconnected, alert the user
+     */
     void deviceDisconnected();
+
+    /**
+     * multiple devices are detected.  only one is allowed
+     * @param numberOfDevicesConnected number of devices
+     */
     void deviceMultipleConnected(int numberOfDevicesConnected);
+
+    /**
+     * permissions escillation is required
+     */
     void notificationPermissionsRequired();
+
+    /**
+     * Startup event 
+     */
     void notificationCASUALSound();
+
+    /**
+     * Input is requested from the user
+     */
     void notificationInputRequested();
+
+    /**
+     * A notification has been issued to the user
+     */
     void notificationGeneral();
+
+    /**
+     * a request to continue has been issued to the user
+     */
     void notificationRequestToContinue();
+
+    /**
+     *  User action is required
+     */
     void notificationUserActionIsRequired();
     
     
