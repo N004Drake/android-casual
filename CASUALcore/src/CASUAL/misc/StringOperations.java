@@ -104,6 +104,11 @@ public class StringOperations {
         return s.hasNext() ? s.next() : "";
     }
 
+    /**
+     * converts a String to an InputStream
+     * @param input string to turn into an InputStream
+     * @return InputStream representation of the input string. 
+     */
     public static InputStream convertStringToStream(String input) {
         InputStream bas = new ByteArrayInputStream(input.getBytes());
         return bas;

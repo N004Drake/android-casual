@@ -73,6 +73,12 @@ public class CountLines {
         return Lines;
     }
 
+    /**
+     * counts number of lines in an inputstream based on "\n" character usage
+     * @param IS inputstream to be checked
+     * @return number of lines counted in the stream
+     * @throws IOException
+     */
     public int countISLines(InputStream IS) throws IOException {
         int count = 0;
         try {
