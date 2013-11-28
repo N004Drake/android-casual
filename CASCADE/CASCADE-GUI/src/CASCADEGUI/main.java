@@ -7,11 +7,15 @@ package CASCADEGUI;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- *
+ * Provides a launcher for CASCADE
  * @author adam
  */
 public class main {
 
+    /**
+     *  Launches CASCADEGUI. 
+     * @param args no arguments taken
+     */
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
