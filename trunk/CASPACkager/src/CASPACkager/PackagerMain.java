@@ -20,8 +20,6 @@ package CASPACkager;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.misc.StringOperations;
-import static CASPACkager.PackagerMain.hasProcessedFolder;
-import static CASPACkager.PackagerMain.packagerMain;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,8 +36,8 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * *************************************************************************
- * PackagerMain
- *
+ * PackagerMain packages a CASPAC into a CASUAL and provides a method of 
+ * modifying a CASPAC on the fly as a part of packaging.
  * @author Jeremy Loper jrloper@gmail.com
  * @author Logan Ludington loglud@logatech.org
  * ************************************************************************
@@ -51,21 +49,20 @@ public class PackagerMain {
      */
     public PackagerMain() {
     }
-    final private static boolean useOverrideArgs = false;
+    final private static boolean useOverrideArgs = false; //overrides the main arguments for testing
     final private static String[] overrideArgs = {"--fullauto", "../CASPAC/", "--type", "nightly"};
     /**
      * output directory for package
      */
-    protected static String userOutputDir = "";
+    protected static String userOutputDir = "";//the output folder 
     final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
-    private static String caspacWithPath = "";
+    private static String caspacWithPath = ""; //path to CASPAC
     final private static Log log = new Log();
-    static String appendToName = "";
-    static String processFolder = "";
-    static boolean hasProcessedFolder = false;
-    public static PackagerMain packagerMain;
-    static ArrayList<String[]> replaceText;
-    static ArrayList<String[]> replaceFile;
+    static String appendToName = ""; //string after name and before file extension
+    static String processFolder = "";//folder to be processed
+    static boolean hasProcessedFolder = false;//once folder is complete this is true
+    static ArrayList<String[]> replaceText;//used to replace text in script
+    static ArrayList<String[]> replaceFile;//used to replace files in zip
     private final String slash = Statics.Slash;
     /**
      * Packages a CASPAC into a CASUAL.
@@ -87,7 +84,7 @@ public class PackagerMain {
      */
     public static void main(final String[] args) {
         processCommandline(args);
-        packagerMain = new PackagerMain();
+        PackagerMain packagerMain = new PackagerMain();
         log.level2Information("[CASPACkager] Command line utility started");
         if (hasProcessedFolder) {
             packagerMain.processFolder();
@@ -96,14 +93,28 @@ public class PackagerMain {
         }
     }
 
+    /**
+     * Merges the specified Caspac with the included CASUAL.
+     */
     public void mergeCaspacCasual() {
         mergeCaspacCasual(caspacWithPath, userOutputDir);
     }
 
+    /**
+     * Merges the specified Caspac with the included CASUAL.
+     *
+     * @param caspacLoc location to caspac
+     */
     public void mergeCaspacCasual(String caspacLoc) {
         mergeCaspacCasual(caspacLoc, userOutputDir);
     }
 
+    /**
+     * Merges the specified Caspac with the included CASUAL.
+     *
+     * @param caspacLoc location to caspac
+     * @param outputDir folder to output the CASUAL
+     */
     public void mergeCaspacCasual(String caspacLoc, String outputDir) {
         try {
             File outputFile;
@@ -124,8 +135,8 @@ public class PackagerMain {
                 outputFile = new File(outputDir + outputFileName);
             }
             if (!outputFile.exists()) {
-                File parentDir=outputFile.getParentFile();
-                if (!parentDir.exists()){
+                File parentDir = outputFile.getParentFile();
+                if (!parentDir.exists()) {
                     parentDir.mkdirs();
                 }
                 outputFile.createNewFile();
@@ -160,9 +171,8 @@ public class PackagerMain {
                 InputStream entryStream = zin;
                 String name;
 
-
                 //if there are files to be replaced, then replace the files
-                if ( replaceFile != null && entry.getName().endsWith(".zip")) {
+                if (replaceFile != null && entry.getName().endsWith(".zip")) {
 
                     entryStream = replaceFileIfNeeded(entryStream, entry);
 
@@ -240,14 +250,11 @@ public class PackagerMain {
                 }
                 replaceFile.add(new String[]{replaceThis, withThis});
 
-
-
             } else {
                 log.level0Error(args[i] + " is an unrecognized command.");
                 showMessageAndExit();
             }
         }
-
 
         //exit if nothing to process        
         if (caspacWithPath.equals("") && processFolder.equals("")) {
@@ -278,10 +285,9 @@ public class PackagerMain {
                 }
             }
 
-
         }
 
-        if (!new File(userOutputDir).isDirectory() && !userOutputDir.equals("") && new File(userOutputDir).exists() ) {
+        if (!new File(userOutputDir).isDirectory() && !userOutputDir.equals("") && new File(userOutputDir).exists()) {
             log.level0Error(userOutputDir + " is a file not a directory. Please make sure to "
                     + "specify a folder not a file. The file will be named for you.");
             showMessageAndExit();
@@ -312,6 +318,11 @@ public class PackagerMain {
 
     }
 
+    /**
+     * gets the list of files in the CASPAC.
+     *
+     * @return path to files
+     */
     public String[] getCaspacFileList() {
         if (caspacWithPath.equals("")) {
             log.level0Error("Caspac file not set.");
@@ -321,6 +332,12 @@ public class PackagerMain {
         return files;
     }
 
+    /**
+     * gets the list of files in the CASPAC.
+     *
+     * @param caspacLoc path toCASPAC
+     * @return path to files
+     */
     public String[] getCaspacFileList(String caspacLoc) {
         ArrayList<String> fileList = new ArrayList<String>();
         if (!new File(caspacLoc).exists()) {
@@ -348,6 +365,13 @@ public class PackagerMain {
         return fileList.toArray(new String[fileList.size()]);
     }
 
+    /**
+     * gets the list of files in the CASPAC. caspac file object representing the
+     * CASPAC
+     *
+     * @param caspac to be examined
+     * @return path to files
+     */
     public String[] getCaspacFileList(File caspac) {
         if (!caspac.exists()) {
             log.level0Error("CASPAC requested not a valid file.");
@@ -397,11 +421,14 @@ public class PackagerMain {
         System.exit(1);
     }
 
-    public void processFolder() {
+    /**
+     * processes the folder and merges the CASPAC
+     */
+    private void processFolder() {
         for (File f : new File(processFolder).listFiles()) {
             if (f.toString().contains(".zip")) {
                 log.level4Debug("processing " + f.getAbsolutePath());
-                packagerMain.mergeCaspacCasual(f.toString(), userOutputDir);
+                mergeCaspacCasual(f.toString(), userOutputDir);
             }
         }
     }
@@ -426,10 +453,17 @@ public class PackagerMain {
             return repackEntry(entry, working);
         }
 
-
     }
 
+    /**
+     * adds a folder to the zip stream
+     *
+     * @param entry location to begin with
+     * @param working folder to compress
+     * @return inputstream representing the zip entry
+     */
     public InputStream repackEntry(ZipEntry entry, String working) {
+        //TODO examine this to see if this is the cleanest way to handle this
         try {
             CASUAL.archiving.Zip zip = new CASUAL.archiving.Zip(new File(Statics.getTempFolder() + entry.getName()));
             zip.compressZipDir(working);

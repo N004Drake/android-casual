@@ -20,8 +20,13 @@ package CASUAL.misc;
  *
  * @author adam
  */
-public class BooleanOperations {
+public class BooleanOperations{
 
+    /**
+     * tests a bolean array to see if it contains a true value
+     * @param array to be tested
+     * @return true if contains true
+     */
     public static boolean containsTrue(boolean[] array) {
         for (boolean b : array) {
             if (b) {
@@ -31,6 +36,11 @@ public class BooleanOperations {
         return false;
     }
 
+    /**
+     * Tests a boolean array to see if it contains a falase value
+     * @param array to be tested
+     * @return true if contains false
+     */
     public static boolean containsFalse(boolean[] array) {
         for (boolean b : array) {
             if (!b) {
@@ -40,6 +50,11 @@ public class BooleanOperations {
         return false;
     }
 
+    /**
+     * tests a boolean array to verify all values are true
+     * @param array to be tested
+     * @return true if all values are true in array
+     */
     public static boolean containsAllTrue(boolean[] array) {
         for (boolean b : array) {
             if (!b) {
@@ -49,6 +64,11 @@ public class BooleanOperations {
         return true;
     }
 
+    /**
+     * tests a boolean array to verify all values are false
+     * @param array to be tested
+     * @return true if all values are false
+     */
     public static boolean containsAllFalse(boolean[] array) {
         for (boolean b : array) {
             if (b) {
