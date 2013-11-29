@@ -491,6 +491,8 @@ public class PitEntry {
      */
     public String getPartitionTypeFriendlyName() {
         switch (this.part_type) {
+            case 0:
+                return "Raw";
             case 1:
                 return "Bct";
             case 2:
@@ -508,7 +510,7 @@ public class PitEntry {
             case 9:
                 return "GPT";
             default:
-                return "unknown";
+                return "undocumented";
         }
     }
 
@@ -533,7 +535,7 @@ public class PitEntry {
             case 5:
                 return "EXT4";
             default:
-                return "unknown";
+                return "undocumented";
         }
     }
 
@@ -556,7 +558,7 @@ public class PitEntry {
             case 5:
                 return "NAND_X16";
             default:
-                return "unknwon";
+                return "undocumented";
 
         }
     }
@@ -572,18 +574,35 @@ public class PitEntry {
         long bytes = (long) block_count * 512;
         int unit = si ? 1000 : 1024;
         if (bytes < unit) {
-            return bytes + " B";
+            return bytes + "B";
         }
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+        return String.format("%.1f%sB", bytes / Math.pow(unit, exp), pre);
 
     }
 
     public String getPartitionDescritpion() {
         String n = System.getProperty("line.separator");
         StringBuilder sb = new StringBuilder();
-        sb.append("This ").append(this.getFilesystemTypeFriendlyName()).append(" format ").append(this.getPartitionTypeFriendlyName()).append(" partition resides on the ").append(this.getBinFriendlyType()).append(" ").append(this.getHardwareTypeFriendlyName()).append(".");
+        sb.append("The ").append(this.getPartitionFriendlyName());
+        sb.append(" partition, ");
+        if (this.getPartID()>=0){
+            sb.append("identified as partition number ").append(this.getPartID());
+        } else {
+            sb.append( " is invalid");
+            return sb.toString();
+        }
+        sb.append(", is ").append(getBlockCountFriendly(true)).append( " in size. It carries a ");
+        sb.append(this.getFilesystemTypeFriendlyName()).append(" format and ");
+        sb.append(this.getPartitionTypeFriendlyName()).append(" data type. The partition resides on the ");
+        sb.append(this.getBinFriendlyType()).append(" ").append(this.getHardwareTypeFriendlyName()).append(". ");
+        if (!this.getFriendlyFileName().equals("")&& !this.getFriendlyFileName().startsWith("-")){
+            sb.append("It identifies itself to Odin as ").append(this.getFriendlyFileName()).append(".");
+        }
+        if (this.file_offset!=0 && this.file_size!=0){
+            sb.append("The partition carries a filesize of ").append(this.file_size).append(" and an offset of ").append(this.file_offset).append(".");
+        }
         return sb.toString();
     }
 
