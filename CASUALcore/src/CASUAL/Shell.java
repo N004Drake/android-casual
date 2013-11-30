@@ -16,14 +16,12 @@
  */
 package CASUAL;
 
-import static CASUAL.CASUALConnectionStatusMonitor.TIMERINTERVAL;
 import CASUAL.misc.StringOperations;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Calendar;
 import javax.swing.Timer;
 
@@ -34,17 +32,33 @@ import javax.swing.Timer;
 //define <output and input> to this abstract class
 public class Shell {
 
-    //for internal access
+    /**
+     * Shell provides a set of methods to access Shell commands in predefined
+     * ways.
+     */
     public Shell() {
     }
     //for external access
     Log log = new Log();
     //Send a command to the shell
 
+    /**
+     * Attempts to elevate a shell command for any platform.
+     *
+     * @param cmd Array representing command and parameters to execute
+     * @param message message to be displayed to user when asked for permissions
+     * @return return from command executed
+     */
     public String elevateSimpleCommandWithMessage(String[] cmd, String message) {
         return elevateSimpleCommands(cmd, message);
     }
 
+    /**
+     * Attempts to elevate a shell command for any platform.
+     *
+     * @param cmd Array representing command and parameters to execute
+     * @return return from command executed
+     */
     public String elevateSimpleCommand(String[] cmd) {
         return elevateSimpleCommands(cmd, null);
 
@@ -54,7 +68,6 @@ public class Shell {
         FileOperations FileOperations = new FileOperations();
         Shell Shell = new Shell();
         String Result = "";
-
 
         String Command = "";
         for (String cmd1 : cmd) {
@@ -81,7 +94,6 @@ public class Shell {
                     new CASUALMessageObject("@interactionPermissionNotFound").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.ERROR_MESSAGE, null, null);
                 }
             }
-
 
             String ScriptFile = Statics.getTempFolder() + "ElevateScript.sh";
             FileOperations.deleteFile(ScriptFile);
@@ -149,6 +161,12 @@ public class Shell {
         return Result;
     }
 
+    /**
+     * Sends a shell command in a basic way, logs results
+     *
+     * @param cmd command and params to execute
+     * @return result from shell
+     */
     public String sendShellCommand(String[] cmd) {
         log.level4Debug("###executing: " + cmd[0] + "###");
         String AllText = "";
@@ -190,6 +208,12 @@ public class Shell {
 
     }
 
+    /**
+     * sends a shell command and returns only stdout not stderr
+     *
+     * @param cmd command to execute
+     * @return standard out only from shell command
+     */
     public String sendShellCommandIgnoreError(String[] cmd) {
         log.level4Debug("\n###executing: " + cmd[0] + "###");
         String AllText = "";
@@ -209,6 +233,12 @@ public class Shell {
 
     }
 
+    /**
+     * Sends a shell command but does not log output to logging device
+     *
+     * @param cmd command and parameters to be executed.
+     * @return output from shell command.
+     */
     public String silentShellCommand(String[] cmd) {
         String AllText = "";
         try {
@@ -232,6 +262,14 @@ public class Shell {
 
     }
 
+    /**
+     * Live shell command executes a command and outputs information in
+     * real-time to console
+     *
+     * @param params command and arguments to execute
+     * @param display true if output should be logged to log device
+     * @return output from command
+     */
     public String liveShellCommand(String[] params, boolean display) {
         String LogRead = "";
         try {
@@ -255,8 +293,8 @@ public class Shell {
 
                 if (!Statics.ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
-                        if (Statics.ActionEvents != null && LineRead.contains( Statics.ActionEvents.get(i))) {
-                            new CASUALScriptParser().executeOneShotCommand( Statics.ReactionEvents.get(i));
+                        if (Statics.ActionEvents != null && LineRead.contains(Statics.ActionEvents.get(i))) {
+                            new CASUALScriptParser().executeOneShotCommand(Statics.ReactionEvents.get(i));
                         }
                     }
                     LineRead = "";
@@ -272,8 +310,13 @@ public class Shell {
         return LogRead;
     }
 
+    /**
+     * executes a command on a new thread and displays output to logging device.
+     * Takes command parameters from Statics.LiveSendCommand.
+     */
+    @Deprecated
     public void liveBackgroundShellCommand() {
-
+        //TODO: add a parameter to include a final variable and cease usage of Statics.LiveSendCommand.  Until then this method is deprecated. 
 
         Runnable r = new Runnable() {
             @Override
@@ -315,31 +358,36 @@ public class Shell {
         t.start();
     }
 
+    /**
+     * executes a command on a new thread. Takes command parameters from
+     * Statics.LiveSendCommand.
+     */
+    @Deprecated
     public void silentBackgroundShellCommand() {
+        //TODO: add a parameter to include a final variable and cease usage of Statics.LiveSendCommand.  Until then this method is deprecated. 
+        Runnable shell = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
+                    ProcessBuilder pb = new ProcessBuilder(params);
+                    pb.redirectErrorStream(true);
+                    Process process = pb.start();
+                    try {
+                        process.waitFor();
+                    } catch (InterruptedException ex) {
+                        log.errorHandler(ex);
+                    }
+                } catch (IOException ex) {
+                    log.level0Error("@problemWhileExecutingCommand ");
+                    new Log().errorHandler(ex);
+                }
+            }
+        };
         Thread t = new Thread(shell);
         t.setName("Silent Background Shell Command");
         t.start();
-
     }
-    Runnable shell = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                String[] params = Statics.LiveSendCommand.toArray(new String[Statics.LiveSendCommand.size()]);
-                ProcessBuilder pb = new ProcessBuilder(params);
-                pb.redirectErrorStream(true);
-                Process process = pb.start();
-                try {
-                    process.waitFor();
-                } catch (InterruptedException ex) {
-                    log.errorHandler(ex);
-                }
-            } catch (IOException ex) {
-                log.level0Error("@problemWhileExecutingCommand ");
-                new Log().errorHandler(ex);
-            }
-        }
-    };
 
     /**
      * timeoutShellCommand is a multi-threaded method and reports to the
@@ -352,6 +400,10 @@ public class Shell {
      */
     public String timeoutShellCommand(final String[] cmd, int timeout) {
         //final object for runnable to write out to.
+        class TimeoutString {
+
+            public String AllText = "";
+        }
         final TimeoutString tos = new TimeoutString();
 
         //Runnable executes in the background
@@ -410,6 +462,10 @@ public class Shell {
      */
     public String silentTimeoutShellCommand(final String[] cmd, int timeout) {
         //final object for runnable to write out to.
+        class TimeoutString {
+
+            public String AllText = "";
+        }
         final TimeoutString tos = new TimeoutString();
 
         //Runnable executes in the background
@@ -421,7 +477,7 @@ public class Shell {
                     ProcessBuilder p = new ProcessBuilder(cmd);
                     p.redirectErrorStream(true);
                     Process process = p.start();
-                    
+
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                     while ((line = STDOUT.readLine()) != null) {
@@ -457,23 +513,23 @@ public class Shell {
     }
 
     /**
-     * same as timeoutShellCommand but only times out if there is a certain value last seen
+     * same as timeoutShellCommand but only times out if there is a certain
+     * value last seen
+     *
      * @param cmd
      * @param startTimerOnThisInLine
      * @param timeout
      * @return text received from command
      */
-    
     //TODO: write automated test code for this for CASUALLanguage line 653.  Can be tested with fastboot flash test test without device connected
-    public String timeoutValueCheckingShellCommand(final String[] cmd,final String[] startTimerOnThisInLine, final int timeout) {
-          //final object for runnable to write out to.
-        final TimeoutString tos = new TimeoutString();
+    public String timeoutValueCheckingShellCommand(final String[] cmd, final String[] startTimerOnThisInLine, final int timeout) {
+        //final object for runnable to write out to.
+        class Timeout {
 
-        //static class to be passed in as reference to value
-        class Timeout{
-            boolean value=false;
+            public String AllText = "";
+            boolean value = false;
         }
-        final Timeout isTimedOut=new Timeout();
+        final Timeout finalTimeout = new Timeout();
         //Runnable executes in the background
         Runnable runCommand = new Runnable() {
             @Override
@@ -481,39 +537,38 @@ public class Shell {
                 log.level4Debug("###executing timeout command: " + cmd[0] + "###");
                 try {
                     //timer will begin on startTimerOnThisInLine detected and stop if it is not in a line
-                    Timer t=new Timer(timeout, new ActionListener() {
+                    Timer t = new Timer(timeout, new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent evt) {
-                           //tells the app to stop waiting
-                           isTimedOut.value=true; 
+                            //tells the app to stop waiting
+                            finalTimeout.value = true;
                         }
                     });
-                    
+
                     String line;
                     ProcessBuilder p = new ProcessBuilder(cmd);
                     p.redirectErrorStream(true);
                     Process process = p.start();
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-                    
                     while ((line = STDOUT.readLine()) != null) {
-                        tos.AllText = tos.AllText + line + "\n";
+                        finalTimeout.AllText = finalTimeout.AllText + line + "\n";
                         // check for value to start timer in string
-                        boolean contained=false;
-                        for (String value:startTimerOnThisInLine){
-                            if (line.contains(value)){
+                        boolean contained = false;
+                        for (String value : startTimerOnThisInLine) {
+                            if (line.contains(value)) {
                                 t.start();
-                                contained=true;
+                                contained = true;
                             }
                         }
-                        if (contained==false){
+                        if (contained == false) {
                             //stop timer
                             t.stop();
                         }
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
                 } catch (IOException ex) {
-                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
+                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + finalTimeout.AllText);
                 }
             }
         };
@@ -527,25 +582,17 @@ public class Shell {
         Calendar endTime = Calendar.getInstance();
         endTime.add(Calendar.MILLISECOND, timeout);
         //loop while not timeout and halt if thread dies. 
-        while (!isTimedOut.value) {
+        while (!finalTimeout.value) {
             if (!t.isAlive()) {
                 break;
             }
         }
         if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
             log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
-            return "Timeout!!! " + tos.AllText;
+            return "Timeout!!! " + finalTimeout.AllText;
         }
         //return values logged from TimeoutString class above
-        return tos.AllText;
+        return finalTimeout.AllText;
     }
 
-    /**
-     * holds variables temporarily. this class is here to be made final for
-     * passing objects
-     */
-    class TimeoutString {
-
-        public String AllText = "";
-    };
 }
