@@ -26,23 +26,68 @@ import java.util.regex.Pattern;
 
 /**
  * **************************************************************************
+ * WindowsDrivers a.k.a. CADI(v2) or (CASUALS Automated Driver Installer) is a CASUALcore
+ * dependant class which attempts to automate CASUAL process on Windows (XP - Win8)
+ * A generic driver is required for USB IO via CASUAL. This driver must temporarily 
+ * take the place of the default OEM driver of targeted device (which must be 
+ * currently connected). While many OEMs use WinUSB (or compatible alternative)
+ * as a device interface, CASUAL is not able communicate with the target because 
+ * of proprietary (undocumented) driver service API. However once the generic 
+ * driver is installed CASUAL using reverse engineered open-source tools such as 
+ * Heimdall - http://goo.gl/bqeulW is able to interact with the target device directly.
+ * 
+ * This class is heavily dependant upon REGEX and a modified version of Devcon (MS-LPL).
+ * CADI uses libusbK, which is a generic WinUSB compatible driver for libusbx 
+ * communication via Heimdall. Two sets of drivers are used (each containing an 
+ * x86/x64 variant), one built with WDK 7.1 (allowing for XP support) the other 
+ * built with WDK 8.0 (for Windows 8 support). All driver components are built & 
+ * digitally signed by Jeremy Loper.
+ * 
+ * WARNING: Modifications to this class can result in system-wide crash of Windows.
+ * (I know, I've seen it :-D ) So plan out all modifications prior, and always ensure
+ * a null value is never passed to Devcon.
+ * 
  * @author Jeremy Loper jrloper@gmail.com
  * @author Adam Outler adamoutler@gmail.com
  * *************************************************************************
  */
 public class WindowsDrivers {
 
-    public Log log = new Log();
-    public final String pathToCADI;
-    public final String[] windowsDriverBlanket;
     /**
-     * true if driver has been prepared.
+     * log is a persistent handle for output for end-user information & debugging
+     */
+    public Log log = new Log();
+
+    /**
+     * pathToCADI contains the full path to the root folder of where driver 
+     * package(s) are (or will be). 
+     * This Member is populated on Class Object creation.
+     */
+    public final String pathToCADI;
+
+    /**
+     * windowsDriverBlanket is a static Array of targeted USB VID (VendorID numbers)
+     * in hexadecimal form. IDs are stored as strings because Java doesn't have 
+     * a native storage class for hexadecimal (base 16) without conversion to decimal (base 10)
+     * This Member is populated on Class Object creation.
+     */
+    public final String[] windowsDriverBlanket;
+    
+    /**
+     * driverExtracted this static member is toggled true upon a successful driver
+     * package decompression.
+     * 
      */
     public static volatile boolean driverExtracted = false;
+    
     /**
-     * Should driver be removed on script completion? 0 - Unset (will prompt
-     * user) 1 - Do not remove driver on completion 2 - Remove driver on script
-     * completion
+     * removeDriverOnCompletion is a primarily user set variable, relating to driver
+     * package uninstallation.
+     * Should driver be removed on script completion? 
+     * 0 - Unset (will prompt user) 
+     * 1 - Do not remove driver on completion 
+     * 2 - Remove driver on script completion
+     * This Member is populated on Class Object creation.
      */
     public static volatile int removeDriverOnCompletion;
 
@@ -157,7 +202,8 @@ public class WindowsDrivers {
     /**
      * uninstallCADI attempts to remove any existing or previous remnants of
      * CADIv1 or CADIv2
-     *
+     * 
+     * @return a boolean sum of result. Value greater than 0 == success
      */
     public boolean uninstallCADI() {
         int resultSum = 0;
