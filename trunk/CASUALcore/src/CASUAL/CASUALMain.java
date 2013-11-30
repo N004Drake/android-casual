@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.CodeSource;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
@@ -288,6 +287,7 @@ public final class CASUALMain {
                     Locks.startGUI.join();
                     Statics.GUI.notificationCASUALSound();
                 }
+                
                 Statics.GUI.setCASPAC(Statics.CASPAC);
                 ADBTools.adbMonitor(true);
             }

@@ -354,9 +354,6 @@ public final class Caspac {
         if (this.caspacShouldBeDeletedAfterExtraction) {
             this.CASPAC.delete();
         }
-        if (Statics.isGUIIsAvailable()) {
-            Statics.GUI.setCASPAC(this);
-        }
         log.level4Debug("Unzipping complete.");
     }
 

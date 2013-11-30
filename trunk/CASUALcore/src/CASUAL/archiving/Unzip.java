@@ -18,7 +18,6 @@ package CASUAL.archiving;
 
 import CASUAL.CASUALMain;
 import CASUAL.Log;
-import CASUAL.Log;
 import CASUAL.Statics;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -42,7 +41,7 @@ public class Unzip {
     static int BUFFER = 4096;
     final ZipFile zip;
     /**
-     *
+     * Unzip provides a set of methods which work to unzip files. 
      */
     public Enumeration<? extends ZipEntry> zipFileEntries;
 

@@ -92,7 +92,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox<String>();
+        comboBoxScriptSelector = new javax.swing.JComboBox();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -124,12 +124,12 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
         comboBoxScriptSelector.setEnabled(false);
         comboBoxScriptSelector.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 comboBoxScriptSelectorPopupMenuWillBecomeInvisible(evt);
             }
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
-            }
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         comboBoxScriptSelector.addActionListener(new java.awt.event.ActionListener() {
@@ -500,7 +500,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     private static void launchLink(String Link) {
         new LinkLauncher(Link).launch();
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DonateButton;
     private javax.swing.JFileChooser FileChooser1;
@@ -510,7 +510,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox<String> comboBoxScriptSelector;
+    private javax.swing.JComboBox comboBoxScriptSelector;
     private javax.swing.JScrollPane informationScrollPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -588,13 +588,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
      */
     @Override
     public boolean enableControls(boolean status) {
-        
-        if (! Locks.scriptRunLock.isComplete()){
+
+        if (!Locks.scriptRunLock.isComplete()) {
             return false;
         }
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
         if (caspac != null) {
-             if (caspac.build.alwaysEnableControls) {
+            if (caspac.build.alwaysEnableControls) {
                 status = true; //if LockOnADBDisconnect is false then just enable controls
                 startButton.setEnabled(status);
                 comboBoxScriptSelector.setEnabled(status);
