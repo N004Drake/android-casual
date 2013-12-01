@@ -76,7 +76,7 @@ public class CommitDetails {
 
     private String trunkHeader() {
         String[] credit = new String[]{
-            "Just now, " + culprit + " committed revision " + revision,
+            "Just now, " + culprit + " committed Revision " + revision,
             "Moments ago " + culprit + " updated the trunk to " + revision,
             "New Trunk commit by " + culprit + ". Revision " + revision,
             "Source Change by " + culprit + ". Revision " + revision,
@@ -85,7 +85,7 @@ public class CommitDetails {
             "The latest source code release by " + culprit + " is revision " + revision,
             "Revision " + revision + " was just revisioned by " + culprit,
             "New source mods. Revision " + revision + " by " + culprit,
-            culprit + " just committed revision " + revision
+            culprit + " just committed Revision " + revision
         };
 
         String header = credit[getRandom(credit.length)];
@@ -95,10 +95,10 @@ public class CommitDetails {
 
     private String branchHeader() {
         String[] credit = new String[]{
-            culprit + " is working on something special in revision " + revision,
+            culprit + " is working on something special in Revision " + revision,
             "Its nice to see new features in development by " + culprit,
             "R" + revision + " committed by " + culprit + " is something new",
-            culprit + " is developing some unreleased features in revision " + revision
+            culprit + " is developing some unreleased features in Revision " + revision
         };
 
         String header = credit[getRandom(credit.length)];
@@ -138,13 +138,13 @@ public class CommitDetails {
                 "Quite a few files were modified in this commit, including files contained within ",
                 files.length + " files were modified in this commit. These changes included revisions to files in ",
                 "This is a large commit including " + files.length + " files, with changes to ",
-                "A large number of files were changed in revision " + revision + " including parts of "
+                "A large number of files were changed in Revision " + revision + " including parts of "
             };
             sb.append(modified[getRandom(modified.length)]);
         } else {
             String[] description = new String[]{
                 "This is an average size commit and contains patches to ",
-                "This commit modifies the ",
+                "This commit modifies ",
                 "The changes included modicication to ",};
             sb.append(description[getRandom(description.length)]);
         }
@@ -164,7 +164,7 @@ public class CommitDetails {
         }
 
         if (partsChanged == 0) {
-            sb.append("a rather new project. ");
+            sb.append(" a rather new project. ");
         } else if (partsChanged == 1) {
             if (modBranch) {
                 sb.append(" a branch");
@@ -178,6 +178,7 @@ public class CommitDetails {
             if (modCASUALCore) {
                 sb.append(" CASUALcore");
             }
+            sb.append(". ");
         } else {
             int partsMentioned = 0;
             if (modBranch) {
@@ -201,8 +202,9 @@ public class CommitDetails {
                 sb.append(" CASUALcore");
                 partsMentioned++;
             }
+            sb.append(". ");
         }
-        sb.append(". ");
+
         if (this.isDocumentation && this.isMaintenance) {
             String[] description = new String[]{
                 "This commit not only includes upgrades and fixes, but also documentation.",
@@ -232,7 +234,7 @@ public class CommitDetails {
         sb.append("_\"").append(message).append("\"_");
         sb.append("\n");
         String[] closing = new String[]{
-            "You can read more about revision " + revision + " at this link:",
+            "You can read more about Revision " + revision + " at this link:",
             "Full details are available here:",
             "If you'd like to read more, you can read about it here:",};
         sb.append(closing[getRandom(closing.length)]).append(" ");
