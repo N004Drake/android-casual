@@ -5,8 +5,7 @@
  * change or a manual build.
  *
  *
- * @see source:
- * https://code.google.com/p/android-casual/source/browse/trunk/X/Jenkins%20Commit/src/com/casual_dev/CommitDescription/
+ * @see source: https://code.google.com/p/android-casual/source/browse/trunk/X/Jenkins%20Commit/src/com/casual_dev/CommitDescription/
  * @author AdamOutler adamoutler@casual-dev.com
  */
 package com.casual_dev.CommitDescription;
