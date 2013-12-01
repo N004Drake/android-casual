@@ -6,7 +6,7 @@
  *
  *
  * @see source:
- * https://code.google.com/p/android-casual/source/browse/trunk/X/Jenkins+Commit?spec=svn931&r=931#Jenkins%20Commit%2Fsrc%2Fcom%2Fcasual_dev%2FCommitDescription
+ * https://code.google.com/p/android-casual/source/browse/trunk/X/Jenkins%20Commit/src/com/casual_dev/CommitDescription/
  * @author AdamOutler adamoutler@casual-dev.com
  */
 package com.casual_dev.CommitDescription;
