@@ -135,17 +135,17 @@ public class CommitDetails {
         //state the intro
         if (files.length > 6) {
             String[] modified = new String[]{
-                "Quite a few files were modified in this commit, including files contained within",
-                files.length + " files were modified in this commit. These changes included revisions to files in",
-                "This is a large commit including " + files.length + " files, with changes to",
-                "A large number of files were changed in revision " + revision + " including parts of"
+                "Quite a few files were modified in this commit, including files contained within ",
+                files.length + " files were modified in this commit. These changes included revisions to files in ",
+                "This is a large commit including " + files.length + " files, with changes to ",
+                "A large number of files were changed in revision " + revision + " including parts of "
             };
             sb.append(modified[getRandom(modified.length)]);
         } else {
             String[] description = new String[]{
-                "This is an average size commit and contains patches to",
-                "This commit modifies the",
-                "The changes included modify",};
+                "This is an average size commit and contains patches to ",
+                "This commit modifies the ",
+                "The changes included modicication to ",};
             sb.append(description[getRandom(description.length)]);
         }
 
@@ -164,25 +164,25 @@ public class CommitDetails {
         }
 
         if (partsChanged == 0) {
-            sb.append("various parts of the repository.  ");
+            sb.append("a rather new project. ");
         } else if (partsChanged == 1) {
             if (modBranch) {
-                sb.append("a branch");
+                sb.append(" a branch");
             }
             if (modCASCADE) {
-                sb.append("CASCADE");
+                sb.append(" CASCADE");
             }
             if (modCASPACkager) {
-                sb.append("CASPACkager");
+                sb.append(" CASPACkager");
             }
             if (modCASUALCore) {
-                sb.append("CASUALcore");
+                sb.append(" CASUALcore");
             }
         } else {
             int partsMentioned = 0;
             if (modBranch) {
-                sb.append(" a branch ");
                 sb.append(partsMentioned == partsChanged - 1 ? " and" : "");
+                sb.append(" a branch");
                 partsMentioned++;
             }
 
