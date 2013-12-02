@@ -265,5 +265,170 @@ public class PitDataTest {
         }
     }
 
+    /**
+     * Test of unpack method, of class PitData.
+     */
+    @Test
+    public void testUnpack() {
+        testPack();
+    }
+
+    /**
+     * Test of findEntryByFilename method, of class PitData.
+     */
+    @Test
+    public void testFindEntryByFilename() {
+        System.out.println("findEntryByFilename");
+        String filename = "tz.img";
+        PitData instance=null;
+        try {
+            instance = new PitData(pitFile);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        int expResult =81;
+        PitEntry result = instance.findEntryByFilename(filename);
+        assertEquals(expResult, result.getPartID());
+
+    }
+
+    /**
+     * Test of removeEntry method, of class PitData.
+     */
+    @Test
+    public void testRemoveEntry() {
+        System.out.println("removeEntry");
+        PitData instance = null;
+        try {
+            instance = new PitData(pitFile);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        PitEntry entry = instance.findEntry(81);
+        instance.removeEntry(entry);
+        PitEntry test=instance.findEntry(81);
+        assert(test==null);
+        
+    }
+
+    /**
+     * Test of getPITFriendlyName method, of class PitData.
+     */
+    @Test
+    public void testGetPITFriendlyName() {
+        System.out.println("getPITFriendlyName");
+        PitData instance = null;
+        try {
+            instance = new PitData(pitFile);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String expResult = "Mx";
+        String result = instance.getPITFriendlyName();
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of getFileTypeFriendlyName method, of class PitData.
+     */
+    @Test
+    public void testGetFileTypeFriendlyName() {
+        System.out.println("getFileTypeFriendlyName");
+        PitData instance = null;
+        try {
+            instance = new PitData(pitFile);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String expResult = "COM_TAR2";
+        String result = instance.getFileTypeFriendlyName();
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of toString method, of class PitData.
+     */
+    @Test
+    public void testToString() {
+        System.out.println("toString");
+        PitData instance = null;
+        try {
+            instance = new PitData(pitFile);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String result = instance.toString();
+
+    }
+
+    /**
+     * Test of sortEntriesByBlockLocation method, of class PitData.
+     */
+    @Test
+    public void testSortEntriesByBlockLocation()  {
+        System.out.println("sortEntriesByBlockLocation");
+        PitData instance = null;
+        try {
+            instance = new PitData(pitFile);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        PitEntry[] expResult = null;
+        PitEntry[] result = instance.sortEntriesByBlockLocation();
+        int[] partitionIDOrder=new int[]{80,70,71,81,1,2,3,4,5,6,7,8,9,10,11,12,13};
+        for (int i=0; i<instance.entryCount;i++){
+            assertEquals(partitionIDOrder[i],result[i].getPartID());
+        }
+
+    }
+
+    /**
+     * Test of resizePartition method, of class PitData.
+     */
+     @Test
+     public void testResizePartition(){
+       System.out.println("resizePartition");
+       String partitionToResize="CACHE";
+       PitData instance = new PitData(); 
+       try {
+            instance = new PitData(pitFile);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //check code
+        int[] originalStart = new int[instance.entryCount];
+        PitEntry[] entryList=instance.sortEntriesByBlockLocation();
+        for (int i=0; i<entryList.length;i++){
+            originalStart[i]=entryList[i].getBlockStart();
+        } 
+        int partitionNumber=11;
+        PitEntry entry=instance.getEntry(partitionNumber);
+        int originalSize=entry.getBlockCount();
+        //break here--- writing demonstration code.
+        assert entry.getPartitionName().equals("CACHE");
+        
+        //example code
+        String partName="CACHE"; //partition name to change
+        int changeToSize=-2000; //size to change partition (1 megabyte smaller)
+        try {
+            instance.resizePartition(partName, changeToSize);
+        } catch (ClassNotFoundException ex) {
+            //this occurs if the partition specified is not found
+            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
+        entryList=instance.sortEntriesByBlockLocation();
+        for (int i=partitionNumber+1;i<originalStart.length;i++){
+            assertEquals(originalStart[i]+changeToSize,entryList[i].getBlockStart());
+        }
+        assertEquals(originalSize+changeToSize,instance.findEntry(partName).getBlockCount());
+         
+     }
+
+
   
 }
