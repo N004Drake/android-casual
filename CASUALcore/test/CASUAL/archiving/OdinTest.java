@@ -58,15 +58,14 @@ public class OdinTest {
         File[] fileList = filesList;
 
         Odin instance = new Odin("heimdall");
-        String[] expResult = new String[]{"heimdall", "flash", "--RECOVERY", "", "--CACHE", ""};
+        String[] expResult = new String[]{"heimdall","flash", "--RECOVERY", "", "--CACHE",""};
 
         String[] result = instance.getFlashFilesCommand(pitFile, fileList);
-        assert (result.length == expResult.length);
-        assert (result[0].equals(expResult[0]));
-        assert (result[1].equals(expResult[1]));
-        assert (result[2].equals(expResult[2]));
-        assert (result[4].equals(expResult[4]));
-
+        assertEquals (expResult.length,result.length );
+        assertEquals (expResult[0],result[0] );
+        assertEquals (expResult[1],result[1] );
+        assertEquals (expResult[2],result[2] );
+        assertEquals (expResult[4],result[4] );
     }
 
 }
