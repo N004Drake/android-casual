@@ -228,7 +228,7 @@ public class Odin {
      */
     public String[] getFlashFilesCommand(File pitFile, File[] filesToFlash) throws FileNotFoundException {
         ArrayList<String> heimdallCommand = getHeimdallCommand();
-
+        heimdallCommand.add("flash");
         getPartitionFilenameList(pitFile, filesToFlash, heimdallCommand);
         return heimdallCommand.toArray(new String[heimdallCommand.size()]);
     }
