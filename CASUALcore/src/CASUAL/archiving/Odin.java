@@ -1,7 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*Odin provides a set of tools to make CASUAL operate using Odin parameters. 
+ *Copyright (C) 2013  Adam Outler
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package CASUAL.archiving;
 
@@ -20,8 +31,9 @@ import java.util.logging.Logger;
 import org.apache.commons.compress.archivers.ArchiveException;
 
 /**
+ * provides a set of tools to make CASUAL operate using Odin parameters.
  *
- * @author adamoutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class Odin {
 
@@ -36,19 +48,69 @@ public class Odin {
         this.heimdallBinaryLocation = heimdallLocation;
     }
 
+    /**
+     * True if device should be rebooted upon completion.
+     */
     public boolean autoReboot = false;
+
+    /**
+     * true if the device should be repartitioned.
+     */
     public boolean repartition = false;
+
+    /**
+     * True if the new pit file should be flashed.
+     */
     public boolean flashPit = false;
+
+    /**
+     * Pit File to use/flash.
+     */
     public File pit = null;
+
+    /**
+     * True if bootloader should be flashed.
+     */
     public boolean flashBootloader = false;
+
+    /**
+     * OdinFile commanded to be flashed first.
+     */
     public File bootloader = null;
+
+    /**
+     * True if PDA should be flashed.
+     */
     public boolean flashPda = false;
+
+    /**
+     * OdinFile commanded to be flashed second.
+     */
     public File pda = null;
+
+    /**
+     * True if Phone should be flashed.
+     */
     public boolean flashPhone = false;
+
+    /**
+     * OdinFile commanded to be flashed second.
+     */
     public File phone = null;
+
+    /**
+     * True if CSC should be flashed. 
+     */
     public boolean flashCsc = false;
+
+    /**
+     * CSC file to be flashed. 
+     */
     public File csc = null;
 
+    /**
+     * Resets the data to default values. 
+     */
     public void reset() {
         autoReboot = false;
         repartition = false;
@@ -65,6 +127,12 @@ public class Odin {
 
     }
 
+    /**
+     * Gets the Heimdall command for Odin compatability. 
+     * @return string[] command to flash odin from parameters above. 
+     * @throws FileNotFoundException
+     * @throws CorruptOdinFileException
+     */
     public String[] getOdinCommand() throws FileNotFoundException, FileNotFoundException, CorruptOdinFileException {
         ArrayList<String> odinCommand = new ArrayList<String>();
         odinCommand.add(heimdallBinaryLocation);
@@ -151,19 +219,41 @@ public class Odin {
         return odinCommand.toArray(new String[odinCommand.size()]);
     }
 
+    /**
+     * gets the command to flash the specified files. 
+     * @param pitFile PitFile to locate the filesToFlash locations
+     * @param filesToFlash Files to be flashed. 
+     * @return Processed command. 
+     * @throws FileNotFoundException
+     */
     public String[] getFlashFilesCommand(File pitFile, File[] filesToFlash) throws FileNotFoundException {
         ArrayList<String> heimdallCommand = getHeimdallCommand();
-        heimdallCommand.add("flash");
+
         getPartitionFilenameList(pitFile, filesToFlash, heimdallCommand);
         return heimdallCommand.toArray(new String[heimdallCommand.size()]);
     }
 
+    /**
+     * Adds additional comands to existing command. 
+     * @param ExistingCommand existing Heimdall command. 
+     * @param pitFile PIT file to be used as a reference. 
+     * @param filesToFlash Files which are to be flashed. 
+     * @return flash command. 
+     * @throws FileNotFoundException
+     */
     public String[] addFlashFiles(String[] ExistingCommand, File pitFile, File[] filesToFlash) throws FileNotFoundException {
         ArrayList<String> heimdallCommand = new ArrayList<String>(Arrays.asList(ExistingCommand));
         getPartitionFilenameList(pitFile, filesToFlash, heimdallCommand);
         return heimdallCommand.toArray(new String[heimdallCommand.size()]);
     }
 
+    /**
+     * adds the repartition command. 
+     * @param ExistingCommand  existing Heimdall command. 
+     * @param pitFile Pit File to flash. 
+     * @return Heimdall command array. 
+     * @throws FileNotFoundException
+     */
     public String[] addRepartitionCommand(String[] ExistingCommand, File pitFile) throws FileNotFoundException {
         if (!pitFile.exists()) {
             throw new FileNotFoundException();

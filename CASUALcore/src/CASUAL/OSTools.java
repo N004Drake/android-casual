@@ -17,17 +17,29 @@
 package CASUAL;
 
 /**
+ * Provides a set of tools designed to identify the operating system and
+ * archetecture.
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class OSTools {
 
+    /**
+     * Operating System is Mac.
+     *
+     * @return true if mac
+     */
     public static boolean isMac() {
         String os = System.getProperty("os.name").toLowerCase();
         return os.indexOf("mac") >= 0;
     }
     //Check for Linux
 
+    /**
+     * Operating System is 64 bit as reported by operating system.
+     *
+     * @return true if 64 bit.
+     */
     public static boolean is64bitSystem() {
         if (isWindows()) {
             return isWindows64Arch();
@@ -36,6 +48,12 @@ public class OSTools {
         }
     }
 
+    /**
+     * Returns the arch from Linux
+     *
+     * @return arch command results or "Linux" on an unsupported machine.
+     * Currently Debian based are supported.
+     */
     public static String checkLinuxArch() {
         Shell shell = new Shell();
         String[] Command = {"dpkg", "--help"};
@@ -60,29 +78,52 @@ public class OSTools {
         }
     }
 
+    /**
+     * Checks if this is Windows64
+     *
+     * @return true if Windows 64.
+     */
     public static boolean isWindows64Arch() {
         return System.getenv("ProgramFiles(x86)") != null;
     }
 
+    /**
+     * gets OS name
+     *
+     * @return string representing OSName
+     */
     public static String OSName() {
         return System.getProperty("os.name");
     }
 
+    /**
+     * Checks if system is Linux.
+     *
+     * @return true if Linux
+     */
     public static boolean isLinux() {
         String os = System.getProperty("os.name").toLowerCase();
         return os.indexOf("nux") >= 0;
     }
 
+    /**
+     * Checks if system is Windows.
+     *
+     * @return True if Windows
+     */
     public static boolean isWindows() {
         String os = System.getProperty("os.name").toLowerCase();
         return os.indexOf("win") >= 0;
     }
-    //Check for Mac
 
-    static boolean isMacLinux64Arch() {
+    /**
+     * Checks if Mac/Linux 64 bit
+     *
+     * @return true if 64 bit mac/linux.
+     */
+    public static boolean isMacLinux64Arch() {
         String[] CommandArch = {"arch"};
         return new Shell().silentShellCommand(CommandArch).contains("64");
     }
 
-   
 }

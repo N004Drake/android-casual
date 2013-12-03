@@ -1606,7 +1606,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         //TODO: move this to CASPACkager. --execute or --launch paramater should launch from command line.
         String args[] = argBuilder();
         final String filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(Statics.Slash) + 1), ".zip", "");
-        final String version = CASUAL.CASUALTools.getSVNVersion();
+        final String version = Integer.toString(CASUAL.CASUALTools.getSVNVersion());
         final String folder = this.casualOutputFile.getText();
         String[] tempFileList = new File(folder).list();
         for (final String file : tempFileList) {
@@ -1656,7 +1656,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-            //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
@@ -1676,7 +1676,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-            //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1853,7 +1853,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         this.killswitchMessage.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.killSwitchMessage);
 
         if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion = (CASUAL.CASUALTools.getSVNVersion());
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion = (Integer.toString(CASUAL.CASUALTools.getSVNVersion()));
         }
         this.minSVNversion.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion);
 
@@ -2011,8 +2011,9 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
     /**
      * Saves the active CASPAC from values in the IDE to disk.
+     *
      * @return true if successful.
-     * @throws HeadlessException if run without user input available.
+     * @throws HeadlessException
      */
     public boolean saveCASPAC() throws HeadlessException {
         //TODO save as .CASPAC file instead of .zip
@@ -2064,8 +2065,9 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
 
     /**
      * Saves CASPAC and then uses CASPACkager to create a CASUAL.
+     *
      * @return true if successful
-     * @throws HeadlessException if no user is available. 
+     * @throws HeadlessException
      */
     public boolean saveCASUAL() throws HeadlessException {
 
@@ -2098,6 +2100,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
         PackagerMain.main(args);
         return false;
     }
+
     /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
@@ -2106,6 +2109,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     @Override
     public void StartButtonActionPerformed() {
     }
+
     /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
@@ -2115,6 +2119,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     public String comboBoxGetSelectedItem() {
         return "";
     }
+
     /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
@@ -2124,16 +2129,18 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     @Override
     public void comboBoxScriptSelectorAddNewItem(String item) {
     }
+
     /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
-     * @param status  dummy method used to implement iCASUALGUI
+     * @param status dummy method used to implement iCASUALGUI
      */
     @Override
     public boolean enableControls(boolean status) {
         return true;
     }
+
     /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
@@ -2148,7 +2155,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
-     * @param caspac  dummy method used to implement iCASUALGUI
+     * @param caspac dummy method used to implement iCASUALGUI
      */
     @Override
     public void setCASPAC(Caspac caspac) {
@@ -2163,7 +2170,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     @Override
     public void setInformationScrollBorderText(String title) {
     }
- /**
+
+    /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
@@ -2172,7 +2180,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     @Override
     public void setProgressBar(int value) {
     }
- /**
+
+    /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
@@ -2191,7 +2200,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     @Override
     public void setScript(Script s) {
     }
- /**
+
+    /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
@@ -2200,7 +2210,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     @Override
     public void setStartButtonText(String text) {
     }
- /**
+
+    /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
@@ -2210,7 +2221,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     @Override
     public void setStatusLabelIcon(String icon, String text) {
     }
- /**
+
+    /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
@@ -2219,16 +2231,20 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     @Override
     public void setStatusMessageLabel(String text) {
     }
- /**
+
+    /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
+     * @param icon the icon to be used as logo.png for the CASPAC
      * @param text dummy method used to implement iCASUALGUI
+     *
      */
     @Override
     public void setWindowBannerImage(BufferedImage icon, String text) {
     }
- /**
+
+    /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *
@@ -2238,7 +2254,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     public void setWindowBannerText(String text) {
     }
 
- /**
+    /**
      * dummy method used to implement iCASUALGUI for the purpose of allowing
      * CASUAL to throw notifications.
      *

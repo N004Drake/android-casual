@@ -1,6 +1,5 @@
 /*TimeOutOptionPane provides an option pane with timeout
- *Copyright (C) Gio Gilligan, Mar 14, 2007
- * http://www.jguru.com/faq/view.jsp?EID=266182
+ *Copyright (C) 2013  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,8 +22,9 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author adam
+ *TimeOutOptionPane provides an option pane with timeout
+ * @author modified heavily by Adam Outler adamoutler@gmail.com
+ * based on uncopyrighted work http://www.jguru.com/faq/view.jsp?EID=266182
  */
 public class TimeOutOptionPane extends JOptionPane {
 

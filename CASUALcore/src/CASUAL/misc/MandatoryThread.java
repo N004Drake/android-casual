@@ -1,7 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*MandatoryThread extends the functionality of thread for better monitoring. 
+ *Copyright (C) 2013  Adam Outler
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package CASUAL.misc;
 
@@ -9,8 +20,8 @@ package CASUAL.misc;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- *
- * @author adamoutler
+ *extends the functionality of thread for better monitoring. 
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class MandatoryThread extends Thread{
     AtomicBoolean hasStarted = new AtomicBoolean(false);

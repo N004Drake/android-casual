@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 /**
+ * CASUALConnectionStatus provides ADB connection status monitoring for CASUAL
  *
  * @author Adam Outler adamoutler@gmail.com
  */
@@ -30,10 +31,21 @@ public class CASUALConnectionStatusMonitor {
      * array of device serial numbers
      */
     private static String mode = "adb";
+
+    /**
+     * Array of devices connnected via ADB. Note: more than one is not
+     * supported.
+     */
     public static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
     private static int LastState = 0;  //last state detected
     private static int cycles = 0; //number of cycles
     private static boolean hasConnected = false; //device was detected since startup
+
+    /**
+     * number of sucessive times ADB has halted. If ADB pauses for more than 4
+     * seconds, it is considered locked up. If ADB locks up 10 times, monitoring
+     * is stopped.
+     */
     public static int adbLockedUp = 0;
     final static int TIMERINTERVAL = 1000;
 
@@ -44,11 +56,18 @@ public class CASUALConnectionStatusMonitor {
     /**
      * Starts and stops the ADB timer reference with
      * Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
-     * @param mode  sets the monitoring mode
+     *
+     * @param mode sets the monitoring mode
      */
     public static void setMode(String mode) {
         mode = "mode";
     }
+
+    /**
+     * Timer starts a device check at a set interval . Device check will poll
+     * adb devices for connected devices. Timer is shutdown if no devices are
+     * detected and adb wait-for-device is used to save process starting.
+     */
     public static Timer DeviceCheck = new Timer(TIMERINTERVAL, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent evt) {
@@ -144,7 +163,6 @@ public class CASUALConnectionStatusMonitor {
             } catch (NullPointerException ex) {
             }
 
-
         }
 
         private void stateSwitcher(int state) {
@@ -156,14 +174,14 @@ public class CASUALConnectionStatusMonitor {
                         log.level4Debug("@stateDisconnected");
                         Statics.setStatus("Device Removed");
                         Statics.GUI.deviceDisconnected();
-                        stateSwitchWasSucessful=true;
+                        stateSwitchWasSucessful = true;
 
                         break;
                     case 1:
                         Statics.setStatus("Device Connected");
                         log.level4Debug("@stateConnected");
                         Statics.GUI.deviceConnected("ADB");
-                        stateSwitchWasSucessful=true;
+                        stateSwitchWasSucessful = true;
                         break;
                     default:
                         Statics.setStatus("Multiple Devices Detected");
@@ -174,7 +192,7 @@ public class CASUALConnectionStatusMonitor {
 
                         log.level4Debug("State Multiple Devices Number of devices" + state);
                         Statics.GUI.deviceMultipleConnected(state);
-                        stateSwitchWasSucessful=true;
+                        stateSwitchWasSucessful = true;
                         break;
 
                 }

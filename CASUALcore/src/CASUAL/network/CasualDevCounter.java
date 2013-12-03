@@ -1,34 +1,49 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*CasualDevCounter provides integration with CASUAL-Dev's counter system.
+ *Copyright (C) 2013  Adam Outler
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package CASUAL.network;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import CASUAL.misc.MandatoryThread;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * provides integration with CASUAL-Dev's counter system.
  *
- * @author adamoutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CasualDevCounter {
 
-    Thread t = new Thread();
+    /**
+     * provides an object which can be polled to determine if the
+     * incrementalCounter has finished
+     */
+    public MandatoryThread t = new MandatoryThread();
 
+    /**
+     * Increments a counter at CASUAL-Dev.com
+     *
+     * @param name the counter reference to increment
+     */
     public void incrementCounter(final String name) {
-
-        t = new Thread(new Runnable() {
+        //TODO create a $CASUAL commmand in CASUAL language to use this, or use Unique ID number. 
+        t = new MandatoryThread(new Runnable() {
             @Override
             public void run() {
                 URL url;
@@ -46,11 +61,12 @@ public class CasualDevCounter {
         });
         t.start();
     }
-    public void waitFor(){
-        try {
-            t.join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(CasualDevCounter.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+    /**
+     * waits for the thread to complete. Used for testing purposes for
+     * rapid-fire.
+     */
+    public void waitFor() {
+        t.waitFor();
     }
 }

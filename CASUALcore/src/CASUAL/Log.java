@@ -26,12 +26,13 @@ import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 
 /**
+ * Logs things
  *
- * @author adam Logging levels: Logging levels are set in Statics
- *
- * Level0: silent, keep this for future critical tasks Level1: Information for
- * user to see Level2: Information for developers to see Level3: verbose
- * information, use for conversions and random tasks
+ * @author AdamOutler Logging levels: Logging levels are set in Statics
+
+ Level0: silent, keep this for future critical tasks Level1: Information for
+ user to see Level2: Information for developers to see Level3: verbose
+ information, use for conversions and random tasks
  *
  */
 public class Log {
@@ -57,6 +58,9 @@ public class Log {
         }
     }
 
+    /**
+     * removes all information from the progress document. (GUI log)
+     */
     public void clearGUI() {
         try {
             Statics.ProgressDoc.remove(0, Statics.ProgressDoc.getLength());
@@ -76,11 +80,11 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[ERROR]" + data);
-        if (Statics.GUIVerboseLevel >= 0) {
+        if (Statics.guiOutputVerbosity >= 0) {
             sendToGUI(data);
 
         }
-        if (Statics.CommandLineVerboseLevel >= 0) {
+        if (Statics.logFIleOutputVerbosity >= 0) {
             out.println("[ERROR]" + data);
 
         }
@@ -96,10 +100,10 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[INTERACTION]" + data);
-        if (Statics.GUIVerboseLevel >= 1) {
+        if (Statics.guiOutputVerbosity >= 1) {
             sendToGUI(data);
         }
-        if (Statics.CommandLineVerboseLevel >= 1) {
+        if (Statics.logFIleOutputVerbosity >= 1) {
             out.println("[INTERACTION]" + data);
 
         }
@@ -117,10 +121,10 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[INFO]" + data);
-        if (Statics.GUIVerboseLevel >= 2) {
+        if (Statics.guiOutputVerbosity >= 2) {
             sendToGUI(data);
         }
-        if (Statics.CommandLineVerboseLevel >= 2) {
+        if (Statics.logFIleOutputVerbosity >= 2) {
             out.println("[INFO]" + data);
         }
     }
@@ -132,10 +136,10 @@ public class Log {
      */
     public void level3Verbose(String data) {
         writeOutToLog("[VERBOSE]" + data);
-        if (Statics.GUIVerboseLevel >= 3) {
+        if (Statics.guiOutputVerbosity >= 3) {
             sendToGUI(data);
         }
-        if (Statics.CommandLineVerboseLevel >= 3) {
+        if (Statics.logFIleOutputVerbosity >= 3) {
             out.println("[VERBOSE]" + data);
         }
     }
@@ -147,10 +151,10 @@ public class Log {
     public void level4Debug(String data) {
         writeOutToLog("[DEBUG]" + data);
 
-        if (Statics.GUIVerboseLevel >= 4) {
+        if (Statics.guiOutputVerbosity >= 4) {
             sendToGUI(data);
         }
-        if (Statics.CommandLineVerboseLevel >= 4) {
+        if (Statics.logFIleOutputVerbosity >= 4) {
             out.println("[DEBUG]" + data);
         }
     }
@@ -245,8 +249,14 @@ public class Log {
         }
     }
 
-    /*
-     * replaces a line of text
+    /**
+     * inserts a line of text to a location. Deletes data at position and lenth
+     * specified allowing for a replacement effect. If length 0 is specified the
+     * data will be only inserted.
+     *
+     * @param data Data to be inserted
+     * @param position position to start
+     * @param length length of text to remove.
      */
     public void replaceLine(String data, int position, int length) {
         if (Statics.isGUIIsAvailable()) {

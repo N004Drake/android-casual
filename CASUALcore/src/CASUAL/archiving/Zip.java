@@ -41,8 +41,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- *
- * @author adam
+ *Provides methods of accessing zip tools. 
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class Zip {
 

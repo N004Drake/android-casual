@@ -23,10 +23,10 @@ import CASUAL.caspac.Script;
 import java.io.*;
 import java.util.ArrayList;
 
-
 /**
+ * Parses and prepares CASUAL Script for CASUAL Language interperater.
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALScriptParser {
 
@@ -109,6 +109,12 @@ public class CASUALScriptParser {
      */
     DataInputStream scriptInput;
 
+    /**
+     * executes the Active Script in the provided CASPAC
+     *
+     * @param caspac CASPAC to have script executed
+     * @param startThreaded true if it is to be started on a new thread.
+     */
     public void executeSelectedScript(final Caspac caspac, boolean startThreaded) {
         Statics.ReactionEvents = new ArrayList<String>();
         Statics.ActionEvents = new ArrayList<String>();

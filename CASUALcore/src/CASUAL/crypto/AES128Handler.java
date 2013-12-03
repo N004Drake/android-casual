@@ -45,8 +45,8 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- *
- * @author adam inspired by
+ *provides a way to encrypt and decrypt given a password
+ * @author Adam Outler adamoutler@gmail.com
  * http://stackoverflow.com/questions/8674018/pbkdf2-with-bouncycastle-in-java
  * inspired by
  * https://www.cigital.com/justice-league-blog/2009/08/14/proper-use-of-javas-securerandom/
@@ -63,10 +63,23 @@ public class AES128Handler {
      *"EncryptedCASPAC-CASUAL-Revision3999" where
      * 3 represents then number of digits in the revision
      */
-    final static private String revision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+    /**
+     * Magic String for CASPAC. 
+     */
     final static private String casualID = "EncryptedCASPAC-CASUAL-Revision";
-    private static String header = casualID + revision.length() + revision;
+    /**
+     * version for the CASPAC
+     */
+    final static private String revision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+    /**
+     * Header for the CASPAC
+     */
+    final static public String header = casualID + revision.length() + revision;
 
+    /**
+     * loads a file for use in AES128Handler. 
+     * @param targetFile File to be encrypted
+     */
     public AES128Handler(File targetFile) {
         this.targetFile = targetFile;
     }
@@ -116,6 +129,8 @@ public class AES128Handler {
      * @param output string name of file to output
      * @param key password issued by encrytper
      * @return name of file written, null if error
+     * @throws java.io.FileNotFoundException
+     * @throws java.lang.Exception
      */
     public String decrypt(String output, char[] key) throws Exception {
         try {
@@ -200,6 +215,17 @@ public class AES128Handler {
         return null;
     }
 
+    /**
+     * gets a cypher for encryption 
+     * @param key secret key
+     * @param iv initialization vector which is pulled from or appended to the file 
+     * @param mode encryption or decryption key
+     * @return cypher to be used for encryption or decryption. 
+     * @throws NoSuchPaddingException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     * @throws InvalidAlgorithmParameterException
+     */
     public Cipher getCipher(byte[] key, byte[] iv, int mode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException {
         SecretKeySpec skey = new SecretKeySpec(key, "AES");
         IvParameterSpec ivspec = new IvParameterSpec(iv);

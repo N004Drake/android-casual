@@ -22,8 +22,9 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 /**
+ * FileOperations provides a set of acellerators for working with files in Java.
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class FileOperations {
 

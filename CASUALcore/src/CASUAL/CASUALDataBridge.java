@@ -38,8 +38,17 @@ import java.util.logging.Logger;
 import javax.swing.Timer;
 
 /**
+ * CASUALDataBridge is a unique way to flash information to a device. as opposed
+ * to other methods, which require writing a string or a file, CASUALDataBridge
+ * also handles Block and Character devices. This allows "flashing" and
+ * "pulling" of entire partitions on a device without first transferring a file
+ * to the SDCard. The technique used is to deploy a server, and monitor its
+ * operations. A second thread is started which sends or receives information to
+ * or from the device via TCP over USB. The end result is a verifiable and
+ * error-checked method of data transfer from a computer to the Android device
+ * from any file/block/char device available.
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALDataBridge {
 
@@ -51,7 +60,12 @@ public class CASUALDataBridge {
     private static boolean deviceReadyForReceive = false;
     static String deviceSideMessage = "";
     static boolean shutdownBecauseOfError = false;
-    public static boolean commandedShutdown=false;
+
+    /**
+     * used externally to command shutdown. If shutdown is commanded, all
+     * operations must halt as soon as possible and return.
+     */
+    public static boolean commandedShutdown = false;
     static long bytes = 0;
     static long lastbytes = -1;
     static String status = "";
@@ -62,9 +76,17 @@ public class CASUALDataBridge {
     CASUALDataBridge() {
     }
 
+    /**
+     * gets a file from the device.
+     *
+     * @param remoteFileName path to remote file
+     * @param f local file to write
+     * @return string path to local file
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public synchronized String getFile(String remoteFileName, File f) throws IOException, InterruptedException {
         status = "received ";
-
 
         FileOutputStream fos = new FileOutputStream(f);
         //begin write
@@ -78,6 +100,16 @@ public class CASUALDataBridge {
 
     }
 
+    /**
+     * Sends a string to a block/char/file on device
+     *
+     * @param send string to send
+     * @param remoteFileName remote block/char/file on deviec
+     * @return number of bytes sent
+     * @throws InterruptedException
+     * @throws SocketException
+     * @throws IOException
+     */
     public synchronized long sendString(String send, String remoteFileName) throws InterruptedException, SocketException, IOException {
         //make a duplicate of the array, with the \n and 0x3 key to end the file transfer
         send = send + "\n" + 0x04;
@@ -87,6 +119,15 @@ public class CASUALDataBridge {
         return retval;
     }
 
+    /**
+     * Sends a file to the device.
+     *
+     * @param f local file to send
+     * @param remoteFileName path to remote file on device
+     * @return number of bytes sent
+     * @throws FileNotFoundException
+     * @throws Exception
+     */
     public synchronized long sendFile(File f, String remoteFileName) throws FileNotFoundException, Exception {
         log.level2Information("sending " + f.getName() + " to device. size=" + f.length());
         FileInputStream fis = new FileInputStream(f);
@@ -106,6 +147,16 @@ public class CASUALDataBridge {
 
     }
 
+    /**
+     * Sends an inputstream to the device.
+     *
+     * @param input stream to be written to remote file
+     * @param remoteFileName name of remote file to be written
+     * @return number of bytes sent.
+     * @throws InterruptedException
+     * @throws SocketException
+     * @throws IOException
+     */
     public synchronized long sendStream(final InputStream input, final String remoteFileName) throws InterruptedException, SocketException, IOException {
         resetCASUALConnection();
 
@@ -136,7 +187,6 @@ public class CASUALDataBridge {
 
         //begin write;
         copyStreamFromDevice(socket, output);
-
 
         shutdownCommunications(socket, t);
         return bytes;
@@ -191,7 +241,7 @@ public class CASUALDataBridge {
             long startTime = System.currentTimeMillis();
             byte[] buf;
             timeoutWatchdog.start();
-            while (deviceReadyForReceive&& !commandedShutdown) {
+            while (deviceReadyForReceive && !commandedShutdown) {
 
                 while ((buf = new byte[bis.available()]).length > 0) {
                     bytes = bytes + buf.length;
@@ -308,8 +358,8 @@ public class CASUALDataBridge {
     }
 
     String integralGetFile(String remoteFile, File f) {
-        
-        String retval="";
+
+        String retval = "";
         try {
             retval = getFile(remoteFile, f);
         } catch (IOException ex) {
@@ -332,7 +382,7 @@ public class CASUALDataBridge {
             } catch (InterruptedException ex) {
                 log.errorHandler(ex);
             }
-            
+
         }
         return retval;
     }
@@ -441,16 +491,16 @@ public class CASUALDataBridge {
                     Statics.setStatus("monitoring ports on device");
                     while (!ready && !commandedShutdown) {
                         //monitor server status and detect errors
-                        while (is.available() > 0 ) {
+                        while (is.available() > 0) {
                             received = received + (char) is.read();
                             log.level4Debug(received);
-                            if (received.contains("read-only file system") ||
-                                    received.contains("cannot open") || 
-                                    received.contains("No such file or directory") || 
-                                    received.contains(DEVICEDISCONNECTED) || 
-                                    received.contains(USBDISCONNECTED) || 
-                                    received.contains(PERMISSIONERROR) ||
-                                    received.contains("error: more than one device and emulator")) {
+                            if (received.contains("read-only file system")
+                                    || received.contains("cannot open")
+                                    || received.contains("No such file or directory")
+                                    || received.contains(DEVICEDISCONNECTED)
+                                    || received.contains(USBDISCONNECTED)
+                                    || received.contains(PERMISSIONERROR)
+                                    || received.contains("error: more than one device and emulator")) {
                                 shutdownServer(received);
                             }
 

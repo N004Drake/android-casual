@@ -582,25 +582,29 @@ public class PitEntry {
 
     }
 
+    /**
+     * gets the partition Description of the entry in human readable form. 
+     * @return partition description. 
+     */
     public String getPartitionDescritpion() {
         String n = System.getProperty("line.separator");
         StringBuilder sb = new StringBuilder();
         sb.append("The ").append(this.getPartitionFriendlyName());
         sb.append(" partition, ");
-        if (this.getPartID()>=0){
+        if (this.getPartID() >= 0) {
             sb.append("identified as partition number ").append(this.getPartID());
         } else {
-            sb.append( " is invalid");
+            sb.append(" is invalid");
             return sb.toString();
         }
-        sb.append(", is ").append(getBlockCountFriendly(true)).append( " in size. It carries a ");
+        sb.append(", is ").append(getBlockCountFriendly(true)).append(" in size. It carries a ");
         sb.append(this.getFilesystemTypeFriendlyName()).append(" format and ");
         sb.append(this.getPartitionTypeFriendlyName()).append(" data type. The partition resides on the ");
         sb.append(this.getBinFriendlyType()).append(" ").append(this.getHardwareTypeFriendlyName()).append(". ");
-        if (!this.getFriendlyFileName().equals("")&& !this.getFriendlyFileName().startsWith("-")){
+        if (!this.getFriendlyFileName().equals("") && !this.getFriendlyFileName().startsWith("-")) {
             sb.append("It identifies itself to Odin as ").append(this.getFriendlyFileName()).append(".");
         }
-        if (this.file_offset!=0 && this.file_size!=0){
+        if (this.file_offset != 0 && this.file_size != 0) {
             sb.append("The partition carries a filesize of ").append(this.file_size).append(" and an offset of ").append(this.file_offset).append(".");
         }
         return sb.toString();

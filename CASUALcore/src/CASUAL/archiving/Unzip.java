@@ -33,8 +33,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 /**
- *
- * @author adam
+ * Provides methods of accessing Unzip tools.
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class Unzip {
 

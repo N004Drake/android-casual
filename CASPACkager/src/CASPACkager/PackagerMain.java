@@ -36,11 +36,12 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * *************************************************************************
- * PackagerMain packages a CASPAC into a CASUAL and provides a method of 
+ * PackagerMain packages a CASPAC into a CASUAL and provides a method of
  * modifying a CASPAC on the fly as a part of packaging.
+ *
  * @author Jeremy Loper jrloper@gmail.com
  * @author Logan Ludington loglud@logatech.org
- * ************************************************************************
+ ************************************************************************
  */
 public class PackagerMain {
 
@@ -64,6 +65,7 @@ public class PackagerMain {
     static ArrayList<String[]> replaceText;//used to replace text in script
     static ArrayList<String[]> replaceFile;//used to replace files in zip
     private final String slash = Statics.Slash;
+
     /**
      * Packages a CASPAC into a CASUAL.
      *
@@ -118,13 +120,12 @@ public class PackagerMain {
     public void mergeCaspacCasual(String caspacLoc, String outputDir) {
         try {
             File outputFile;
-            String rev = CASUAL.CASUALTools.getSVNVersion();
             int lastSlash = caspacLoc.lastIndexOf("/");
             if (lastSlash == -1) {
                 lastSlash = caspacLoc.lastIndexOf("\\");
             }
             int lastDot = caspacLoc.lastIndexOf(".");
-            String outputFileName = caspacLoc.substring(lastSlash, lastDot) + "-CASUAL-R" + rev + "b";
+            String outputFileName = caspacLoc.substring(lastSlash, lastDot) + "-CASUAL-R" + Integer.toString(CASUAL.CASUALTools.getSVNVersion()) + "b";
             if (!appendToName.isEmpty()) {
                 outputFileName = outputFileName + "-" + appendToName;
             }
@@ -200,7 +201,7 @@ public class PackagerMain {
                     }
                 }
                 name = entry.getName();
-                out.putNextEntry(new ZipEntry("SCRIPTS"+ slash + name));
+                out.putNextEntry(new ZipEntry("SCRIPTS" + slash + name));
                 int bufferSize;
                 while ((bufferSize = entryStream.read(BUFFER)) > 0) {
                     out.write(BUFFER, 0, bufferSize);

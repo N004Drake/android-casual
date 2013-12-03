@@ -29,6 +29,7 @@ public class FastbootTools {
      * deploys and verifies fastboot
      */
     public static void checkAndDeployFastboot() {
+        Log log =new Log();
         if (!new FileOperations().verifyExists(Statics.fastbootDeployed)) {
             if (OSTools.isLinux()) {
                 Statics.fastbootResource = getFastbootLinuxResource();
@@ -41,13 +42,13 @@ public class FastbootTools {
             if (OSTools.isMac()) {
                 Statics.fastbootResource = Statics.fastbootMac;
             }
-            Statics.log.level2Information("@deployingFastboot");
-            Statics.log.level3Verbose("Deploying Fastboot from " + Statics.fastbootResource + " to " + Statics.fastbootDeployed);
+            log.level2Information("@deployingFastboot");
+            log.level3Verbose("Deploying Fastboot from " + Statics.fastbootResource + " to " + Statics.fastbootDeployed);
             new FileOperations().copyFromResourceToFile(Statics.fastbootResource, Statics.fastbootDeployed);
             if (OSTools.isLinux() || OSTools.isMac()) {
                 new FileOperations().setExecutableBit(Statics.fastbootDeployed);
             }
-            Statics.log.level2Information("@fastbootDeployed");
+            log.level2Information("@fastbootDeployed");
         }
     }
 

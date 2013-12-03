@@ -33,35 +33,38 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * queries the file-system at casual-dev.com for items pertaining to the
+ * provided build.prop
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALDevQuerier {
 
     static String BUILDPROP;
     static ArrayList<MandatoryThread> searches = new ArrayList<MandatoryThread>();
-    
+
     /**
      * Takes the build.prop and instantiates CasualDevQuerier
      *
      * @param deviceBuildProp from an android device.
      * @param additionalProps additional properties to blacklist
      */
-    public CASUALDevQuerier(String deviceBuildProp,String[] additionalProps) {
+    public CASUALDevQuerier(String deviceBuildProp, String[] additionalProps) {
         //clean out the buildprop.  / is a folder here. 
         BUILDPROP = deviceBuildProp.replace("/", "");
-        for (String prop:additionalProps){
-            BUILDPROP=prop+BUILDPROP;
+        for (String prop : additionalProps) {
+            BUILDPROP = prop + BUILDPROP;
         }
     }
 
     /**
      * Performs a recursive search of builds.casual-dev.com
+     *
      * @return an array of URLs in string format representing available files.
      */
     public String[] recursiveFolderSearch() {
-        
-        Set<String> availableURLs=new TreeSet<String>();
+
+        Set<String> availableURLs = new TreeSet<String>();
         //get initial filelist
         searchFolder("files/", availableURLs);
         //dispatchThreads( searchFolder("files/").folders);
@@ -79,7 +82,7 @@ public class CASUALDevQuerier {
                     threadsComplete++;
                 }
             }
-         
+
         }
         System.out.println(availableURLs);
         availableURLs.remove("http://builds.casual-dev.com/");
@@ -87,9 +90,9 @@ public class CASUALDevQuerier {
         return availableURLs.toArray(new String[availableURLs.size()]);
     }
 
-    
     /**
      * adds a thread to the searches list
+     *
      * @param t thread to be added
      */
     synchronized static void addSearch(MandatoryThread t) {
@@ -98,21 +101,24 @@ public class CASUALDevQuerier {
 
     /**
      * gets an array of MandatoryThreads
+     *
      * @return array of MandatoryThreads
      */
     MandatoryThread[] getSearches() {
         return searches.toArray(new MandatoryThread[searches.size()]);
     }
 
-
     /**
      * dispatches new threads to take care of each folder
-     * @param availableFolders  folders to check
-     * @param availableURLs reference to URLs 
+     *
+     * @param availableFolders folders to check
+     * @param availableURLs reference to URLs
      */
     private void dispatchThreads(final String[] availableFolders, final Set<String> availableURLs) {
         for (final String folder : availableFolders) {
-            if (folder==null||folder.equals("null")||folder.isEmpty())return;
+            if (folder == null || folder.equals("null") || folder.isEmpty()) {
+                return;
+            }
             MandatoryThread t = new MandatoryThread(new Runnable() {
                 @Override
                 public void run() {
@@ -127,16 +133,17 @@ public class CASUALDevQuerier {
 
     /**
      * Searches a folder if the folder is not in the blacklist
+     *
      * @param folder folder to perform work on
      * @param availableURLs reference to URL list
      */
-    private void searchFolder(String folder,Set<String> availableURLs) {
-        String[] worklist=new String[]{};
-        if (! isBlacklisted(folder)) {
+    private void searchFolder(String folder, Set<String> availableURLs) {
+        String[] worklist = new String[]{};
+        if (!isBlacklisted(folder)) {
             try {
                 worklist = folderList(folder, availableURLs);
-                for (String name:worklist){
-                    System.out.println("Folder: "+name);
+                for (String name : worklist) {
+                    System.out.println("Folder: " + name);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(CASUALDevQuerier.class.getName()).log(Level.SEVERE, null, ex);
@@ -146,17 +153,18 @@ public class CASUALDevQuerier {
     }
 
     /**
-     * downloads the folder b.prop if available and checks it for whitelist
-     * then checks for blacklist.  
-     * @param folder  online folder to check
+     * downloads the folder b.prop if available and checks it for whitelist then
+     * checks for blacklist.
+     *
+     * @param folder online folder to check
      * @return true if folder is blacklisted
      */
     private static boolean isBlacklisted(String folder) {
         boolean blacklisted;
-        Properties buildprop=new Properties();
+        Properties buildprop = new Properties();
         try {
-            URI uri=new URI("http","builds.casual-dev.com","/"+ folder + "b.prop",null);
-            URL url=new URL(uri.toASCIIString());
+            URI uri = new URI("http", "builds.casual-dev.com", "/" + folder + "b.prop", null);
+            URL url = new URL(uri.toASCIIString());
             System.out.println("Searching " + folder);
             buildprop.load(url.openStream());
         } catch (IOException ex) {
@@ -188,27 +196,27 @@ public class CASUALDevQuerier {
                 break;
             }
         }
-        System.out.println(folder + (blacklisted?" does not apply to this device.":" is Whitelisted."));
+        System.out.println(folder + (blacklisted ? " does not apply to this device." : " is Whitelisted."));
         return blacklisted;
     }
 
     /**
-     * Performs the listing on the folder.  This is performed after blacklist
-     * Gets folders and files.
-     * Adds files to the availableURLs list
+     * Performs the listing on the folder. This is performed after blacklist
+     * Gets folders and files. Adds files to the availableURLs list
+     *
      * @param remoteFolder folder to do work on
      * @param availableURLs reference to the master URL list
      * @return new work items to be addressed.
      * @throws MalformedURLException
-     * @throws IOException 
+     * @throws IOException
      */
-    private String[] folderList(String remoteFolder,Set<String> availableURLs) throws MalformedURLException, IOException {
+    private String[] folderList(String remoteFolder, Set<String> availableURLs) throws MalformedURLException, IOException {
         try {
-            
+
             //Open the URL with folder search query.
             System.out.println("remoteFolder:" + remoteFolder);
-            URI uri=new URI("http","builds.casual-dev.com","/"+ "query.php","folder="+remoteFolder,null);
-            URL url=new URL(uri.toASCIIString());
+            URI uri = new URI("http", "builds.casual-dev.com", "/" + "query.php", "folder=" + remoteFolder, null);
+            URL url = new URL(uri.toASCIIString());
             //Read both expected arrays and close the input
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             //Read file and folder
@@ -217,24 +225,24 @@ public class CASUALDevQuerier {
             System.out.println(folderLine + "\n" + fileLine);
             in.close();
             //parse sun.proprietary.NativeArray to java array (as returned by javascript)
-            folderLine=StringOperations.replaceLast(folderLine, "]","");
-            String[] folderList=folderLine.replaceFirst("\\[","").replace("\\","").replace("\"","").split(",");
-            fileLine=StringOperations.replaceLast(fileLine, "]","");
-            String[] fileList=fileLine.replaceFirst("\\[","").replace("\\","").replace("\"","").split(",");
+            folderLine = StringOperations.replaceLast(folderLine, "]", "");
+            String[] folderList = folderLine.replaceFirst("\\[", "").replace("\\", "").replace("\"", "").split(",");
+            fileLine = StringOperations.replaceLast(fileLine, "]", "");
+            String[] fileList = fileLine.replaceFirst("\\[", "").replace("\\", "").replace("\"", "").split(",");
             //clean and add String URL references to availableFiles
             for (String file : fileList) {
-                if (!file.endsWith("b.prop")){
+                if (!file.endsWith("b.prop")) {
                     file = "http://builds.casual-dev.com/" + file.replace("\\/", "/");
                     availableURLs.add(file);
-                    System.out.println("Available File: "+file);
+                    System.out.println("Available File: " + file);
                 }
             }
-           
+
             return folderList;
         } catch (URISyntaxException ex) {
             Logger.getLogger(CASUALDevQuerier.class.getName()).log(Level.SEVERE, null, ex);
         }
-     return new String[]{};
+        return new String[]{};
     }
 
 }

@@ -21,8 +21,8 @@ import CASUAL.caspac.Script;
 import java.awt.image.BufferedImage;
 
 /**
- *
- * @author adam
+ *provides an interface for a main GUI in CASUAL
+ * @author Adam Outler adamoutler@gmail.com
  */
 public interface iCASUALGUI {
 

@@ -25,8 +25,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
+ * Launches URLs on various platforms.
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class LinkLauncher {
 
@@ -49,7 +50,7 @@ public class LinkLauncher {
         thread.setName("Link Launcher Thread");
         thread.start();
     }
-    private Runnable launcher = new Runnable() {
+    final private Runnable launcher = new Runnable() {
         @Override
         public void run() {
             //use java to autolaunch if possible
@@ -79,7 +80,7 @@ public class LinkLauncher {
                         Shell.sendShellCommand(new String[]{"chrome", link});
                         if (retval.contains("CritERROR!!!")) {
                             //launch link with explorer
-                            retval = Shell.sendShellCommand(new String[]{"explorer", link});
+                            Shell.sendShellCommand(new String[]{"explorer", link});
                         }
                     }
                 }

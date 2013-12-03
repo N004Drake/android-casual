@@ -30,17 +30,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author adam
+ * Provides a set of tools used in CASUAL 
+ * @author Adam Outler
  */
 public class CASUALTools {
     //final public String defaultPackage="ATT GS3 Root";
 
     /**
-     *
+     * true if this is running on the flat filesystem. False if in a jar.
      */
     final public static boolean IDEMode = new CASUALTools().getIDEMode();
-
 
     Log log = new Log();
 
@@ -134,7 +133,6 @@ public class CASUALTools {
                                 prop.store(fos, null);
                                 fos.close();
 
-
                             }
                         } catch (FileNotFoundException ex) {
                             new Log().errorHandler(ex);
@@ -214,6 +212,10 @@ public class CASUALTools {
             }
         }
     };
+
+    /**
+     * provides a runnable object for updating MD5s
+     */
     public static Runnable updateMD5s = new Runnable() {
         @Override
         public void run() {
@@ -222,6 +224,12 @@ public class CASUALTools {
     };
 
     //This is only used in IDE mode for development
+    /**
+     * rewrites MD5s in the provided CASPAC. note: This is only used in IDE mode
+     * for development
+     *
+     * @param CASPAC file to be checked and have MD5s rewritten.
+     */
     public static void rewriteMD5OnCASPAC(File CASPAC) {
 
         Caspac caspac;
@@ -276,17 +284,31 @@ public class CASUALTools {
         }
     }
 
-    public static String getSVNVersion() {
-        return java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
+    /**
+     * gets the stored Subversion revision from the last build
+     *
+     * @return string representation of subversion revision
+     */
+    public static int getSVNVersion() {
+        return Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
     }
 
+    /**
+     * sets the message API based on property in CASUAL/resources/CASUALApp.
+     * The Message API can be specified by modification of 
+     * Application.interactions. The API only requires that you specify a class
+     * which implements the iCASUALinteractions class. 
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public static void setMessageAPI() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        String messageAPI=java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.interactions");
+        String messageAPI = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.interactions");
         CASUAL.iCASUALInteraction clsInstance;
-        try{
+        try {
             Class<?> cls = Class.forName(messageAPI);
             setiCASUALinteraction(cls);
-        } catch (ClassNotFoundException ex){
+        } catch (ClassNotFoundException ex) {
             Class<?> cls = Class.forName("GUI.development.CASUALShowJFrameMessageObject");
             setiCASUALinteraction(cls);
         } catch (InstantiationException ex) {
@@ -297,21 +319,31 @@ public class CASUALTools {
             setiCASUALinteraction(cls);
         }
     }
-    
+
     private static void setiCASUALinteraction(Class<?> cls) throws InstantiationException, IllegalAccessException {
         iCASUALInteraction clsInstance;
-        if (! java.awt.GraphicsEnvironment.isHeadless()){
+        if (!java.awt.GraphicsEnvironment.isHeadless()) {
             clsInstance = (CASUAL.iCASUALInteraction) cls.newInstance();
             CASUAL.Statics.interaction = clsInstance;
         }
 
     }
+
+    /**
+     * sets the GUI API based on property in CASUAL/resources/CASUALApp.
+     * The GUI API can be specified by modification of Application.GUI. The API 
+     * only requires that you specify a class which implements the 
+     * iCASUALGUI class.
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InstantiationException
+     * @throws java.lang.IllegalAccessException
+     */
     public static void setGUIAPI() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        String messageAPI=java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.GUI");
-        try{
+        String messageAPI = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.GUI");
+        try {
             Class<?> cls = Class.forName(messageAPI);
             setiCASUALGUI(cls);
-        } catch (ClassNotFoundException ex){
+        } catch (ClassNotFoundException ex) {
             Class<?> cls = Class.forName("GUI.development.CASUALJFrameMain");
             setiCASUALGUI(cls);
         } catch (InstantiationException ex) {
@@ -322,29 +354,37 @@ public class CASUALTools {
             setiCASUALGUI(cls);
         }
     }
- 
+
     private static void setiCASUALGUI(Class<?> cls) throws InstantiationException, IllegalAccessException {
         iCASUALGUI clsInstance;
         clsInstance = (CASUAL.iCASUALGUI) cls.newInstance();
         CASUAL.Statics.GUI = clsInstance;
     }
-    
-    
-    
-    public static boolean uidMatches(String expectedUID){
-        String[] cmd = new String[]{ADBTools.getADBCommand(),"shell","id -u"};
-        String retval=new Shell().silentShellCommand(cmd);
+
+    /**
+     * compares User ID from id -u on the device to the specified User ID.
+     * @param expectedUID  User ID specified.
+     * @return True if actua UID matches expected
+     */
+    public static boolean uidMatches(String expectedUID) {
+        String[] cmd = new String[]{ADBTools.getADBCommand(), "shell", "id -u"};
+        String retval = new Shell().silentShellCommand(cmd);
         return retval.contains(expectedUID);
     }
-    
-    public static String rootAccessCommand(){
-        if (uidMatches("uid=0(")){
+
+    /**
+     * Checks the device to get the command required for root access.  This
+     * accounts for both adb root and rooted devices.  
+     * @return command used to get root, will be blank if unrooted. 
+     */
+    public static String rootAccessCommand() {
+        if (uidMatches("uid=0(")) {
             return "";
         }
-        if (uidMatches("2000")){
-            String retval=new Shell().silentShellCommand(new String[]{ADBTools.getADBCommand(),"shell","su -c 'id -u'"});
-            if (retval.contains("uid=0(")){
-               return "su -c ";
+        if (uidMatches("2000")) {
+            String retval = new Shell().silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "su -c 'id -u'"});
+            if (retval.contains("uid=0(")) {
+                return "su -c ";
             } else {
                 return "";
             }
@@ -353,7 +393,5 @@ public class CASUALTools {
             return "";
         }
     }
-    
-    
-    
+
 }

@@ -19,11 +19,20 @@ package CASUAL;
 import java.util.ArrayList;
 
 /**
- *
- * @author adam
+ * Provides a set of shell tools designed to assist with Java to shell on all systems. 
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class ShellTools {
 
+    /**
+     * CASUAL's command line parser. Will return an arraylist of each part of
+     * the command line. Checks for literal "\", double and single quotes to
+     * determine if the command should be quoted or not. This will process only
+     * the outermost layer of any single or double quote.
+     *
+     * @param Line Commandline to be processsed.
+     * @return ArrayList representing individual portions of commandline.
+     */
     public ArrayList<String> parseCommandLine(String Line) {
         ArrayList<String> List = new ArrayList<String>();
         Boolean SingleQuoteOn = false;

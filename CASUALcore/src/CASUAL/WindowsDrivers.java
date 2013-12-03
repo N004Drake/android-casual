@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  * 
  * @author Jeremy Loper jrloper@gmail.com
  * @author Adam Outler adamoutler@gmail.com
- * *************************************************************************
+ *************************************************************************
  */
 public class WindowsDrivers {
 

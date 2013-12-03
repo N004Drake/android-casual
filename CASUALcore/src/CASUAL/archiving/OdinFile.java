@@ -34,8 +34,8 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 
 /**
- *
- * @author adamoutler
+ *Opens odin files and performs consistancy checks
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class OdinFile {
 

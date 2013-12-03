@@ -28,8 +28,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
- *
- * @author adam
+ * provides a place for the main thread to break out into different modes.
+ * @author AdamOuler
  */
 public final class CASUALMain {
 
@@ -249,10 +249,11 @@ public final class CASUALMain {
         prepareCaspac();
         //start the GUI if required
 
+        Locks.startGUI.setName("CASUAL GUI");
         Locks.startGUI.start();//starts the GUI if required
-       
+        
         //deploy ADB
-        Thread adb = startADB();
+        Locks.startADB = startADB();
 
 
         try {
@@ -261,6 +262,7 @@ public final class CASUALMain {
             if (!execute) {
                 if (Statics.CASPAC != null && Statics.CASPAC.scripts != null && Statics.CASPAC.scripts.size() >= 1) {
                     new Log().level4Debug("Finalizing active script up to be run");
+                    //TODO set Active Script in CASPAC here
                     Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
                     Statics.CASPAC.getActiveScript().scriptContinue = true;
                 }
@@ -268,7 +270,7 @@ public final class CASUALMain {
             if (args.length != 0 && !useGUI) {
                 //Using command line mode
                 Statics.setStatus("waiting for ADB");
-                adb.join(); //wait for adb deployment
+                Locks.startADB.waitFor(); //wait for adb deployment
 
                 //start the device monitor
                 //wait for complete;
@@ -361,14 +363,20 @@ public final class CASUALMain {
         }
     };
 
-
-    public Thread startADB() {
-        Thread adb = new Thread(new CASUALTools().adbDeployment);
+    /**
+     * Starts a Thread responsible for deploying and starting ADB.
+     * @return a reference to the startADBThread
+     */
+    public MandatoryThread startADB() {
+        MandatoryThread adb = new MandatoryThread(new CASUALTools().adbDeployment);
         adb.setName("ADB Deployment");
         adb.start(); //start ADB deployment
         return adb;
     }
 
+    /**
+     * starts preparing the CASPAC provided. 
+     */
     public void prepareCaspac() {
         Locks.caspacPrepLock = new MandatoryThread(setupCASUALCASPAC);
         Locks.caspacPrepLock.setName("Preparing Scripts");

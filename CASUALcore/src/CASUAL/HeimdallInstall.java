@@ -25,8 +25,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
+ * Heimdall Install provides methods to install Heimdall under the CASUAL
+ * environment
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class HeimdallInstall {
 
@@ -183,7 +185,6 @@ public class HeimdallInstall {
         }
     }
 
-   
     /**
      * Installs windows drivers
      *
@@ -308,7 +309,6 @@ public class HeimdallInstall {
     public boolean checkAndDeployHeimdall() {
 
         //deploys heimdall for Windows, launches checks for all other OS's. 
-
         if (Statics.isHeimdallDeployed) {
             return true;
         } else {

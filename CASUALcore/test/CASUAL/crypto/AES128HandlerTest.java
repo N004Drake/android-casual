@@ -178,4 +178,60 @@ public class AES128HandlerTest {
         }
         return data;
     }
+
+    /**
+     * Test of encrypt method, of class AES128Handler.
+     */
+    @Test
+    public void testEncrypt() {
+        testEncryptDecryptForConsistancy();
+    }
+
+    /**
+     * Test of decrypt method, of class AES128Handler.
+     */
+    @Test
+    public void testDecrypt() throws Exception {
+        testEncryptDecryptForConsistancy();
+    }
+
+    /**
+     * Test of oneWayHash method, of class AES128Handler.
+     */
+    @Test
+    public void testOneWayHash() {
+        System.out.println("oneWayHash");
+        char[] input = "test".toCharArray();
+        AES128Handler instance = new AES128Handler(new File("../../CASPAC/testpak.zip"));
+        byte[] expResult = new byte[]{-39,7,54,-119,-22,57,-32,-92,-99,-122,69,-64,61,47,-42,-103};
+        byte[] result = instance.oneWayHash(input);
+        assertArrayEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of getCipher method, of class AES128Handler.
+     */
+    @Test
+    public void testGetCipher() throws Exception {
+        System.out.println("getCipher");
+             byte[] key = hexStringToByteArray("2b7e151628aed2a6abf7158809cf4f3c");
+            byte[] iv = hexStringToByteArray("000102030405060708090A0B0C0D0E0F");
+            AES128Handler ch = new AES128Handler(new File("../../CASPAC/testpak.zip"));
+            Cipher c = ch.getCipher(key, iv, Cipher.ENCRYPT_MODE);
+            assertArrayEquals(iv,c.getIV());
+    }
+
+    /**
+     * Test of getCASPACHeaderLength method, of class AES128Handler.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testGetCASPACHeaderLength() throws Exception {
+        System.out.println("getCASPACHeaderLength");
+        int expResult = AES128Handler.header.length();
+        int result=AES128Handler.getCASPACHeaderLength(new File("../../CASPAC/testpak.enc.zip"));
+        assertEquals(expResult, result);
+
+    }
 }

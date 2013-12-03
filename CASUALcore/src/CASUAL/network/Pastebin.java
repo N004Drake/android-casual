@@ -42,9 +42,9 @@ import java.util.regex.Pattern;
 
 /**
  * @author Jeremy Loper jrloper@gmail.com
- *
- * Modified From: https://code.google.com/p/pastebin-click/ Originally released
- * under the MIT license (http://www.opensource.org/licenses/mit-license.php)
+
+ Modified From: https://code.google.com/p/pastebin-click/ Originally released
+ under the MIT license (http://www.opensource.org/licenses/mit-license.php)
  */
 public class Pastebin {
 
