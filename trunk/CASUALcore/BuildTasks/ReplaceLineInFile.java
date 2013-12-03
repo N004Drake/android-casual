@@ -1,22 +1,31 @@
-
+/*ReplaceLineInFile provides a method of hunting down and replacing a line in a file
+ *Copyright (C) 2013  Adam Outler
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
- * @author adamoutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class ReplaceLineInFile {
 
@@ -52,7 +61,7 @@ public class ReplaceLineInFile {
         System.out.println("Scanning " + file.getCanonicalPath());
         BufferedReader reader = new BufferedReader(new FileReader(file));
         BufferedWriter writer = new BufferedWriter(new FileWriter(file + "temporary"));
-        String line = "";
+        String line;
         while ((line = reader.readLine()) != null) {
             if (line.equals(args[1])) {
                 line = args[2];

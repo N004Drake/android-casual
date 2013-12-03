@@ -34,8 +34,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * CASUALLanguage is where the CASUALLanguage is interperated
  *
- * @author adam
+ * @author Adam Outler
  */
 public class CASUALLanguage {
 
@@ -53,6 +54,7 @@ public class CASUALLanguage {
      * @param ScriptTempFolder temp folder to use for script
      */
     public CASUALLanguage(Caspac caspac, String ScriptName, String ScriptTempFolder) {
+        //TODO remove ScriptName as it is only used for logging.  The CASUALLanguage need not know what SCRIPT is executing. 
         this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = caspac;
@@ -61,6 +63,12 @@ public class CASUALLanguage {
     static String GOTO = "";
     int CurrentLine = 1;
 
+    /**
+     * Constructor for CASUALLanguage
+     *
+     * @param ScriptName Name of script to be executed
+     * @param ScriptTempFolder Folder in which script is executing.
+     */
     public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
         this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
@@ -111,7 +119,16 @@ public class CASUALLanguage {
                 new WindowsDrivers(2).uninstallCADI();
             }
             log.level2Information("@done");
-        } catch (Exception e) {//Catch exception if any
+        } catch (Exception e) {
+            /*
+             *  Java reports this as an overly broad catch.  Thats fine.  this is 
+             *  supposed to be broad.  It is the handler for all errors during 
+             *  execution of CASUAL script.  Script commands are tested for quality
+             *  and errors found here will be syntax or oher scripting errors.
+             *
+             *  CASUAL will take the blame for the end user and the developer will
+             *  see that it was a problem with their script
+             */
             log.level0Error("@problemParsingScript");
             log.level0Error(strLine);
             log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
@@ -227,7 +244,9 @@ public class CASUALLanguage {
          }
          */
         if (line.startsWith("$HALT")) {
-            if (Statics.CASPAC !=null)Statics.CASPAC.getActiveScript().scriptContinue = false;
+            if (Statics.CASPAC != null) {
+                Statics.CASPAC.getActiveScript().scriptContinue = false;
+            }
             //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
             log.level4Debug("HALT RECEIVED");
@@ -366,7 +385,6 @@ public class CASUALLanguage {
             log.level4Debug("Expanded $BUSYBOX: " + line);
         }
 
-
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
             line = line.replace("$SLASH", Statics.Slash);
@@ -395,8 +413,6 @@ public class CASUALLanguage {
             log.level4Debug("Expanded $HOMEFOLDER" + line);
         }
 
-
-
         /*
          * GENERAL PURPOSE COMMANDS
          */
@@ -418,22 +434,21 @@ public class CASUALLanguage {
             File[] files = new File(line).listFiles();
             String retval = "";
             if (files != null && files.length > 0) {
-                for (int i = 0; i < files.length; i++) {
-                    retval = retval + files[i].getAbsolutePath() + "\n";
+                for (File file : files) {
+                    retval = retval + file.getAbsolutePath() + "\n";
                     try {
                         //TODO: create a method which will parse $ON action/reaction events.  This is currently implemented in Shell() but should be moved to ScriptParser or script spooler. 
                         //or parse $ON events from CASUALScriptParser
                         //this method can create a problem if the device is in recovery mode.
                         //the problem could be solved by creating a new method which will
-                        //parse $ON action/reaction events which is the purpose for this.. 
-                        commandHandler("shell \"echo " + files[i].getCanonicalPath() + "\"");
+                        //parse $ON action/reaction events which is the purpose for this..
+                        commandHandler("shell \"echo " + file.getCanonicalPath() + "\"");
                     } catch (IOException ex) {
                         log.errorHandler(ex);
                     }
                 }
             }
             return retval;
-
 
 // $MAKEDIR will make a folder
         } else if (line.startsWith("$MAKEDIR")) {
@@ -457,8 +472,6 @@ public class CASUALLanguage {
             String retval = commandHandler(line);
             new CASUALMessageObject(title + ">>>" + retval).showCommandNotification();
             return retval;
-
-
 
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 
@@ -485,10 +498,7 @@ public class CASUALLanguage {
             }
             return "";
 
-
-
 //$ACTIONREQUIRED Message            
-
         } else if (line.startsWith("$ACTIONREQUIRED")) {
             Statics.GUI.notificationUserActionIsRequired();
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
@@ -519,7 +529,6 @@ public class CASUALLanguage {
             String command = Message[2].replace("$USERINPUT", inputBoxText);
             this.commandHandler(command);
 
-
             return "";
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
 
@@ -527,17 +536,17 @@ public class CASUALLanguage {
             line = line.replace("$DOWNLOAD", "");
             line = StringOperations.removeLeadingSpaces(line);
             String[] downloadCommand = line.split(",");
-            for (int i=0;i<downloadCommand.length; i++){
-                downloadCommand[i]=downloadCommand[i].trim();
+            for (int i = 0; i < downloadCommand.length; i++) {
+                downloadCommand[i] = downloadCommand[i].trim();
             }
             FileOperations fo = new FileOperations();
             log.level4Debug("Downloading " + downloadCommand[2]);
             log.level4Debug("From " + downloadCommand[0]);
             log.level4Debug("to " + downloadCommand[1]);
-            if (!new File(downloadCommand[1]).getParentFile().exists()){
+            if (!new File(downloadCommand[1]).getParentFile().exists()) {
                 new File(downloadCommand[1]).getParentFile().mkdirs();
             }
-            
+
             if (downloadCommand.length == 3) {
                 new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 return downloadCommand[1];
@@ -614,13 +623,10 @@ public class CASUALLanguage {
             }
             return new CASUALDataBridge().integralGetFile(split[0].trim(), f);
 
-
-
             /*
              * SUPPORTED SHELLS
              */
             // if Heimdall, Send to Heimdall shell command
-
         } else if (line.startsWith("$HEIMDALL")) {
             line = line.replace("$HEIMDALL", "");
             line = StringOperations.removeLeadingSpaces(line);
@@ -651,13 +657,13 @@ public class CASUALLanguage {
                 //Todo write checks for this
                 //String retval=new Shell().timeoutValueCheckingShellCommand(new String[]{line.replaceAll("\"", "\\\"")},new String[]{"< waiting for device >"},30000);
                 //if (retval.endsWith("< waiting for device >")){
-                    String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
-                    if (!returnValue.contentEquals("\n")) {
-                        return returnValue;
-                    }
+                String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
+                if (!returnValue.contentEquals("\n")) {
+                    return returnValue;
+                }
                 //}
-     
-                } else {
+
+            } else {
                 return new FastbootTools().doFastbootShellCommand(line);
             }
 
@@ -712,7 +718,6 @@ public class CASUALLanguage {
         }
         log.level4Debug("checking for results to be " + ifContains);
         log.level4Debug("requesting " + command);
-
 
         String returnValue = new CASUALScriptParser().executeOneShotCommand(command);
         log.level4Debug("got " + returnValue);

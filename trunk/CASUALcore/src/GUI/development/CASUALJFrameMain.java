@@ -41,8 +41,8 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 /**
- *
- * @author adam
+ *provides UI for CASUAL. 
+ * @author Adam Outler adamoutler@gmail.com
  */
 public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUALGUI {
 
@@ -733,6 +733,10 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         }
     }
 
+    /**
+     * sets the window visible. 
+     * @param v set true if window should be visible. 
+     */
     public void setVisibile(boolean v) {
         this.setVisible(v);
     }

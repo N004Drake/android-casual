@@ -21,8 +21,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- *
- * @author adamoutler
+ *prints the pit file provided
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class PrintPit {
 

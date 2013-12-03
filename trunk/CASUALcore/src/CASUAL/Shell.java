@@ -26,10 +26,9 @@ import java.util.Calendar;
 import javax.swing.Timer;
 
 /**
- *
- * @author adam
+ * Provides methods of  to access the shell in predefined ways. 
+ * @author Adam Outler adamoutler@gmail.com
  */
-//define <output and input> to this abstract class
 public class Shell {
 
     /**

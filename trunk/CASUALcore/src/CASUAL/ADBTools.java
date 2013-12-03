@@ -21,8 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Provides a set of tools for using ADB in CASUAL
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class ADBTools {
 
@@ -65,8 +66,8 @@ public class ADBTools {
     }
 
     /**
-     * returns the location of ADB
-     * deploys if needed
+     * returns the location of ADB deploys if needed
+     *
      * @return location of ADBa
      */
     public static String getADBCommand() {
@@ -119,12 +120,12 @@ public class ADBTools {
         new Log().level3Verbose("@restartingADBSlowly");
         Shell shell = new Shell();
         shell.timeoutShellCommand(getKillServerCmd(), 1000);
-        String retval=shell.timeoutShellCommand(getDevicesCmd(), 6000);
+        String retval = shell.timeoutShellCommand(getDevicesCmd(), 6000);
         new ADBTools().checkADBerrorMessages(retval);
     }
 
     /**
-     * starts an elevated ADB server
+     * starts an elevated ADB server.
      */
     public static void elevateADBserver() {
         new Log().level3Verbose("@restartingADB");
@@ -134,7 +135,7 @@ public class ADBTools {
     }
 
     /**
-     *
+     * Halts the ADB server.
      */
     public static void killADBserver() {
         Shell shell = new Shell();
@@ -167,14 +168,14 @@ public class ADBTools {
             return false;
         }
 
-        if ( DeviceList.contains("unauthorized") || DeviceList.contains("Please check the confirmation dialog on your device." ) ){
+        if (DeviceList.contains("unauthorized") || DeviceList.contains("Please check the confirmation dialog on your device.")) {
             adbMonitor(false);
             new CASUALMessageObject("@interactionPairingRequired").showActionRequiredDialog();
             adbMonitor(true);
             return false;
         }
 
-        if (DeviceList.contains("offline")){
+        if (DeviceList.contains("offline")) {
             adbMonitor(false);
             new CASUALMessageObject("@interactionOfflineNotification").showActionRequiredDialog();
             adbMonitor(true);
@@ -194,13 +195,26 @@ public class ADBTools {
         }
         return true;
     }
-    
-    public static boolean isConnected(){
-        return new Shell().timeoutShellCommand(new String[]{ADBTools.getADBCommand(),"devices"},4000).contains("   device");
+
+    /**
+     * detects if a device is connected. Uses timeout so the command will return
+     * true or false and after 4 seconds will always return false.
+     *
+     * @return
+     */
+    public static boolean isConnected() {
+        return new Shell().timeoutShellCommand(new String[]{ADBTools.getADBCommand(), "devices"}, 4000).contains("   device");
     }
-    public static void adbMonitor(boolean start){
-        if (start){
-            while (Statics.CASPAC==null){
+
+    /**
+     * Turns on or off the adbMonitor.
+     *
+     * @see CASUALConnectionStatus.DeviceCheck
+     * @param start true if monitor is to be started.
+     */
+    public static void adbMonitor(boolean start) {
+        if (start) {
+            while (Statics.CASPAC == null) {
                 CASUALTools.sleepForOneTenthOfASecond();
             }
             try {
@@ -208,15 +222,15 @@ public class ADBTools {
             } catch (InterruptedException ex) {
                 Logger.getLogger(ADBTools.class.getName()).log(Level.SEVERE, null, ex);
             }
-            while ( Locks.caspacScriptPrepLock){
-                    CASUALTools.sleepForOneTenthOfASecond();
+            while (Locks.caspacScriptPrepLock) {
+                CASUALTools.sleepForOneTenthOfASecond();
             }
             Statics.CASPAC.waitForUnzipComplete();
 
             CASUALConnectionStatusMonitor.DeviceCheck.start();
         } else {
-            CASUALConnectionStatusMonitor.DeviceCheck.stop();    
+            CASUALConnectionStatusMonitor.DeviceCheck.stop();
         }
-        
+
     }
 }

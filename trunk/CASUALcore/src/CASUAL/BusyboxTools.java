@@ -17,8 +17,9 @@
 package CASUAL;
 
 /**
+ * BusyboxTools deploys and gives an on-device reference to busybox.
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class BusyboxTools {
 
@@ -44,12 +45,17 @@ public class BusyboxTools {
     }
 
     private boolean busyboxIsInstalled() {
-       
-       String temp=shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "chmod 777 "+busyboxLocation+";ls " + busyboxLocation});
+
+        String temp = shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "chmod 777 " + busyboxLocation + ";ls " + busyboxLocation});
 
         return !temp.contains("No such") && !temp.contains("found");
     }
 
+    /**
+     * Deploys busybox to device and returns the location of busybox on device.
+     *
+     * @return string path to busybox on device
+     */
     public static String getBusyboxLocation() {
         BusyboxTools bbtools = new BusyboxTools();
         if (bbtools.busyboxIsInstalled()) {

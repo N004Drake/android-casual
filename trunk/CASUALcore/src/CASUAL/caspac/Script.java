@@ -1,4 +1,4 @@
-/*Script provides a way to readn and write Script information for a Caspac
+/*Script provides a way to read and write Script information for a Caspac
  *Copyright (C) 2013  Adam Outler & Logan Ludington
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -45,35 +45,92 @@ import java.util.Properties;
 import java.util.zip.ZipException;
 
 /**
- *
+ *provides a way to read and write Script information for a Caspac
+ * @author Adam Outler
  * @author loganludington
  */
 public class Script {
-    /*
+    /**
      * extractionMethod = 
      * 0 for CASPAC  (File, zipFile/zipFile)
      * 1 for CASUAL  (Resource, /SCRIPTS/zipFile
      * 2 for Filesystem (File, zipFile)
      */
-
+    
     final int CASPAC = 0;
     final int CASUAL = 1;
     final int FILE = 2;
+
+    /**
+     * Specifies the extraction method for the script.
+     *final int CASPAC = 0
+     *final int CASUAL = 1;
+     *final int FILE = 2;
+     * 
+     */
     final public int extractionMethod;
-    public Object scriptZipFile; //zipFile Entry, Resource or File on disk
+
+    /**
+     *zipFile Entry, Resource or File on disk.
+     */
+    public Object scriptZipFile; 
+
+    /**
+     *CASPAC only. used to show zipfile location on disk.  Used to determine parent
+     */
     public Unzip zipfile; //CASPAC only.
+
+    /**
+     * Name of the Script (script filename without extension).
+     */
     final public String name;
+
+    /**
+     * Working folder for this Script.
+     */
     final public String tempDir;
+
+    /**
+     * Contents of the Script which are to be executed by CASUAL. This is populated by the Script SCR file. 
+     */
     public String scriptContents = "";
+
+    /**
+     * An array of resources after decompression from the Script's ZIP file. 
+     */
     public List<File> individualFiles = new ArrayList<File>();
+
+    /**
+     * Metadata from the script.  This is populated from the Script META file. 
+     */
     public meta metaData = new meta();
+
+    /**
+     * The description of the script.  This is populated from the Script TXT file. 
+     */
     public String discription = "";
+
+    /**
+     * While scriptContinue is true, the script may continue. If scriptContinue is false, the script will not execute further lines. 
+     */
     public boolean scriptContinue = false;
     private static String slash = System.getProperty("file.separator");
+
+    /**
+     * Device Arch.  This is used by busybox to determine what dependency to use. 
+     */
     public String deviceArch = "";
     Map<? extends String, ? extends InputStream> getAllAsStringAndInputStream;
+
+    /**
+     * MD5 array as read from files directly. 
+     */
     public List<String> actualMD5s = new ArrayList<String>();
 
+    /**
+     * Creates a duplicate script from an old one. 
+     * @param s script to use as base. 
+     */
     public Script(Script s) {
         new Log().level4Debug("Setting up script " + s.name + " from preexisting script");
         this.name = s.name;
@@ -85,8 +142,14 @@ public class Script {
         this.discription = s.discription;
         this.scriptContinue = s.scriptContinue;
         this.getAllAsStringAndInputStream = s.getAllAsStringAndInputStream;
+        this.deviceArch=s.deviceArch;
     }
 
+    /**
+     * Creates a new script from a name and a temp folder.
+     * @param name name of script. 
+     * @param tempDir temp folder to use. 
+     */
     public Script(String name, String tempDir) {
         new Log().level4Debug("Setting up script " + name + " with name and tempdir");
         this.name = name;
@@ -94,6 +157,15 @@ public class Script {
         this.extractionMethod = 0;
     }
 
+    /**
+     * Creates a new script from a name, tempdir and type. 
+     * @param name name of script
+     * @param tempDir temp folder to use. 
+     * @param type  this.CASPAC, this.CASUAL, this.FILE.
+     *final int CASPAC = 0
+     *final int CASUAL = 1;
+     *final int FILE = 2;
+     */
     public Script(String name, String tempDir, int type) {
         new Log().level4Debug("Setting up script " + name + " with name, tempdir and type");
         this.name = name;
@@ -101,6 +173,14 @@ public class Script {
         this.extractionMethod = type;
     }
 
+    /**
+     * creates a new script with several parameters
+     * @param name name of script
+     * @param script Script contents to use for script (scr file)
+     * @param discription description of script (txt file)
+     * @param includeFiles files to be used in script (zipfile)
+     * @param tempDir temp folder to use. 
+     */
     public Script(String name, String script, String discription, List<File> includeFiles, String tempDir) {
         new Log().level4Debug("Setting up script " + name + " with name, script, description, included files and tempdir");
         this.discription = discription;
@@ -110,7 +190,16 @@ public class Script {
         this.tempDir = tempDir;
         extractionMethod = 0;
     }
-
+    /**
+     * creates a new script with several parameters
+     * @param name name of script
+     * @param script Script contents to use for script (scr file)
+     * @param discription description of script (txt file)
+     * @param includeFiles files to be used in script (zipfile)
+     * @param prop properties file to be used in script (meta)
+     * @param tempDir temp folder to use. 
+     * @param type  type of script (this.CASUAL this.CASPAC this.FILE). 
+     */
     public Script(String name, String script, String discription,
             List<File> includeFiles, Properties prop, String tempDir, int type) {
         new Log().level4Debug("Setting up script " + name + " with name, script, description, included files, propeties, type and tempdir");
@@ -123,6 +212,15 @@ public class Script {
         this.extractionMethod = type;
     }
 
+    /**
+     * creates a new script with several parameters
+     * @param name name of script
+     * @param script Script contents to use for script (scr file)
+     * @param discription description of script (txt file)
+     * @param includeFiles files to be used in script (zipfile)
+     * @param prop properties file to be used in script (meta)
+     * @param tempDir temp folder to use. 
+     */
     public Script(String name, String script, String discription,
             List<File> includeFiles, Properties prop, String tempDir) {
         new Log().level4Debug("Setting up script " + name + " with name, script, description includedFiles, properties, and tempdir");
@@ -134,7 +232,13 @@ public class Script {
         this.tempDir = tempDir;
         extractionMethod = 0;
     }
-
+    /**
+     * creates a new script with several parameters
+     * @param name name of script
+     * @param script Script contents to use for script (scr file)
+     * @param discription description of script (txt file)
+     * @param tempDir temp folder to use. 
+     */
     public Script(String name, String script, String discription, String tempDir) {
         new Log().level4Debug("Setting up script " + name + " with name, script, description and tempdir");
         this.name = name;
@@ -144,6 +248,12 @@ public class Script {
         extractionMethod = 0;
     }
 
+    /**
+     * Returns a copy of the script with a new name and tempdir. 
+     * @param newScriptName new script name
+     * @param newTempDir new tempdir
+     * @return new script with tempdir and name. 
+     */
     public Script copyOf(String newScriptName,String newTempDir){
         new Log().level4Debug("Setting up script " + newScriptName + " from preexisting script");
         Script s=new Script(newScriptName,tempDir);
@@ -155,6 +265,11 @@ public class Script {
         s.getAllAsStringAndInputStream = getAllAsStringAndInputStream;
         return s;
     }
+
+    /**
+     * verifies script contents to ensure script is a valid script and can be used. 
+     * @return true if valid script. 
+     */
     public boolean verifyScript() {
         boolean testingBool = true;
         testingBool = !(name.isEmpty()) && testingBool;
@@ -165,6 +280,10 @@ public class Script {
         return testingBool;
     }
 
+    /**
+     * gets the script contents (SCR) file. 
+     * @return contents of script. 
+     */
     public DataInputStream getScriptContents() {
         InputStream is = StringOperations.convertStringToStream(scriptContents);
         return new DataInputStream(is);
@@ -188,6 +307,11 @@ public class Script {
 
     /*
      * extracts includedFiles from zip
+     */
+
+    /**
+     * gets a runnable object representing the entire extraction of the script from the zip file. 
+     * @return runnable extraction method. 
      */
     public Runnable getExtractionRunnable() {
         final Log log = new Log();
@@ -384,30 +508,81 @@ public class Script {
 
     }
 
+    /**
+     * performs unzip and is to be run after script zipfile update, not during script init.
+     * @throws ZipException
+     * @throws IOException
+     */
     public void performUnzipAfterScriptZipfileUpdate() throws ZipException, IOException {
         this.getExtractionRunnable().run();
     }
 
+    /**
+     * Meta provides a holding area and parsing for the metadata in the script. 
+     */
     public class meta {
 
+        /**
+         * Minimum Subversion revision required for script.
+         */
         public String minSVNversion = "";
+
+        /**
+         * The revision of this script (used to determine update required status).
+         */
         public String scriptRevision = "";
+
+        /**
+         * Unique script identification string. 
+         */
         public String uniqueIdentifier = "";
+
+        /**
+         * URL for support of this Script. 
+         */
         public String supportURL = "";
+
+        /**
+         * Message to be shown during script update. 
+         */
         public String updateMessage = "";
+
+        /**
+         * Message to be shown if killswitch is thrown on script. 
+         */
         public String killSwitchMessage = "";
+
+        /**
+         * Properties extracted from meta.properties.
+         */
         public Properties metaProp;
+
+        /**
+         * List of expected MD5s for all files in the script (except meta). 
+         */
         public List<String> md5s = new ArrayList<String>();
 
+        /**
+         * constructor for new Meta.
+         */
         public meta() {
             metaProp = new Properties();
         }
 
+        /**
+         * Constructor for meta if properties file is available. 
+         * @param prop
+         */
         public meta(Properties prop) {
             metaProp = prop;
             setVariablesFromProperties(prop);
         }
 
+        /**
+         * Constructor for meta if inputstrem properties is available. 
+         * @param prop properties as inputstream. 
+         * @throws IOException
+         */
         public meta(InputStream prop) throws IOException {
             metaProp.load(prop);
             setVariablesFromProperties(metaProp);
@@ -430,6 +605,10 @@ public class Script {
 
         }
 
+        /**
+         *
+         * @return
+         */
         public InputStream getMetaInputStream() {
             setPropsFromVariables();
             ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -504,6 +683,10 @@ public class Script {
 
         }
 
+        /**
+         *
+         * @param prop
+         */
         public void load(Properties prop) {
             this.metaProp = prop;
             setVariablesFromProperties(metaProp);
@@ -519,6 +702,10 @@ public class Script {
 
         }
 
+        /**
+         *
+         * @return
+         */
         public int minSVNversion() {
             return Integer.parseInt(minSVNversion);
         }

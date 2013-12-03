@@ -23,7 +23,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.*;
 
-
 /**
  * CASUALAudioSystem handles Sounds
  *
@@ -31,6 +30,9 @@ import javax.sound.sampled.*;
  */
 public class AudioHandler {
 
+    /**
+     * True if sound is to be used.
+     */
     public static volatile boolean useSound = false;
 
     /**
@@ -88,7 +90,6 @@ public class AudioHandler {
             @Override
             public void run() {
                 if (useSound) {
-                    
 
                     for (String URL : URLs) {
 
@@ -102,7 +103,6 @@ public class AudioHandler {
                             clip.open(audioIn);
                             clip.start();
                             sleepTillEndOfClip(clip);
-
 
                         } catch (IOException error) {
                             System.out.print("file not found");

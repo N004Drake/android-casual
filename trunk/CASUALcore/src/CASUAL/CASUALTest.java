@@ -25,8 +25,9 @@ import java.io.PrintStream;
 import java.util.Arrays;
 
 /**
+ * CASUALTest provides a test automation framework.
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALTest {
 
@@ -66,11 +67,9 @@ public class CASUALTest {
             writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
             CASUAL.Statics.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
-
         } catch (IOException ex) {
             new CASUAL.Log().errorHandler(ex);
         }
-
 
     }
 
@@ -98,13 +97,9 @@ public class CASUALTest {
             writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
             CASUAL.Statics.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
-
         } catch (IOException ex) {
             new CASUAL.Log().errorHandler(ex);
         }
-
-
-
 
         args = CASUALLaunchCommand;
     }
@@ -155,7 +150,6 @@ public class CASUALTest {
                 }
             }
 
-
         }
 
         private void doCasualOuputHandling(String line) {
@@ -172,12 +166,10 @@ public class CASUALTest {
                 } else if (line.contains("[USERTASK][Q or RETURN][CRITICAL]")) {
                     writeToCASUAL.write(13);
 
-
                     //perform an action now or stop
                 } else if (line.contains("[CANCELOPTION][Q or RETURN]")) {
                     //are you sure you want to continue?
                     writeToCASUAL.write(13);
-
 
                 } else if (line.contains("[INTERACTION][NOTIFICATION][RETURN]")) {
                     //general notification
@@ -186,11 +178,9 @@ public class CASUALTest {
                     //general notification
                     writeToCASUAL.write(13);
 
-
                 } else if (line.contains("[INFOMESSAGE][RETURN]")) {
                     //general information
                     writeToCASUAL.write(13);
-
 
                 } else if (line.contains("[ERRORMESSAGE][RETURN]")) {
                     //general error 
@@ -207,7 +197,6 @@ public class CASUALTest {
                 new CASUAL.Log().errorHandler(ex);
 
             }
-
 
         }
 

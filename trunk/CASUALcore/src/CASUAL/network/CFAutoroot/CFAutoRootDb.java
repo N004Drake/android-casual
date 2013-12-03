@@ -1,4 +1,4 @@
-/*Pulls file locations from CFAutoRoot 
+/*CFAutoRootDB Pulls file locations from CFAutoRoot 
  *Copyright (C) 2013  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -29,8 +29,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
+ * Pulls file locations from CFAutoRoot
  *
- * @author adamoutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CFAutoRootDb {
 
@@ -123,7 +124,7 @@ public class CFAutoRootDb {
             if (br.readLine().contains("<tr>")) {
                 //assertations to verify table has not changed
                 while (trcount == 1) {
-                        //assert that the table is usable or throw a CFAutorootTableException. 
+                    //assert that the table is usable or throw a CFAutorootTableException. 
                     //If the table is not the way we expect it, then we will not proceed. 
                     if (!br.readLine().contains("OEM")) {
                         throw new CFAutorootTableException("OEM tables On autoroot.chainfire.eu changed");
@@ -211,9 +212,9 @@ public class CFAutoRootDb {
 }
 
 /**
- * object representing a table entry of a device on http://autoroot.chainfire.eu
+ * Device class is an object representing a table entry of a device on
+ * http://autoroot.chainfire.eu
  *
- * @author adamoutler
  */
 class Device {
 

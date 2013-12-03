@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import javax.swing.Timer;
 
 /**
- *
- * @author adam
+ * Provides tools to work with Heimdall in CASUAL. 
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class HeimdallTools {
 

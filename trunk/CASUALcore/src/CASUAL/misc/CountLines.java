@@ -21,8 +21,8 @@ import CASUAL.Statics;
 import java.io.*;
 
 /**
- *
- * @author adam
+ *counts lines
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CountLines {
 

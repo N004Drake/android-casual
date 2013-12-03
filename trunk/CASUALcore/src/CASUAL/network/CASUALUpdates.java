@@ -38,8 +38,9 @@ import java.util.Properties;
 import java.util.zip.ZipException;
 
 /**
+ * provides a way to check and update CASUAL
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALUpdates {
 
@@ -156,6 +157,14 @@ public class CASUALUpdates {
         return url;
     }
 
+    /**
+     * gets the data from the online script
+     * @param script Script to pull online metadata for
+     * @return String representation of the metadata for the script. 
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws URISyntaxException 
+     */
     public String getWebData(String script) throws MalformedURLException, IOException, URISyntaxException {
         URL url = stringToFormattedURL(script);
         String webData;
@@ -176,6 +185,14 @@ public class CASUALUpdates {
         return webData;
     }
 
+    /**
+     * downloads metadata for the current script from the repository.
+     * @param s Script for information to be pulled
+     * @return InputStream representing a properties file with metadata about online version of the script. 
+     * @throws MalformedURLException
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     public InputStream downloadMetaFromRepoForScript(Script s) throws MalformedURLException, URISyntaxException, IOException {
         URL url;
         String parentFolder = new File(s.tempDir).getParent() + "/";
@@ -197,6 +214,14 @@ public class CASUALUpdates {
 
     }
 
+    /**
+     * Opens a file from a URL as a stream
+     * @param link String representation of URL
+     * @return InputStream object to file. 
+     * @throws MalformedURLException
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     public InputStream streamFileFromNet(String link) throws MalformedURLException, URISyntaxException, IOException {
         URL url = new URL(link);
         return url.openStream();
@@ -273,6 +298,16 @@ public class CASUALUpdates {
 
     }
 
+    /**
+     * Updates a script.  Uses online repository specified in Statics. 
+     * @param script CASUAL.caspac.Script object to be updated
+     * @param tempFolder Temp Folder to use for updating. 
+     * @return New, updated script. 
+     * @throws ZipException
+     * @throws IOException
+     * @throws MalformedURLException
+     * @throws URISyntaxException
+     */
     public Script updateScript(Script script, String tempFolder) throws ZipException, IOException, MalformedURLException, URISyntaxException {
         MD5sum md5sum = new MD5sum();
 

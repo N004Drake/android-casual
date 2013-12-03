@@ -18,14 +18,15 @@ package GUI.development;
 
 import CASUAL.Log;
 import CASUAL.Statics;
-import java.io.File;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
+ * provides an "about window".
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALJFrameAboutBox extends javax.swing.JFrame {
+
     /**
      * Creates new form CASUALAboutBox1
      */
@@ -149,9 +150,9 @@ public class CASUALJFrameAboutBox extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         if (jCheckBox1.isSelected()) {
-            Statics.GUIVerboseLevel = 4;
+            Statics.guiOutputVerbosity = 4;
         } else {
-            Statics.GUIVerboseLevel = 1;
+            Statics.guiOutputVerbosity = 1;
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 

@@ -20,8 +20,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- *
- * @author adam
+ * Provides translations for the CASUAL project
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class Translations {
 

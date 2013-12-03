@@ -20,10 +20,12 @@ import CASUAL.Log;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
+ * provides a quick reference manual and is usually out of date.
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
+
     /**
      * Creates new form CASUALDeveloperInstructions
      */

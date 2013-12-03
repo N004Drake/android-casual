@@ -17,13 +17,15 @@
 package CASUAL.misc;
 
 /**
+ * contains accellerators for booleans
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
-public class BooleanOperations{
+public class BooleanOperations {
 
     /**
      * tests a bolean array to see if it contains a true value
+     *
      * @param array to be tested
      * @return true if contains true
      */
@@ -38,6 +40,7 @@ public class BooleanOperations{
 
     /**
      * Tests a boolean array to see if it contains a falase value
+     *
      * @param array to be tested
      * @return true if contains false
      */
@@ -52,6 +55,7 @@ public class BooleanOperations{
 
     /**
      * tests a boolean array to verify all values are true
+     *
      * @param array to be tested
      * @return true if all values are true in array
      */
@@ -66,6 +70,7 @@ public class BooleanOperations{
 
     /**
      * tests a boolean array to verify all values are false
+     *
      * @param array to be tested
      * @return true if all values are false
      */

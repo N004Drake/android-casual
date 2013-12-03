@@ -1,6 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/*CASUALShowJFrameMessageObject provides a way to display a messageObject using Java Desktop
+ *Copyright (C) 2013  Adam Outler
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package GUI.development;
 
@@ -14,8 +26,9 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 /**
+ * Provides a way to display a messageObject using Java Desktop.
  *
- * @author adam
+ * @author AdamOutler
  */
 public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUALInteraction {
 
@@ -30,7 +43,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
                 return showTimeOutInteraction(messageObject, messageText, title);
             case INTERACTION_ACTION_REUIRED:
                 return showActionRequiredInteraction(messageText, title);
-                //break;// unreachable
+            //break;// unreachable
 
             case INTERACTION_USER_CANCEL_OPTION:
                 return showUserCancelOptionInteraction(title, messageText);               //break; unreachable
@@ -56,12 +69,16 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
             //break; unreachable
 
             case INTERACTION_COMMAND_NOTIFICATION:
-                showUserNotificationInteraction(title,messageText);
+                showUserNotificationInteraction(title, messageText);
                 return messageText;
         }
         return retval;
     }
 
+    /**
+     * grabs input from Statics.in (usually stdin).
+     * @return string value containing user input truncated by enter key.
+     */
     public String getCommandLineInput() {
         try {
             Log.out.flush();
@@ -200,7 +217,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
 
     private void showErrorInteraction(String messageText, String title) throws HeadlessException {
         if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
-           JOptionPane.showMessageDialog( (Component) Statics.GUI, messageText, title, ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component) Statics.GUI, messageText, title, ERROR_MESSAGE);
         } else {
             new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
@@ -217,7 +234,7 @@ public class CASUALShowJFrameMessageObject extends JOptionPane implements iCASUA
                     (Component) Statics.GUI,
                     messageText,
                     title,
-                    JOptionPane.YES_NO_OPTION) == YES_OPTION) ? true : false;
+                    JOptionPane.YES_NO_OPTION) == YES_OPTION);
             return val ? "true" : "false";
         } else {
             if (title == null) {

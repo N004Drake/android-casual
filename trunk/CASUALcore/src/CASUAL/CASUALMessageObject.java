@@ -21,22 +21,80 @@ import java.awt.HeadlessException;
 import java.util.Arrays;
 
 /**
- *
- * @author adam
+ * CASUALInteraction is the place where all User Interactions are initiated.
+ * @author AdamOutler
  */
 public class CASUALMessageObject {
 
+    /**
+     * The message sent into the CASUALMessageObject. Original message includes
+     * Title and Message delimited by the first comma or >>>.
+     */
     public String originalMessage = ""; //for use with translations
+
+    /**
+     * Return values expected (for use as a guide only). The expected returns
+     * for all are 0 for acknowledged, ok, yes or any other positive. 1 is for
+     * cancel or no.
+     */
     public String expectedReturn = "";
+
+    /**
+     * The title of the message.
+     */
     public String title;
+
+    /**
+     * The text of the message.
+     */
     public String messageText;
+
+    /**
+     * Type of message commanded by this MessageObject
+     * iCASUALInteraction.INTERACTION_TIME_OUT=0;
+     * iCASUALInteraction.INTERACTION_USER_CANCEL_OPTION=1;
+     * iCASUALInteraction.INTERACTION_ACTION_REUIRED=2;
+     * iCASUALInteraction.INTERACTION_USER_NOTIFICATION=3;
+     * iCASUALInteraction.INTERACTION_SHOW_INFORMATION=4;
+     * iCASUALInteraction.INTERACTION_SHOW_ERROR=5;
+     * iCASUALInteraction.INTERACTION_SHOW_YES_NO=6;
+     * iCASUALInteraction.INTERACTION_INPUT_DIALOG=7;
+     * iCASUALInteraction.INTERACTION_COMMAND_NOTIFICATION=8;
+     */
     public int messageType;
-    public String message;
-    //for timeout option pane
+
+    /**
+     * Used by jOptionPane for TimeOutMessages only. Made available for use
+     * under other APIs so that it may be changed if needed.
+     *
+     * @see JOptionPane.OptionType
+     */
     public int timeoutOptionType;
+
+    /**
+     * Used by TimeOutMessages only. Specifies the default value for timeout
+     * upon timeout.
+     */
     public Object timeoutInitialValue;
+
+    /**
+     * Used by TimeOutMessages only. Specifies the options for the
+     * TimeOutMessage
+     */
     public Object[] timeoutOptions;
+
+    /**
+     * Used by TimeOutMessages only. Specifies the amount of time the message
+     * should be displayed before timing out and returning the default value
+     */
     public int timeoutPresetTime;
+
+    /**
+     * Used by jOptionPane for TimeOutMessages only. Made available for use
+     * under other APIs so that it may be changed if needed.
+     *
+     * @see JOptionPane.MESSAGETYPE
+     */
     public int timeoutMessageType;
 
     /**
@@ -46,6 +104,7 @@ public class CASUALMessageObject {
      * message and title will be automatically chosen
      */
     public CASUALMessageObject(String messageInput) {
+
         if (messageInput.startsWith("@")) {
             String translation = Translations.get(messageInput);
             if (translation.contains(">>>")) {
@@ -56,7 +115,7 @@ public class CASUALMessageObject {
                 messageText = s[1];
             } else {
                 title = null;
-                message = translation;
+                messageText = translation;
             }
         } else {
             if (messageInput.contains(">>>")) {
@@ -152,7 +211,6 @@ public class CASUALMessageObject {
         this.messageType = iCASUALInteraction.INTERACTION_COMMAND_NOTIFICATION;
         expectedReturn = "Empty";
         Statics.interaction.displayMessage(this);
-        return;
     }
 
     /**
@@ -164,7 +222,6 @@ public class CASUALMessageObject {
         this.messageType = iCASUALInteraction.INTERACTION_USER_NOTIFICATION;
         expectedReturn = "Empty";
         Statics.interaction.displayMessage(this);
-        return;
     }
 
     /**
@@ -178,7 +235,6 @@ public class CASUALMessageObject {
         new Log().level3Verbose("showing information message object");
         Statics.interaction.displayMessage(this);
         new Log().level3Verbose("Done with message object");
-        return;
     }
 
     /**
@@ -190,8 +246,6 @@ public class CASUALMessageObject {
         this.messageType = iCASUALInteraction.INTERACTION_SHOW_ERROR;
         expectedReturn = "Empty";
         Statics.interaction.displayMessage(this);
-        return;
-
 
     }
 

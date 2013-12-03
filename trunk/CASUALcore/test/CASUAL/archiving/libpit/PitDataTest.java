@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package CASUAL.archiving.libpit;
 
 import java.io.DataOutputStream;
@@ -26,51 +25,48 @@ import static org.junit.Assert.*;
  * @author adamoutler
  */
 public class PitDataTest {
-    
+
     public PitDataTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() throws Exception {
-            pitFile=new File("../test/CASUAL/archiving/resources/ekgc100part.pit");
+        pitFile = new File("../test/CASUAL/archiving/resources/ekgc100part.pit");
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
-        
+
     }
-    
+
     @After
     public void tearDown() {
     }
     static File pitFile;
 
-
-
     /**
      * Test of pack method, of class PitData.
      */
     @Test
-    public void testPack(){
+    public void testPack() {
         try {
             System.out.println("pack");
-            String testFile=CASUAL.Statics.getTempFolder()+"test.pit";
+            String testFile = CASUAL.Statics.getTempFolder() + "test.pit";
             PitData instance = new PitData(pitFile);
             instance.pack(new DataOutputStream(new FileOutputStream(testFile)));
-            System.out.println("packed " +testFile);
-            PitData test=new PitData(new File(testFile));
-            assert(test.matches(instance));
-            String s=instance.getEntry(0).getFilenameString();
-            assert(s.equals("sboot.binmd5"));
-            String origSHA256sum=new CASUAL.crypto.SHA256sum(new File(testFile)).getSha256();
-            String newSHA256sum=new CASUAL.crypto.SHA256sum(pitFile).getSha256();
+            System.out.println("packed " + testFile);
+            PitData test = new PitData(new File(testFile));
+            assert (test.matches(instance));
+            String s = instance.getEntry(0).getFilenameString();
+            assert (s.equals("sboot.binmd5"));
+            String origSHA256sum = new CASUAL.crypto.SHA256sum(new File(testFile)).getSha256();
+            String newSHA256sum = new CASUAL.crypto.SHA256sum(pitFile).getSha256();
             assert newSHA256sum.equals(origSHA256sum);
-            
-            
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -102,14 +98,14 @@ public class PitDataTest {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         instance.clear();
-        assert(instance.getEntryCount()==0);
+        assert (instance.getEntryCount() == 0);
     }
 
     /**
      * Test of getEntry method, of class PitData.
      */
     @Test
-    public void testGetEntry(){
+    public void testGetEntry() {
         System.out.println("getEntry");
         PitData instance = new PitData();
         try {
@@ -117,40 +113,40 @@ public class PitDataTest {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String test=instance.getEntry(0).getFilenameString();
-        assert(test.equals("sboot.binmd5"));
-        test=instance.getEntry(1).getFilenameString();
-        assert(test.equals("tz.imgmd5"));
-        test=instance.getEntry(2).getFilenameString();
-        assert(test.equals("camera.pit"));
-        test=instance.getEntry(3).getFilenameString();
-        assert(test.equals("md5.imgin.md5"));
-        test=instance.getEntry(4).getFilenameString();
-        assert(test.equals("-"));
-        test=instance.getEntry(5).getFilenameString();
-        assert(test.equals("-"));
-        test=instance.getEntry(6).getFilenameString();
-        assert(test.equals("efs.imgmd5"));
-        test=instance.getEntry(7).getFilenameString();
-        assert(test.equals("param.binmd5"));
-        test=instance.getEntry(8).getFilenameString();
-        assert(test.equals("boot.imgmd5"));
-        test=instance.getEntry(9).getFilenameString();
-        assert(test.equals("recovery.imgmd5"));
-        test=instance.getEntry(10).getFilenameString();
-        assert(test.equals("modem.binmd5"));
-        test=instance.getEntry(11).getFilenameString();
-        assert(test.equals("cache.imgmd5"));
-        test=instance.getEntry(12).getFilenameString();
-        assert(test.equals("system.imgmd5"));
-        test=instance.getEntry(13).getFilenameString();
-        assert(test.equals("hidden.imgmd5"));
-        test=instance.getEntry(14).getFilenameString();
-        assert(test.equals("-"));
-        test=instance.getEntry(15).getFilenameString();
-        assert(test.equals("-erdata.imgmd5"));
-        test=instance.getEntry(16).getFilenameString();
-        assert(test.equals("userdata.img"));
+        String test = instance.getEntry(0).getFilenameString();
+        assert (test.equals("sboot.binmd5"));
+        test = instance.getEntry(1).getFilenameString();
+        assert (test.equals("tz.imgmd5"));
+        test = instance.getEntry(2).getFilenameString();
+        assert (test.equals("camera.pit"));
+        test = instance.getEntry(3).getFilenameString();
+        assert (test.equals("md5.imgin.md5"));
+        test = instance.getEntry(4).getFilenameString();
+        assert (test.equals("-"));
+        test = instance.getEntry(5).getFilenameString();
+        assert (test.equals("-"));
+        test = instance.getEntry(6).getFilenameString();
+        assert (test.equals("efs.imgmd5"));
+        test = instance.getEntry(7).getFilenameString();
+        assert (test.equals("param.binmd5"));
+        test = instance.getEntry(8).getFilenameString();
+        assert (test.equals("boot.imgmd5"));
+        test = instance.getEntry(9).getFilenameString();
+        assert (test.equals("recovery.imgmd5"));
+        test = instance.getEntry(10).getFilenameString();
+        assert (test.equals("modem.binmd5"));
+        test = instance.getEntry(11).getFilenameString();
+        assert (test.equals("cache.imgmd5"));
+        test = instance.getEntry(12).getFilenameString();
+        assert (test.equals("system.imgmd5"));
+        test = instance.getEntry(13).getFilenameString();
+        assert (test.equals("hidden.imgmd5"));
+        test = instance.getEntry(14).getFilenameString();
+        assert (test.equals("-"));
+        test = instance.getEntry(15).getFilenameString();
+        assert (test.equals("-erdata.imgmd5"));
+        test = instance.getEntry(16).getFilenameString();
+        assert (test.equals("userdata.img"));
     }
 
     /**
@@ -201,10 +197,10 @@ public class PitDataTest {
             System.out.println("addEntry");
             PitEntry entry = null;
             PitData instance = new PitData(pitFile);
-            int size=instance.getEntryCount();
+            int size = instance.getEntryCount();
             PitEntry expresult = instance.findEntry(10);
             instance.addEntry(expresult);
-            PitEntry result=instance.getEntry(size);
+            PitEntry result = instance.getEntry(size);
             assert (result.getPartitionName().equals(expresult.getPartitionName()));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -223,11 +219,11 @@ public class PitDataTest {
             int result = instance.getEntryCount();
             assertEquals(expResult, result);
             instance.addEntry(new PitEntry());
-            assertEquals(expResult+1, instance.getEntryCount());
+            assertEquals(expResult + 1, instance.getEntryCount());
             instance.addEntry(new PitEntry());
-            assertEquals(expResult+2, instance.getEntryCount());
+            assertEquals(expResult + 2, instance.getEntryCount());
             instance.addEntry(new PitEntry());
-            assertEquals(expResult+3, instance.getEntryCount());
+            assertEquals(expResult + 3, instance.getEntryCount());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -241,7 +237,7 @@ public class PitDataTest {
         try {
             System.out.println("getFileType");
             PitData instance = new PitData(pitFile);
-            char[] expResult = new char[]{'C','O','M','_','T','A','R','2'};
+            char[] expResult = new char[]{'C', 'O', 'M', '_', 'T', 'A', 'R', '2'};
             char[] result = instance.getFileType();
             assertArrayEquals(expResult, result);
         } catch (FileNotFoundException ex) {
@@ -257,7 +253,7 @@ public class PitDataTest {
         try {
             System.out.println("getPhone");
             PitData instance = new PitData(pitFile);
-            char[] expResult = new char[]{'M','x',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
+            char[] expResult = new char[]{'M', 'x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
             char[] result = instance.getPhone();
             assertArrayEquals(expResult, result);
         } catch (FileNotFoundException ex) {
@@ -280,13 +276,13 @@ public class PitDataTest {
     public void testFindEntryByFilename() {
         System.out.println("findEntryByFilename");
         String filename = "tz.img";
-        PitData instance=null;
+        PitData instance = null;
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        int expResult =81;
+        int expResult = 81;
         PitEntry result = instance.findEntryByFilename(filename);
         assertEquals(expResult, result.getPartID());
 
@@ -306,9 +302,9 @@ public class PitDataTest {
         }
         PitEntry entry = instance.findEntry(81);
         instance.removeEntry(entry);
-        PitEntry test=instance.findEntry(81);
-        assert(test==null);
-        
+        PitEntry test = instance.findEntry(81);
+        assert (test == null);
+
     }
 
     /**
@@ -367,7 +363,7 @@ public class PitDataTest {
      * Test of sortEntriesByBlockLocation method, of class PitData.
      */
     @Test
-    public void testSortEntriesByBlockLocation()  {
+    public void testSortEntriesByBlockLocation() {
         System.out.println("sortEntriesByBlockLocation");
         PitData instance = null;
         try {
@@ -375,12 +371,12 @@ public class PitDataTest {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         PitEntry[] expResult = null;
         PitEntry[] result = instance.sortEntriesByBlockLocation();
-        int[] partitionIDOrder=new int[]{80,70,71,81,1,2,3,4,5,6,7,8,9,10,11,12,13};
-        for (int i=0; i<instance.entryCount;i++){
-            assertEquals(partitionIDOrder[i],result[i].getPartID());
+        int[] partitionIDOrder = new int[]{80, 70, 71, 81, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+        for (int i = 0; i < instance.entryCount; i++) {
+            assertEquals(partitionIDOrder[i], result[i].getPartID());
         }
 
     }
@@ -388,31 +384,31 @@ public class PitDataTest {
     /**
      * Test of resizePartition method, of class PitData.
      */
-     @Test
-     public void testResizePartition(){
-       System.out.println("resizePartition");
-       String partitionToResize="CACHE";
-       PitData instance = new PitData(); 
-       try {
+    @Test
+    public void testResizePartition() {
+        System.out.println("resizePartition");
+        String partitionToResize = "CACHE";
+        PitData instance = new PitData();
+        try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         //check code
         int[] originalStart = new int[instance.entryCount];
-        PitEntry[] entryList=instance.sortEntriesByBlockLocation();
-        for (int i=0; i<entryList.length;i++){
-            originalStart[i]=entryList[i].getBlockStart();
-        } 
-        int partitionNumber=11;
-        PitEntry entry=instance.getEntry(partitionNumber);
-        int originalSize=entry.getBlockCount();
+        PitEntry[] entryList = instance.sortEntriesByBlockLocation();
+        for (int i = 0; i < entryList.length; i++) {
+            originalStart[i] = entryList[i].getBlockStart();
+        }
+        int partitionNumber = 11;
+        PitEntry entry = instance.getEntry(partitionNumber);
+        int originalSize = entry.getBlockCount();
         //break here--- writing demonstration code.
         assert entry.getPartitionName().equals("CACHE");
-        
+
         //example code
-        String partName="CACHE"; //partition name to change
-        int changeToSize=-2000; //size to change partition (1 megabyte smaller)
+        String partName = "CACHE"; //partition name to change
+        int changeToSize = -2000; //size to change partition (1 megabyte smaller)
         try {
             instance.resizePartition(partName, changeToSize);
         } catch (ClassNotFoundException ex) {
@@ -420,15 +416,12 @@ public class PitDataTest {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        
-        entryList=instance.sortEntriesByBlockLocation();
-        for (int i=partitionNumber+1;i<originalStart.length;i++){
-            assertEquals(originalStart[i]+changeToSize,entryList[i].getBlockStart());
+        entryList = instance.sortEntriesByBlockLocation();
+        for (int i = partitionNumber + 1; i < originalStart.length; i++) {
+            assertEquals(originalStart[i] + changeToSize, entryList[i].getBlockStart());
         }
-        assertEquals(originalSize+changeToSize,instance.findEntry(partName).getBlockCount());
-         
-     }
+        assertEquals(originalSize + changeToSize, instance.findEntry(partName).getBlockCount());
 
+    }
 
-  
 }

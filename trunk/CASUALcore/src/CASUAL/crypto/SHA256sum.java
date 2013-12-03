@@ -28,8 +28,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- *
- * @author adam
+ *provides several methods for md256 standards
+ * @author Adam Outler adamoutler@gmail.com
  */
 /**
  * attempts to replicates linux's sha256sum.. there appears to be a problem with

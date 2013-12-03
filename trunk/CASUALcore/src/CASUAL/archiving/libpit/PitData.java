@@ -36,11 +36,21 @@ import java.util.LinkedList;
 public class PitData {
 
     /**
-     * Magic Number to identify an Odin File
+     * Magic Number to identify an Odin File.
      */
     public static final int FILE_IDENTIFIER = 0x12349876;
-    public int entryCount; // 0x04
+    /**
+     * number of entries available to be read.
+     */
+    public int entryCount;
+    /**
+     * PIT Type in Char array. eg. new char[]{C,O,M,_,T,A,R,2}
+     */
     char[] fileType = new char[8];
+    /**
+     * Pit name in char array. eg new char[]{M,S,M,8,9,2,0,\0,\0,\0,\0,\0} where
+     * \0 is a 0-byte
+     */
     char[] pitName = new char[12];
 
     // Entries start at 0x1C
@@ -48,7 +58,7 @@ public class PitData {
     ByteArrayOutputStream signature = new ByteArrayOutputStream();
 
     /**
-     * Constructor for new PIT file
+     * Constructor for new PIT file.
      */
     public PitData() {
     }
@@ -96,7 +106,7 @@ public class PitData {
                 fileType[i] = (char) pitInputStream.read();
             }
 
-            //read 8 bytes of phone name
+            //read 12 bytes of phone name
             for (int i = 0; i < 12; i++) {
                 pitName[i] = (char) pitInputStream.read();
             }
@@ -385,6 +395,7 @@ public class PitData {
         sb.append(n).append(n);
         return sb.toString();
     }
+
     /**
      * Resizes a pitentry and adjusts starting blocks of all successive
      * pitentries.
@@ -395,10 +406,10 @@ public class PitData {
      * @throws java.lang.ClassNotFoundException
      * @see resizePartition()
      */
-    public void resizePartition(String partName, int changeToSize) throws ClassNotFoundException{
-         resizePartition(this.findEntry(partName),changeToSize);
+    public void resizePartition(String partName, int changeToSize) throws ClassNotFoundException {
+        resizePartition(this.findEntry(partName), changeToSize);
     }
-    
+
     /**
      * Resizes a pitentry and adjusts starting blocks of all successive
      * pitentries.
@@ -411,37 +422,36 @@ public class PitData {
     public void resizePartition(PitEntry entry, int changeToSize) throws ClassNotFoundException {
         PitEntry[] sorted = sortEntriesByBlockLocation();
         //get entry location
-        int entryLocation=-1;
-        String type=entry.getPartitionTypeFriendlyName();
-        for (int i=0; i<sorted.length;i++){
-            if (entry==sorted[i]){
-                entryLocation=i;
+        int entryLocation = -1;
+        String type = entry.getPartitionTypeFriendlyName();
+        for (int i = 0; i < sorted.length; i++) {
+            if (entry == sorted[i]) {
+                entryLocation = i;
                 break;
             }
         }
         //halt if not found
-        if (entryLocation==-1){
-            throw new ClassNotFoundException("The PitEntry Specified was not found:" +entry);
+        if (entryLocation == -1) {
+            throw new ClassNotFoundException("The PitEntry Specified was not found:" + entry);
         }
         //resize the partition
-        sorted[entryLocation].setBlockCount(sorted[entryLocation].getBlockCount()+changeToSize);
+        sorted[entryLocation].setBlockCount(sorted[entryLocation].getBlockCount() + changeToSize);
         //adjust the offset of the remainders
-        for (int i=entryLocation+1; i<sorted.length;i++){
+        for (int i = entryLocation + 1; i < sorted.length; i++) {
             //ignore partitions on a different device
-            if (sorted[i].getPartitionTypeFriendlyName().equals(type)){
-                sorted[i].setBlockStart(sorted[i].getBlockStart()+changeToSize);
-            } 
+            if (sorted[i].getPartitionTypeFriendlyName().equals(type)) {
+                sorted[i].setBlockStart(sorted[i].getBlockStart() + changeToSize);
+            }
         }
         //put each entry back into the original array
-        for (PitEntry finalEntry:sorted){
-            for (int i=0;i<entries.size();i++){
-                if (entries.get(i).getPartID()==finalEntry.getPartID()){
+        for (PitEntry finalEntry : sorted) {
+            for (int i = 0; i < entries.size(); i++) {
+                if (entries.get(i).getPartID() == finalEntry.getPartID()) {
                     entries.set(i, finalEntry);
                 }
             }
         }
-        
-        
+
     }
 
     /**

@@ -29,63 +29,136 @@ import javax.swing.JTextPane;
 import javax.swing.text.StyledDocument;
 
 /**
- *
- * @author adam
- *
  * Statics is used for any type of static variable It is the Static Class for
  * information to be used everywhere in the program.
+ *
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class Statics {
 
+    /**
+     * CASUAL does not look to GUI to execute. Execution will start
+     * autonomously. Terminal is used for input and output. GUI is a display.
+     */
     public static boolean dumbTerminalGUI = false; //used by CASPAC mode
     private static String currentStatus = "working";
+
+    /**
+     * true if debugMode. Do not send logs in debug mode. We create too many
+     * errors, thanks.
+     */
     public static boolean debugMode = false;
+
+    /**
+     * reference to CASPAC used by this CASUAL
+     */
     public static Caspac CASPAC;
-    public static boolean guiReady=false;
+
+    /**
+     * true when GUI is ready.
+     */
+    public static boolean guiReady = false;
 
     /**
      * @return the GUIIsAvailable
      */
     public static boolean isGUIIsAvailable() {
-        if (GUI !=null ){
+        if (GUI != null) {
             return guiReady && !java.awt.GraphicsEnvironment.isHeadless();
         }
         return false;
     }
 
-    public Statics() {
-    }
+    /**
+     * increase or decrease the logging level. 0 is error only, 4 is debug
+     */
+    public static int guiOutputVerbosity = 2; //userdata is output to console
 
-    /*
-     * increase or decrease the logging level
+    /**
+     * increase or decrease the log file output. 0 is error only, 4 is debug
      */
-    public static int GUIVerboseLevel = 2; //userdata is output to console
-    public static int CommandLineVerboseLevel = 4; //all logs are output to file
+    public static int logFIleOutputVerbosity = 4; //all logs are output to file
+
+    /**
+     * static reference to interactions object for CASUALMessageObject.
+     */
     public static iCASUALInteraction interaction;
-    public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    /*
-     * miscellanious variables
+
+    /**
+     * Input Device for CASUAL. Generally System.in (STDIN) but may be
+     * reassigned to any inputstream.
      */
-    static Log log = new Log();
+    public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+    private static Log log = new Log();
+
+    /**
+     * Arraylist which serves as a temporary holder for Shell.SendLiveCommand.
+     * //TODO remove this and replace with a different set in Shell. The
+     * original purpose of this was to abstract but it can be done better.
+     */
     public static ArrayList<String> LiveSendCommand = new ArrayList<String>();
-    public static PrintWriter OutFile; //used by log class
+
+    /**
+     * STDOutDevice for CASUAL. Generally System.out (STDOUT) but may be
+     * reassigned to any printwriter.
+     */
+    public static PrintWriter OutFile = new PrintWriter(System.out); //used by log class
+
+    //TODO: remove this because it is not needed anymore.  Log is created on the fly. 
+    /**
+     * Log file was created.
+     */
     public static boolean LogCreated = false; //used by Log class
-    public static ArrayList<String> runnableMD5list = new ArrayList<String>();
+
     //Form data
     //public static boolean TargetScriptIsResource = true;  //true if resource, false if file
+
+
+    /**
+     * static reference for class implementing interface for CASUAL's GUI.
+     */
     public static iCASUALGUI GUI; //Static reference to GUI input/output device
-    public static JTextPane ProgressPane ; //used by log to update Progress
+
+    //TODO: replace this with an interface as JTextPane is not supported on all platforms
+    /**
+     * the Progress area for CASUAL's user interface.
+     */
+    public static JTextPane ProgressPane; //used by log to update Progress
+
+    /**
+     * Slash provides a universal reference to the / on linux/mac and a \ on Windows. 
+     */
     final public static String Slash = System.getProperty("file.separator"); //file separator for system \ or /
     /**
-     * ProgressDoc provides a static reference to the program output
+     * ProgressDoc provides a static reference to the program output.
      */
     public static String PreProgress = "";  //place to log data before GUI comes up
+
+    //TODO: replace this with an interface as StyledDocument is not supported on all platforms
+    /**
+     * progress document used to document progress.
+     */
     public static StyledDocument ProgressDoc; //anything in here is displayed to GUI. this is main output device.
     //Folders
+
+    /**
+     * default SCRIPTS location for CASUAL.
+     */
     public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
+
+    /**
+     * Default home folder for CASUAL. Use for permanent storage of data only.
+     * Located in the users home folder, in a folder called ".CASUAL".
+     */
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     private static String TempFolder;
 
+    /**
+     * Creates and returns the temp folder if required.
+     *
+     * @return temp folder string location.
+     */
     public static String getTempFolder() {
         FileOperations fo = new FileOperations();
         if (TempFolder == null) {
@@ -97,22 +170,48 @@ public class Statics {
             setTempFolder(TempFolder);
             fo.makeFolder(TempFolder);
         }
-        
-        if (!new File(TempFolder).exists()){
-           new File(TempFolder).mkdirs();
+
+        if (!new File(TempFolder).exists()) {
+            new File(TempFolder).mkdirs();
         }
         return TempFolder;
     }
 
+    /**
+     * gets the temp folder for CASUAL;
+     *
+     * @return the temp folder.
+     */
     public String getTempFolderInstance() {
         return TempFolder;
     }
     //Cross-Platform data storage
+
+    //TODO remove this as ADBTools().getAdbLocation() should be used istead. 
+    /**
+     * path to ADB after deployment.
+     */
     public static String adbDeployed; //location of ADB after deployment
+
+    //TODO It may be possible to remove this as it is handled by the active script 
+    /**
+     * Static reference to active script folder.
+     */
     public static String SelectedScriptFolder;//Used for script locations on disk
+
+    //TODO: evaluate possibility of removal of elevate.exe
+    /**
+     * Path to elevate.exe as after deployment. Elevate is deployed
+     * automatically on Windows.
+     */
     public static String WinElevatorInTempFolder = getTempFolder() + "Elevate.exe"; //location of elevate.exe after deployed
 
-    //ADB
+    //TODO: move this to ADBTools(). 
+    /**
+     * returns the Instance of Linux's ADB binary
+     *
+     * @return
+     */
     public static String LinuxADB() {
         String arch = OSTools.checkLinuxArch();
         if (arch.equals("x86_64")) {
@@ -125,56 +224,199 @@ public class Statics {
     }
     final private static String Linux32ADB = "/CASUAL/resources/ADB/adb-linux32";
     final private static String Linux64ADB = "/CASUAL/resources/ADB/adb-linux64";
+
+    /**
+     * ADB for ARMv6.
+     */
     final public static String LinuxARMv6ADB = "/CASUAL/resources/ADB/adb-linuxARMv6";
+
+    /**
+     * ADB for Mac.
+     */
     final public static String MacADB = "/CASUAL/resources/ADB/adb-mac";
+
+    /**
+     * ADB for Windows.
+     */
     final public static String WinADB = "/CASUAL/resources/ADB/adb.exe";
+
+    /**
+     * ADB for Windows resource must be in same folder.
+     */
     final public static String WinADB2 = "/CASUAL/resources/ADB/AdbWinApi.dll";
+
+    /**
+     * Adb for Windows resource must be in same folder.
+     */
     final public static String WinADB3 = "/CASUAL/resources/ADB/AdbWinUsbApi.dll";
     //Heimdall
-    final public static String heimdallVersion = "132";  //primary version string
+
+    /**
+     * Heimdall version.
+     */
+    final public static String heimdallVersion = "140";  //primary version string
+
+    /**
+     * heimdall for Debian Linux x86.
+     */
     final public static String heimdallLinuxi386 = "/CASUAL/resources/heimdall/heimdall_i386.deb";
+
+    /**
+     * heimdall for Debian Linux 64-bit.
+     */
     final public static String heimdallLinuxamd64 = "/CASUAL/resources/heimdall/heimdall_amd64.deb";
+
+    /**
+     * Heimdall for Debian Linux ARMv6.
+     */
     final public static String heimdallLinuxARMv6 = "/CASUAL/resources/heimdall/heimdall_armv6.deb";
+
+    /**
+     * Heimdall for Mac dmg file.
+     */
     final public static String heimdallMac = "/CASUAL/resources/heimdall/heimdall-mac.dmg";
+
+    /**
+     * Heimdall for Windows.
+     */
     final public static String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
+
+    /**
+     * Heimdall for Windows resource must be in same folder as exe.
+     */
     final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
+
+    /**
+     * Heimdall for Windows resource must be in same folder as exe.
+     */
     final public static String msvcp110dll = "/CASUAL/resources/heimdall/msvcp110.dll";
+
+    /**
+     * Heimdall for Windows resource must be in same folder as exe.
+     */
     final public static String msvcr110dll = "/CASUAL/resources/heimdall/msvcr110.dll";
+
+    //TODO jrloper, refactor and make this set of WinDriverResources separately named (not windriverresource2). 
+    //TODO jrloper, remove this. 
+    /**
+     * CADI windows Driver. "Old Faithful"
+     */
     final public static String WinDriverResource = "/CASUAL/resources/heimdall/CADI.exe";  //original CADI
+
+    /**
+     * CADI Windows Driver.
+     */
     final public static String WinDriverResource1 = "/CASUAL/resources/heimdall/CADI.zip";  //devcon CADI
+    //TODO jrloper, remove this. 
+    /**
+     * CADI Windows Driver for XP. "Old Faithful"
+     */
     final public static String WinDriverResource2 = "/CASUAL/resources/heimdall/xp/CADI.exe";  //xp original CADI
+
+    /**
+     * CADI Windows Driver.
+     */
     final public static String WinDriverResource3 = "/CASUAL/resources/heimdall/xp/CADI.zip";  //xp devcon CADI
     //Fastboot
+
+    /**
+     * Fastboot for Linux 64-bit.
+     */
     final public static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
+
+    /**
+     * Fastboot for Linux 32bit.
+     */
     final public static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
+
+    /**
+     * Fastboot for Linux ARMv6.
+     */
     final public static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
+
+    /**
+     * Fastboot for Windows.
+     */
     final public static String fastbootWindows = "/CASUAL/resources/fastboot/fastboot-win.exe";
+
+    /**
+     * Fastboot for Mac.
+     */
     final public static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
     //Busybox
+
+    /**
+     * Busybox for Linux ARMv4tl is the most compatible with all ARM according
+     * to Busybox site. This is intended for the device, not the host.
+     */
     final public static String busyboxARM = "/CASUAL/resources/ADB/busybox/busybox-armv4tl";
+
+    /**
+     * Busybox for Linux x86. This is intended for the device, not the host.
+     */
     final public static String busyboxX86 = "/CASUAL/resources/ADB/busybox/busybox-i686";
     //Windows permissions elevator
+
+    /**
+     * Windows Elevate.exe as resource in CASUAL
+     */
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
+
+    /**
+     * adb_usb.ini file used for deployment of ADB and specification of
+     * otherwise unsupported devices.
+     */
     final public static String ADBini = "/CASUAL/resources/ADB/adb_usb.ini";
+
+    //TODO: remove this and use ADBTools().getAdbLocation();
+    /**
+     * Location of ADB on the filesystem for Linux and Mac.
+     */
     final public static String FilesystemAdbIniLocationLinuxMac = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
+
+    //TODO: remove this and use ADBTools().getAdbLocation();
+    /**
+     * Location of ADB on the filesystem for Windows.
+     */
     final public static String FilesystemAdbIniLocationWindows = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
     //Windows Visual C++ redist --not always required
+
+    /**
+     * Windows Visual C++ redistributable downloadable file. This is not used as
+     * we include the proper dependencies in CASUAL.
+     */
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
-    //CADI location by Jeremy Loper
+
+    //TODO: jrloper remove this. 
+    /**
+     * Location of CADI.exe in online repo. (old Faithful) CADI by Jeremy Loper
+     */
     final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
 
-    /*
-     * Determines if Linux, Mac or Windows
+    //TODO: determine feasability of moving this to CASPAC.Script. 
+    /**
+     * ActionEvents for the $ON command are set up by script. Trigger Reaction
+     * events.
      */
-    //Check for windows
-    //script data
     public static ArrayList<String> ActionEvents = new ArrayList<String>(); //Action events for $ON command. set by script
+
+    /**
+     * ReactionEvents are triggered by ActionEvents and created by $ON command.
+     */
     public static ArrayList<String> ReactionEvents = new ArrayList<String>(); //Reactions for $ON command. . set by script
-    //fastboot
-    //static boolean isFastbootDeployed = false;  // if fastboot has been deployed
-    public static String fastbootResource = ""; //location to fastboot set from final values above
+
+    /**
+     * location to fastboot resource. set from final values above.
+     */
+    public static String fastbootResource = ""; //
+
+    //TODO: remove this and move it to FastbootTools.getFastbootLocation();
+    /**
+     * fastboot after deployment to computer disk.
+     */
     public static String fastbootDeployed = getTempFolder() + "fastboot"; //deployed fastboot
     //heimdall  
+    //TODO: remove all thse and Heimdall Install/HeimdallTools with getters set by, or triggering installation ;
     static boolean isHeimdallDeployed = false; //if fastboot has been deployed
     static String heimdallResource = ""; //location to heimdall set from final values above
     static String heimdallStaging = getTempFolder() + "heimdallStage";//location for heimdall files while deploying on Linux
@@ -182,17 +424,20 @@ public class Statics {
     static String[] resourceHeimdallVersion;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
+    /**
+     * Resets all variables in CASUAL to provide, basically, a warm reboot.
+     */
     public static void initializeStatics() {
-        CASUALDataBridge.commandedShutdown=true;
+        CASUALDataBridge.commandedShutdown = true;
         guiReady = false;
         dumbTerminalGUI = false;
         setStatus("working");
-        GUIVerboseLevel = 2;
-        CommandLineVerboseLevel = 4;
+        guiOutputVerbosity = 2;
+        logFIleOutputVerbosity = 4;
         LiveSendCommand = new ArrayList<String>();
         OutFile = null;
         LogCreated = false;
-        if (!java.awt.GraphicsEnvironment.isHeadless()){
+        if (!java.awt.GraphicsEnvironment.isHeadless()) {
             ProgressPane = new JTextPane();
         }
         PreProgress = "";
@@ -200,9 +445,8 @@ public class Statics {
         adbDeployed = null;
         SelectedScriptFolder = "";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
-        Locks.scriptRunLock=new CASUAL.misc.MandatoryThread();
+        Locks.scriptRunLock = new CASUAL.misc.MandatoryThread();
         Locks.lockGUIunzip = false;
-        runnableMD5list = new ArrayList<String>();
         ActionEvents = new ArrayList<String>();
         ReactionEvents = new ArrayList<String>();
         fastbootResource = ""; //location to fastboot set from final values above
@@ -214,13 +458,18 @@ public class Statics {
         resourceHeimdallVersion = null;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
         installedHeimdallVersion = null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
         CASUALLanguage.GOTO = "";
-        try{
-                Statics.CASPAC.getActiveScript().scriptContinue = false;
-        } catch (NullPointerException ex){
+        try {
+            Statics.CASPAC.getActiveScript().scriptContinue = false;
+        } catch (NullPointerException ex) {
             //do nothing at all 
         }
     }
 
+    /**
+     * sets the current operation status.
+     *
+     * @param status status to be displayed to user.
+     */
     public static void setStatus(final String status) {
         new Log().level4Debug(status);
         currentStatus = status;
@@ -236,10 +485,22 @@ public class Statics {
         }
     }
 
+    /**
+     * Gets the current status for display.
+     *
+     * @return current status.
+     */
     public static String getStatus() {
         return currentStatus;
     }
 
+    /**
+     * Sets the temp folder. Generally this is auto-assigned by getTempFolder,
+     * but it can be manually assigned.
+     *
+     * @param folder dir to make temp folder.
+     * @return path to new temp folder.
+     */
     public static String setTempFolder(String folder) {
         TempFolder = folder;
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";

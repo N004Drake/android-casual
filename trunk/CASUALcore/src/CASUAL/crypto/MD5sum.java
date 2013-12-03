@@ -26,8 +26,8 @@ import java.util.ArrayList;
  * Inspired by R.J. Lorimer http://www.javalobby.org/java/forums/t84420.html
  */
 /**
- *
- * @author adam
+ *MD5sum provides MD5 tools for use in CASUAL
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class MD5sum {
 
@@ -172,6 +172,11 @@ public class MD5sum {
         return NameMD5;
     }
 
+    /**
+     * MD5Sums a file
+     * @param string representation of path to file on hard disk. 
+     * @return MD5Sum of file. 
+     */
     public String md5sum(String string) {
         return md5sum(new File(string));
 

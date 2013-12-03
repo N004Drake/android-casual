@@ -19,8 +19,9 @@ package CASUAL;
 import CASUAL.misc.DiffTextFiles;
 
 /**
+ * Provides a set of tools for installation of ADB under CASUAL environment
  *
- * @author adam
+ * @author Adam Outler adamoutler@gmail.com
  */
 class ADBInstall {
 
