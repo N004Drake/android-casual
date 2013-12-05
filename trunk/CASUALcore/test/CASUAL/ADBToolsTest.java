@@ -4,6 +4,8 @@
  */
 package CASUAL;
 
+import java.io.File;
+import java.io.IOException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,7 +18,9 @@ import static org.junit.Assert.*;
 public class ADBToolsTest {
 
 
-    public ADBToolsTest() {
+    public ADBToolsTest() throws IOException {
+        Statics.initializeStatics();
+        System.out.println(new File(".").getCanonicalPath());
     }
     
     @BeforeClass

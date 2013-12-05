@@ -154,13 +154,13 @@ public class CASUALTest {
 
         private void doCasualOuputHandling(String line) {
             try {
-                System.out.println(line);
+                //new Log().level4Debug(line);
                 validateLine(line);
 
                 if (line.contains("ERROR")) {
-                    System.out.println(line); //error
+                    new Log().level4Debug(line); //error
                 } else if (line.contains("[INPUT][ANY]")) {
-                    System.out.println(line);//get textual input  
+                   new Log().level4Debug(line);//get textual input  
 
                     writeToCASUAL.write(13);
                 } else if (line.contains("[USERTASK][Q or RETURN][CRITICAL]")) {

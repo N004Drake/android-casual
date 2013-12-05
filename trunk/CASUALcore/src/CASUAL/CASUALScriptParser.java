@@ -131,7 +131,7 @@ public class CASUALScriptParser {
                     Statics.GUI.setProgressBarMax(LinesInScript);
                 }
                 log.level4Debug("Reading datastream" + scriptInput);
-                new CASUALLanguage(caspac, caspac.getActiveScript().name, caspac.getActiveScript().tempDir).beginScriptingHandler(scriptInput);
+                new CASUALLanguage(caspac, caspac.getActiveScript().tempDir).beginScriptingHandler(scriptInput);
 
                 if (Statics.isGUIIsAvailable()) {
                     //return to normal.
@@ -184,7 +184,8 @@ public class CASUALScriptParser {
         try {
             ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.scriptContents.getBytes("UTF-8"));
             DataInputStream dis = new DataInputStream(scriptStream);
-            new CASUALLanguage(CASPAC, s.name, s.tempDir).beginScriptingHandler(dis);
+            CASPAC.setActiveScript(s);
+            new CASUALLanguage(CASPAC, s.tempDir).beginScriptingHandler(dis);
         } catch (UnsupportedEncodingException ex) {
             new Log().errorHandler(ex);
         }

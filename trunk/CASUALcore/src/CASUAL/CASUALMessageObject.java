@@ -67,7 +67,7 @@ public class CASUALMessageObject {
      * Used by jOptionPane for TimeOutMessages only. Made available for use
      * under other APIs so that it may be changed if needed.
      *
-     * @see JOptionPane.OptionType
+     * @see javax.swing.JOptionPane
      */
     public int timeoutOptionType;
 
@@ -93,7 +93,7 @@ public class CASUALMessageObject {
      * Used by jOptionPane for TimeOutMessages only. Made available for use
      * under other APIs so that it may be changed if needed.
      *
-     * @see JOptionPane.MESSAGETYPE
+     * @see javax.swing.JOptionPane
      */
     public int timeoutMessageType;
 

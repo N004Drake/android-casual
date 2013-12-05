@@ -200,7 +200,7 @@ public class ADBTools {
      * detects if a device is connected. Uses timeout so the command will return
      * true or false and after 4 seconds will always return false.
      *
-     * @return
+     * @return true if connected. 
      */
     public static boolean isConnected() {
         return new Shell().timeoutShellCommand(new String[]{ADBTools.getADBCommand(), "devices"}, 4000).contains("   device");
@@ -209,7 +209,7 @@ public class ADBTools {
     /**
      * Turns on or off the adbMonitor.
      *
-     * @see CASUALConnectionStatus.DeviceCheck
+     * @see CASUAL.CASUALConnectionStatusMonitor
      * @param start true if monitor is to be started.
      */
     public static void adbMonitor(boolean start) {

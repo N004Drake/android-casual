@@ -5,6 +5,7 @@
 package CASUAL;
 
 import java.io.File;
+import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -14,7 +15,10 @@ import static org.junit.Assert.*;
  */
 public class ADBInstallTest {
     
-    public ADBInstallTest() {
+    public ADBInstallTest() throws IOException {
+        Statics.initializeStatics();
+        System.out.println(new File(".").getCanonicalPath());
+
     }
 
     /**

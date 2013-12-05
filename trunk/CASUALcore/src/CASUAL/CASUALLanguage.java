@@ -40,7 +40,6 @@ import java.util.logging.Logger;
  */
 public class CASUALLanguage {
 
-    String ScriptName;
     final private String ScriptTempFolder;
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     final Caspac CASPAC;
@@ -50,12 +49,10 @@ public class CASUALLanguage {
      * instantiates CASUALLanguage with script
      *
      * @param caspac the CASPAC used for the script
-     * @param ScriptName name of script
      * @param ScriptTempFolder temp folder to use for script
      */
-    public CASUALLanguage(Caspac caspac, String ScriptName, String ScriptTempFolder) {
-        //TODO remove ScriptName as it is only used for logging.  The CASUALLanguage need not know what SCRIPT is executing. 
-        this.ScriptName = ScriptName;
+    public CASUALLanguage(Caspac caspac,  String ScriptTempFolder) {
+
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = caspac;
     }
@@ -70,7 +67,6 @@ public class CASUALLanguage {
      * @param ScriptTempFolder Folder in which script is executing.
      */
     public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
-        this.ScriptName = ScriptName;
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = null;
     }
@@ -119,6 +115,7 @@ public class CASUALLanguage {
                 new WindowsDrivers(2).uninstallCADI();
             }
             log.level2Information("@done");
+            //yeah yeah, overly broad chatch.  read below. 
         } catch (Exception e) {
             /*
              *  Java reports this as an overly broad catch.  Thats fine.  this is 
@@ -491,7 +488,7 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
             n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserCancelOption();
             if (n == 1) {
-                log.level0Error(ScriptName);
+                log.level0Error(this.CASPAC.getActiveScript().name);
                 log.level0Error("@canceledAtUserRequest");
                 Statics.CASPAC.getActiveScript().scriptContinue = false;
                 return "";
@@ -504,7 +501,7 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
             int n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showActionRequiredDialog();
             if (n == 1) {
-                log.level0Error(ScriptName);
+                log.level0Error(this.CASPAC.getActiveScript().name);
                 log.level0Error("@haltedPerformActions");
                 Statics.CASPAC.getActiveScript().scriptContinue = false;
                 return "";
@@ -793,7 +790,7 @@ public class CASUALLanguage {
     private void fileNotFound() {
         int n = new CASUALMessageObject("@interactionMissingFileVirusScanner").showUserCancelOption();
         if (n == 1) {
-            log.level0Error(ScriptName);
+            log.level0Error(this.CASPAC.getActiveScript().name);
             log.level0Error("@canceledDueToMissingFiles");
             Statics.CASPAC.getActiveScript().scriptContinue = false;
         }

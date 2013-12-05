@@ -105,7 +105,7 @@ public class AudioHandler {
                             sleepTillEndOfClip(clip);
 
                         } catch (IOException error) {
-                            System.out.print("file not found");
+                            new Log().level3Verbose("File Not Found");
                         } catch (UnsupportedAudioFileException ex) {
                             Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (LineUnavailableException ex) {

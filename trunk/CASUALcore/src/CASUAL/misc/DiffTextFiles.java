@@ -18,6 +18,8 @@ package CASUAL.misc;
 
 import CASUAL.Log;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,13 +35,19 @@ public class DiffTextFiles {
      * @return lines in test that are not in original
      */
     public String diffResourceVersusFile(String TestIStream, String OriginalFile) {
-
-        String Difference = "";
+        try {
+            System.out.println(new File(".").getCanonicalFile()+TestIStream);
+        } catch (IOException ex) {
+            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String difference = "";
         InputStream resourceAsStream = getClass().getResourceAsStream(TestIStream);
+        System.out.println("TestIstream:"+TestIStream+"\nOriginal:"+OriginalFile);
+        
         BufferedReader testStream = new BufferedReader(new InputStreamReader(resourceAsStream));
         File original = new File(OriginalFile);
         String TestStreamLine = "";
-        String OriginalFileLine;
+        String OriginalFileLine="";
         try {
             while ((TestStreamLine = testStream.readLine()) != null) {
                 boolean LineExists;
@@ -55,32 +63,37 @@ public class DiffTextFiles {
                 }
 
                 if (!LineExists) {
-                    Difference = Difference + "\n" + TestStreamLine;
+                    difference = difference + "\n" + TestStreamLine;
                 }
             }
-            resourceAsStream.close();
-            testStream.close();
         } catch (IOException ex) {
 
-            Difference = TestStreamLine + "\n";
+            difference = TestStreamLine + "\n";
             try {
                 while ((TestStreamLine = testStream.readLine()) != null) {
-                    Difference = Difference + TestStreamLine + "\n";
+                    difference = difference + TestStreamLine + "\n";
                 }
             } catch (IOException ex1) {
                 new Log().errorHandler(ex);
             }
 
 
+        } finally {
+            try {
+                resourceAsStream.close();
+                testStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        if (Difference.startsWith("\n")) {
-            Difference = Difference.replaceFirst("\n", "");
+        if (difference.startsWith("\n")) {
+            difference = difference.replaceFirst("\n", "");
         }
-        if (Difference.endsWith("\n")) {
-            Difference = StringOperations.replaceLast(Difference, "\n", "");
+        if (difference.endsWith("\n")) {
+            difference = CASUAL.misc.StringOperations.replaceLast(difference, "\n", "");
         }
 
-        return Difference;
+        return difference;
 
     }
 
@@ -128,57 +141,33 @@ public class DiffTextFiles {
     /**
      * appends text to file
      *
-     * @param NameOfFileToBeModified file to be appended
+     * @param file file to be added to
      * @param Diff text to add
      */
-    public void appendDiffToFile(String NameOfFileToBeModified, String Diff) {
+    public void appendDiffToFile(String file, String Diff) {
         if (Diff.equals("")) {
             return;
         }
-        String currentString;
-        FileOutputStream FileOut;
-        File FileToModify = new File(NameOfFileToBeModified);
-        if (!FileToModify.exists()) {
+        //create the file if it does not exist
+        File fileToModify = new File(file);
+        if (!fileToModify.exists()) {
+            if (fileToModify.isDirectory()){
+                fileToModify.delete();
+            }
             try {
-                FileToModify.mkdirs();
-                if (FileToModify.isDirectory()) {
-                    FileToModify.delete();
-                }
-                FileToModify.createNewFile();
+                fileToModify.createNewFile();
             } catch (IOException ex) {
-                new Log().errorHandler(ex);
+                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        FileReader FR;
+        
         try {
-            FR = new FileReader(FileToModify);
-        } catch (FileNotFoundException ex) {
-            new Log().errorHandler(ex);
-            return;
-        }
-        BufferedReader OriginalFileBuffer = new BufferedReader(FR);
-        try {
-            FileOut = new FileOutputStream(NameOfFileToBeModified);
-            while ((currentString = OriginalFileBuffer.readLine()) != null) {
-                new PrintStream(FileOut).println(currentString);
-            }
-            new PrintStream(FileOut).println(Diff);
-            OriginalFileBuffer.close();
-            FR.close();
-            FileOut.close();
+            PrintWriter out=new PrintWriter(new BufferedWriter(new FileWriter(file,true)));
+            out.println(Diff);
+ 
+            out.close();
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
-        } finally {
-            try {
-                OriginalFileBuffer.close();
-                File OutputFile = FileToModify;
-                OutputFile.delete();
-                OutputFile = new File(NameOfFileToBeModified + "_new");
-                OutputFile.renameTo(new File(NameOfFileToBeModified).getAbsoluteFile());
-            } catch (IOException ex) {
-                new Log().errorHandler(ex);
-            }
+         new Log().errorHandler(ex);
         }
-
     }
 }
