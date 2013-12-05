@@ -830,7 +830,7 @@ public final class Caspac {
     /**
      * replaces a script in list array.
      * @param s script to replace
-     * @return
+     * @return location of script in scripts array. 
      */
     public int replaceScriptByName(Script s) {
         String name = s.name;

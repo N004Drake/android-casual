@@ -91,25 +91,8 @@ public class Statics {
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     private static Log log = new Log();
+     
 
-    /**
-     * Arraylist which serves as a temporary holder for Shell.SendLiveCommand.
-     * //TODO remove this and replace with a different set in Shell. The
-     * original purpose of this was to abstract but it can be done better.
-     */
-    public static ArrayList<String> LiveSendCommand = new ArrayList<String>();
-
-    /**
-     * STDOutDevice for CASUAL. Generally System.out (STDOUT) but may be
-     * reassigned to any printwriter.
-     */
-    public static PrintWriter OutFile = new PrintWriter(System.out); //used by log class
-
-    //TODO: remove this because it is not needed anymore.  Log is created on the fly. 
-    /**
-     * Log file was created.
-     */
-    public static boolean LogCreated = false; //used by Log class
 
     //Form data
     //public static boolean TargetScriptIsResource = true;  //true if resource, false if file
@@ -210,7 +193,7 @@ public class Statics {
     /**
      * returns the Instance of Linux's ADB binary
      *
-     * @return
+     * @return gets the proper name of the ADB binary as a resource. 
      */
     public static String LinuxADB() {
         String arch = OSTools.checkLinuxArch();
@@ -434,9 +417,6 @@ public class Statics {
         setStatus("working");
         guiOutputVerbosity = 2;
         logFIleOutputVerbosity = 4;
-        LiveSendCommand = new ArrayList<String>();
-        OutFile = null;
-        LogCreated = false;
         if (!java.awt.GraphicsEnvironment.isHeadless()) {
             ProgressPane = new JTextPane();
         }

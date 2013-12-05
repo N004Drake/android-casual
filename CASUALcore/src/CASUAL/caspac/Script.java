@@ -606,8 +606,8 @@ public class Script {
         }
 
         /**
-         *
-         * @return
+         * gets the metadata as an inputstream
+         * @return metadata as inputstream. 
          */
         public InputStream getMetaInputStream() {
             setPropsFromVariables();
@@ -703,8 +703,8 @@ public class Script {
         }
 
         /**
-         *
-         * @return
+         * Minimum CASUAL SVN version requied by this script.
+         * @return svn version required. 
          */
         public int minSVNversion() {
             return Integer.parseInt(minSVNversion);

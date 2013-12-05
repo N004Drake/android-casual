@@ -140,31 +140,7 @@ public class ShellTest {
 
     }
 
-    /**
-     * Test of liveBackgroundShellCommand method, of class Shell.
-     */
-    @Test
-    public void testLiveBackgroundShellCommand() {
-        System.out.println("liveBackgroundShellCommand");
-        Shell instance = new Shell();
-        Statics.LiveSendCommand = new ArrayList();
-        Statics.LiveSendCommand.add(ADBTools.getADBCommand());
-        Statics.LiveSendCommand.add("devices");
-        instance.liveBackgroundShellCommand();
-    }
-
-    /**
-     * Test of silentBackgroundShellCommand method, of class Shell.
-     */
-    @Test
-    public void testSilentBackgroundShellCommand() {
-        System.out.println("silentBackgroundShellCommand");
-        Shell instance = new Shell();
-        Statics.LiveSendCommand = new ArrayList();
-        Statics.LiveSendCommand.add(ADBTools.getADBCommand());
-        Statics.LiveSendCommand.add("devices");
-        instance.silentBackgroundShellCommand();
-    }
+   
 
     /**
      * Test of timeoutShellCommand method, of class Shell.

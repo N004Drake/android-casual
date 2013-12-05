@@ -171,16 +171,12 @@ public class Log {
         FileWriter WriteFile;
         try {
             WriteFile = new FileWriter(Statics.getTempFolder() + "log.txt", true);
+            PrintWriter output = new PrintWriter(WriteFile);
+            output.write(data + "\n");
+            WriteFile.close();
+            output.close();
         } catch (IOException ex) {
             out.println("Attempted to write to log but could not.");
-            return;
-        }
-        PrintWriter output = new PrintWriter(WriteFile);
-        output.write(data + "\n");
-
-        Statics.OutFile = output;
-        if (Statics.OutFile != null) {
-            Statics.LogCreated = true;
         }
 
     }

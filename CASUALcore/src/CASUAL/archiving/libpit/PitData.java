@@ -404,7 +404,7 @@ public class PitData {
      * @param changeToSize the amount to change the entry This can be positive
      * or negative and will change the size relatively.
      * @throws java.lang.ClassNotFoundException
-     * @see resizePartition()
+     * @see #resizePartition(CASUAL.archiving.libpit.PitEntry, int) 
      */
     public void resizePartition(String partName, int changeToSize) throws ClassNotFoundException {
         resizePartition(this.findEntry(partName), changeToSize);
@@ -461,7 +461,7 @@ public class PitData {
      */
     public PitEntry[] sortEntriesByBlockLocation() {
         boolean enumerated = false;
-        LinkedList<PitEntry> ll = new LinkedList();
+        LinkedList<PitEntry> ll = new LinkedList<PitEntry>();
         ll.addAll(entries);
         //while not every entry is enumerated
         while (!enumerated) {
