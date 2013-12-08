@@ -17,6 +17,7 @@
 package CASUAL;
 
 //import java.awt.Color;
+import CASUAL.Heimdall.HeimdallInstall;
 import CASUAL.caspac.Caspac;
 import java.io.BufferedReader;
 import java.io.File;
@@ -235,41 +236,6 @@ public class Statics {
     //Heimdall
 
     /**
-     * Heimdall version.
-     */
-    final public static String heimdallVersion = "140";  //primary version string
-
-    /**
-     * heimdall for Debian Linux x86.
-     */
-    final public static String heimdallLinuxi386 = "/CASUAL/resources/heimdall/heimdall_i386.deb";
-
-    /**
-     * heimdall for Debian Linux 64-bit.
-     */
-    final public static String heimdallLinuxamd64 = "/CASUAL/resources/heimdall/heimdall_amd64.deb";
-
-    /**
-     * Heimdall for Debian Linux ARMv6.
-     */
-    final public static String heimdallLinuxARMv6 = "/CASUAL/resources/heimdall/heimdall_armv6.deb";
-
-    /**
-     * Heimdall for Mac dmg file.
-     */
-    final public static String heimdallMac = "/CASUAL/resources/heimdall/heimdall-mac.dmg";
-
-    /**
-     * Heimdall for Windows.
-     */
-    final public static String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
-
-    /**
-     * Heimdall for Windows resource must be in same folder as exe.
-     */
-    final public static String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
-
-    /**
      * Heimdall for Windows resource must be in same folder as exe.
      */
     final public static String msvcp110dll = "/CASUAL/resources/heimdall/msvcp110.dll";
@@ -398,12 +364,6 @@ public class Statics {
      * fastboot after deployment to computer disk.
      */
     public static String fastbootDeployed = getTempFolder() + "fastboot"; //deployed fastboot
-    //heimdall  
-    //TODO: remove all thse and Heimdall Install/HeimdallTools with getters set by, or triggering installation ;
-    static boolean isHeimdallDeployed = false; //if fastboot has been deployed
-    static String heimdallResource = ""; //location to heimdall set from final values above
-    static String heimdallStaging = getTempFolder() + "heimdallStage";//location for heimdall files while deploying on Linux
-    static String heimdallDeployed = ""; //location of heimdall once deployed
     static String[] resourceHeimdallVersion;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
     static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
@@ -431,10 +391,10 @@ public class Statics {
         ReactionEvents = new ArrayList<String>();
         fastbootResource = ""; //location to fastboot set from final values above
         fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
-        isHeimdallDeployed = false; //if fastboot has been deployed
-        heimdallResource = ""; //location to heimdall set from final values above
-        heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
-        heimdallDeployed = ""; //location of heimdall once deployed
+        HeimdallInstall.isHeimdallDeployed = false; //if fastboot has been deployed
+        HeimdallInstall.heimdallResource = ""; //location to heimdall set from final values above
+        HeimdallInstall.heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
+        HeimdallInstall.heimdallDeployed = ""; //location of heimdall once deployed
         resourceHeimdallVersion = null;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
         installedHeimdallVersion = null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
         CASUALLanguage.GOTO = "";
@@ -485,8 +445,8 @@ public class Statics {
         TempFolder = folder;
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         fastbootDeployed = TempFolder + "fastboot";
-        heimdallStaging = TempFolder + "heimdallStage";
-        heimdallDeployed = "";
+        HeimdallInstall.heimdallStaging = TempFolder + "heimdallStage";
+        HeimdallInstall.heimdallDeployed = "";
         return TempFolder;
     }
 }

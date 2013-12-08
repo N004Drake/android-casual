@@ -18,8 +18,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package CASUAL;
+package CASUAL.Heimdall;
 
+import CASUAL.CASUALMain;
+import CASUAL.CASUALMessageObject;
+import CASUAL.FileOperations;
+import CASUAL.Log;
+import CASUAL.OSTools;
+import CASUAL.Shell;
+import CASUAL.Statics;
+import CASUAL.WindowsDrivers;
 import CASUAL.network.CASUALUpdates;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,6 +39,40 @@ import java.io.IOException;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class HeimdallInstall {
+    /**
+     * Heimdall version.
+     */
+    public static final String heimdallVersion = "140"; //primary version string
+    public static String heimdallResource = ""; //location to heimdall set from final values above
+    /**
+     * heimdall for Debian Linux 64-bit.
+     */
+    public static final String heimdallLinuxamd64 = "/CASUAL/resources/heimdall/heimdall_amd64.deb";
+    /**
+     * Heimdall for Windows.
+     */
+    public static final String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
+    /**
+     * Heimdall for Debian Linux ARMv6.
+     */
+    public static final String heimdallLinuxARMv6 = "/CASUAL/resources/heimdall/heimdall_armv6.deb";
+    /**
+     * Heimdall for Mac dmg file.
+     */
+    public static final String heimdallMac = "/CASUAL/resources/heimdall/heimdall-mac.dmg";
+    public static String heimdallDeployed = ""; //location of heimdall once deployed
+    public static String heimdallStaging = Statics.getTempFolder() + "heimdallStage"; //location for heimdall files while deploying on Linux
+    /**
+     * Heimdall for Windows resource must be in same folder as exe.
+     */
+    public static final String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
+    /**
+     * heimdall for Debian Linux x86.
+     */
+    public static final String heimdallLinuxi386 = "/CASUAL/resources/heimdall/heimdall_i386.deb";
+    //heimdall
+    //TODO: remove all thse and Heimdall Install/HeimdallTools with getters set by, or triggering installation ;
+    public static boolean isHeimdallDeployed = false; //if fastboot has been deployed
 
     final String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
     /**
@@ -49,17 +91,17 @@ public class HeimdallInstall {
      */
     public boolean deployHeimdallForWindows() {
         FileOperations fo = new FileOperations();
-        Statics.heimdallResource = Statics.heimdallWin2;
-        fo.copyFromResourceToFile(Statics.heimdallResource, Statics.getTempFolder() + "libusb-1.0.dll");
-        Statics.heimdallResource = Statics.heimdallWin;
-        Statics.heimdallDeployed = Statics.getTempFolder() + "heimdall.exe";
-        fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallDeployed);
+        heimdallResource = heimdallWin2;
+        fo.copyFromResourceToFile(heimdallResource, Statics.getTempFolder() + "libusb-1.0.dll");
+        heimdallResource = heimdallWin;
+        heimdallDeployed = Statics.getTempFolder() + "heimdall.exe";
+        fo.copyFromResourceToFile(heimdallResource, heimdallDeployed);
         fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.getTempFolder() + "msvcp110.dll");
         fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.getTempFolder() + "msvcr110.dll");
 
         log.level4Debug("deployHeimdallForWindows- verifying Heimdall deployment");
         if (checkHeimdall()) { //try with redist files
-            Statics.isHeimdallDeployed = true;
+            isHeimdallDeployed = true;
             log.level4Debug("heimdall install sucessful");
             return true;
         }
@@ -90,28 +132,28 @@ public class HeimdallInstall {
         String arch = OSTools.checkLinuxArch();
 //Linux64
         if (arch.contains("x86_64")) {
-            Statics.heimdallResource = Statics.heimdallLinuxamd64;
-            fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallStaging);
-            fo.setExecutableBit(Statics.heimdallStaging);
-            shell.elevateSimpleCommandWithMessage(new String[]{"dpkg", "-i", Statics.heimdallStaging}, "Permissions escillation required to install Heimdall");
-            Statics.heimdallDeployed = "heimdall";
-            if (new HeimdallInstall().checkHeimdallVersion()) {
+            heimdallResource = heimdallLinuxamd64;
+            fo.copyFromResourceToFile(heimdallResource, heimdallStaging);
+            fo.setExecutableBit(heimdallStaging);
+            shell.elevateSimpleCommandWithMessage(new String[]{"dpkg", "-i", heimdallStaging}, "Permissions escillation required to install Heimdall");
+            heimdallDeployed = "heimdall";
+            if (checkHeimdallVersion()) {
                 return true;
             } else {
-                Statics.heimdallDeployed = "";
+                heimdallDeployed = "";
                 return false;
             }
 //Linux32
         } else if (arch.contains("i686")) {
-            Statics.heimdallResource = Statics.heimdallLinuxi386;
-            fo.copyFromResourceToFile(Statics.heimdallResource, Statics.heimdallStaging);
-            fo.setExecutableBit(Statics.heimdallStaging);
-            shell.elevateSimpleCommandWithMessage(new String[]{"dpkg", "-i", Statics.heimdallStaging}, "Install Heimdall");
-            Statics.heimdallDeployed = "heimdall";
+            heimdallResource = heimdallLinuxi386;
+            fo.copyFromResourceToFile(heimdallResource, heimdallStaging);
+            fo.setExecutableBit(heimdallStaging);
+            shell.elevateSimpleCommandWithMessage(new String[]{"dpkg", "-i", heimdallStaging}, "Install Heimdall");
+            heimdallDeployed = "heimdall";
             if (checkAndDeployHeimdall()) {
                 return true;
             } else {
-                Statics.heimdallDeployed = "";
+                heimdallDeployed = "";
                 return false;
             }
         } else {
@@ -132,34 +174,34 @@ public class HeimdallInstall {
      */
     public boolean installHeimdall() {
         //if ( installedHeimdallVersion.length==2 && REGEX FOR STRING NUMBERS ONLY){ isHeimdallDeployed=true;
-        if (Statics.isHeimdallDeployed) { //if heimdall is installed, return true
+        if (isHeimdallDeployed) { //if heimdall is installed, return true
             return true;
         } else { //attempt to correct the issue
             if (OSTools.isLinux()) {
-                return new HeimdallInstall().installLinuxHeimdall();
+                return installLinuxHeimdall();
             } else if (OSTools.isWindows()) {
-                if (new HeimdallInstall().checkHeimdallVersion()) {
+                if (checkHeimdallVersion()) {
                     return true;
                 } else {
                     if (checkAndDeployHeimdall()) {
                         return true;
                     }
-                    Statics.heimdallDeployed = "";
+                    heimdallDeployed = "";
                     return false;
                 }
 
                 //Mac          
             } else if (OSTools.isMac()) {
 
-                Statics.heimdallDeployed = HeimdallTools.getHeimdallCommand();
+                heimdallDeployed = HeimdallTools.getHeimdallCommand();
                 String retval = new Shell().silentShellCommand(new String[]{HeimdallTools.getHeimdallCommand()});
                 if (retval.contains("CritError!!!")) {
-                    new HeimdallInstall().installHeimdallMac();
+                    installHeimdallMac();
                 }
-                if (new HeimdallInstall().checkHeimdallVersion()) {
+                if (checkHeimdallVersion()) {
                     return true;
                 } else {
-                    Statics.heimdallDeployed = "";
+                    heimdallDeployed = "";
                     return false;
                 }
             }
@@ -309,20 +351,17 @@ public class HeimdallInstall {
     public boolean checkAndDeployHeimdall() {
 
         //deploys heimdall for Windows, launches checks for all other OS's. 
-        if (Statics.isHeimdallDeployed) {
+        if (isHeimdallDeployed) {
             return true;
         } else {
             if (OSTools.isWindows()) {
-                return new HeimdallInstall().deployHeimdallForWindows();
+                return deployHeimdallForWindows();
             } else {
 
-                if (new HeimdallInstall().checkHeimdallVersion()) {
+                if (checkHeimdallVersion()) {
                     return true;
-                } else { //shell returned error
-                    if (installHeimdall()) {
-                        return true;
-                    }
-                    return false;
+                } else {
+                    return installHeimdall();
                 }
 
             }
@@ -336,10 +375,10 @@ public class HeimdallInstall {
      */
     public boolean checkHeimdallVersion() {
         String heimdallCommand;
-        if (Statics.heimdallDeployed.equals("")) {
+        if (heimdallDeployed.equals("")) {
             heimdallCommand = HeimdallTools.getHeimdallCommand();
         } else {
-            heimdallCommand = Statics.heimdallDeployed;
+            heimdallCommand = heimdallDeployed;
         }
         String[] command = {heimdallCommand, "version"};
         String Version = new Shell().silentShellCommand(command);
@@ -357,11 +396,11 @@ public class HeimdallInstall {
         }
         char[] digits = Version.toCharArray();
         int commandLineVersion = Integer.parseInt(new String(digits));
-        int resourceVersion = Integer.parseInt(Statics.heimdallVersion);
+        int resourceVersion = Integer.parseInt(heimdallVersion);
 
         if (commandLineVersion >= resourceVersion) {
-            Statics.heimdallDeployed = heimdallCommand;
-            Statics.isHeimdallDeployed = true;
+            heimdallDeployed = heimdallCommand;
+            isHeimdallDeployed = true;
             return true;
         } else {
             return false;

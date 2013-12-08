@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import CASUAL.Heimdall.HeimdallTools;
+import CASUAL.Heimdall.HeimdallInstall;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
 import CASUAL.network.Pastebin;
@@ -631,12 +633,17 @@ public class CASUALLanguage {
             log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
             HeimdallInstall heimdallInstall = new HeimdallInstall();
             if (heimdallInstall.checkAndDeployHeimdall()) {
-                new HeimdallTools("").doHeimdallWaitForDevice();
+                ArrayList<String> intermediateCommand=new ShellTools().parseCommandLine(line);
+                String[] command=intermediateCommand.toArray(new String[intermediateCommand.size()]);
+                new HeimdallTools().doHeimdallWaitForDevice();
+                
                 /* if (Statics.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
                  }*/
                 log.level2Information("@executingHeimdall");
-                return new HeimdallTools(line).doHeimdallShellCommand();
+                
+                
+                return new HeimdallTools().doHeimdallShellCommand(command);
             } else {
                 return new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
             }

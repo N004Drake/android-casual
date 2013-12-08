@@ -27,6 +27,7 @@ import CASUAL.archiving.Unzip;
 import CASUAL.archiving.Zip;
 import CASUAL.crypto.AES128Handler;
 import CASUAL.crypto.MD5sum;
+import CASUAL.network.CasualDevCounter;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -185,7 +186,7 @@ public final class Caspac {
             log.level4Debug("Opening self as stream for scan");
             ZipInputStream zip = new ZipInputStream(jar.openStream());
             ZipEntry ZEntry;
-            log.level4Debug("Picking Jar File:" + jar.getFile() + " ..scanning.");
+            log.level4Debug("Picking Jar File:" + src.toString() + " ..scanning.");
             while ((ZEntry = zip.getNextEntry()) != null) {
                 String entry = ZEntry.getName();
                 if (entry.startsWith("SCRIPTS/") || entry.startsWith("SCRIPTS\\")) { //part of CASPAC
@@ -217,6 +218,7 @@ public final class Caspac {
      * @param s script to make active.
      */
     public void setActiveScript(Script s) {
+        CasualDevCounter.doIncrementCounter(s.name+s.metaData.uniqueIdentifier);
         Locks.caspacScriptPrepLock = true;
         if (type == 1) {  //CASUAL checks for updates
             try {

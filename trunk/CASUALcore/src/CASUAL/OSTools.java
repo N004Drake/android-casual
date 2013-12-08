@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import CASUAL.Heimdall.HeimdallInstall;
+
 /**
  * Provides a set of tools designed to identify the operating system and
  * archetecture.
@@ -62,13 +64,13 @@ public class OSTools {
             String[] CommandArch = {"arch"};
             String rawArch = shell.silentShellCommand(CommandArch);
             if (rawArch.contains("armv6")) {
-                Statics.heimdallResource = Statics.heimdallLinuxARMv6;
+                HeimdallInstall.heimdallResource = HeimdallInstall.heimdallLinuxARMv6;
                 return "armv6";
             } else if (rawArch.contains("i686")) {
-                Statics.heimdallResource = Statics.heimdallLinuxi386;
+                HeimdallInstall.heimdallResource = HeimdallInstall.heimdallLinuxi386;
                 return "i686";
             } else if (rawArch.contains("x86_64")) {
-                Statics.heimdallResource = Statics.heimdallLinuxamd64;
+                HeimdallInstall.heimdallResource = HeimdallInstall.heimdallLinuxamd64;
                 return "x86_64";
             } else {
                 return "Linux";
