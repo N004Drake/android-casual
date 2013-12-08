@@ -47,32 +47,42 @@ public class HeimdallInstall {
     /**
      * heimdall for Debian Linux 64-bit.
      */
-    public static final String heimdallLinuxamd64 = "/CASUAL/resources/heimdall/heimdall_amd64.deb";
+    public static final String heimdallLinuxamd64 = "/CASUAL/Heimdall/resources/heimdall_amd64.deb";
     /**
      * Heimdall for Windows.
      */
-    public static final String heimdallWin = "/CASUAL/resources/heimdall/heimdall.exe";
+    public static final String heimdallWin = "/CASUAL/Heimdall/resources/heimdall.exe";
     /**
      * Heimdall for Debian Linux ARMv6.
      */
-    public static final String heimdallLinuxARMv6 = "/CASUAL/resources/heimdall/heimdall_armv6.deb";
+    public static final String heimdallLinuxARMv6 = "/CASUAL/Heimdall/resources/heimdall_armv6.deb";
     /**
      * Heimdall for Mac dmg file.
      */
-    public static final String heimdallMac = "/CASUAL/resources/heimdall/heimdall-mac.dmg";
+    public static final String heimdallMac = "/CASUAL/Heimdall/resources/heimdall-mac.dmg";
     public static String heimdallDeployed = ""; //location of heimdall once deployed
     public static String heimdallStaging = Statics.getTempFolder() + "heimdallStage"; //location for heimdall files while deploying on Linux
     /**
      * Heimdall for Windows resource must be in same folder as exe.
      */
-    public static final String heimdallWin2 = "/CASUAL/resources/heimdall/libusb-1.0.dll";
+    public static final String heimdallWin2 = "/CASUAL/Heimdall/resources/libusb-1.0.dll";
     /**
      * heimdall for Debian Linux x86.
      */
-    public static final String heimdallLinuxi386 = "/CASUAL/resources/heimdall/heimdall_i386.deb";
+    public static final String heimdallLinuxi386 = "/CASUAL/Heimdall/resources/heimdall_i386.deb";
     //heimdall
     //TODO: remove all thse and Heimdall Install/HeimdallTools with getters set by, or triggering installation ;
     public static boolean isHeimdallDeployed = false; //if fastboot has been deployed
+    /**
+     * Heimdall for Windows resource must be in same folder as exe.
+     */
+    public static final String msvcr110dll = "/CASUAL/Heimdall/resources/msvcr110.dll";
+    /**
+     * Heimdall for Windows resource must be in same folder as exe.
+     */
+    public static final String msvcp110dll = "/CASUAL/Heimdall/resources/msvcp110.dll";
+    public static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.)
+    public static String[] resourceHeimdallVersion; //get resource version[] from "/CASUAL/Heimdall/resources/HeimdallVersion".replace("v","").split(.) ;
 
     final String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
     /**
@@ -96,8 +106,8 @@ public class HeimdallInstall {
         heimdallResource = heimdallWin;
         heimdallDeployed = Statics.getTempFolder() + "heimdall.exe";
         fo.copyFromResourceToFile(heimdallResource, heimdallDeployed);
-        fo.copyFromResourceToFile(Statics.msvcp110dll, Statics.getTempFolder() + "msvcp110.dll");
-        fo.copyFromResourceToFile(Statics.msvcr110dll, Statics.getTempFolder() + "msvcr110.dll");
+        fo.copyFromResourceToFile(msvcp110dll, Statics.getTempFolder() + "msvcp110.dll");
+        fo.copyFromResourceToFile(msvcr110dll, Statics.getTempFolder() + "msvcr110.dll");
 
         log.level4Debug("deployHeimdallForWindows- verifying Heimdall deployment");
         if (checkHeimdall()) { //try with redist files

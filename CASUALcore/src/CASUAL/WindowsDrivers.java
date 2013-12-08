@@ -144,13 +144,13 @@ public class WindowsDrivers {
         if (OSTools.OSName().contains("Windows XP")) {
             if (new FileOperations().makeFolder(pathToCADI)) {
                 log.level4Debug("driverExtract() Unzipping CADI for xp");
-                Unzip.unZipResource("/CASUAL/resources/heimdall/xp/CADI.zip", pathToExtract);
+                Unzip.unZipResource("/CASUAL/Heimdall/resources/xp/CADI.zip", pathToExtract);
                 return true;
             }
             return false;
         } else if (new FileOperations().makeFolder(pathToCADI)) {
             log.level4Debug("driverExtract() Unzipping CADI");
-            Unzip.unZipResource("/CASUAL/resources/heimdall/CADI.zip", pathToExtract);
+            Unzip.unZipResource("/CASUAL/Heimdall/resources/CADI.zip", pathToExtract);
             return true;
         }
         return false;

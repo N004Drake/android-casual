@@ -26,9 +26,11 @@ public class OdinTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        odinFile = new OdinFile("../test/CASUAL/archiving/resources/CF-Auto-Root-gd1-gd1xx-ekgc100.tar.md5");
+        //odinFile = new OdinFile("../test/CASUAL/archiving/resources/CF-Auto-Root-gd1-gd1xx-ekgc100.tar.md5");
+        //pitFile = new File("../test/CASUAL/archiving/resources/ekgc100part.pit");
+        odinFile = new OdinFile("/home/adamoutler/Downloads/KIES_HOME_I605VRAMC3_I605VZWAMC3_1098177_REV04_user_low_ship.tar.md5");
+        pitFile = new File("/home/adamoutler/note.pit");
         filesList = odinFile.extractOdinContents(CASUAL.Statics.getTempFolder());
-        pitFile = new File("../test/CASUAL/archiving/resources/ekgc100part.pit");
     }
 
     @AfterClass

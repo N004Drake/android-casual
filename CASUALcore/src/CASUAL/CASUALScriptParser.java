@@ -116,6 +116,7 @@ public class CASUALScriptParser {
      * @param startThreaded true if it is to be started on a new thread.
      */
     public void executeSelectedScript(final Caspac caspac, boolean startThreaded) {
+
         Statics.ReactionEvents = new ArrayList<String>();
         Statics.ActionEvents = new ArrayList<String>();
         Statics.CASPAC.getActiveScript().scriptContinue = true;
