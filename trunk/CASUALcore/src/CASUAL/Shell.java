@@ -81,6 +81,7 @@ public class Shell {
             //      If elevated shell exists, use it
             //         else create elevated shell
             //      This solves fastboot issues of having multiple password entries to perform several tasks
+            //    or--  elevate "sh" and maintain a reference to it, then send in "'command' 'param' 'param'"&
 
             boolean useGKSU = true;
             String[] testGKSudo = {"which", "gksudo"};

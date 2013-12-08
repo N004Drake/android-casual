@@ -226,7 +226,7 @@
                 <exclude name="**/*.form"/>
                 <exclude name="**/SCRIPTS/*"/>
                 <exclude name="CASUAL/resources/fastboot/**"/>
-                <exclude name="CASUAL/resources/heimdall/**"/>
+                <exclude name="CASUAL/Heimdall/resources/heimdall/**"/>
                 <exclude name="CASUAL/resources/sounds/**"/>
                 <exclude name="CASUAL/resources/ADB/**"/>
                 <exclude name="CASUAL/resources/icons/**"/>

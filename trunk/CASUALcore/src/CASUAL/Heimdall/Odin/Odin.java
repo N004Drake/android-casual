@@ -273,12 +273,13 @@ public class Odin {
     }
 
     private ArrayList<String> getPartitionFilenameList(File pitFile, File[] fileList, ArrayList<String> heimdallCommand) throws FileNotFoundException {
+        PitData pittable=new PitData(pitFile);
         for (File f : fileList) {
             //we wouldn't be using this if the files dont exist
             if (!f.exists()) {
                 throw new FileNotFoundException();
             }
-            heimdallCommand.add("--" + new PitData(pitFile).findEntryByFilename(f.getName()).getPartitionName());
+            heimdallCommand.add("--" + pittable.findEntryByFilename(f.getName()).getOdinFlashablePartitionName());
             heimdallCommand.add(f.getAbsolutePath());
         }
         return heimdallCommand;

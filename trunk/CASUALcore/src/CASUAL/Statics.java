@@ -235,37 +235,27 @@ public class Statics {
     final public static String WinADB3 = "/CASUAL/resources/ADB/AdbWinUsbApi.dll";
     //Heimdall
 
-    /**
-     * Heimdall for Windows resource must be in same folder as exe.
-     */
-    final public static String msvcp110dll = "/CASUAL/resources/heimdall/msvcp110.dll";
-
-    /**
-     * Heimdall for Windows resource must be in same folder as exe.
-     */
-    final public static String msvcr110dll = "/CASUAL/resources/heimdall/msvcr110.dll";
-
     //TODO jrloper, refactor and make this set of WinDriverResources separately named (not windriverresource2). 
     //TODO jrloper, remove this. 
     /**
      * CADI windows Driver. "Old Faithful"
      */
-    final public static String WinDriverResource = "/CASUAL/resources/heimdall/CADI.exe";  //original CADI
+    final public static String WinDriverResource = "/CASUAL/Heimdall/resources/CADI.exe";  //original CADI
 
     /**
      * CADI Windows Driver.
      */
-    final public static String WinDriverResource1 = "/CASUAL/resources/heimdall/CADI.zip";  //devcon CADI
+    final public static String WinDriverResource1 = "/CASUAL/Heimdall/resources/CADI.zip";  //devcon CADI
     //TODO jrloper, remove this. 
     /**
      * CADI Windows Driver for XP. "Old Faithful"
      */
-    final public static String WinDriverResource2 = "/CASUAL/resources/heimdall/xp/CADI.exe";  //xp original CADI
+    final public static String WinDriverResource2 = "/CASUAL/Heimdall/resources/xp/CADI.exe";  //xp original CADI
 
     /**
      * CADI Windows Driver.
      */
-    final public static String WinDriverResource3 = "/CASUAL/resources/heimdall/xp/CADI.zip";  //xp devcon CADI
+    final public static String WinDriverResource3 = "/CASUAL/Heimdall/resources/xp/CADI.zip";  //xp devcon CADI
     //Fastboot
 
     /**
@@ -364,8 +354,6 @@ public class Statics {
      * fastboot after deployment to computer disk.
      */
     public static String fastbootDeployed = getTempFolder() + "fastboot"; //deployed fastboot
-    static String[] resourceHeimdallVersion;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
-    static String[] installedHeimdallVersion; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
 
     /**
      * Resets all variables in CASUAL to provide, basically, a warm reboot.
@@ -395,8 +383,8 @@ public class Statics {
         HeimdallInstall.heimdallResource = ""; //location to heimdall set from final values above
         HeimdallInstall.heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
         HeimdallInstall.heimdallDeployed = ""; //location of heimdall once deployed
-        resourceHeimdallVersion = null;//get resource version[] from "/CASUAL/resources/heimdall/HeimdallVersion".replace("v","").split(.) ;
-        installedHeimdallVersion = null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
+        HeimdallInstall.resourceHeimdallVersion = null;//get resource version[] from "/CASUAL/Heimdall/resources/HeimdallVersion".replace("v","").split(.) ;
+        HeimdallInstall.installedHeimdallVersion = null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
         CASUALLanguage.GOTO = "";
         try {
             Statics.CASPAC.getActiveScript().scriptContinue = false;
@@ -443,6 +431,7 @@ public class Statics {
      */
     public static String setTempFolder(String folder) {
         TempFolder = folder;
+        //TODO move away from setting paths and handle in getHeimdall/ADB/Fastboot location in proper class. 
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         fastbootDeployed = TempFolder + "fastboot";
         HeimdallInstall.heimdallStaging = TempFolder + "heimdallStage";
