@@ -95,7 +95,7 @@ public class PitEntry {
     }
 
     /**
-     * binary type
+     * The major hardware structure that the partition belongs to.  Call processor or App Processor
      *
      * @return type of binary
      */
@@ -162,11 +162,12 @@ public class PitEntry {
     }
 
     /**
-     * Partition Attributes
+     * Partition Type
+     * bootloader, data, bct...  This is the type of partition. 
      *
      * @return attributes field in PIT
      */
-    public int getAttributes() {
+    public int getPartitionType() {
         return (part_type);
     }
 
@@ -545,7 +546,7 @@ public class PitEntry {
      *
      * @return the name of the hardware device
      */
-    public String getHardwareTypeFriendlyName() {
+    public String getDeviceTypeFriendlyName() {
         switch (this.device_type) {
             case 1:
                 return "NAND";
@@ -600,7 +601,7 @@ public class PitEntry {
         sb.append(", is ").append(getBlockCountFriendly(true)).append(" in size. It carries a ");
         sb.append(this.getFilesystemTypeFriendlyName()).append(" format and ");
         sb.append(this.getPartitionTypeFriendlyName()).append(" data type. The partition resides on the ");
-        sb.append(this.getBinFriendlyType()).append(" ").append(this.getHardwareTypeFriendlyName()).append(". ");
+        sb.append(this.getBinFriendlyType()).append(" ").append(this.getDeviceTypeFriendlyName()).append(". ");
         if (!this.getFriendlyFileName().equals("") && !this.getFriendlyFileName().startsWith("-")) {
             sb.append("It identifies itself to Odin as ").append(this.getFriendlyFileName()).append(".");
         }
@@ -643,7 +644,7 @@ public class PitEntry {
         sb.append("   FOTA: ").append(this.getFOTAFriendlyName()).append(n);
         sb.append(getPartitionDescritpion());
         if (this.getFotaName().contains("remained")) {
-            sb.append(" The partition will expand to fill the remainder of the ").append(this.getHardwareTypeFriendlyName()).append(".");
+            sb.append(" The partition will expand to fill the remainder of the ").append(this.getDeviceTypeFriendlyName()).append(".");
         }
         sb.append(n).append(n).append(n);
         return sb.toString();

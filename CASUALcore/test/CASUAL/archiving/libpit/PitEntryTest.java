@@ -115,7 +115,7 @@ public class PitEntryTest {
     }
 
     /**
-     * Test of getAttributes method, of class PitEntry.
+     * Test of getPartitionType method, of class PitEntry.
      */
     @Test
     public void testGetAttributes() {
@@ -123,7 +123,7 @@ public class PitEntryTest {
         PitEntry instance = new PitEntry();
         int expResult = 93;
         instance.setPartitionType(expResult);
-        int result = instance.getAttributes();
+        int result = instance.getPartitionType();
         assertEquals(expResult, result);
     }
 
