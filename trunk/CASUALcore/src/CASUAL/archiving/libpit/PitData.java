@@ -175,7 +175,7 @@ public class PitData {
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getBinType()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getDevType()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getPartID()));
-                dataOutputStream.writeInt(Integer.reverseBytes(entry.getAttributes()));
+                dataOutputStream.writeInt(Integer.reverseBytes(entry.getPartitionType()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getFilesystem()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getBlockStart()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getBlockCount()));
