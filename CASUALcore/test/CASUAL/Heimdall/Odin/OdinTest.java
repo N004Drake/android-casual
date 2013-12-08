@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL.archiving;
+package CASUAL.Heimdall.Odin;
 
-import CASUAL.archiving.Odin;
-import CASUAL.archiving.OdinFile;
+import CASUAL.Heimdall.Odin.Odin;
+import CASUAL.Heimdall.Odin.OdinFile;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;

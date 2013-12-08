@@ -14,11 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL.archiving;
+package CASUAL.Heimdall.Odin;
 
+import CASUAL.Heimdall.HeimdallTools;
 import CASUAL.Statics;
-import CASUAL.archiving.CorruptOdinFileException;
-import CASUAL.archiving.OdinFile;
+import CASUAL.Heimdall.Odin.CorruptOdinFileException;
+import CASUAL.Heimdall.Odin.OdinFile;
 import CASUAL.archiving.libpit.PitData;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -283,4 +284,12 @@ public class Odin {
         return heimdallCommand;
     }
 
-}
+    public File getPitNoReboot(){
+        String[] cmd=new String[]{HeimdallTools.getHeimdallCommand()};
+        
+        return new File(".");
+            
+        }
+    }
+    
+

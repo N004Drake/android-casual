@@ -36,6 +36,9 @@ public class CasualDevCounter {
      */
     public MandatoryThread t = new MandatoryThread();
 
+    public static void doIncrementCounter( String name ){
+        new CasualDevCounter().incrementCounter(name);
+    }
     /**
      * Increments a counter at CASUAL-Dev.com
      *

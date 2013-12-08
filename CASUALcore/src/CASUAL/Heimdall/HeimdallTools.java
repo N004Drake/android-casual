@@ -14,38 +14,52 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.Heimdall;
 
-import CASUAL.misc.StringOperations;
+import CASUAL.CASUALMessageObject;
+import CASUAL.CASUALScriptParser;
+import CASUAL.Log;
+import CASUAL.OSTools;
+import CASUAL.Shell;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import javax.swing.Timer;
 
 /**
- * Provides tools to work with Heimdall in CASUAL. 
+ * Provides tools to work with Heimdall in CASUAL.
+ *
  * @author Adam Outler adamoutler@gmail.com
+ * @author Jeremy Loper jrloper@gmail.com
  */
 public class HeimdallTools {
 
+    Shell shell = new Shell();
     Log log = new Log();
-    int permissionEscillationAttempt = 0;
     int heimdallRetries = 0;
-    String line;
 
-    HeimdallTools(String line) {
-        this.line = line;
+    /**
+     * Status for decision making based on return value from heimdall.
+     *
+     * SUCCESS: Heimdall executed sucessfully
+     *
+     * HALTED: Heimdall encountered a failure which cannot be recovered.
+     *
+     * CONTINUE: Heimdall did not execute sucessfully, but we can try again.
+     *
+     * MAXIMUMRETRIESEXCEEDED: We've tried to continue four times now.
+     *
+     */
+    private enum STATUS {
+
+        SUCCESS, CONTINUE, HALTED, MAXIMUMRETRIESEXCEEDED
     }
 
     /**
      * do nothing until a heimdall device is detected
      */
     public void doHeimdallWaitForDevice() {
-        Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
-        shellCommand.add(Statics.heimdallDeployed);
-        shellCommand.add("detect");
-        String stringCommand[] = StringOperations.convertArrayListToStringArray(shellCommand);
+        String detectCommand[] = new String[]{HeimdallTools.getHeimdallCommand(), "detect"};
+
         log.level2Information("@waitingForDownload");
         String shellReturn = "";
         Timer connectionTimer = new Timer(60000, new ActionListener() {
@@ -59,7 +73,7 @@ public class HeimdallTools {
         while (!shellReturn.contains("Device detected")) {
             log.progress(".");
             sleepForOneSecond();
-            shellReturn = Shell.silentShellCommand(stringCommand);
+            shellReturn = shell.silentShellCommand(detectCommand);
         }
         connectionTimer.stop();
         if (OSTools.isWindows()) {
@@ -74,111 +88,126 @@ public class HeimdallTools {
     /**
      * performs an elevated heimdall command
      *
+     * @param command heimdall command to be executed
      * @return result from heimdall
      */
-    public String doElevatedHeimdallShellCommand() {
-        ++heimdallRetries;
-        line = StringOperations.removeLeadingSpaces(line);
-        Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
-        shellCommand.add(Statics.heimdallDeployed);
-        shellCommand.addAll(new ShellTools().parseCommandLine(line));
-        log.level3Verbose("Performing elevated Heimdall command" + line);
-        String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
-        String returnval = Shell.elevateSimpleCommandWithMessage(stringCommand2, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you have setup your UDEV rules.");
-        String result = didHeimdallError(returnval);
-        if (!result.equals("")) {
-            if (result.contains("Script halted")) {
-                log.level0Error("@heimdallEncounteredAnError");
-                log.level0Error(result);
-                log.level0Error("@heimdallEncounteredAnError");
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                if (!Statics.debugMode) {
-                    cLang.executeOneShotCommand("$HALT $SENDLOG");
-                }
-                return returnval;
-            } else if (result.contains("Attempting to continue")) {
-                log.level2Information("@permissionsElevationRequired");
-                returnval = doElevatedHeimdallShellCommand();
-                return returnval;
-            }
-        } else {
-            log.level3Verbose("\n[Heimdall Success]\n\n");
-        }
+    private String doElevatedHeimdallShellCommand(String[] command) {
+        log.level4Debug("Executing ELEVATED Heimdall Command:  " + displayArray(command));
+        String returnval = shell.elevateSimpleCommandWithMessage(command, "CASUAL uses root to work around Heimdall permissions.  Hit cancel if you know root is not required to access your device.");
         return returnval;
+    }
+
+    private String[] appendHeimdallCommandToStartOfArray(String[] command) {
+        String[] cmd = new String[command.length + 1];
+        //insert heimdall command at position 0
+        cmd[0] = getHeimdallCommand();
+        System.arraycopy(command, 0, cmd, 1, command.length);
+        return cmd;
     }
 
     /**
      * performs a heimdall command
      *
-     * @return value from heimdall command
+     * @param command value from heimdall command
+     * @return
      */
-    public String doHeimdallShellCommand() {
-        line = StringOperations.removeLeadingSpaces(line);
-        Shell Shell = new Shell();
-        ArrayList<String> shellCommand = new ArrayList<String>();
-        shellCommand.add(Statics.heimdallDeployed);
-        shellCommand.addAll(new ShellTools().parseCommandLine(line));
-        String stringCommand2[] = StringOperations.convertArrayListToStringArray(shellCommand);
-        log.level3Verbose("Performing standard Heimdall command" + line);
-        String returnRead = Shell.liveShellCommand(stringCommand2, true);
-        String result = didHeimdallError(returnRead);
-        if (!result.equals("")) {
-            if (result.contains("Script halted")) {
+    public String doHeimdallShellCommand(String[] command) {
+        log.level4Debug("Executing " + displayArray(command));
+        command = appendHeimdallCommandToStartOfArray(command);
+        int timesRun = 0;
+        String shellRead; //value from command 
+        String returnValue = ""; //concatinated shellRead values from repeats
+        //make 4 attempts
+        while (timesRun <= 4) {
+            //we don't elevate Windows or mac.  
+            //Mac should not need it as an installer is run with a kext included
+            //Windows uses a driver
+            if (timesRun < 1 || OSTools.isWindows() || OSTools.isMac()) {
+                shellRead = shell.liveShellCommand(command, true);
 
-                log.level0Error("@heimdallErrorReport");
-                log.level0Error(line);
-                log.level0Error("@heimdallErrorReport");
-                log.level0Error(result);
-                log.level0Error("@heimdallErrorReport");
-                CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $SENDLOG");
-                return returnRead;
-            } else if (result.contains("; Stopping")) {
-                return returnRead;
+            } else { // three attempts elevated for Linux LibUSB interface.
+                shellRead = doElevatedHeimdallShellCommand(command);
             }
-            log.level2Information(result);
-        } else if (result.contains("")) {
-            log.level2Information("@heimdallWasSucessful");
-        }
-        if (result.contains("Attempting to continue")) {
-            permissionEscillationAttempt++;
-            if (OSTools.isLinux()) {
-                log.level2Information("@permissionsElevationRequired");
-                returnRead = returnRead + doElevatedHeimdallShellCommand();
-            } else if (OSTools.isWindows() || OSTools.isMac()) {
-                if (permissionEscillationAttempt < 5) {
-                    returnRead = returnRead + doHeimdallShellCommand();
-                } else {
+            //append last read value to return value and increment retries
+            returnValue = returnValue + shellRead;
+            timesRun++;
+            //get the status
+            String result = checkHeimdallErrorStatus(shellRead);
+            STATUS status = processStatusFromResult(result, timesRun);
+
+            //make a decision based on status result
+            switch (status) {
+                case SUCCESS: //great
+                    log.level2Information("@heimdallWasSucessful");
+                    return returnValue;
+                case HALTED: //Epic heimdall failure
+                    doErrorReport(command, result);
+                    return returnValue;
+                case MAXIMUMRETRIESEXCEEDED: //This has looped 4 times.
                     log.level0Error("@maximumRetries");
+                    doErrorReport(command, result);
                     //TODO: uninstall drivers, reinstall with CADI and try once more.
                     new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO cyclic error.");
-                }
+                    return returnValue;
+                case CONTINUE: //doover
+
+                    break;
+                default: //this should never happen
+                    break;
             }
-            permissionEscillationAttempt = 0;
         }
-        return returnRead;
+        return returnValue;
+
+    }
+
+    private STATUS processStatusFromResult(String result, int retries) {
+
+        if (retries == 4) {
+            return STATUS.MAXIMUMRETRIESEXCEEDED;
+        }
+        if (result.contains("Script halted")) {
+            return STATUS.HALTED;
+        } else if (result.equals("")) {
+            return STATUS.SUCCESS;
+        } else if (result.contains("; Attempting to continue")) {
+            return STATUS.CONTINUE;
+        }
+        return STATUS.CONTINUE;
+
+    }
+
+    private void doErrorReport(String[] command, String result) {
+        log.level0Error("@heimdallErrorReport");
+        log.level0Error(displayArray(command));
+        log.level0Error("@heimdallErrorReport");
+        log.level0Error(result);
+        log.level0Error("@heimdallErrorReport");
+        CASUALScriptParser cLang = new CASUALScriptParser();
+        cLang.executeOneShotCommand("$HALT $SENDLOG");
     }
 
     /**
      * checks if Heimdall threw an error
      *
-     * @param stdErrLog CASUAL log output
+     * @param logFromHeimdallCommand CASUAL log output
      * @return containing halted if cannot continue or continue if it can
      *
      * @author Jeremy Loper jrloper@gmail.com
      */
-    public String didHeimdallError(String stdErrLog) {
+    public String checkHeimdallErrorStatus(String logFromHeimdallCommand) {
 
+        if (logFromHeimdallCommand.startsWith("Usage:")) {
+            return "invalid command; Attempting to continue for test purposes";
+        }
         for (String code : epicFailures) {
-            if (stdErrLog.contains(code)) {
-                return "Heimdall uncontinuable error; Script halted";
+            if (logFromHeimdallCommand.contains(code)) {
+                return "Heimdall epic uncontinuable error; Script halted";
             }
         }
 
         //Critical Failure, stop
         for (String code : errFail) { //halt
-            if (stdErrLog.contains(code)) {
+            if (logFromHeimdallCommand.contains(code)) {
                 if (heimdallRetries <= 3) {  //only loop thrice
                     new CASUALMessageObject("@interactionRestartDownloadMode").showActionRequiredDialog();
                     return "Heimdall continuable error; Attempting to continue";
@@ -189,51 +218,48 @@ public class HeimdallTools {
 
         }
 
-
-
-
-        if (stdErrLog.contains("Failed to detect compatible download-mode device")) {
+        if (logFromHeimdallCommand.contains("Failed to detect compatible download-mode device")) {
             if (new CASUALMessageObject("@interactionUnableToDetectDownloadMode").showUserCancelOption() == 0) {
                 return "Heimdall uncontinuable error; Script halted";
             }
             return "Heimdall continuable error; Attempting to continue";
         }
 
-        if (stdErrLog.contains(" failed!")) {
-            if (stdErrLog.contains("Claiming interface failed!")) {
+        if (logFromHeimdallCommand.contains(" failed!")) {
+            if (logFromHeimdallCommand.contains("Claiming interface failed!")) {
                 new CASUALMessageObject(null, "@interactionRestartDownloadMode").showActionRequiredDialog();
                 return "Heimdall failed to claim interface; Attempting to continue";
             }
 
-            if (stdErrLog.contains("Setting up interface failed!")) {
+            if (logFromHeimdallCommand.contains("Setting up interface failed!")) {
                 return "Heimdall failed to setup an interface; Attempting to continue";
             }
 
-            if (stdErrLog.contains("Protocol initialisation failed!")) {
+            if (logFromHeimdallCommand.contains("Protocol initialisation failed!")) {
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $ECHO A random error occurred while attempting initial communications with the device.\nYou will need disconnect USB and pull your battery out to restart your device.\nDo the same for CASUAL.");
                 return "Heimdall failed to initialize protocol; Attempting to continue";
             }
 
-            if (stdErrLog.contains("upload failed!")) {
+            if (logFromHeimdallCommand.contains("upload failed!")) {
                 return "Heimdall failed to upload; Attempting to continue";
             }
         }
 
-        if (stdErrLog.contains("Flash aborted!")) {
+        if (logFromHeimdallCommand.contains("Flash aborted!")) {
             return "Heimdall aborted flash; Attempting to continue";
         }
 
-        if (stdErrLog.contains("libusb error")) {
-            int startIndex = stdErrLog.lastIndexOf("libusb error");
-            if (stdErrLog.charAt(startIndex + 1) == ':') {
+        if (logFromHeimdallCommand.contains("libusb error")) {
+            int startIndex = logFromHeimdallCommand.lastIndexOf("libusb error");
+            if (logFromHeimdallCommand.charAt(startIndex + 1) == ':') {
                 startIndex = +3;
             }
-            while (stdErrLog.charAt(startIndex) != '\n') {
-                if (stdErrLog.charAt(startIndex) == '-') {
-                    switch (stdErrLog.charAt(startIndex + 1)) {
+            while (logFromHeimdallCommand.charAt(startIndex) != '\n') {
+                if (logFromHeimdallCommand.charAt(startIndex) == '-') {
+                    switch (logFromHeimdallCommand.charAt(startIndex + 1)) {
                         case '1': {
-                            switch (stdErrLog.charAt(startIndex + 2)) {
+                            switch (logFromHeimdallCommand.charAt(startIndex + 2)) {
                                 case '0': {// -10
                                     return "'LIBUSB_ERROR_INTERRUPTED' Error not handled; Attempting to continue";
                                 }
@@ -273,7 +299,7 @@ public class HeimdallTools {
                             return "'LIBUSB_ERROR_OVERFLOW' Error not handled; Attempting to continue";
                         }
                         case '9': {
-                            if (stdErrLog.charAt(startIndex + 2) == 9) {// -99
+                            if (logFromHeimdallCommand.charAt(startIndex + 2) == 9) {// -99
                                 return "'LIBUSB_ERROR_OTHER' Error not handled; Attempting to continue";
                             } else {//-9
                                 return "'LIBUSB_ERROR_PIPE'; Attempting to continue";
@@ -296,13 +322,22 @@ public class HeimdallTools {
      * @return string path to heimdall
      */
     public static String getHeimdallCommand() {
-        if (OSTools.isMac()) {
+
+        if (OSTools.isLinux()) {
+            return "heimdall";
+
+        } else if (OSTools.isWindows()) {
+            return HeimdallInstall.heimdallDeployed;
+
+        } else {
             Shell shell = new Shell();
             String cmd = "/usr/local/bin/heimdall";
             String check = shell.silentShellCommand(new String[]{cmd});
+            //we got the file
             if (check.equals("")) {
                 cmd = "/usr/bin/heimdall";
                 check = shell.silentShellCommand(new String[]{cmd});
+                //try different things 
                 if (check.equals("CritError!!!")) {
                     cmd = "/bin/heimdall";
                     check = shell.silentShellCommand(new String[]{cmd});
@@ -319,13 +354,6 @@ public class HeimdallTools {
                 return cmd;
             }
             return cmd;
-        } else {
-            if (Statics.heimdallDeployed.equals("")) {
-                return "heimdall";
-            } else {
-                return Statics.heimdallDeployed;
-            }
-
         }
     }
 
@@ -404,4 +432,12 @@ public class HeimdallTools {
     };
     final static String[] epicFailures = {"ERROR: No partition with identifier"
     };
+
+    private String displayArray(String[] command) {
+        StringBuilder sb = new StringBuilder();
+        for (String cmd : command) {
+            sb.append("\"").append(cmd).append("\" ");
+        }
+        return sb.toString();
+    }
 }
