@@ -1,4 +1,4 @@
-/*iCASUALInteraction provides an interface for CASUAL to interact with the user
+/*iCASUALUI provides an interface for a main GUI in CASUAL
  *Copyright (C) 2013  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,14 @@
  */
 package CASUAL;
 
+import CASUAL.caspac.Caspac;
+import CASUAL.caspac.Script;
+import java.awt.image.BufferedImage;
+
 /**
- * iCASUALInteraction is a class which provides a means of handling
- * CASUALMessageObjects. The intent is to abstract the CASUAL Messaging System
+ *provides an interface for a main UI in CASUAL.
+ * Provides all User Interfaces and methods which provide a means of handling
+ * Message objects and UI. The intent is to abstract the CASUAL Messaging System
  * using this class so a developer may implement their own GUI using any means
  * they like. This class provides notifications which will halt the progress of
  * the script and present information to the user. This allows the user to
@@ -29,7 +34,7 @@ package CASUAL;
  * change required is Application.interactions. This should match the desired
  * class which can handle CASUALMessageObjects
  *
- * It is recommended that any class implementing iCASUALInteraction handle the
+ * It is recommended that any class implementing iCASUALUI handle the
  * following items at a minimum: 1. CASUALMessageObject.messageText 2. *
  * CASUALMessageObject.title
  *
@@ -37,11 +42,12 @@ package CASUAL;
  * commmands or specifically state they return string results: 0- yes, ok,
  * continue 1- no, cancel, stop
  *
+ * 
+ * 
  * @author Adam Outler adamoutler@gmail.com
  */
-public interface iCASUALInteraction {
-
-    /**
+public interface iCASUALUI {
+/**
      * MessageType used by CASUALMessageObject and any class implementing this
      * interface. Type 0 is a non-critical time-based message object which will
      * time out and dismiss itself. returns 0
@@ -120,5 +126,175 @@ public interface iCASUALInteraction {
      * @return string value which must be interpereted
      */
     String displayMessage(CASUALMessageObject messageObject);
+    
+    
+    /**
+     * disposes the current window.
+     * should be used to terminate application.
+     */
+    void dispose();
+    /**
+     * the start button was pressed.
+     */
+    void StartButtonActionPerformed();
 
+    /**
+     * gets the selected combobox item.
+     *
+     * @return selected item in combobox
+     */
+    String comboBoxGetSelectedItem();
+
+    /**
+     * adds an item to the combo box
+     *
+     * @param item item to add
+     */
+    void comboBoxScriptSelectorAddNewItem(String item);
+
+    /**
+     * sets controls status
+     *
+     * @param status commanded value
+     * @return true if enabled false if not
+     */
+    boolean enableControls(boolean status);
+
+    /**
+     * gets the control status
+     *
+     * @return true if enabled
+     */
+    boolean getControlStatus();
+
+    /**
+     * Sets a reference to the current CASPAC so information can be displayed
+     * @param caspac caspac to reference
+     */
+    void setCASPAC(Caspac caspac);
+
+    /**
+     * Sets the current status of the window. 
+     * @param title current status
+     */
+    void setInformationScrollBorderText(String title);
+
+    /**
+     * sets the progress bar value.
+     *
+     * @param value value for progress bar
+     */
+    void setProgressBar(int value);
+
+    /**
+     * sets max value for progress bar
+     *
+     * @param value maximum
+     */
+    void setProgressBarMax(int value);
+
+    /**
+     * Sets the active script for the window
+     * @param s script which is now active
+     */
+    void setScript(Script s);
+
+    /**
+     * sets "do it!" button text
+     *
+     * @param text text for main execution button
+     */
+    void setStartButtonText(String text);
+
+    /**
+     * changes the label icon
+     *
+     * @param Icon resource to be displayed
+     * @param Text text if icon is missing
+     */
+    void setStatusLabelIcon(String Icon, String Text);
+
+    /**
+     * sets the message label text
+     *
+     * @param text label text
+     */
+    void setStatusMessageLabel(String text);
+
+    /**
+     * sets window banner image
+     *
+     * @param icon image to display
+     * @param text text if image cannot be displayed
+     */
+    /**
+     *
+     * @param icon
+     * @param text
+     */
+    void setWindowBannerImage(BufferedImage icon, String text);
+
+    /**
+     * sets the main window banner text if an image is not used
+     *
+     * @param text text to display as banner
+     */
+    void setWindowBannerText(String text);
+
+    /**
+     * sets the window visibility 
+     * @param b true if visibility is commanded
+     */
+    public void setVisible(boolean b);
+    /**
+     * called when device is connected
+     * @param mode adb/fastboot/heimdall/flashtool
+     */
+    void deviceConnected(String mode);
+
+    /**
+     * Device has disconnected, alert the user
+     */
+    void deviceDisconnected();
+
+    /**
+     * multiple devices are detected.  only one is allowed
+     * @param numberOfDevicesConnected number of devices
+     */
+    void deviceMultipleConnected(int numberOfDevicesConnected);
+
+    /**
+     * permissions escillation is required
+     */
+    void notificationPermissionsRequired();
+
+    /**
+     * Startup event 
+     */
+    void notificationCASUALSound();
+
+    /**
+     * Input is requested from the user
+     */
+    void notificationInputRequested();
+
+    /**
+     * A notification has been issued to the user
+     */
+    void notificationGeneral();
+
+    /**
+     * a request to continue has been issued to the user
+     */
+    void notificationRequestToContinue();
+
+    /**
+     *  User action is required
+     */
+    void notificationUserActionIsRequired();
+    
+    
+    
+    
+    
 }

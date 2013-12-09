@@ -22,7 +22,6 @@ import CASUAL.caspac.Caspac;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,16 +82,13 @@ public class Statics {
     /**
      * static reference to interactions object for CASUALMessageObject.
      */
-    public static iCASUALInteraction interaction;
+
 
     /**
      * Input Device for CASUAL. Generally System.in (STDIN) but may be
      * reassigned to any inputstream.
      */
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-    private static Log log = new Log();
-     
 
 
     //Form data
@@ -102,7 +98,7 @@ public class Statics {
     /**
      * static reference for class implementing interface for CASUAL's GUI.
      */
-    public static iCASUALGUI GUI; //Static reference to GUI input/output device
+    public static iCASUALUI GUI; //Static reference to GUI input/output device
 
     //TODO: replace this with an interface as JTextPane is not supported on all platforms
     /**

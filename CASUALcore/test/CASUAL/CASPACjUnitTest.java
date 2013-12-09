@@ -29,7 +29,6 @@ public class CASPACjUnitTest {
     public void testCASPACOperations() {
         if (!ADBTools.isConnected()) return;
         CASUAL.CASUALMain.shutdown(0);
-        CASUAL.Statics.interaction=new GUI.development.CASUALShowJFrameMessageObject();
         CASUAL.Statics.dumbTerminalGUI=true;
         String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         String[] badValues = new String[]{"ERROR"};
@@ -37,15 +36,7 @@ public class CASPACjUnitTest {
         CASUALTest ct=new CASUALTest(casualParams, goodValues, badValues);
         assertEquals(true, ct.checkTestPoints());
         CASUAL.CASUALMain.shutdown(0);
-        try {
-            CASUAL.CASUALTools.setMessageAPI();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CASPACjUnitTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(CASPACjUnitTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(CASPACjUnitTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
         System.out.println("TESTING SECOND ROUND");
         System.out.println("TESTING SECOND ROUND");
         System.out.println("TESTING SECOND ROUND");

@@ -293,38 +293,13 @@ public class CASUALTools {
         return Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
     }
 
-    /**
-     * sets the message API based on property in CASUAL/resources/CASUALApp.
-     * The Message API can be specified by modification of 
-     * Application.interactions. The API only requires that you specify a class
-     * which implements the iCASUALinteractions class. 
-     * @throws ClassNotFoundException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    public static void setMessageAPI() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        String messageAPI = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.interactions");
-        CASUAL.iCASUALInteraction clsInstance;
-        try {
-            Class<?> cls = Class.forName(messageAPI);
-            setiCASUALinteraction(cls);
-        } catch (ClassNotFoundException ex) {
-            Class<?> cls = Class.forName("GUI.development.CASUALShowJFrameMessageObject");
-            setiCASUALinteraction(cls);
-        } catch (InstantiationException ex) {
-            Class<?> cls = Class.forName("GUI.development.CASUALShowJFrameMessageObject");
-            setiCASUALinteraction(cls);
-        } catch (IllegalAccessException ex) {
-            Class<?> cls = Class.forName("GUI.development.CASUALShowJFrameMessageObject");
-            setiCASUALinteraction(cls);
-        }
-    }
+  
 
     private static void setiCASUALinteraction(Class<?> cls) throws InstantiationException, IllegalAccessException {
-        iCASUALInteraction clsInstance;
+        iCASUALUI clsInstance;
         if (!java.awt.GraphicsEnvironment.isHeadless()) {
-            clsInstance = (CASUAL.iCASUALInteraction) cls.newInstance();
-            CASUAL.Statics.interaction = clsInstance;
+            clsInstance = (CASUAL.iCASUALUI) cls.newInstance();
+            CASUAL.Statics.GUI = clsInstance;
         }
 
     }
@@ -332,8 +307,8 @@ public class CASUALTools {
     /**
      * sets the GUI API based on property in CASUAL/resources/CASUALApp.
      * The GUI API can be specified by modification of Application.GUI. The API 
-     * only requires that you specify a class which implements the 
-     * iCASUALGUI class.
+ only requires that you specify a class which implements the 
+ iCASUALUI class.
      * @throws java.lang.ClassNotFoundException
      * @throws java.lang.InstantiationException
      * @throws java.lang.IllegalAccessException
@@ -356,8 +331,8 @@ public class CASUALTools {
     }
 
     private static void setiCASUALGUI(Class<?> cls) throws InstantiationException, IllegalAccessException {
-        iCASUALGUI clsInstance;
-        clsInstance = (CASUAL.iCASUALGUI) cls.newInstance();
+        iCASUALUI clsInstance;
+        clsInstance = (CASUAL.iCASUALUI) cls.newInstance();
         CASUAL.Statics.GUI = clsInstance;
     }
 

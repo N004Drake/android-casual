@@ -28,20 +28,7 @@ public class Locks {
     /**
      * Thread representing the Graphical User Interface.
      */
-    public static Thread startGUI = new Thread(
-            //TODO Locate all references to startGUI, move this Runnable Object to CASUALMain and set references to new object
-            new Runnable() {
-                @Override
-                public void run() {
-                    if (CASUALMain.useGUI || Statics.dumbTerminalGUI) {
-                        startGUI = new Thread(new CASUALTools().GUI);
-                        startGUI.setName("CASUAL GUI");
-                        Statics.setStatus("launching GUI");
-                        startGUI.start();
-                    }
-                }
-
-            });
+    public static Thread startGUI = new Thread();
 
     /**
      * Lock representing the preparation state of the CASPAC. This is alive when

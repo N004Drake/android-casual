@@ -162,9 +162,9 @@ public class CASUALMessageObject {
         this.timeoutOptions = options;
         this.timeoutInitialValue = initialValue;
         this.timeoutPresetTime = PRESET_TIME;
-        this.messageType = iCASUALInteraction.INTERACTION_TIME_OUT;
+        this.messageType = iCASUALUI.INTERACTION_TIME_OUT;
         expectedReturn = "(String)int from " + Arrays.asList(options).toString();
-        return Integer.parseInt(Statics.interaction.displayMessage(this));
+        return Integer.parseInt(Statics.GUI.displayMessage(this));
     }
 
     /**
@@ -174,9 +174,9 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public String inputDialog() throws HeadlessException {
-        this.messageType = iCASUALInteraction.INTERACTION_INPUT_DIALOG;
+        this.messageType = iCASUALUI.INTERACTION_INPUT_DIALOG;
         expectedReturn = "Any String";
-        return Statics.interaction.displayMessage(this);
+        return Statics.GUI.displayMessage(this);
     }
 
     /**
@@ -186,9 +186,9 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public int showActionRequiredDialog() throws HeadlessException {
-        this.messageType = iCASUALInteraction.INTERACTION_ACTION_REUIRED;
+        this.messageType = iCASUALUI.INTERACTION_ACTION_REUIRED;
         expectedReturn = "String 0-continue, 1-stop";
-        return Integer.parseInt(Statics.interaction.displayMessage(this));
+        return Integer.parseInt(Statics.GUI.displayMessage(this));
     }
 
     /**
@@ -197,9 +197,9 @@ public class CASUALMessageObject {
      * @return 1 if cancel was requested
      */
     public int showUserCancelOption() {
-        this.messageType = iCASUALInteraction.INTERACTION_USER_CANCEL_OPTION;
+        this.messageType = iCASUALUI.INTERACTION_USER_CANCEL_OPTION;
         expectedReturn = "String 0-continue, 1-stop";
-        return Integer.parseInt(Statics.interaction.displayMessage(this));
+        return Integer.parseInt(Statics.GUI.displayMessage(this));
     }
 
     /**
@@ -208,9 +208,9 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public void showCommandNotification() throws HeadlessException {
-        this.messageType = iCASUALInteraction.INTERACTION_COMMAND_NOTIFICATION;
+        this.messageType = iCASUALUI.INTERACTION_COMMAND_NOTIFICATION;
         expectedReturn = "Empty";
-        Statics.interaction.displayMessage(this);
+        Statics.GUI.displayMessage(this);
     }
 
     /**
@@ -219,9 +219,9 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public void showUserNotification() throws HeadlessException {
-        this.messageType = iCASUALInteraction.INTERACTION_USER_NOTIFICATION;
+        this.messageType = iCASUALUI.INTERACTION_USER_NOTIFICATION;
         expectedReturn = "Empty";
-        Statics.interaction.displayMessage(this);
+        Statics.GUI.displayMessage(this);
     }
 
     /**
@@ -230,10 +230,10 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public void showInformationMessage() throws HeadlessException {
-        this.messageType = iCASUALInteraction.INTERACTION_SHOW_INFORMATION;
+        this.messageType = iCASUALUI.INTERACTION_SHOW_INFORMATION;
         expectedReturn = "Empty";
         new Log().level3Verbose("showing information message object");
-        Statics.interaction.displayMessage(this);
+        Statics.GUI.displayMessage(this);
         new Log().level3Verbose("Done with message object");
     }
 
@@ -243,9 +243,9 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public void showErrorDialog() throws HeadlessException {
-        this.messageType = iCASUALInteraction.INTERACTION_SHOW_ERROR;
+        this.messageType = iCASUALUI.INTERACTION_SHOW_ERROR;
         expectedReturn = "Empty";
-        Statics.interaction.displayMessage(this);
+        Statics.GUI.displayMessage(this);
 
     }
 
@@ -255,8 +255,8 @@ public class CASUALMessageObject {
      * @return true if yes, false if no
      */
     public boolean showYesNoOption() {
-        this.messageType = iCASUALInteraction.INTERACTION_SHOW_ERROR;
-        Boolean retval = Statics.interaction.displayMessage(this).equals("true");
+        this.messageType = iCASUALUI.INTERACTION_SHOW_ERROR;
+        Boolean retval = Statics.GUI.displayMessage(this).equals("true");
         expectedReturn = "String 0-yes, 1-no";
         return retval;
     }

@@ -18,8 +18,6 @@ package CASUAL.Heimdall.Odin;
 
 import CASUAL.Heimdall.HeimdallTools;
 import CASUAL.Statics;
-import CASUAL.Heimdall.Odin.CorruptOdinFileException;
-import CASUAL.Heimdall.Odin.OdinFile;
 import CASUAL.archiving.libpit.PitData;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -134,7 +132,7 @@ public class Odin {
      * @throws FileNotFoundException
      * @throws CorruptOdinFileException
      */
-    public String[] getOdinCommand() throws FileNotFoundException, FileNotFoundException, CorruptOdinFileException {
+    public String[] getHeimdallCommandWithOdinParameters() throws FileNotFoundException, FileNotFoundException, CorruptOdinFileException {
         ArrayList<String> odinCommand = new ArrayList<String>();
         odinCommand.add(heimdallBinaryLocation);
 
@@ -285,10 +283,18 @@ public class Odin {
         return heimdallCommand;
     }
 
-    public File getPitNoReboot(){
-        String[] cmd=new String[]{HeimdallTools.getHeimdallCommand()};
-        
-        return new File(".");
+    public File getPitFile() throws FileNotFoundException{
+        String pitFile=Statics.getTempFolder()+"part.pit";
+        File pitf=new File(pitFile);
+        if (pitf.exists()){
+            pitf.delete();
+        }
+        String[] cmd=new String[]{HeimdallTools.getHeimdallCommand(), "download-pit","--output",pitFile};
+        //TODO make this get the pit, reboot the device, then boot back into heimdall.
+        if (!pitf.exists()){
+            throw new FileNotFoundException("Could not obtain pitfile from device");
+        }
+        return new File(pitFile);
             
         }
     }
