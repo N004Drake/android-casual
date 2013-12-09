@@ -1,6 +1,4 @@
-$ADB reboot download
-$HEIMDALL print-pit --no-reboot
-$HEIMDALL print-pit --resume
+
 
 $ECHO Testing ALL CASUAL commands. Connect your device
 $SLEEPMILLIS 3250

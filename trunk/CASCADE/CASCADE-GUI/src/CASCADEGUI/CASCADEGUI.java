@@ -22,6 +22,7 @@ package CASCADEGUI;
  */
 //Dependencies must be built or there will be errors.. Build the project first.
 import CASPACkager.PackagerMain;
+import CASUAL.CASUALMessageObject;
 import CASUAL.crypto.AES128Handler;
 import CASUAL.FileOperations;
 import CASUAL.Log;
@@ -64,7 +65,7 @@ import javax.swing.event.ListDataListener;
  *
  * @author adamoutler
  */
-public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI {
+public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
     /**
      * Creates new form mainWindow
@@ -92,7 +93,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     public CASCADEGUI() {
         initComponents();
         CASUAL.caspac.Caspac.debug = true;
-        CASUAL.Statics.interaction = new CASCADEInteractions();
         setThisAsGUI();
         this.setLocationRelativeTo(null); //Centers Container to Screen
         //this.resourcesForScriptList.setDropTarget(dt);
@@ -2102,8 +2102,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
      */
     @Override
@@ -2111,8 +2111,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
      */
     @Override
@@ -2121,8 +2121,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
      * @param item generated CASPAC to work with
      */
@@ -2131,10 +2131,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param status dummy method used to implement iCASUALGUI
+     * @param status dummy method used to implement iCASUALUI
      */
     @Override
     public boolean enableControls(boolean status) {
@@ -2142,8 +2142,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
      */
     @Override
@@ -2152,18 +2152,18 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param caspac dummy method used to implement iCASUALGUI
+     * @param caspac dummy method used to implement iCASUALUI
      */
     @Override
     public void setCASPAC(Caspac caspac) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
      * @param title
      */
@@ -2172,72 +2172,72 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param value dummy method used to implement iCASUALGUI
+     * @param value dummy method used to implement iCASUALUI
      */
     @Override
     public void setProgressBar(int value) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param value dummy method used to implement iCASUALGUI
+     * @param value dummy method used to implement iCASUALUI
      */
     @Override
     public void setProgressBarMax(int value) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param s dummy method used to implement iCASUALGUI
+     * @param s dummy method used to implement iCASUALUI
      */
     @Override
     public void setScript(Script s) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param text dummy method used to implement iCASUALGUI
+     * @param text dummy method used to implement iCASUALUI
      */
     @Override
     public void setStartButtonText(String text) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param text dummy method used to implement iCASUALGUI
-     * @param icon dummy method used to implement iCASUALGUI
+     * @param text dummy method used to implement iCASUALUI
+     * @param icon dummy method used to implement iCASUALUI
      */
     @Override
     public void setStatusLabelIcon(String icon, String text) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param text dummy method used to implement iCASUALGUI
+     * @param text dummy method used to implement iCASUALUI
      */
     @Override
     public void setStatusMessageLabel(String text) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
      * @param icon the icon to be used as logo.png for the CASPAC
-     * @param text dummy method used to implement iCASUALGUI
+     * @param text dummy method used to implement iCASUALUI
      *
      */
     @Override
@@ -2245,89 +2245,94 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALGUI 
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param text dummy method used to implement iCASUALGUI
+     * @param text dummy method used to implement iCASUALUI
      */
     @Override
     public void setWindowBannerText(String text) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param string dummy method used to implement iCASUALGUI
+     * @param string dummy method used to implement iCASUALUI
      */
     @Override
     public void deviceConnected(String string) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      */
     @Override
     public void deviceDisconnected() {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      *
-     * @param i dummy method used to implement iCASUALGUI
+     * @param i dummy method used to implement iCASUALUI
      */
     @Override
     public void deviceMultipleConnected(int i) {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      */
     @Override
     public void notificationPermissionsRequired() {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      */
     @Override
     public void notificationCASUALSound() {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      */
     @Override
     public void notificationInputRequested() {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      */
     @Override
     public void notificationGeneral() {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      */
     @Override
     public void notificationRequestToContinue() {
     }
 
     /**
-     * dummy method used to implement iCASUALGUI for the purpose of allowing
-     * CASUAL to throw notifications.
+     * dummy method used to implement iCASUALUI for the purpose of allowing
+ CASUAL to throw notifications.
      */
     @Override
     public void notificationUserActionIsRequired() {
+    }
+
+    @Override
+    public String displayMessage(CASUALMessageObject messageObject) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /*

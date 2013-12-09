@@ -10,7 +10,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -44,8 +43,7 @@ public class PrintPitTest {
     public void testMain() {
         System.out.println("main");
         String[] args = new String[]{"../test/CASUAL/archiving/resources/ekgc100part.pit"};
-        PrintPit instance = new PrintPit();
-        instance.main(args);
+        PrintPit.main(args);
 
     }
 

@@ -57,15 +57,6 @@ public final class CASUALMain {
         arguments = args;
         //Initialize statics
         Statics.initializeStatics();
-        try {
-            CASUALTools.setMessageAPI();
-        } catch (ClassNotFoundException ex) {
-            new Log().errorHandler(ex);
-        } catch (InstantiationException ex) {
-            new Log().errorHandler(ex);
-        } catch (IllegalAccessException ex) {
-            new Log().errorHandler(ex);
-        }
         //Override args for test modes
         if (useOverrideArgs) {
             args = overrideArguments;
@@ -249,6 +240,7 @@ public final class CASUALMain {
         prepareCaspac();
         //start the GUI if required
 
+        Locks.startGUI=new Thread(new CASUALTools().GUI);
         Locks.startGUI.setName("CASUAL GUI");
         Locks.startGUI.start();//starts the GUI if required
         

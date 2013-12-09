@@ -4,7 +4,7 @@
  */
 package CASUAL;
 
-import GUI.development.CASUALShowJFrameMessageObject;
+import GUI.development.CASUALJFrameMain;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,7 +21,6 @@ public class CASUALInteractionsjUnitTest {
 
     public CASUALInteractionsjUnitTest() {
         if (! java.awt.GraphicsEnvironment.isHeadless() ){
-            CASUAL.Statics.interaction=new CASUALShowJFrameMessageObject();
             CASUAL.Statics.GUI=new GUI.development.CASUALJFrameMain();
         }
     }

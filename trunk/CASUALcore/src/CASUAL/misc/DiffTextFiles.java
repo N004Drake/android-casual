@@ -35,15 +35,11 @@ public class DiffTextFiles {
      * @return lines in test that are not in original
      */
     public String diffResourceVersusFile(String TestIStream, String OriginalFile) {
-        try {
-            System.out.println(new File(".").getCanonicalFile()+TestIStream);
-        } catch (IOException ex) {
-            Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        String difference = "";
-        InputStream resourceAsStream = getClass().getResourceAsStream(TestIStream);
 
-        
+        String difference = "";
+        InputStream resourceAsStream = this.getClass().getResourceAsStream(TestIStream);
+
+        System.out.println("ResourceLocation: " +this.getClass().getResource(TestIStream)+ " " + resourceAsStream);
         BufferedReader testStream = new BufferedReader(new InputStreamReader(resourceAsStream));
         File original = new File(OriginalFile);
         String TestStreamLine = "";
