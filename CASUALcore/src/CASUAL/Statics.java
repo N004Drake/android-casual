@@ -235,27 +235,16 @@ public class Statics {
     final public static String WinADB3 = "/CASUAL/resources/ADB/AdbWinUsbApi.dll";
     //Heimdall
 
-    //TODO jrloper, refactor and make this set of WinDriverResources separately named (not windriverresource2). 
-    //TODO jrloper, remove this. 
     /**
-     * CADI windows Driver. "Old Faithful"
+     * CADI Windows Driver for Windows Vista and higher.
      */
-    final public static String WinDriverResource = "/CASUAL/Heimdall/resources/CADI.exe";  //original CADI
+    final public static String windowsVistaAndHigherCadiDevconDriver = "/CASUAL/Heimdall/resources/CADI.zip";  //devcon CADI
+
 
     /**
-     * CADI Windows Driver.
+     * CADI Windows Driver for XP.  
      */
-    final public static String WinDriverResource1 = "/CASUAL/Heimdall/resources/CADI.zip";  //devcon CADI
-    //TODO jrloper, remove this. 
-    /**
-     * CADI Windows Driver for XP. "Old Faithful"
-     */
-    final public static String WinDriverResource2 = "/CASUAL/Heimdall/resources/xp/CADI.exe";  //xp original CADI
-
-    /**
-     * CADI Windows Driver.
-     */
-    final public static String WinDriverResource3 = "/CASUAL/Heimdall/resources/xp/CADI.zip";  //xp devcon CADI
+    final public static String windowsXPCadiDevconDriver = "/CASUAL/Heimdall/resources/xp/CADI.zip";  //xp devcon CADI
     //Fastboot
 
     /**
@@ -326,11 +315,6 @@ public class Statics {
      */
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
 
-    //TODO: jrloper remove this. 
-    /**
-     * Location of CADI.exe in online repo. (old Faithful) CADI by Jeremy Loper
-     */
-    final public static String WinDriverInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/CADI.exe"; //windriver in repo
 
     //TODO: determine feasability of moving this to CASPAC.Script. 
     /**

@@ -268,7 +268,7 @@ public class FileOperationsTest {
     @Test
     public void testVerifyResource() {
         System.out.println("verifyResource");
-        String res = Statics.WinDriverResource;
+        String res = Statics.LinuxARMv6ADB;
         FileOperations instance = new FileOperations();
         boolean expResult = true;
         boolean result = instance.verifyResource(res);
