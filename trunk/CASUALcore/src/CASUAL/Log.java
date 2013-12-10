@@ -43,7 +43,7 @@ public class Log {
     public static PrintStream out = new PrintStream(System.out);
 
     private void sendToGUI(String data) {
-        if (Statics.isGUIIsAvailable() || Statics.dumbTerminalGUI && !"".equals(data) && !"\n".equals(data)) {
+        if (Statics.GUI!=null&& (Statics.isGUIIsAvailable() || Statics.GUI.isDummyGUI()) && !"".equals(data) && !"\n".equals(data)) {
             try {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
@@ -80,11 +80,11 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[ERROR]" + data);
-        if (Statics.guiOutputVerbosity >= 0) {
+        if (Statics.outputVerbosity >= 0) {
             sendToGUI(data);
 
         }
-        if (Statics.logFIleOutputVerbosity >= 0) {
+        if (Statics.logFileOutputVerbosity >= 0) {
             out.println("[ERROR]" + data);
 
         }
@@ -100,10 +100,10 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[INTERACTION]" + data);
-        if (Statics.guiOutputVerbosity >= 1) {
+        if (Statics.outputVerbosity >= 1) {
             sendToGUI(data);
         }
-        if (Statics.logFIleOutputVerbosity >= 1) {
+        if (Statics.logFileOutputVerbosity >= 1) {
             out.println("[INTERACTION]" + data);
 
         }
@@ -121,10 +121,10 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[INFO]" + data);
-        if (Statics.guiOutputVerbosity >= 2) {
+        if (Statics.outputVerbosity >= 2) {
             sendToGUI(data);
         }
-        if (Statics.logFIleOutputVerbosity >= 2) {
+        if (Statics.logFileOutputVerbosity >= 2) {
             out.println("[INFO]" + data);
         }
     }
@@ -136,10 +136,10 @@ public class Log {
      */
     public void level3Verbose(String data) {
         writeOutToLog("[VERBOSE]" + data);
-        if (Statics.guiOutputVerbosity >= 3) {
+        if (Statics.outputVerbosity >= 3) {
             sendToGUI(data);
         }
-        if (Statics.logFIleOutputVerbosity >= 3) {
+        if (Statics.logFileOutputVerbosity >= 3) {
             out.println("[VERBOSE]" + data);
         }
     }
@@ -151,10 +151,10 @@ public class Log {
     public void level4Debug(String data) {
         writeOutToLog("[DEBUG]" + data);
 
-        if (Statics.guiOutputVerbosity >= 4) {
+        if (Statics.outputVerbosity >= 4) {
             sendToGUI(data);
         }
-        if (Statics.logFIleOutputVerbosity >= 4) {
+        if (Statics.logFileOutputVerbosity >= 4) {
             out.println("[DEBUG]" + data);
         }
     }

@@ -4,8 +4,6 @@
  */
 package CASUAL;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
@@ -29,7 +27,7 @@ public class CASPACjUnitTest {
     public void testCASPACOperations() {
         if (!ADBTools.isConnected()) return;
         CASUAL.CASUALMain.shutdown(0);
-        CASUAL.Statics.dumbTerminalGUI=true;
+        CASUAL.Statics.GUI.setDummyGUI(true);
         String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         String[] badValues = new String[]{"ERROR"};
         String[] goodValues = new String[]{"echo [PASS]"};
@@ -41,7 +39,7 @@ public class CASPACjUnitTest {
         System.out.println("TESTING SECOND ROUND");
         System.out.println("TESTING SECOND ROUND");
         System.out.println("TESTING SECOND ROUND");
-        CASUAL.Statics.dumbTerminalGUI=true;
+        CASUAL.Statics.GUI.setDummyGUI(true);
         casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         badValues = new String[]{"ERROR"};
         goodValues = new String[]{"echo [PASS]", "[PASS] IFNOTCONTAINS"};

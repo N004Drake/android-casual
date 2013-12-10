@@ -4,7 +4,6 @@
  */
 package CASUAL;
 
-import GUI.development.CASUALJFrameMain;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,11 +16,11 @@ import org.junit.Test;
  *
  * @author adam
  */
-public class CASUALInteractionsjUnitTest {
+public class CASUALMessageObjectTest {
 
-    public CASUALInteractionsjUnitTest() {
+    public CASUALMessageObjectTest() {
         if (! java.awt.GraphicsEnvironment.isHeadless() ){
-            CASUAL.Statics.GUI=new GUI.development.CASUALJFrameMain();
+            CASUAL.Statics.GUI=new GUI.development.CASUALGUIMain();
         }
     }
 
@@ -42,7 +41,7 @@ public class CASUALInteractionsjUnitTest {
         String message = "Testing Message";
         //InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
 
-        CASUAL.Statics.guiReady = false;
+        CASUAL.Statics.GUI.setReady(false);
         CASUAL.CASUALMessageObject ci = new CASUAL.CASUALMessageObject(title, message);
         setContinue();
         assertEquals("", ci.inputDialog());
@@ -63,10 +62,10 @@ public class CASUALInteractionsjUnitTest {
         assertEquals(0, ci.showUserCancelOption());
         setContinue();
         ci.showUserNotification();
-        CASUAL.Statics.guiReady = true;
+        CASUAL.Statics.GUI.setReady(true);
         if (!java.awt.GraphicsEnvironment.isHeadless()){
             int x = new CASUAL.CASUALMessageObject("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
-            CASUAL.Statics.guiReady = true;
+            CASUAL.Statics.GUI.setReady(true);
             if (x == 0) {
                 ci = new CASUAL.CASUALMessageObject("Text Input", "Press\n1");
                 assertEquals("1", ci.inputDialog());
@@ -82,12 +81,17 @@ public class CASUALInteractionsjUnitTest {
                 ci.showErrorDialog();
                 ci = new CASUAL.CASUALMessageObject("Information Dialog", "hit\nOK!");
                 ci.showInformationMessage();
-                ci = new CASUAL.CASUALMessageObject("Notification Dialog", "hit OK!");
+                ci = new CASUAL.CASUALMessageObject("Notification Dialog", "In the next window, double-click the Disconnected logo to enable the controls");
                 ci.showUserNotification();
+                
             }
         }
     }
 
+    
+    public void testGUIResponsiveness(){
+        
+    }
     private void setContinue() {
         String string = "\n";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());

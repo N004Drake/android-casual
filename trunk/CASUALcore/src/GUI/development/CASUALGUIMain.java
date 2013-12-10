@@ -49,8 +49,10 @@ import javax.swing.border.TitledBorder;
  *provides UI for CASUAL. 
  * @author Adam Outler adamoutler@gmail.com
  */
-public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUALUI {
+public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI {
 
+    private boolean isReady=false;
+    private boolean isDummyGUI=false;
     Caspac caspac;
     String nonResourceFileName;
     Log log = new Log();
@@ -60,13 +62,13 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     /**
      * Creates new form CASUALJFrame2
      */
-    public CASUALJFrameMain() {
+    public CASUALGUIMain() {
 
         initComponents();
 
         //set up place to log to for GUI
         ProgressArea.setContentType("text/html");
-        Statics.ProgressPane = CASUALJFrameMain.ProgressArea;
+        Statics.ProgressPane = CASUALGUIMain.ProgressArea;
         Statics.ProgressPane.setContentType("text/html");
         Statics.ProgressDoc = Statics.ProgressPane.getStyledDocument();
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
@@ -689,7 +691,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     public void setCASPAC(Caspac caspac) {
         this.setInformationScrollBorderText("Important Information");
         this.caspac = caspac;
-        Statics.guiReady = true;
+        isReady = true;
 
         log.level2Information(caspac.overview);
         /* if (caspac.build.usePictureForBanner) {
@@ -866,7 +868,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     }
 
     private String showTimeOutInteraction(CASUALMessageObject messageObject, String messageText, String title) {
-        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             return Integer.toString(new TimeOutOptionPane().timeoutDialog(messageObject.timeoutPresetTime, (Component) Statics.GUI, messageText, title, messageObject.timeoutOptionType, messageObject.timeoutMessageType, messageObject.timeoutOptions, messageObject.timeoutInitialValue));
         } else {
             new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText + "\n[RESPONSEEXPECTED]");
@@ -882,7 +884,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
         String retval;
         new Log().level4Debug("Displaying Action Is Required Dialog:" + messageText);
         int n = 9999;
-        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             Object[] Options = {"I did it", "I didn't do it"};
             messageText = "<html>" + messageText.replace("\\n", "<BR>");
 
@@ -915,7 +917,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     private String showUserCancelOptionInteraction(String title, String messageText) throws HeadlessException {
         int cancelReturn;
         Object[] Options = {"Continue", "Stop"};
-        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
                 cancelReturn = JOptionPane.showOptionDialog(
                         (Component) Statics.GUI,
@@ -952,7 +954,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
     private void showUserNotificationInteraction(String title, String messageText) throws HeadlessException {
         new Log().level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
-        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             if (title != null) {
                 JOptionPane.showMessageDialog((Component) Statics.GUI,
                         messageText,
@@ -971,7 +973,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     }
 
     private void showInformationInteraction(String messageText, String title) throws HeadlessException {
-        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             JOptionPane.showMessageDialog((Component) Statics.GUI,
                     messageText, title,
                     JOptionPane.INFORMATION_MESSAGE);
@@ -982,7 +984,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     }
 
     private void showErrorInteraction(String messageText, String title) throws HeadlessException {
-        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             JOptionPane.showMessageDialog((Component) Statics.GUI, messageText, title, ERROR_MESSAGE);
         } else {
             new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
@@ -992,7 +994,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
 
     private String showYesNoInteraction(String title, String messageText) throws HeadlessException {
         new Log().level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
-        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
                 title = "Yes or No";
             }
@@ -1022,7 +1024,7 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
     private String showInputDialog(String title, String messageText) throws HeadlessException {
         new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText + "\n[RESPONSEEXPECTED]");
         messageText = "<html>" + messageText.replace("\\n", "\n");
-        if (Statics.isGUIIsAvailable() && !Statics.dumbTerminalGUI) {
+        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
                 return JOptionPane.showInputDialog((Component) Statics.GUI, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
             } else {
@@ -1033,5 +1035,28 @@ public final class CASUALJFrameMain extends javax.swing.JFrame implements iCASUA
             return getCommandLineInput();
         }
         //break; unreachable
+    }
+
+    @Override
+    public boolean isReady() {
+        return isReady;
+    }
+
+
+    @Override
+    public boolean isDummyGUI() {
+        return isDummyGUI;
+    }
+
+
+
+    @Override
+    public void setReady(boolean ready) {
+        isReady=ready;
+    }
+
+    @Override
+    public void setDummyGUI(boolean dummy) {
+        isDummyGUI=dummy;
     }
 }
