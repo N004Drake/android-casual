@@ -189,7 +189,7 @@ public class Unzip {
             Destination = new BufferedOutputStream(FileOut);
             int numberOfCycles=(int)(ZipEntryInstance.getSize()/BUFFER);
             boolean updateGUI=false;
-            if (Statics.GUI!=null && Statics.guiReady){
+            if (Statics.GUI!=null && Statics.GUI.isReady()){
                 updateGUI=true;
                 Statics.GUI.setProgressBarMax(numberOfCycles);
             }

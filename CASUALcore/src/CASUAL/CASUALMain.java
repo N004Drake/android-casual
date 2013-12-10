@@ -277,7 +277,7 @@ public final class CASUALMain {
                 }  //use command line args
             } else {
                 //using GUI mode
-                if (useGUI||Statics.dumbTerminalGUI) {
+                if (useGUI||Statics.GUI.isDummyGUI()) {
                     Locks.startGUI.join();
                     Statics.GUI.notificationCASUALSound();
                 }

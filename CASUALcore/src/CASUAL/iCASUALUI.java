@@ -47,7 +47,31 @@ import java.awt.image.BufferedImage;
  * @author Adam Outler adamoutler@gmail.com
  */
 public interface iCASUALUI {
-/**
+    /**
+     * returns true if the UI is ready.
+     * @return true if ui is ready
+     */
+    public boolean isReady();
+    /**
+     * provides a setter for UI.  Normally unused, but this is for test purposes.
+     * @param ready GUI has all parts established and is ready for operations. 
+     */
+    public void setReady(boolean ready);
+    /**
+     * returns true if the UI is a dummy UI.  Dummy UI is used for testing and
+     * for running CASPACs with a UI from the command line.  This is useful for
+     * situations when you want to run an automated UI on a loop.
+     * @return  true if dummy ui.
+     */
+    public boolean isDummyGUI();
+    /**
+     * provides a setter for UI.  Used from CASUALMain from Commandline option --GUI
+     * @param dummy Set true to automatically start CASUAL and auto-answer all
+     * messages with a Yes/OK/I did it.
+     */
+    public void setDummyGUI(boolean dummy);
+    
+    /**
      * MessageType used by CASUALMessageObject and any class implementing this
      * interface. Type 0 is a non-critical time-based message object which will
      * time out and dismiss itself. returns 0

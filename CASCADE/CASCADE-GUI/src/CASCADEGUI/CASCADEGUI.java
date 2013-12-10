@@ -2335,6 +2335,25 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public boolean isReady() {
+        return true;
+    }
+
+    @Override
+    public void setReady(boolean ready) {
+    }
+
+    @Override
+    public boolean isDummyGUI() {
+        return false;
+    }
+
+    @Override
+    public void setDummyGUI(boolean dummy) {
+        
+    }
+
     /*
      * Listener that enables and disables script elements based on the existance
      * of scripts in list. Whenever a script is added or deleted it will check 

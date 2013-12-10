@@ -40,7 +40,7 @@ public class Statics {
      * CASUAL does not look to GUI to execute. Execution will start
      * autonomously. Terminal is used for input and output. GUI is a display.
      */
-    public static boolean dumbTerminalGUI = false; //used by CASPAC mode
+   // public static boolean dumbTerminalGUI = false; //used by CASPAC mode
     private static String currentStatus = "working";
 
     /**
@@ -57,14 +57,14 @@ public class Statics {
     /**
      * true when GUI is ready.
      */
-    public static boolean guiReady = false;
+    //public static boolean guiReady = false;
 
     /**
      * @return the GUIIsAvailable
      */
     public static boolean isGUIIsAvailable() {
         if (GUI != null) {
-            return guiReady && !java.awt.GraphicsEnvironment.isHeadless();
+            return GUI.isReady() && !java.awt.GraphicsEnvironment.isHeadless();
         }
         return false;
     }
@@ -72,13 +72,16 @@ public class Statics {
     /**
      * increase or decrease the logging level. 0 is error only, 4 is debug
      */
-    public static int guiOutputVerbosity = 2; //userdata is output to console
+    public static int outputVerbosity = 2; //userdata is output to console
 
     /**
      * increase or decrease the log file output. 0 is error only, 4 is debug
      */
-    public static int logFIleOutputVerbosity = 4; //all logs are output to file
+    public static int logFileOutputVerbosity = 4; //all logs are output to file
 
+
+    /**
+     * static reference to interactions object for CASUALMessageObject.
     /**
      * static reference to interactions object for CASUALMessageObject.
      */
@@ -340,11 +343,9 @@ public class Statics {
      */
     public static void initializeStatics() {
         CASUALDataBridge.commandedShutdown = true;
-        guiReady = false;
-        dumbTerminalGUI = false;
         setStatus("working");
-        guiOutputVerbosity = 2;
-        logFIleOutputVerbosity = 4;
+        outputVerbosity = 2;
+        logFileOutputVerbosity = 4;
         if (!java.awt.GraphicsEnvironment.isHeadless()) {
             ProgressPane = new JTextPane();
         }
