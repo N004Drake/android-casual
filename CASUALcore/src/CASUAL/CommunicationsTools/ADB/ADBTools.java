@@ -41,11 +41,11 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
     /**
      * path to ADB after deployment.
      */
-    private static String binaryLocation; //location of ADB after deployment
+    private static String binaryLocation = ""; //location of ADB after deployment
 
-    public ADBTools(){
-    
-}
+    public ADBTools() {
+
+    }
     // The following variables represent locations of ADB files
     private static final String[] linux64Location = new String[]{"/CASUAL/CommunicationsTools/ADB/resources/adb-linux64"};
     private static final String[] linux32Location = new String[]{"/CASUAL/CommunicationsTools/ADB/resources/adb-linux32"};
@@ -54,10 +54,10 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
     private static final String[] linuxArmv6Location = new String[]{"/CASUAL/CommunicationsTools/ADB/resources/adb-linuxARMv6"};
     private static final String adbIniResource = "/CASUAL/CommunicationsTools/ADB/resources/adb_usb.ini";
 
-
-    private String getAdbIniLocation(){
+    private String getAdbIniLocation() {
         return System.getProperty("user.home") + Statics.Slash + ".android" + Statics.Slash + "adb_usb.ini";
     }
+
     /**
      * returns the Instance of Linux's ADB binary
      *
@@ -75,39 +75,29 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
     }
 
     Log log = new Log();
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
     public int numberOfDevicesConnected() {
-        String[] devices= getIndividualDevices();
-        int connected=0;
-        for (String device:devices){
-            if (device.trim().endsWith("device")||device.trim().endsWith("recovery")){
+        String[] devices = getIndividualDevices();
+        int connected = 0;
+        for (String device : devices) {
+            if (device.trim().endsWith("device") || device.trim().endsWith("recovery")) {
                 connected++;
             }
         }
         return connected;
     }
 
-        /**
-     *{@inheritDoc}
-     * @return {@inheritDoc}
-     */
-    @Override
-    public String getBinaryLocation() {
-        if (binaryLocation == null || !new File(binaryLocation).exists()) {
-            deployBinary(Statics.getTempFolder());
-        }
-        return binaryLocation;
-    }
-
     /**
      * kills and restarts the adb server max duration of 7 seconds. Thread will
      * be abandoned if time is exceeded
-     * 
-     *@inheritDoc
+     *
+     * @inheritDoc
      */
     @Override
     public void restartConnection() {
@@ -118,12 +108,14 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
         new ADBTools().checkErrorMessage(getDevicesCmd(), retval);
     }
 
-        /**
-     *{@inheritDoc}
+    /**
+     * {@inheritDoc}
+     *
+     *
      * @return {@inheritDoc}
      */
     @Override
-    public boolean checkErrorMessage(String[] CommandRun, String returnValue) throws HeadlessException {
+    public boolean checkErrorMessage(String[] commandRun, String returnValue) throws HeadlessException {
 
         /**
          * This error was received on Linux when permissions elevation was
@@ -174,7 +166,7 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
                     String[] ok = {"ok"};
                     Statics.GUI.notificationPermissionsRequired();
                     new CASUALMessageObject("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, 2, ok, 0);
-                    killADBserver();
+                    shutdown();
                     elevateADBserver();
                 }
                 adbMonitor(true);
@@ -183,64 +175,71 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
         return true;
     }
 
-        /**
-     *{@inheritDoc}
+    /**
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
     public boolean isConnected() {
         return numberOfDevicesConnected() == 1;
     }
+
     /**
-     *{@inheritDoc}
-     * @return {@inheritDoc}
+     * {@inheritDoc}
+     *
      */
     @Override
     public void reset() {
-        this.killADBserver();
-        binaryLocation = null;
+        if (!binaryLocation.isEmpty()) {
+            this.shutdown();
+        }
+        binaryLocation = "";
     }
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
     public boolean installDriver() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO install drivers for ADB
+        return true;
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
-    public String deployBinary(String TempFolder) {
+    public String deployBinary(String tempFolder) {
         //TODO check that deployBinary is deploying proper working Linux64 binary. 
         FileOperations fo = new FileOperations();
-        if (binaryLocation != null && new File(binaryLocation).exists()) {
+        if (binaryLocation.isEmpty() && new File(binaryLocation).exists()) {
             return binaryLocation;
         } else {
             binaryLocation = Statics.getTempFolder() + "adb";
             String[] resourceLocation;
             if (OSTools.isLinux()) {
                 new Log().level4Debug("Found Linux Computer for ADB deployment");
-                resourceLocation=this.getLinuxADBResource();
+                resourceLocation = this.getLinuxADBResource();
             } else if (OSTools.isMac()) {
                 new Log().level4Debug("Found Mac Computer for ADB deployment");
-                resourceLocation=macLocation;
+                resourceLocation = macLocation;
             } else if (OSTools.isWindows()) {
                 new Log().level4Debug("Found Windows Computer for ADB deployment");
-                resourceLocation=windowsLocation;
-                fo.copyFromResourceToFile(Statics.WinPermissionElevatorResource, Statics.WinElevatorInTempFolder);
-                binaryLocation = binaryLocation+"exe";
-                
+                resourceLocation = windowsLocation;
+                binaryLocation = binaryLocation + "exe";
+
             } else {
                 new CASUALMessageObject("@interactionsystemNotNativelySupported").showInformationMessage();
-                resourceLocation=new String[]{};
+                resourceLocation = new String[]{};
                 binaryLocation = "adb";
             }
-            for (String res:resourceLocation){
-                fo.copyFromResourceToFile(res, binaryLocation);    
+            for (String res : resourceLocation) {
+                fo.copyFromResourceToFile(res, binaryLocation);
             }
         }
         updateADBini();
@@ -249,6 +248,15 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
         DeviceList = new ADBTools().getDevices();
         new ADBTools().checkErrorMessage(getDevicesCmd(), DeviceList);
         return binaryLocation;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     */
+    @Override
+    public void shutdown() {
+        super.run(getKillServerCmd(), 4000, false);
     }
 
     private void updateADBini() {
@@ -380,14 +388,6 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
         Shell shell = new Shell();
         shell.silentShellCommand(getKillServerCmd());
         shell.elevateSimpleCommand(getDevicesCmd());
-    }
-
-    /**
-     * Halts the ADB server.
-     */
-    public void killADBserver() {
-        Shell shell = new Shell();
-        shell.silentShellCommand(getKillServerCmd());
     }
 
 }

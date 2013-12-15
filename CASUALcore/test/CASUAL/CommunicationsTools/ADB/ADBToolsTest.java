@@ -11,9 +11,11 @@ import CASUAL.OSTools;
 import CASUAL.Statics;
 import java.io.File;
 import java.io.IOException;
+import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,9 +28,7 @@ public class ADBToolsTest {
     AbstractDeviceCommunicationsProtocol instance;
 
     public ADBToolsTest() throws IOException {
-        Statics.initializeStatics();
         instance = new ADBTools();
-        Statics.GUI = new GUI.development.CASUALGUIMain();
         System.out.println(new File(".").getCanonicalPath());
     }
 
@@ -38,6 +38,14 @@ public class ADBToolsTest {
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
     }
 
     /**
@@ -115,12 +123,12 @@ public class ADBToolsTest {
     }
 
     /**
-     * Test of killADBserver method, of class ADBTools.
+     * Test of shutdown method, of class ADBTools.
      */
     @Test
     public void testKillADBserver() {
         System.out.println("killADBserver");
-        new ADBTools().killADBserver();
+        new ADBTools().shutdown();
     }
 
     /**
@@ -149,6 +157,97 @@ public class ADBToolsTest {
         System.out.println("isConnected");
         boolean result = new ADBTools().isConnected();
 
+    }
+
+    /**
+     * Test of getBinaryLocation method, of class ADBTools.
+     */
+    @Test
+    public void testGetBinaryLocation() {
+        System.out.println("getBinaryLocation");
+        ADBTools instance = new ADBTools();
+        String expResult = "adb";
+        String result = instance.getBinaryLocation();
+        assert result.contains(expResult);
+        assert result.contains(Statics.getTempFolder());
+    }
+
+    /**
+     * Test of restartConnection method, of class ADBTools.
+     */
+    @Test
+    public void testRestartConnection() {
+        System.out.println("restartConnection");
+        ADBTools instance = new ADBTools();
+        instance.restartConnection();
+
+    }
+
+    /**
+     * Test of checkErrorMessage method, of class ADBTools.
+     */
+    @Test
+    public void testCheckErrorMessage() {
+        System.out.println("checkErrorMessage");
+        String[] CommandRun = null;
+        String returnValue = "";
+        ADBTools instance = new ADBTools();
+        boolean expResult = true;
+        boolean result = instance.checkErrorMessage(CommandRun, returnValue);
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of reset method, of class ADBTools.
+     */
+    @Test
+    public void testReset() {
+        System.out.println("reset");
+        ADBTools instance = new ADBTools();
+        instance.reset();
+    }
+
+
+
+    /**
+     * Test of deployBinary method, of class ADBTools.
+     */
+    @Test
+    public void testDeployBinary() {
+        System.out.println("deployBinary");
+        String TempFolder = Statics.getTempFolder();
+        ADBTools instance = new ADBTools();
+        String expResult = Statics.getTempFolder()+ (OSTools.isWindows()?"adb.exe":"adb");
+        //use old binary if it exists
+        String result = instance.deployBinary(TempFolder);
+        assertEquals(expResult, result);
+        //reset to ensure that the new binary is used this time
+        instance.reset();
+        result = instance.deployBinary(TempFolder);
+        assertEquals(expResult, result);
+        
+    }
+
+    /**
+     * Test of adbMonitor method, of class ADBTools.
+     */
+    @Test
+    public void testAdbMonitor() {
+        System.out.println("adbMonitor");
+        boolean start = false;
+        ADBTools.adbMonitor(start);
+
+    }
+
+    /**
+     * Test of getIndividualDevices method, of class ADBTools.
+     */
+    @Test
+    public void testGetIndividualDevices() {
+        System.out.println("getIndividualDevices");
+        ADBTools instance = new ADBTools();
+        instance.getIndividualDevices();
     }
 
 }

@@ -129,18 +129,12 @@ public class CommitInformation {
 
     private boolean isMaintenance(String message) {
         message = message.toLowerCase();
-        if (message.contains("fixing") || message.contains("correcting") || message.contains("corrected") || message.contains("fixed") || message.contains("cleaning") || message.contains("revising") || message.contains("revised")) {
-            return true;
-        }
-        return false;
+        return message.contains("fixing") || message.contains("correcting") || message.contains("corrected") || message.contains("fixed") || message.contains("cleaning") || message.contains("revising") || message.contains("revised");
     }
 
     private boolean isDocumentation(String message) {
         message = message.toLowerCase();
-        if (message.contains("documented") || message.contains("documentation") || message.contains("javadoc")) {
-            return true;
-        }
-        return false;
+        return message.contains("documented") || message.contains("documentation") || message.contains("javadoc");
     }
 
     private String getMessage() throws IOException {
