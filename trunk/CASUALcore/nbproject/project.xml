@@ -21,7 +21,7 @@
             <word>adb</word>
         </spellchecker-wordlist>
         <swingapp xmlns="http://www.netbeans.org/ns/form-swingapp/1">
-            <application-class name="CASUAL.CASUALApp"/>
+            <application-class name="CASUAL.CASUALMain"/>
         </swingapp>
     </configuration>
 </project>

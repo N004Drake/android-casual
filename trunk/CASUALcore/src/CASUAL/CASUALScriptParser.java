@@ -16,12 +16,15 @@
  */
 package CASUAL;
 
+import CASUAL.CommunicationsTools.ADB.ADBTools;
 import CASUAL.misc.StringOperations;
 import CASUAL.misc.CountLines;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Parses and prepares CASUAL Script for CASUAL Language interperater.
@@ -91,16 +94,20 @@ public class CASUALScriptParser {
             ScriptName = "oneShot";
             ScriptTempFolder = Statics.getTempFolder();
         }
+        try {
 
-        if (Line.contains(";;;")) {
-            String[] lineArray = Line.split(";;;");
-            for (String linesplit : lineArray) {
-                retvalue = retvalue + new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(linesplit) + "\n";
+            if (Line.contains(";;;")) {
+                String[] lineArray = Line.split(";;;");
+                for (String linesplit : lineArray) {
+                    retvalue = retvalue + new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(linesplit) + "\n";
+                }
+            } else {
+                retvalue = new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(Line);
+
             }
-        } else {
-            retvalue = new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(Line);
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return retvalue;
     }
 

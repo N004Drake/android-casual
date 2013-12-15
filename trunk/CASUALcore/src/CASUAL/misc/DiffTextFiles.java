@@ -39,7 +39,6 @@ public class DiffTextFiles {
         String difference = "";
         InputStream resourceAsStream = this.getClass().getResourceAsStream(TestIStream);
 
-        System.out.println("ResourceLocation: " +this.getClass().getResource(TestIStream)+ " " + resourceAsStream);
         BufferedReader testStream = new BufferedReader(new InputStreamReader(resourceAsStream));
         File original = new File(OriginalFile);
         String TestStreamLine = "";

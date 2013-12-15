@@ -4,6 +4,7 @@
  */
 package CASUAL;
 
+import CASUAL.CommunicationsTools.ADB.ADBTools;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class BusyboxToolsTest {
     @Test
     public void testGetBusyboxLocation() {
         System.out.println("getBusyboxLocation");
-        new Shell().sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "rm " + busybox});
+        new Shell().sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + busybox});
         String expResult = "/data/local/tmp/busybox";
         String result = BusyboxTools.getBusyboxLocation();
         assertEquals(expResult, result);
@@ -38,10 +39,12 @@ public class BusyboxToolsTest {
 
     @Test
     public void testBusyboxCASUALCommand() {
-        if (!ADBTools.isConnected()) return;
+        if (!new ADBTools().isConnected()) {
+            return;
+        }
         System.out.println("testBusyboxCASUALCommand");
-        new Shell().sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "rm " + busybox});
-        String result = new Shell().sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "ls " + busybox});
+        new Shell().sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + busybox});
+        String result = new Shell().sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "ls " + busybox});
         assert result.contains("busybox");
         result = new CASUALScriptParser().executeOneShotCommand("$ADB shell $BUSYBOX mount");
 

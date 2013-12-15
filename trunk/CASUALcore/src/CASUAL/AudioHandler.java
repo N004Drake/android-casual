@@ -38,29 +38,29 @@ public class AudioHandler {
     /**
      * playSound plays sounds
      *
-     * @param URL path to sound
+     * @param url path to sound
      */
-    public static synchronized void playSound(final String URL) {
+    public static synchronized void playSound(final String url) {
         Thread t = new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
             @Override
             public void run() {
                 if (useSound) {
-                    AudioInputStream IS;
+                    AudioInputStream is;
                     try {
                         byte[] buffer = new byte[4096];
-                        IS = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(URL)));
-                        AudioFormat Format = IS.getFormat();
+                        is = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getResourceAsStream(url)));
+                        AudioFormat Format = is.getFormat();
                         SourceDataLine line;
                         line = AudioSystem.getSourceDataLine(Format);
                         line.open(Format);
                         line.start();
-                        while (IS.available() > 0) {
-                            int Len = IS.read(buffer);
+                        while (is.available() > 0) {
+                            int Len = is.read(buffer);
                             line.write(buffer, 0, Len);
                         }
                         line.drain();
                         line.close();
-                        IS.close();
+                        is.close();
                         //Don't worry about autio exceptions.  Just turn off audio
                     } catch (IllegalArgumentException ex) {
                         useSound = false;
@@ -81,9 +81,9 @@ public class AudioHandler {
     /**
      * plays multiple sounds
      *
-     * @param URLs array of paths to sound
+     * @param urls array of paths to sound
      */
-    public static synchronized void playMultipleInputStreams(final String[] URLs) {
+    public static synchronized void playMultipleInputStreams(final String[] urls) {
         Thread t;
         t = new Thread(new Runnable() {
 // the wrapper thread is unnecessary, unless it blocks on the Clip finishing
@@ -91,10 +91,10 @@ public class AudioHandler {
             public void run() {
                 if (useSound) {
 
-                    for (String URL : URLs) {
+                    for (String url : urls) {
 
                         try {
-                            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(URL));
+                            AudioInputStream audioIn = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(url));
 
                             AudioFormat format = audioIn.getFormat();
                             DataLine.Info info = new DataLine.Info(Clip.class, format);
@@ -103,7 +103,7 @@ public class AudioHandler {
                             clip.open(audioIn);
                             clip.start();
                             sleepTillEndOfClip(clip);
-
+                            clip.drain();
                         } catch (IOException error) {
                             new Log().level3Verbose("File Not Found");
                         } catch (UnsupportedAudioFileException ex) {
@@ -122,10 +122,11 @@ public class AudioHandler {
             }
 
             private void sleepTillEndOfClip(Clip clip) throws InterruptedException {
-                Thread.sleep(clip.getMicrosecondLength() / 1000);
+                Thread.sleep(clip.getMicrosecondLength()/5000);
             }
         });
         t.setName("AudioStream");
+        
         t.start();
 
     }

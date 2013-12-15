@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import CASUAL.CommunicationsTools.ADB.ADBTools;
+
 /**
  * BusyboxTools deploys and gives an on-device reference to busybox.
  *
@@ -26,6 +28,7 @@ public class BusyboxTools {
     final String busyboxLocation = "/data/local/tmp/busybox";
     ADBTools adb = new ADBTools();
     Shell shell = new Shell();
+    
 
     private String getDeviceArch() {
         if (Statics.CASPAC != null) {
@@ -33,7 +36,7 @@ public class BusyboxTools {
                 return Statics.CASPAC.getActiveScript().deviceArch;
             }
         }
-        String cpuinfo = shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "cat /proc/cpuinfo"});
+        String cpuinfo = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "cat /proc/cpuinfo"});
         String[] lines = cpuinfo.split("\n");
         for (String line : lines) {
             if (line.contains("Processor") && line.contains("ARM")) {
@@ -46,7 +49,7 @@ public class BusyboxTools {
 
     private boolean busyboxIsInstalled() {
 
-        String temp = shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "chmod 777 " + busyboxLocation + ";ls " + busyboxLocation});
+        String temp = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 777 " + busyboxLocation + ";ls " + busyboxLocation});
 
         return !temp.contains("No such") && !temp.contains("found");
     }
@@ -69,8 +72,8 @@ public class BusyboxTools {
     private String deployBusybox() {
         FileOperations fo = new FileOperations();
         String busyboxOnHost = Statics.getTempFolder() + "busybox";
-        String[] installCmd = {ADBTools.getADBCommand(), "push", busyboxOnHost, busyboxLocation};
-        String busyboxResource = "";
+        String[] installCmd = {adb.getBinaryLocation(), "push", busyboxOnHost, busyboxLocation};
+        String busyboxResource;
         if (getDeviceArch().equals("ARM")) {
             busyboxResource = Statics.busyboxARM;
         } else {
@@ -78,7 +81,7 @@ public class BusyboxTools {
         }
         fo.copyFromResourceToFile(busyboxResource, busyboxOnHost);
         new Shell().silentShellCommand(installCmd);
-        String check = new Shell().sendShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "chmod 777 /data/local/tmp/busybox;ls /data/local/tmp"});
+        String check = new Shell().sendShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 777 /data/local/tmp/busybox;ls /data/local/tmp"});
         if (check.contains("busybox")) {
             return this.busyboxLocation;
         } else {

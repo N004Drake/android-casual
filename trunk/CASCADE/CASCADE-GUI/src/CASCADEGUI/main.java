@@ -18,12 +18,7 @@ public class main {
      */
     public static void main(String args[]) {
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("System".equals(info.getName()) || info.getName().toLowerCase().contains(System.getProperty("os.name").toLowerCase().subSequence(0, 3))) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
             new CASUAL.Log().errorHandler(ex);
         } catch (InstantiationException ex) {
@@ -37,7 +32,6 @@ public class main {
             @Override
             public void run() {
                 CASCADEGUI cg = new CASCADEGUI();
-                cg.setVisible(true);
             }
         };
         Thread t = new Thread(r);

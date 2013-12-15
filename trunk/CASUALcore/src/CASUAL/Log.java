@@ -80,11 +80,11 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[ERROR]" + data);
-        if (Statics.outputVerbosity >= 0) {
+        if (Statics.outputGUIVerbosity >= 0) {
             sendToGUI(data);
 
         }
-        if (Statics.logFileOutputVerbosity >= 0) {
+        if (Statics.outputLogVerbosity >= 0) {
             out.println("[ERROR]" + data);
 
         }
@@ -100,10 +100,10 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[INTERACTION]" + data);
-        if (Statics.outputVerbosity >= 1) {
+        if (Statics.outputGUIVerbosity >= 1) {
             sendToGUI(data);
         }
-        if (Statics.logFileOutputVerbosity >= 1) {
+        if (Statics.outputLogVerbosity >= 1) {
             out.println("[INTERACTION]" + data);
 
         }
@@ -121,10 +121,10 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[INFO]" + data);
-        if (Statics.outputVerbosity >= 2) {
+        if (Statics.outputGUIVerbosity >= 2) {
             sendToGUI(data);
         }
-        if (Statics.logFileOutputVerbosity >= 2) {
+        if (Statics.outputLogVerbosity >= 2) {
             out.println("[INFO]" + data);
         }
     }
@@ -136,10 +136,10 @@ public class Log {
      */
     public void level3Verbose(String data) {
         writeOutToLog("[VERBOSE]" + data);
-        if (Statics.outputVerbosity >= 3) {
+        if (Statics.outputGUIVerbosity >= 3) {
             sendToGUI(data);
         }
-        if (Statics.logFileOutputVerbosity >= 3) {
+        if (Statics.outputLogVerbosity >= 3) {
             out.println("[VERBOSE]" + data);
         }
     }
@@ -151,10 +151,10 @@ public class Log {
     public void level4Debug(String data) {
         writeOutToLog("[DEBUG]" + data);
 
-        if (Statics.outputVerbosity >= 4) {
+        if (Statics.outputGUIVerbosity >= 4) {
             sendToGUI(data);
         }
-        if (Statics.logFileOutputVerbosity >= 4) {
+        if (Statics.outputLogVerbosity >= 4) {
             out.println("[DEBUG]" + data);
         }
     }

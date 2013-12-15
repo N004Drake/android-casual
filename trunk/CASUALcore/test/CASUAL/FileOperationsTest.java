@@ -32,6 +32,7 @@ public class FileOperationsTest {
     @AfterClass
     public static void tearDownClass() {
     }
+    private static final String adbIniResource = "/CASUAL/CommunicationsTools/ADB/resources/adb_usb.ini";
 
     /**
      * Test of copyFromResourceToFile method, of class FileOperations.
@@ -39,7 +40,7 @@ public class FileOperationsTest {
     @Test
     public void testCopyFromResourceToFile() {
         System.out.println("copyFromResourceToFile");
-        assertEquals(true, new CASUAL.FileOperations().copyFromResourceToFile(CASUAL.Statics.ADBini, CASUAL.Statics.getTempFolder() + "new"));
+        assertEquals(true, new CASUAL.FileOperations().copyFromResourceToFile(adbIniResource, CASUAL.Statics.getTempFolder() + "new"));
         assertEquals(false, new CASUAL.FileOperations().copyFromResourceToFile(null, null));
        
     }
@@ -73,6 +74,7 @@ public class FileOperationsTest {
 
     /**
      * Test of verifyWritePermissionsRecursive method, of class FileOperations.
+     * @throws java.io.IOException
      */
     @Test
     public void testVerifyWritePermissionsRecursive() throws IOException {
@@ -86,6 +88,7 @@ public class FileOperationsTest {
 
     /**
      * Test of findRecursive method, of class FileOperations.
+     * @throws java.io.IOException
      */
     @Test
     public void testFindRecursive() throws IOException {
@@ -109,6 +112,7 @@ public class FileOperationsTest {
 
     /**
      * Test of verifyExists method, of class FileOperations.
+     * @throws java.io.IOException
      */
     @Test
     public void testVerifyExists() throws IOException {
@@ -131,6 +135,7 @@ public class FileOperationsTest {
 
     /**
      * Test of writeStreamToFile method, of class FileOperations.
+     * @throws java.lang.Exception
      */
     @Test
     public void testWriteStreamToFile() throws Exception {
@@ -148,6 +153,7 @@ public class FileOperationsTest {
 
     /**
      * Test of writeToFile method, of class FileOperations.
+     * @throws java.lang.Exception
      */
     @Test
     public void testWriteToFile() throws Exception {
@@ -162,6 +168,7 @@ public class FileOperationsTest {
 
     /**
      * Test of deleteStringArrayOfFiles method, of class FileOperations.
+     * @throws java.io.IOException
      */
     @Test
     public void testDeleteStringArrayOfFiles() throws IOException {
@@ -179,6 +186,7 @@ public class FileOperationsTest {
 
     /**
      * Test of copyFile method, of class FileOperations.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCopyFile_File_File() throws Exception {
@@ -242,6 +250,7 @@ public class FileOperationsTest {
 
     /**
      * Test of setExecutableBit method, of class FileOperations.
+     * @throws java.io.IOException
      */
     @Test
     public void testSetExecutableBit() throws IOException {
@@ -268,7 +277,7 @@ public class FileOperationsTest {
     @Test
     public void testVerifyResource() {
         System.out.println("verifyResource");
-        String res = Statics.LinuxARMv6ADB;
+        String res = adbIniResource;
         FileOperations instance = new FileOperations();
         boolean expResult = true;
         boolean result = instance.verifyResource(res);
@@ -278,6 +287,7 @@ public class FileOperationsTest {
 
     /**
      * Test of readTextFromResource method, of class FileOperations.
+     * @throws java.io.FileNotFoundException
      */
     @Test
     public void testReadTextFromResource() throws FileNotFoundException, IOException {
@@ -353,7 +363,8 @@ public class FileOperationsTest {
     }
 
     /**
-     * Test of moveFile method, of class FileOperations.
+     * Test of moveFile method, of class FileOperations
+     * @throws java.lang.Exception
      */
     @Test
     public void testMoveFile_File_File() throws Exception {
@@ -374,6 +385,7 @@ public class FileOperationsTest {
 
     /**
      * Test of moveFile method, of class FileOperations.
+     * @throws java.lang.Exception
      */
     @Test
     public void testMoveFile_String_String() throws Exception {

@@ -62,15 +62,7 @@ public class ShellTools {
                 }
                 //if we are not single quoted, act on double quotes
             } else if (!SingleQuoteOn && CharLine[I] == TestChars[1] && LastChar != TestChars[3]) {
-                //if we are doulbe quoted already and see the last character;
-                if (DoubleQuoteOn) {
-                    //turn doublequote off
-                    DoubleQuoteOn = false;
-                    //start doublequote
-                } else {
-                    DoubleQuoteOn = true;
-                }
-                //if space is detected and not single or double quoted
+                DoubleQuoteOn = !DoubleQuoteOn;
             } else if (!SingleQuoteOn && !DoubleQuoteOn && CharLine[I] == TestChars[2] && LastChar != TestChars[3]) {
                 List.add(Word);
                 Word = "";

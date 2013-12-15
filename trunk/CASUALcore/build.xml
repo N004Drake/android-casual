@@ -73,10 +73,18 @@
         <taskdef resource="net/sf/antcontrib/antlib.xml" />
 
     -->
+    
+    <target depends="clean,init,jar,compile-test,-pre-test-run,-do-test-run,test-report,-post-test-run,-test-browse" description="Run unit tests." name="test">
+            
+    
+    </target>
+
+    
+    
     <target name="-pre-compile" description="sorts out properties files and selects higher revisions">
         <echo>Running build number resolver</echo>
         <javac includeantruntime="last" failonerror="no" srcdir="BuildTasks/" destdir="BuildTasks"/>
-        <java fork="false" failonerror="no" classname="ResolveSVNConflicts">
+        <java fork="true" failonerror="no" classname="ResolveSVNConflicts">
             <classpath>
                 <pathelement location="BuildTasks"/>
             </classpath>
