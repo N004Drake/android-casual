@@ -198,4 +198,11 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol{
       this.reset();
       this.getBinaryLocation();
     }
+
+    @Override
+    public void reset() {
+        if (!binaryLocation.isEmpty()) {
+            this.shutdown();
+        }
+        binaryLocation = "";    }
 }

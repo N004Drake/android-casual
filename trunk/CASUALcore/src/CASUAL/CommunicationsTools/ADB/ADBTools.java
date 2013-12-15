@@ -390,4 +390,12 @@ public class ADBTools extends CASUAL.CommunicationsTools.AbstractDeviceCommunica
         shell.elevateSimpleCommand(getDevicesCmd());
     }
 
+    @Override
+    public String getBinaryLocation() {
+        if (binaryLocation.isEmpty() || !new File(binaryLocation).exists()) {
+            deployBinary(Statics.getTempFolder());
+        }
+        return binaryLocation;
+    }
+
 }
