@@ -86,6 +86,7 @@ public class ADBToolsTest {
     public void testGetDevices() {
         System.out.println("getDevices");
         String result = new ADBTools().getDevices();
+        System.out.println(result);
     }
 
     /**

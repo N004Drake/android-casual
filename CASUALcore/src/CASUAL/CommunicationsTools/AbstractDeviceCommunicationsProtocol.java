@@ -17,53 +17,53 @@
 package CASUAL.CommunicationsTools;
 
 import CASUAL.Shell;
-import CASUAL.Statics;
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Abstract DeviceCommunicationsProtocol provides a set of methods which allow
+ * universal access to various device firmware loading binaries. This class was
+ * written with ADB, Fastboot, and Heimdall in mind but is broad enough to
+ * encompass many others as well.
  *
  * @author adamoutler
  */
 public abstract class AbstractDeviceCommunicationsProtocol {
 
-    
-     /**
+    /**
      * Last known location of the binary should be overridden and implemented as
      * private static. Refers to the location of the binary to be operated by
      * this class eg.. /tmp/Adam2123/adb.exe or C:\Users\Adam\local...
+     * 
+     * 
+     * String binaryLocation="";
      */
-    String binaryLocation;
-    
     
     /**
      * Windows binary location should be overridden and implemented as private
      * static final.
      */
-    String[] windowsLocation;
+    String[] windowsLocation=new String[]{"The Windows platform is not yet supported. Please override this with an appropriate binary."};
     /**
      * Linux32 binary location should be overridden and implemented as private
      * static final.
      */
-    String[] linux32Location;
+    String[] linux32Location=new String[]{"The Linux32 platform is not yet supported. Please override this with an appropriate binary."};
     /**
      * Linux64 binary location should be overridden and implemented as private
      * static final.
      */
-    String[] linux64Location;
+    String[] linux64Location=new String[]{"The Linux64 platform is not yet supported. Please override this with an appropriate binary."};
     /**
      * LinuxArmv6 binary location should be overridden and implemented as
      * private static final.
      */
-    String[] linuxArmv6Location;
+    String[] linuxArmv6Location=new String[]{"The Linux ARMv6 platform is not yet supported. Please override this with an appropriate binary."};
     /**
      * Mac binary location should be overridden and implemented as private
      * static final.
      */
-    String[] macLocation;
-
-
+    String[] macLocation=new String[]{"The Mac platform is not yet supported. Please override this with an appropriate binary."};
 
     /**
      * returns and integer representing the number of devices connected. This
@@ -124,12 +124,7 @@ public abstract class AbstractDeviceCommunicationsProtocol {
      * method to destroy the private static location of the binary in memory.
      * This will reset the binaryLocation and call the shudown() method;
      */
-    public void reset() {
-        if (!binaryLocation.isEmpty()) {
-            this.shutdown();
-        }
-        binaryLocation = "";
-    }
+    abstract public void reset();
 
     /**
      * Commands used to shutdown the application as a part of reset. This may be
@@ -145,12 +140,7 @@ public abstract class AbstractDeviceCommunicationsProtocol {
      *
      * @return location to binary being called.
      */
-    public String getBinaryLocation() {
-        if (binaryLocation.isEmpty() || !new File(binaryLocation).exists()) {
-            deployBinary(Statics.getTempFolder());
-        }
-        return binaryLocation;
-    }
+    abstract public String getBinaryLocation();
 
     /**
      * returns true if 1 device is connected. Will return false if more than one
@@ -210,9 +200,12 @@ public abstract class AbstractDeviceCommunicationsProtocol {
         //expand array by one
         String[] runcmd = new String[parameters.length + 1];
         runcmd[0] = getBinaryLocation(); //insert binary as [0]
+        String runstring=runcmd[0];
         for (int i = 1; i < runcmd.length; i++) {
             runcmd[i] = parameters[i - 1]; //insert the rest of the parameters
+            runstring=runstring+" "+runcmd[i];
         }
+        new CASUAL.Log().level4Debug("Running the following from DeviceCommunicationProtocol:"+runstring);
         if (silent) {
             return shell.silentTimeoutShellCommand(runcmd, timeout);
         } else {
