@@ -18,8 +18,6 @@ package CASUAL;
 
 import CASUAL.CommunicationsTools.AbstractDeviceCommunicationsProtocol;
 
-
-
 /**
  * CASUALConnectionStatus provides ADB connection status monitoring for CASUAL
  *
@@ -54,7 +52,7 @@ public class CASUALConnectionStatusMonitor {
      *
      * @param mode sets the monitoring mode
      */
-    public void start( AbstractDeviceCommunicationsProtocol mode) {
+    public void start(AbstractDeviceCommunicationsProtocol mode) {
         monitor = mode;
         //lock controls if not available yet.
         if (Statics.isGUIIsAvailable() && (Locks.lockGUIformPrep || Locks.lockGUIunzip)) {
@@ -66,7 +64,7 @@ public class CASUALConnectionStatusMonitor {
     }
 
     private void doMonitoring() {
-        
+
         //check device for state changes
         //loop on new thread while the monitor is the same monitor
         Thread t = new Thread(new Runnable() {
@@ -74,7 +72,7 @@ public class CASUALConnectionStatusMonitor {
             public void run() {
 
                 AbstractDeviceCommunicationsProtocol stateMonitor = monitor;
-                while (CASUALConnectionStatusMonitor.monitor.equals(stateMonitor)) {
+                while (CASUALConnectionStatusMonitor.monitor != null && CASUALConnectionStatusMonitor.monitor.equals(stateMonitor)) {
                     sleepForOneSecond();
                     doDeviceCheck();
                 }
@@ -89,10 +87,10 @@ public class CASUALConnectionStatusMonitor {
         int connectedDevices;
         try {
             connectedDevices = monitor.numberOfDevicesConnected();
-        } catch (NullPointerException ex){
-            connectedDevices=0;
+        } catch (NullPointerException ex) {
+            connectedDevices = 0;
         }
-        
+
         //Multiple devices detected
         if (connectedDevices > 1) {
 

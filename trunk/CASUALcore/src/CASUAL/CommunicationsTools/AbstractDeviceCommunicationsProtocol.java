@@ -17,6 +17,8 @@
 package CASUAL.CommunicationsTools;
 
 import CASUAL.Shell;
+import CASUAL.Statics;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,73 +29,41 @@ import java.util.logging.Logger;
 public abstract class AbstractDeviceCommunicationsProtocol {
 
     
-    String[] windowsLocation;
-    String[] linux32Location;
-    String[] linux64Location;
-    String[] linuxArmv6Location;
-    String[] macLocation;
-    
-    /*
-     * binaryLocation refers to the location of the binary to be operated by
+     /**
+     * Last known location of the binary should be overridden and implemented as
+     * private static. Refers to the location of the binary to be operated by
      * this class eg.. /tmp/Adam2123/adb.exe or C:\Users\Adam\local...
-     * This must be overridden and made static for the interface. 
      */
-    //static String binaryLocation;
-
-    /**
-     * reset is used to clear the binary location from outside the package and
-     * stop the service if required. This is useful for when the temp folder is
-     * changed or when the system is shutting down. This should also trigger the
-     * getBinaryLocation() to create a new binary upon the next call. This is a
-     * method to destroy the private static location of the binary in memory.
-     */
-    abstract public void reset();
-
-    /**
-     * Deploys the binary and returns its location. This method should check the
-     * binaryLocation, and if the called location is null, it should deploy the
-     * binary using the deployBinary(TempFolder) method. This is the primary
-     * method used by this class.
-     *
-     * @return location to binary being called.
-     */
-    abstract public String getBinaryLocation();
-
-    /**
-     * returns true if 1 device is connected. Will return false if more than one
-     * or less than one is connected. This method should use the
-     * numberOfDevicesConnected() method to get the number of devices connected
-     * and determine if it is a single device.
-     *
-     * @return true if connected.
-     */
-    public boolean isConnected() {
-        return numberOfDevicesConnected() == 1;
-    }
-
-    /**
-     * Waits for isConnected() to return true. If the device is not connected,
-     * this method will continue blocking. The purpose of this method is to halt
-     * progress until a device is connected and usable. waitForDevice() may use
-     * any tools it can to determine the ready status of the device.
-     *
-     */
-    public void waitForDevice(){
-        while (!isConnected()){
-           sleep200ms();
-        }
-    }
+    String binaryLocation;
+    
     
     /**
-     * sleeps for 200 ms and then returns
+     * Windows binary location should be overridden and implemented as private
+     * static final.
      */
-    private void sleep200ms(){
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AbstractDeviceCommunicationsProtocol.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    String[] windowsLocation;
+    /**
+     * Linux32 binary location should be overridden and implemented as private
+     * static final.
+     */
+    String[] linux32Location;
+    /**
+     * Linux64 binary location should be overridden and implemented as private
+     * static final.
+     */
+    String[] linux64Location;
+    /**
+     * LinuxArmv6 binary location should be overridden and implemented as
+     * private static final.
+     */
+    String[] linuxArmv6Location;
+    /**
+     * Mac binary location should be overridden and implemented as private
+     * static final.
+     */
+    String[] macLocation;
+
+
 
     /**
      * returns and integer representing the number of devices connected. This
@@ -112,6 +82,7 @@ public abstract class AbstractDeviceCommunicationsProtocol {
      * automatically installing drivers should the return value detect that it
      * is required.
      *
+     * @param commandRun Command which was run including parameters.
      * @param returnValue string to check for errors
      * @return true if no error
      */
@@ -144,6 +115,78 @@ public abstract class AbstractDeviceCommunicationsProtocol {
      * operating systems here.
      */
     abstract public void restartConnection();
+
+    /**
+     * reset is used to clear the binary location from outside the package and
+     * stop the service if required. This is useful for when the temp folder is
+     * changed or when the system is shutting down. This should also trigger the
+     * getBinaryLocation() to create a new binary upon the next call. This is a
+     * method to destroy the private static location of the binary in memory.
+     * This will reset the binaryLocation and call the shudown() method;
+     */
+    public void reset() {
+        if (!binaryLocation.isEmpty()) {
+            this.shutdown();
+        }
+        binaryLocation = "";
+    }
+
+    /**
+     * Commands used to shutdown the application as a part of reset. This may be
+     * called at any time so it should account for various operating conditions.
+     */
+    abstract public void shutdown();
+
+    /**
+     * Deploys the binary and returns its location. This method should check the
+     * binaryLocation, and if the called location is null, it should deploy the
+     * binary using the deployBinary(TempFolder) method. This is the primary
+     * method used by this class.
+     *
+     * @return location to binary being called.
+     */
+    public String getBinaryLocation() {
+        if (binaryLocation.isEmpty() || !new File(binaryLocation).exists()) {
+            deployBinary(Statics.getTempFolder());
+        }
+        return binaryLocation;
+    }
+
+    /**
+     * returns true if 1 device is connected. Will return false if more than one
+     * or less than one is connected. This method should use the
+     * numberOfDevicesConnected() method to get the number of devices connected
+     * and determine if it is a single device.
+     *
+     * @return true if connected.
+     */
+    public boolean isConnected() {
+        return numberOfDevicesConnected() == 1;
+    }
+
+    /**
+     * Waits for isConnected() to return true. If the device is not connected,
+     * this method will continue blocking. The purpose of this method is to halt
+     * progress until a device is connected and usable. waitForDevice() may use
+     * any tools it can to determine the ready status of the device.
+     *
+     */
+    public void waitForDevice() {
+        while (!isConnected()) {
+            sleep200ms();
+        }
+    }
+
+    /**
+     * sleeps for 200 ms and then returns
+     */
+    private void sleep200ms() {
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AbstractDeviceCommunicationsProtocol.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * provides a safe method to run the binary with parameters. this method

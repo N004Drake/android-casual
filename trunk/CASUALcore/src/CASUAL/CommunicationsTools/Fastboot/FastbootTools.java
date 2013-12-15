@@ -118,8 +118,8 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol{
      *{@inheritDoc}
      */
     @Override
-    public void reset() {
-        binaryLocation="";
+    public void shutdown() {
+        //nothing required for Fastboot. fastboot has no daemon. 
     }
 
 
