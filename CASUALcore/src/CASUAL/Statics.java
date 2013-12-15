@@ -17,6 +17,8 @@
 package CASUAL;
 
 //import java.awt.Color;
+import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.CommunicationsTools.Fastboot.FastbootTools;
 import CASUAL.Heimdall.HeimdallInstall;
 import CASUAL.caspac.Caspac;
 import java.io.BufferedReader;
@@ -72,13 +74,12 @@ public class Statics {
     /**
      * increase or decrease the logging level. 0 is error only, 4 is debug
      */
-    public static int outputVerbosity = 2; //userdata is output to console
+    public static int outputGUIVerbosity = 2; //userdata is output to console
 
     /**
      * increase or decrease the log file output. 0 is error only, 4 is debug
      */
-    public static int logFileOutputVerbosity = 4; //all logs are output to file
-
+    public static int outputLogVerbosity = 4; //all logs are output to file
 
     /**
      * static reference to interactions object for CASUALMessageObject.
@@ -170,12 +171,6 @@ public class Statics {
     }
     //Cross-Platform data storage
 
-    //TODO remove this as ADBTools().getAdbLocation() should be used istead. 
-    /**
-     * path to ADB after deployment.
-     */
-    public static String adbDeployed; //location of ADB after deployment
-
     //TODO It may be possible to remove this as it is handled by the active script 
     /**
      * Static reference to active script folder.
@@ -189,51 +184,6 @@ public class Statics {
      */
     public static String WinElevatorInTempFolder = getTempFolder() + "Elevate.exe"; //location of elevate.exe after deployed
 
-    //TODO: move this to ADBTools(). 
-    /**
-     * returns the Instance of Linux's ADB binary
-     *
-     * @return gets the proper name of the ADB binary as a resource. 
-     */
-    public static String LinuxADB() {
-        String arch = OSTools.checkLinuxArch();
-        if (arch.equals("x86_64")) {
-            return Linux64ADB;
-        }
-        if (arch.equals("ARMv6")) {
-            return LinuxARMv6ADB;
-        }
-        return Linux32ADB;  //defautlt to 32bit ADB
-    }
-    final private static String Linux32ADB = "/CASUAL/resources/ADB/adb-linux32";
-    final private static String Linux64ADB = "/CASUAL/resources/ADB/adb-linux64";
-
-    /**
-     * ADB for ARMv6.
-     */
-    final public static String LinuxARMv6ADB = "/CASUAL/resources/ADB/adb-linuxARMv6";
-
-    /**
-     * ADB for Mac.
-     */
-    final public static String MacADB = "/CASUAL/resources/ADB/adb-mac";
-
-    /**
-     * ADB for Windows.
-     */
-    final public static String WinADB = "/CASUAL/resources/ADB/adb.exe";
-
-    /**
-     * ADB for Windows resource must be in same folder.
-     */
-    final public static String WinADB2 = "/CASUAL/resources/ADB/AdbWinApi.dll";
-
-    /**
-     * Adb for Windows resource must be in same folder.
-     */
-    final public static String WinADB3 = "/CASUAL/resources/ADB/AdbWinUsbApi.dll";
-    //Heimdall
-
     /**
      * CADI Windows Driver for Windows Vista and higher.
      */
@@ -244,34 +194,7 @@ public class Statics {
      * CADI Windows Driver for XP.  
      */
     final public static String windowsXPCadiDevconDriver = "/CASUAL/Heimdall/resources/xp/CADI.zip";  //xp devcon CADI
-    //Fastboot
-
-    /**
-     * Fastboot for Linux 64-bit.
-     */
-    final public static String fastbootLinux64 = "/CASUAL/resources/fastboot/fastboot-linux64";
-
-    /**
-     * Fastboot for Linux 32bit.
-     */
-    final public static String fastbootLinux32 = "/CASUAL/resources/fastboot/fastboot-linux32";
-
-    /**
-     * Fastboot for Linux ARMv6.
-     */
-    final public static String fastbootLinuxARMv6 = "/CASUAL/resources/fastboot/fastboot-linuxARMv6";
-
-    /**
-     * Fastboot for Windows.
-     */
-    final public static String fastbootWindows = "/CASUAL/resources/fastboot/fastboot-win.exe";
-
-    /**
-     * Fastboot for Mac.
-     */
-    final public static String fastbootMac = "/CASUAL/resources/fastboot/fastboot-mac";
-    //Busybox
-
+ 
     /**
      * Busybox for Linux ARMv4tl is the most compatible with all ARM according
      * to Busybox site. This is intended for the device, not the host.
@@ -290,27 +213,10 @@ public class Statics {
     final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
 
     /**
-     * adb_usb.ini file used for deployment of ADB and specification of
-     * otherwise unsupported devices.
-     */
-    final public static String ADBini = "/CASUAL/resources/ADB/adb_usb.ini";
-
-    //TODO: remove this and use ADBTools().getAdbLocation();
-    /**
-     * Location of ADB on the filesystem for Linux and Mac.
-     */
-    final public static String FilesystemAdbIniLocationLinuxMac = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
-
-    //TODO: remove this and use ADBTools().getAdbLocation();
-    /**
-     * Location of ADB on the filesystem for Windows.
-     */
-    final public static String FilesystemAdbIniLocationWindows = System.getProperty("user.home") + Slash + ".android" + Slash + "adb_usb.ini";
-    //Windows Visual C++ redist --not always required
-
-    /**
      * Windows Visual C++ redistributable downloadable file. This is not used as
-     * we include the proper dependencies in CASUAL.
+     * we include the proper dependencies in CASUAL. Windows Visual C++ redist 
+     * not always required.
+
      */
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
 
@@ -328,38 +234,26 @@ public class Statics {
     public static ArrayList<String> ReactionEvents = new ArrayList<String>(); //Reactions for $ON command. . set by script
 
     /**
-     * location to fastboot resource. set from final values above.
-     */
-    public static String fastbootResource = ""; //
-
-    //TODO: remove this and move it to FastbootTools.getFastbootLocation();
-    /**
-     * fastboot after deployment to computer disk.
-     */
-    public static String fastbootDeployed = getTempFolder() + "fastboot"; //deployed fastboot
-
-    /**
      * Resets all variables in CASUAL to provide, basically, a warm reboot.
      */
     public static void initializeStatics() {
         CASUALDataBridge.commandedShutdown = true;
         setStatus("working");
-        outputVerbosity = 2;
-        logFileOutputVerbosity = 4;
+        outputGUIVerbosity = 2;
+        outputLogVerbosity = 4;
         if (!java.awt.GraphicsEnvironment.isHeadless()) {
             ProgressPane = new JTextPane();
         }
         PreProgress = "";
         ProgressDoc = null;
-        adbDeployed = null;
         SelectedScriptFolder = "";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         Locks.scriptRunLock = new CASUAL.misc.MandatoryThread();
         Locks.lockGUIunzip = false;
         ActionEvents = new ArrayList<String>();
         ReactionEvents = new ArrayList<String>();
-        fastbootResource = ""; //location to fastboot set from final values above
-        fastbootDeployed = TempFolder + "fastboot"; //deployed fastboot
+        new ADBTools().reset();
+        new FastbootTools().reset(); 
         HeimdallInstall.isHeimdallDeployed = false; //if fastboot has been deployed
         HeimdallInstall.heimdallResource = ""; //location to heimdall set from final values above
         HeimdallInstall.heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
@@ -414,7 +308,8 @@ public class Statics {
         TempFolder = folder;
         //TODO move away from setting paths and handle in getHeimdall/ADB/Fastboot location in proper class. 
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
-        fastbootDeployed = TempFolder + "fastboot";
+        new FastbootTools().reset();
+        new ADBTools().reset();
         HeimdallInstall.heimdallStaging = TempFolder + "heimdallStage";
         HeimdallInstall.heimdallDeployed = "";
         return TempFolder;

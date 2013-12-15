@@ -6,11 +6,10 @@
 
 package CASUAL;
 
+import CASUAL.CommunicationsTools.ADB.ADBTools;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -109,8 +108,8 @@ public class CASUALLanguageTest {
         assertEquals(action.get(0), Statics.ActionEvents.get(0));
         System.out.println("$CLEARON");
         csp.executeOneShotCommand("$CLEARON");
-        assert(Statics.ReactionEvents.size() ==0 );
-        assert(Statics.ActionEvents.size() ==0 );
+        assert(Statics.ReactionEvents.isEmpty());
+        assert(Statics.ActionEvents.isEmpty());
     }
 
     @Test
@@ -167,7 +166,7 @@ public class CASUALLanguageTest {
     public void testBusybox() {
         System.out.println("$BUSYBOX");
         //this will fail if no device is connected.
-        if (ADBTools.isConnected()){
+        if (new ADBTools().isConnected()){
             String expResult = "/data/local/tmp/busybox";
             String result = csp.executeOneShotCommand("$ECHO $BUSYBOX");
             assertEquals(expResult, result);

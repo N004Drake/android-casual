@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.CommunicationsTools.ADB.ADBTools;
 import CASUAL.misc.StringOperations;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,6 +55,7 @@ public class CASUALDataBridge {
 
     Shell shell = new Shell();
     Log log = new Log();
+    ADBTools adb = new ADBTools();
     final static String port = "27825";
     final static String ip = "127.0.0.1";
     final static Integer WATCHDOGINTERVAL = 2000;
@@ -224,7 +226,7 @@ public class CASUALDataBridge {
             long endTime = System.currentTimeMillis();
             double duration = (endTime - startTime) / 1000.000;
             double kb = bytes / duration / 1000;
-            log.level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + (long) kb + " KB/s");
+            log.level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + kb + " KB/s");
 
         } catch (IOException ex) {
             timeoutWatchdog.stop();
@@ -258,7 +260,7 @@ public class CASUALDataBridge {
             double kb = bytes / duration / 1000;
             String message;
 
-            log.level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + (long) kb + " KB/s");
+            log.level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + kb + " KB/s");
         } catch (IOException ex) {
             timeoutWatchdog.stop();
             Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
@@ -275,8 +277,8 @@ public class CASUALDataBridge {
         lastbytes = -1;
         log.level4Debug("closing existing stream");
         log.level4Debug("restarting server");
-        ADBTools.restartADBserver();
-        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "forward", "--remove-all"});
+        new ADBTools().restartConnection();
+        shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "forward", "--remove-all"});
         try {
             Socket socket = new Socket(ip, Integer.parseInt(port));
             socket.shutdownInput();
@@ -286,8 +288,8 @@ public class CASUALDataBridge {
         } catch (IOException ex) {
         }
         log.level4Debug("establishing ports");
-        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "killall busybox"});
-        shell.silentShellCommand(new String[]{ADBTools.getADBCommand(), "forward", "tcp:" + port, "tcp:" + port});
+        shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "killall busybox"});
+        shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "forward", "tcp:" + port, "tcp:" + port});
         log.level3Verbose("ports established");
     }
 
@@ -373,7 +375,7 @@ public class CASUALDataBridge {
             shutdownBecauseOfError = false;
             bytes = 0;
             lastbytes = -1;
-            String status = "";
+            status = "";
             new CASUALMessageObject("@interactionFailedToReceive").showInformationMessage();
             try {
                 return getFile(remoteFile, f);
@@ -426,15 +428,15 @@ public class CASUALDataBridge {
                         //build the command to send or receive with root or without. 
                         if (forWrite) {
                             if (!CASUALTools.rootAccessCommand().equals("")) {
-                                cmd = new String[]{ADBTools.getADBCommand(), "shell", sendcommand};
+                                cmd = new String[]{adb.getBinaryLocation(), "shell", sendcommand};
                             } else {
-                                cmd = new String[]{ADBTools.getADBCommand(), "shell", CASUALTools.rootAccessCommand() + " \"" + sendcommand + ";\""};
+                                cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \"" + sendcommand + ";\""};
                             }
                         } else {
                             if (CASUALTools.rootAccessCommand().equals("")) {
-                                cmd = new String[]{ADBTools.getADBCommand(), "shell", receiveCommand};
+                                cmd = new String[]{adb.getBinaryLocation(), "shell", receiveCommand};
                             } else {
-                                cmd = new String[]{ADBTools.getADBCommand(), "shell", CASUALTools.rootAccessCommand() + " \'" + receiveCommand + "\'"};
+                                cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \'" + receiveCommand + "\'"};
                             }
                         }
 
@@ -485,7 +487,7 @@ public class CASUALDataBridge {
 
                 InputStream waitForDeviceSideConnection(InputStream is) throws IOException {
                     String[] cmd;
-                    cmd = new String[]{ADBTools.getADBCommand(), "shell", "/data/local/tmp/busybox netstat -tul"};
+                    cmd = new String[]{adb.getBinaryLocation(), "shell", "/data/local/tmp/busybox netstat -tul"};
                     boolean ready = false;
                     String received = "";
                     Statics.setStatus("monitoring ports on device");

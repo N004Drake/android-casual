@@ -16,6 +16,8 @@
  */
 package CASUAL;
 
+import CASUAL.CommunicationsTools.Fastboot.FastbootTools;
+import CASUAL.CommunicationsTools.ADB.ADBTools;
 import CASUAL.Heimdall.HeimdallTools;
 import CASUAL.Heimdall.HeimdallInstall;
 import CASUAL.misc.StringOperations;
@@ -142,8 +144,9 @@ public class CASUALLanguage {
      *
      * @param line CASUAL line to process
      * @return value returned from CASUAL command
+     * @throws java.io.IOException
      */
-    public String commandHandler(String line) {
+    public String commandHandler(String line) throws IOException {
         line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
         if (line.equals("")) {
             //log.level4Debug("received blank line");
@@ -368,7 +371,7 @@ public class CASUALLanguage {
             }
 
             try {
-                log.level2Information("sleeping for " + (double) sleeptime / 1000 + " seconds");
+                log.level2Information("sleeping for " + sleeptime / 1000 + " seconds");
                 Thread.sleep(sleeptime);
             } catch (InterruptedException ex) {
             }
@@ -572,7 +575,7 @@ public class CASUALLanguage {
             if (deviceBuildPropStorage != null && deviceBuildPropStorage.contains("ro.")) {
                 return deviceBuildPropStorage;
             } else {
-                String[] cmd = {ADBTools.getADBCommand(), "shell", "cat /system/build.prop"};
+                String[] cmd = {new ADBTools().getBinaryLocation(), "shell", "cat /system/build.prop"};
                 deviceBuildPropStorage = new Shell().timeoutShellCommand(cmd, 5000);
                 return deviceBuildPropStorage;
             }
@@ -653,7 +656,7 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line);
             log.level4Debug("received fastbot command.");
             log.level4Debug("deploying fastboot.");
-            FastbootTools.checkAndDeployFastboot();
+            new FastbootTools().getBinaryLocation();
             log.level2Information("@waitingForDownloadModeDevice");
             if (OSTools.isLinux()) {
                 log.level2Information("@linuxPermissionsElevation");
@@ -685,7 +688,7 @@ public class CASUALLanguage {
             return retVal;
         }
         //final line output for debugging purposes
-        log.level4Debug("COMMAND processed - " + ADBTools.getADBCommand() + " " + line);
+        log.level4Debug("COMMAND processed - " +new ADBTools().getBinaryLocation() + " " + line);
         return "";
     }
 //END OF SCRIPT PARSER
@@ -761,7 +764,7 @@ public class CASUALLanguage {
 
         Shell Shell = new Shell();
         ArrayList<String> ShellCommand = new ArrayList<String>();
-        ShellCommand.add(ADBTools.getADBCommand());
+        ShellCommand.add(new ADBTools().getBinaryLocation());
         ShellCommand.addAll(new ShellTools().parseCommandLine(Line));
         String StringCommand[] = StringOperations.convertArrayListToStringArray(ShellCommand);
         if (ReplaceThis != null) {

@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 /**
  * CASUALInteraction is the place where all User Interactions are initiated.
+ *
  * @author AdamOutler
  */
 public class CASUALMessageObject {

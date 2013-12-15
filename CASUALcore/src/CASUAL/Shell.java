@@ -402,7 +402,7 @@ public class Shell {
                     BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                     while ((line = STDOUT.readLine()) != null) {
-                        tos.AllText = tos.AllText + line + "\n";
+                        tos.AllText = tos.AllText.concat(line).concat("\n");
                     }
                     //log.level0(cmd[0]+"\":"+AllText);
                 } catch (IOException ex) {
@@ -427,6 +427,7 @@ public class Shell {
         }
         if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
             log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
+            return "Timeout!!! " + tos.AllText;
         }
         //return values logged from TimeoutString class above
         return tos.AllText;

@@ -16,9 +16,9 @@
  */
 package CASUAL;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Timer;
+import CASUAL.CommunicationsTools.AbstractDeviceCommunicationsProtocol;
+
+
 
 /**
  * CASUALConnectionStatus provides ADB connection status monitoring for CASUAL
@@ -28,29 +28,24 @@ import javax.swing.Timer;
 public class CASUALConnectionStatusMonitor {
 
     /**
-     * array of device serial numbers
-     */
-    private static String mode = "adb";
-
-    /**
      * Array of devices connnected via ADB. Note: more than one is not
      * supported.
      */
-    public static String[] DeviceTracker; //used as static reference by casualConnectionStatusMonitor
     private static int LastState = 0;  //last state detected
     private static int cycles = 0; //number of cycles
     private static boolean hasConnected = false; //device was detected since startup
+    Log log = new Log();
 
     /**
      * number of sucessive times ADB has halted. If ADB pauses for more than 4
      * seconds, it is considered locked up. If ADB locks up 10 times, monitoring
      * is stopped.
      */
-    public static int adbLockedUp = 0;
     final static int TIMERINTERVAL = 1000;
+    static CASUAL.CommunicationsTools.AbstractDeviceCommunicationsProtocol monitor;
 
-    CASUALConnectionStatusMonitor() {
-        adbLockedUp = 0;
+    public static void reset() {
+        monitor = null;
     }
 
     /**
@@ -59,185 +54,116 @@ public class CASUALConnectionStatusMonitor {
      *
      * @param mode sets the monitoring mode
      */
-    public static void setMode(String mode) {
-        mode = "mode";
+    public void start( AbstractDeviceCommunicationsProtocol mode) {
+        monitor = mode;
+        //lock controls if not available yet.
+        if (Statics.isGUIIsAvailable() && (Locks.lockGUIformPrep || Locks.lockGUIunzip)) {
+            Statics.GUI.enableControls(false);
+            Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
+            LastState = 0;
+        }
+        doMonitoring();
     }
 
-    /**
-     * Timer starts a device check at a set interval . Device check will poll
-     * adb devices for connected devices. Timer is shutdown if no devices are
-     * detected and adb wait-for-device is used to save process starting.
-     */
-    public static Timer DeviceCheck = new Timer(TIMERINTERVAL, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            if (mode.equals("qprst")) {
-                //TODO: implement fastboot here as well. 
-            } else {  //default to adb
-                Thread t = new Thread(adbDeviceCheck);
-                t.setName("Device Monitor");
-                t.start();
+    private void doMonitoring() {
+        
+        //check device for state changes
+        //loop on new thread while the monitor is the same monitor
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                AbstractDeviceCommunicationsProtocol stateMonitor = monitor;
+                while (CASUALConnectionStatusMonitor.monitor.equals(stateMonitor)) {
+                    sleepForOneSecond();
+                    doDeviceCheck();
+                }
             }
+
+        });
+        t.start();
+
+    }
+
+    private void doDeviceCheck() {
+        int connectedDevices;
+        try {
+            connectedDevices = monitor.numberOfDevicesConnected();
+        } catch (NullPointerException ex){
+            connectedDevices=0;
         }
-    });
-    final static Runnable adbDeviceCheck = new Runnable() {
-        Log log = new Log();
+        
+        //Multiple devices detected
+        if (connectedDevices > 1) {
 
-        @Override
-        public void run() {
+            stateSwitcher(connectedDevices);
+            //No devices detected
+        } else if (connectedDevices == 0) {
+            stateSwitcher(0);
+            //One device detected
+        } else if (connectedDevices == 1) {
+            hasConnected = true;
+            stateSwitcher(1);
 
-            //setup initial state
-            if (Statics.isGUIIsAvailable() && (Locks.lockGUIformPrep || Locks.lockGUIunzip)) {
-                Statics.GUI.enableControls(false);
-                Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
-                LastState = 0;
-                return;
-            }
-            String DeviceList = getConnectedDevices();
-            CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
-            try {
+        }
 
-                //Multiple devices detected
-                if (CASUALConnectionStatusMonitor.DeviceTracker.length > 1 && !DeviceList.contains("offline")) {
-                    stateSwitcher(CASUALConnectionStatusMonitor.DeviceTracker.length);
-                    //No devices detected
-                } else if (CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
-                    stateSwitcher(0);
-                    if (!hasConnected) {
-                        messageUser();
-                    }
-                    //One device detected
-                } else if (!CASUALConnectionStatusMonitor.DeviceTracker[0].isEmpty()) {
-                    hasConnected = true;
-                    //Check and handle abnormalities
-                    // pairing problem with 4.2+
-                    if (DeviceList.contains("offline")) {
-                        DeviceCheck.stop();
-                        sleepForFourSeconds(); //give the device a chance to come online
-                        DeviceList = getConnectedDevices();
-                        if (DeviceList.contains("offline")) {
-                            String[] ok = {"All set and done!"};
-                            new CASUALMessageObject("@interactionOfflineNotification").showTimeoutDialog(120, null, javax.swing.JOptionPane.OK_OPTION, 2, ok, 0);
-                            log.level0Error("@disconnectAndReconnect");
-                            DeviceList = ADBTools.getDevices();
-                            DeviceCheck.start();
-                        }
-                    } else {
-                        if (Statics.isGUIIsAvailable() && !Statics.GUI.getControlStatus()) {
-                            Statics.GUI.enableControls(true);
-                        }
-                        stateSwitcher(1);
-                    }
-                    //insufficient permissions
+    }
 
-                    if (DeviceList.contains("????????????") && !OSTools.isWindows()) {
-                        DeviceCheck.stop();
-                        log.level4Debug("@sleepingfor4Seconds");
-                        sleepForFourSeconds();
-                        DeviceList = getConnectedDevices();
-                        CASUALConnectionStatusMonitor.DeviceTracker = DeviceList.split("device");
+    void stateSwitcher(int state) {
+        if (LastState != state) {
+            log.level4Debug("State Change Detected, The new state is: " + state);
+            switch (state) {
+                case 0:
+                    log.level4Debug("@stateDisconnected");
+                    Statics.setStatus("Device Removed");
+                    Statics.GUI.deviceDisconnected();
+                    Statics.GUI.enableControls(false);
 
-                        //Linux and mac only.
-                        if (DeviceList.contains("????????????")) {
-                            log.level2Information("@permissionsElevationRequired");
-                            ADBTools.startServer(); //send the command
-                            //notify user that permissions will be requested and what they are used for
-                            String[] ok = {"ok"};
-                            Statics.GUI.notificationPermissionsRequired();
-                            new CASUALMessageObject("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, 2, ok, 0);
-
-                            DeviceList = ADBTools.getDevices();
-                            // if permissions elevation was sucessful
-                            if (!DeviceList.contains("????????????")) {
-                                log.level4Debug(DeviceList);
-                                stateSwitcher(1);
-                                //devices still not properly recognized.  log it.
-                            } else {
-                                log.level0Error("@unrecognizedDeviceDetected");
-                            }
-                        }
-                        DeviceCheck.start();
+                    break;
+                case 1:
+                    Statics.setStatus("Device Connected");
+                    log.level4Debug("@stateConnected");
+                    Statics.GUI.deviceConnected("ADB");
+                    Statics.GUI.enableControls(true);
+                    break;
+                default:
+                    Statics.setStatus("Multiple Devices Detected");
+                    if (state == 2) {
+                        log.level0Error("@stateMultipleDevices");
+                        log.level0Error("Remove " + (state - 1) + " device to continue.");
                     }
 
-                }
-            } catch (NullPointerException ex) {
-            }
+                    Statics.GUI.enableControls(false);
+                    log.level4Debug("State Multiple Devices Number of devices" + state);
+                    Statics.GUI.deviceMultipleConnected(state);
+                    break;
 
+            }
+            LastState = state;
+        }
+    }
+
+    private void messageUser() {
+        cycles++;
+        if (cycles == 30 && !hasConnected) {
+            if (OSTools.isWindows()) {
+                new CASUALMessageObject("@interactionWindowsDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+            } else if (OSTools.isLinux()) {
+                new CASUALMessageObject("@interactionLinuxDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+            } else if (OSTools.isMac()) {
+                new CASUALMessageObject("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
+            }
+            hasConnected = true;
         }
 
-        private void stateSwitcher(int state) {
-            boolean stateSwitchWasSucessful; //try again later.
-            if (LastState != state) {
-                log.level4Debug("State Change Detected, The new state is: " + state);
-                switch (state) {
-                    case 0:
-                        log.level4Debug("@stateDisconnected");
-                        Statics.setStatus("Device Removed");
-                        Statics.GUI.deviceDisconnected();
-                        stateSwitchWasSucessful = true;
+    }
 
-                        break;
-                    case 1:
-                        Statics.setStatus("Device Connected");
-                        log.level4Debug("@stateConnected");
-                        Statics.GUI.deviceConnected("ADB");
-                        stateSwitchWasSucessful = true;
-                        break;
-                    default:
-                        Statics.setStatus("Multiple Devices Detected");
-                        if (state == 2) {
-                            log.level0Error("@stateMultipleDevices");
-                            log.level0Error("Remove " + (state - 1) + " device to continue.");
-                        }
-
-                        log.level4Debug("State Multiple Devices Number of devices" + state);
-                        Statics.GUI.deviceMultipleConnected(state);
-                        stateSwitchWasSucessful = true;
-                        break;
-
-                }
-                if (stateSwitchWasSucessful) {
-                    LastState = state;
-                }
-            }
+    private void sleepForOneSecond() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            log.errorHandler(ex);
         }
+    }
 
-        private void messageUser() {
-            cycles++;
-            if (cycles == 30) {
-                if (OSTools.isWindows()) {
-                    new CASUALMessageObject("@interactionWindowsDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-                } else if (OSTools.isLinux()) {
-                    new CASUALMessageObject("@interactionLinuxDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-                } else if (OSTools.isMac()) {
-                    new CASUALMessageObject("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-                }
-                hasConnected = true;
-            }
-
-        }
-
-        private String getConnectedDevices() {
-            String devices = ADBTools.getDevices().replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
-            if (devices.startsWith("Timeout!!! ")) {
-                devices = devices.replace("Timeout!!! ", "");
-                CASUALConnectionStatusMonitor.adbLockedUp++;
-                if (adbLockedUp == 10) {
-                    new CASUALMessageObject("@interactionADBLockedUp").showErrorDialog();
-                }
-            } else {
-                adbLockedUp = 0;
-            }
-            return devices;
-
-        }
-
-        private void sleepForFourSeconds() {
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException ex) {
-                log.errorHandler(ex);
-            }
-        }
-    };
 }

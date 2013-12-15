@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.CommunicationsTools.ADB.ADBTools;
 import CASUAL.caspac.Caspac;
 import CASUAL.misc.MandatoryThread;
 import CASUAL.network.Pastebin;
@@ -147,9 +148,10 @@ public final class CASUALMain {
         if (Statics.CASPAC != null && Statics.CASPAC.getActiveScript() != null) {
             Statics.CASPAC.getActiveScript().scriptContinue = false;
         }
-        ADBTools.adbMonitor(false);
+        CASUALConnectionStatusMonitor.reset();
+        
 
-        ADBTools.killADBserver();
+        new ADBTools().killADBserver();
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
         if (!CASUALTools.IDEMode && !Statics.isGUIIsAvailable() && Statics.CASPAC.type != 0) {
             try {
@@ -165,17 +167,6 @@ public final class CASUALMain {
 
         Statics.initializeStatics();
 
-        /*Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-
-        while (threadSet.size()>0){
-            System.out.println("---List of open threads---");
-            threadSet = Thread.getAllStackTraces().keySet();
-            Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-            for (Thread t:threadArray){
-                System.out.println("Awaiting shutdown of thread "+t.getName());
-            }
-            doSleep(); 
-        }*/
     }
 
     private static void doSleep(){
@@ -218,7 +209,7 @@ public final class CASUALMain {
     /**
      * startup is where CASUAL starts its normal routines for both
      *
-     * @param args commmand line args
+     * @param args command line args
      */
     public void startup(String[] args) {
         //starts the scriptRunLock so that the lock will not be enabled when checked for the first time. 
@@ -236,7 +227,7 @@ public final class CASUALMain {
         } else {
             useGUI = true;
         }
-        //prepare the CASPAC
+        //prepare the CASPAC, locate, unzip and ready it.
         prepareCaspac();
         //start the GUI if required
 

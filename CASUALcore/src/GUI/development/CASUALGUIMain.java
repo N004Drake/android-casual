@@ -17,7 +17,7 @@
 package GUI.development;
 
 import CASUAL.iCASUALUI;
-import CASUAL.ADBTools;
+import CASUAL.CommunicationsTools.ADB.ADBTools;
 import CASUAL.AudioHandler;
 import CASUAL.CASUALMessageObject;
 import CASUAL.misc.CASUALScrFilter;
@@ -462,7 +462,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         ADBTools.adbMonitor(false);
-        ADBTools.killADBserver();
+        new ADBTools().reset();
     }//GEN-LAST:event_formWindowClosing
     boolean buttonEnableStage = false;
     private void startButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseClicked

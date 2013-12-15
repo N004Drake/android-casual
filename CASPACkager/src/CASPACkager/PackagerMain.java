@@ -71,7 +71,7 @@ public class PackagerMain {
      *
      * @param args input from command line where args can be the following:
      * --CASPAC || -c "/path_to/CASPAC.*" specifies the path to the CASPAC eg
-     * "--CASPAC C:/mycaspac.zip". --output || -o "/path_to/OutputCASUAL.jar"
+     * "--CASPAC C:/mycaspac.CASPAC". --output || -o "/path_to/OutputCASUAL.jar"
      * specifies an output file name. --type || -t "words to be appended before
      * jar" appends words to the end of the filename eg "--type nightly"
      * results: CASPAC-CASUALr327-nightly.jar.
@@ -173,7 +173,7 @@ public class PackagerMain {
                 String name;
 
                 //if there are files to be replaced, then replace the files
-                if (replaceFile != null && entry.getName().endsWith(".zip")) {
+                if (replaceFile != null && (entry.getName().endsWith(".zip")||entry.getName().endsWith(".CASPAC"))) {
 
                     entryStream = replaceFileIfNeeded(entryStream, entry);
 
@@ -184,7 +184,7 @@ public class PackagerMain {
                     //loop through all text to be replaced
                     for (String[] replace : replaceText) {
                         //dont modify zip files
-                        if (!entry.getName().endsWith(".zip")) {
+                        if (!entry.getName().endsWith(".zip")&&!entry.getName().endsWith(".CASPAC")) {
                             //Modify Script/Properties/Meta/txt contents
                             if (entry.getName().endsWith(".txt") || entry.getName().endsWith(".properties") || entry.getName().endsWith(".meta") || entry.getName().endsWith(".scr")) {
                                 String check = CASUAL.misc.StringOperations.convertStreamToString(entryStream);
@@ -269,7 +269,7 @@ public class PackagerMain {
             showMessageAndExit();
         }
 
-        if (!caspacWithPath.endsWith(".zip") && !caspacWithPath.equals("")) {
+        if ((!caspacWithPath.endsWith(".zip")&& !caspacWithPath.endsWith(".CASPAC") )&& !caspacWithPath.equals("")) {
             log.level0Error(caspacWithPath + " is not a valid CASPAC file.");
             showMessageAndExit();
         }
@@ -345,7 +345,7 @@ public class PackagerMain {
             log.level0Error("CASPAC requested not a valid file.");
             return null;
         }
-        if (!(caspacLoc.endsWith(".zip"))) {
+        if (!caspacLoc.endsWith(".zip")&& !caspacLoc.endsWith(".CASPAC")) {
             log.level0Error(caspacLoc + "is not a valid CASPAC file.");
             return null;
         }
@@ -406,7 +406,7 @@ public class PackagerMain {
         log.level2Information(
                 "  - or -                                         ");
         log.level2Information(
-                "java -jar --CASPAC /home/caspacs/myCASPAC.zip    ");
+                "java -jar --CASPAC /home/caspacs/myCASPAC.CASPAC    ");
         log.level2Information(
                 "                                                 ");
         log.level2Information(
@@ -427,7 +427,7 @@ public class PackagerMain {
      */
     private void processFolder() {
         for (File f : new File(processFolder).listFiles()) {
-            if (f.toString().contains(".zip")) {
+            if (f.toString().contains(".zip")||f.toString().contains(".CASPAC")) {
                 log.level4Debug("processing " + f.getAbsolutePath());
                 mergeCaspacCasual(f.toString(), userOutputDir);
             }

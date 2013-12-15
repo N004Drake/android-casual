@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.CommunicationsTools.ADB.ADBTools;
 import CASUAL.misc.LinkedProperties;
 import CASUAL.caspac.Caspac;
 import CASUAL.crypto.MD5sum;
@@ -181,7 +182,7 @@ public class CASUALTools {
     public Runnable launchADB = new Runnable() {
         @Override
         public void run() {
-            ADBTools.startServer();
+            new ADBTools().startServer();
         }
     };
     /**
@@ -190,7 +191,7 @@ public class CASUALTools {
     public Runnable adbDeployment = new Runnable() {
         @Override
         public void run() {
-            new ADBInstall().deployADB();
+            new ADBTools().getBinaryLocation();
             new Log().level3Verbose("ADB Server Started!!!");
         }
     };
@@ -319,13 +320,13 @@ public class CASUALTools {
             Class<?> cls = Class.forName(messageAPI);
             setiCASUALGUI(cls);
         } catch (ClassNotFoundException ex) {
-            Class<?> cls = Class.forName("GUI.development.CASUALJFrameMain");
+            Class<?> cls = Class.forName("GUI.development.CASUALGUIMain");
             setiCASUALGUI(cls);
         } catch (InstantiationException ex) {
-            Class<?> cls = Class.forName("GUI.development.CASUALJFrameMain");
+            Class<?> cls = Class.forName("GUI.development.CASUALGUIMain");
             setiCASUALGUI(cls);
         } catch (IllegalAccessException ex) {
-            Class<?> cls = Class.forName("GUI.development.CASUALJFrameMain");
+            Class<?> cls = Class.forName("GUI.development.CASUALGUIMain");
             setiCASUALGUI(cls);
         }
     }
@@ -342,7 +343,7 @@ public class CASUALTools {
      * @return True if actua UID matches expected
      */
     public static boolean uidMatches(String expectedUID) {
-        String[] cmd = new String[]{ADBTools.getADBCommand(), "shell", "id -u"};
+        String[] cmd = new String[]{new ADBTools().getBinaryLocation(), "shell", "id -u"};
         String retval = new Shell().silentShellCommand(cmd);
         return retval.contains(expectedUID);
     }
@@ -357,7 +358,7 @@ public class CASUALTools {
             return "";
         }
         if (uidMatches("2000")) {
-            String retval = new Shell().silentShellCommand(new String[]{ADBTools.getADBCommand(), "shell", "su -c 'id -u'"});
+            String retval = new Shell().silentShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "su -c 'id -u'"});
             if (retval.contains("uid=0(")) {
                 return "su -c ";
             } else {
