@@ -42,9 +42,9 @@ public class CountLines {
 
 
         } catch (FileNotFoundException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
         return Lines;
 
@@ -62,12 +62,12 @@ public class CountLines {
         try {
             Lines = countISLines(IS);
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         } finally {
             try {
                 IS.close();
             } catch (IOException ex) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             }
         }
         return Lines;

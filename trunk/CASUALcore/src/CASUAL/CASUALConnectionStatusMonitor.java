@@ -16,7 +16,8 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.AbstractDeviceCommunicationsProtocol;
+import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
+
 
 /**
  * CASUALConnectionStatus provides ADB connection status monitoring for CASUAL
@@ -25,14 +26,10 @@ import CASUAL.CommunicationsTools.AbstractDeviceCommunicationsProtocol;
  */
 public class CASUALConnectionStatusMonitor {
 
-    /**
-     * Array of devices connnected via ADB. Note: more than one is not
-     * supported.
-     */
+    
     private static int LastState = 0;  //last state detected
-    private static int cycles = 0; //number of cycles
-    private static boolean hasConnected = false; //device was detected since startup
-    Log log = new Log();
+    private static CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol monitor;
+    private static CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol monitorLastState;
 
     /**
      * number of sucessive times ADB has halted. If ADB pauses for more than 4
@@ -40,12 +37,44 @@ public class CASUALConnectionStatusMonitor {
      * is stopped.
      */
     final static int TIMERINTERVAL = 1000;
-    static CASUAL.CommunicationsTools.AbstractDeviceCommunicationsProtocol monitor;
 
-    public static void reset() {
+        
+    /**
+     * stops monitoring and nulls the monitor out. Stores the monitor to be resumed at a later time. Monitor may be started again by using the start(new monitor) or resumeAfterStop to continue the monitoring. 
+     */
+    public static void stop() {
+        monitorLastState=monitor;
         monitor = null;
     }
+    
+    public static void resumeAfterStop(){
+        if (monitorLastState==null){
+            Log.level3Verbose("A call to resume monitor occurred, but monitor was not reset first.  No action is occuring");
+        } else {
+            new CASUALConnectionStatusMonitor().start(monitorLastState);
+        }
+    }
 
+    /**
+     * Static method to access toString().
+     * @return value of toString()
+     */
+    public static String getStatus(){
+        return new CASUALConnectionStatusMonitor().toString();
+    }
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        String n="\n";
+        sb.append("Status:");
+        if (monitor==null)  {
+            sb.append("offline").append(n).append("Mode:not monitoring").append(n);
+        }else {
+            sb.append("online").append(n).append(monitor.toString());
+        }
+        return sb.toString();
+    }
     /**
      * Starts and stops the ADB timer reference with
      * Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
@@ -53,10 +82,13 @@ public class CASUALConnectionStatusMonitor {
      * @param mode sets the monitoring mode
      */
     public void start(AbstractDeviceCommunicationsProtocol mode) {
+        stop(); 
+        stateSwitcher(0);
         monitor = mode;
+        Log.level3Verbose("Starting: "+mode);
         //lock controls if not available yet.
-        if (Statics.isGUIIsAvailable() && (Locks.lockGUIformPrep || Locks.lockGUIunzip)) {
-            Statics.GUI.enableControls(false);
+        if (Statics.isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
+            Statics.GUI.setControlStatus(false);
             Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
             LastState = 0;
         }
@@ -79,6 +111,7 @@ public class CASUALConnectionStatusMonitor {
             }
 
         });
+        t.setName("Connection Status");
         t.start();
 
     }
@@ -100,7 +133,6 @@ public class CASUALConnectionStatusMonitor {
             stateSwitcher(0);
             //One device detected
         } else if (connectedDevices == 1) {
-            hasConnected = true;
             stateSwitcher(1);
 
         }
@@ -109,30 +141,30 @@ public class CASUALConnectionStatusMonitor {
 
     void stateSwitcher(int state) {
         if (LastState != state) {
-            log.level4Debug("State Change Detected, The new state is: " + state);
+            Log.level4Debug("State Change Detected, The new state is: " + state);
             switch (state) {
                 case 0:
-                    log.level4Debug("@stateDisconnected");
+                    Log.level4Debug("@stateDisconnected");
                     Statics.setStatus("Device Removed");
                     Statics.GUI.deviceDisconnected();
-                    Statics.GUI.enableControls(false);
+                    Statics.GUI.setControlStatus(false);
 
                     break;
                 case 1:
                     Statics.setStatus("Device Connected");
-                    log.level4Debug("@stateConnected");
+                    Log.level4Debug("@stateConnected");
                     Statics.GUI.deviceConnected("ADB");
-                    Statics.GUI.enableControls(true);
+                    Statics.GUI.setControlStatus(true);
                     break;
                 default:
                     Statics.setStatus("Multiple Devices Detected");
                     if (state == 2) {
-                        log.level0Error("@stateMultipleDevices");
-                        log.level0Error("Remove " + (state - 1) + " device to continue.");
+                        Log.level0Error("@stateMultipleDevices");
+                        Log.level0Error("Remove " + (state - 1) + " device to continue.");
                     }
 
-                    Statics.GUI.enableControls(false);
-                    log.level4Debug("State Multiple Devices Number of devices" + state);
+                    Statics.GUI.setControlStatus(false);
+                    Log.level4Debug("State Multiple Devices Number of devices" + state);
                     Statics.GUI.deviceMultipleConnected(state);
                     break;
 
@@ -141,27 +173,14 @@ public class CASUALConnectionStatusMonitor {
         }
     }
 
-    private void messageUser() {
-        cycles++;
-        if (cycles == 30 && !hasConnected) {
-            if (OSTools.isWindows()) {
-                new CASUALMessageObject("@interactionWindowsDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-            } else if (OSTools.isLinux()) {
-                new CASUALMessageObject("@interactionLinuxDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-            } else if (OSTools.isMac()) {
-                new CASUALMessageObject("@interactionMacDeviceNotDetected").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.INFORMATION_MESSAGE, new String[]{"OK"}, "OK");
-            }
-            hasConnected = true;
-        }
-
-    }
 
     private void sleepForOneSecond() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
-            log.errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }
 
+    
 }

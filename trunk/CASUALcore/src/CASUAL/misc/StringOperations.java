@@ -181,7 +181,7 @@ public class StringOperations {
         for (int i = 0; i < stringarray.length; i++) {
             str = str + " " + stringarray[i];
         }
-        new Log().level4Debug("arrayToString " + stringarray + " expanded to: " + str);
+        Log.level4Debug("arrayToString " + stringarray + " expanded to: " + str);
         return str;
     }
 }

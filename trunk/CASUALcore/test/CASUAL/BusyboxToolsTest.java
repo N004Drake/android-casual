@@ -4,7 +4,8 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.communicationstools.adb.busybox.BusyboxTools;
+import CASUAL.communicationstools.adb.ADBTools;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

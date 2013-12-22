@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL.network;
+package CASUAL.network.CASUALDevIntegration;
 
 import CASUAL.misc.MandatoryThread;
 import java.io.IOException;
@@ -45,7 +45,6 @@ public class CasualDevCounter {
      * @param name the counter reference to increment
      */
     public void incrementCounter(final String name) {
-        //TODO create a $CASUAL commmand in CASUAL language to use this, or use Unique ID number. 
         t = new MandatoryThread(new Runnable() {
             @Override
             public void run() {

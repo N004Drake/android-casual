@@ -55,7 +55,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -81,7 +80,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     //Used to keep track of currently selected script
     //int currentScriptIndex = -1;
     DefaultListModel<String> listModel = new DefaultListModel<String>();
-    private List<String> scriptFiles;
+    private final List<String> scriptFiles;
     private boolean dropEventEnable = false;
     private Caspac cp;
     BufferedImage logo;
@@ -146,7 +145,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                         for (File f : files) {
                             String file = f.getCanonicalPath();
                             scriptList.getElementAt(scriptListJList.getSelectedIndex()).individualFiles.add(f);
-                            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.Slash) + 1), "$ZIPFILE"));
+                            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.slash) + 1), "$ZIPFILE"));
 
                         }
 
@@ -183,7 +182,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                         File firstFile = files.get(0);
                         if (firstFile.isDirectory()) {
                             String newFile = firstFile.getCanonicalPath();
-                            newFile = newFile + Statics.Slash + "newCaspac.CASPAC";
+                            newFile = newFile + Statics.slash + "newCaspac.CASPAC";
                             caspacOutputFile.setText(newFile);
                         } else if (firstFile.isFile() && firstFile.exists()) {
                             caspacOutputFile.setText(files.get(0).getCanonicalPath());
@@ -380,7 +379,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
             }
         });
 
-        casualOutputFile.setText(System.getProperty("user.dir")+Statics.Slash+"generatedCASUALs");
+        casualOutputFile.setText(System.getProperty("user.dir")+Statics.slash+"generatedCASUALs");
         casualOutputFile.setEnabled(CASPACkagerPanel.isEnabled());
         casualOutputFile.setName("casualOutputFile"); // NOI18N
 
@@ -749,7 +748,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                 .addContainerGap()
                 .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(scriptOverviewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(addScriptButton)
@@ -784,7 +783,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         );
         scriptLayout.setVerticalGroup(
             scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
         );
 
         scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
@@ -1044,7 +1043,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         bannerPicPanelLayout.setVerticalGroup(
             bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bannerPicPanelLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(bannerPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(browseLogo)))
@@ -1155,7 +1154,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1613,9 +1612,9 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         String args[] = argBuilder();
         String filename;
         if (args[1].endsWith(".zip")){ 
-            filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(Statics.Slash) + 1), ".zip", "");
+            filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(Statics.slash) + 1), ".zip", "");
         } else {
-            filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(Statics.Slash) + 1), ".CASPAC", "");
+            filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(Statics.slash) + 1), ".CASPAC", "");
         }
         final String version = Integer.toString(CASUAL.CASUALTools.getSVNVersion());
         final String folder = this.casualOutputFile.getText();
@@ -1636,22 +1635,22 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                     @Override
                     public void run() {
 
-                        //CASUAL.JavaSystem.restart(new String[]{outputFile+Statics.Slash+file});
+                        //CASUAL.JavaSystem.restart(new String[]{outputFile+Statics.slash+file});
                         ProcessBuilder pb;
                         if (OSTools.isWindows()) {
-                            System.out.println("executing " + "cmd.exe /c start " + System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable + "-jar " + outputFile + Statics.Slash + file);
-                            new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + Statics.Slash + file + "\""}, true);
+                            System.out.println("executing " + "cmd.exe /c start " + System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable + "-jar " + outputFile + Statics.slash + file);
+                            new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + Statics.slash + file + "\""}, true);
                         } else {
-                            System.out.println("Executing" + System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable + " -jar " + outputFile + Statics.Slash + file);
+                            System.out.println("Executing" + System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable + " -jar " + outputFile + Statics.slash + file);
 
-                            new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable, "-jar", outputFile + Statics.Slash + file}, true);
+                            new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable, "-jar", outputFile + Statics.slash + file}, true);
 
                         }
                         // pb.directory(new File(new File( "." ).getCanonicalPath()));
                         //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
                         //Process p = pb.start();
 
-                        //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.Slash + "bin" + Statics.Slash + "java" + executable,"-jar",outputFile+Statics.Slash+file});
+                        //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable,"-jar",outputFile+Statics.slash+file});
                     }
                 };
                 Thread t = new Thread(r);
@@ -1857,7 +1856,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         listModel.removeAllElements();
         for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles) {
             String file = f.toString();
-            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.Slash) + 1), "$ZIPFILE"));
+            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.slash) + 1), "$ZIPFILE"));
             //listModel.addElement(f);
         }
 
@@ -2114,7 +2113,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      * @param status dummy method used to implement iCASUALUI
      */
     @Override
-    public boolean enableControls(boolean status) {
+    public boolean setControlStatus(boolean status) {
         return true;
     }
 
@@ -2329,6 +2328,11 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     @Override
     public void setDummyGUI(boolean dummy) {
         
+    }
+
+    @Override
+    public void setBlocksUnzipped(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /*

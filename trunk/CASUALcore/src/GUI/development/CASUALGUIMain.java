@@ -17,13 +17,14 @@
 package GUI.development;
 
 import CASUAL.iCASUALUI;
-import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.AudioHandler;
+import CASUAL.CASUALConnectionStatusMonitor;
 import CASUAL.CASUALMessageObject;
 import CASUAL.misc.CASUALScrFilter;
 import CASUAL.CASUALScriptParser;
 import CASUAL.FileOperations;
-import CASUAL.Locks;
+import CASUAL.CASUALStartupTasks;
 import CASUAL.network.LinkLauncher;
 import CASUAL.Log;
 import CASUAL.Statics;
@@ -38,6 +39,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
@@ -50,12 +52,13 @@ import javax.swing.border.TitledBorder;
  * @author Adam Outler adamoutler@gmail.com
  */
 public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI {
+    private static final long serialVersionUID = 1L;
 
     private boolean isReady=false;
     private boolean isDummyGUI=false;
     Caspac caspac;
     String nonResourceFileName;
-    Log log = new Log();
+    
     FileOperations fileOperations = new FileOperations();
     private String ComboBoxValue = "";
 
@@ -73,7 +76,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         Statics.ProgressDoc = Statics.ProgressPane.getStyledDocument();
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
 
-        Locks.lockGUIformPrep = false;
+        CASUALStartupTasks.lockGUIformPrep = false;
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -99,7 +102,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
         FileChooser1 = new javax.swing.JFileChooser();
         windowBanner = new javax.swing.JLabel();
-        comboBoxScriptSelector = new javax.swing.JComboBox();
+        comboBoxScriptSelector = new JComboBox<String>();
         startButton = new javax.swing.JButton();
         DonateButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -309,16 +312,16 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      */
     @Override
     public void StartButtonActionPerformed() {
-        log.level4Debug("StartButtonActionPerformed() Script Activated");
-        log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
+        Log.level4Debug("StartButtonActionPerformed() Script Activated");
+        Log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
 
-        ADBTools.adbMonitor(false);
-        enableControls(false);
+        CASUALConnectionStatusMonitor.stop();
+        setControlStatus(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
 
         //execute
         if (Statics.CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
-            log.level4Debug("Loading internal resource: " + script);
+            Log.level4Debug("Loading internal resource: " + script);
             Statics.CASPAC.getActiveScript().scriptContinue = true;
             new CASUALScriptParser().executeSelectedScript(caspac, true);
         }
@@ -363,18 +366,18 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         int returnVal = FileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                ADBTools.adbMonitor(false);
-                this.enableControls(false);
+                CASUALConnectionStatusMonitor.stop();
+                this.setControlStatus(false);
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
-                log.level2Information("Description for " + nonResourceFileName);
+                Log.level2Information("Description for " + nonResourceFileName);
                 try {
-                    log.level2Information(fileOperations.readFile(nonResourceFileName + ".txt"));
+                    Log.level2Information(fileOperations.readFile(nonResourceFileName + ".txt"));
                 } catch (Exception e) {
-                    log.level2Information("@textResourceNotFound");
+                    Log.level2Information("@textResourceNotFound");
                 }
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
-                Statics.SelectedScriptFolder = Statics.getTempFolder() + new File(nonResourceFileName).getName() + Statics.Slash;
+                Statics.SelectedScriptFolder = Statics.getTempFolder() + new File(nonResourceFileName).getName() + Statics.slash;
                 if (new FileOperations().verifyFolderExists(nonResourceFileName.toString() + ".zip")) {
                     new Unzip(nonResourceFileName.toString() + ".zip").unzipFile(Statics.SelectedScriptFolder);
                 }
@@ -383,9 +386,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                 ComboBoxValue = getFilenameWithoutExtension(FileName);
                 comboBoxScriptSelector.setSelectedItem(ComboBoxValue);
                 comboBoxScriptSelector.setEditable(false);
-                ADBTools.adbMonitor(true);
+                CASUALConnectionStatusMonitor.resumeAfterStop();
             } catch (IOException ex) {
-                log.errorHandler(ex);
+                Log.errorHandler(ex);
             }
 
         }
@@ -440,17 +443,17 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
-        ADBTools.adbMonitor(false);
-        this.enableControls(false);
-        Locks.lockGUIunzip = true;
+        CASUALConnectionStatusMonitor.stop();
+        this.setControlStatus(false);
+        CASUALStartupTasks.lockGUIunzip = true;
         String selectedScript = comboBoxScriptSelector.getSelectedItem().toString();
-        log.level4Debug("hiding script selector TargetScript: " + selectedScript);
+        Log.level4Debug("hiding script selector TargetScript: " + selectedScript);
         caspac.setActiveScript(caspac.getScriptByName(selectedScript));
-        log.level2Information(caspac.getActiveScript().discription);
+        Log.level2Information(caspac.getActiveScript().discription);
         caspac.waitForUnzipComplete();
 
-        Locks.lockGUIunzip = false;
-        ADBTools.adbMonitor(true);
+        CASUALStartupTasks.lockGUIunzip = false;
+        CASUALConnectionStatusMonitor.resumeAfterStop();
 
 
     }//GEN-LAST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
@@ -461,7 +464,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        ADBTools.adbMonitor(false);
+        CASUALConnectionStatusMonitor.stop();
         new ADBTools().reset();
     }//GEN-LAST:event_formWindowClosing
     boolean buttonEnableStage = false;
@@ -473,15 +476,15 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     private void StatusLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_StatusLabelMouseClicked
         if (buttonEnableStage) {
-            log.level4Debug("Control system override active.  User has manually enabled controls");
+            Log.level4Debug("Control system override active.  User has manually enabled controls");
             startButton.setEnabled(buttonEnableStage);
             this.comboBoxScriptSelector.setEnabled(buttonEnableStage);
             this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS/-build").getString("Window.ExecuteButtonText"));
             buttonEnableStage = false;
 
         }
-        if (!startButton.isEnabled() && !Locks.lockGUIformPrep) {
-            log.level4Debug("Control system override clicked");
+        if (!startButton.isEnabled() && !CASUALStartupTasks.lockGUIformPrep) {
+            Log.level4Debug("Control system override clicked");
             startButton.setText("Click again to enable all controls");
             buttonEnableStage = true;
 
@@ -517,7 +520,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
     public static javax.swing.JTextPane ProgressArea;
     private javax.swing.JLabel StatusLabel;
-    private javax.swing.JComboBox comboBoxScriptSelector;
+    private javax.swing.JComboBox<String> comboBoxScriptSelector;
     private javax.swing.JScrollPane informationScrollPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -594,9 +597,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * @return true if enabled false if not
      */
     @Override
-    public boolean enableControls(boolean status) {
+    public boolean setControlStatus(boolean status) {
 
-        if (!Locks.scriptRunLock.isComplete()) {
+        if (!CASUALStartupTasks.scriptRunLock.isComplete()) {
             return false;
         }
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
@@ -608,20 +611,20 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                 return true;
             }
         }
-        if (!Locks.lockGUIformPrep) {
-            if (!Locks.lockGUIunzip) {
-                if (!Locks.scriptRunLock.isAlive()) {
+        if (!CASUALStartupTasks.lockGUIformPrep) {
+            if (!CASUALStartupTasks.lockGUIunzip) {
+                if (!CASUALStartupTasks.scriptRunLock.isAlive()) {
                     startButton.setEnabled(status);
                     comboBoxScriptSelector.setEnabled(status);
-                    log.level4Debug("Controls Enabled status: " + status);
+                    Log.level4Debug("Controls Enabled status: " + status);
                 } else {
-                    log.level4Debug("Control Change requested but script is running");
+                    Log.level4Debug("Control Change requested but script is running");
                 }
             } else {
-                log.level4Debug("Control Change requested but unzip has not yet finished");
+                Log.level4Debug("Control Change requested but unzip has not yet finished");
             }
         } else {
-            log.level4Debug("Control Change requested but GUI is not ready is set.");
+            Log.level4Debug("Control Change requested but GUI is not ready is set.");
         }
         return checkGUIStatus(status);
     }
@@ -693,12 +696,12 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         this.caspac = caspac;
         isReady = true;
 
-        log.level2Information(caspac.overview);
+        Log.level2Information(caspac.overview);
         /* if (caspac.build.usePictureForBanner) {
          //setup banner with CASPAC.logo
          }*/
         if (caspac.build.alwaysEnableControls) {
-            enableControls(true);
+            setControlStatus(true);
         }
         if (caspac.scripts.size() > 0) {
             for (Script s : caspac.scripts) {
@@ -712,10 +715,12 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                     this.comboBoxScriptSelector.addItem(s.name);
                 }
 
-                log.level4Debug("adding " + s.name + " to UI");
+                Log.level4Debug("adding " + s.name + " to UI");
             }
-            this.comboBoxScriptSelector.setSelectedItem(caspac.getActiveScript().name);
-            log.level2Information(caspac.getScriptByName(this.comboBoxGetSelectedItem()).discription);
+            if (caspac.getActiveScript()!=null){
+                this.comboBoxScriptSelector.setSelectedItem(caspac.getActiveScript().name);
+                Log.level2Information(caspac.getScriptByName(this.comboBoxGetSelectedItem()).discription);
+            }
         }
         if (comboBoxScriptSelector.getItemCount() < 1) {
             // comboBoxScriptSelector.setVisible(false);
@@ -858,7 +863,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             }
             return s;
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
             return "";
         }
     }
@@ -871,7 +876,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             return Integer.toString(new TimeOutOptionPane().timeoutDialog(messageObject.timeoutPresetTime, (Component) Statics.GUI, messageText, title, messageObject.timeoutOptionType, messageObject.timeoutMessageType, messageObject.timeoutOptions, messageObject.timeoutInitialValue));
         } else {
-            new Log().Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText + "\n[RESPONSEEXPECTED]");
+            Log.Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText + "\n[RESPONSEEXPECTED]");
             String s = getCommandLineInput();
             if (s == null || s.equals("")) {
                 return "0";
@@ -882,7 +887,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     private String showActionRequiredInteraction(String messageText, String title) throws HeadlessException {
         String retval;
-        new Log().level4Debug("Displaying Action Is Required Dialog:" + messageText);
+        Log.level4Debug("Displaying Action Is Required Dialog:" + messageText);
         int n = 9999;
         if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             Object[] Options = {"I did it", "I didn't do it"};
@@ -899,7 +904,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                     Options[1]);
         } else {
             while (n != 0 && n != 1) {
-                new Log().Level1Interaction("[ACTIONREQUIRED][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit" + "\n[RESPONSEEXPECTED]");
+                Log.Level1Interaction("[ACTIONREQUIRED][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit" + "\n[RESPONSEEXPECTED]");
                 retval = getCommandLineInput();
                 if (!retval.equals("q") && !retval.equals("Q") && !retval.equals("")) {
                     n = new CASUALMessageObject(messageText).showActionRequiredDialog();
@@ -940,7 +945,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                         Options[1]);
             }
         } else {
-            new Log().Level1Interaction("[CANCELOPTION][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit" + "\n[RESPONSEEXPECTED]");
+            Log.Level1Interaction("[CANCELOPTION][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit" + "\n[RESPONSEEXPECTED]");
             String s = this.getCommandLineInput();
             if (s.equals("q") || s.equals("Q")) {
                 cancelReturn = 1;
@@ -953,7 +958,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     private void showUserNotificationInteraction(String title, String messageText) throws HeadlessException {
-        new Log().level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
+        Log.level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
         if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             if (title != null) {
                 JOptionPane.showMessageDialog((Component) Statics.GUI,
@@ -967,7 +972,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                         JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
-            new Log().Level1Interaction("[NOTIFICATION][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
+            Log.Level1Interaction("[NOTIFICATION][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -978,7 +983,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                     messageText, title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
-            new Log().Level1Interaction("[INFOMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
+            Log.Level1Interaction("[INFOMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
         }
     }
@@ -987,13 +992,13 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             JOptionPane.showMessageDialog((Component) Statics.GUI, messageText, title, ERROR_MESSAGE);
         } else {
-            new Log().Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
+            Log.Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
         }
     }
 
     private String showYesNoInteraction(String title, String messageText) throws HeadlessException {
-        new Log().level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
+        Log.level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
         if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
                 title = "Yes or No";
@@ -1011,7 +1016,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                 title = title + "\n";
             }
             //display the messageText
-            new Log().Level1Interaction("[YESNOOPTION][RETURN or n]" + title + "\n" + messageText + "\npress N for no" + "\n[RESPONSEEXPECTED]");
+            Log.Level1Interaction("[YESNOOPTION][RETURN or n]" + title + "\n" + messageText + "\npress N for no" + "\n[RESPONSEEXPECTED]");
             String s = this.getCommandLineInput();
             if (s.equals("n") || s.equals("N")) {
                 return "false";
@@ -1022,7 +1027,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     private String showInputDialog(String title, String messageText) throws HeadlessException {
-        new Log().level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText + "\n[RESPONSEEXPECTED]");
+        Log.level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText + "\n[RESPONSEEXPECTED]");
         messageText = "<html>" + messageText.replace("\\n", "\n");
         if (Statics.isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
@@ -1031,7 +1036,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                 return JOptionPane.showInputDialog((Component) Statics.GUI, messageText, title, JOptionPane.QUESTION_MESSAGE);
             }
         } else {
-            new Log().Level1Interaction("[INPUT][ANY]" + title + messageText + "\n input:");
+            Log.Level1Interaction("[INPUT][ANY]" + title + messageText + "\n input:");
             return getCommandLineInput();
         }
         //break; unreachable
@@ -1058,5 +1063,10 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     @Override
     public void setDummyGUI(boolean dummy) {
         isDummyGUI=dummy;
+    }
+
+    @Override
+    public void setBlocksUnzipped(int i) {
+        this.setInformationScrollBorderText("Unzipping:"+i);
     }
 }

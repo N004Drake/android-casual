@@ -88,7 +88,7 @@ public class TimeOutOptionPane extends JOptionPane {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
 
                 }
             }

@@ -16,8 +16,8 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.ADB.ADBTools;
 import CASUAL.caspac.Caspac;
+import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.misc.MandatoryThread;
 import CASUAL.network.Pastebin;
 import java.io.File;
@@ -30,24 +30,22 @@ import java.util.zip.ZipException;
 
 /**
  * provides a place for the main thread to break out into different modes.
+ *
  * @author AdamOuler
  */
 public final class CASUALMain {
 
-    String password = "";
-    File caspacLocation;
     boolean exitWhenDone = false;
-    boolean execute = false;
-    static boolean useGUI = false;
-    //TODO: convert android-casual to Maven so it works better cross-platform
 
+    //TODO: convert android-casual to Maven so it works better cross-platform
     /**
      * the default package used for IDE mode or if no scripts are found
      */
     final public static String defaultPackage = "TestScript"; //note this will be used for IDE only.
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{""};
-    static String[] arguments;
+
+    CASUALSettings arguments = new CASUALSettings();
 
     /**
      * Main method launching the application.
@@ -55,8 +53,7 @@ public final class CASUALMain {
      * @param args
      */
     public static void main(String[] args) {
-        arguments = args;
-        //Initialize statics
+        //reset initial variables for everything. 
         Statics.initializeStatics();
         //Override args for test modes
         if (useOverrideArgs) {
@@ -66,74 +63,127 @@ public final class CASUALMain {
     }
 
     /**
-     * Begins actual CASUAL modes this can be called as a reset for CASUAL
-     * without losing args[] in case of a problem
+     * Begins actual CASUAL modes this can be called as a stop for CASUAL
+ without losing state. This does not cause a stop.
      *
      * @param args
      */
     public static void beginCASUAL(String[] args) {
-        String CASUALFileName = new File(new CASUALMain().getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
+        CASUALMain main = new CASUALMain();
+        String CASUALFileName = new File(main.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
         String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
-        boolean shutdown = checkModeSwitchArgs(args);
-        new Log().level2Information("CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
+
+        Log.level2Information("CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
                 + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
                 + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
                 + "    and you are welcome to redistribute it, under certain conditions; run\n"
                 + "    '" + CASUALFileName + " --license'\n"
-                + "    for details. http://android-casual.googlecode.com for source."
+                + "    for details. http://android-casual.googlecode.com for source.\n"
                 + "Logging:" + Statics.getTempFolder() + "\nSystem: " + System.getProperty("os.name"));
-
-        if (!shutdown) { //shutdown may be commanded by modeswitch
-            new CASUALMain().startup(args);
-        }
+        main.arguments.checkArguments(args);
+        main.startup();
+        System.gc();
     }
 
     /**
-     * checkModeSwitchArgs is a primary switch before any real actions happen.
-     * Here we check for switches that will either change the mode of CASUAL or
-     * display something quick and exit.
-     *
-     * @param args
-     * @return true if shutdown is commanded;
+     * startup is where CASUAL starts its normal routines for both
      */
-    private static boolean checkModeSwitchArgs(String args[]) {
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].contains("--temp") || args[i].contains("-t")) {
-                i++;
-                Statics.setTempFolder(args[i]);
+    public void startup() {
+        //starts the scriptRunLock so that the lock will not be enabled when checked for the first time. 
+        CASUALStartupTasks.scriptRunLock.start();
+        //make the temp folder if not created
+        new FileOperations().makeFolder(Statics.getTempFolder());
 
-            }
-            if (args[i].equals("--help") || args[i].equals("-v?")) {
-                new Log().level2Information("\n"
-                        + " Usage: casual.jar [optional parameters]\n"
-                        + " without arguments - Launch the GUI\n"
-                        + " [--help] shows this message and exits\n"
-                        + " [--license] -shows license and exits\n"
-                        + " [--execute/-e \"command\"]-executes any CASUAL command and exits. Launch CASUAL GUI to read about commands"
-                        + " [--caspac/-c path_to" + Statics.Slash + "CASPACzip] -launches CASUAL with a CASPAC"
-                        + " [--gui/-g)] - performs actions with a GUI\n");
-
-                shutdown(0);
-                return true;
-            }
-            if (args[i].equals("--license")) {
-                new Log().level2Information("\n"
-                        + "    This program is free software: you can redistribute it and/or modify\n"
-                        + "    it under the terms of the GNU General Public License as published by\n"
-                        + "    the Free Software Foundation, either version 3 of the License, or\n"
-                        + "    (at your option) any later version.\n"
-                        + "\n"
-                        + "    This program is distributed in the hope that it will be useful,\n"
-                        + "    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-                        + "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-                        + "    GNU General Public License for more details.");
-                shutdown(0);
-                return true;
-            }
-
+        switch (arguments.getCASPACType()) {
+            case CASUAL:
+                startGUI();
+                commonCASUALCASPACStartupTasks();
+                waitForGUI();
+                Statics.GUI.notificationCASUALSound();
+                try {
+                    //TODO Remove this wonkeyness.  This should all be in loadFirstScriptFromCASAPC.
+                    Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
+                    Statics.CASPAC.loadActiveScript();
+                } catch (IOException ex) {
+                    Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Statics.GUI.setCASPAC(Statics.CASPAC);
+                CASUALStartupTasks.startADB.waitFor();
+                startConnectionStatusMonitor();
+                return;
+            case CASPAC:
+                Statics.GUI=new GUI.CommandLine.CommandLineUI();
+                commonCASUALCASPACStartupTasks();
+                Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
+                try {
+                    Statics.CASPAC.loadActiveScript();
+                } catch (IOException ex) {
+                    Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                CASUALStartupTasks.caspacPrepLock.waitFor();
+                CASUALStartupTasks.startADB.waitFor();
+                new CASUALScriptParser().executeActiveScript(Statics.CASPAC);
+                
+                //caspacExecute();
+                break;
+            case EXECUTE:
+                this.doConsoleStartup(arguments.getExecuteCommand());
+                break;
+            case EXIT:
+                shutdown(1);
+                break;
+            default:
+                shutdown(1);
+                break;
         }
-        return false;
+        shutdown(0);
+
+    }
+
+    private void waitForGUI() {
+        try {
+            CASUALStartupTasks.startGUI.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void commonCASUALCASPACStartupTasks() {
+        CASUALStartupTasks.startADB.start();
+        prepareCaspac();
+        setDefaultCASPACScript();
+        Statics.setStatus("waiting for CASPAC");
+        CASUALStartupTasks.caspacPrepLock.waitFor();
+
+    }
+
+    private void caspacExecute() {
+        //Using command line mode
+
+        //start the device monitor
+        //wait for complete;
+        CASUALConnectionStatusMonitor.stop();
+        Statics.CASPAC.waitForUnzipComplete();
+
+        new CASUALScriptParser().executeActiveScript(Statics.CASPAC);
+                
+    }
+
+    private void setDefaultCASPACScript() {
+        if (Statics.CASPAC != null && Statics.CASPAC.scripts != null && Statics.CASPAC.scripts.size() >= 1) {
+            Log.level4Debug("Finalizing active script up to be run");
+                       
+            //TODO set Active Script in CASPAC here through implementation of a new meta parameter for default script. 
+            Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
+            Statics.CASPAC.getActiveScript().scriptContinue = true;
+        }
+    }
+
+    private void startGUI() {
+        CASUALStartupTasks.startGUI = new MandatoryThread(new CASUALTools().GUI);
+        CASUALStartupTasks.startGUI.setName("CASUAL GUI");
+        CASUALStartupTasks.startGUI.start();//starts the GUI if required
     }
 
     /**
@@ -142,14 +192,13 @@ public final class CASUALMain {
      * @param i code to throw
      */
     public static void shutdown(int i) {
-        new Log().level4Debug("Shutting Down");
+        Log.level4Debug("Shutting Down");
         AudioHandler.useSound = false;
         Log.out.flush();
         if (Statics.CASPAC != null && Statics.CASPAC.getActiveScript() != null) {
             Statics.CASPAC.getActiveScript().scriptContinue = false;
         }
-        CASUALConnectionStatusMonitor.reset();
-        
+        CASUALConnectionStatusMonitor.stop();
 
         new ADBTools().shutdown();
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
@@ -157,148 +206,33 @@ public final class CASUALMain {
             try {
                 new Pastebin().pasteAnonymousLog();
             } catch (MalformedURLException ex) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             }
         }
 
         if (Statics.GUI != null) {
             Statics.GUI.dispose();
         }
+        CASUALConnectionStatusMonitor.stop();
 
         Statics.initializeStatics();
 
     }
 
-    private static void doSleep(){
+    private static void doSleep() {
         try {
             Thread.sleep(300);
         } catch (InterruptedException ex) {
             Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void doArgsCheck(String[] args) {
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].contains("--password") || args[i].contains("-p")) {
-                password = args[++i];
-            }
-            if (args[i].contains("--caspac") || args[i].contains("-c") || args[i].contains("--CASPAC") || args[i].contains("-CASPAC")) {
-                if (new File(args[++i]).exists()) {
-                    caspacLocation = new File(args[i]);
-                    new Log().level4Debug("Setting CASPAC location to " + caspacLocation.getAbsolutePath());
-                } else {
-                    new Log().level0Error("@fileNotFound");
-                    return;
-                }
 
-            }
-            if (args[i].contains("--gui") || args[i].contains("-g")) {
-                useGUI = true;
-            }
-            if (args[i].contains("--nosound") || args[i].contains("-n")) {
-                AudioHandler.useSound = false;
-            }
-            if (args[i].contains("--execute") || args[i].contains("-e")) {
-                execute = true;
-                i++;
-            }
+    private void doConsoleStartup(String cmd) {
+        CASUALConnectionStatusMonitor.stop();
+        CASUALScriptParser csp = new CASUALScriptParser();
+        csp.executeOneShotCommand(cmd);
+        Log.level2Information("@scriptComplete");
 
-        }
-
-    }
-
-    /**
-     * startup is where CASUAL starts its normal routines for both
-     *
-     * @param args command line args
-     */
-    public void startup(String[] args) {
-        //starts the scriptRunLock so that the lock will not be enabled when checked for the first time. 
-        Locks.scriptRunLock.start();
-        //make the temp folder
-        if (Statics.getTempFolder() == null) {
-            Statics.setTempFolder(Statics.getTempFolder());
-        }
-
-        new FileOperations().makeFolder(Statics.getTempFolder());
-
-        //parse args
-        if (args.length > 0) {
-            doArgsCheck(args);
-        } else {
-            useGUI = true;
-        }
-        //prepare the CASPAC, locate, unzip and ready it.
-        prepareCaspac();
-        //start the GUI if required
-
-        Locks.startGUI=new Thread(new CASUALTools().GUI);
-        Locks.startGUI.setName("CASUAL GUI");
-        Locks.startGUI.start();//starts the GUI if required
-        
-        //deploy ADB
-        Locks.startADB = startADB();
-
-
-        try {
-            Locks.caspacPrepLock.waitFor();
-            //if not a single commmand, then load up the active script
-            if (!execute) {
-                if (Statics.CASPAC != null && Statics.CASPAC.scripts != null && Statics.CASPAC.scripts.size() >= 1) {
-                    new Log().level4Debug("Finalizing active script up to be run");
-                    //TODO set Active Script in CASPAC here
-                    Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
-                    Statics.CASPAC.getActiveScript().scriptContinue = true;
-                }
-            }
-            if (args.length != 0 && !useGUI) {
-                //Using command line mode
-                Statics.setStatus("waiting for ADB");
-                Locks.startADB.waitFor(); //wait for adb deployment
-
-                //start the device monitor
-                //wait for complete;
-                if (execute) {
-                    doConsoleStartup(args);
-                } else {
-                    ADBTools.adbMonitor(false);
-                    Statics.CASPAC.waitForUnzipComplete();
-
-                    new CASUALScriptParser().executeFirstScriptInCASPAC(Statics.CASPAC);
-                    shutdown(0);
-                }  //use command line args
-            } else {
-                //using GUI mode
-                if (useGUI||Statics.GUI.isDummyGUI()) {
-                    Locks.startGUI.join();
-                    Statics.GUI.notificationCASUALSound();
-                }
-                
-                Statics.GUI.setCASPAC(Statics.CASPAC);
-                ADBTools.adbMonitor(true);
-            }
-        } catch (InterruptedException ex) {
-            new Log().errorHandler(ex);
-
-        }
-    }
-
-    private void doConsoleStartup(String[] args) {
-        for (int i = 0; i < args.length; i++) {
-            Statics.setStatus("parsing");
-            if (args[i].contains("--execute") || args[i].contains("-e")) {
-                i++;
-                ADBTools.adbMonitor(false);
-                CASUALScriptParser csp = new CASUALScriptParser();
-                csp.executeOneShotCommand(args[i]);
-                Statics.setStatus("Complete");
-                new Log().level2Information("@scriptComplete");
-            } else {
-                Statics.setStatus("Invalid CASUAL Startup argument " + args[i]);
-                new Log().level0Error("@unrecognizedCommand");
-            }
-
-        }
-        //   CASUALApp.shutdown(0);
     }
     /**
      * Scans /SCRIPTS/ Folder to locate scripts.
@@ -307,28 +241,25 @@ public final class CASUALMain {
         @Override
         public void run() {
 
-            if (caspacLocation != null && caspacLocation.exists()) {
+            if (arguments.getCaspacLocation() != null && arguments.getCaspacLocation().exists()) {
                 try {
                     Caspac cp;
-                    if (caspacLocation != null && caspacLocation.exists() && !password.isEmpty()) {
-                        cp = new Caspac(caspacLocation, Statics.getTempFolder(), 0, password.toCharArray());
-                        password = "";
-                    } else if (caspacLocation != null && caspacLocation.exists()) {
-                        cp = new Caspac(caspacLocation, Statics.getTempFolder(), 0);
-
+                    if (!arguments.getPassword().isEmpty()) {
+                        cp = new Caspac(arguments.getCaspacLocation(), Statics.getTempFolder(), 0, arguments.getPassword().toCharArray());
+                        arguments.setPassword("");
                     } else {
-                        new Log().level4Debug("exiting setupCASUALCASPAC().  Nothing to be done");
-                        return;
+                        cp = new Caspac(arguments.getCaspacLocation(), Statics.getTempFolder(), 0);
+
                     }
                     cp.loadFirstScriptFromCASPAC();
                     Statics.CASPAC = cp;
                 } catch (IOException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 } catch (Exception ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 }
 
-            } else if (!execute) {   //execute is for single commands
+            } else if (!arguments.isExecute()) {   //execute is for single commands
                 //Build a CASPAC from the SCRIPTS folder
                 CodeSource src = getClass().getProtectionDomain().getCodeSource();
                 Caspac cp;
@@ -338,31 +269,36 @@ public final class CASUALMain {
                     //cp.load();
                     Statics.CASPAC = cp;
                 } catch (ZipException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 } catch (IOException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 }
             }
         }
     };
 
-    /**
-     * Starts a Thread responsible for deploying and starting ADB.
-     * @return a reference to the startADBThread
-     */
-    public MandatoryThread startADB() {
-        MandatoryThread adb = new MandatoryThread(new CASUALTools().adbDeployment);
-        adb.setName("ADB Deployment");
-        adb.start(); //start ADB deployment
-        return adb;
+    private void startConnectionStatusMonitor(){
+       switch (arguments.getMonitorMode()){
+            case ADB:
+                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+                break;
+            case FASTBOOT:
+                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+                break;
+            case HEIMDALL:
+                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+                break;
+            default:
+                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+        }
     }
 
     /**
-     * starts preparing the CASPAC provided. 
+     * starts preparing the CASPAC provided.
      */
     public void prepareCaspac() {
-        Locks.caspacPrepLock = new MandatoryThread(setupCASUALCASPAC);
-        Locks.caspacPrepLock.setName("Preparing Scripts");
-        Locks.caspacPrepLock.start(); //scan self for embedded scripts
+        CASUALStartupTasks.caspacPrepLock = new MandatoryThread(setupCASUALCASPAC);
+        CASUALStartupTasks.caspacPrepLock.setName("Preparing Scripts");
+        CASUALStartupTasks.caspacPrepLock.start(); //scan self for embedded scripts
     }
 }

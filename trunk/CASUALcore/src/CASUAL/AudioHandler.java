@@ -17,11 +17,17 @@
 package CASUAL;
 
 import java.io.BufferedInputStream;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * CASUALAudioSystem handles Sounds
@@ -105,7 +111,7 @@ public class AudioHandler {
                             sleepTillEndOfClip(clip);
                             clip.drain();
                         } catch (IOException error) {
-                            new Log().level3Verbose("File Not Found");
+                            Log.level3Verbose("File Not Found");
                         } catch (UnsupportedAudioFileException ex) {
                             Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (LineUnavailableException ex) {

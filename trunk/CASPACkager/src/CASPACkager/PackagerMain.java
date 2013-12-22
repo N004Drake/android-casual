@@ -56,7 +56,7 @@ public class PackagerMain {
      * output directory for package
      */
     protected static String userOutputDir = "";//the output folder 
-    final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.Slash;
+    final private static String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.slash;
     private static String caspacWithPath = ""; //path to CASPAC
     final private static Log log = new Log();
     static String appendToName = ""; //string after name and before file extension
@@ -64,7 +64,7 @@ public class PackagerMain {
     static boolean hasProcessedFolder = false;//once folder is complete this is true
     static ArrayList<String[]> replaceText;//used to replace text in script
     static ArrayList<String[]> replaceFile;//used to replace files in zip
-    private final String slash = Statics.Slash;
+    private final String slash = Statics.slash;
 
     /**
      * Packages a CASPAC into a CASUAL.
@@ -277,7 +277,7 @@ public class PackagerMain {
         if (!processFolder.equals("") && userOutputDir.equals("")) {
             log.level2Information("No output directory supplied will place "
                     + processFolder + "CASUAL");
-            userOutputDir = processFolder + "CASUAL" + Statics.Slash;
+            userOutputDir = processFolder + "CASUAL" + Statics.slash;
             if (!(new File(userOutputDir).exists())) {
                 File outdir = new File(userOutputDir);
                 outdir.mkdirs();
@@ -297,8 +297,8 @@ public class PackagerMain {
         //if we are using userOutputDir
         if (!userOutputDir.equals("")) {
             // verify there is a slash at the end of userOutputDir
-            if (!userOutputDir.endsWith(Statics.Slash)) {
-                userOutputDir = userOutputDir + Statics.Slash;
+            if (!userOutputDir.endsWith(Statics.slash)) {
+                userOutputDir = userOutputDir + Statics.slash;
             }
             // set output dir to the same as the file    
         }
@@ -312,7 +312,7 @@ public class PackagerMain {
             showMessageAndExit();
         }
 
-        if (appendToName.contains(Statics.Slash)) {
+        if (appendToName.contains(Statics.slash)) {
             log.level0Error("Append to name contains illegal characters");
             showMessageAndExit();
         }
@@ -435,7 +435,7 @@ public class PackagerMain {
     }
 
     private InputStream replaceFileIfNeeded(InputStream zin, ZipEntry entry) {
-        String working = Statics.getTempFolder() + "extractionof" + entry + Statics.Slash;
+        String working = Statics.getTempFolder() + "extractionof" + entry + Statics.slash;
         new File(working).mkdirs();
         try {
             CASUAL.archiving.Unzip.unZipInputStream(zin, working);

@@ -89,7 +89,7 @@ public class Zip {
      * @param TempFolder string of name of folder to dive into
      */
     public void addToTempFolderLoc(String TempFolder) {
-        this.TempFolder = this.TempFolder + Statics.Slash + TempFolder;
+        this.TempFolder = this.TempFolder + Statics.slash + TempFolder;
         if (!(new File(this.TempFolder).exists())) {
             new File(this.TempFolder).mkdirs();
         }
@@ -246,11 +246,11 @@ public class Zip {
     public void injectZip(File injectionZip, String injectionPath) {
         try {
             if (!injectionPath.equals("")) {
-                if (injectionPath.startsWith(Statics.Slash)) {
-                    injectionPath = injectionPath.replaceFirst(Statics.Slash, "");
+                if (injectionPath.startsWith(Statics.slash)) {
+                    injectionPath = injectionPath.replaceFirst(Statics.slash, "");
                 }
-                if (!injectionPath.endsWith(Statics.Slash)) {
-                    injectionPath = injectionPath.concat(Statics.Slash);
+                if (!injectionPath.endsWith(Statics.slash)) {
+                    injectionPath = injectionPath.concat(Statics.slash);
                 }
             }
             byte[] buf = new byte[1024];
@@ -267,7 +267,7 @@ public class Zip {
             }
             zin.close();
             if (!injectionZip.exists()) {
-                log.level0Error("The file " + injectionZip.getAbsolutePath() + " doesn't exist please make sure it is the right location.");
+                Log.level0Error("The file " + injectionZip.getAbsolutePath() + " doesn't exist please make sure it is the right location.");
                 return;
             }
             zin = new ZipInputStream(new FileInputStream(injectionZip));
@@ -288,9 +288,9 @@ public class Zip {
             out.close();
 
         } catch (FileNotFoundException ex) {
-            log.errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (IOException ex) {
-            log.errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }
 
@@ -392,13 +392,13 @@ public class Zip {
     private void addFileToZipDir(File file) throws IOException {
 
         if (!file.exists()) {
-            log.level0Error("File: " + file.toString() + " not found while adding to zip");
+            Log.level0Error("File: " + file.toString() + " not found while adding to zip");
             return;
         }
 
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
-        File fileToAdd = new File(TempFolder + Statics.Slash + file.getName());
+        File fileToAdd = new File(TempFolder + Statics.slash + file.getName());
         if (!fileToAdd.exists()) {
             fileToAdd.createNewFile();
         }
@@ -429,13 +429,13 @@ public class Zip {
     //SHOULD ONLY BE CALLED FROM addDirectory
     private void addFileToZipDir(File file, File destFolder) throws IOException {
         if (!file.exists()) {
-            log.level0Error("File: " + file.toString() + " not found while adding to zip.");
+            Log.level0Error("File: " + file.toString() + " not found while adding to zip.");
             return;
         }
 
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
-        File fileToAdd = new File(destFolder.toString() + Statics.Slash + file.getName());
+        File fileToAdd = new File(destFolder.toString() + Statics.slash + file.getName());
         if (!fileToAdd.exists()) {
             fileToAdd.createNewFile();
         }
@@ -450,7 +450,7 @@ public class Zip {
      */
     public void addFileToZipDIr(File file) throws IOException {
         if (!file.exists()) {
-            log.level0Error("File: " + file.toString() + " not found while adding to zip.");
+            Log.level0Error("File: " + file.toString() + " not found while adding to zip.");
             return;
         }
         if (file.isFile()) {
@@ -467,9 +467,9 @@ public class Zip {
     private void addDirectoryToZipDir(File folder, File parent) throws IOException {
         File dirToAdd;
         if (parent == null) {
-            dirToAdd = new File(TempFolder + Statics.Slash + folder.getName());
+            dirToAdd = new File(TempFolder + Statics.slash + folder.getName());
         } else {
-            dirToAdd = new File(parent.toString() + Statics.Slash + folder.getName());
+            dirToAdd = new File(parent.toString() + Statics.slash + folder.getName());
         }
         if (!dirToAdd.exists()) {
             dirToAdd.mkdir();

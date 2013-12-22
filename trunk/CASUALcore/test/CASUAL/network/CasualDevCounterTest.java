@@ -5,6 +5,7 @@
  */
 package CASUAL.network;
 
+import CASUAL.network.CASUALDevIntegration.CasualDevCounter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

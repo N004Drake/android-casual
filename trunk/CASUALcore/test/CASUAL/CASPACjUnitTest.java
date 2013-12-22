@@ -4,7 +4,7 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.communicationstools.adb.ADBTools;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;

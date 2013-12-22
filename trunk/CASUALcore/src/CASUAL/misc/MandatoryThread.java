@@ -16,77 +16,92 @@
  */
 package CASUAL.misc;
 
-
+import CASUAL.instrumentation.Instrumentation;
+import CASUAL.Statics;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- *extends the functionality of thread for better monitoring. 
+ * extends the functionality of thread for better monitoring.
+ *
  * @author Adam Outler adamoutler@gmail.com
  */
-public class MandatoryThread extends Thread{
-    AtomicBoolean hasStarted = new AtomicBoolean(false);
-    boolean nullThread=false;
+public class MandatoryThread extends Thread {
 
+    AtomicBoolean hasStarted = new AtomicBoolean(false);
+    boolean nullThread = false;
 
     /**
      * constructor for thread sets up a blank Mandatory Thread.
      */
-    public MandatoryThread(){
+    public MandatoryThread() {
         hasStarted.set(true);
-        nullThread=true;
+        nullThread = true;
     }
+
     /**
      * constructor accepts a runnable to be used for the thread.
+     *
      * @param r to be run in a different thread
      */
-    public MandatoryThread(Runnable r){
+    public MandatoryThread(Runnable r) {
         super(r);
     }
- 
-    
+
     /**
-     * starts the thread and sets the "hasStarted" boolean. 
+     * starts the thread and sets the "hasStarted" boolean.
      */
     @Override
     public synchronized void start() {
+        if (nullThread) {
+            return;
+        }
         super.start();
         hasStarted.set(true);
         notify();
-    }
-    
-    /**
-     * isComplete allows for monitoring of the progress of a thread.  If the
-     * thread has started and is no longer alive this will return true.  The
-     * MandatoryThread has done its job.
-     * @return true if MandatoryThread is complete
-     */
-    public boolean isComplete(){
-        return hasStarted.get() && ! super.isAlive();
+        Instrumentation.trackThread(this);
     }
 
     /**
-     * halts the current thread until the mandatoryThread has completed.  If the
-     * thread has not started, it will wait for the thread to start. 
+     * isComplete allows for monitoring of the progress of a thread. If the
+     * thread has started and is no longer alive this will return true. The
+     * MandatoryThread has done its job.
+     *
+     * @return true if MandatoryThread is complete
+     */
+    public boolean isComplete() {
+        return hasStarted.get() && !super.isAlive();
+    }
+
+    /**
+     * halts the current thread until the mandatoryThread has completed. If the
+     * thread has not started, it will wait for the thread to start.
      */
     public synchronized void waitFor() {
         try {
-            if (nullThread){
+            if (nullThread) {
                 return;
             }
-            while (!hasStarted.get()){
+            while (!hasStarted.get()) {
                 wait();
             }
-            if (this.isAlive()){
+            if (this.isAlive()) {
+                System.out.println("waiting for " + this.getName());
                 super.join();
+                System.out.println(this.getName() + " has completed");
             }
         } catch (InterruptedException ex) {
-            
+
         }
+    }
+    @Override
+    public String toString(){
+        StringBuilder sb=new StringBuilder();
+        String n="\n";
+        sb.append("Name:").append(getName()).append(n);
+        sb.append("Started:").append(this.hasStarted).append(n);
+        sb.append("Complete:").append(this.isComplete()).append(n);
+        
+        return sb.toString();
     }
 
 };
-
-
-    
-  
-

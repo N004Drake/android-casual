@@ -75,16 +75,16 @@ public class Pastebin {
         String xdaUsername = new CASUALMessageObject("@interactionPastebinError").inputDialog();
         if (xdaUsername != null) {//CANCEL_OPTION will rerturn a null String
             API paste = new API(devKey);
-            Log log = new Log();
+            
             if (!(user.equals("")) && !(passwd.equals(""))) {
                 String lResult = paste.login(user, passwd);
                 if (lResult.equals("false")) {
-                    log.level4Debug("Pastebin Login Failed");
+                    Log.level4Debug("Pastebin Login Failed");
                 } else {
                     paste.setToken(lResult);
-                    log.level4Debug("Pastebin Login Successful");
+                    Log.level4Debug("Pastebin Login Successful");
                 }
-                String pasteData = new FileOperations().readFile(Statics.getTempFolder() + "log.txt");
+                String pasteData = new FileOperations().readFile(Statics.getTempFolder() + "Log.txt");
 
                 String output = paste.makePaste(pasteData, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-" + xdaUsername, format);
                 if (output.substring(0, 4).equals("http")) {
@@ -93,9 +93,9 @@ public class Pastebin {
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                     clipboard.setContents(stringSelection, null);
                     new CASUALMessageObject("@interactionThankyouForPastebin").showInformationMessage();
-                    log.level4Debug(output);
+                    Log.level4Debug(output);
                 } else {
-                    log.level4Debug(output);
+                    Log.level4Debug(output);
                 }
             }
         }
@@ -109,10 +109,10 @@ public class Pastebin {
     public void pasteAnonymousLog() throws MalformedURLException {
         Pattern svnRev = Pattern.compile("(?=[setViewedRevision]?.{2})[0-9]{3,4}");
         FileOperations fO = new FileOperations();
-        if (!fO.verifyExists(Statics.getTempFolder() + "log.txt")) {
+        if (!fO.verifyExists(Statics.getTempFolder() + "Log.txt")) {
             return;
         }
-        String casualLog = fO.readFile(Statics.getTempFolder() + "log.txt");
+        String casualLog = fO.readFile(Statics.getTempFolder() + "Log.txt");
         Matcher matcher;
         try {
             matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));
@@ -124,7 +124,7 @@ public class Pastebin {
         if ((SVNrev - 5) >= CASRev && casualLog.contains("failed") || casualLog.contains("FAILED") || casualLog.contains("ERROR")) { //build.prop contains the word error on some devices so error is not a good word to track. 
             String slashrep = OSTools.isWindows() ? "\\" : "//";
             String userhome = System.getProperty("user.home");
-            casualLog = casualLog.replace(userhome, slashrep + "USERHOME" + (userhome.endsWith(Statics.Slash) ? slashrep : ""));
+            casualLog = casualLog.replace(userhome, slashrep + "USERHOME" + (userhome.endsWith(Statics.slash) ? slashrep : ""));
             String username = System.getProperty("user.name");
             if (username == null || username.equals("")) {
                 username = System.getenv("USERNAME");
@@ -149,7 +149,7 @@ public class Pastebin {
                 }
                 paste.makePaste(casualLog, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-Anonymous", format);
             } catch (IOException ex) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             }
         }
     }
@@ -160,7 +160,6 @@ public class Pastebin {
      */
     private class API {
 
-        private Log log = new Log();
         private String token; //used for instance
         private String devkey; //used for our program
         private String loginURL = "http://www.pastebin.com/api/api_login.php";
@@ -231,7 +230,7 @@ public class Pastebin {
                 }
                 return response.toString();
             } catch (IOException ex) {
-                log.errorHandler(ex);
+                Log.errorHandler(ex);
             }
             return null;
         }
@@ -254,7 +253,7 @@ public class Pastebin {
 
                 return html.toString();
             } catch (IOException ex) {
-                log.errorHandler(ex);
+                Log.errorHandler(ex);
             }
             return null;
         }

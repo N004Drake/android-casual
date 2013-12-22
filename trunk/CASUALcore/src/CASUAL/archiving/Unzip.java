@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -61,7 +62,7 @@ public class Unzip {
         try {
             this.zipFileEntries = zip.entries();
         } catch (Exception e) {
-            new Log().errorHandler(e);
+            Log.errorHandler(e);
         }
     }
 
@@ -81,7 +82,7 @@ public class Unzip {
         try {
             this.zipFileEntries = zip.entries();
         } catch (Exception e) {
-            new Log().errorHandler(e);
+            Log.errorHandler(e);
         }
     }
 
@@ -99,7 +100,7 @@ public class Unzip {
     }
 
     private void unzipFileToFolder(String outputFolder) throws ZipException, IOException {
-        new Log().level4Debug("Unzipping " + zip.toString());
+        Log.level4Debug("Unzipping " + zip.toString());
 
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
@@ -115,10 +116,10 @@ public class Unzip {
             // create the parent directory structure if needed
             destinationParent.mkdirs();
             if (!entry.isDirectory()) {
-                new Log().level3Verbose("unzipping " + entry.toString());
+                Log.level3Verbose("unzipping " + entry.toString());
                 writeFromZipToFile(zip, entry, newPath);
             } else if (entry.isDirectory()) {
-                new Log().level4Debug(newPath + entry.getName());
+                Log.level4Debug(newPath + entry.getName());
                 new File(newPath + entry.getName()).mkdirs();
             }
         }
@@ -164,13 +165,15 @@ public class Unzip {
      */
     public static void unZipInputStream(InputStream zStream, String outputFolder) throws FileNotFoundException, IOException {
 
-        ZipInputStream ZipInput;
-        ZipInput = new ZipInputStream(zStream);
-        ZipEntry ZipEntryInstance;
-        while ((ZipEntryInstance = ZipInput.getNextEntry()) != null) {
-            new Log().level3Verbose("Unzipping " + ZipEntryInstance.getName());
-            File EntryFile = new File(outputFolder + System.getProperty("file.separator") + ZipEntryInstance.getName());
-            if (ZipEntryInstance.isDirectory()) {
+        zStream.mark(0);
+        ZipInputStream zipInputStream;
+        zipInputStream = new ZipInputStream(zStream);
+        ZipEntry zipEntry;
+        zipInputStream = new ZipInputStream(zStream);
+        while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+            Log.level3Verbose("Unzipping " + zipEntry.getName());
+            File EntryFile = new File(outputFolder + System.getProperty("file.separator") + zipEntry.getName());
+            if (zipEntry.isDirectory()) {
                 EntryFile.mkdirs();
                 continue;
             }
@@ -181,27 +184,32 @@ public class Unzip {
             int currentByte;
             // establish buffer for writing file
             byte data[] = new byte[BUFFER];
-            String currentEntry = ZipEntryInstance.getName();
+            String currentEntry = zipEntry.getName();
             File DestFile = new File(outputFolder + System.getProperty("file.separator"), currentEntry);
             FileOutputStream FileOut = new FileOutputStream(DestFile);
-            BufferedInputStream BufferedInputStream = new BufferedInputStream(ZipInput);
+            BufferedInputStream BufferedInputStream = new BufferedInputStream(zipInputStream);
             BufferedOutputStream Destination;
             Destination = new BufferedOutputStream(FileOut);
-            int numberOfCycles=(int)(ZipEntryInstance.getSize()/BUFFER);
-            boolean updateGUI=false;
-            if (Statics.GUI!=null && Statics.GUI.isReady()){
-                updateGUI=true;
-                Statics.GUI.setProgressBarMax(numberOfCycles);
+            int numberOfCycles=(int)(zipEntry.getSize()/BUFFER);
+            boolean updatePercent=false;
+            if (numberOfCycles>0){
+                updatePercent=true;
             }
             int currentCycle=0;
             while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
                 Destination.write(data, 0, currentByte);
-                if (updateGUI) Statics.GUI.setProgressBar(++currentCycle);
+                if (updatePercent){
+                    Statics.GUI.setProgressBar(++currentCycle);
+                } else {
+                    Statics.GUI.setBlocksUnzipped(++currentCycle);
+                }
+                
             }
+            
             Destination.flush();
             Destination.close();
         }
-        new Log().level3Verbose("Unzip Complete");
+        Log.level3Verbose("Unzip Complete");
     }
 
     /**
@@ -213,7 +221,7 @@ public class Unzip {
         try {
             zip.close();
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }
 

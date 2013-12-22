@@ -139,10 +139,9 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
         try {
             new Pastebin().doPosting();
         } catch (URISyntaxException ex) {
-            Log logThis = new Log();
-            logThis.errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }//GEN-LAST:event_jPastebinSubmitActionPerformed
 
@@ -167,6 +166,6 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
 
     private void refreshLog() {
         final FileOperations FileOperations = new FileOperations();
-        this.jTextArea1.setText(FileOperations.readFile(Statics.getTempFolder() + "log.txt"));
+        this.jTextArea1.setText(FileOperations.readFile(Statics.getTempFolder() + "Log.txt"));
     }
 }

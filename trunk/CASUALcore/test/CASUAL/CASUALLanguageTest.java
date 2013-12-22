@@ -6,7 +6,7 @@
 
 package CASUAL;
 
-import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.communicationstools.adb.ADBTools;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

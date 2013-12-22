@@ -19,7 +19,7 @@ package CASUAL.caspac;
 import CASUAL.AudioHandler;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
-import CASUAL.Locks;
+import CASUAL.CASUALStartupTasks;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.misc.StringOperations;
@@ -27,7 +27,8 @@ import CASUAL.archiving.Unzip;
 import CASUAL.archiving.Zip;
 import CASUAL.crypto.AES128Handler;
 import CASUAL.crypto.MD5sum;
-import CASUAL.network.CasualDevCounter;
+import CASUAL.misc.MandatoryThread;
+import CASUAL.network.CASUALDevIntegration.CasualDevCounter;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -101,7 +102,6 @@ public final class Caspac {
      */
     public final String TempFolder;
 
-    private Log log = new Log();
 
     private ArrayList<CASUAL.misc.MandatoryThread> unzipThreads = new ArrayList<CASUAL.misc.MandatoryThread>();
     //For CASUAL mode
@@ -183,10 +183,10 @@ public final class Caspac {
             //Statics.scriptLocations = new String[]{""};
             setupIDEModeScriptForCASUAL(CASUAL.CASUALMain.defaultPackage);
         } else {
-            log.level4Debug("Opening self as stream for scan");
+            Log.level4Debug("Opening self as stream for scan");
             ZipInputStream zip = new ZipInputStream(jar.openStream());
             ZipEntry ZEntry;
-            log.level4Debug("Picking Jar File:" + src.toString() + " ..scanning.");
+            Log.level4Debug("Picking Jar File:" + src.toString() + " ..scanning.");
             while ((ZEntry = zip.getNextEntry()) != null) {
                 String entry = ZEntry.getName();
                 if (entry.startsWith("SCRIPTS/") || entry.startsWith("SCRIPTS\\")) { //part of CASPAC
@@ -219,10 +219,10 @@ public final class Caspac {
      */
     public void setActiveScript(Script s) {
         CasualDevCounter.doIncrementCounter(s.name+s.metaData.uniqueIdentifier);
-        Locks.caspacScriptPrepLock = true;
+        CASUALStartupTasks.caspacScriptPrepLock = true;
         if (type == 1) {  //CASUAL checks for updates
             try {
-                log.level3Verbose("Setting script " + s.name + " as active and loading");
+                Log.level3Verbose("Setting script " + s.name + " as active and loading");
                 activeScript = s;
                 loadActiveScript();
                 //update script
@@ -253,7 +253,7 @@ public final class Caspac {
     public void removeScript(Script script) {
         if (scripts.contains(script)) {
             scripts.remove(script);
-            log.level4Debug("Removing Script: " + script.name);
+            Log.level4Debug("Removing Script: " + script.name);
         }
     }
 
@@ -300,7 +300,7 @@ public final class Caspac {
             nameStream.putAll(s.getScriptAsMapForCASPAC());
         }
 
-        log.level4Debug("Placeing the following files in the caspac Zip");
+        Log.level4Debug("Placeing the following files in the caspac Zip");
         zip.streamEntryToExistingZip(nameStream);
     }
 
@@ -322,7 +322,7 @@ public final class Caspac {
      * @throws IOException
      */
     public void loadFirstScriptFromCASPAC() throws ZipException, IOException {
-        log.level4Debug("Starting loadFirstScriptFromCASPAC unzip on " + CASPAC.getAbsolutePath());
+        Log.level4Debug("Starting loadFirstScriptFromCASPAC unzip on " + CASPAC.getAbsolutePath());
         String scriptName = "";
         Unzip unzip = new Unzip(CASPAC);
         while (unzip.zipFileEntries.hasMoreElements()) {
@@ -340,7 +340,7 @@ public final class Caspac {
                 this.activeScript = this.getScriptByFilename(filename);
             }
         }
-        new Log().level4Debug("loading CASPAC script");
+        Log.level4Debug("loading CASPAC script");
         performUnzipOnQueue();
     }
 
@@ -349,7 +349,7 @@ public final class Caspac {
      * @throws IOException
      */
     public void loadActiveScript() throws IOException {
-        log.level4Debug("Starting loadActiveScript CASPAC unzip.");
+        Log.level4Debug("Starting loadActiveScript CASPAC unzip.");
         String scriptName = activeScript.name;
 
         if (type == 0) {
@@ -363,13 +363,13 @@ public final class Caspac {
             }
 
         } else if (type == 1) {
-            log.level3Verbose("This is a CASUAL jar with resources");
+            Log.level3Verbose("This is a CASUAL jar with resources");
             try {
                 activeScript = updateIfRequired(activeScript);
             } catch (URISyntaxException ex) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             }
-            log.level4Debug("returned from checking updates.");
+            Log.level4Debug("returned from checking updates.");
             //no need to update again because it is being updated
             replaceScriptByName(activeScript);
 
@@ -401,15 +401,15 @@ public final class Caspac {
             return;
         }
         //Type 0
-        log.level4Debug("Starting commanded Load CASPAC unzip.");
+        Log.level4Debug("Starting commanded Load CASPAC unzip.");
         Unzip unzip = new Unzip(CASPAC);
         while (unzip.zipFileEntries.hasMoreElements()) {
             Object entry = unzip.zipFileEntries.nextElement(); //get the object and begin examination
             handleCASPACFiles(entry, unzip);
         }
-        log.level4Debug("Starting to unzip script zips");
+        Log.level4Debug("Starting to unzip script zips");
         performUnzipOnQueue();
-        log.level4Debug("CASPAC load completed.");
+        Log.level4Debug("CASPAC load completed.");
     }
 
     /**
@@ -429,7 +429,7 @@ public final class Caspac {
     public void waitForUnzipAndRun(Runnable action, boolean onASeparateThread, String ThreadName) {
         waitForUnzipComplete();
         if (onASeparateThread) {
-            Thread t = new Thread(action);
+            MandatoryThread t = new MandatoryThread(action);
             t.setName(ThreadName);
             t.start();
         } else {
@@ -443,16 +443,19 @@ public final class Caspac {
      */
     public void waitForUnzipComplete() {
         boolean[] isUnzipping = new boolean[unzipThreads.size()];
-        log.level4Debug("Currently waiting for Threads:" + Integer.toString(isUnzipping.length));
+        Log.level4Debug("Currently waiting for Threads:" + Integer.toString(isUnzipping.length));
         for (CASUAL.misc.MandatoryThread t : unzipThreads) {
+            if (t!=null&&!t.isComplete()){
+                t.start();
+            }
             t.waitFor();
-            log.level4Debug("Unzip completed!");
+            Log.level4Debug("Unzip completed!");
         }
 
         if (this.caspacShouldBeDeletedAfterExtraction) {
             this.CASPAC.delete();
         }
-        log.level4Debug("Unzipping complete.");
+        Log.level4Debug("Unzipping complete.");
     }
 
     /**
@@ -485,7 +488,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + Statics.Slash, this.type);
+        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + Statics.slash, this.type);
         //Add script 
         scripts.add(script);
         return scripts.get(scripts.indexOf(script));
@@ -498,7 +501,7 @@ public final class Caspac {
      * @return script instance of script to be processed null if not found
      */
     public Script getScriptByFilename(String fileName) {
-        log.level4Debug("Looking up " + fileName);
+        Log.level4Debug("Looking up " + fileName);
         String scriptName = "";
         try {
             scriptName = fileName.substring(0, fileName.lastIndexOf("."));
@@ -511,7 +514,7 @@ public final class Caspac {
         } catch (Exception ex) {
         }
         if (!scriptName.isEmpty()) {
-            Script s = new Script(scriptName, this.TempFolder + scriptName + Statics.Slash, this.type);
+            Script s = new Script(scriptName, this.TempFolder + scriptName + Statics.slash, this.type);
             this.scripts.add(s);
             return this.scripts.get(scripts.size() - 1);
         } else {
@@ -544,27 +547,27 @@ public final class Caspac {
                 return s;
             }
         }
-        Script s = new Script(name, this.TempFolder + Statics.Slash + name + Statics.Slash, this.type);
+        Script s = new Script(name, this.TempFolder + Statics.slash + name + Statics.slash, this.type);
         this.scripts.add(s);
         return this.scripts.get(scripts.size() - 1);
     }
 
     private void performUnzipOnQueue() {
-        log.level3Verbose("Performing unzip of resources.");
-        for (Thread t : this.unzipThreads) {
+        Log.level3Verbose("Performing unzip of resources.");
+        for (MandatoryThread t : this.unzipThreads) {
             t.start();
         }
     }
 
     private void setBuildPropInformation(Unzip pack, Object entry) throws IOException {
-        log.level4Debug("Found -build.properties adding information to "
+        Log.level4Debug("Found -build.properties adding information to "
                 + "CASPAC");
         build = new Build(pack.streamFileFromZip(entry));
         build.loadPropsToVariables();
     }
 
     private void extractCASPACBanner(Unzip pack, Object entry, String filename) throws IOException {
-        log.level4Debug("Found logo adding information to "
+        Log.level4Debug("Found logo adding information to "
                 + "CASPAC");
         logo = ImageIO.read(ImageIO.createImageInputStream(pack.streamFileFromZip(entry)));
         if (filename.isEmpty()) {
@@ -603,23 +606,23 @@ public final class Caspac {
         if (filename.toString().endsWith(".meta")) {
 
             Script script = getScriptInstanceByFilename(filename.toString());
-            log.level4Debug("Found METADATA for " + script.name + ".");
+            Log.level4Debug("Found METADATA for " + script.name + ".");
             int i;
             if (!scripts.contains(script)) {
-                log.level4Debug(script.name + " not found in CASPAC adding"
+                Log.level4Debug(script.name + " not found in CASPAC adding"
                         + " script to CASPAC.");
                 scripts.add(script);
             }
             i = scripts.indexOf(script);
 
             script.metaData.load(pack.streamFileFromZip(entry));
-            log.level4Debug("Added METADATA to " + script.name + ".");
+            Log.level4Debug("Added METADATA to " + script.name + ".");
             int md5ArrayPosition = 0;
             scripts.set(i, script);
         } else if (filename.toString().endsWith(".scr")) {
             Script script = getScriptInstanceByFilename(filename.toString());
             script.scriptContents = fo.readTextFromStream(pack.streamFileFromZip(entry));
-            log.level4Debug("Added Script for " + script.name + ".");
+            Log.level4Debug("Added Script for " + script.name + ".");
             script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.scriptContents), filename));
 
         } else if (filename.toString().endsWith(".zip")) {
@@ -630,13 +633,13 @@ public final class Caspac {
             t.setName("zip File Preparation " + unzipThreads.size());
             this.unzipThreads.add(t);
 
-            log.level4Debug("Added .zip to " + script.name + ". It will be unziped at end of unpacking.");
+            Log.level4Debug("Added .zip to " + script.name + ". It will be unziped at end of unpacking.");
 
         } else if (filename.toString().endsWith(".txt")) {
             Script script = getScriptInstanceByFilename(filename.toString());
             String description = fo.readTextFromStream(pack.streamFileFromZip(entry));
             script.discription = description;
-            log.level4Debug("Added Description to " + script.name + ".");
+            Log.level4Debug("Added Description to " + script.name + ".");
             script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.discription), filename));
         }
     }
@@ -645,7 +648,7 @@ public final class Caspac {
         Properties prop = new Properties();
         prop.load(in);
         this.setBuild(prop);
-        log.level4Debug(StringOperations.convertStreamToString(this.build.getBuildPropInputStream()));
+        Log.level4Debug(StringOperations.convertStreamToString(this.build.getBuildPropInputStream()));
 
     }
 
@@ -657,31 +660,31 @@ public final class Caspac {
 
         if (entry.equals("SCRIPTS/-Overview.txt") || entry.equals("SCRIPTS\\-Overview.txt")) {
 
-            log.level4Debug("processing:" + entry);
+            Log.level4Debug("processing:" + entry);
             this.overview = fo.readTextFromResource(entry);
             System.out.println("overview " + overview);
         } else if (entry.equals("SCRIPTS/-build.properties") || entry.equals("SCRIPTS\\-build.properties")) {
-            log.level4Debug("processing:" + entry);
+            Log.level4Debug("processing:" + entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             setBuild(in);
         } else if (entry.equals("SCRIPTS/-logo.png") || entry.equals("SCRIPTS\\-logo.png")) {
-            log.level4Debug("processing:" + entry);
+            Log.level4Debug("processing:" + entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             logo = ImageIO.read(ImageIO.createImageInputStream(in));
         } else if (entry.endsWith(".txt")) {
-            log.level4Debug("processing:" + entry);
+            Log.level4Debug("processing:" + entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
             this.getScriptByFilename(entry).discription = fo.readTextFromResource(entry);
         } else if (entry.endsWith(".scr")) {
-            log.level4Debug("processing:" + entry);
+            Log.level4Debug("processing:" + entry);
             System.out.println("SCRIPT CONTENTS:" + fo.readTextFromResource(entry));
             this.getScriptByFilename(entry).scriptContents = fo.readTextFromResource(entry);
 
         } else if (entry.endsWith(".meta")) {
-            log.level4Debug("processing:" + entry);
+            Log.level4Debug("processing:" + entry);
             System.out.println("loading meta " + entry);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(entry);
@@ -689,11 +692,11 @@ public final class Caspac {
             prop.load(in);
             this.getScriptByFilename(entry).metaData.load(prop);
         } else if (entry.endsWith(".zip")) {
-            log.level4Debug("processing:" + entry);
-            log.level3Verbose("found zip at " + entry);
+            Log.level4Debug("processing:" + entry);
+            Log.level3Verbose("found zip at " + entry);
             this.getScriptByFilename(entry).scriptZipFile = entry;
         }
-        log.level4Debug("getting MD5 for:" + entry);
+        Log.level4Debug("getting MD5 for:" + entry);
         new MD5sum().getLinuxMD5Sum(Caspac.class.getClassLoader().getResourceAsStream(entry), entry);
     }
 
@@ -706,15 +709,15 @@ public final class Caspac {
             File f = new File(".");
             caspacPath = f.getCanonicalPath() + "/SCRIPTS/";
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
         String scriptPath = caspacPath + defaultPackage;
         try {
             this.setBuild(new BufferedInputStream(new FileInputStream(caspacPath + "-build.properties")));
         } catch (FileNotFoundException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
         this.overview = fo.readFile(caspacPath + "-Overview.txt");
         String logof = caspacPath + "-logo.png";
@@ -728,7 +731,7 @@ public final class Caspac {
         }
         build.bannerPic = logof;
 
-        log.level4Debug("IDE MODE PATH=" + scriptPath);
+        Log.level4Debug("IDE MODE PATH=" + scriptPath);
         getScriptByName(defaultPackage).scriptContents = fo.readFile(scriptPath + ".scr");
         getScriptByName(defaultPackage).discription = fo.readFile(scriptPath + ".txt");
         try {
@@ -769,11 +772,11 @@ public final class Caspac {
     }
 
     private void updateMD5s() {
-        Thread update;
-        update = new Thread(CASUALTools.updateMD5s);
+        MandatoryThread update;
+        update = new MandatoryThread(CASUALTools.updateMD5s);
         update.setName("Updating MD5s");
         update.start(); //ugly  move this to somewhere else
-        log.level3Verbose("IDE Mode: Using " + CASUAL.CASUALMain.defaultPackage + ".scr ONLY!");
+        Log.level3Verbose("IDE Mode: Using " + CASUAL.CASUALMain.defaultPackage + ".scr ONLY!");
     }
 
     /**
@@ -789,7 +792,7 @@ public final class Caspac {
         //TODO reenable SCRIPT updates. 
     }
     /*
-     Log log = new Log();
+     
      if (s.metaData.minSVNversion.isEmpty()) {
      return s;
      }
@@ -800,30 +803,30 @@ public final class Caspac {
      String myScriptName=s.name;
      CASUALUpdates ci=new CASUALUpdates();
      Properties updatedprop=new Properties();
-     log.level3Verbose("creating new script instance to compare against online version");
+     Log.level3Verbose("creating new script instance to compare against online version");
      Script updatedScript=new Script(s);
      new File(s.tempDir).mkdirs();
-     log.level3Verbose("getting updated script version info");
+     Log.level3Verbose("getting updated script version info");
         
      //TODO: downloadMetaFromRepoForScript hangs.  Script will not complte unzip because of this.  Updates are down
      updatedprop.load(ci.downloadMetaFromRepoForScript(s));
-     log.level3Verbose("updating meta");
+     Log.level3Verbose("updating meta");
      updatedScript.metaData.load(updatedprop);
         
      int updatedSVNVersion=Integer.parseInt(updatedScript.metaData.minSVNversion);
      int updatedScriptVersion=Integer.parseInt(updatedScript.metaData.scriptRevision);
-     log.level3Verbose("comparing script information");
+     Log.level3Verbose("comparing script information");
      if (mySVNVersion<updatedSVNVersion){
      updatedScript.scriptContents="";
-     log.level2Information("\n"+updatedScript.metaData.killSwitchMessage);
+     Log.level2Information("\n"+updatedScript.metaData.killSwitchMessage);
      return updatedScript;
      } else if (myScriptVersion< updatedScriptVersion){
-     log.level2Information("@scriptIsOutOfDate");
-     log.level2Information("\n"+updatedScript.metaData.updateMessage);
+     Log.level2Information("@scriptIsOutOfDate");
+     Log.level2Information("\n"+updatedScript.metaData.updateMessage);
      updatedScript=ci.updateScript(updatedScript,this.TempFolder);
      return updatedScript;
      } else {
-     log.level2Information("@noUpdateRequired");
+     Log.level2Information("@noUpdateRequired");
      return s;
      }
 
@@ -911,10 +914,10 @@ public final class Caspac {
          * @throws IOException
          */
         public Build(InputStream prop) throws IOException {
-            log.level4Debug("Loading build information from inputstream");
+            Log.level4Debug("Loading build information from inputstream");
             buildProp.load(prop);
             loadPropsToVariables();
-            log.level4Debug(windowTitle + " - " + bannerText + " - " + developerName);
+            Log.level4Debug(windowTitle + " - " + bannerText + " - " + developerName);
 
         }
 
@@ -924,7 +927,7 @@ public final class Caspac {
          * @param prop build.properties file
          */
         public Build(Properties prop) {
-            log.level4Debug("Loading build information from prop information");
+            Log.level4Debug("Loading build information from prop information");
             this.buildProp = prop;
             loadPropsToVariables();
         }
@@ -1019,6 +1022,6 @@ public final class Caspac {
         sb.append("Working Dir: ").append(this.TempFolder).append(n);
         sb.append(this.build.buildProp.toString());
 
-        return "";
+        return sb.toString();
     }
 }

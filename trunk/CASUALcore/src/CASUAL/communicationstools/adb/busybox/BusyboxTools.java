@@ -14,9 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL;
+package CASUAL.communicationstools.adb.busybox;
 
-import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.Log;
+import CASUAL.ResourceDeployer;
+import CASUAL.Shell;
+import CASUAL.Statics;
+import CASUAL.communicationstools.adb.ADBTools;
 
 /**
  * BusyboxTools deploys and gives an on-device reference to busybox.
@@ -24,6 +28,16 @@ import CASUAL.CommunicationsTools.ADB.ADBTools;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class BusyboxTools {
+    /**
+     * Busybox for Linux ARMv4tl is the most compatible with all ARM according
+     * to Busybox site. This is intended for the device, not the host.
+     */
+    public static final String busyboxARM = "/CASUAL/communicationstools/adb/busybox/resources/busybox-armv4tl";
+    /**
+     * Busybox for Linux x86. This is intended for the device, not the host.
+     */
+    public static final String busyboxX86 = "/CASUAL/communicationstools/adb/busybox/resources/busybox-i686";
+    //Windows permissions elevator
 
     final String busyboxLocation = "/data/local/tmp/busybox";
     ADBTools adb = new ADBTools();
@@ -64,22 +78,22 @@ public class BusyboxTools {
         if (bbtools.busyboxIsInstalled()) {
             return bbtools.busyboxLocation;
         } else {
-            new Log().level4Debug("deploying busybox");
+            Log.level4Debug("deploying busybox");
             return bbtools.deployBusybox();
         }
     }
 
     private String deployBusybox() {
-        FileOperations fo = new FileOperations();
+        ResourceDeployer rd=new ResourceDeployer();
         String busyboxOnHost = Statics.getTempFolder() + "busybox";
         String[] installCmd = {adb.getBinaryLocation(), "push", busyboxOnHost, busyboxLocation};
         String busyboxResource;
         if (getDeviceArch().equals("ARM")) {
-            busyboxResource = Statics.busyboxARM;
+            busyboxResource = busyboxARM;
         } else {
-            busyboxResource = Statics.busyboxX86;
+            busyboxResource = busyboxX86;
         }
-        fo.copyFromResourceToFile(busyboxResource, busyboxOnHost);
+        rd.copyFromResourceToFile(busyboxResource, busyboxOnHost);
         new Shell().silentShellCommand(installCmd);
         String check = new Shell().sendShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 777 /data/local/tmp/busybox;ls /data/local/tmp"});
         if (check.contains("busybox")) {

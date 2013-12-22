@@ -16,15 +16,18 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.Fastboot.FastbootTools;
-import CASUAL.CommunicationsTools.ADB.ADBTools;
-import CASUAL.Heimdall.HeimdallTools;
-import CASUAL.Heimdall.HeimdallInstall;
+import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
+import CASUAL.caspac.Caspac;
+import CASUAL.communicationstools.adb.ADBTools;
+import CASUAL.communicationstools.adb.busybox.BusyboxTools;
+import CASUAL.communicationstools.fastboot.FastbootTools;
+import CASUAL.communicationstools.heimdall.HeimdallInstall;
+import CASUAL.communicationstools.heimdall.HeimdallTools;
+import CASUAL.communicationstools.heimdall.drivers.WindowsDrivers;
+import CASUAL.crypto.MD5sum;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
 import CASUAL.network.Pastebin;
-import CASUAL.caspac.Caspac;
-import CASUAL.crypto.MD5sum;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -60,7 +63,7 @@ public class CASUALLanguage {
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = caspac;
     }
-    Log log = new Log();
+    
     static String GOTO = "";
     int CurrentLine = 1;
 
@@ -115,10 +118,10 @@ public class CASUALLanguage {
             //Close the input stream
             dataIn.close();
             if (WindowsDrivers.removeDriverOnCompletion == 2) {//2 for remove driver 1 for do not remove
-                log.level2Information("Removing generic USB driver as requested");
+                Log.level2Information("Removing generic USB driver as requested");
                 new WindowsDrivers(2).uninstallCADI();
             }
-            log.level2Information("@done");
+            Log.level2Information("@done");
             //yeah yeah, overly broad chatch.  read below. 
         } catch (Exception e) {
             /*
@@ -130,11 +133,11 @@ public class CASUALLanguage {
              *  CASUAL will take the blame for the end user and the developer will
              *  see that it was a problem with their script
              */
-            log.level0Error("@problemParsingScript");
-            log.level0Error(strLine);
-            log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
-            log.level0Error("@problemParsingScript");
-            log.level0Error(strLine);
+            Log.level0Error("@problemParsingScript");
+            Log.level0Error(strLine);
+            Log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
+            Log.level0Error("@problemParsingScript");
+            Log.level0Error(strLine);
         }
 
     }
@@ -149,7 +152,7 @@ public class CASUALLanguage {
     public String commandHandler(String line) throws IOException {
         line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
         if (line.equals("")) {
-            //log.level4Debug("received blank line");
+            //Log.level4Debug("received blank line");
             return "";
         }
         /*OPERATING SYSTEM COMMANDS
@@ -162,8 +165,8 @@ public class CASUALLanguage {
             if (OSTools.isLinux() || OSTools.isMac()) {
                 String removeCommand = "$LINUXMAC";
                 line = processIdentifiedCommand(removeCommand, line);
-                log.progress("Linux Or Mac Detected: ");
-                log.level4Debug("OS IS LINUX or MAC! remaining commands:" + line);
+                Log.progress("Linux Or Mac Detected: ");
+                Log.level4Debug("OS IS LINUX or MAC! remaining commands:" + line);
             } else {
                 return "";
             }
@@ -172,8 +175,8 @@ public class CASUALLanguage {
             if (OSTools.isLinux() || OSTools.isWindows()) {
                 String removeCommand = "$LINUXWINDOWS";
                 line = processIdentifiedCommand(removeCommand, line);
-                log.progress("Windows or Linux Detected: ");
-                log.level4Debug("OS IS WINDOWS OR LINUX! remaining commands:" + line);
+                Log.progress("Windows or Linux Detected: ");
+                Log.level4Debug("OS IS WINDOWS OR LINUX! remaining commands:" + line);
             } else {
                 return "";
             }
@@ -182,8 +185,8 @@ public class CASUALLanguage {
             if (OSTools.isWindows() || OSTools.isMac()) {
                 String removeCommand = "$WINDOWSMAC";
                 line = processIdentifiedCommand(removeCommand, line);
-                log.progress("Mac or Windows Detected: ");
-                log.level4Debug("OS IS Windows or Mac! remaining commands:" + line);
+                Log.progress("Mac or Windows Detected: ");
+                Log.level4Debug("OS IS Windows or Mac! remaining commands:" + line);
             } else {
                 return "";
             }
@@ -192,28 +195,28 @@ public class CASUALLanguage {
             if (OSTools.isLinux()) {
                 String removeCommand = "$LINUX";
                 line = processIdentifiedCommand(removeCommand, line);
-                log.progress("Linux Detected: ");
-                log.level4Debug("OS IS LINUX! remaining commands:" + line);
+                Log.progress("Linux Detected: ");
+                Log.level4Debug("OS IS LINUX! remaining commands:" + line);
             } else {
                 return "";
             }
         }
         if (line.startsWith("$WINDOWS")) {
             if (OSTools.isWindows()) {
-                log.progress("Windows Detected: ");
+                Log.progress("Windows Detected: ");
                 String removeCommand = "$WINDOWS";
                 line = processIdentifiedCommand(removeCommand, line);
-                log.level4Debug("OS IS WINDOWS! remaining commands:" + line);
+                Log.level4Debug("OS IS WINDOWS! remaining commands:" + line);
             } else {
                 return "";
             }
         }
         if (line.startsWith("$MAC")) {
             if (OSTools.isMac()) {
-                log.progress("Mac Detected: ");
+                Log.progress("Mac Detected: ");
                 String removeCommand = "$MAC";
                 line = processIdentifiedCommand(removeCommand, line);
-                log.level4Debug("OS IS MAC! remaining commands:" + line);
+                Log.level4Debug("OS IS MAC! remaining commands:" + line);
             } else {
                 return "";
             }
@@ -251,9 +254,9 @@ public class CASUALLanguage {
             }
             //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
             line = line.replace("$HALT", "");
-            log.level4Debug("HALT RECEIVED");
+            Log.level4Debug("HALT RECEIVED");
             line = StringOperations.removeLeadingSpaces(line);
-            log.level4Debug("Finishing remaining commands:" + line);
+            Log.level4Debug("Finishing remaining commands:" + line);
 
         }
 
@@ -263,16 +266,16 @@ public class CASUALLanguage {
             line = line.replace("$SENDLOG", "");
             line = StringOperations.removeLeadingSpaces(line);
             if (StringOperations.removeLeadingAndTrailingSpaces(line).equals("")) {
-                log.level4Debug("Sendlog Command Issued!\nNo remaining commands");
+                Log.level4Debug("Sendlog Command Issued!\nNo remaining commands");
             } else {
-                log.level4Debug("Sendlog Command Issued!\nFinishing remaining commands:" + line);
+                Log.level4Debug("Sendlog Command Issued!\nFinishing remaining commands:" + line);
             }
             try {
                 new Pastebin().doPosting();
             } catch (IOException ex) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             } catch (URISyntaxException ex) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             }
             return "";
         }
@@ -298,12 +301,12 @@ public class CASUALLanguage {
             String Event[] = line.split(",");
             try {
                 Statics.ActionEvents.add(Event[0]);
-                log.level4Debug("***NEW EVENT ADDED***");
-                log.level4Debug("ON EVENT: " + Event[0]);
+                Log.level4Debug("***NEW EVENT ADDED***");
+                Log.level4Debug("ON EVENT: " + Event[0]);
                 Statics.ReactionEvents.add(Event[1]);
-                log.level4Debug("PERFORM ACTION: " + Event[1]);
+                Log.level4Debug("PERFORM ACTION: " + Event[1]);
             } catch (Exception e) {
-                log.errorHandler(e);
+                Log.errorHandler(e);
 
             }
             return "";
@@ -314,13 +317,13 @@ public class CASUALLanguage {
         if (line.startsWith("$CLEARON")) {
             Statics.ActionEvents = new ArrayList<String>();
             Statics.ReactionEvents = new ArrayList<String>();
-            log.level4Debug("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
+            Log.level4Debug("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return "";
         }
 
 //# is a comment Disregard commented lines
         if (line.startsWith("#")) {
-            log.level4Debug("Ignoring commented line" + line);
+            Log.level4Debug("Ignoring commented line" + line);
             return "";
         }
 
@@ -328,7 +331,7 @@ public class CASUALLanguage {
         if (line.equals("")) {
             return "";
         }
-        log.level4Debug("SCRIPT COMMAND:" + line);
+        Log.level4Debug("SCRIPT COMMAND:" + line);
 
         /*
          * $IFCONTAINS takes:
@@ -357,7 +360,7 @@ public class CASUALLanguage {
             return doIfContainsReturnResults(line, false);
         }
         if (line.startsWith("$SLEEP")) {
-            log.level3Verbose("detected sleep command: " + line);
+            Log.level3Verbose("detected sleep command: " + line);
             int sleeptime;
             line = line.replace("$SLEEP", "").trim();
             if (line.startsWith("MILLIS")) {
@@ -371,7 +374,7 @@ public class CASUALLanguage {
             }
 
             try {
-                log.level2Information("sleeping for " + sleeptime / 1000 + " seconds");
+                Log.level2Information("sleeping for " + sleeptime / 1000 + " seconds");
                 Thread.sleep(sleeptime);
             } catch (InterruptedException ex) {
             }
@@ -384,13 +387,13 @@ public class CASUALLanguage {
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$BUSYBOX")) {
             line = line.replace("$BUSYBOX", BusyboxTools.getBusyboxLocation());
-            log.level4Debug("Expanded $BUSYBOX: " + line);
+            Log.level4Debug("Expanded $BUSYBOX: " + line);
         }
 
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (line.contains("$SLASH")) {
-            line = line.replace("$SLASH", Statics.Slash);
-            log.level4Debug("Expanded $SLASH: " + line);
+            line = line.replace("$SLASH", Statics.slash);
+            Log.level4Debug("Expanded $SLASH: " + line);
         }
 //$ZIPFILE is a reference to the Script's .zip file
         if (line.contains("$ZIPFILE")) {
@@ -400,7 +403,7 @@ public class CASUALLanguage {
             }
 
             line = line.replace("$ZIPFILE", ScriptTempFolder);
-            log.level4Debug("Expanded $ZIPFILE: " + line);
+            Log.level4Debug("Expanded $ZIPFILE: " + line);
         }
 
         if (line.contains("\\n") && (line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERCANCELOPTION"))) {
@@ -412,7 +415,7 @@ public class CASUALLanguage {
                 new FileOperations().makeFolder(CASUALHOME);
             }
             line = line.replace("$HOMEFOLDER", CASUALHOME);
-            log.level4Debug("Expanded $HOMEFOLDER" + line);
+            Log.level4Debug("Expanded $HOMEFOLDER" + line);
         }
 
         /*
@@ -420,10 +423,10 @@ public class CASUALLanguage {
          */
 //$ECHO command will display text in the main window
         if (line.startsWith("$ECHO")) {
-            log.level4Debug("Received ECHO command" + line);
+            Log.level4Debug("Received ECHO command" + line);
             line = line.replace("$ECHO", "");
             line = StringOperations.removeLeadingSpaces(line);
-            log.level2Information(line);
+            Log.level2Information(line);
             return line;
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
         } else if (line.startsWith("$LISTDIR")) {
@@ -431,7 +434,7 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line);
             if (OSTools.isLinux() || OSTools.isMac()) {
             } else {
-                line = line.replace("/", Statics.Slash);
+                line = line.replace("/", Statics.slash);
             }
             File[] files = new File(line).listFiles();
             String retval = "";
@@ -439,14 +442,9 @@ public class CASUALLanguage {
                 for (File file : files) {
                     retval = retval + file.getAbsolutePath() + "\n";
                     try {
-                        //TODO: create a method which will parse $ON action/reaction events.  This is currently implemented in Shell() but should be moved to ScriptParser or script spooler. 
-                        //or parse $ON events from CASUALScriptParser
-                        //this method can create a problem if the device is in recovery mode.
-                        //the problem could be solved by creating a new method which will
-                        //parse $ON action/reaction events which is the purpose for this..
                         commandHandler("shell \"echo " + file.getCanonicalPath() + "\"");
                     } catch (IOException ex) {
-                        log.errorHandler(ex);
+                        Log.errorHandler(ex);
                     }
                 }
             }
@@ -456,14 +454,14 @@ public class CASUALLanguage {
         } else if (line.startsWith("$MAKEDIR")) {
             line = line.replace("$MAKEDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
-            log.level4Debug("Creating Folder: " + line);
+            Log.level4Debug("Creating Folder: " + line);
             new File(line).mkdirs();
             return line;
 // $REMOVEDIR will make a folder
         } else if (line.startsWith("$REMOVEDIR")) {
             line = line.replace("$REMOVEDIR", "");
             line = StringOperations.removeLeadingSpaces(line);
-            log.level4Debug("Creating Folder: " + line);
+            Log.level4Debug("Creating Folder: " + line);
             new FileOperations().recursiveDelete(line);
             return line;
 
@@ -493,8 +491,8 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
             n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserCancelOption();
             if (n == 1) {
-                log.level0Error(this.CASPAC.getActiveScript().name);
-                log.level0Error("@canceledAtUserRequest");
+                Log.level0Error(this.CASPAC.getActiveScript().name);
+                Log.level0Error("@canceledAtUserRequest");
                 Statics.CASPAC.getActiveScript().scriptContinue = false;
                 return "";
             }
@@ -506,8 +504,8 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
             int n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showActionRequiredDialog();
             if (n == 1) {
-                log.level0Error(this.CASPAC.getActiveScript().name);
-                log.level0Error("@haltedPerformActions");
+                Log.level0Error(this.CASPAC.getActiveScript().name);
+                Log.level0Error("@haltedPerformActions");
                 Statics.CASPAC.getActiveScript().scriptContinue = false;
                 return "";
             }
@@ -526,7 +524,7 @@ public class CASUALLanguage {
             }
             inputBoxText = returnSafeCharacters(inputBoxText);
 
-            log.level4Debug(inputBoxText);
+            Log.level4Debug(inputBoxText);
 
             String command = Message[2].replace("$USERINPUT", inputBoxText);
             this.commandHandler(command);
@@ -542,9 +540,9 @@ public class CASUALLanguage {
                 downloadCommand[i] = downloadCommand[i].trim();
             }
             FileOperations fo = new FileOperations();
-            log.level4Debug("Downloading " + downloadCommand[2]);
-            log.level4Debug("From " + downloadCommand[0]);
-            log.level4Debug("to " + downloadCommand[1]);
+            Log.level4Debug("Downloading " + downloadCommand[2]);
+            Log.level4Debug("From " + downloadCommand[0]);
+            Log.level4Debug("to " + downloadCommand[1]);
             if (!new File(downloadCommand[1]).getParentFile().exists()) {
                 new File(downloadCommand[1]).getParentFile().mkdirs();
             }
@@ -559,7 +557,7 @@ public class CASUALLanguage {
                 }
                 return "";
             } else {
-                log.level0Error("Invalid download command");
+                Log.level0Error("Invalid download command");
                 return "Invalid Download Command";
             }
 
@@ -584,7 +582,7 @@ public class CASUALLanguage {
 
             line = line.replace("$FLASH", "").trim();
             if (!line.contains(",")) {
-                log.level0Error("Missing Comma in $FLASH command");
+                Log.level0Error("Missing Comma in $FLASH command");
                 throw new RuntimeException("no comma to split and specify destination");
             }
             String[] split = line.split(",");
@@ -601,10 +599,10 @@ public class CASUALLanguage {
                 }
                 return "Pushed " + x + " bytes";
             } catch (FileNotFoundException ex) {
-                new Log().level0Error("@fileNotFound");
+                Log.level0Error("@fileNotFound");
                 throw new RuntimeException("File not found");
             } catch (Exception ex) {
-                new Log().level0Error("@failedToWriteFile");
+                Log.level0Error("@failedToWriteFile");
                 throw new RuntimeException("Failed to write file");
             }
 //$PULL will push a file to the specified block eg $PULL  /dev/block/mmcblk0p5 , $ZIPFILEmyFile
@@ -612,7 +610,7 @@ public class CASUALLanguage {
 
             line = line.replace("$PULL", "").trim();
             if (!line.contains(",")) {
-                log.level0Error("Missing Comma in $PULL command");
+                Log.level0Error("Missing Comma in $PULL command");
                 throw new RuntimeException("no comma to split and specify destination");
             }
             String[] split = line.split(",");
@@ -632,18 +630,19 @@ public class CASUALLanguage {
         } else if (line.startsWith("$HEIMDALL")) {
             line = line.replace("$HEIMDALL", "");
             line = StringOperations.removeLeadingSpaces(line);
-            log.level4Debug("Received Command: " + line);
-            log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
+            Log.level4Debug("Received Command: " + line);
+            Log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
             HeimdallInstall heimdallInstall = new HeimdallInstall();
-            if (heimdallInstall.checkAndDeployHeimdall()) {
+            
+            if (!new HeimdallTools().run(new String[]{"detect"},5000, true).contains("CritERROR!!!")) {
                 ArrayList<String> intermediateCommand=new ShellTools().parseCommandLine(line);
                 String[] command=intermediateCommand.toArray(new String[intermediateCommand.size()]);
-                new HeimdallTools().doHeimdallWaitForDevice();
+                new HeimdallTools().waitForDevice();
                 
                 /* if (Statics.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
                  }*/
-                log.level2Information("@executingHeimdall");
+                Log.level2Information("@executingHeimdall");
                 
                 
                 return new HeimdallTools().doHeimdallShellCommand(command);
@@ -654,12 +653,12 @@ public class CASUALLanguage {
         } else if (line.startsWith("$FASTBOOT")) {
             line = line.replace("$FASTBOOT", "");
             line = StringOperations.removeLeadingSpaces(line);
-            log.level4Debug("received fastbot command.");
-            log.level4Debug("deploying fastboot.");
+            Log.level4Debug("received fastbot command.");
+            Log.level4Debug("deploying fastboot.");
             new FastbootTools().getBinaryLocation();
-            log.level2Information("@waitingForDownloadModeDevice");
+            Log.level2Information("@waitingForDownloadModeDevice");
             if (OSTools.isLinux()) {
-                log.level2Information("@linuxPermissionsElevation");
+                Log.level2Information("@linuxPermissionsElevation");
                 Statics.GUI.notificationPermissionsRequired();
                 //Todo write checks for this
                 //String retval=new Shell().timeoutValueCheckingShellCommand(new String[]{line.replaceAll("\"", "\\\"")},new String[]{"< waiting for device >"},30000);
@@ -679,23 +678,24 @@ public class CASUALLanguage {
             line = line.replace("$ADB", "");
             line = StringOperations.removeLeadingSpaces(line);
             String retVal = doShellCommand(line, null, null);
-            log.level4Debug("return from ADB:" + retVal);
+            Log.level4Debug("return from ADB:" + retVal);
             return retVal;
 // if no prefix, then send command directly to ADB.
         } else {
+            //TODO throw new runtime exception here and call out the invalid command.
             String retVal = doShellCommand(line, null, null);
-            log.level4Debug("return from ADB:" + retVal);
+            Log.level4Debug("return from ADB:" + retVal);
             return retVal;
         }
         //final line output for debugging purposes
-        log.level4Debug("COMMAND processed - " +new ADBTools().getBinaryLocation() + " " + line);
+        Log.level4Debug("COMMAND processed - " +new ADBTools().getBinaryLocation() + " " + line);
         return "";
     }
 //END OF SCRIPT PARSER
 
     private String processIdentifiedCommand(String identified, String line) {
         line = line.replace(identified, "");
-        log.level4Debug("Processing " + identified);
+        Log.level4Debug("Processing " + identified);
         line = StringOperations.removeLeadingSpaces(line);
         return line;
     }
@@ -723,11 +723,11 @@ public class CASUALLanguage {
         if (command.startsWith("$ADB")) {
             command = command.replaceFirst("\\$ADB", "");
         }
-        log.level4Debug("checking for results to be " + ifContains);
-        log.level4Debug("requesting " + command);
+        Log.level4Debug("checking for results to be " + ifContains);
+        Log.level4Debug("requesting " + command);
 
         String returnValue = new CASUALScriptParser().executeOneShotCommand(command);
-        log.level4Debug("got " + returnValue);
+        Log.level4Debug("got " + returnValue);
         String retValue = "";
 
         //ifnotcontains==false or ifcontains==true
@@ -759,7 +759,7 @@ public class CASUALLanguage {
         Line = StringOperations.removeLeadingSpaces(Line);
 
         if (Line.startsWith("wait-for")) {
-            log.level2Information("@waitingForDeviceToBeDetected");
+            Log.level2Information("@waitingForDeviceToBeDetected");
         }
 
         Shell Shell = new Shell();
@@ -772,7 +772,7 @@ public class CASUALLanguage {
                 StringCommand[i] = StringCommand[i].replace(ReplaceThis, WithThis);
             }
         }
-        log.level4Debug("sending");
+        Log.level4Debug("sending");
         if (parseError) {
             return Shell.liveShellCommand(StringCommand, true);
         } else {
@@ -784,12 +784,12 @@ public class CASUALLanguage {
     private boolean verifyFileExists(String testFileString) {
         if (new FileOperations().verifyExists(testFileString)) {
             //exists
-            log.level3Verbose("verified " + testFileString + " exists");
+            Log.level3Verbose("verified " + testFileString + " exists");
         } else {
             testFileString = testFileString.replace(",", "");
             if (new FileOperations().verifyExists(testFileString)) {
                 //exists
-                log.level3Verbose("verified " + testFileString + " exists");
+                Log.level3Verbose("verified " + testFileString + " exists");
                 return true;
             }
             return false;
@@ -800,8 +800,8 @@ public class CASUALLanguage {
     private void fileNotFound() {
         int n = new CASUALMessageObject("@interactionMissingFileVirusScanner").showUserCancelOption();
         if (n == 1) {
-            log.level0Error(this.CASPAC.getActiveScript().name);
-            log.level0Error("@canceledDueToMissingFiles");
+            Log.level0Error(this.CASPAC.getActiveScript().name);
+            Log.level0Error("@canceledDueToMissingFiles");
             Statics.CASPAC.getActiveScript().scriptContinue = false;
         }
     }

@@ -57,7 +57,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class AES128Handler {
 
     final File targetFile;
-    Log log = new Log();
+
 
     /*these variables are used for generating a header 
      *"EncryptedCASPAC-CASUAL-Revision3999" where
@@ -92,32 +92,32 @@ public class AES128Handler {
      * @return true if encryption was sucessful
      */
     public boolean encrypt(String output, char[] key) {
-        new Log().level2Information("Encrypting " + targetFile.getName());
+        Log.level2Information("Encrypting " + targetFile.getName());
 
         try {
             //key is infalated by 16 random characters A-Z,a-z,0-9
             //16 digits are used for ivSpec
             byte[] randomness = secureRandomCharGen(key, 16);
-            new Log().level2Information("Key parsed.  Encrypting...");
+            Log.level2Information("Key parsed.  Encrypting...");
             InputStream fis = new FileInputStream(targetFile);
             List<InputStream> streams = Arrays.asList(
                     new ByteArrayInputStream(randomness),
                     fis);
-            new Log().level2Information("obtaining key...");
+            Log.level2Information("obtaining key...");
             InputStream is = new SequenceInputStream(Collections.enumeration(streams));
             writeCipherFile(is, randomness, output, key, Cipher.ENCRYPT_MODE);
         } catch (NoSuchAlgorithmException ex) {
             return false;
         } catch (FileNotFoundException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (NoSuchPaddingException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (InvalidKeyException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (InvalidAlgorithmParameterException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
         //key is returned.
         return true;
@@ -173,7 +173,7 @@ public class AES128Handler {
 
     private byte[] secureRandomCharGen(char[] key, int numberOfChars) throws NoSuchAlgorithmException {
 
-        log.level4Debug("Generating randomness");
+        Log.level4Debug("Generating randomness");
         SecureRandom random = new SecureRandom(SecureRandom.getSeed(key.length));
         byte bytes[] = new byte[numberOfChars];
         random.nextBytes(bytes);  //burn some bits
@@ -198,19 +198,19 @@ public class AES128Handler {
         try {
 
             int maxSecurity = Cipher.getMaxAllowedKeyLength("AES");
-            log.level4Debug("The maximum security allowed on this system is AES " + maxSecurity);
+            Log.level4Debug("The maximum security allowed on this system is AES " + maxSecurity);
             if (maxSecurity > 128) {
                 maxSecurity = 128;
             }
-            log.level4Debug("For the sake of compatibility with US Import/Export laws we are using AES " + maxSecurity);
+            Log.level4Debug("For the sake of compatibility with US Import/Export laws we are using AES " + maxSecurity);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             KeySpec keyspec = new PBEKeySpec(input, "--salt--".getBytes(), 100000, maxSecurity);
             Key key = factory.generateSecret(keyspec);
             return key.getEncoded();
         } catch (NoSuchAlgorithmException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (InvalidKeySpecException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
         return null;
     }

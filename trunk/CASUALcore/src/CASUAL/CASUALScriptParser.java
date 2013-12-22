@@ -16,12 +16,15 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.ADB.ADBTools;
-import CASUAL.misc.StringOperations;
-import CASUAL.misc.CountLines;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
-import java.io.*;
+import CASUAL.misc.CountLines;
+import CASUAL.misc.StringOperations;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +41,6 @@ public class CASUALScriptParser {
     /**
      * If true, script will continue. False to shutdown.
      */
-    Log log = new Log();
     int LinesInScript = 0;
     String ScriptTempFolder = "";
     String ScriptName = "";
@@ -62,20 +64,20 @@ public class CASUALScriptParser {
     private DataInputStream getDataStreamFromFile(Caspac caspac) {
 
         try {
-            log.level4Debug("Selected file" + caspac.getActiveScript().name);
+            Log.level4Debug("Selected file" + caspac.getActiveScript().name);
 
             ScriptName = caspac.getActiveScript().name;
             ScriptTempFolder = caspac.getActiveScript().tempDir;
             LinesInScript = new CountLines().countISLines(caspac.getActiveScript().getScriptContents());
-            log.level4Debug("Lines in Script " + LinesInScript);
+            Log.level4Debug("Lines in Script " + LinesInScript);
             return new DataInputStream(caspac.getActiveScript().getScriptContents());
 
         } catch (FileNotFoundException ex) {
-            log.errorHandler(ex);
+            Log.errorHandler(ex);
             return null;
 
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
             return null;
         }
 
@@ -128,64 +130,58 @@ public class CASUALScriptParser {
         Statics.ActionEvents = new ArrayList<String>();
         Statics.CASPAC.getActiveScript().scriptContinue = true;
         scriptInput = new DataInputStream(StringOperations.convertStringToStream(caspac.getActiveScript().scriptContents));
-        log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
+        Log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 //int updateStatus;
-                log.level4Debug("CASUAL has initiated a multithreaded execution environment");
+                Log.level4Debug("CASUAL has initiated a multithreaded execution environment");
 
                 if (Statics.isGUIIsAvailable()) {
                     Statics.GUI.setProgressBarMax(LinesInScript);
                 }
-                log.level4Debug("Reading datastream" + scriptInput);
+                Log.level4Debug("Reading datastream" + scriptInput);
                 new CASUALLanguage(caspac, caspac.getActiveScript().tempDir).beginScriptingHandler(scriptInput);
 
                 if (Statics.isGUIIsAvailable()) {
                     //return to normal.
-                    ADBTools.adbMonitor(true);
+                    CASUALConnectionStatusMonitor.resumeAfterStop();
                 } else {
                     //just in case something started the device monitor
-                    ADBTools.adbMonitor(false);
+                    CASUALConnectionStatusMonitor.stop();
                 }
                 try {
                     scriptInput.close();
                 } catch (IOException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 }
                 Statics.CASPAC.getActiveScript().deviceArch = "";
                 Statics.setStatus("done");
-                log.level2Information("@scriptComplete");
+                Log.level2Information("@scriptComplete");
 
             }
         };
         if (startThreaded) {
-            Locks.scriptRunLock = new CASUAL.misc.MandatoryThread(r);
+            CASUALStartupTasks.scriptRunLock = new CASUAL.misc.MandatoryThread(r);
             Statics.setStatus("Executing");
-            Locks.scriptRunLock.setName("CASUAL Script Executor");
-            Locks.scriptRunLock.start();
+            CASUALStartupTasks.scriptRunLock.setName("CASUAL Script Executor");
+            CASUALStartupTasks.scriptRunLock.start();
         } else {
             r.run();
 
         }
     }
 
-    void executeFirstScriptInCASPAC(Caspac CASPAC) {
-        String scriptName = CASPAC.getScriptNames()[0];
-        Script s = CASPAC.getScriptByName(scriptName);
-        CASPAC.setActiveScript(s);
+    void executeActiveScript(Caspac CASPAC){
+        Log.level3Verbose("Exection of active script in CASPAC Commensing");
+        Script s=CASPAC.getActiveScript();
         Statics.CASPAC.getActiveScript().scriptContinue = true;
-        try {
-            CASPAC.loadActiveScript();
-        } catch (IOException ex) {
-            new Log().errorHandler(ex);
-        }
-        CASPAC.waitForUnzipComplete();
-        log.level2Information(s.discription);
+
+        Log.level2Information(s.discription);
         int CASUALSVN = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
         int scriptSVN = Integer.parseInt(s.metaData.minSVNversion);
         if (CASUALSVN < scriptSVN) {
-            new Log().level0Error("@improperCASUALversion");
+            Log.level0Error("@improperCASUALversion");
             return;
         }
 
@@ -195,8 +191,15 @@ public class CASUALScriptParser {
             CASPAC.setActiveScript(s);
             new CASUALLanguage(CASPAC, s.tempDir).beginScriptingHandler(dis);
         } catch (UnsupportedEncodingException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
+    }
+    
+    void executeFirstScriptInCASPAC(Caspac CASPAC) {
+        String scriptName = CASPAC.getScriptNames()[0];
+        Script s = CASPAC.getScriptByName(scriptName);
+        CASPAC.setActiveScript(s);
+        executeActiveScript(CASPAC);
 
     }
 }

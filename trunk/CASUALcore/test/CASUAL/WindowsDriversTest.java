@@ -18,6 +18,7 @@
 
 package CASUAL;
 
+import CASUAL.communicationstools.heimdall.drivers.WindowsDrivers;
 import java.util.regex.Pattern;
 import org.junit.AfterClass;
 import org.junit.Test;
