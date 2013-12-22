@@ -32,32 +32,33 @@ import java.util.ArrayList;
  *
  * @author adam
  */
-public class FastbootTools extends AbstractDeviceCommunicationsProtocol{
+public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
 
     //last known deployed location for fastboot
-    private static String binaryLocation=""; //deployed fastboot
-    
+    private static String binaryLocation = ""; //deployed fastboot
+
     //binary locations for Fastboot in resources
     private static final String fastbootLinux32 = "/CASUAL/communicationstools/fastboot/resources/fastboot-linux32";
     private static final String fastbootMac = "/CASUAL/communicationstools/fastboot/resources/fastboot-mac";
-    private static final String fastbootWindows = "/CASUAL/communicationstools/fastboot/resources/fastboot-win.exe";
+    private static final String fastbootWindows = "/CASUAL/communicationstools/fastboot/resources/fastboot.exe";
     private static final String fastbootLinuxARMv6 = "/CASUAL/communicationstools/fastboot/resources/fastboot-linuxARMv6";
     private static final String fastbootLinux64 = "/CASUAL/communicationstools/fastboot/resources/fastboot-linux64";
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
-    public String getBinaryLocation(){
-        
-        File loc=new File(binaryLocation);
-        if (!loc.isFile()&&!loc.exists()){
-           return deployBinary(Statics.getTempFolder());
+    public String getBinaryLocation() {
+
+        File loc = new File(binaryLocation);
+        if (!loc.isFile() || !loc.exists()) {
+            return deployBinary(Statics.getTempFolder());
         } else {
-           return binaryLocation;
+            return binaryLocation;
         }
-        
+
     }
 
     /**
@@ -114,33 +115,36 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol{
         String returnval = Shell.elevateSimpleCommandWithMessage(StringCommand, "CASUAL uses root to work around fastboot permissions.  Hit cancel if you have setup your UDEV rules.");
         return returnval;
     }
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void shutdown() {
         //nothing required for Fastboot. fastboot has no daemon. 
     }
 
-
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
     public int numberOfDevicesConnected() {
-       String[] devices=run(new String[]{"devices"}, 4000, true).trim().split("\n");
-       int devcount=0;  
-       for (String device:devices){ //enumerate devices
-           if (device.trim().endsWith("fastboot")){ //validate devices
-               devcount++; //increment counter
-           }
-       }
-       return devcount; //return results
-       
+        String[] devices = run(new String[]{"devices"}, 4000, true).trim().split("\n");
+        int devcount = 0;
+        for (String device : devices) { //enumerate devices
+            if (device.trim().endsWith("fastboot")) { //validate devices
+                devcount++; //increment counter
+            }
+        }
+        return devcount; //return results
+
     }
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
@@ -148,8 +152,10 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol{
         //TODO Fastboot error message checking.  Error messages should be checked, actions taken and drivers installed if needed. 
         return true;
     }
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
@@ -157,46 +163,49 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol{
         //TODO Fastboot Drivers.  This should be called if error messages dictate need for driver installation. 
         return true;
     }
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
+     *
      * @return {@inheritDoc}
      */
     @Override
     public String deployBinary(String tempFolder) {
-        
-        if (binaryLocation.isEmpty() ) {
-                String fastbootResource;
-                binaryLocation=Statics.getTempFolder()+"fastboot";
-                if (OSTools.isWindows()) {
-                    binaryLocation=binaryLocation+".exe";
-                    new CASUALMessageObject("@interactionInstallFastbootDrivers").showInformationMessage();
-                    fastbootResource = fastbootWindows;
-                } else if (OSTools.isMac()) {
-                    fastbootResource = fastbootMac;
-                } else  {
-                    fastbootResource = getFastbootLinuxResource();
-                }
-                Log.level2Information("@deployingFastboot");
-                Log.level3Verbose("Deploying Fastboot from " + fastbootResource + " to " + binaryLocation);
-                new ResourceDeployer().copyFromResourceToFile(fastbootResource, binaryLocation);
-                if (OSTools.isLinux() || OSTools.isMac()) {
-                    new File(binaryLocation).setExecutable(true);
-                }
-                Log.level2Information("@fastbootDeployed");
+
+        if (binaryLocation.isEmpty()) {
+            String fastbootResource;
+            binaryLocation = Statics.getTempFolder() + "fastboot";
+            if (OSTools.isWindows()) {
+                binaryLocation = binaryLocation + ".exe";
+                new CASUALMessageObject("@interactionInstallFastbootDrivers").showInformationMessage();
+                fastbootResource = fastbootWindows;
+            } else if (OSTools.isMac()) {
+                fastbootResource = fastbootMac;
+            } else {
+                fastbootResource = getFastbootLinuxResource();
             }
-            File loc=new File(binaryLocation);
-            if (loc.exists()){  //if the file exists after deployment procedure
-                 return binaryLocation;
+            Log.level2Information("@deployingFastboot");
+            Log.level3Verbose("Deploying Fastboot from " + fastbootResource + " to " + binaryLocation);
+            new ResourceDeployer().deployResourceTo(fastbootResource, tempFolder);
+            if (OSTools.isLinux() || OSTools.isMac()) {
+                new File(binaryLocation).setExecutable(true);
             }
-            return "";
+            Log.level2Information("@fastbootDeployed");
+        }
+        File loc = new File(binaryLocation);
+        if (loc.exists()) {  //if the file exists after deployment procedure
+            return binaryLocation;
+        }
+        return "";
     }
+
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void restartConnection() {
-      this.reset();
-      this.getBinaryLocation();
+        this.reset();
+        this.getBinaryLocation();
     }
 
     @Override
@@ -204,10 +213,11 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol{
         if (!binaryLocation.isEmpty()) {
             this.shutdown();
         }
-        binaryLocation = "";    }
+        binaryLocation = "";
+    }
 
     @Override
     public String getConnectionMethodName() {
-       return "fastboot";
+        return "fastboot";
     }
 }
