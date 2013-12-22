@@ -256,7 +256,7 @@ public class Shell {
             }
             return AllText;
         } catch (IOException ex) {
-            return "CritError!!!";
+            return "CritERROR!!!";
         }
 
     }

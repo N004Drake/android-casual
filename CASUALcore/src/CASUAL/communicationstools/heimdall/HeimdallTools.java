@@ -16,7 +16,6 @@
  */
 package CASUAL.communicationstools.heimdall;
 
-import CASUAL.CASUALScriptParser;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Shell;
@@ -204,9 +203,9 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
 
     @Override
     public String getBinaryLocation() {
-        
         //return located heimdall if available
-        if (!binaryLocation.isEmpty() && new File(binaryLocation).isFile() && new File(binaryLocation).exists()) {
+        //here we make new File twice, but this is because binaryLocation may be null.  It's easier to read this way 
+        if (binaryLocation !=null && !binaryLocation.isEmpty() && new File(binaryLocation).isFile() && new File(binaryLocation).exists()) {
             return binaryLocation;
         }
 
@@ -218,23 +217,25 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         }
 
         //install heimdall
-        deployBinary(Statics.getTempFolder());
+        binaryLocation=deployBinary(Statics.getTempFolder());
         return binaryLocation;
     }
 
     private String locateNativeHeimdall() {
         Shell shell = new Shell();
-        String notFound = "CritError!!!";
+        String notFound = "CritERROR!!!";
 
         //for windows we try running "heimdall".
         //note this wont work unless user sets path variable. 
         if (OSTools.isWindows()) {
             String heimdall = "heimdall";
             String[] cmd = new String[]{heimdall};
-            if (shell.sendShellCommand(cmd).contains(notFound)) {
-                heimdall = "";
+            String retval=shell.sendShellCommand(cmd);
+            if (retval.contains(notFound)||retval.equals("")) {
+                return "";
+            } else {
+                return heimdall;
             }
-            return heimdall;
         }
 
         //TODO optimize this to use file.exists && file.isFile

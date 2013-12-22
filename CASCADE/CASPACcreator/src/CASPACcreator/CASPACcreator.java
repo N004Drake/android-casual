@@ -45,7 +45,6 @@ public class CASPACcreator {
     private String outputfile = null;
     List<File> inputfiles = new ArrayList<File>();  //temp holding for collecting files.
     boolean shutdown = false;
-    Log log = new Log();
 
     private void doWork(String[] args) {
         argProcessor(args);
@@ -74,13 +73,13 @@ public class CASPACcreator {
 
              if (args[i].contains("--force") || args[i].contains("-f")) {
                 force = true;
-                log.level3Verbose("force overwrite of output file.");
+                Log.level3Verbose("force overwrite of output file.");
             } else if (args[i].contains("--ignore")) {
                 ignore = true;
-                log.level3Verbose("ignoring invalid files.");
+                Log.level3Verbose("ignoring invalid files.");
             } else if (args[i].contains("--output") || args[i].contains("-o")) {
                 outputfile = args[++i];
-                log.level3Verbose("output file " + args[i]);
+                Log.level3Verbose("output file " + args[i]);
             } else if (args[i].startsWith("-")) {
                 usage("Error: -" + args[i] + " is not a valid flag.");
             } else {
@@ -107,7 +106,7 @@ public class CASPACcreator {
             }
         }
         if (ignore) {
-            log.level0Error("Warning: The following files are missing: \n"
+            Log.level0Error("Warning: The following files are missing: \n"
                     + missingFiles + "\n" + "However the packaging will continue.");
         } else if (!("".equals(missingFiles))) {
             usage("The following missing files or invalid arguments: \n" + missingFiles);
@@ -117,10 +116,10 @@ public class CASPACcreator {
     }
 
     private void usage(String error) {
-        log.level0Error(error);
-        log.level2Information("Usage: java -jar CASPACCreator-dist.jar  [-fi]  --output output_zipfile inputfile1 ... inputfileN");
-        log.level2Information("       -f: Will overwrite existing output_zipfile");
-        log.level2Information("       -i: Will ignore nonexisting input files");
+        Log.level0Error(error);
+        Log.level2Information("Usage: java -jar CASPACCreator-dist.jar  [-fi]  --output output_zipfile inputfile1 ... inputfileN");
+        Log.level2Information("       -f: Will overwrite existing output_zipfile");
+        Log.level2Information("       -i: Will ignore nonexisting input files");
         shutdown = true;
     }
 }

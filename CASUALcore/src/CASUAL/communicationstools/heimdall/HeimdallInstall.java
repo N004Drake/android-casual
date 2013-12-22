@@ -230,7 +230,7 @@ public class HeimdallInstall {
     public boolean checkHeimdallVersion(String binaryLocation) {
         String[] command = {binaryLocation, "version"};
         String Version = new Shell().silentShellCommand(command);
-        if (!Version.contains("CritError!!!")) {
+        if (!Version.contains("CritERROR!!!")) {
             Version = Version.replaceAll("\n", "").replaceAll("v", "");
             if (Version.contains(" ")) {
                 Version = Version.split(" ")[0];
@@ -255,22 +255,22 @@ public class HeimdallInstall {
      *
      * @return true if deployed
      */
-    String installWindows(String[] windowsLocation,String expectedBinaryLocation) {
-        FileOperations fo = new FileOperations();
+    String installWindows(String[] windowsLocation,String tempFolder) {
         HeimdallTools ht=new HeimdallTools();
-        if (ht.fileIsDeployedProperly(expectedBinaryLocation)){
-            return expectedBinaryLocation;
+        String expectedLocation=tempFolder+"heimdall.exe";
+        if (ht.fileIsDeployedProperly(expectedLocation)){
+            return expectedLocation;
         }
         
         ResourceDeployer rt = new ResourceDeployer();
         for (String res : HeimdallTools.windowsLocation) {
-                String name=Statics.getTempFolder()+new File(res).getName();
+                String name=tempFolder+new File(res).getName();
                 rt.copyFromResourceToFile(res, name);
         }
         Log.level4Debug("deployHeimdallForWindows- verifying Heimdall deployment");
-        if (ht.fileIsDeployedProperly(expectedBinaryLocation)) { //try with redist files
+        if (ht.fileIsDeployedProperly(expectedLocation)) { //try with redist files
             Log.level4Debug("heimdall install sucessful");
-            return expectedBinaryLocation;
+            return tempFolder;
         }
         return null;
 

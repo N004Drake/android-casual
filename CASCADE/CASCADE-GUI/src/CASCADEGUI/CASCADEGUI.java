@@ -70,7 +70,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     /**
      * Creates new form mainWindow
      */
-    private Log log = new Log();
     //Stores the list of current include files. NOTE: only for current script
     private DefaultListModel<File> fileList = new DefaultListModel<File>();
     /*Stores the list of the current scripts
@@ -254,7 +253,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         updateMessage = new javax.swing.JTextField();
         killswitchMessage = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        scriptListJList = new javax.swing.JList();
+        scriptListJList = new javax.swing.JList<String>();
         deleteScriptButton = new javax.swing.JButton();
         addScriptButton = new javax.swing.JButton();
         editScriptNameButton = new javax.swing.JButton();
@@ -688,7 +687,11 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        scriptListJList.setModel(scriptList);
+        scriptListJList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "scriptList.setModel<String>(scriptList)" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
         scriptListJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scriptListJList.setName("scriptListJList"); // NOI18N
         scriptListJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -1443,7 +1446,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                     + filename + "\n is not a valid zip file.\n"
                     + "Please make sure that the file ends in a .CASPAC", "File read error",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input zip file not valid: \n \t" + filename);
+            Log.level0Error("Input zip file not valid: \n \t" + filename);
             return;
         }
         if (!file.exists()) {
@@ -1451,7 +1454,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                     + filename + "\n is not a valid zip file.\n"
                     + "Ensure the file exists", "File Not Found",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Could not find file at: \n \t" + filename);
+            Log.level0Error("Could not find file at: \n \t" + filename);
             return;
         }
         try {
@@ -1467,13 +1470,13 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         }
         try {
             scriptList.clear();
-            log.level4Debug("Initiating CASPAC load.");
+            Log.level4Debug("Initiating CASPAC load.");
             cp.load();
             cp.waitForUnzipComplete();
         } catch (ZipException ex) {
-            log.errorHandler(ex);
+            Log.errorHandler(ex);
         } catch (IOException ex) {
-            log.errorHandler(ex);
+            Log.errorHandler(ex);
         }
         Caspac tempcas;
         tempcas = cp;
@@ -1621,10 +1624,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         String[] tempFileList = new File(folder).list();
         for (final String file : tempFileList) {
             if (file.contains(filename)) {
-                log.level3Verbose("found " + filename);
+                Log.level3Verbose("found " + filename);
             }
             if (file.contains(filename + "-CASUAL-R" + version)) {
-                log.level3Verbose("found file. launching");
+                Log.level3Verbose("found file. launching");
                 String exe = "";
                 if (OSTools.isWindows()) {
                     exe = ".exe";
@@ -1647,7 +1650,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
                         }
                         // pb.directory(new File(new File( "." ).getCanonicalPath()));
-                        //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
+                        //Log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
                         //Process p = pb.start();
 
                         //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable,"-jar",outputFile+Statics.slash+file});
@@ -1716,7 +1719,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     private javax.swing.JPanel script;
     private javax.swing.JTextArea scriptDescriptionJText;
     private javax.swing.JTabbedPane scriptGroup;
-    private javax.swing.JList scriptListJList;
+    private javax.swing.JList<String> scriptListJList;
     private javax.swing.JLabel scriptNameJLabel;
     private javax.swing.JLabel scriptNameTitleJLabel;
     private javax.swing.JPanel scriptOverview;
@@ -1785,16 +1788,16 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     }
 
     private Caspac buildCASPAC() throws IOException {
-        log.level2Information("Creating CASPAC file");
+        Log.level2Information("Creating CASPAC file");
         Caspac casp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.getTempFolder(), 0);
-        log.level2Information("Setting CASPAC build");
+        Log.level2Information("Setting CASPAC build");
         casp.setBuild(buildMaker());
         casp.logo = logo;
-        log.level2Information("Adding scripts from memory to CASPAC");
+        Log.level2Information("Adding scripts from memory to CASPAC");
         for (int j = 0; j < scriptList.getSize(); j++) {
             casp.scripts.add(scriptList.get(j));
         }
-        log.level2Information("Setting Overview");
+        Log.level2Information("Setting Overview");
         casp.overview = this.overviewWorkArea.getText();
         return casp;
     }
@@ -1961,7 +1964,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     private boolean checkScriptNameExists(String testName) {
         for (int i = 0; i < scriptList.getSize(); i++) {
             if (scriptList.get(i).name.equals(testName)) {
-                log.level0Error("The script \"" + testName + "\" already exists");
+                Log.level0Error("The script \"" + testName + "\" already exists");
                 JOptionPane.showMessageDialog(this, "The script \"" + testName + "\" already exists",
                         "Script Alreay Exists", JOptionPane.ERROR_MESSAGE);
                 return true;
@@ -2001,31 +2004,31 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                         + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
                         + "Please make sure that the file ends in a .CASPAC", "File output error",
                         JOptionPane.ERROR_MESSAGE);
-                log.level0Error("Output zip file not valid: \n \t" + this.caspacOutputFile.getText());
+                Log.level0Error("Output zip file not valid: \n \t" + this.caspacOutputFile.getText());
                 return true;
             }
             //File overwrite check
             if (file.exists()) {
-                log.level2Information("File exist prompting for overwrite");
+                Log.level2Information("File exist prompting for overwrite");
                 int i = JOptionPane.showConfirmDialog(this, "Warning:" + this.caspacOutputFile.getText()
                         + " already exists are you sure you wish to continue.\n Any "
                         + "previous files will be overridden.", "Overwrite existing file?",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (i == JOptionPane.NO_OPTION) {
-                    log.level0Error("File override declined");
+                    Log.level0Error("File override declined");
                     return true;
                 } else {
                     file.delete();
                 }
             }
             cp = buildCASPAC();
-            log.level2Information("Attempting CASCPAC write");
+            Log.level2Information("Attempting CASCPAC write");
             try {
                 cp.write();
             } catch (IOException ex) {
-                log.errorHandler(ex);
+                Log.errorHandler(ex);
             }
-            log.level2Information("CASPAC write successfull!!!");
+            Log.level2Information("CASPAC write successfull!!!");
             if (useEncryption.isSelected()) {
                 File temp = new File(cp.CASPAC.getAbsolutePath() + ".tmp");
                 new FileOperations().copyFile(file, temp);
@@ -2054,7 +2057,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                     + this.caspacOutputFile.getText() + "\n is not a valid CASPAC file.\n"
                     + "Please make sure that the file ends in a .CASPAC, and is a valid CASPAC", "File read error",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input CASPAC file not valid: \n \t" + this.caspacOutputFile.getText());
+            Log.level0Error("Input CASPAC file not valid: \n \t" + this.caspacOutputFile.getText());
             return true;
         }
         if (!caspacin.exists()) {
@@ -2062,7 +2065,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                     + this.caspacOutputFile.getText() + "\n is not a valid CASPAC file.\n"
                     + "Ensure the CASPAC exists.", "File Not Found",
                     JOptionPane.ERROR_MESSAGE);
-            log.level0Error("Input CASPAC file not found: \n \t" + this.caspacOutputFile.getText());
+            Log.level0Error("Input CASPAC file not found: \n \t" + this.caspacOutputFile.getText());
             return true;
         }
         if (casualout.isFile()) {

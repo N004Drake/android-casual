@@ -44,7 +44,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     // The following variables represent locations of ADB files
     private static final String[] linux64Location = new String[]{"/CASUAL/communicationstools/adb/resources/adb-linux64"};
     private static final String[] linux32Location = new String[]{"/CASUAL/communicationstools/adb/resources/adb-linux32"};
-    private static final String[] windowsLocation = new String[]{"/CASUAL/communicationstools/adb/resources/adb.exe", "/CASUAL/CommunicationsTools/ADB/resources/AdbWinApi.dll", "/CASUAL/CommunicationsTools/ADB/resources/AdbWinUsbApi.dll"};
+    private static final String[] windowsLocation = new String[]{"/CASUAL/communicationstools/adb/resources/adb.exe", "/CASUAL/communicationstools/adb/resources/AdbWinApi.dll", "/CASUAL/communicationstools/adb/resources/AdbWinUsbApi.dll"};
     private static final String[] macLocation = new String[]{"/CASUAL/communicationstools/adb/resources/adb-mac"};
     private static final String[] linuxArmv6Location = new String[]{"/CASUAL/communicationstools/adb/resources/adb-linuxARMv6"};
     private static final String adbIniResource = "/CASUAL/communicationstools/adb/resources/adb_usb.ini";
@@ -223,7 +223,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
             ResourceDeployer rd=new ResourceDeployer();
             File defaultLocation=new File(getDefaultBinaryName());
             for (String res : resourceLocation) {
-                String deployedName=rd.deployResourceTo(res, Statics.getTempFolder());
+                String deployedName=rd.deployResourceTo(res, tempFolder);
                 if (deployedName.contains("adb-")||deployedName.endsWith("adb.exe")){
                     
                     new File(deployedName).renameTo(defaultLocation);
