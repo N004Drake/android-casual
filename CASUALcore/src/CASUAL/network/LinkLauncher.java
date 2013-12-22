@@ -62,9 +62,9 @@ public class LinkLauncher {
                     uri = new URI(link);
                     desktop.browse(uri);
                 } catch (IOException ioe) {
-                    new Log().level4Debug("Attempted to open" + link + " Failed with IO error");
+                    Log.level4Debug("Attempted to open" + link + " Failed with IO error");
                 } catch (URISyntaxException use) {
-                    new Log().level4Debug("Attempted to open" + link + " Failed with URI Syntax error");
+                    Log.level4Debug("Attempted to open" + link + " Failed with URI Syntax error");
 
                 }
             } else {

@@ -153,6 +153,9 @@
                 </Property>
                 <Property name="name" type="java.lang.String" value="caspacOutputFile" noResource="true"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="CASCADEGUI_caspacOutputFile"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JButton" name="makeCASPAC">
               <Properties>
@@ -259,7 +262,7 @@
             <Component class="javax.swing.JTextField" name="casualOutputFile">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="System.getProperty(&quot;user.dir&quot;)+Statics.Slash+&quot;generatedCASUALs&quot;" type="code"/>
+                  <Connection code="System.getProperty(&quot;user.dir&quot;)+Statics.slash+&quot;generatedCASUALs&quot;" type="code"/>
                 </Property>
                 <Property name="enabled" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection component="CASPACkagerPanel" name="isEnabled" type="method"/>
@@ -392,7 +395,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="jScrollPane1" pref="454" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane1" pref="462" max="32767" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
                                           <Component id="addScriptButton" min="-2" max="-2" attributes="0"/>
@@ -867,7 +870,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scriptText" alignment="0" pref="513" max="32767" attributes="0"/>
+                          <Component id="scriptText" alignment="0" pref="521" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -975,7 +978,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="logoLabel" pref="104" max="32767" attributes="0"/>
+                          <Component id="logoLabel" pref="106" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -1401,7 +1404,7 @@
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <EmptySpace pref="27" max="32767" attributes="0"/>
+                                  <EmptySpace pref="29" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
                                       <Component id="bannerPic" alignment="2" min="-2" max="-2" attributes="0"/>
                                       <Component id="browseLogo" alignment="2" min="-2" max="-2" attributes="0"/>

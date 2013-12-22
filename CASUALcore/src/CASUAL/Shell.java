@@ -38,7 +38,6 @@ public class Shell {
     public Shell() {
     }
     //for external access
-    Log log = new Log();
     //Send a command to the shell
 
     /**
@@ -100,10 +99,10 @@ public class Shell {
             try {
                 FileOperations.writeToFile("#!/bin/sh\n" + Command, ScriptFile);
             } catch (IOException ex) {
-                log.errorHandler(ex);
+                Log.errorHandler(ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
-            log.level4Debug("###Elevating Command: " + Command + " ###");
+            Log.level4Debug("###Elevating Command: " + Command + " ###");
             Result = "";
             if (useGKSU) {
                 if (message == null) {
@@ -118,7 +117,7 @@ public class Shell {
                     Result = Shell.liveShellCommand(new String[]{"pkexec", ScriptFile}, true);
                     i++;
                     if (Result.contains("Error executing command as another user:") && i >= 3) {
-                        log.level2Information("@permissionsElevationProblem");
+                        Log.level2Information("@permissionsElevationProblem");
                         Result = Shell.liveShellCommand(new String[]{ScriptFile}, true);
                         break;
                     }
@@ -133,9 +132,9 @@ public class Shell {
                         + "export bar=" + Command + " ;\n"
                         + "for i in \"$@\"; do export bar=\"$bar '${i}'\";done;\n"
                         + "osascript -e \'do shell script \"$bar\" with administrator privileges\'", ScriptFile);
-                log.level3Verbose(ScriptFile);
+                Log.level3Verbose(ScriptFile);
             } catch (IOException ex) {
-                log.errorHandler(ex);
+                Log.errorHandler(ex);
             }
             FileOperations.setExecutableBit(ScriptFile);
             String[] MacCommand = {ScriptFile};
@@ -168,7 +167,7 @@ public class Shell {
      * @return result from shell
      */
     public String sendShellCommand(String[] cmd) {
-        log.level4Debug("###executing: " + cmd[0] + "###");
+        Log.level4Debug("###executing: " + cmd[0] + "###");
         String AllText = "";
         try {
             String line;
@@ -178,9 +177,9 @@ public class Shell {
             try {
                 process.waitFor();
             } catch (InterruptedException ex) {
-                log.errorHandler(ex);
+                Log.errorHandler(ex);
             }
-            //log.level3Verbose(STDOUT.readLine());
+            //Log.level3Verbose(STDOUT.readLine());
             int y = 0;
             while ((line = STDOUT.readLine()) != null) {
                 if (y == 0) {
@@ -199,10 +198,10 @@ public class Shell {
                 }
                 y++;
             }
-            //log.level0(cmd[0]+"\":"+AllText);
+            //Log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (IOException ex) {
-            log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + "\nreturnval:" + AllText);
+            Log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + "\nreturnval:" + AllText);
             return "CritERROR!!!";
         }
 
@@ -215,7 +214,7 @@ public class Shell {
      * @return standard out only from shell command
      */
     public String sendShellCommandIgnoreError(String[] cmd) {
-        log.level4Debug("\n###executing: " + cmd[0] + "###");
+        Log.level4Debug("\n###executing: " + cmd[0] + "###");
         String AllText = "";
         try {
             String line;
@@ -224,10 +223,10 @@ public class Shell {
             while ((line = STDOUT.readLine()) != null) {
                 AllText = AllText + line + "\n";
             }
-            //log.level0(cmd[0]+"\":"+AllText);
+            //Log.level0(cmd[0]+"\":"+AllText);
             return AllText + "\n";
         } catch (IOException ex) {
-            log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + "returnval:" + AllText);
+            Log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + "returnval:" + AllText);
             return "CritERROR!!!";
         }
 
@@ -248,7 +247,7 @@ public class Shell {
             try {
                 process.waitFor();
             } catch (InterruptedException ex) {
-                log.errorHandler(ex);
+                Log.errorHandler(ex);
             }
             while ((line = STDOUT.readLine()) != null) {
 
@@ -276,7 +275,7 @@ public class Shell {
             ProcessBuilder p = new ProcessBuilder(params);
             p.redirectErrorStream(true);
             Process process = p.start();
-            log.level4Debug("###executing real-time command: " + params[0] + "###");
+            Log.level4Debug("###executing real-time command: " + params[0] + "###");
             BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String LineRead = "";
             String CharRead;
@@ -288,7 +287,7 @@ public class Shell {
                 LineRead = LineRead + CharRead;
                 LogRead = LogRead + CharRead;
                 if (display) {
-                    log.progress(CharRead);
+                    Log.progress(CharRead);
                 }
 
                 if (!Statics.ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
@@ -302,10 +301,10 @@ public class Shell {
                 }
             }
         } catch (RuntimeException ex) {
-            log.errorHandler(ex);
+            Log.errorHandler(ex);
             return LogRead;
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
         return LogRead;
     }
@@ -331,7 +330,7 @@ public class Shell {
         Runnable runCommand = new Runnable() {
             @Override
             public void run() {
-                log.level4Debug("###executing timeout command: " + cmd[0] + "###");
+                Log.level4Debug("###executing timeout command: " + cmd[0] + "###");
                 try {
                     String line;
                     ProcessBuilder p = new ProcessBuilder(cmd);
@@ -342,9 +341,9 @@ public class Shell {
                     while ((line = STDOUT.readLine()) != null) {
                         tos.AllText = tos.AllText + line + "\n";
                     }
-                    //log.level0(cmd[0]+"\":"+AllText);
+                    //Log.level0(cmd[0]+"\":"+AllText);
                 } catch (IOException ex) {
-                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
+                    Log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
                 }
             }
         };
@@ -364,7 +363,7 @@ public class Shell {
             }
         }
         if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
-            log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
+            Log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
             return "Timeout!!! " + tos.AllText;
         }
         //return values logged from TimeoutString class above
@@ -404,9 +403,9 @@ public class Shell {
                     while ((line = STDOUT.readLine()) != null) {
                         tos.AllText = tos.AllText.concat(line).concat("\n");
                     }
-                    //log.level0(cmd[0]+"\":"+AllText);
+                    //Log.level0(cmd[0]+"\":"+AllText);
                 } catch (IOException ex) {
-                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
+                    Log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + tos.AllText);
                 }
             }
         };
@@ -426,7 +425,7 @@ public class Shell {
             }
         }
         if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
-            log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
+            Log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
             return "Timeout!!! " + tos.AllText;
         }
         //return values logged from TimeoutString class above
@@ -443,7 +442,6 @@ public class Shell {
      * @param timeout
      * @return text received from command
      */
-    //TODO: write automated test code for this for CASUALLanguage line 653.  Can be tested with fastboot flash test test without device connected
     public String timeoutValueCheckingShellCommand(final String[] cmd, final String[] startTimerOnThisInLine, final int timeout) {
         //final object for runnable to write out to.
         class Timeout {
@@ -456,7 +454,7 @@ public class Shell {
         Runnable runCommand = new Runnable() {
             @Override
             public void run() {
-                log.level4Debug("###executing timeout command: " + cmd[0] + "###");
+                Log.level4Debug("###executing timeout command: " + cmd[0] + "###");
                 try {
                     //timer will begin on startTimerOnThisInLine detected and stop if it is not in a line
                     Timer t = new Timer(timeout, new ActionListener() {
@@ -488,9 +486,9 @@ public class Shell {
                             t.stop();
                         }
                     }
-                    //log.level0(cmd[0]+"\":"+AllText);
+                    //Log.level0(cmd[0]+"\":"+AllText);
                 } catch (IOException ex) {
-                    log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + finalTimeout.AllText);
+                    Log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + finalTimeout.AllText);
                 }
             }
         };
@@ -510,7 +508,7 @@ public class Shell {
             }
         }
         if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
-            log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
+            Log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
             return "Timeout!!! " + finalTimeout.AllText;
         }
         //return values logged from TimeoutString class above

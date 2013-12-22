@@ -175,13 +175,13 @@ public class CASUALJFrameAboutBox extends javax.swing.JFrame {
                 try {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                 } catch (ClassNotFoundException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 } catch (InstantiationException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 } catch (IllegalAccessException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 } catch (UnsupportedLookAndFeelException ex) {
-                    new Log().errorHandler(ex);
+                    Log.errorHandler(ex);
                 }
                 break;
             }

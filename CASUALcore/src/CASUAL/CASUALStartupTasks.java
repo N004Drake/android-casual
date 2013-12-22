@@ -1,8 +1,9 @@
 package CASUAL;
 
+import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.misc.MandatoryThread;
 
-/*Locks provides a place for storage of sequential and static items
+/*CASUALStartupTasks provides a place for storage of sequential and static items
  *Copyright (C) 2013  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,34 +20,41 @@ import CASUAL.misc.MandatoryThread;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Locks provides a place for storage of sequential and static items
+ * CASUALStartupTasks provides a place for storage of sequential and static items
  *
  * @author Adam Outler adamoutler@gmail.com
  */
-public class Locks {
+public class CASUALStartupTasks {
 
     /**
      * Thread representing the Graphical User Interface.
      */
-    public static Thread startGUI = new Thread();
+    public static MandatoryThread startGUI = new MandatoryThread();
 
     /**
-     * Lock representing the preparation state of the CASPAC. This is alive when
+     * preparation state of the CASPAC. This is alive during the time the 
      * CASPAC is being prepared.
      */
     public static MandatoryThread caspacPrepLock = new MandatoryThread();
 
     /**
-     * Lock representing the script. this is alive when script is running.
+     * Script is run from this object script. this is alive when script is running.
      */
     public static MandatoryThread scriptRunLock = new MandatoryThread();
 
     /**
-     * Lock representing the state of ADB starting. This is alive while ADB is
+     * ADB is started from this object.  monitoring of the state of ADB starting can be monitored here. This is alive while ADB is
      * being deployed and the server is started.
      */
-    public static MandatoryThread startADB = new MandatoryThread();
-
+    public static MandatoryThread startADB = new MandatoryThread(new Runnable() {
+            
+            @Override
+            public void run() {
+                new ADBTools().startServer();
+                Log.level3Verbose("ADB Server Started!!!");
+            }
+        
+     });
     /**
      * Lock representing the GUI preparation. This is alive while the form is
      * preparing itself.

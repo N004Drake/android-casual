@@ -42,7 +42,7 @@ public class Log {
      */
     public static PrintStream out = new PrintStream(System.out);
 
-    private void sendToGUI(String data) {
+    private static void sendToGUI(String data) {
         if (Statics.GUI!=null&& (Statics.isGUIIsAvailable() || Statics.GUI.isDummyGUI()) && !"".equals(data) && !"\n".equals(data)) {
             try {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
@@ -61,7 +61,7 @@ public class Log {
     /**
      * removes all information from the progress document. (GUI log)
      */
-    public void clearGUI() {
+    public static void clearGUI() {
         try {
             Statics.ProgressDoc.remove(0, Statics.ProgressDoc.getLength());
         } catch (BadLocationException ex) {
@@ -75,7 +75,7 @@ public class Log {
      *
      * @param data is data to be written to log
      */
-    public void level0Error(String data) {
+    public static void level0Error(String data) {
         if (data.startsWith("@")) {
             data = Translations.get(data);
         }
@@ -95,7 +95,7 @@ public class Log {
      *
      * @param data is data to be written to log
      */
-    public void Level1Interaction(String data) {
+    public static void Level1Interaction(String data) {
         if (data.startsWith("@")) {
             data = Translations.get(data);
         }
@@ -116,7 +116,7 @@ public class Log {
      * @param data is data to be written to log
      */
     // level 2 is for info-type data
-    public void level2Information(String data) {
+    public static void level2Information(String data) {
         if (data.startsWith("@")) {
             data = Translations.get(data);
         }
@@ -134,7 +134,7 @@ public class Log {
      *
      * @param data is data to be written to log
      */
-    public void level3Verbose(String data) {
+    public static void level3Verbose(String data) {
         writeOutToLog("[VERBOSE]" + data);
         if (Statics.outputGUIVerbosity >= 3) {
             sendToGUI(data);
@@ -148,7 +148,7 @@ public class Log {
      *
      * @param data is data to be written to log
      */
-    public void level4Debug(String data) {
+    public static void level4Debug(String data) {
         writeOutToLog("[DEBUG]" + data);
 
         if (Statics.outputGUIVerbosity >= 4) {
@@ -163,14 +163,14 @@ public class Log {
      *
      * @param data to be written to log file
      */
-    public void writeToLogFile(String data) {
+    public static void writeToLogFile(String data) {
         writeOutToLog(data);
     }
 
-    private void writeOutToLog(String data) {
+    private static synchronized void writeOutToLog(String data) {
         FileWriter WriteFile;
         try {
-            WriteFile = new FileWriter(Statics.getTempFolder() + "log.txt", true);
+            WriteFile = new FileWriter(Statics.getTempFolder() + "Log.txt", true);
             PrintWriter output = new PrintWriter(WriteFile);
             output.write(data + "\n");
             WriteFile.close();
@@ -181,13 +181,13 @@ public class Log {
 
     }
     private static String progressBuffer = "";
-    int lastNewLine = 100;
+    static int lastNewLine = 100;
 
     /**
      *
      * @param data data to be written to progress on screen
      */
-    public void progress(String data) {
+    public  static void progress(String data) {
         progressBuffer = progressBuffer + data;
         if (Statics.isGUIIsAvailable() && Statics.ProgressDoc != null) {
             try {
@@ -203,14 +203,15 @@ public class Log {
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
 
             } catch (BadLocationException ex) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             } catch (NullPointerException e) {
                 level0Error(data + e.toString());
             }
             if (data.contains("\n")) {
                 writeToLogFile(progressBuffer.replace("\n", ""));
                 progressBuffer = "";
-                lastNewLine = Statics.ProgressPane.getCaretPosition() - 1;
+                //TODO implement StringBuilder and use that for Log. 
+                //lastNewLine = Statics.GUI.ProgressPane.getCaretPosition() - 1;
             }
         } else {
             out.print(data);
@@ -222,14 +223,14 @@ public class Log {
      *
      * @param data data to be written to screen in real time
      */
-    public void LiveUpdate(String data) {
+    public  static void LiveUpdate(String data) {
         out.println(data);
         if (Statics.isGUIIsAvailable()) {
             try {
                 Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
                 Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
             } catch (BadLocationException ex) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             }
         }
 
@@ -238,7 +239,7 @@ public class Log {
     /**
      * begins a new line
      */
-    public void beginLine() {
+    public  static void beginLine() {
         out.println();
         if (Statics.isGUIIsAvailable()) {
             progress("\n");
@@ -254,7 +255,7 @@ public class Log {
      * @param position position to start
      * @param length length of text to remove.
      */
-    public void replaceLine(String data, int position, int length) {
+    public  static void replaceLine(String data, int position, int length) {
         if (Statics.isGUIIsAvailable()) {
             try {
                 Statics.ProgressDoc.remove(position, length);
@@ -269,14 +270,14 @@ public class Log {
      *
      * @param e is any Throwable.
      */
-    public void errorHandler(Exception e) {
+    public  static void errorHandler(Exception e) {
         StringWriter writer = new StringWriter();
         e.printStackTrace(new PrintWriter(writer));
         level0Error("[CRITICAL]" + e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
         level0Error("@criticalError");
     }
 
-    void initialize() {
+    static void initialize() {
         out = new PrintStream(System.out);
     }
 }

@@ -119,7 +119,7 @@ public interface iCASUALUI {
     /**
      * MessageType used by CASUALMessageObject and any class implementing this
      * interface. Halts all script operations and shows the user a Yes/No
-     * dialog. returns 0 if yes and 1 if no.
+     * diaLog. returns 0 if yes and 1 if no.
      */
     final int INTERACTION_SHOW_YES_NO = 6;
 
@@ -182,7 +182,7 @@ public interface iCASUALUI {
      * @param status commanded value
      * @return true if enabled false if not
      */
-    boolean enableControls(boolean status);
+    boolean setControlStatus(boolean status);
 
     /**
      * gets the control status
@@ -316,6 +316,8 @@ public interface iCASUALUI {
      *  User action is required
      */
     void notificationUserActionIsRequired();
+
+    public void setBlocksUnzipped(int i);
     
     
     

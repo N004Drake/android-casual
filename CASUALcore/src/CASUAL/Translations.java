@@ -42,7 +42,7 @@ public class Translations {
             Translations.setDefaultLanguage();
         }
 
-        new Log().level4Debug("[TRANSLATION]" + line);
+        Log.level4Debug("[TRANSLATION]" + line);
         //get translation
         String[] splitRef = line.split("( )|(\n)");
         String retVal = "";
@@ -51,7 +51,7 @@ public class Translations {
                 try {
                     retVal = line.replace(ref, translation.getString(ref));
                 } catch (java.util.MissingResourceException ex) {
-                    new Log().level3Verbose("*****MISSING TRANSLATION VALUE***** for "+ref+" ");
+                    Log.level3Verbose("*****MISSING TRANSLATION VALUE***** for "+ref+" ");
                 }
             }
         }
@@ -68,7 +68,7 @@ public class Translations {
             translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English", Locale.getDefault());
         } catch (Exception e) {
             translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English");
-            new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
+            Log.level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
         }
     }
 
@@ -83,7 +83,7 @@ public class Translations {
             translation = ResourceBundle.getBundle("CASUAL/resources/Translations/" + lang);
         } catch (Exception e) {
             translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English");
-            new Log().level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
+            Log.level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
         }
     }
 }

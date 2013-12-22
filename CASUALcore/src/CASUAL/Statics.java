@@ -17,10 +17,10 @@
 package CASUAL;
 
 //import java.awt.Color;
-import CASUAL.CommunicationsTools.ADB.ADBTools;
-import CASUAL.CommunicationsTools.Fastboot.FastbootTools;
-import CASUAL.Heimdall.HeimdallInstall;
+import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import CASUAL.caspac.Caspac;
+import CASUAL.communicationstools.adb.ADBTools;
+import CASUAL.communicationstools.fastboot.FastbootTools;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -93,12 +93,7 @@ public class Statics {
      * reassigned to any inputstream.
      */
     public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-
-    //Form data
-    //public static boolean TargetScriptIsResource = true;  //true if resource, false if file
-
-
+    
     /**
      * static reference for class implementing interface for CASUAL's GUI.
      */
@@ -111,9 +106,9 @@ public class Statics {
     public static JTextPane ProgressPane; //used by log to update Progress
 
     /**
-     * Slash provides a universal reference to the / on linux/mac and a \ on Windows. 
+     * slash provides a universal reference to the / on linux/mac and a \ on Windows. 
      */
-    final public static String Slash = System.getProperty("file.separator"); //file separator for system \ or /
+    final public static String slash = System.getProperty("file.separator"); //file separator for system \ or /
     /**
      * ProgressDoc provides a static reference to the program output.
      */
@@ -136,7 +131,7 @@ public class Statics {
      * Located in the users home folder, in a folder called ".CASUAL".
      */
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
-    private static String TempFolder;
+    private static File TempFolder;
 
     /**
      * Creates and returns the temp folder if required.
@@ -148,17 +143,17 @@ public class Statics {
         if (TempFolder == null) {
             String user = System.getProperty("user.name");  //username
             String tf = System.getProperty("java.io.tmpdir"); //tempfolder
-            tf = tf.endsWith(Slash) ? tf : tf + Slash;  //make sure temp folder has a slash
+            tf = tf.endsWith(slash) ? tf : tf + slash;  //make sure temp folder has a slash
             SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
-            TempFolder = tf + "CASUAL" + user + sdf.format(new Date()).toString() + Slash; //set /temp/usernameRandom/
-            setTempFolder(TempFolder);
-            fo.makeFolder(TempFolder);
+            TempFolder = new File(tf + "CASUAL" + user + sdf.format(new Date()).toString() + slash); //set /temp/usernameRandom/
+            setTempFolder(TempFolder.toString());
+            fo.makeFolder(TempFolder.toString());
         }
 
-        if (!new File(TempFolder).exists()) {
-            new File(TempFolder).mkdirs();
+        if (!TempFolder.exists()) {
+            TempFolder.mkdirs();
         }
-        return TempFolder;
+        return TempFolder.toString()+slash;
     }
 
     /**
@@ -167,7 +162,7 @@ public class Statics {
      * @return the temp folder.
      */
     public String getTempFolderInstance() {
-        return TempFolder;
+        return TempFolder.toString()+slash;
     }
     //Cross-Platform data storage
 
@@ -183,29 +178,6 @@ public class Statics {
      * automatically on Windows.
      */
     public static String WinElevatorInTempFolder = getTempFolder() + "Elevate.exe"; //location of elevate.exe after deployed
-
-    /**
-     * CADI Windows Driver for Windows Vista and higher.
-     */
-    final public static String windowsVistaAndHigherCadiDevconDriver = "/CASUAL/Heimdall/resources/CADI.zip";  //devcon CADI
-
-
-    /**
-     * CADI Windows Driver for XP.  
-     */
-    final public static String windowsXPCadiDevconDriver = "/CASUAL/Heimdall/resources/xp/CADI.zip";  //xp devcon CADI
- 
-    /**
-     * Busybox for Linux ARMv4tl is the most compatible with all ARM according
-     * to Busybox site. This is intended for the device, not the host.
-     */
-    final public static String busyboxARM = "/CASUAL/resources/ADB/busybox/busybox-armv4tl";
-
-    /**
-     * Busybox for Linux x86. This is intended for the device, not the host.
-     */
-    final public static String busyboxX86 = "/CASUAL/resources/ADB/busybox/busybox-i686";
-    //Windows permissions elevator
 
     /**
      * Windows Elevate.exe as resource in CASUAL
@@ -248,18 +220,12 @@ public class Statics {
         ProgressDoc = null;
         SelectedScriptFolder = "";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
-        Locks.scriptRunLock = new CASUAL.misc.MandatoryThread();
-        Locks.lockGUIunzip = false;
+        CASUALStartupTasks.scriptRunLock = new CASUAL.misc.MandatoryThread();
+        CASUALStartupTasks.lockGUIunzip = false;
         ActionEvents = new ArrayList<String>();
         ReactionEvents = new ArrayList<String>();
         new ADBTools().reset();
         new FastbootTools().reset(); 
-        HeimdallInstall.isHeimdallDeployed = false; //if fastboot has been deployed
-        HeimdallInstall.heimdallResource = ""; //location to heimdall set from final values above
-        HeimdallInstall.heimdallStaging = TempFolder + "heimdallStage";//location for heimdall files while deploying on Linux
-        HeimdallInstall.heimdallDeployed = ""; //location of heimdall once deployed
-        HeimdallInstall.resourceHeimdallVersion = null;//get resource version[] from "/CASUAL/Heimdall/resources/HeimdallVersion".replace("v","").split(.) ;
-        HeimdallInstall.installedHeimdallVersion = null; //attempt to get from running heimdall blindly, then .replace("v","").split(.) 
         CASUALLanguage.GOTO = "";
         try {
             Statics.CASPAC.getActiveScript().scriptContinue = false;
@@ -274,18 +240,23 @@ public class Statics {
      * @param status status to be displayed to user.
      */
     public static void setStatus(final String status) {
-        new Log().level4Debug(status);
+        Log.level4Debug(status);
         currentStatus = status;
-        if (isGUIIsAvailable()) {
+
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    GUI.setInformationScrollBorderText(status);
+                    if (GUI!=null) {
+                        GUI.setInformationScrollBorderText(status);
+                    }
+                    
+                    CASUAL.instrumentation.Instrumentation.updateStatus(status);
+                    
                 }
             });
             t.setName("Updating GUI");
             t.start();
-        }
+
     }
 
     /**
@@ -305,13 +276,11 @@ public class Statics {
      * @return path to new temp folder.
      */
     public static String setTempFolder(String folder) {
-        TempFolder = folder;
+        TempFolder = new File(folder);
         //TODO move away from setting paths and handle in getHeimdall/ADB/Fastboot location in proper class. 
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         new FastbootTools().reset();
         new ADBTools().reset();
-        HeimdallInstall.heimdallStaging = TempFolder + "heimdallStage";
-        HeimdallInstall.heimdallDeployed = "";
-        return TempFolder;
+        return TempFolder.toString()+slash;
     }
 }

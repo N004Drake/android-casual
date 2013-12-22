@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.instrumentation.Instrumentation;
 import java.awt.Component;
 import java.awt.HeadlessException;
 import java.util.Arrays;
@@ -130,6 +131,7 @@ public class CASUALMessageObject {
                 this.messageText = messageInput;
             }
         }
+        Instrumentation.updateStatus("-New Message:"+title+" "+messageText);
     }
 
     /**
@@ -157,7 +159,7 @@ public class CASUALMessageObject {
      * @param initialValue value to choose if none other are chosen
      * @return value chosen 0 for first, 1 for second...
      */
-    public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, int optionType, int timeOutMessageType, Object[] options, final Object initialValue) {
+    synchronized public int showTimeoutDialog(final int PRESET_TIME, Component parentComponent, int optionType, int timeOutMessageType, Object[] options, final Object initialValue) {
         this.timeoutOptionType = optionType;
         this.timeoutMessageType = timeOutMessageType;
         this.timeoutOptions = options;
@@ -165,6 +167,9 @@ public class CASUALMessageObject {
         this.timeoutPresetTime = PRESET_TIME;
         this.messageType = iCASUALUI.INTERACTION_TIME_OUT;
         expectedReturn = "(String)int from " + Arrays.asList(options).toString();
+        if (Statics.GUI==null){
+            return 0;
+        }
         return Integer.parseInt(Statics.GUI.displayMessage(this));
     }
 
@@ -233,9 +238,9 @@ public class CASUALMessageObject {
     public void showInformationMessage() throws HeadlessException {
         this.messageType = iCASUALUI.INTERACTION_SHOW_INFORMATION;
         expectedReturn = "Empty";
-        new Log().level3Verbose("showing information message object");
+        Log.level3Verbose("showing information message object");
         Statics.GUI.displayMessage(this);
-        new Log().level3Verbose("Done with message object");
+        Log.level3Verbose("Done with message object");
     }
 
     /**
@@ -260,5 +265,14 @@ public class CASUALMessageObject {
         Boolean retval = Statics.GUI.displayMessage(this).equals("true");
         expectedReturn = "String 0-yes, 1-no";
         return retval;
+    }
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        String n="\n";
+        sb.append("RequestTitle:").append(this.title).append(n);
+        sb.append("RequestBody:").append(this.messageText).append(n);
+        return sb.toString();
     }
 }

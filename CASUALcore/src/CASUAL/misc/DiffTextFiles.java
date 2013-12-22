@@ -69,7 +69,7 @@ public class DiffTextFiles {
                     difference = difference + TestStreamLine + "\n";
                 }
             } catch (IOException ex1) {
-                new Log().errorHandler(ex);
+                Log.errorHandler(ex);
             }
 
 
@@ -125,7 +125,7 @@ public class DiffTextFiles {
             }
             BROriginal.close();
         } catch (IOException e) {
-            new Log().errorHandler(e);
+            Log.errorHandler(e);
         }
 
         return DifferenceFromFile1;
@@ -162,7 +162,7 @@ public class DiffTextFiles {
  
             out.close();
         } catch (IOException ex) {
-         new Log().errorHandler(ex);
+         Log.errorHandler(ex);
         }
     }
 }

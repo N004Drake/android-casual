@@ -37,7 +37,7 @@ public class CFAutoRootDb {
 
     final Properties BUILDPROP = new Properties();
     final private ArrayList<Device> deviceList;
-    Log log = new Log();
+    
 
     /**
      * Constructor for CFAutoRootDB parses the buildprop and CFAutoroot site
@@ -82,7 +82,7 @@ public class CFAutoRootDb {
                 }
             }
         }
-        log.level2Information("Found nothing available for your device on http://autoroot.chainfire.eu/");
+        Log.level2Information("Found nothing available for your device on http://autoroot.chainfire.eu/");
         return "";
     }
 

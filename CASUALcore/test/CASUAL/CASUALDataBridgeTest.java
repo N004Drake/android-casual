@@ -4,7 +4,8 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
+import CASUAL.communicationstools.adb.ADBTools;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;

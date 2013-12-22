@@ -16,10 +16,10 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.ADB.ADBTools;
-import CASUAL.misc.LinkedProperties;
 import CASUAL.caspac.Caspac;
+import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.crypto.MD5sum;
+import CASUAL.misc.LinkedProperties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,7 +42,7 @@ public class CASUALTools {
      */
     final public static boolean IDEMode = new CASUALTools().getIDEMode();
 
-    Log log = new Log();
+
 
     /**
      * listScripts scans the CASUAL for scripts -results are stored in
@@ -59,7 +59,7 @@ public class CASUALTools {
      URL jar = Src.getLocation();
      try (ZipInputStream Zip = new ZipInputStream(jar.openStream())) {
      ZipEntry ZEntry;
-     log.level4Debug("Picking Jar File:" + jar.getFile());
+     Log.level4Debug("Picking Jar File:" + jar.getFile());
      while ((ZEntry = Zip.getNextEntry()) != null) {
 
      String EntryName = ZEntry.getName();
@@ -68,11 +68,11 @@ public class CASUALTools {
      list.add(EntryName);
      }
      }
-     log.level4Debug("Found " + list.size() + " CASUAL scripts");
+     Log.level4Debug("Found " + list.size() + " CASUAL scripts");
      Statics.scriptNames = new String[list.size()];
      for (int n = 0; n < list.size(); n++) {
      String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
-     log.level4Debug("Found script: " + EntryName);
+     Log.level4Debug("Found script: " + EntryName);
      Statics.scriptNames[n] = EntryName;
      Count++;
      }
@@ -81,7 +81,7 @@ public class CASUALTools {
      Thread update = new Thread(updateMD5s);
      update.setName("Updating MD5s");
      update.start();
-     log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
+     Log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
      //Statics.scriptLocations = new String[]{""};
      Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
      }
@@ -93,12 +93,12 @@ public class CASUALTools {
      */
     private void md5sumTestScripts() {
         Statics.setStatus("Setting MD5s");
-        log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
+        Log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
         incrementBuildNumber();
 
         if (getIDEMode()) { //if we are in development mode
             //Set up scripts path
-            String scriptsPath = System.getProperty("user.dir") + Statics.Slash + "SCRIPTS" + Statics.Slash;
+            String scriptsPath = System.getProperty("user.dir") + Statics.slash + "SCRIPTS" + Statics.slash;
             final File folder = new File(scriptsPath);
             if (folder.isDirectory()) {
                 for (final File fileEntry : folder.listFiles()) {
@@ -106,7 +106,7 @@ public class CASUALTools {
                         InputStream in = null;
                         try {
                             //load each meta file into a properties file
-                            new Log().level3Verbose("Verifying meta: " + fileEntry.toString());
+                            Log.level3Verbose("Verifying meta: " + fileEntry.toString());
                             LinkedProperties prop = new LinkedProperties();
                             in = new FileInputStream(fileEntry);
                             prop.load(in);
@@ -121,31 +121,31 @@ public class CASUALTools {
                                 String newMD5 = new MD5sum().md5sum(scriptsPath + md5File[1]);
                                 if (!md5.contains(newMD5)) {
                                     md5Changed = true;
-                                    log.level4Debug("Old MD5: " + md5);
-                                    log.level4Debug("New MD5: " + prop.getProperty(entry));
+                                    Log.level4Debug("Old MD5: " + md5);
+                                    Log.level4Debug("New MD5: " + prop.getProperty(entry));
                                 }
                                 prop.setProperty(entry, newMD5 + "  " + md5File[1]);
                                 pos++;
                             }
 
                             if (md5Changed) {
-                                new Log().level4Debug("MD5s for " + fileEntry + " changed. Updating...");
+                                Log.level4Debug("MD5s for " + fileEntry + " changed. Updating...");
                                 FileOutputStream fos = new FileOutputStream(fileEntry);
                                 prop.store(fos, null);
                                 fos.close();
 
                             }
                         } catch (FileNotFoundException ex) {
-                            new Log().errorHandler(ex);
+                            Log.errorHandler(ex);
                         } catch (IOException ex) {
-                            new Log().errorHandler(ex);
+                            Log.errorHandler(ex);
                         } finally {
                             try {
                                 if (in != null) {
                                     in.close();
                                 }
                             } catch (IOException ex) {
-                                new Log().errorHandler(ex);
+                                Log.errorHandler(ex);
                             }
                         }
                     }
@@ -176,25 +176,8 @@ public class CASUALTools {
         boolean isSource = path.contains("src") && path.contains("CASUALcore");
         return classJar.startsWith("file:") && isSource;
     }
-    /**
-     * Starts a new ADB instance
-     */
-    public Runnable launchADB = new Runnable() {
-        @Override
-        public void run() {
-            new ADBTools().startServer();
-        }
-    };
-    /**
-     * deploys ADB to Statics.ADBDeployed.
-     */
-    public Runnable adbDeployment = new Runnable() {
-        @Override
-        public void run() {
-            new ADBTools().getBinaryLocation();
-            new Log().level3Verbose("ADB Server Started!!!");
-        }
-    };
+
+
     /**
      * Starts the GUI, should be done last and only if needed.
      */
@@ -241,7 +224,7 @@ public class CASUALTools {
             System.exit(0);
 
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }
 
@@ -259,7 +242,7 @@ public class CASUALTools {
                 prop.store(new FileOutputStream(System.getProperty("user.dir") + "/CASUAL/resources/CASUALApp.properties"), "Application.buildnumber=" + x);
             }
         } catch (IOException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }
 
@@ -270,7 +253,7 @@ public class CASUALTools {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }
 
@@ -281,7 +264,7 @@ public class CASUALTools {
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }
 

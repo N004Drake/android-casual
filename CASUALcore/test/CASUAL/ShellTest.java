@@ -16,8 +16,8 @@
  */
 package CASUAL;
 
-import CASUAL.CommunicationsTools.Fastboot.FastbootTools;
-import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.communicationstools.fastboot.FastbootTools;
+import CASUAL.communicationstools.adb.ADBTools;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;

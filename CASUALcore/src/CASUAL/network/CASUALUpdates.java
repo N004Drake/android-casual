@@ -54,7 +54,6 @@ public class CASUALUpdates {
      * Update Required 3=CASUAL update required- cannot continue. 4=download
      * failed
      */
-    Log Log = new Log();
 
     /**
      * downloads a file
@@ -70,7 +69,7 @@ public class CASUALUpdates {
         } catch (MalformedURLException ex) {
             Log.errorHandler(ex);
         } catch (URISyntaxException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
         return true;
     }
@@ -111,7 +110,7 @@ public class CASUALUpdates {
                     bytes = bytes + bytesRead;
                     kilobytes = bytes / 1024;
                     if (Statics.ProgressDoc != null) {
-                        new CASUAL.Log().replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
+                        Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
                     }
                     lastlength = 6 + Integer.toString(kilobytes).length();
 
@@ -200,11 +199,11 @@ public class CASUALUpdates {
         if (CASUALTools.IDEMode) {
             url = stringToFormattedURL(CASUALRepo + "/SCRIPTS/" + meta);
         } else {
-            new Log().level3Verbose(CASUALRepo + meta);
+            Log.level3Verbose(CASUALRepo + meta);
             url = stringToFormattedURL(CASUALRepo + meta);
             System.out.println(url.toString());
         }
-        new Log().level3Verbose("opening download stream");
+        Log.level3Verbose("opening download stream");
 
         URLConnection con = url.openConnection();
         con.setConnectTimeout(300);

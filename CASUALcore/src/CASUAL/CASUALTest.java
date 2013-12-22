@@ -68,7 +68,7 @@ public class CASUALTest {
             CASUAL.Statics.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
         } catch (IOException ex) {
-            new CASUAL.Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
 
     }
@@ -98,7 +98,7 @@ public class CASUALTest {
             CASUAL.Statics.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
         } catch (IOException ex) {
-            new CASUAL.Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
 
         args = CASUALLaunchCommand;
@@ -117,7 +117,7 @@ public class CASUALTest {
         try {
             launch.join();
         } catch (InterruptedException ex) {
-            new Log().errorHandler(ex);
+            Log.errorHandler(ex);
         }
     }
     /**
@@ -145,7 +145,7 @@ public class CASUALTest {
                     doQuarterSecondSleep();
 
                 } catch (Exception ex) {
-                    new Log().level4Debug(ex.getLocalizedMessage());
+                    Log.level4Debug(ex.getLocalizedMessage());
                     //no need to report this. its fine
                 }
             }
@@ -154,13 +154,13 @@ public class CASUALTest {
 
         private void doCasualOuputHandling(String line) {
             try {
-                //new Log().level4Debug(line);
+                //Log.level4Debug(line);
                 validateLine(line);
 
                 if (line.contains("ERROR")) {
-                    new Log().level4Debug(line); //error
+                    Log.level4Debug(line); //error
                 } else if (line.contains("[INPUT][ANY]")) {
-                   new Log().level4Debug(line);//get textual input  
+                   Log.level4Debug(line);//get textual input  
 
                     writeToCASUAL.write(13);
                 } else if (line.contains("[USERTASK][Q or RETURN][CRITICAL]")) {
@@ -194,7 +194,7 @@ public class CASUALTest {
                     writeToCASUAL.write(13);
                 }
             } catch (IOException ex) {
-                new CASUAL.Log().errorHandler(ex);
+                Log.errorHandler(ex);
 
             }
 

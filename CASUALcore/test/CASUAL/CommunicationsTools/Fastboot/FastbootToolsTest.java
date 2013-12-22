@@ -17,6 +17,7 @@
 
 package CASUAL.CommunicationsTools.Fastboot;
 
+import CASUAL.communicationstools.fastboot.FastbootTools;
 import CASUAL.Statics;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -57,10 +58,10 @@ public class FastbootToolsTest {
     public void testGetBinaryLocation() {
         System.out.println("getBinaryLocation");
         FastbootTools instance = new FastbootTools();
-        String expResult = "";
+        String expResult = "fastboot";
         String result = instance.getBinaryLocation();
         assert(result.contains(Statics.getTempFolder()));
-        assert(result.contains("fastboot"));
+        assert(result.contains(expResult));
     }
 
 
@@ -120,5 +121,46 @@ public class FastbootToolsTest {
         FastbootTools instance = new FastbootTools();
         Boolean result=instance.isConnected();
         System.out.println("Is Connected: "+result);
+    }
+
+
+
+
+    /**
+     * Test of shutdown method, of class FastbootTools.
+     */
+    @Test
+    public void testShutdown() {
+        System.out.println("shutdown");
+        FastbootTools instance = new FastbootTools();
+        instance.shutdown();
+    }
+
+    /**
+     * Test of checkErrorMessage method, of class FastbootTools.
+     */
+    @Test
+    public void testCheckErrorMessage() {
+        System.out.println("checkErrorMessage");
+        String[] commandRun = null;
+        String returnValue = "";
+        FastbootTools instance = new FastbootTools();
+        boolean expResult = true;
+        boolean result = instance.checkErrorMessage(commandRun, returnValue);
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of installDriver method, of class FastbootTools.
+     */
+    @Test
+    public void testInstallDriver() {
+        System.out.println("installDriver");
+        FastbootTools instance = new FastbootTools();
+        boolean expResult = true;
+        boolean result = instance.installDriver();
+        assertEquals(expResult, result);
+
     }
 }

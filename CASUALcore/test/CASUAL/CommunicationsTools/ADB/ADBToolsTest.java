@@ -5,8 +5,8 @@
 package CASUAL.CommunicationsTools.ADB;
 
 import CASUAL.CASUALMessageObject;
-import CASUAL.CommunicationsTools.AbstractDeviceCommunicationsProtocol;
-import CASUAL.CommunicationsTools.ADB.ADBTools;
+import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
+import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.OSTools;
 import CASUAL.Statics;
 import java.io.File;
@@ -14,7 +14,6 @@ import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -230,16 +229,6 @@ public class ADBToolsTest {
         
     }
 
-    /**
-     * Test of adbMonitor method, of class ADBTools.
-     */
-    @Test
-    public void testAdbMonitor() {
-        System.out.println("adbMonitor");
-        boolean start = false;
-        ADBTools.adbMonitor(start);
-
-    }
 
     /**
      * Test of getIndividualDevices method, of class ADBTools.

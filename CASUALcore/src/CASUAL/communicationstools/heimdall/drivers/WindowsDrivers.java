@@ -1,6 +1,6 @@
 /*WindowsDrivers.java
  * **************************************************************************
- *Copyright (C) 2013  Adam Outler
+ *Copyright (C) 2013  Jeremy Loper
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,8 +15,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package CASUAL;
+package CASUAL.communicationstools.heimdall.drivers;
 
+import CASUAL.CASUALMessageObject;
+import CASUAL.FileOperations;
+import CASUAL.Log;
+import CASUAL.OSTools;
+import CASUAL.Shell;
+import CASUAL.Statics;
 import CASUAL.archiving.Unzip;
 import CASUAL.misc.StringOperations;
 import java.io.FileNotFoundException;
@@ -52,11 +58,15 @@ import java.util.regex.Pattern;
  *************************************************************************
  */
 public class WindowsDrivers {
-
     /**
-     * log is a persistent handle for output for end-user information & debugging
+     * CADI Windows Driver for XP.
      */
-    public Log log = new Log();
+    public static final String windowsXPCadiDevconDriver = "/CASUAL/communicationstools/heimdall/drivers/resources/xp/CADI.zip"; //xp devcon CADI
+    /**
+     * CADI Windows Driver for Windows Vista and higher.
+     */
+    public static final String windowsVistaAndHigherCadiDevconDriver = "/CASUAL/communicationstools/heimdall/drivers/resources/CADI.zip"; //devcon CADI
+
 
     /**
      * pathToCADI contains the full path to the root folder of where driver 
@@ -100,9 +110,9 @@ public class WindowsDrivers {
      */
     public WindowsDrivers(int promptInit) {
         removeDriverOnCompletion = promptInit;
-        log.level4Debug("WindowsDrivers() Initializing");
+        Log.level4Debug("WindowsDrivers() Initializing");
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
-        this.pathToCADI = Statics.getTempFolder() + "CADI" + Statics.Slash;
+        this.pathToCADI = Statics.getTempFolder() + "CADI" + Statics.slash;
         if (removeDriverOnCompletion == 0) { //so it only asks once
             removeDriverOnCompletion = new CASUALMessageObject("@interactionInstallingCADI").showYesNoOption() ? 2 : 1; //set value as 2 if true and 1 if false
         }
@@ -143,13 +153,13 @@ public class WindowsDrivers {
     public boolean driverExtract(String pathToExtract) throws FileNotFoundException, IOException {
         if (OSTools.OSName().contains("Windows XP")) {
             if (new FileOperations().makeFolder(pathToCADI)) {
-                log.level4Debug("driverExtract() Unzipping CADI for xp");
+                Log.level4Debug("driverExtract() Unzipping CADI for xp");
                 Unzip.unZipResource("/CASUAL/Heimdall/resources/xp/CADI.zip", pathToExtract);
                 return true;
             }
             return false;
         } else if (new FileOperations().makeFolder(pathToCADI)) {
-            log.level4Debug("driverExtract() Unzipping CADI");
+            Log.level4Debug("driverExtract() Unzipping CADI");
             Unzip.unZipResource("/CASUAL/Heimdall/resources/CADI.zip", pathToExtract);
             return true;
         }
@@ -167,10 +177,10 @@ public class WindowsDrivers {
      */
     public boolean installDriver(String VID) {
         if (VID.equals("")) {
-            log.level0Error("installDriver() no VID specified!");
+            Log.level0Error("installDriver() no VID specified!");
             return false;
         }
-        log.level3Verbose("Installing driver for VID:" + VID);
+        Log.level3Verbose("Installing driver for VID:" + VID);
         boolean installedPreviously = false;    //flags true if a previously installed HWID is found, to prevent redundant calls to devcon.
         String[] dList = getDeviceList(VID);    //get device HWID list for current VID
         if (dList != null) {
@@ -184,16 +194,16 @@ public class WindowsDrivers {
                 if (!installedPreviously) { //checks if current HWID is redundant
                     String retVal = devconCommand("update " + pathToCADI + "cadi.inf " + "\"" + dList[x] + "\"");
                     if (retVal == null) {
-                        log.level0Error("installDriver() devcon returned null!");
+                        Log.level0Error("installDriver() devcon returned null!");
                         return false;
                     } else if (!retVal.contains("Drivers installed successfully") || retVal.contains(" failed")) {
-                        log.level0Error("installDriver() failed for " + "\"" + dList[x] + "\"!");
+                        Log.level0Error("installDriver() failed for " + "\"" + dList[x] + "\"!");
                     }
                     pastInstalls[x] = dList[x]; //add installed HWID to redundancy list
                 }
             }
         } else {
-            log.level0Error("installDriver() no target devices for VID: " + VID);
+            Log.level0Error("installDriver() no target devices for VID: " + VID);
             return false;
         }
         return true;
@@ -207,22 +217,22 @@ public class WindowsDrivers {
      */
     public boolean uninstallCADI() {
         int resultSum = 0;
-        log.level2Information("uninstallCADI() Initializing");
-        log.level2Information("uninstallCADI() Scanning for CADI driver package(s)");
+        Log.level2Information("uninstallCADI() Initializing");
+        Log.level2Information("uninstallCADI() Scanning for CADI driver package(s)");
         if (deleteOemInf()) {
             resultSum++;
         }
 
-        log.level2Information("uninstallCADI() Scanning for orphaned devices");
+        Log.level2Information("uninstallCADI() Scanning for orphaned devices");
         for (int x = 0; windowsDriverBlanket.length > x; x++) {
             if (removeOrphanedDevices(windowsDriverBlanket[x])) {
                 resultSum++;
             }
         }
 
-        log.level2Information("removeDriver() Windows will now scan for hardware changes");
+        Log.level2Information("removeDriver() Windows will now scan for hardware changes");
         if (devconCommand("rescan") == null) {
-            log.level0Error("removeDriver() devcon returned null!");
+            Log.level0Error("removeDriver() devcon returned null!");
         }
         return resultSum > 0;
     }
@@ -253,19 +263,19 @@ public class WindowsDrivers {
                         }
                         return dList;
                     } else {
-                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        Log.level0Error("getDeviceList() getRegExPattern() returned null!");
                         return null;
                     }
                 } else {
-                    log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                    Log.level0Error("getDeviceList() getRegExPattern() returned null!");
                     return null;
                 }
             } else {
-                log.level0Error("getDeviceList() devcon returned null!");
+                Log.level0Error("getDeviceList() devcon returned null!");
                 return null;
             }
         } else {
-            log.level0Error("getDeviceList() no VID specified");
+            Log.level0Error("getDeviceList() no VID specified");
             return null;
         }
     }
@@ -296,11 +306,11 @@ public class WindowsDrivers {
                             return dList;
                         }
                     } else {
-                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        Log.level0Error("getDeviceList() getRegExPattern() returned null!");
                         return null;
                     }
                 } else {
-                    log.level0Error("getDeviceList() devcon returned null!");
+                    Log.level0Error("getDeviceList() devcon returned null!");
                     return null;
                 }
             } else { //All present devices
@@ -319,11 +329,11 @@ public class WindowsDrivers {
                             return dList;
                         }
                     } else {
-                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        Log.level0Error("getDeviceList() getRegExPattern() returned null!");
                         return null;
                     }
                 } else {
-                    log.level0Error("getDeviceList() devcon returned null!");
+                    Log.level0Error("getDeviceList() devcon returned null!");
                     return null;
                 }
             }
@@ -344,11 +354,11 @@ public class WindowsDrivers {
                             return dList;
                         }
                     } else {
-                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        Log.level0Error("getDeviceList() getRegExPattern() returned null!");
                         return null;
                     }
                 } else {
-                    log.level0Error("getDeviceList() devcon returned null!");
+                    Log.level0Error("getDeviceList() devcon returned null!");
                     return null;
                 }
             } else { //All past & present devices
@@ -367,11 +377,11 @@ public class WindowsDrivers {
                             return dList;
                         }
                     } else {
-                        log.level0Error("getDeviceList() getRegExPattern() returned null!");
+                        Log.level0Error("getDeviceList() getRegExPattern() returned null!");
                         return null;
                     }
                 } else {
-                    log.level0Error("getDeviceList() devcon returned null!");
+                    Log.level0Error("getDeviceList() devcon returned null!");
                     return null;
                 }
             }
@@ -394,11 +404,11 @@ public class WindowsDrivers {
                 Matcher matcher = pattern.matcher(outputBuffer);
                 while(matcher.find()) devCount++;
             } else {
-                log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
+                Log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
                 return 0;
             }
         } else {
-            log.level0Error("removeOrphanedDevices() devcon returned null!");
+            Log.level0Error("removeOrphanedDevices() devcon returned null!");
             return 0;
         }
         return devCount;
@@ -428,26 +438,26 @@ public class WindowsDrivers {
                     if (pattern != null) {
                         Matcher matcher = pattern.matcher(outputBuffer);
                         while (matcher.find()) {
-                            log.level2Information("removeOrphanedDevices() Removing orphaned device " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
+                            Log.level2Information("removeOrphanedDevices() Removing orphaned device " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
                             result = devconCommand("remove " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
                             if (result.equals("")) {
-                                log.level0Error("removeOrphanedDevices() devcon returned null!");
+                                Log.level0Error("removeOrphanedDevices() devcon returned null!");
                             } else if (result.contains("device(s) are ready to be removed. To remove the devices, reboot the system.")) {
                                 resultSum++;
                             }
                             i++;
                         }
                     } else {
-                        log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
+                        Log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
                     }
                 } else {
-                    log.level0Error("removeOrphanedDevices() devcon returned null!");
+                    Log.level0Error("removeOrphanedDevices() devcon returned null!");
                 }
             } else {
-                log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
+                Log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
             }
         } else {
-            log.level0Error("removeOrphanedDevices() no VID specified");
+            Log.level0Error("removeOrphanedDevices() no VID specified");
         }
         return resultSum > 0;
     }
@@ -460,7 +470,7 @@ public class WindowsDrivers {
      * @return a String Array of *.inf files matching the search criteria.
      */
     public boolean deleteOemInf() {
-        log.level2Information("deleteOemInf() Enumerating installed driver packages");
+        Log.level2Information("deleteOemInf() Enumerating installed driver packages");
         int resultSum = 0;
         Pattern pattern = getRegExPattern("inf");
         if (pattern != null) {
@@ -468,18 +478,18 @@ public class WindowsDrivers {
             if (outputBuffer != null) {
                 Matcher matcher = pattern.matcher(outputBuffer);
                 while (matcher.find()) {
-                    log.level2Information("removeDriver() Forcing removal of driver package" + matcher.group(0));
+                    Log.level2Information("removeDriver() Forcing removal of driver package" + matcher.group(0));
                     String result = devconCommand("-f dp_delete " + matcher.group(0));
                     if (result == null || result.contains("Driver package")) {
-                        log.level0Error("removeDriver() devcon returned null!");
+                        Log.level0Error("removeDriver() devcon returned null!");
                     }
                     resultSum++;
                 }
             } else {
-                log.level0Error("deleteOemInf() devcon returned null!");
+                Log.level0Error("deleteOemInf() devcon returned null!");
             }
         } else {
-            log.level0Error("deleteOemInf() getRegExPattern() returned null!");
+            Log.level0Error("deleteOemInf() getRegExPattern() returned null!");
             return false;
         }
         return resultSum > 0;
@@ -501,10 +511,10 @@ public class WindowsDrivers {
                 try {
                     driverExtract(pathToCADI);
                 } catch (FileNotFoundException ex) {
-                    log.errorHandler(ex);
+                    Log.errorHandler(ex);
                     return null;
                 } catch (IOException ex) {
-                    log.errorHandler(ex);
+                    Log.errorHandler(ex);
                     return null;
                 }
                 driverExtracted = true;
@@ -512,10 +522,10 @@ public class WindowsDrivers {
             String exec = pathToCADI + (OSTools.is64bitSystem() ? "driver_x64.exe " : "driver_x86.exe ") + args;
             String retval;
             retval = new Shell().timeoutShellCommand(new String[]{"cmd.exe", "/C", "\"" + exec + "\""}, 90000); //1000 milliseconds — one second
-            log.level2Information(retval);
+            Log.level2Information(retval);
             return retval;
         } else {
-            log.level0Error("devconCommand() no command specified");
+            Log.level0Error("devconCommand() no command specified");
             return null;
         }
     }
@@ -540,11 +550,11 @@ public class WindowsDrivers {
             } else if (whatPattern.equals("All devices")) {
                 return Pattern.compile("\\S+(?=\\s*:\\s)");
             } else {
-                log.level0Error("getRegExPattern() no known pattern requested");
+                Log.level0Error("getRegExPattern() no known pattern requested");
                 return null;
             }
         } else {
-            log.level0Error("getRegExPattern() no pattern requested");
+            Log.level0Error("getRegExPattern() no pattern requested");
             return null;
         }
     }
