@@ -378,7 +378,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                 }
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
                 Statics.SelectedScriptFolder = Statics.getTempFolder() + new File(nonResourceFileName).getName() + Statics.slash;
-                if (new FileOperations().verifyFolderExists(nonResourceFileName.toString() + ".zip")) {
+                if (new File(nonResourceFileName.toString() + ".zip").exists()) {
                     new Unzip(nonResourceFileName.toString() + ".zip").unzipFile(Statics.SelectedScriptFolder);
                 }
                 Statics.ScriptLocation = Statics.SelectedScriptFolder;

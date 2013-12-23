@@ -222,21 +222,6 @@ public class FileOperationsTest {
 
     }
 
-    /**
-     * Test of verifyFileExists method, of class FileOperations.
-     */
-    @Test
-    public void testVerifyFolderExists() {
-        System.out.println("verifyFolderExists");
-        String file = "newFolder";
-        FileOperations instance = new FileOperations();
-        File f= new File(file);
-        f.mkdir();
-        boolean result = instance.verifyFolderExists(file);
-        assert(result);
-        f.delete();
-
-    }
 
     /**
      * Test of setExecutableBit method, of class FileOperations.

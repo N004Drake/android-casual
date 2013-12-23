@@ -21,8 +21,8 @@ import CASUAL.Statics;
 import CASUAL.misc.MandatoryThread;
 
 /**
- *
- * @author adamoutler
+ * Provides a method of instrumentation plugin. 
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class Instrumentation {
     //Form data

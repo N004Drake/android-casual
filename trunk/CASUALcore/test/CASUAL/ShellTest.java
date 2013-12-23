@@ -35,9 +35,10 @@ import static org.junit.Assert.*;
 public class ShellTest {
 
     final String ex = "List of devices attached \n\n";
-    final String exp = "\nList of devices attached \n\n";
+    final String exp = "\nList of devices attached";
 
     public ShellTest() {
+        Statics.GUI=new GUI.testing.automatic();
     }
 
     @BeforeClass
@@ -50,6 +51,7 @@ public class ShellTest {
 
     @Before
     public void setUp() {
+        new ADBTools().startServer();
     }
 
     @After
@@ -112,9 +114,9 @@ public class ShellTest {
         String result = instance.sendShellCommand(cmd);
         assert (result.contains(exp));
         cmd = new String[]{new ADBTools().getBinaryLocation()};
-        String expResult = "\nAndroid Debug Bridge version 1.0.31\n\n";
+        String expResult = "\nAndroid Debug Bridge version";
         result = instance.sendShellCommand(cmd);
-        assertEquals(expResult, result);
+        assert(result.startsWith(expResult));
 
     }
 

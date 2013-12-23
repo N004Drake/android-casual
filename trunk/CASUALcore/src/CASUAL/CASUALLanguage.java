@@ -43,7 +43,7 @@ import java.util.logging.Logger;
 /**
  * CASUALLanguage is where the CASUALLanguage is interperated
  *
- * @author Adam Outler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALLanguage {
 

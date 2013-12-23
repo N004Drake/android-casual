@@ -32,18 +32,14 @@ import static CASUAL.iCASUALUI.INTERACTION_SHOW_YES_NO;
 import static CASUAL.iCASUALUI.INTERACTION_TIME_OUT;
 import static CASUAL.iCASUALUI.INTERACTION_USER_CANCEL_OPTION;
 import static CASUAL.iCASUALUI.INTERACTION_USER_NOTIFICATION;
-import GUI.development.TimeOutOptionPane;
-import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import static javax.swing.JOptionPane.YES_OPTION;
+
 
 /**
  *
- * @author adamoutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CommandLineUI implements iCASUALUI {
 
@@ -235,17 +231,15 @@ public class CommandLineUI implements iCASUALUI {
 
     @Override
     public void StartButtonActionPerformed() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String comboBoxGetSelectedItem() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "";
     }
 
     @Override
     public void comboBoxScriptSelectorAddNewItem(String item) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -256,7 +250,7 @@ public class CommandLineUI implements iCASUALUI {
 
     @Override
     public boolean getControlStatus() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+          return true;
     }
 
     @Override
@@ -285,12 +279,10 @@ public class CommandLineUI implements iCASUALUI {
     
     @Override
     public void setScript(Script s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setStartButtonText(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -300,22 +292,18 @@ public class CommandLineUI implements iCASUALUI {
 
     @Override
     public void setStatusMessageLabel(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setWindowBannerImage(BufferedImage icon, String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setWindowBannerText(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setVisible(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -326,17 +314,14 @@ public class CommandLineUI implements iCASUALUI {
 
     @Override
     public void deviceDisconnected() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void deviceMultipleConnected(int numberOfDevicesConnected) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void notificationPermissionsRequired() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -346,22 +331,19 @@ public class CommandLineUI implements iCASUALUI {
 
     @Override
     public void notificationInputRequested() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void notificationGeneral() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void notificationRequestToContinue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
     public void notificationUserActionIsRequired() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public void setThisAsGUI(){

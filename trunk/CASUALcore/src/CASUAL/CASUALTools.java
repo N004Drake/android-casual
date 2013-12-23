@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 /**
  * Provides a set of tools used in CASUAL 
- * @author Adam Outler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALTools {
     //final public String defaultPackage="ATT GS3 Root";

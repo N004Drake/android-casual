@@ -1,28 +1,46 @@
 package CASUAL;
-
+/*CASUALSettings decodes args and creates an object used for CASUAL settings
+ *Copyright (C) 2013  Adam Outler
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.io.File;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 /**
  *
- * @author adamoutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALSettings {
 
+    /**
+     * Options used for arguments.  HELP, LICENSE, TEMP, PASSWORD, CASPAC, GUI, NOSOUND, EXECUTE. INVALID is specified if a argument is not proper. 
+     */
     public static enum ArgOptions {
-
         HELP, LICENSE, TEMP, PASSWORD, CASPAC, GUI, NOSOUND, EXECUTE, INVALID
     }
 
+    /**
+     * Options used to determine the maor mode of CASUAL CASUAL, CASPAC, EXECUTE, EXIT.  If a problem is detected EXIT is specified.   CASUAL is default. Execute and CASPAC are specified by commandline args.
+     */
     public static enum CASUALMode {
-
         CASUAL, CASPAC, EXECUTE, EXIT;
     }
     
+    /**
+     * Initial monitoring mode of CASUAL. 
+     */
     public static enum MonitorMode{
         ADB, HEIMDALL, FASTBOOT
     }
@@ -52,6 +70,10 @@ public class CASUALSettings {
         this.useGUI = true;
     }
 
+    /**
+     *Takes command-line arguments and turns them into a CASUALSettings object. 
+     * @param args commands to be processed. 
+     */
     public void checkArguments(String[] args) {
         reset();
         if (args == null || args.length == 0) {
@@ -298,7 +320,7 @@ public class CASUALSettings {
         StringBuilder sb = new StringBuilder();
         String n = "\n";
         sb.append("Type:").append(this.CASPACType).append(n);
-
+        sb.append("Monitor:").append(this.monitor).append(n);
         sb.append("UseGUI:").append(useGUI).append(n);
         sb.append("executeMode:").append(execute).append(n);
         sb.append("executeCommand:").append(executeCommand).append(n);

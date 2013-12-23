@@ -27,9 +27,9 @@ import java.util.logging.Logger;
 import CASUAL.archiving.Zip;
 
 /**
- *
+ * Provides a way to create CASPACs
  * @author loganludington
- * @author Adam Outler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASPACcreator {
 

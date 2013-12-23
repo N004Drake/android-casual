@@ -21,7 +21,7 @@ import CASUAL.misc.MandatoryThread;
 
 /**
  *
- * @author adamoutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public interface InstrumentationInterface {
     

@@ -140,20 +140,9 @@ public class Shell {
             String[] MacCommand = {ScriptFile};
             Result = liveShellCommand(MacCommand, true);
         } else if (!OSTools.OSName().equals("Windows XP")) {
-            newCmd = new String[cmd.length + 2];
-            newCmd[0] = Statics.WinElevatorInTempFolder;
-            newCmd[1] = "-wait";
+            
 
-            //check if a virus scanner trashed CASUAL's Elevate.exe file. 
-            if (!new FileOperations().verifyExists(Statics.WinElevatorInTempFolder)) {
-                new CASUALMessageObject("@interactionCASUALCorrupt").showUserCancelOption();
-            }
-
-            for (int i = 2; i < cmd.length + 2; i++) {
-                newCmd[i] = cmd[i - 2] + " ";
-            }
-
-            Result = liveShellCommand(newCmd, true);
+            Result = liveShellCommand(cmd, true);
 
         }
 

@@ -24,6 +24,7 @@ import org.junit.Test;
 public class CaspacTest {
     Caspac test;
     public CaspacTest() {
+        Statics.GUI=new GUI.testing.automatic();
         try {
             test=new Caspac(new File("../../CASPAC/QualityControl/echoTest.zip"),Statics.getTempFolder(),0);
             test.loadFirstScriptFromCASPAC();
