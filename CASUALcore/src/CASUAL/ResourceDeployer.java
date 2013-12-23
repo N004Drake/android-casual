@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author adamoutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class ResourceDeployer {
 

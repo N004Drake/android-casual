@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.CASUALSettings.MonitorMode;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.misc.MandatoryThread;
@@ -31,7 +32,7 @@ import java.util.zip.ZipException;
 /**
  * provides a place for the main thread to break out into different modes.
  *
- * @author AdamOuler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public final class CASUALMain {
 
@@ -269,6 +270,7 @@ public final class CASUALMain {
                     //cp.load();
                     Statics.CASPAC = cp;
                 } catch (ZipException ex) {
+    
                     Log.errorHandler(ex);
                 } catch (IOException ex) {
                     Log.errorHandler(ex);
@@ -278,15 +280,16 @@ public final class CASUALMain {
     };
 
     private void startConnectionStatusMonitor(){
-       switch (arguments.getMonitorMode()){
+        
+       switch ( arguments.getMonitorMode()){
             case ADB:
                 new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
                 break;
             case FASTBOOT:
-                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.fastboot.FastbootTools());
                 break;
             case HEIMDALL:
-                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.heimdall.HeimdallTools());
                 break;
             default:
                 new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());

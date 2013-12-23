@@ -29,8 +29,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- *
- * @author adam
+ * Provides tools required to use Fastboot.
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
 

@@ -35,6 +35,7 @@ public class WindowsDriversTest {
     
     public WindowsDriversTest() {
         assumeTrue(OSTools.isWindows());
+        Statics.GUI=new GUI.testing.automatic();
     }
     
     @BeforeClass

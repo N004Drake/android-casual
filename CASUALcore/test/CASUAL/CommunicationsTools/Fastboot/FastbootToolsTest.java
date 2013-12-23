@@ -33,6 +33,7 @@ import static org.junit.Assert.*;
 public class FastbootToolsTest {
     
     public FastbootToolsTest() {
+        Statics.GUI=new GUI.testing.automatic();
     }
     
     @BeforeClass

@@ -1,4 +1,4 @@
-/*
+/*Handles errors from heimdall. 
  * Copyright (C) 2013 adamoutler
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,8 @@ import CASUAL.OSTools;
 import CASUAL.communicationstools.heimdall.HeimdallTools.CommandDisposition;
 
 /**
- *
- * @author adamoutler
+ * Used for detection and reaction to errors in heimdall. 
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class HeimdallErrorHandler {
     static final String[] errFail = {"Failed to end phone file transfer sequence!", "Failed to end modem file transfer sequence!", "Failed to confirm end of file transfer sequence!", "Failed to request dump!", "Failed to receive dump size!", "Failed to request dump part ", "Failed to receive dump part ", "Failed to send request to end dump transfer!", "Failed to receive end dump transfer verification!", "Failed to initialise file transfer!", "Failed to begin file transfer sequence!", "Failed to confirm beginning of file transfer sequence!", "Failed to send file part packet!", "Failed to request device info packet!", "Failed to initialise PIT file transfer!", "Failed to confirm transfer initialisation!", "Failed to send PIT file part information!", "Failed to confirm sending of PIT file part information!", "Failed to send file part packet!", "Failed to receive PIT file part response!", "Failed to send end PIT file transfer packet!", "Failed to confirm end of PIT file transfer!", "Failed to request receival of PIT file!", "Failed to receive PIT file size!", "Failed to request PIT file part ", "Failed to receive PIT file part ", "Failed to send request to end PIT file transfer!", "Failed to receive end PIT file transfer verification!", "Failed to download PIT file!", "Failed to send end session packet!", "Failed to receive session end confirmation!", "Failed to send reboot device packet!", "Failed to receive reboot confirmation!", "Failed to begin session!", "Failed to send file part size packet!", "Failed to complete sending of data: ", "Failed to complete sending of data!", "Failed to unpack device's PIT file!", "Failed to retrieve device description", "Failed to retrieve config descriptor", "Failed to find correct interface configuration", "Failed to read PIT file.", "Failed to open output file ", "Failed to write PIT data to output file.", "Failed to open file ", "Failed to send total bytes device info packet!", "Failed to receive device info response!", "Expected file part index: ", "Expected file part index: ", "No partition with identifier ", "Could not identify the PIT partition within the specified PIT file.", "Unexpected file part size response!", "Unexpected device info response!", "Attempted to send file to unknown destination!", "The modem file does not have an identifier!", "Incorrect packet size received - expected size = ", "does not exist in the specified PIT.", "Partition name for ", "Failed to send data: ", "Failed to send data!", "Failed to receive file part response!", "Failed to unpack received packet.", "Unexpected handshake response!", "Failed to receive handshake response."};

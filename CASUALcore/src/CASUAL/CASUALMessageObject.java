@@ -24,7 +24,7 @@ import java.util.Arrays;
 /**
  * CASUALInteraction is the place where all User Interactions are initiated.
  *
- * @author AdamOutler
+ * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALMessageObject {
 

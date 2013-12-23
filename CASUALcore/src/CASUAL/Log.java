@@ -26,13 +26,9 @@ import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 
 /**
- * Logs things
+ * Logs stuff and things
  *
- * @author AdamOutler Logging levels: Logging levels are set in Statics
-
- Level0: silent, keep this for future critical tasks Level1: Information for
- user to see Level2: Information for developers to see Level3: verbose
- information, use for conversions and random tasks
+ * @author Adam Outler adamoutler@gmail.com
  *
  */
 public class Log {

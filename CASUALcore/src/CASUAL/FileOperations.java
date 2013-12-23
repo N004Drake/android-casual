@@ -379,20 +379,7 @@ public class FileOperations {
 
     }
 
-    /**
-     * take a string filename returns a boolean if file exists
-     *
-     * @param Folder
-     * @return true if file exists
-     */
-    public boolean verifyFolderExists(String Folder) {
-        
-        File FileFolder = new File(Folder);
-        boolean Result = FileFolder.length() >= 1;
-        Log.level4Debug("Verifying " + Folder + " .  Result=" + Result);
-        Log.level4Debug("Result=" + Result);
-        return Result;
-    }
+
 
     /**
      * takes a filename sets executable returns result

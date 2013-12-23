@@ -46,7 +46,7 @@ import java.util.zip.ZipException;
 
 /**
  *provides a way to read and write Script information for a Caspac
- * @author Adam Outler
+ * @author Adam Outler adamoutler@gmail.com
  * @author loganludington
  */
 public class Script {
