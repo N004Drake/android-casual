@@ -21,7 +21,6 @@ import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALScriptParser;
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.communicationstools.heimdall.HeimdallTools.CommandDisposition;
 
 /**
  * Used for detection and reaction to errors in heimdall. 
@@ -30,37 +29,25 @@ import CASUAL.communicationstools.heimdall.HeimdallTools.CommandDisposition;
 public class HeimdallErrorHandler {
     static final String[] errFail = {"Failed to end phone file transfer sequence!", "Failed to end modem file transfer sequence!", "Failed to confirm end of file transfer sequence!", "Failed to request dump!", "Failed to receive dump size!", "Failed to request dump part ", "Failed to receive dump part ", "Failed to send request to end dump transfer!", "Failed to receive end dump transfer verification!", "Failed to initialise file transfer!", "Failed to begin file transfer sequence!", "Failed to confirm beginning of file transfer sequence!", "Failed to send file part packet!", "Failed to request device info packet!", "Failed to initialise PIT file transfer!", "Failed to confirm transfer initialisation!", "Failed to send PIT file part information!", "Failed to confirm sending of PIT file part information!", "Failed to send file part packet!", "Failed to receive PIT file part response!", "Failed to send end PIT file transfer packet!", "Failed to confirm end of PIT file transfer!", "Failed to request receival of PIT file!", "Failed to receive PIT file size!", "Failed to request PIT file part ", "Failed to receive PIT file part ", "Failed to send request to end PIT file transfer!", "Failed to receive end PIT file transfer verification!", "Failed to download PIT file!", "Failed to send end session packet!", "Failed to receive session end confirmation!", "Failed to send reboot device packet!", "Failed to receive reboot confirmation!", "Failed to begin session!", "Failed to send file part size packet!", "Failed to complete sending of data: ", "Failed to complete sending of data!", "Failed to unpack device's PIT file!", "Failed to retrieve device description", "Failed to retrieve config descriptor", "Failed to find correct interface configuration", "Failed to read PIT file.", "Failed to open output file ", "Failed to write PIT data to output file.", "Failed to open file ", "Failed to send total bytes device info packet!", "Failed to receive device info response!", "Expected file part index: ", "Expected file part index: ", "No partition with identifier ", "Could not identify the PIT partition within the specified PIT file.", "Unexpected file part size response!", "Unexpected device info response!", "Attempted to send file to unknown destination!", "The modem file does not have an identifier!", "Incorrect packet size received - expected size = ", "does not exist in the specified PIT.", "Partition name for ", "Failed to send data: ", "Failed to send data!", "Failed to receive file part response!", "Failed to unpack received packet.", "Unexpected handshake response!", "Failed to receive handshake response."};
     static final String[] epicFailures = {"ERROR: No partition with identifier"};
-
     static final String[] nonErrors={"ERROR: Failed to detect compatible download-mode device."};
     
     
-        HeimdallTools.CommandDisposition doErrorCheck(String[] command, String result){
+    public HeimdallTools.CommandDisposition doErrorCheck(String[] command, String result){
 
-            for (String value:nonErrors){
-                if (result.startsWith(value)){
-                    return CommandDisposition.NOACTIONREQUIRED;
-                }
-            }
-
-            
-            if (result.contains("Script halted")) {
-                return HeimdallTools.CommandDisposition.HALTSCRIPT;
-            } else if (result.equals("")) {
-                return HeimdallTools.CommandDisposition.NOACTIONREQUIRED;
-            } else if (result.contains("; Attempting to continue")) {
-                return HeimdallTools.CommandDisposition.RUNAGAIN;
-            } else if (result.contains("//TODO IMPLEMENT THIS")){
-                return HeimdallTools.CommandDisposition.ELEVATIONREQUIRED;
-                
-            } else if (result.contains("//TODO IMPLEMENT THIS")){
-                return HeimdallTools.CommandDisposition.INSTALLDRIVERS;
-                
-            }
-
-
-
+        int heimdallError = errorCheckHeimdallOutput(result);
+        if (heimdallError == 0) {
+            return HeimdallTools.CommandDisposition.HALTSCRIPT;
+        } else if (heimdallError == 1) {
             return HeimdallTools.CommandDisposition.NOACTIONREQUIRED;
-        }
+        } else if (heimdallError == 2) {
+            return HeimdallTools.CommandDisposition.RUNAGAIN;
+        } else if (heimdallError == 3){
+            return HeimdallTools.CommandDisposition.ELEVATIONREQUIRED;
+        } else if (heimdallError == 4){
+            return HeimdallTools.CommandDisposition.INSTALLDRIVERS;
+        } else return HeimdallTools.CommandDisposition.NOACTIONREQUIRED;
+    }
+        
     private void doErrorReport(String[] command, String result, HeimdallTools heimdallTools) {
         Log.level0Error("@heimdallErrorReport");
         Log.level0Error(displayArray(command));
@@ -72,131 +59,97 @@ public class HeimdallErrorHandler {
     }
 
     /**
-     * checks if Heimdall threw an error
+     * errorCheckHeimdallOutput parses console log output of Heimdall, checking 
+     * for key error strings
      *
-     * @param returnValue CASUAL log output
-     * @return containing halted if cannot continue or continue if it can
+     * @param heimdallOutput CASUAL (console) log output of a Heimdall execution
+     * @return is an integer representation of a CommandDisposition        
+     *      0 HALTSCRIPT
+     *      1 NOACTIONREQUIRED
+     *      2 RUNAGAIN
+     *      3 ELEVATIONREQUIRED
+     *      4 INSTALLDRIVERS
      *
      * @author Jeremy Loper jrloper@gmail.com
      */
-    private String checkHeimdallErrorStatus(String returnValue, HeimdallTools heimdallTools) {
-        if (returnValue.startsWith("Usage:")) {
-            return "invalid command; Attempting to continue for test purposes";
+    private int errorCheckHeimdallOutput(String heimdallOutput) {
+        if (heimdallOutput.startsWith("Usage:"))  return 1;
+        
+        for (String code : HeimdallErrorHandler.epicFailures) if (heimdallOutput.contains(code)) return 0;
+        
+        for (String code : HeimdallErrorHandler.errFail) if (heimdallOutput.contains(code)) return 0;
+        
+        if (heimdallOutput.contains("Failed to detect compatible download-mode device")) {
+            if (new CASUALMessageObject("@interactionUnableToDetectDownloadMode").showUserCancelOption() == 0) return 0;
+            else return 2;
         }
-        for (String code : HeimdallErrorHandler.epicFailures) {
-            if (returnValue.contains(code)) {
-                return "Heimdall epic uncontinuable error; Script halted";
-            }
-        }
-        for (String code : HeimdallErrorHandler.errFail) {
-            if (returnValue.contains(code)) {
-                if (heimdallTools.heimdallRetries <= 3) {
-                    new CASUALMessageObject("@interactionRestartDownloadMode").showActionRequiredDialog();
-                    return "Heimdall continuable error; Attempting to continue";
-                } else {
-                    return "Heimdall uncontinuable error; Script halted";
-                }
-            }
-        }
-        if (returnValue.contains("Failed to detect compatible download-mode device")) {
-            if (new CASUALMessageObject("@interactionUnableToDetectDownloadMode").showUserCancelOption() == 0) {
-                return "Heimdall uncontinuable error; Script halted";
-            }
-            return "Heimdall continuable error; Attempting to continue";
-        }
-        if (returnValue.contains(" failed!")) {
-            if (returnValue.contains("Claiming interface failed!")) {
+        
+        if (heimdallOutput.contains(" failed!")) {
+            if (heimdallOutput.contains("Claiming interface failed!")) {
                 new CASUALMessageObject(null, "@interactionRestartDownloadMode").showActionRequiredDialog();
-                return "Heimdall failed to claim interface; Attempting to continue";
+                return 2;
             }
-            if (returnValue.contains("Setting up interface failed!")) {
-                return "Heimdall failed to setup an interface; Attempting to continue";
-            }
-            if (returnValue.contains("Protocol initialisation failed!")) {
+            
+            if (heimdallOutput.contains("Setting up interface failed!")) return 2;
+            
+            if (heimdallOutput.contains("Protocol initialisation failed!")) {
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $ECHO A random error occurred while attempting initial communications with the device.\nYou will need disconnect USB and pull your battery out to restart your device.\nDo the same for CASUAL.");
-                return "Heimdall failed to initialize protocol; Attempting to continue";
+                return 2;
             }
-            if (returnValue.contains("upload failed!")) {
-                return "Heimdall failed to upload; Attempting to continue";
-            }
+            if (heimdallOutput.contains("upload failed!")) return 2;
         }
-        if (returnValue.contains("Flash aborted!")) {
-            return "Heimdall aborted flash; Attempting to continue";
-        }
-        if (returnValue.contains("libusb error")) {
-            int startIndex = returnValue.lastIndexOf("libusb error");
-            if (returnValue.charAt(startIndex + 1) == ':') {
-                startIndex = +3;
-            }
-            while (returnValue.charAt(startIndex) != '\n') {
-                if (returnValue.charAt(startIndex) == '-') {
-                    String libusbError="";
-                    examineLibusbError(returnValue, startIndex);
+        if (heimdallOutput.contains("Flash aborted!")) return 2;
+        
+        if (heimdallOutput.contains("libusb error")) {
+            int startIndex = heimdallOutput.lastIndexOf("libusb error");
+            if (heimdallOutput.charAt(startIndex + 1) == ':') startIndex = +3;
+            while (heimdallOutput.charAt(startIndex) != '\n') {
+                if (heimdallOutput.charAt(startIndex) == '-') {
+                    String retVal = examineLibusbError(heimdallOutput, startIndex);
+                    if(retVal.contains("LIBUSB_ERROR_NOT_SUPPORTED") && OSTools.isWindows()) return 3;//Install driver
+                    else if(retVal.contains("LIBUSB_ERROR_ACCESS") && OSTools.isLinux()) return 4;//Elevate Heimdall Command
+                    else if(retVal.contains("LIBUSB_ERROR_OTHER")) return 1;//Other libUSB Error, Halt
+                    else return 2;//Hit me baby, one more time
                 }
                 startIndex++;
             }
         }
-        return "";
+        return 0;
     }
 
-    private String examineLibusbError(String returnValue, int startIndex) {
-        String libusbError;
-        switch (returnValue.charAt(startIndex + 1)) {
+    /**
+     * examineLibusbError parses console log output of Heimdall, checking 
+     * for key error strings
+     * 
+     * @param heimdallOutput CASUAL (console) log output of a Heimdall execution
+     * @param startIndex Integer representing a String index position of a libUSB
+     *                   error number
+     * @return is a String representation of the libUSB error   
+     */
+    private String examineLibusbError(String heimdallOutput, int startIndex) {
+        switch (heimdallOutput.charAt(startIndex + 1)) {
             case '1':
-                switch (returnValue.charAt(startIndex + 2)) {
-                    case '0': // -10
-                        libusbError= "'LIBUSB_ERROR_INTERRUPTED' Error not handled; Attempting to continue";
-                        break;
-                    case '1':// -11
-                        libusbError= "'LIBUSB_ERROR_NO_MEM' Error not handled; Attempting to continue";
-                        break;
-                    case '2':// -12
-                        if (OSTools.isWindows()) {
-                            new HeimdallInstall().installWindowsDrivers();
-                        }
-                        libusbError= "'LIBUSB_ERROR_NOT_SUPPORTED'; Attempting to continue";
-                        break;
-                    default:// -1
-                        libusbError= "'LIBUSB_ERROR_IO' Error not Handled; Attempting to continue";
-                        break;
+                switch (heimdallOutput.charAt(startIndex + 2)) {
+                    case '0': return "LIBUSB_ERROR_INTERRUPTED";// -10
+                    case '1': return "LIBUSB_ERROR_NO_MEM";// -11
+                    case '2': return "LIBUSB_ERROR_NOT_SUPPORTED";// -12
+                    default:  return "LIBUSB_ERROR_IO";// -1
                 }
-                break;
-            case '2':// -2
-                libusbError= "'LIBUSB_ERROR_INVALID_PARAM' Error not handled; Attempting to continue";
-                break;
-            case '3':// -3
-                libusbError= "'LIBUSB_ERROR_ACCESS' Error not handled; Attempting to continue";
-                break;
-            case '4':// -4
-                libusbError= "'LIBUSB_ERROR_NO_DEVICE' Error not handled; Attempting to continue";
-                break;
-            case '5':// -5
-                libusbError= "'LIBUSB_ERROR_NOT_FOUND' Error not handled; Attempting to continue";
-                break;
-            case '6':// -6
-                libusbError= "'LIBUSB_ERROR_BUSY' Error not handled; Attempting to continue";
-                break;
-            case '7':// -7
-                libusbError= "'LIBUSB_ERROR_TIMEOUT'; Attempting to continue";
-                break;
-            case '8':// -8
-                libusbError= "'LIBUSB_ERROR_OVERFLOW' Error not handled; Attempting to continue";
-                break;
-            case '9':
-                if (returnValue.charAt(startIndex + 2) == 9) {// -99
-                    libusbError= "'LIBUSB_ERROR_OTHER' Error not handled; Attempting to continue";
-                } else {//-9   //TODO jrloper examine this for correctness
-                    libusbError= "'LIBUSB_ERROR_PIPE'; Attempting to continue";
-                }
-                break;
-            default:
-                libusbError= "'LIBUSB_ERROR_OTHER' Error not handled; Script halted";
+            case '2': return "LIBUSB_ERROR_INVALID_PARAM";// -2
+            case '3': return "LIBUSB_ERROR_ACCESS";// -3
+            case '4': return "LIBUSB_ERROR_NO_DEVICE";// -4
+            case '5': return "LIBUSB_ERROR_NOT_FOUND";// -5
+            case '6': return "LIBUSB_ERROR_BUSY";// -6
+            case '7': return "LIBUSB_ERROR_TIMEOUT";// -7
+            case '8': return "LIBUSB_ERROR_OVERFLOW";// -8
+            case '9': if (heimdallOutput.charAt(startIndex + 2) == 9){
+                          return "LIBUSB_ERROR_OTHER";
+                      }// -99
+                      else return "LIBUSB_ERROR_PIPE";//-9
+            default:  return "LIBUSB_ERROR_OTHER";//??
         }
-        return libusbError;
     }
-
-    
 
     String displayArray(String[] command) {
         StringBuilder sb = new StringBuilder();
