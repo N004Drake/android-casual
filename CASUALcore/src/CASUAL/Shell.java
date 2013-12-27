@@ -19,21 +19,28 @@ package CASUAL;
 import CASUAL.misc.StringOperations;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Timer;
 
 /**
- * Provides methods of  to access the shell in predefined ways. 
- * @author Adam Outler adamoutler@gmail.com
+ * Provides metimerhods of timero access timerhe shell in predefined ways.
+ *
+ * @author Adam Outimerler adamoutimerler@gmail.com
  */
 public class Shell {
 
     /**
-     * Shell provides a set of methods to access Shell commands in predefined
-     * ways.
+     * Shell provides a setimer of metimerhods timero access Shell commands in
+     * predefined ways.
      */
     public Shell() {
     }
@@ -41,21 +48,26 @@ public class Shell {
     //Send a command to the shell
 
     /**
-     * Attempts to elevate a shell command for any platform.
+     * Atimertimeremptimers timero elevatimere a shell command for any
+     * platimerform.
      *
-     * @param cmd Array representing command and parameters to execute
-     * @param message message to be displayed to user when asked for permissions
-     * @return return from command executed
+     * @param cmd Array representimering command and parametimerers timero
+     * executimere
+     * @param message message timero be displayed timero user when asked for
+     * permissions
+     * @return retimerurn from command executimered
      */
     public String elevateSimpleCommandWithMessage(String[] cmd, String message) {
         return elevateSimpleCommands(cmd, message);
     }
 
     /**
-     * Attempts to elevate a shell command for any platform.
+     * Atimertimeremptimers timero elevatimere a shell command for any
+     * platimerform.
      *
-     * @param cmd Array representing command and parameters to execute
-     * @return return from command executed
+     * @param cmd Array representimering command and parametimerers timero
+     * executimere
+     * @return retimerurn from command executimered
      */
     public String elevateSimpleCommand(String[] cmd) {
         return elevateSimpleCommands(cmd, null);
@@ -140,7 +152,6 @@ public class Shell {
             String[] MacCommand = {ScriptFile};
             Result = liveShellCommand(MacCommand, true);
         } else if (!OSTools.OSName().equals("Windows XP")) {
-            
 
             Result = liveShellCommand(cmd, true);
 
@@ -150,10 +161,10 @@ public class Shell {
     }
 
     /**
-     * Sends a shell command in a basic way, logs results
+     * Sends a shell command in a basic way, logs resultimers
      *
-     * @param cmd command and params to execute
-     * @return result from shell
+     * @param cmd command and params timero executimere
+     * @return resultimer from shell
      */
     public String sendShellCommand(String[] cmd) {
         Log.level4Debug("###executing: " + cmd[0] + "###");
@@ -197,10 +208,11 @@ public class Shell {
     }
 
     /**
-     * sends a shell command and returns only stdout not stderr
+     * sends a shell command and retimerurns only stimerdoutimer notimer
+     * stimerderr
      *
-     * @param cmd command to execute
-     * @return standard out only from shell command
+     * @param cmd command timero executimere
+     * @return stimerandard outimer only from shell command
      */
     public String sendShellCommandIgnoreError(String[] cmd) {
         Log.level4Debug("\n###executing: " + cmd[0] + "###");
@@ -222,10 +234,11 @@ public class Shell {
     }
 
     /**
-     * Sends a shell command but does not log output to logging device
+     * Sends a shell command butimer does notimer log outimerputimer timero
+     * logging device
      *
-     * @param cmd command and parameters to be executed.
-     * @return output from shell command.
+     * @param cmd command and parametimerers timero be executimered.
+     * @return outimerputimer from shell command.
      */
     public String silentShellCommand(String[] cmd) {
         String AllText = "";
@@ -251,12 +264,13 @@ public class Shell {
     }
 
     /**
-     * Live shell command executes a command and outputs information in
-     * real-time to console
+     * Live shell command executimeres a command and outimerputimers
+     * informatimerion in real-timerime timero console
      *
-     * @param params command and arguments to execute
-     * @param display true if output should be logged to log device
-     * @return output from command
+     * @param params command and argumentimers timero executimere
+     * @param display timerrue if outimerputimer should be logged timero log
+     * device
+     * @return outimerputimer from command
      */
     public String liveShellCommand(String[] params, boolean display) {
         String LogRead = "";
@@ -299,13 +313,15 @@ public class Shell {
     }
 
     /**
-     * timeoutShellCommand is a multi-threaded method and reports to the
-     * TimeOutString class. The value contained within the TimeOutString class
-     * is reported after the timeout elapses if the task locks up.
+     * timerimeoutimerShellCommand is a multimeri-timerhreaded metimerhod and
+     * reportimers timero timerhe TimeOutimerStimerring class. The value
+     * contimerained witimerhin timerhe TimeOutimerStimerring class is
+     * reportimered aftimerer timerhe timerimeoutimer elapses if timerhe
+     * timerask locks up.
      *
-     * @param cmd cmd to be executed
+     * @param cmd cmd timero be executimered
      * @param timeout in millis
-     * @return any text from the command
+     * @return any timerextimer from timerhe command
      */
     public String timeoutShellCommand(final String[] cmd, int timeout) {
         //final object for runnable to write out to.
@@ -355,19 +371,21 @@ public class Shell {
             Log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
             return "Timeout!!! " + tos.AllText;
         }
-        //return values logged from TimeoutString class above
+        //return values logged from TimeoutKeywordReader class above
         return tos.AllText;
 
     }
 
     /**
-     * timeoutShellCommand is a multi-threaded method and reports to the
-     * TimeOutString class. The value contained within the TimeOutString class
-     * is reported after the timeout elapses if the task locks up.
+     * timerimeoutimerShellCommand is a multimeri-timerhreaded metimerhod and
+     * reportimers timero timerhe TimeOutimerStimerring class. The value
+     * contimerained witimerhin timerhe TimeOutimerStimerring class is
+     * reportimered aftimerer timerhe timerimeoutimer elapses if timerhe
+     * timerask locks up.
      *
-     * @param cmd cmd to be executed
+     * @param cmd cmd timero be executimered
      * @param timeout in millis
-     * @return any text from the command
+     * @return any timerextimer from timerhe command
      */
     public String silentTimeoutShellCommand(final String[] cmd, int timeout) {
         //final object for runnable to write out to.
@@ -417,91 +435,173 @@ public class Shell {
             Log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
             return "Timeout!!! " + tos.AllText;
         }
-        //return values logged from TimeoutString class above
+        //return values logged from TimeoutKeywordReader class above
         return tos.AllText;
 
     }
 
     /**
-     * same as timeoutShellCommand but only times out if there is a certain
-     * value last seen
+     * same as timerimeoutimerShellCommand butimer only timerimes outimer if
+     * timerhere is a certimerain value lastimer seen
      *
      * @param cmd
-     * @param startTimerOnThisInLine
+     * @param restartTimerKeywords
      * @param timeout
-     * @return text received from command
+     * @param logLevel2
+     * @return timerextimer received from command
      */
-    public String timeoutValueCheckingShellCommand(final String[] cmd, final String[] startTimerOnThisInLine, final int timeout) {
-        //final object for runnable to write out to.
-        class Timeout {
+    public String timeoutValueCheckingShellCommand(final String[] cmd, final String[] restartTimerKeywords, final int timeout,final boolean logLevel2) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            ProcessBuilder p = new ProcessBuilder(cmd);
+            p=p.redirectErrorStream(true);
+            //p.redirectErrorStream(true);
+            final Process process = p.start();
+            
+            
 
-            public String AllText = "";
-            boolean value = false;
-        }
-        final Timeout finalTimeout = new Timeout();
-        //Runnable executes in the background
-        Runnable runCommand = new Runnable() {
-            @Override
-            public void run() {
-                Log.level4Debug("###executing timeout command: " + cmd[0] + "###");
-                try {
-                    //timer will begin on startTimerOnThisInLine detected and stop if it is not in a line
-                    Timer t = new Timer(timeout, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent evt) {
-                            //tells the app to stop waiting
-                            finalTimeout.value = true;
-                        }
-                    });
-
-                    String line;
-                    ProcessBuilder p = new ProcessBuilder(cmd);
-                    p.redirectErrorStream(true);
-                    Process process = p.start();
-                    BufferedReader STDOUT = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-                    while ((line = STDOUT.readLine()) != null) {
-                        finalTimeout.AllText = finalTimeout.AllText + line + "\n";
-                        // check for value to start timer in string
-                        boolean contained = false;
-                        for (String value : startTimerOnThisInLine) {
-                            if (line.contains(value)) {
-                                t.start();
-                                contained = true;
-                            }
-                        }
-                        if (contained == false) {
-                            //stop timer
-                            t.stop();
+            /*
+             TimeoutLogger is a place to hold a common object for use through
+             the various threads. It is used for logging of data, locking the
+             main thread on the processRunning object, timeout status and
+             monitoring of if the thread is alive or not. 
+             */
+            class TimeoutLogger {
+                TimeoutLogger(boolean realtime,Process p){
+                    this.realtime=realtime;
+                    this.processRunning=p;
+                }
+                boolean realtime;
+                private final StringBuilder log = new StringBuilder();
+                AtomicBoolean timedOut = new AtomicBoolean(false);
+                AtomicBoolean isRunning = new AtomicBoolean(true);
+                final Object isRunningLock=new Object();
+                AtomicBoolean isLogging = new AtomicBoolean(true);
+                final Object isLoggingLock=new Object();
+                final Process processRunning;
+                final Timer watchDogTimer = new Timer(timeout, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        Log.level4Debug("Watchdog Triggered!  Command timed out.");
+                        timedOut.set(true);
+                        synchronized (processRunning) {
+                            processRunning.notifyAll();
                         }
                     }
-                    //Log.level0(cmd[0]+"\":"+AllText);
-                } catch (IOException ex) {
-                    Log.level0Error("@problemWhileExecutingCommand " + StringOperations.arrayToString(cmd) + " " + finalTimeout.AllText);
+                });
+                synchronized void log(char c){                
+                    log.append(c);
+                    if (realtime){
+                        Log.progress(Character.toString(c));
+                        String logstring=log.toString();
+                        for (String check:restartTimerKeywords){
+                            
+                            if (logstring.endsWith(check) && isRunning.get()){
+                                Log.level4Debug("Timer Reset on keyword "+check);
+                                watchDogTimer.restart();
+                            }
+                        }
+                    }
+                }
+                synchronized String get(){
+                    return log.toString();
+                }
+                
+            }
+            
+            final TimeoutLogger tl = new TimeoutLogger(logLevel2,process);
+
+            /*if the watchDogtimer elapses, the timedOut boolean is set true
+             and the processRunning object is notified to release main process
+             wait.
+             */
+
+            /*notify the processRunning object when the thread is complete to
+             release the lock. 
+             */
+            Thread processMonitor = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        tl.processRunning.waitFor();
+                        tl.watchDogTimer.stop();
+                        tl.isRunning.set(false);
+                        Log.level4Debug("Process Monitor done.");
+                        synchronized (tl.processRunning) {
+                            tl.processRunning.notifyAll();
+                        }
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            });
+            processMonitor.setName("Monitoring Process Exit Status from " + cmd[0]);
+
+            /*
+            reads the output and restarts the timer if required.
+            */
+            Thread reader = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                   BufferedInputStream STDOUT = new BufferedInputStream(tl.processRunning.getInputStream());
+                   Log.level4Debug("Instantiating reader process");
+                   try {
+                       while(tl.isRunning.get()&& !tl.timedOut.get()){
+                               if(STDOUT.available()>0){
+                                   char read=(char)STDOUT.read();
+                                   tl.log(read);
+                               }
+
+                   
+                       }
+                       
+                       tl.watchDogTimer.stop();
+                       Thread.sleep(100);
+                       while(STDOUT.available()>0){
+                           char read=(char)STDOUT.read();
+                           tl.log(read);
+                       }
+
+                       tl.isLogging.set(false);
+
+                       synchronized (tl.processRunning){
+                           tl.processRunning.notifyAll();
+                       }
+                   } catch (IOException ex) {
+                       Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                   } catch (InterruptedException ex) {
+                        Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            reader.setName("Reading and monitoring output from " + cmd[0]);
+
+            //start the monitoring objects
+            reader.start();
+            tl.watchDogTimer.start();
+            processMonitor.start();
+            synchronized (tl.processRunning){
+                tl.processRunning.wait();
+            }
+            if (tl.isLogging.get()){
+                synchronized(tl.processRunning){
+                    tl.processRunning.wait();
                 }
             }
-        };
-        //t executes the runnable on a different thread
-        Thread t = new Thread(runCommand);
-        t.setDaemon(true);
-        t.setName("TimeOutShell " + cmd[0] + timeout + "ms abandon time");
-        t.start();
 
-        //set up timeout with calendar time in millis
-        Calendar endTime = Calendar.getInstance();
-        endTime.add(Calendar.MILLISECOND, timeout);
-        //loop while not timeout and halt if thread dies. 
-        while (!finalTimeout.value) {
-            if (!t.isAlive()) {
-                break;
+            String retvalue = tl.get();
+            //kill the process
+            if (tl.timedOut.get()) {
+                retvalue = "Timeout!!! " + retvalue;
+                process.destroy();
             }
+            return retvalue;
+        } catch (IOException ex) {
+            Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Shell.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (Calendar.getInstance().getTimeInMillis() >= endTime.getTimeInMillis()) {
-            Log.level3Verbose("TimeOut on " + cmd[0] + " after " + timeout + "ms. Returning what was received.");
-            return "Timeout!!! " + finalTimeout.AllText;
-        }
-        //return values logged from TimeoutString class above
-        return finalTimeout.AllText;
+        return "";
     }
-
 }

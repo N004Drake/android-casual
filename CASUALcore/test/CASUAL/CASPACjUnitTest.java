@@ -36,7 +36,6 @@ public class CASPACjUnitTest {
             return;
         }
         CASUAL.CASUALMain.shutdown(0);
-        CASUAL.Statics.GUI.setDummyGUI(true);
         String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         String[] badValues = new String[]{"ERROR"};
         String[] goodValues = new String[]{"echo [PASS]"};
@@ -48,7 +47,6 @@ public class CASPACjUnitTest {
         System.out.println("TESTING SECOND ROUND");
         System.out.println("TESTING SECOND ROUND");
         System.out.println("TESTING SECOND ROUND");
-        CASUAL.Statics.GUI.setDummyGUI(true);
         casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         badValues = new String[]{"ERROR"};
         goodValues = new String[]{"echo [PASS]", "[PASS] IFNOTCONTAINS"};

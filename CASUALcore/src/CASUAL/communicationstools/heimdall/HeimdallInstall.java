@@ -27,12 +27,9 @@ import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.ResourceDeployer;
 import CASUAL.Shell;
-import CASUAL.Statics;
-import static CASUAL.communicationstools.heimdall.HeimdallTools.macLocation;
 import CASUAL.communicationstools.heimdall.drivers.WindowsDrivers;
 import CASUAL.network.CASUALUpdates;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -94,7 +91,6 @@ public class HeimdallInstall {
         if (checkHeimdallVersion(heimdallDeployed)) {
             return heimdallDeployed;
         } else {
-            heimdallDeployed = "";
             return "";
         }
 //Windows

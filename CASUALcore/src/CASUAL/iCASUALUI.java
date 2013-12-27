@@ -64,12 +64,7 @@ public interface iCASUALUI {
      * @return  true if dummy ui.
      */
     public boolean isDummyGUI();
-    /**
-     * provides a setter for UI.  Used from CASUALMain from Commandline option --GUI
-     * @param dummy Set true to automatically start CASUAL and auto-answer all
-     * messages with a Yes/OK/I did it.
-     */
-    public void setDummyGUI(boolean dummy);
+
     
     /**
      * MessageType used by CASUALMessageObject and any class implementing this
@@ -162,19 +157,7 @@ public interface iCASUALUI {
      */
     void StartButtonActionPerformed();
 
-    /**
-     * gets the selected combobox item.
-     *
-     * @return selected item in combobox
-     */
-    String comboBoxGetSelectedItem();
 
-    /**
-     * adds an item to the combo box
-     *
-     * @param item item to add
-     */
-    void comboBoxScriptSelectorAddNewItem(String item);
 
     /**
      * sets controls status

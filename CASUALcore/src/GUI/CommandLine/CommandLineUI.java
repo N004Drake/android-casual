@@ -64,13 +64,6 @@ public class CommandLineUI implements iCASUALUI {
         return false;
     }
 
-    @Override
-    public void setDummyGUI(boolean dummy) {
-        
-        
-        msg("set dummy gui requested");
-        
-    }
 
    @Override
     public String displayMessage(CASUALMessageObject messageObject) {
@@ -233,14 +226,7 @@ public class CommandLineUI implements iCASUALUI {
     public void StartButtonActionPerformed() {
     }
 
-    @Override
-    public String comboBoxGetSelectedItem() {
-        return "";
-    }
-
-    @Override
-    public void comboBoxScriptSelectorAddNewItem(String item) {
-    }
+ 
 
     @Override
     public boolean setControlStatus(boolean status) {

@@ -73,7 +73,6 @@ public class AuxiliaryTesting {
         CASUAL.Statics.GUI.setReady(true);
         if (new CASUAL.CASUALMessageObject("Overall Test", "Connect a device in ADB mode").showUserCancelOption() == 0) {
             CASUAL.Statics.GUI.setReady(false);
-            CASUAL.Statics.GUI.setDummyGUI(true);
             String[] casualParams = new String[]{"--execute", "$ECHO hi"};
             String[] badValues = new String[]{"holy mother of god, i just saw a dog."};
             String[] goodValues = new String[]{"hi"};

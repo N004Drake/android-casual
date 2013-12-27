@@ -80,8 +80,7 @@ public class HeimdallErrorHandler {
         for (String code : HeimdallErrorHandler.errFail) if (heimdallOutput.contains(code)) return 0;
         
         if (heimdallOutput.contains("Failed to detect compatible download-mode device")) {
-            if (new CASUALMessageObject("@interactionUnableToDetectDownloadMode").showUserCancelOption() == 0) return 0;
-            else return 2;
+            return 0;
         }
         
         if (heimdallOutput.contains(" failed!")) {

@@ -16,6 +16,7 @@
  */
 package CASUAL.communicationstools.heimdall;
 
+import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Shell;
@@ -78,11 +79,16 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         String shellReturn = run(detectCommand, 4000, true);
         if (shellReturn.contains(connectedString)) {
             Log.level3Verbose("Heimdall Device detected!");
+            errorCycles=100; //this removes the potential annoying error;
             return 1;
+        }
+        errorCycles++;
+        if(errorCycles==60){
+            new CASUALMessageObject("@interactionUnableToDetectDownloadMode").showInformationMessage();
         }
         return 0;
     }
-
+    
     int errorCycles=0;
     /**
      * {@inheritDoc}
@@ -95,9 +101,6 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
     @Override
     public boolean checkErrorMessage(String[] commandRun, String returnValue) {
      CommandDisposition retval=new HeimdallErrorHandler().doErrorCheck(commandRun, returnValue);
-     if (errorCycles>4){
-         retval=CommandDisposition.MAXIMUMRETRIES;
-     }
      errorCycles++;
      boolean errored;
      switch(retval){
@@ -108,9 +111,17 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
          case RUNAGAIN:
              //TODO run again here
              errored=checkErrorMessage(commandRun,this.doElevatedHeimdallShellCommand(commandRun));
+             if (errorCycles>4){
+                 retval=CommandDisposition.MAXIMUMRETRIES;
+                 errored=true;
+             }
              break;
          case ELEVATIONREQUIRED:
              errored=checkErrorMessage(commandRun,this.doElevatedHeimdallShellCommand(commandRun));
+             if (errorCycles>4){
+                 retval=CommandDisposition.MAXIMUMRETRIES;
+                 errored=true;
+             }
              break;
          case INSTALLDRIVERS:
              errorCycles=0;
@@ -146,9 +157,8 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
      */
     @Override
     public boolean installDriver() {
-        
-        boolean result = new WindowsDrivers(0).installDriverBlanket(null);
-        return result;
+        return new WindowsDrivers(0).installDriverBlanket(null);
+
     }
 
     /**
@@ -222,7 +232,6 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
     }
 
     private String locateNativeHeimdall() {
-        Shell shell = new Shell();
         String notFound = "CritERROR!!!";
 
         //for windows we try running "heimdall".

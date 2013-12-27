@@ -17,19 +17,13 @@
 
 package GUI.development;
 
-import CASUAL.CASUALMessageObject;
 import CASUAL.Statics;
-import CASUAL.caspac.Caspac;
-import CASUAL.caspac.Script;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -56,9 +50,8 @@ public class CASUALGUIMainTest {
         if (!java.awt.GraphicsEnvironment.isHeadless()) {
             CASUAL.Statics.GUI = new GUI.development.CASUALGUIMain();
 
-            Statics.GUI.setDummyGUI(true);
             assert Statics.GUI.isDummyGUI();
-            Statics.GUI.setDummyGUI(false);
+
         }
     }
 
