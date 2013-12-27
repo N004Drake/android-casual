@@ -143,13 +143,4 @@ public class WindowsDriversTest {
         assert(result.contains("Device Console Help:"));
     }
 
-    /**
-     * Test of getRegExPattern method, of class WindowsDrivers.
-     */
-    @Test
-    public void testGetRegExPattern() {
-        System.out.println("getRegExPattern");
-        String whatPattern = "install";
-        assert(instance.getRegExPattern(whatPattern) != null);
-    }
 }

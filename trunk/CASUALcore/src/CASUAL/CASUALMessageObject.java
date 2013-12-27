@@ -261,8 +261,8 @@ public class CASUALMessageObject {
      * @return true if yes, false if no
      */
     public boolean showYesNoOption() {
-        this.messageType = iCASUALUI.INTERACTION_SHOW_ERROR;
-        Boolean retval = Statics.GUI.displayMessage(this).equals("true");
+        this.messageType = iCASUALUI.INTERACTION_SHOW_YES_NO;
+        Boolean retval = Statics.GUI.displayMessage(this).equals("0");
         expectedReturn = "String 0-yes, 1-no";
         return retval;
     }

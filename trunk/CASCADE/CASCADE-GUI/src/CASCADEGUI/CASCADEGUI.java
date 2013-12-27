@@ -2089,25 +2089,9 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public void StartButtonActionPerformed() {
     }
 
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     *
-     */
-    @Override
-    public String comboBoxGetSelectedItem() {
-        return "";
-    }
 
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     *
-     * @param item generated CASPAC to work with
-     */
-    @Override
-    public void comboBoxScriptSelectorAddNewItem(String item) {
-    }
+
+
 
     /**
      * dummy method used to implement iCASUALUI for the purpose of allowing
@@ -2328,10 +2312,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         return false;
     }
 
-    @Override
-    public void setDummyGUI(boolean dummy) {
-        
-    }
+
 
     @Override
     public void setBlocksUnzipped(int i) {

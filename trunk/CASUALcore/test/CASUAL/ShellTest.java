@@ -16,8 +16,8 @@
  */
 package CASUAL;
 
-import CASUAL.communicationstools.fastboot.FastbootTools;
 import CASUAL.communicationstools.adb.ADBTools;
+import CASUAL.communicationstools.fastboot.FastbootTools;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,11 +34,10 @@ import static org.junit.Assert.*;
  */
 public class ShellTest {
 
-    final String ex = "List of devices attached \n\n";
-    final String exp = "\nList of devices attached";
+    final String exp = "List of devices attached";
 
     public ShellTest() {
-        Statics.GUI=new GUI.testing.automatic();
+        Statics.GUI = new GUI.testing.automatic();
     }
 
     @BeforeClass
@@ -71,7 +70,7 @@ public class ShellTest {
         Shell instance = new Shell();
         String message = "adb wait-for-device";
         String result = instance.elevateSimpleCommandWithMessage(cmd, message);
-        assert (result.contains(ex));
+        assert (result.contains(exp));
 
     }
 
@@ -87,7 +86,7 @@ public class ShellTest {
         String[] cmd = new String[]{new ADBTools().getBinaryLocation(), "devices"};
         Shell instance = new Shell();
         String result = instance.elevateSimpleCommand(cmd);
-        assertEquals(ex, result);
+        assert result.contains(exp);
 
     }
 
@@ -113,10 +112,10 @@ public class ShellTest {
         Shell instance = new Shell();
         String result = instance.sendShellCommand(cmd);
         assert (result.contains(exp));
-        cmd = new String[]{new ADBTools().getBinaryLocation()};
+        cmd = new String[]{new ADBTools().getBinaryLocation(), "version"};
         String expResult = "\nAndroid Debug Bridge version";
         result = instance.sendShellCommand(cmd);
-        assert(result.startsWith(expResult));
+        assert (result.startsWith(expResult));
 
     }
 
@@ -142,11 +141,9 @@ public class ShellTest {
         boolean display = false;
         Shell instance = new Shell();
         String result = instance.liveShellCommand(params, display);
-        assertEquals(ex, result);
+        assert result.contains(exp);
 
     }
-
-   
 
     /**
      * Test of timeoutShellCommand method, of class Shell.
@@ -158,7 +155,7 @@ public class ShellTest {
         String[] cmd = new String[]{new ADBTools().getBinaryLocation(), "devices"};
         Shell instance = new Shell();
         String result = instance.timeoutShellCommand(cmd, timeout);
-        assertEquals(ex, result);
+        assert result.contains(exp);
         timeout = 0;
         result = instance.timeoutShellCommand(cmd, timeout);
         String expResult = "Timeout!!! ";
@@ -176,7 +173,7 @@ public class ShellTest {
         String[] cmd = new String[]{new ADBTools().getBinaryLocation(), "devices"};
         Shell instance = new Shell();
         String result = instance.silentTimeoutShellCommand(cmd, timeout);
-        assertEquals(ex, result);
+        assert result.contains(exp);
         timeout = 0;
         result = instance.silentTimeoutShellCommand(cmd, timeout);
         String expResult = "Timeout!!! ";
@@ -186,54 +183,60 @@ public class ShellTest {
 
     /**
      * Test of timeoutValueCheckingShellCommand method, of class Shell.
+     *
      * @throws java.io.IOException
      */
     @Test
     public void testTimeoutValueCheckingShellCommand() throws IOException {
         System.out.println("timeoutValueCheckingShellCommand");
-        String[] cmd = new String[]{new ADBTools().getBinaryLocation(), "devices"};
-        String[] startTimerOnThisInLine = new String[]{"devices","attached"};
-        String expectedResult="List of devices attached \n\n";
+        String[] cmd = new String[]{new FastbootTools().getBinaryLocation()};
+        String[] startTimerOnThisInLine = new String[]{"devices", "attached"};
+        String expectedResult = "usage: fastboot";
         int timeout = 4000;
         Shell instance = new Shell();
-        String result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout);
-        assertEquals(expectedResult, result);
+        String result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout,true);
         
+        assert result.contains(expectedResult);
+
         //verify the command "fastboot flash" times out after 3 seconds
         cmd = new String[]{new FastbootTools().getBinaryLocation(), "flash"};
         //instantiate a final static variable for use in the timer
-        class check{
-            boolean timerElapsed=false;
+        class check {
+
+            boolean timerElapsed = false;
         }
-        final check c=new check();
+        final check c = new check();
         //instantiate a timer
         Timer t = new Timer();
         startTimerOnThisInLine = new String[]{"waiting"};
-        expectedResult="Timeout!!! < waiting for device >\n";
+        expectedResult = "Timeout!!! < waiting for device >\n";
         t.schedule(new TimerTask() {
-           @Override
+            @Override
             public void run() {
-                c.timerElapsed=true;
+                System.out.println("test time elapsed");
+                c.timerElapsed = true;
             }
-        }, timeout);
-        result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout);
-        assert(c.timerElapsed);
-        assertEquals(expectedResult,result);
+        }, timeout-1000);
+        System.out.println(result);
+        result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout,true);
+        assert (c.timerElapsed);
+        System.out.println("RESULT:"+result);
+        assertEquals(expectedResult, result);
         //reset test timer for checking non-timeout
-        c.timerElapsed=false;
-        cmd = new String[]{new FastbootTools().getBinaryLocation(), "devices"};
-        expectedResult="";
+        c.timerElapsed = false;
+        cmd = new String[]{new FastbootTools().getBinaryLocation(), "flash"};
+        expectedResult = "";
         t.schedule(new TimerTask() {
-           @Override
+            @Override
             public void run() {
-                c.timerElapsed=true;
+                c.timerElapsed = true;
             }
         }, timeout);
-        
-        result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout);
+
+        result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout,true);
         assert (!c.timerElapsed);
-        assertEquals(expectedResult,result);
-        
+        assertEquals(expectedResult, result);
+
     }
 
 }

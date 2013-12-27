@@ -43,10 +43,7 @@ public class automatic implements CASUAL.iCASUALUI {
         return true;
     }
 
-    @Override
-    public void setDummyGUI(boolean dummy) {
-        
-    }
+
 
     @Override
     public String displayMessage(CASUALMessageObject mo) {
@@ -67,15 +64,7 @@ public class automatic implements CASUAL.iCASUALUI {
         
     }
 
-    @Override
-    public String comboBoxGetSelectedItem() {
-        return "";
-    }
 
-    @Override
-    public void comboBoxScriptSelectorAddNewItem(String item) {
-        
-    }
 
     @Override
     public boolean setControlStatus(boolean status) {

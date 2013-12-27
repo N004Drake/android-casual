@@ -18,7 +18,6 @@ package CASUAL;
 
 import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
 
-
 /**
  * CASUALConnectionStatus provides ADB connection status monitoring for CASUAL
  *
@@ -26,7 +25,6 @@ import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
  */
 public class CASUALConnectionStatusMonitor {
 
-    
     private static int LastState = 0;  //last state detected
     private static CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol monitor;
     private static CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol monitorLastState;
@@ -37,18 +35,22 @@ public class CASUALConnectionStatusMonitor {
      * is stopped.
      */
     final static int TIMERINTERVAL = 1000;
+    static boolean paused = false;
 
-        
     /**
-     * stops monitoring and nulls the monitor out. Stores the monitor to be resumed at a later time. Monitor may be started again by using the start(new monitor) or resumeAfterStop to continue the monitoring. 
+     * stops monitoring and nulls the monitor out. Stores the monitor to be
+     * resumed at a later time. Monitor may be started again by using the
+     * start(new monitor) or resumeAfterStop to continue the monitoring.
      */
     public static void stop() {
-        monitorLastState=monitor;
+        monitorLastState = monitor;
         monitor = null;
+        paused = true;
     }
-    
-    public static void resumeAfterStop(){
-        if (monitorLastState==null){
+
+    public static void resumeAfterStop() {
+        paused = false;
+        if (monitorLastState == null) {
             Log.level3Verbose("A call to resume monitor occurred, but monitor was not reset first.  No action is occuring");
         } else {
             new CASUALConnectionStatusMonitor().start(monitorLastState);
@@ -57,24 +59,26 @@ public class CASUALConnectionStatusMonitor {
 
     /**
      * Static method to access toString().
+     *
      * @return value of toString()
      */
-    public static String getStatus(){
+    public static String getStatus() {
         return new CASUALConnectionStatusMonitor().toString();
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
-        String n="\n";
+        String n = "\n";
         sb.append("Status:");
-        if (monitor==null)  {
+        if (monitor == null) {
             sb.append("offline").append(n).append("Mode:not monitoring").append(n);
-        }else {
+        } else {
             sb.append("online").append(n).append(monitor.toString());
         }
         return sb.toString();
     }
+
     /**
      * Starts and stops the ADB timer reference with
      * Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
@@ -82,10 +86,11 @@ public class CASUALConnectionStatusMonitor {
      * @param mode sets the monitoring mode
      */
     public void start(AbstractDeviceCommunicationsProtocol mode) {
-        stop(); 
+        stop();
+        paused=false;
         stateSwitcher(0);
         monitor = mode;
-        Log.level3Verbose("Starting: "+mode);
+        Log.level3Verbose("Starting: " + mode);
         //lock controls if not available yet.
         if (Statics.isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
             Statics.GUI.setControlStatus(false);
@@ -106,6 +111,9 @@ public class CASUALConnectionStatusMonitor {
                 AbstractDeviceCommunicationsProtocol stateMonitor = monitor;
                 while (CASUALConnectionStatusMonitor.monitor != null && CASUALConnectionStatusMonitor.monitor.equals(stateMonitor)) {
                     sleepForOneSecond();
+                    if (paused) {
+                        continue;
+                    }
                     doDeviceCheck();
                 }
             }
@@ -173,7 +181,6 @@ public class CASUALConnectionStatusMonitor {
         }
     }
 
-
     private void sleepForOneSecond() {
         try {
             Thread.sleep(1000);
@@ -182,5 +189,4 @@ public class CASUALConnectionStatusMonitor {
         }
     }
 
-    
 }

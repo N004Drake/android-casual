@@ -32,72 +32,73 @@ import java.util.regex.Pattern;
 
 /**
  * **************************************************************************
- * WindowsDrivers a.k.a. CADI(v2) or (CASUALS Automated Driver Installer) is a CASUALcore
- * dependant class which attempts to automate CASUAL process on Windows (XP - Win8)
- * A generic driver is required for USB IO via CASUAL. This driver must temporarily 
- * take the place of the default OEM driver of targeted device (which must be 
- * currently connected). While many OEMs use WinUSB (or compatible alternative)
- * as a device interface, CASUAL is not able communicate with the target because 
- * of proprietary (undocumented) driver service API. However once the generic 
- * driver is installed CASUAL using reverse engineered open-source tools such as 
- * Heimdall - http://goo.gl/bqeulW is able to interact with the target device directly.
- * 
- * This class is heavily dependant upon REGEX and a modified version of Devcon (MS-LPL).
- * CADI uses libusbK, which is a generic WinUSB compatible driver for libusbx 
- * communication via Heimdall. Two sets of drivers are used (each containing an 
- * x86/x64 variant), one built with WDK 7.1 (allowing for XP support) the other 
- * built with WDK 8.0 (for Windows 8 support). All driver components are built & 
- * digitally signed by Jeremy Loper.
- * 
- * WARNING: Modifications to this class can result in system-wide crash of Windows.
- * (I know, I've seen it :-D ) So plan out all modifications prior, and always ensure
- * a null value is never passed to Devcon.
- * 
+ * WindowsDrivers a.k.a. CADI(v2) or (CASUALS Automated Driver Installer) is a
+ * CASUALcore dependant class which attempts to automate CASUAL process on
+ * Windows (XP - Win8) A generic driver is required for USB IO via CASUAL. This
+ * driver must temporarily take the place of the default OEM driver of targeted
+ * device (which must be currently connected). While many OEMs use WinUSB (or
+ * compatible alternative) as a device interface, CASUAL is not able communicate
+ * with the target because of proprietary (undocumented) driver service API.
+ * However once the generic driver is installed CASUAL using reverse engineered
+ * open-source tools such as Heimdall - http://goo.gl/bqeulW is able to interact
+ * with the target device directly.
+ *
+ * This class is heavily dependant upon REGEX and a modified version of Devcon
+ * (MS-LPL). CADI uses libusbK, which is a generic WinUSB compatible driver for
+ * libusbx communication via Heimdall. Two sets of drivers are used (each
+ * containing an x86/x64 variant), one built with WDK 7.1 (allowing for XP
+ * support) the other built with WDK 8.0 (for Windows 8 support). All driver
+ * components are built & digitally signed by Jeremy Loper.
+ *
+ * WARNING: Modifications to this class can result in system-wide crash of
+ * Windows. (I know, I've seen it :-D ) So plan out all modifications prior, and
+ * always ensure a null value is never passed to Devcon.
+ *
  * @author Jeremy Loper jrloper@gmail.com
  * @author Adam Outler adamoutler@gmail.com
- *************************************************************************
+ * ************************************************************************
  */
 public class WindowsDrivers {
+
     /**
      * CADI Windows Driver for XP.
      */
-    public static final String windowsXPCadiDevconDriver = "/CASUAL/communicationstools/heimdall/drivers/resources/xp/CADI.zip"; //xp devcon CADI
+    private final static String cadiXpDrivers = "/CASUAL/communicationstools/heimdall/drivers/resources/xp/CADI.zip";
+
     /**
      * CADI Windows Driver for Windows Vista and higher.
      */
-    public static final String windowsVistaAndHigherCadiDevconDriver = "/CASUAL/communicationstools/heimdall/drivers/resources/CADI.zip"; //devcon CADI
-
+    private final static String cadiDrivers = "/CASUAL/communicationstools/heimdall/drivers/resources/CADI.zip";
 
     /**
-     * pathToCADI contains the full path to the root folder of where driver 
-     * package(s) are (or will be). 
-     * This Member is populated on Class Object creation.
+     * pathToCADI contains the full path to the root folder of where driver
+     * package(s) are (or will be). This Member is populated on Class Object
+     * creation.
      */
     public final String pathToCADI;
 
     /**
-     * windowsDriverBlanket is a static Array of targeted USB VID (VendorID numbers)
-     * in hexadecimal form. IDs are stored as strings because Java doesn't have 
-     * a native storage class for hexadecimal (base 16) without conversion to decimal (base 10)
-     * This Member is populated on Class Object creation.
+     * windowsDriverBlanket is a static Array of targeted USB VID (VendorID
+     * numbers) in hexadecimal form. IDs are stored as strings because Java
+     * doesn't have a native storage class for hexadecimal (base 16) without
+     * conversion to decimal (base 10) This Member is populated on Class Object
+     * creation.
      */
     public final String[] windowsDriverBlanket;
-    
+
     /**
-     * driverExtracted this static member is toggled true upon a successful driver
-     * package decompression.
-     * 
+     * driverExtracted this static member is toggled true upon a successful
+     * driver package decompression.
+     *
      */
     public static volatile boolean driverExtracted = false;
-    
+
     /**
-     * removeDriverOnCompletion is a primarily user set variable, relating to driver
-     * package uninstallation.
-     * Should driver be removed on script completion? 
-     * 0 - Unset (will prompt user) 
-     * 1 - Do not remove driver on completion 
-     * 2 - Remove driver on script completion
-     * This Member is populated on Class Object creation.
+     * removeDriverOnCompletion is a primarily user set variable, relating to
+     * driver package uninstallation. Should driver be removed on script
+     * completion? 0 - Unset (will prompt user) 1 - Do not remove driver on
+     * completion 2 - Remove driver on script completion This Member is
+     * populated on Class Object creation.
      */
     public static volatile int removeDriverOnCompletion;
 
@@ -154,13 +155,13 @@ public class WindowsDrivers {
         if (OSTools.OSName().contains("Windows XP")) {
             if (new FileOperations().makeFolder(pathToCADI)) {
                 Log.level4Debug("driverExtract() Unzipping CADI for xp");
-                Unzip.unZipResource("/CASUAL/Heimdall/resources/xp/CADI.zip", pathToExtract);
+                Unzip.unZipResource(cadiXpDrivers, pathToExtract);
                 return true;
             }
             return false;
         } else if (new FileOperations().makeFolder(pathToCADI)) {
             Log.level4Debug("driverExtract() Unzipping CADI");
-            Unzip.unZipResource("/CASUAL/Heimdall/resources/CADI.zip", pathToExtract);
+            Unzip.unZipResource(cadiDrivers, pathToExtract);
             return true;
         }
         return false;
@@ -212,7 +213,7 @@ public class WindowsDrivers {
     /**
      * uninstallCADI attempts to remove any existing or previous remnants of
      * CADIv1 or CADIv2
-     * 
+     *
      * @return a boolean sum of result. Value greater than 0 == success
      */
     public boolean uninstallCADI() {
@@ -250,11 +251,11 @@ public class WindowsDrivers {
         if (!VID.equals("")) {
             String outputBuffer = devconCommand("find *USB\\VID_" + VID + "*");
             if (outputBuffer != null) {
-                Pattern pattern = getRegExPattern("Matching devices");
+                Pattern pattern = getRegExPattern(PatternChoice.MATCHINGDEVICES);
                 if (pattern != null) {
                     Matcher matcher = pattern.matcher(outputBuffer);
                     String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
-                    pattern = getRegExPattern("install");
+                    pattern = getRegExPattern(PatternChoice.ALLDEVICES);
 
                     if (pattern != null) {
                         matcher = pattern.matcher(outputBuffer);
@@ -293,11 +294,11 @@ public class WindowsDrivers {
             if (onlyUSB) { //All present USB devices
                 String outputBuffer = devconCommand("find USB*");
                 if (outputBuffer != null) {
-                    Pattern pattern = getRegExPattern("Matching devices");
+                    Pattern pattern = getRegExPattern(PatternChoice.MATCHINGDEVICES);
                     if (pattern != null) {
                         Matcher matcher = pattern.matcher(outputBuffer);
                         String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
-                        pattern = getRegExPattern("All devices");
+                        pattern = getRegExPattern(PatternChoice.ALLDEVICES);
                         if (pattern != null) {
                             matcher = pattern.matcher(outputBuffer);
                             for (int x = 0; matcher.find(); x++) {
@@ -316,11 +317,11 @@ public class WindowsDrivers {
             } else { //All present devices
                 String outputBuffer = devconCommand("find *");
                 if (outputBuffer != null) {
-                    Pattern pattern = getRegExPattern("Matching devices");
+                    Pattern pattern = getRegExPattern(PatternChoice.MATCHINGDEVICES);
                     if (pattern != null) {
                         Matcher matcher = pattern.matcher(outputBuffer);
                         String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
-                        pattern = getRegExPattern("All devices");
+                        pattern = getRegExPattern(PatternChoice.ALLDEVICES);
                         if (pattern != null) {
                             matcher = pattern.matcher(outputBuffer);
                             for (int x = 0; matcher.find(); x++) {
@@ -341,11 +342,11 @@ public class WindowsDrivers {
             if (onlyUSB) { //All past & present USB devices
                 String outputBuffer = devconCommand("findall USB*");
                 if (outputBuffer != null) {
-                    Pattern pattern = getRegExPattern("Matching devices");
+                    Pattern pattern = getRegExPattern(PatternChoice.MATCHINGDEVICES);
                     if (pattern != null) {
                         Matcher matcher = pattern.matcher(outputBuffer);
                         String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
-                        pattern = getRegExPattern("All devices");
+                        pattern = getRegExPattern(PatternChoice.ALLDEVICES);
                         if (pattern != null) {
                             matcher = pattern.matcher(outputBuffer);
                             for (int x = 0; matcher.find(); x++) {
@@ -364,11 +365,11 @@ public class WindowsDrivers {
             } else { //All past & present devices
                 String outputBuffer = devconCommand("findall *");
                 if (outputBuffer != null) {
-                    Pattern pattern = getRegExPattern("Matching devices");
+                    Pattern pattern = getRegExPattern(PatternChoice.MATCHINGDEVICES);
                     if (pattern != null) {
                         Matcher matcher = pattern.matcher(outputBuffer);
                         String[] dList = new String[Integer.parseInt(matcher.find() ? matcher.group(0).toString() : "0")];
-                        pattern = getRegExPattern("All devices");
+                        pattern = getRegExPattern(PatternChoice.ALLDEVICES);
                         if (pattern != null) {
                             matcher = pattern.matcher(outputBuffer);
                             for (int x = 0; matcher.find(); x++) {
@@ -390,19 +391,21 @@ public class WindowsDrivers {
     }
 
     /**
-     * getCASUALDriverCount parses devcon output for all CASUAL driver installations
-     * and returns an integer count
-     * 
+     * getCASUALDriverCount parses devcon output for all CASUAL driver
+     * installations and returns an integer count
+     *
      * @return integer count of CASUAL driver installs
      */
     public int getCASUALDriverCount() {
         int devCount = 0;
         String outputBuffer = devconCommand("findall USB*");
         if (outputBuffer != null) {
-            Pattern pattern = getRegExPattern("CASUAL driver");
+            Pattern pattern = getRegExPattern(PatternChoice.CASUALDRIVER);
             if (pattern != null) {
                 Matcher matcher = pattern.matcher(outputBuffer);
-                while(matcher.find()) devCount++;
+                while (matcher.find()) {
+                    devCount++;
+                }
             } else {
                 Log.level0Error("removeOrphanedDevices() getRegExPattern() returned null!");
                 return 0;
@@ -427,14 +430,14 @@ public class WindowsDrivers {
     public boolean removeOrphanedDevices(String VID) {
         int i = 0;
         int resultSum = 0;
-        String result = "";
+        String result;
         if (!VID.equals("")) {
-            Pattern pattern = getRegExPattern("Matching devices");
+            Pattern pattern = getRegExPattern(PatternChoice.MATCHINGDEVICES);
             if (pattern != null) {
                 String outputBuffer = devconCommand("findall *USB\\VID_" + VID + "*");
                 if (outputBuffer != null) {
 
-                    pattern = getRegExPattern("orphans");
+                    pattern = getRegExPattern(PatternChoice.ORPHANS);
                     if (pattern != null) {
                         Matcher matcher = pattern.matcher(outputBuffer);
                         while (matcher.find()) {
@@ -472,7 +475,7 @@ public class WindowsDrivers {
     public boolean deleteOemInf() {
         Log.level2Information("deleteOemInf() Enumerating installed driver packages");
         int resultSum = 0;
-        Pattern pattern = getRegExPattern("inf");
+        Pattern pattern = getRegExPattern(PatternChoice.INF);
         if (pattern != null) {
             String outputBuffer = devconCommand("dp_enum");
             if (outputBuffer != null) {
@@ -537,25 +540,31 @@ public class WindowsDrivers {
      * @return a compiled REGEX Pattern if requested pattern exists, otherwise
      * null.
      */
-    public Pattern getRegExPattern(String whatPattern) {
-        if (!whatPattern.equals("")) {
-            if (whatPattern.equals("orphans") || whatPattern.equals("CASUAL driver")) {
+    public Pattern getRegExPattern(PatternChoice whatPattern) {
+        switch (whatPattern) {
+            case ORPHANS:
                 return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:\\s[CASUAL's|Samsung]+\\s[Android\\sDevice])");
-            } else if (whatPattern.equals("inf")) {
+            case CASUALDRIVER:
+                return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}.*(?=:\\s[CASUAL's|Samsung]+\\s[Android\\sDevice])");
+            case INF:
                 return Pattern.compile("[o|Oe|Em|M]{3}[0-9]{1,4}\\.inf(?=\\s*Provider:\\slibusbK\\s*Class:\\s*libusbK USB Devices)");
-            } else if (whatPattern.equals("install")) {
+            case INSTALL:
                 return Pattern.compile("USB.?VID_[0-9a-fA-F]{4}&PID_[0-9a-fA-F]{4}(?=.*:)");
-            } else if (whatPattern.equals("Matching devices")) {
+            case MATCHINGDEVICES:
                 return Pattern.compile("(?<=\\s)[0-9]{1,3}?(?=[\\smatching\\sdevice\\(s\\)\\sfound])");
-            } else if (whatPattern.equals("All devices")) {
+            case ALLDEVICES:
                 return Pattern.compile("\\S+(?=\\s*:\\s)");
-            } else {
+            default:
                 Log.level0Error("getRegExPattern() no known pattern requested");
                 return null;
-            }
-        } else {
-            Log.level0Error("getRegExPattern() no pattern requested");
-            return null;
         }
     }
+
+    public enum PatternChoice {
+
+        ORPHANS, CASUALDRIVER, INF, INSTALL, MATCHINGDEVICES, ALLDEVICES
+    }
+
 }
+
+

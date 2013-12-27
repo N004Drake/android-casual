@@ -421,26 +421,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         }
     }//GEN-LAST:event_DonateButtonActionPerformed
 
-    /**
-     * gets the selected combobox item.
-     *
-     * @return selected item in combobox
-     */
-    @Override
-    public String comboBoxGetSelectedItem() {
-        return (String) comboBoxScriptSelector.getSelectedItem();
-    }
 
-    /**
-     * adds an item to the combo box
-     *
-     * @param item item to add
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"}) //needed because JDK6 does not support type-modified JComboBoxes
-    @Override
-    public void comboBoxScriptSelectorAddNewItem(String item) {
-        comboBoxScriptSelector.addItem(item);
-    }
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
         CASUALConnectionStatusMonitor.stop();
@@ -719,7 +700,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             }
             if (caspac.getActiveScript()!=null){
                 this.comboBoxScriptSelector.setSelectedItem(caspac.getActiveScript().name);
-                Log.level2Information(caspac.getScriptByName(this.comboBoxGetSelectedItem()).discription);
+                Log.level2Information(caspac.getScriptByName(this.comboBoxScriptSelector.getSelectedItem().toString()).discription);
             }
         }
         if (comboBoxScriptSelector.getItemCount() < 1) {
@@ -1060,10 +1041,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         isReady=ready;
     }
 
-    @Override
-    public void setDummyGUI(boolean dummy) {
-        isDummyGUI=dummy;
-    }
 
     @Override
     public void setBlocksUnzipped(int i) {
