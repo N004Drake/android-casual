@@ -21,6 +21,7 @@ package CASUAL;
 import CASUAL.communicationstools.heimdall.drivers.WindowsDrivers;
 import java.util.regex.Pattern;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import static org.junit.Assume.*;
 import org.junit.BeforeClass;
@@ -33,11 +34,6 @@ public class WindowsDriversTest {
     
     public static WindowsDrivers instance = null;
     
-    public WindowsDriversTest() {
-        assumeTrue(OSTools.isWindows());
-        Statics.GUI=new GUI.testing.automatic();
-    }
-    
     @BeforeClass
     public static void setUp() {
         instance = new WindowsDrivers(1);
@@ -47,6 +43,21 @@ public class WindowsDriversTest {
     public static void tearDownClass() {
     }
     
+    public WindowsDriversTest() {
+        assumeTrue(OSTools.isWindows());
+        Statics.GUI=new GUI.testing.automatic();
+    }
+    
+    
+    /**
+     * Test of installKnownDrivers() method of class WindowsDrivers.
+     */
+    @Test
+    public void testinstallKnownDrivers(){
+        WindowsDrivers wd=new WindowsDrivers(0);
+        wd.installKnownDrivers(new String[]{});
+        
+    }
     /**
      * Test of getDeviceList(BOOL, BOOL) method, of class WindowsDrivers.
      */
@@ -130,7 +141,7 @@ public class WindowsDriversTest {
     @Test
     public void testDeleteOemInf() {
         System.out.println("deleteOemInf");
-        assert(!instance.deleteOemInf());
+        assertEquals(false,instance.deleteOemInf());
     }
 
     /**
