@@ -189,8 +189,6 @@ public class ShellTest {
      */
     @Test
     public void testTimeoutValueCheckingShellCommand() throws IOException {
-                assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
-
         System.out.println("timeoutValueCheckingShellCommand");
         String[] cmd = new String[]{new FastbootTools().getBinaryLocation()};
         String[] startTimerOnThisInLine = new String[]{"devices", "attached"};
@@ -227,7 +225,7 @@ public class ShellTest {
 
         //reset test timer for checking non-timeout
         c.timerElapsed = false;
-        cmd = new String[]{new FastbootTools().getBinaryLocation(), "flash"};
+        cmd = new String[]{new FastbootTools().getBinaryLocation(), "devices"};
         expectedResult = "";
         t.schedule(new TimerTask() {
             @Override
