@@ -22,7 +22,7 @@ import CASUAL.OSTools;
 import CASUAL.Shell;
 import CASUAL.Statics;
 import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
-import CASUAL.communicationstools.heimdall.drivers.WindowsDrivers;
+import CASUAL.communicationstools.heimdall.drivers.DriverInstall;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -157,7 +157,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
      */
     @Override
     public boolean installDriver() {
-        return new WindowsDrivers(0).installDriverBlanket(null);
+        return new DriverInstall(0).installKnownDrivers();
 
     }
 
