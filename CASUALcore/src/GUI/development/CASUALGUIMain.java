@@ -431,7 +431,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         Log.level4Debug("hiding script selector TargetScript: " + selectedScript);
         caspac.setActiveScript(caspac.getScriptByName(selectedScript));
         Log.level2Information(caspac.getActiveScript().discription);
-        caspac.waitForUnzipComplete();
+        caspac.startAndWaitForUnzip();
 
         CASUALStartupTasks.lockGUIunzip = false;
         CASUALConnectionStatusMonitor.resumeAfterStop();

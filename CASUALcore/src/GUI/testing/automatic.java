@@ -51,7 +51,7 @@ public class automatic implements CASUAL.iCASUALUI {
         String n="%n";
         sb.append(mo.title).append(n).append(mo.messageText).append(n);
         sb.append("MessageType:").append(mo.messageType).append(n);
-        return "0";
+        return "";
     }
 
     @Override

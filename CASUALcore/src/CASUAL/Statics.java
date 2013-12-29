@@ -21,6 +21,7 @@ import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.fastboot.FastbootTools;
+import CASUAL.communicationstools.heimdall.HeimdallTools;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -225,6 +226,7 @@ public class Statics {
         ActionEvents = new ArrayList<String>();
         ReactionEvents = new ArrayList<String>();
         new ADBTools().reset();
+        new HeimdallTools().reset();
         new FastbootTools().reset(); 
         CASUALLanguage.GOTO = "";
         try {

@@ -82,6 +82,9 @@ public class BusyboxTools {
             return bbtools.deployBusybox();
         }
     }
+    public static void reset(){
+        
+    }
 
     private String deployBusybox() {
         ResourceDeployer rd=new ResourceDeployer();

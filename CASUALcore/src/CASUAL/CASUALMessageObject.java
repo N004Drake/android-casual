@@ -52,6 +52,19 @@ public class CASUALMessageObject {
     public String messageText;
 
     /**
+     *Categories of possible messages. 
+     */
+    public enum MessageCategory{
+        TimeOut, UserCancelOption, ActionRequired, UserNotification,
+        ShowInformation, ShowError, ShowYesNo, TextInput, CommandNotification
+    }
+    
+    /**
+     * category of this message.  The category should be used instead of the old
+     * final static variables. 
+     */
+    public MessageCategory category;
+    /**
      * Type of message commanded by this MessageObject
      * iCASUALInteraction.INTERACTION_TIME_OUT=0;
      * iCASUALInteraction.INTERACTION_USER_CANCEL_OPTION=1;
@@ -166,6 +179,7 @@ public class CASUALMessageObject {
         this.timeoutInitialValue = initialValue;
         this.timeoutPresetTime = PRESET_TIME;
         this.messageType = iCASUALUI.INTERACTION_TIME_OUT;
+        category=MessageCategory.TimeOut;
         expectedReturn = "(String)int from " + Arrays.asList(options).toString();
         if (Statics.GUI==null){
             return 0;
@@ -181,6 +195,7 @@ public class CASUALMessageObject {
      */
     public String inputDialog() throws HeadlessException {
         this.messageType = iCASUALUI.INTERACTION_INPUT_DIALOG;
+        category=MessageCategory.TextInput;
         expectedReturn = "Any String";
         return Statics.GUI.displayMessage(this);
     }
@@ -193,6 +208,7 @@ public class CASUALMessageObject {
      */
     public int showActionRequiredDialog() throws HeadlessException {
         this.messageType = iCASUALUI.INTERACTION_ACTION_REUIRED;
+        category=MessageCategory.ActionRequired;
         expectedReturn = "String 0-continue, 1-stop";
         return Integer.parseInt(Statics.GUI.displayMessage(this));
     }
@@ -204,6 +220,7 @@ public class CASUALMessageObject {
      */
     public int showUserCancelOption() {
         this.messageType = iCASUALUI.INTERACTION_USER_CANCEL_OPTION;
+        category=MessageCategory.UserCancelOption;
         expectedReturn = "String 0-continue, 1-stop";
         return Integer.parseInt(Statics.GUI.displayMessage(this));
     }
@@ -215,6 +232,7 @@ public class CASUALMessageObject {
      */
     public void showCommandNotification() throws HeadlessException {
         this.messageType = iCASUALUI.INTERACTION_COMMAND_NOTIFICATION;
+        category=MessageCategory.CommandNotification;
         expectedReturn = "Empty";
         Statics.GUI.displayMessage(this);
     }
@@ -226,6 +244,7 @@ public class CASUALMessageObject {
      */
     public void showUserNotification() throws HeadlessException {
         this.messageType = iCASUALUI.INTERACTION_USER_NOTIFICATION;
+        category=MessageCategory.UserNotification;
         expectedReturn = "Empty";
         Statics.GUI.displayMessage(this);
     }
@@ -237,6 +256,7 @@ public class CASUALMessageObject {
      */
     public void showInformationMessage() throws HeadlessException {
         this.messageType = iCASUALUI.INTERACTION_SHOW_INFORMATION;
+        category=MessageCategory.ShowInformation;
         expectedReturn = "Empty";
         Log.level3Verbose("showing information message object");
         Statics.GUI.displayMessage(this);
@@ -250,6 +270,7 @@ public class CASUALMessageObject {
      */
     public void showErrorDialog() throws HeadlessException {
         this.messageType = iCASUALUI.INTERACTION_SHOW_ERROR;
+        category=MessageCategory.ShowError;
         expectedReturn = "Empty";
         Statics.GUI.displayMessage(this);
 
@@ -262,6 +283,7 @@ public class CASUALMessageObject {
      */
     public boolean showYesNoOption() {
         this.messageType = iCASUALUI.INTERACTION_SHOW_YES_NO;
+        category=MessageCategory.ShowYesNo;
         Boolean retval = Statics.GUI.displayMessage(this).equals("0");
         expectedReturn = "String 0-yes, 1-no";
         return retval;

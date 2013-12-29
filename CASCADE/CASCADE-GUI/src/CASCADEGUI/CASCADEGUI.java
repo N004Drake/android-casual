@@ -1472,7 +1472,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
             scriptList.clear();
             Log.level4Debug("Initiating CASPAC load.");
             cp.load();
-            cp.waitForUnzipComplete();
+            cp.startAndWaitForUnzip();
         } catch (ZipException ex) {
             Log.errorHandler(ex);
         } catch (IOException ex) {

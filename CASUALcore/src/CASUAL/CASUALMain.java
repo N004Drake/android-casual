@@ -16,7 +16,6 @@
  */
 package CASUAL;
 
-import CASUAL.CASUALSettings.MonitorMode;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.misc.MandatoryThread;
@@ -102,19 +101,20 @@ public final class CASUALMain {
                 commonCASUALCASPACStartupTasks();
                 waitForGUI();
                 Statics.GUI.notificationCASUALSound();
-                try {
-                    //TODO Remove this wonkeyness.  This should all be in loadFirstScriptFromCASAPC.
-                    Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
-                    Statics.CASPAC.loadActiveScript();
-                } catch (IOException ex) {
-                    Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        try {
+            Statics.CASPAC.loadActiveScript();
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
                 Statics.GUI.setCASPAC(Statics.CASPAC);
                 CASUALStartupTasks.startADB.waitFor();
                 startConnectionStatusMonitor();
                 return;
             case CASPAC:
-                Statics.GUI=new GUI.CommandLine.CommandLineUI();
+                if (Statics.GUI==null){
+                   Statics.GUI=new GUI.CommandLine.CommandLineUI();
+                };
                 commonCASUALCASPACStartupTasks();
                 Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
                 try {
@@ -123,6 +123,7 @@ public final class CASUALMain {
                     Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CASUALStartupTasks.caspacPrepLock.waitFor();
+                Statics.CASPAC.waitForUnzip();
                 CASUALStartupTasks.startADB.waitFor();
                 new CASUALScriptParser().executeActiveScript(Statics.CASPAC);
                 
@@ -165,7 +166,7 @@ public final class CASUALMain {
         //start the device monitor
         //wait for complete;
         CASUALConnectionStatusMonitor.stop();
-        Statics.CASPAC.waitForUnzipComplete();
+        Statics.CASPAC.startAndWaitForUnzip();
 
         new CASUALScriptParser().executeActiveScript(Statics.CASPAC);
                 
