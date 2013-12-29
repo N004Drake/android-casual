@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeTrue;
 
 /**
  *
@@ -188,6 +189,8 @@ public class ShellTest {
      */
     @Test
     public void testTimeoutValueCheckingShellCommand() throws IOException {
+                assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
+
         System.out.println("timeoutValueCheckingShellCommand");
         String[] cmd = new String[]{new FastbootTools().getBinaryLocation()};
         String[] startTimerOnThisInLine = new String[]{"devices", "attached"};
