@@ -482,6 +482,7 @@ public class Shell {
                 final Timer watchDogTimer = new Timer(timeout, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent evt) {
+                        
                         Log.level4Debug("Watchdog Triggered!  Command timed out.");
                         timedOut.set(true);
                         synchronized (processRunning) {
@@ -552,8 +553,6 @@ public class Shell {
                                    char read=(char)STDOUT.read();
                                    tl.log(read);
                                }
-
-                   
                        }
                        
                        tl.watchDogTimer.stop();

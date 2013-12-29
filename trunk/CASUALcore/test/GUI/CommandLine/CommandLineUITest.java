@@ -58,7 +58,8 @@ public class CommandLineUITest {
     public void testMain() {
         System.out.println("main");
         String[] args = new String[]{"--caspac","../../CASPAC/testpak.zip"};
-        //CASUALMain.main(args);
+        CASUAL.Statics.GUI=new GUI.testing.automatic();
+        CASUALMain.beginCASUAL(args);
 
     }
     

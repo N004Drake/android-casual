@@ -200,7 +200,7 @@ public class ShellTest {
         assert result.contains(expectedResult);
 
         //verify the command "fastboot flash" times out after 3 seconds
-        cmd = new String[]{new FastbootTools().getBinaryLocation(), "flash"};
+        cmd = new String[]{new FastbootTools().getBinaryLocation(), "flash", "2>&1"};
         //instantiate a final static variable for use in the timer
         class check {
 

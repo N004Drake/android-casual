@@ -136,8 +136,8 @@ public final class Caspac {
     }
 
     /**
-     * secure constructor for Caspac always call waitForUnzipComplete in order
-     * to delete file and maintain security
+     * secure constructor for Caspac always call startAndWaitForUnzip in order
+ to delete file and maintain security
      *
      * @param caspac file containing CASPAC information.
      * @param tempDir temp folder to use
@@ -342,6 +342,7 @@ public final class Caspac {
         }
         Log.level4Debug("loading CASPAC script");
         performUnzipOnQueue();
+
     }
 
     /**
@@ -427,7 +428,7 @@ public final class Caspac {
      * @param ThreadName name for the alternate thread.
      */
     public void waitForUnzipAndRun(Runnable action, boolean onASeparateThread, String ThreadName) {
-        waitForUnzipComplete();
+        startAndWaitForUnzip();
         if (onASeparateThread) {
             MandatoryThread t = new MandatoryThread(action);
             t.setName(ThreadName);
@@ -441,14 +442,15 @@ public final class Caspac {
      * causes the current thread to wait until all unzipThreads have completed.
      * this is the longest part and the last part of completion of the CASPAC prep. 
      */
-    public void waitForUnzipComplete() {
+    public void startAndWaitForUnzip() {
         boolean[] isUnzipping = new boolean[unzipThreads.size()];
         Log.level4Debug("Currently waiting for Threads:" + Integer.toString(isUnzipping.length));
         for (CASUAL.misc.MandatoryThread t : unzipThreads) {
             if (t!=null&&!t.isComplete()){
                 t.start();
+                t.waitFor();
+
             }
-            t.waitFor();
             Log.level4Debug("Unzip completed!");
         }
 
@@ -458,6 +460,23 @@ public final class Caspac {
         Log.level4Debug("Unzipping complete.");
     }
 
+    
+    public void waitForUnzip(){
+        for (CASUAL.misc.MandatoryThread t : unzipThreads) {
+            if (t==null){
+                continue;
+            }
+            if (!t.isAlive()&& !t.isComplete()){
+                t.start();
+            }
+            if (!t.isComplete()){
+                t.waitFor();
+            }
+            Log.level4Debug("Unzip completed!");
+        }
+    }
+    
+    
     /**
      * handles each CASPAC file appropriately
      *
