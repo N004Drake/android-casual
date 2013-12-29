@@ -16,10 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-package CASUAL;
+package CASUAL.CommunicationsTools.heimdall.drivers;
+import CASUAL.OSTools;
+import CASUAL.Statics;
 
 import CASUAL.communicationstools.heimdall.drivers.WindowsDrivers;
-import java.util.regex.Pattern;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
