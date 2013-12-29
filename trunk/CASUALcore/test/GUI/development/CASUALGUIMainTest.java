@@ -22,6 +22,7 @@ import CASUAL.Statics;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
+import static org.junit.Assume.assumeTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,6 +33,7 @@ import org.junit.Test;
 public class CASUALGUIMainTest {
     
     public CASUALGUIMainTest() {
+        assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
     }
     
     @BeforeClass
