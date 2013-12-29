@@ -23,7 +23,8 @@ import CASUAL.communicationstools.adb.busybox.BusyboxTools;
 import CASUAL.communicationstools.fastboot.FastbootTools;
 import CASUAL.communicationstools.heimdall.HeimdallInstall;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
-import CASUAL.communicationstools.heimdall.drivers.WindowsDrivers;
+import CASUAL.communicationstools.heimdall.drivers.DriverInstall;
+import CASUAL.communicationstools.heimdall.drivers.DriverRemove;
 import CASUAL.crypto.MD5sum;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
@@ -117,9 +118,9 @@ public class CASUALLanguage {
             }
             //Close the input stream
             dataIn.close();
-            if (WindowsDrivers.removeDriverOnCompletion == 2) {//2 for remove driver 1 for do not remove
+            if (DriverInstall.removeDriverOnCompletion == 2) {//2 for remove driver 1 for do not remove
                 Log.level2Information("Removing generic USB driver as requested");
-                new WindowsDrivers(2).uninstallCADI();
+                new DriverRemove();
             }
             Log.level2Information("@done");
             //yeah yeah, overly broad chatch.  read below. 
