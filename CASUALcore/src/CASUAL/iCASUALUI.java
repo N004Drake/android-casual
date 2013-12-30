@@ -270,35 +270,8 @@ public interface iCASUALUI {
      */
     void deviceMultipleConnected(int numberOfDevicesConnected);
 
-    /**
-     * permissions escillation is required
-     */
-    void notificationPermissionsRequired();
 
-    /**
-     * Startup event 
-     */
-    void notificationCASUALSound();
 
-    /**
-     * Input is requested from the user
-     */
-    void notificationInputRequested();
-
-    /**
-     * A notification has been issued to the user
-     */
-    void notificationGeneral();
-
-    /**
-     * a request to continue has been issued to the user
-     */
-    void notificationRequestToContinue();
-
-    /**
-     *  User action is required
-     */
-    void notificationUserActionIsRequired();
 
     public void setBlocksUnzipped(int i);
     

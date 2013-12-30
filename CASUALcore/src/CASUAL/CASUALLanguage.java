@@ -477,7 +477,6 @@ public class CASUALLanguage {
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 
         } else if (line.startsWith("$USERNOTIFICATION")) {
-            Statics.GUI.notificationGeneral();
             line = line.replace("$USERNOTIFICATION", "");
             new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserNotification();
             return "";
@@ -487,7 +486,6 @@ public class CASUALLanguage {
             //USE: $USERCANCELOPTION Title, Message
         } else if (line.startsWith("$USERCANCELOPTION")) {
             //CASUALAudioSystem CAS = new CASUALAudioSystem();
-            Statics.GUI.notificationRequestToContinue();
             int n;
             line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
             n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserCancelOption();
@@ -501,7 +499,6 @@ public class CASUALLanguage {
 
 //$ACTIONREQUIRED Message            
         } else if (line.startsWith("$ACTIONREQUIRED")) {
-            Statics.GUI.notificationUserActionIsRequired();
             line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
             int n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showActionRequiredDialog();
             if (n == 1) {
@@ -516,7 +513,6 @@ public class CASUALLanguage {
             //Any text will be injected into the $USERINPUT variable    
             //USE: $USERINPUTBOX Title, Message, command $USERINPUT
         } else if (line.startsWith("$USERINPUTBOX")) {
-            Statics.GUI.notificationInputRequested();
             //line = line.replace("\\n", "\n");
             String[] Message = line.replace("$USERINPUTBOX", "").split(",", 3);
             String inputBoxText = new CASUALMessageObject(Message[0] + ">>>" + Message[1]).inputDialog();
@@ -660,10 +656,7 @@ public class CASUALLanguage {
             Log.level2Information("@waitingForDownloadModeDevice");
             if (OSTools.isLinux()) {
                 Log.level2Information("@linuxPermissionsElevation");
-                Statics.GUI.notificationPermissionsRequired();
-                //Todo write checks for this
-                //String retval=new Shell().timeoutValueCheckingShellCommand(new String[]{line.replaceAll("\"", "\\\"")},new String[]{"< waiting for device >"},30000);
-                //if (retval.endsWith("< waiting for device >")){
+
                 String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
                 if (!returnValue.contentEquals("\n")) {
                     return returnValue;

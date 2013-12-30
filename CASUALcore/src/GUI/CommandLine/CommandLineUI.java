@@ -306,32 +306,7 @@ public class CommandLineUI implements iCASUALUI {
     public void deviceMultipleConnected(int numberOfDevicesConnected) {
     }
 
-    @Override
-    public void notificationPermissionsRequired() {
-    }
-
-    @Override
-    public void notificationCASUALSound() {
-        msg("casualSound Requested");
-    }
-
-    @Override
-    public void notificationInputRequested() {
-    }
-
-    @Override
-    public void notificationGeneral() {
-    }
-
-    @Override
-    public void notificationRequestToContinue() {
-
-    }
-
-    @Override
-    public void notificationUserActionIsRequired() {
-    }
-    
+   
     public void setThisAsGUI(){
         Statics.GUI=this;
     }

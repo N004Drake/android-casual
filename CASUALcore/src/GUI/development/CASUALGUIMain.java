@@ -755,36 +755,13 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         AudioHandler.playMultipleInputStreams(URLs);
     }
 
-    @Override
-    public void notificationPermissionsRequired() {
-        AudioHandler.playSound("/GUI/development/resources/sounds/PermissionEscillation.wav");
-    }
 
-    @Override
+
     public void notificationCASUALSound() {
         AudioHandler.playSound("/GUI/development/resources/sounds/CASUAL.wav");
     }
 
-    @Override
-    public void notificationInputRequested() {
-        AudioHandler.playSound("/GUI/development/resources/sounds/InputRequested.wav");
-    }
-
-    @Override
-    public void notificationGeneral() {
-        AudioHandler.playSound("/GUI/development/resources/sounds/Notification.wav");
-
-    }
-
-    @Override
-    public void notificationRequestToContinue() {
-        AudioHandler.playSound("/GUI/development/resources/sounds/RequestToContinue.wav");
-    }
-
-    @Override
-    public void notificationUserActionIsRequired() {
-        AudioHandler.playSound("/GUI/development/resources/sounds/UserActionIsRequired.wav");
-    }
+   
     
     @Override
     public String displayMessage(CASUALMessageObject messageObject) {
@@ -796,18 +773,21 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             case INTERACTION_TIME_OUT:
                 return showTimeOutInteraction(messageObject, messageText, title);
             case INTERACTION_ACTION_REUIRED:
+                AudioHandler.playSound("/GUI/development/resources/sounds/UserActionIsRequired.wav");
                 return showActionRequiredInteraction(messageText, title);
             //break;// unreachable
 
             case INTERACTION_USER_CANCEL_OPTION:
+                AudioHandler.playSound("/GUI/development/resources/sounds/RequestToContinue.wav");
                 return showUserCancelOptionInteraction(title, messageText);               //break; unreachable
 
             case INTERACTION_USER_NOTIFICATION:
+                 AudioHandler.playSound("/GUI/development/resources/sounds/Notification.wav");
                 showUserNotificationInteraction(title, messageText);
                 break;
 
             case INTERACTION_SHOW_INFORMATION:
-                showInformationInteraction(messageText, title);
+               showInformationInteraction(messageText, title);
                 break;
 
             case INTERACTION_SHOW_ERROR:
@@ -819,6 +799,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             //break; unreachable
 
             case INTERACTION_INPUT_DIALOG:
+                AudioHandler.playSound("/GUI/development/resources/sounds/InputRequested.wav");
                 return showInputDialog(title, messageText);
             //break; unreachable
 

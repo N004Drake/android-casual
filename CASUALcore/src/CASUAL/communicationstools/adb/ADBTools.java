@@ -151,7 +151,6 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
                 returnValue = new Shell().silentShellCommand(getDevicesCmd()).replace("List of devices attached \n", "").replace("\n", "").replace("\t", "");
                 if (!OSTools.isWindows() && returnValue.contains("????????????") || returnValue.contains("**************") || returnValue.contains("error: cannot connect to daemon")) {
                     String[] ok = {"ok"};
-                    Statics.GUI.notificationPermissionsRequired();
                     new CASUALMessageObject("@interactionInsufficientPermissionsWorkaround").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, 2, ok, 0);
                     shutdown();
                     elevateADBserver();
