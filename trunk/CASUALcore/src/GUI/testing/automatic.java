@@ -146,36 +146,7 @@ public class automatic implements CASUAL.iCASUALUI {
         
     }
 
-    @Override
-    public void notificationPermissionsRequired() {
-        
-    }
-
-    @Override
-    public void notificationCASUALSound() {
-        
-    }
-
-    @Override
-    public void notificationInputRequested() {
-        
-    }
-
-    @Override
-    public void notificationGeneral() {
-        
-    }
-
-    @Override
-    public void notificationRequestToContinue() {
-        
-    }
-
-    @Override
-    public void notificationUserActionIsRequired() {
-        
-    }
-
+   
     @Override
     public void setBlocksUnzipped(int i) {
         

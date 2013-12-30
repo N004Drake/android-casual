@@ -73,7 +73,7 @@ public class Pastebin {
             return;
         }
         String xdaUsername = new CASUALMessageObject("@interactionPastebinError").inputDialog();
-        if (xdaUsername != null) {//CANCEL_OPTION will rerturn a null String
+        if (xdaUsername != null && !xdaUsername.equals("1")) {//CANCEL_OPTION will rerturn a null String
             API paste = new API(devKey);
             
             if (!(user.equals("")) && !(passwd.equals(""))) {

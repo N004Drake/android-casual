@@ -102,7 +102,6 @@ public final class CASUALMain {
                 waitForGUI();
                 Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
 
-                Statics.GUI.notificationCASUALSound();
                 try {
                     Statics.CASPAC.loadActiveScript();
                 } catch (IOException ex) {

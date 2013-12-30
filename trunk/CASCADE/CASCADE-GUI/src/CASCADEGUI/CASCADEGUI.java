@@ -2245,54 +2245,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public void deviceMultipleConnected(int i) {
     }
 
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     */
-    @Override
-    public void notificationPermissionsRequired() {
-    }
-
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     */
-    @Override
-    public void notificationCASUALSound() {
-    }
-
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     */
-    @Override
-    public void notificationInputRequested() {
-    }
-
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     */
-    @Override
-    public void notificationGeneral() {
-    }
-
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     */
-    @Override
-    public void notificationRequestToContinue() {
-    }
-
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     */
-    @Override
-    public void notificationUserActionIsRequired() {
-    }
-
+    
     @Override
     public String displayMessage(CASUALMessageObject messageObject) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
