@@ -64,7 +64,7 @@ public final class CASUALMain {
 
     /**
      * Begins actual CASUAL modes this can be called as a stop for CASUAL
- without losing state. This does not cause a stop.
+     * without losing state. This does not cause a stop.
      *
      * @param args
      */
@@ -100,21 +100,24 @@ public final class CASUALMain {
                 startGUI();
                 commonCASUALCASPACStartupTasks();
                 waitForGUI();
+                Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
+
                 Statics.GUI.notificationCASUALSound();
-        try {
-            Statics.CASPAC.loadActiveScript();
-        } catch (IOException ex) {
-            Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                try {
+                    Statics.CASPAC.loadActiveScript();
+                } catch (IOException ex) {
+                    Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
                 Statics.GUI.setCASPAC(Statics.CASPAC);
                 CASUALStartupTasks.startADB.waitFor();
                 startConnectionStatusMonitor();
                 return;
             case CASPAC:
-                if (Statics.GUI==null){
-                   Statics.GUI=new GUI.CommandLine.CommandLineUI();
-                };
+                if (Statics.GUI == null) {
+                    Statics.GUI = new GUI.CommandLine.CommandLineUI();
+                }
+                ;
                 commonCASUALCASPACStartupTasks();
                 Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
                 try {
@@ -126,7 +129,7 @@ public final class CASUALMain {
                 Statics.CASPAC.waitForUnzip();
                 CASUALStartupTasks.startADB.waitFor();
                 new CASUALScriptParser().executeActiveScript(Statics.CASPAC);
-                
+
                 //caspacExecute();
                 break;
             case EXECUTE:
@@ -169,13 +172,13 @@ public final class CASUALMain {
         Statics.CASPAC.startAndWaitForUnzip();
 
         new CASUALScriptParser().executeActiveScript(Statics.CASPAC);
-                
+
     }
 
     private void setDefaultCASPACScript() {
         if (Statics.CASPAC != null && Statics.CASPAC.scripts != null && Statics.CASPAC.scripts.size() >= 1) {
             Log.level4Debug("Finalizing active script up to be run");
-                       
+
             //TODO set Active Script in CASPAC here through implementation of a new meta parameter for default script. 
             Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
             Statics.CASPAC.getActiveScript().scriptContinue = true;
@@ -271,7 +274,7 @@ public final class CASUALMain {
                     //cp.load();
                     Statics.CASPAC = cp;
                 } catch (ZipException ex) {
-    
+
                     Log.errorHandler(ex);
                 } catch (IOException ex) {
                     Log.errorHandler(ex);
@@ -280,9 +283,9 @@ public final class CASUALMain {
         }
     };
 
-    private void startConnectionStatusMonitor(){
-        
-       switch ( arguments.getMonitorMode()){
+    private void startConnectionStatusMonitor() {
+
+        switch (arguments.getMonitorMode()) {
             case ADB:
                 new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
                 break;

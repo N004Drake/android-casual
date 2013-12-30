@@ -5,9 +5,11 @@
 package CASUAL;
 
 import CASUAL.caspac.Script;
+import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.misc.JarClassLoader;
 import java.io.File;
 import org.junit.AfterClass;
+import static org.junit.Assume.assumeTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -48,7 +50,7 @@ public class CASUALJUnitTest {
     @Test
     @SuppressWarnings({"unchecked", "rawtypes", "static"})
     public void testCASUAL() throws Exception {
-        System.out.println(new File("../dist/CASUALstatic.jar").getCanonicalPath());
+        System.out.println(new File("../dist/CASUALcore.jar").getCanonicalPath());
         JarClassLoader jarLoader = new JarClassLoader("../dist/CASUALstatic.jar");
         Class c = jarLoader.loadClass("CASUAL.CASUALMain", true);
         Object cmain = c.newInstance();

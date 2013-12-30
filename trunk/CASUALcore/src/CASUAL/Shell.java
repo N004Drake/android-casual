@@ -455,7 +455,6 @@ public class Shell {
         try {
             ProcessBuilder p = new ProcessBuilder(cmd);
             p=p.redirectErrorStream(true);
-            //p.redirectErrorStream(true);
             final Process process = p.start();
             
             
