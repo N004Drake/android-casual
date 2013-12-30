@@ -186,9 +186,11 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
             }
             Log.level2Information("@deployingFastboot");
             Log.level3Verbose("Deploying Fastboot from " + fastbootResource + " to " + binaryLocation);
-            new ResourceDeployer().deployResourceTo(fastbootResource, tempFolder);
+            binaryLocation=new ResourceDeployer().deployResourceTo(fastbootResource, tempFolder);
             if (OSTools.isLinux() || OSTools.isMac()) {
+                
                 new File(binaryLocation).setExecutable(true);
+
             }
             Log.level2Information("@fastbootDeployed");
         }
