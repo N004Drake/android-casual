@@ -127,7 +127,7 @@ public class DriverInstall {
         return uidVid;
     }
 
-    public ArrayList addDeviceToInstallationQueueIfInList(ArrayList<String> installqueue, String device) {
+    public ArrayList<String> addDeviceToInstallationQueueIfInList(ArrayList<String> installqueue, String device) {
         for (String vid : windowsDriverBlanket) {
             if (device.startsWith("USB\\VID_" + vid)) {
                 installqueue.add(device);
