@@ -8,8 +8,13 @@ package CasualInstrumentation;
 
 import CASUAL.CASUALConnectionStatusMonitor;
 import CASUAL.misc.MandatoryThread;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,6 +44,10 @@ public class CASUALInstrumentationFXMLController implements Initializable {
     Button startFastboot;
     @FXML
     TextArea ta;
+    
+    @FXML
+    Button pastebinButton;
+            
   /*  @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
@@ -71,5 +80,24 @@ public class CASUALInstrumentationFXMLController implements Initializable {
     
     @FXML public void resetConnection(){
         CASUALConnectionStatusMonitor.stop();
+    }
+    
+    @FXML private void pastebin(){
+        MandatoryThread t=new MandatoryThread( new Runnable (){
+            @Override
+            public void run (){
+                try {
+                    new CASUAL.network.Pastebin().pasteAnonymousLog();
+                    new CASUAL.network.Pastebin().doPosting();
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(CASUALInstrumentationFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(CASUALInstrumentationFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (URISyntaxException ex) {
+                    Logger.getLogger(CASUALInstrumentationFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }});
+        t.setName("Pastebin From Instrumentation");
+        t.start();
     }
 }
