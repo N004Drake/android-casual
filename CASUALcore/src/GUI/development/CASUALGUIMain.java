@@ -759,6 +759,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         String title = messageObject.title;
         String messageText = messageObject.messageText;
         String retval = "";
+        Log.Level1Interaction(messageObject.toString());
         switch (messageType) {
             case INTERACTION_TIME_OUT:
                 return showTimeOutInteraction(messageObject, messageText, title);

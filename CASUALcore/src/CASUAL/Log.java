@@ -164,7 +164,7 @@ public class Log {
      */
     public  static void progress(String data) {
        if (Statics.GUI==null){
-           System.out.println(data);
+           System.out.print(data);
        } else  {
            Statics.GUI.sendProgress(data);
        }
@@ -208,7 +208,7 @@ public class Log {
      * @param data data to be written to screen in real time
      */
     public  static void LiveUpdate(String data) {
-        out.println(data);
+        out.print(data);
         if (Statics.GUI!=null) {
             Statics.GUI.sendProgress(data);
         }

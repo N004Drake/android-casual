@@ -277,9 +277,9 @@ public class CASUALMessageObject {
     public String toString(){
         StringBuilder sb = new StringBuilder();
         String n="\n";
-        sb.append(this.category).append(n);
-        sb.append("RequestTitle:").append(this.title).append(n);
-        sb.append("RequestBody:").append(this.messageText).append(n);
+        sb.append("[").append(this.category).append("] Title:").append(this.title).append(n);
+        sb.append("Message:").append(this.messageText.replace("\n","\\\\n")).append(n);
+        sb.append("press: ").append(this.expectedReturn).append(n);
         return sb.toString();
     }
     

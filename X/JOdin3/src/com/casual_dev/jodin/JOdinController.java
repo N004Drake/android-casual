@@ -36,7 +36,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -136,6 +135,13 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     Button donate;
     boolean ready = false;
 
+    @FXML
+    Button dismissLegal;
+    @FXML
+    AnchorPane legal;
+    @FXML
+    Button showLegal;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         CASUAL.Statics.GUI = this;
@@ -143,6 +149,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+                resetPassFail("");
                 deviceDisconnected();
                 checkFilesCheckboxes();
                 displaySurface.setVisible(false);
@@ -160,7 +167,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
             @Override
             public void run() {
                 boolean x = new HeimdallTools().installDriver();
-                new CASUALMessageObject("All Done>>>All done.\n\nReport: " + (x == true ? "Sucessful!" : "No Changes") + "\n\nIf you continue to have problems,"+(OSTools.isMac()?" ensure you have removed Samsung Kies from your computer.  You should also":"")+" reboot the device and the computer. ").showInformationMessage();
+                new CASUALMessageObject("All Done>>>All done.\n\nReport: " + (x == true ? "Sucessful!" : "No Changes") + "\n\nIf you continue to have problems," + (OSTools.isMac() ? " ensure you have removed Samsung Kies from your computer.  You should also" : "") + " reboot the device and the computer. ").showInformationMessage();
             }
         });
         t.start();
@@ -186,55 +193,104 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     @FXML
     private void pitPressed() {
-        pitLocation.setText(showFileChooser("Select PIT"));
-        checkFilesCheckboxes();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                pitLocation.setText(showFileChooser("Select PIT"));
+                checkFilesCheckboxes();
+            }
+        });
     }
 
     @FXML
     private void bootloaderPressed() {
-        bootloaderLocation.setText(showFileChooser("Select Bootloader"));
-        checkFilesCheckboxes();
-        if (!bootloaderLocation.getText().equals("")) {
-            bootloaderFlash.setSelected(true);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                bootloaderLocation.setText(showFileChooser("Select Bootloader"));
+                checkFilesCheckboxes();
+                if (!bootloaderLocation.getText().equals("")) {
+                    bootloaderFlash.setSelected(true);
+                }
+            }
+        });
     }
 
     @FXML
     private void pdaPressed() {
-        this.pdaLocation.setText(showFileChooser("Select PDA"));
-        checkFilesCheckboxes();
-        if (!pdaLocation.getText().equals("")) {
-            pdaFlash.setSelected(true);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                pdaLocation.setText(showFileChooser("Select PDA"));
+                checkFilesCheckboxes();
+                if (!pdaLocation.getText().equals("")) {
+                    pdaFlash.setSelected(true);
+                }
+            }
+        });
     }
 
     @FXML
     private void phonePressed() {
-        this.phoneLocation.setText(showFileChooser("Select Phone"));
-        checkFilesCheckboxes();
-        if (!phoneLocation.getText().equals("")) {
-            phoneFlash.setSelected(true);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                phoneLocation.setText(showFileChooser("Select Phone"));
+                checkFilesCheckboxes();
+                if (!phoneLocation.getText().equals("")) {
+                    phoneFlash.setSelected(true);
+                }
+            }
+        });
     }
 
     @FXML
     private void cscPressed() {
-        this.cscLocation.setText(showFileChooser("Select CSC"));
-        checkFilesCheckboxes();
-        if (!cscLocation.getText().equals("")) {
-            cscFlash.setSelected(true);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                cscLocation.setText(showFileChooser("Select CSC"));
+                checkFilesCheckboxes();
+                if (!cscLocation.getText().equals("")) {
+                    cscFlash.setSelected(true);
+                }
+            }
+        });
     }
 
     public void completePass() {
-        passFailLabel.setText("PASS");
-        passFailBox.setFill(Paint.valueOf("green"));
-        disableControls(false);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                passFailLabel.setText("PASS");
+                passFailBox.setFill(Paint.valueOf("green"));
+                disableControls(false);
+            }
+        });
     }
+    public void resetPassFail(final String message) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                passFailLabel.setText(message);
+                passFailBox.setFill(Paint.valueOf("#dfdfdf"));
+                disableControls(false);
+            }
+        });
+    }
+    
 
     public void completeFail() {
-        passFailLabel.setText("FAIL");
-        passFailBox.setFill(Paint.valueOf("red"));
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                passFailLabel.setText("FAIL");
+                passFailBox.setFill(Paint.valueOf("red"));
+            }
+        });
     }
 
     private void checkFilesCheckboxes() {
@@ -312,12 +368,12 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     }
 
     @FXML
-    private void displaySurface(final String[] message, final String[] buttonText,final boolean textbox) {
+    private void displaySurface(final String[] message, final String[] buttonText, final boolean textbox) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 mainSurface.setEffect(new GaussianBlur());
-                if (textbox){
+                if (textbox) {
                     inputText.setVisible(true);
                 } else {
                     inputText.setVisible(false);
@@ -395,35 +451,36 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     @Override
     public String displayMessage(CASUALMessageObject messageObject) {
+        Log.Level1Interaction(messageObject.toString());
         String[] message = new String[]{messageObject.title, messageObject.messageText};
         returnValue = null;
         switch (messageObject.category) {
             case ACTIONREQUIRED:
-                displaySurface(message, new String[]{"I did it", "I didn' do it"},false);
+                displaySurface(message, new String[]{"I did it", "I didn' do it"}, false);
                 break;
             case COMMANDNOTIFICATION:
-                displaySurface(message, new String[]{"OK"},false);
+                displaySurface(message, new String[]{"OK"}, false);
                 break;
             case TEXTINPUT:
-                displaySurface(message, new String[]{"OK","Cancel"},true);
+                displaySurface(message, new String[]{"OK", "Cancel"}, true);
                 break;
             case SHOWERROR:
-                displaySurface(message, new String[]{"OK"},false);
+                displaySurface(message, new String[]{"OK"}, false);
                 break;
             case SHOWINFORMATION:
-                displaySurface(message, new String[]{"OK"},false);
+                displaySurface(message, new String[]{"OK"}, false);
                 break;
             case SHOWYESNO:
-                displaySurface(message, new String[]{"Yes", "no"},false);
+                displaySurface(message, new String[]{"Yes", "no"}, false);
                 break;
             case TIMEOUT:
-                displaySurface(message, new String[]{"Ok"},false);
+                displaySurface(message, new String[]{"Ok"}, false);
                 break;
             case USERCANCELOPTION:
-                displaySurface(message, new String[]{"OK", "Cancel"},false);
+                displaySurface(message, new String[]{"OK", "Cancel"}, false);
                 break;
             case USERNOTIFICATION:
-                displaySurface(message, new String[]{"OK"},false);
+                displaySurface(message, new String[]{"OK"}, false);
                 break;
 
         }
@@ -468,9 +525,9 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+                resetPassFail("running");
                 disableControls(true);
                 if (pitLocation.getText().isEmpty()) {
-
                     String pitMessage = "Do you want me to obtain a PIT for you?>>>This application requires what is known as a` 'PIT file'.  The PIT file tells the application where to place files on your device.  If you don't have a PIT file, we can obtain one from your device";
                     boolean obtainPit = new CASUALMessageObject(pitMessage).showYesNoOption();
                     if (obtainPit) {
@@ -482,17 +539,20 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                         if (f.exists()) {
                             pitLocation.setText(f.getAbsolutePath());
                             disableControls(false);
+                            resetPassFail("waiting");
                             new CASUALMessageObject("Got it!>>>We obtained the PIT file and everything is ready to flash\n\n Click the start button again when you're ready. ").showInformationMessage();
                             return;
                         } else {
                             new CASUALMessageObject("Could not obtain pit.>>>We could not obtain the pit file. We tried, but it didn't work. ").showErrorDialog();
                             disableControls(false);
+                            resetPassFail("halted");
                             return;
                         }
 
                     } else {
                         new CASUALMessageObject("We can't continue without a PIT>>>We cannot continue without a PIT file.  Please select one or let CASUAL do it for you.").showInformationMessage();
                         disableControls(false);
+                        resetPassFail("halted");
                         return;
                     }
                 }
@@ -538,8 +598,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                         messageBox.appendText("\nWaiting for device");
                     }
                     String s = ht.run(runCommand, 9999999, false);
-                    messageBox.appendText(s);
-                    if (ht.checkErrorMessage(runCommand, s)){
+                    if (ht.checkErrorMessage(runCommand, s)) {
                         completePass();
                     } else {
                         completeFail();
@@ -630,8 +689,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-
-
     @Override
     public void setWindowBannerText(String text) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -670,48 +727,52 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     @FXML
     private void sendReport() {
-        Thread t=new Thread( new Runnable(){
+        Thread t = new Thread(new Runnable() {
             @Override
-            public void run(){
-                
-                    try {
-                        new CASUAL.network.Pastebin().doPosting();
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
+            public void run() {
 
-                    } catch (IOException ex) {
-                        Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (URISyntaxException ex) {
-                        Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                try {
+                    new CASUAL.network.Pastebin().doPosting();
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (URISyntaxException ex) {
+                    Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         t.setName("reporting error");
         t.start();
     }
- 
+
     @FXML
-    private void donatePressed(){
+    private void donatePressed() {
         CASUAL.network.LinkLauncher ll = new CASUAL.network.LinkLauncher("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WHZEN3FV6SKAA");
         ll.launch();
     }
 
     @Override
     public void sendString(String string) {
-    
+
     }
 
     @Override
-    public void sendProgress(final String data) {
-        Platform.runLater(new Runnable(){
+    public void sendProgress(String data) {
+        sendProgress(data, messageBox);
+    }
+
+    public void sendProgress(final String data, final TextArea messageBox) {
+        Platform.runLater(new Runnable() {
             @Override
-            public void run(){
-                char[] dataArray=data.toCharArray();
-                for (int c:dataArray){
-                    switch (c){
+            public void run() {
+                char[] dataArray = data.toCharArray();
+                for (int c : dataArray) {
+                    switch (c) {
                         case 8: //backspace
-                            String doc=messageBox.getText();
-                            doc=doc.substring(0, doc.length()-1);
+                            String doc = messageBox.getText();
+                            doc = doc.substring(0, doc.length() - 1);
                             messageBox.setText(doc);
                             break;
 
@@ -719,8 +780,38 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                             messageBox.appendText(data);
                     }
                 }
+                String[] test=messageBox.getText().split("\n");
+                String lastline=test[test.length-1];
+                if (lastline.startsWith("Uploading")){
+                    lastline=lastline.replace("Uploading ", "");
+                    passFailLabel.setText(lastline);
+                }
+                
 
             }
         });
     }
+
+    @FXML
+    private void showLegal() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                mainSurface.setEffect(new GaussianBlur());
+                legal.setVisible(true);
+            }
+        });
+    }
+
+    @FXML
+    private void dismissLegal() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                mainSurface.setEffect(null);
+                legal.setVisible(false);
+            }
+        });
+    }
+
 }
