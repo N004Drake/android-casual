@@ -53,6 +53,8 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     Button testButton;
 
     @FXML
+    private AnchorPane loading;
+    @FXML
     private Label passFailLabel;
     @FXML
     private AnchorPane displaySurface;
@@ -149,12 +151,14 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+                displaySurface.setVisible(false);
                 resetPassFail("");
                 deviceDisconnected();
                 checkFilesCheckboxes();
-                displaySurface.setVisible(false);
                 inputText.setPromptText("Enter Text Here");
                 new CASUAL.CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.heimdall.HeimdallTools());
+                loading.setVisible(false);
+                hideDisplaySurface();
             }
         });
         t.start();
@@ -420,6 +424,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         }
         inputText.setVisible(false);
         this.displaySurface.setVisible(false);
+        loading.setVisible(false);
 
     }
 
