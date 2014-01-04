@@ -71,6 +71,7 @@ public class CommandLineUI implements iCASUALUI {
         String title = messageObject.title;
         String messageText = messageObject.messageText;
         String retval = "";
+        Log.Level1Interaction(messageObject.toString());
         switch (messageType) {
             case INTERACTION_TIME_OUT:
                 return showTimeOutInteraction(messageObject, messageText, title);
@@ -133,8 +134,6 @@ public class CommandLineUI implements iCASUALUI {
     }
 
     private String showTimeOutInteraction(CASUALMessageObject messageObject, String messageText, String title) {
-
-            Log.Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText + "\n[RESPONSEEXPECTED]");
             String s = getCommandLineInput();
             if (s == null || s.equals("")) {
                 return "0";
@@ -147,7 +146,6 @@ public class CommandLineUI implements iCASUALUI {
         int n = 9999;
 
             while (n != 0 && n != 1) {
-                Log.Level1Interaction("[ACTIONREQUIRED][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit" + "\n[RESPONSEEXPECTED]");
                 retval = getCommandLineInput();
                 if (!retval.equals("q") && !retval.equals("Q") && !retval.equals("")) {
                     n = new CASUALMessageObject(messageText).showActionRequiredDialog();
@@ -163,8 +161,6 @@ public class CommandLineUI implements iCASUALUI {
 
     private String showUserCancelOptionInteraction(String title, String messageText) throws HeadlessException {
         int cancelReturn;
-
-            Log.Level1Interaction("[CANCELOPTION][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit" + "\n[RESPONSEEXPECTED]");
             String s = this.getCommandLineInput();
             if (s.equals("q") || s.equals("Q")) {
                 cancelReturn = 1;
@@ -177,27 +173,22 @@ public class CommandLineUI implements iCASUALUI {
 
     private void showUserNotificationInteraction(String title, String messageText) throws HeadlessException {
 
-            Log.Level1Interaction("[NOTIFICATION][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
     }
 
     private void showInformationInteraction(String messageText, String title) throws HeadlessException {
 
-            Log.Level1Interaction("[INFOMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
     }
 
     private void showErrorInteraction(String messageText, String title) throws HeadlessException {
-            Log.Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
 
     }
 
     private String showYesNoInteraction(String title, String messageText) throws HeadlessException {
-        Log.level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
 
             //display the messageText
-            Log.Level1Interaction("[YESNOOPTION][RETURN or n]" + title + "\n" + messageText + "\npress N for no" + "\n[RESPONSEEXPECTED]");
             String s = this.getCommandLineInput();
             if (s.equals("n") || s.equals("N")) {
                 return "false";
@@ -208,10 +199,8 @@ public class CommandLineUI implements iCASUALUI {
     }
 
     private String showInputDialog(String title, String messageText) throws HeadlessException {
-        Log.level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText + "\n[RESPONSEEXPECTED]");
         messageText = "<html>" + messageText.replace("\\n", "\n");
         
-            Log.Level1Interaction("[INPUT][ANY]" + title + messageText + "\n input:");
             return getCommandLineInput();
       
         //break; unreachable

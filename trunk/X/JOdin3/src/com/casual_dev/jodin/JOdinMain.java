@@ -7,7 +7,6 @@ package com.casual_dev.jodin;
 
 
 //NOTE: Runtime Error == Java is out of date. 
-import java.util.List;
 import java.util.Map;
 import javafx.application.Application;
 import javafx.event.EventHandler;

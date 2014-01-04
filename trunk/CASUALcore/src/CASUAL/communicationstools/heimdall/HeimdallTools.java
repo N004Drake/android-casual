@@ -141,7 +141,6 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
             default:
                 errored = true;
         }
-
         if (errored) {
 //TODO further action is required here
             //need halt command

@@ -33,7 +33,7 @@
             <Font name="Arial Bold" size="16.0" />
           </font>
         </Label>
-        <Button fx:id="testButton" layoutX="13.0" layoutY="585.0" minHeight="16.0" mnemonicParsing="false" onAction="#installDriverButton" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Install Drivers" />
+        <Button fx:id="testButton" layoutX="85.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#installDriverButton" opacity="0.79" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Install Drivers" />
         <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutX="15.0" layoutY="84.0" mouseTransparent="false" prefHeight="154.0" prefWidth="854.0" vbarPolicy="NEVER" visible="true">
           <content>
             <AnchorPane mouseTransparent="false" pickOnBounds="true" prefHeight="154.0" prefWidth="852.0">
@@ -77,7 +77,7 @@
                     </AnchorPane>
                   </content>
                 </TitledPane>
-                <Label fx:id="passFailLabel" alignment="CENTER" layoutX="18.0" layoutY="34.0" prefWidth="68.0" text="" textAlignment="CENTER">
+                <Label fx:id="passFailLabel" alignment="CENTER" layoutX="-2.0" layoutY="28.0" minHeight="16.000091552734375" prefHeight="31.0" prefWidth="109.0" text="RECOVERY" textAlignment="CENTER">
                   <font>
                     <Font name="Arial" size="18.0" />
                   </font>
@@ -195,12 +195,13 @@
             <Font name="Arial Bold" size="33.0" />
           </font>
         </Label>
-        <Button fx:id="reportProblem" layoutX="105.0" layoutY="586.0" mnemonicParsing="false" onAction="#sendReport" opacity="0.75" prefWidth="109.0" rotate="14.0" text="report problem" />
-        <Button fx:id="donate" layoutX="191.0" layoutY="585.0" minWidth="46.0" mnemonicParsing="false" onAction="#donatePressed" opacity="0.56" prefWidth="107.55675506591797" rotate="14.0" text="Donate" textOverrun="CLIP">
+        <Button fx:id="reportProblem" layoutX="178.0" layoutY="583.0" mnemonicParsing="false" onAction="#sendReport" opacity="0.7" prefWidth="109.0" rotate="14.0" text="report problem" />
+        <Button fx:id="donate" layoutX="264.0" layoutY="582.0" minWidth="46.0" mnemonicParsing="false" onAction="#donatePressed" opacity="0.56" prefWidth="107.55675506591797" rotate="14.0" text="Donate" textOverrun="CLIP">
           <font>
             <Font size="12.0" />
           </font>
         </Button>
+        <Button id="testButton" fx:id="showLegal" layoutX="5.0" layoutY="583.0" minHeight="16.0" mnemonicParsing="false" onAction="#showLegal" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Legal" />
       </children>
     </AnchorPane>
     <AnchorPane id="MessageGroup" fx:id="displaySurface" layoutX="-9.0" layoutY="-7.0" visible="false">
@@ -236,6 +237,31 @@
             <Label fx:id="messageTitle" font="$x3" layoutX="23.0" layoutY="14.0" prefHeight="75.0" prefWidth="854.0" text="This is a Message How do you react?" textFill="#52ff00" />
             <TextArea fx:id="messageDisplay" editable="false" layoutX="37.0" layoutY="98.0" opacity="1.0" prefHeight="454.0" prefWidth="546.0" style="    -fx-font: 25px &quot;Arial&quot;;&#10;    -fx-padding: 15;&#10;    -fx-background-color: rgba(50,0,50,.3);&#10;    -fx-text-fill: #44FF44;" text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" wrapText="true" />
             <TextField fx:id="inputText" layoutX="37.0" layoutY="453.0" onAction="#sendReport" prefHeight="70.0" prefWidth="546.0" style="-fx-font-size: 40pt;&#10;-fx-text-fill: lime;&#10;" text="" />
+          </children>
+        </AnchorPane>
+      </children>
+    </AnchorPane>
+    <AnchorPane fx:id="legal" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="883.0" visible="false">
+      <children>
+        <ScrollPane layoutX="1.0" layoutY="1.0" opacity="0.89" prefHeight="617.7518920898438" prefWidth="882.0">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+          </content>
+          <effect>
+            <Lighting diffuseConstant="0.5238095238095238" specularConstant="0.665079365079365" specularExponent="6.666666666666666" surfaceScale="1.0238095238095237">
+              <bumpInput>
+                <Shadow />
+              </bumpInput>
+              <light>
+                <javafx.scene.effect.Light.Spot color="#fdffff" pointsAtX="400.0" pointsAtY="400.0" pointsAtZ="-100.0" x="100.0" y="100.0" z="100.0" />
+              </light>
+            </Lighting>
+          </effect>
+        </ScrollPane>
+        <AnchorPane layoutX="0.0" layoutY="1.0" prefHeight="618.0" prefWidth="883.0" visible="true">
+          <children>
+            <Button fx:id="dismissLegal" font="$x3" layoutX="726.0" layoutY="531.0" minHeight="60.0" mnemonicParsing="false" onAction="#dismissLegal" prefHeight="60.0" prefWidth="125.0" text="OK" />
+            <TextArea layoutX="59.0" layoutY="31.0" prefHeight="450.0" prefWidth="738.0" style="    -fx-font: 18px &quot;Arial&quot;;&#10;&#10;    -fx-text-fill: #AAAAFF;&#10;    -fx-padding: 15;&#10;    -fx-background-color: rgba(0,0,0,.0);" text="JOdin3 CASUAL flashes Samsung Odin files on Windows, Linux and Mac&#10;Copyright (C) 2013  Adam Outler&#10;Development: Adam Outler &lt;adamoutler@gmail.com&gt;&#10;Security &amp; Drivers: Jeremy Loper &lt;jrloper@gmail.com&gt;&#10;Web Infrastructure: Logan Ludington &lt;loglud@logatech.org&gt;&#10;&#10; This program is free software: you can redistribute it and/or modify&#10; it under the terms of the GNU General Public License as published by&#10; the Free Software Foundation, either version 3 of the License, or&#10; (at your option) any later version.&#10;&#10; This program is distributed in the hope that it will be useful,&#10; but WITHOUT ANY WARRANTY; without even the implied warranty of&#10; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#10; GNU General Public License for more details.&#10;&#10; You should have received a copy of the GNU General Public License&#10; along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#10; &#10;This project includes distributable forms of:&#10;ADB, Heimdall, Fastboot, and busybox&#10;&#10;&#10;This project contains Fastboot&#10;Copyright (C) 2008 The Android Open Source Project&#10; All rights reserved.&#10;  Redistribution and use in source and binary forms, with or without&#10; modification, are permitted provided that the following conditions&#10; are met:&#10;  * Redistributions of source code must retain the above copyright&#10;    notice, this list of conditions and the following disclaimer.&#10;  * Redistributions in binary form must reproduce the above copyright&#10;    notice, this list of conditions and the following disclaimer in&#10;    the documentation and/or other materials provided with the &#10;  distribution.&#10;  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS&#10; &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT&#10; LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS&#10; FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE&#10; COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,&#10; INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,&#10; BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS&#10; OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED &#10; AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,&#10; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT&#10; OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF&#10; SUCH DAMAGE.&#10;&#10;This project contains ADB&#10;Copyright (C) 2008 The Android Open Source Project&#10; All rights reserved.&#10;  Redistribution and use in source and binary forms, with or without&#10; modification, are permitted provided that the following conditions&#10; are met:&#10;  * Redistributions of source code must retain the above copyright&#10;    notice, this list of conditions and the following disclaimer.&#10;  * Redistributions in binary form must reproduce the above copyright&#10;    notice, this list of conditions and the following disclaimer in&#10;    the documentation and/or other materials provided with the &#10;  distribution.&#10;  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS&#10; &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT&#10; LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS&#10; FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE&#10; COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,&#10; INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,&#10; BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS&#10; OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED &#10; AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,&#10; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT&#10; OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF&#10; SUCH DAMAGE.&#10; &#10;This project contains Heimdall&#10;Copyright (c) 2010-2012, Benjamin Dobell, Glass Echidna&#10;http://www.glassechidna.com.au/&#10;This software is provided free of charge. Copying and redistribution is&#10;encouraged. If you appreciate this software and you would like to support future&#10;development please consider donating: http://www.glassechidna.com.au/donate/&#10;Heimdall utilises libusb-1.0 for all USB communication:&#10;    http://www.libusb.org/&#10;libusb-1.0 is licensed under the LGPL-2.1:&#10;    http://www.gnu.org/licenses/licenses.html#LGPL&#10;&#10;This project contains Busybox&#10;BusyBox v1.20.2 (Ubuntu 1:1.20.0-8ubuntu1) multi-call binary.&#10;Copyright (C) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko&#10;and others. Licensed under GPLv2.&#10;See source distribution for full notice.&#10;" visible="true" wrapText="true" />
           </children>
         </AnchorPane>
       </children>

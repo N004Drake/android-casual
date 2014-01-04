@@ -33,19 +33,7 @@ public class HeimdallErrorHandler {
     
     
     public HeimdallTools.CommandDisposition doErrorCheck(String[] command, String result){
-
-        int heimdallError = errorCheckHeimdallOutput(result);
-        if (heimdallError == 0) {
-            return HeimdallTools.CommandDisposition.HALTSCRIPT;
-        } else if (heimdallError == 1) {
-            return HeimdallTools.CommandDisposition.NOACTIONREQUIRED;
-        } else if (heimdallError == 2) {
-            return HeimdallTools.CommandDisposition.RUNAGAIN;
-        } else if (heimdallError == 3){
-            return HeimdallTools.CommandDisposition.ELEVATIONREQUIRED;
-        } else if (heimdallError == 4){
-            return HeimdallTools.CommandDisposition.INSTALLDRIVERS;
-        } else return HeimdallTools.CommandDisposition.NOACTIONREQUIRED;
+        return errorCheckHeimdallOutput(result);
     }
         
     private void doErrorReport(String[] command, String result, HeimdallTools heimdallTools) {
@@ -72,33 +60,59 @@ public class HeimdallErrorHandler {
      *
      * @author Jeremy Loper jrloper@gmail.com
      */
-    private int errorCheckHeimdallOutput(String heimdallOutput) {
-        if (heimdallOutput.startsWith("Usage:"))  return 1;
+    private HeimdallTools.CommandDisposition errorCheckHeimdallOutput(String heimdallOutput) {
+        if (heimdallOutput.startsWith("Usage:"))  {
+            Log.level0Error("Did you intend to run a blank heimdall command without valid parameters?");
+            return HeimdallTools.CommandDisposition.NOACTIONREQUIRED;
+        }
         
-        for (String code : HeimdallErrorHandler.epicFailures) if (heimdallOutput.contains(code)) return 0;
+        for (String code : HeimdallErrorHandler.epicFailures) {
+            if (heimdallOutput.contains(code)) {
+                Log.level0Error("ANALYSIS DETECTED ERROR:"+ code);
+                return HeimdallTools.CommandDisposition.HALTSCRIPT;
+            }
+        }
         
-        for (String code : HeimdallErrorHandler.errFail) if (heimdallOutput.contains(code)) return 0;
+        for (String code : HeimdallErrorHandler.errFail){
+            if (heimdallOutput.contains(code)) {
+                Log.level0Error("ANALYSIS DETECTED ERROR:"+ code);
+                return HeimdallTools.CommandDisposition.HALTSCRIPT;
+            }
+        }
         
         if (heimdallOutput.contains("Failed to detect compatible download-mode device")) {
-            return 0;
+            Log.level0Error("ANALYSIS DETECTED ERROR: Device not in download mode or cable is borked.");
+            return HeimdallTools.CommandDisposition.NOACTIONREQUIRED;
         }
         
         if (heimdallOutput.contains(" failed!")) {
+            Log.level0Error("Heimdall Failure Detected");
             if (heimdallOutput.contains("Claiming interface failed!")) {
+                Log.level0Error("Claiming Interface failure");
                 new CASUALMessageObject(null, "@interactionRestartDownloadMode").showActionRequiredDialog();
-                return 2;
+                return HeimdallTools.CommandDisposition.RUNAGAIN;
             }
             
-            if (heimdallOutput.contains("Setting up interface failed!")) return 2;
+            if (heimdallOutput.contains("Setting up interface failed!")){
+                Log.level0Error("Setting up interface failure");
+                return HeimdallTools.CommandDisposition.RUNAGAIN;
+            }
             
             if (heimdallOutput.contains("Protocol initialisation failed!")) {
                 CASUALScriptParser cLang = new CASUALScriptParser();
                 cLang.executeOneShotCommand("$HALT $ECHO A random error occurred while attempting initial communications with the device.\nYou will need disconnect USB and pull your battery out to restart your device.\nDo the same for CASUAL.");
-                return 2;
+                Log.level0Error("Protocol Init failure");
+                return HeimdallTools.CommandDisposition.RUNAGAIN;
             }
-            if (heimdallOutput.contains("upload failed!")) return 2;
+            if (heimdallOutput.contains("upload failed!")) {
+                Log.level0Error("Upload Failure");
+                return HeimdallTools.CommandDisposition.RUNAGAIN;
+            }
         }
-        if (heimdallOutput.contains("Flash aborted!")) return 2;
+        if (heimdallOutput.contains("Flash aborted!")){
+            Log.level0Error("Flash Aborted");
+            return HeimdallTools.CommandDisposition.RUNAGAIN;
+        }
         
         if (heimdallOutput.contains("libusb error")) {
             int startIndex = heimdallOutput.lastIndexOf("libusb error");
@@ -106,15 +120,24 @@ public class HeimdallErrorHandler {
             while (heimdallOutput.charAt(startIndex) != '\n') {
                 if (heimdallOutput.charAt(startIndex) == '-') {
                     String retVal = examineLibusbError(heimdallOutput, startIndex);
-                    if(retVal.contains("LIBUSB_ERROR_NOT_SUPPORTED") && OSTools.isWindows()) return 3;//Install driver
-                    else if(retVal.contains("LIBUSB_ERROR_ACCESS") && OSTools.isLinux()) return 4;//Elevate Heimdall Command
-                    else if(retVal.contains("LIBUSB_ERROR_OTHER")) return 1;//Other libUSB Error, Halt
-                    else return 2;//Hit me baby, one more time
+                    if(retVal.contains("LIBUSB_ERROR_NOT_SUPPORTED") && OSTools.isWindows()){
+                        Log.level0Error("LIBUSB error not supported.  Installing drivers. ");
+                        return HeimdallTools.CommandDisposition.INSTALLDRIVERS;
+                    }//Install driver
+                    else if(retVal.contains("LIBUSB_ERROR_ACCESS") && OSTools.isLinux()){
+                        Log.level0Error("permissions elevation required");
+                        return HeimdallTools.CommandDisposition.ELEVATIONREQUIRED;
+                    }//Elevate Heimdall Command
+                    else if(retVal.contains("LIBUSB_ERROR_OTHER")) {
+                        Log.level0Error("Random LIBUSB error detected. ");
+                        return HeimdallTools.CommandDisposition.RUNAGAIN;
+                    }//Other libUSB Error, Halt
+                    else return HeimdallTools.CommandDisposition.RUNAGAIN;//Hit me baby, one more time
                 }
                 startIndex++;
             }
         }
-        return 0;
+        return HeimdallTools.CommandDisposition.NOACTIONREQUIRED;
     }
 
     /**
