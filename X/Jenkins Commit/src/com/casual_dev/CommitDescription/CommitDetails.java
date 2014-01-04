@@ -74,6 +74,15 @@ public class CommitDetails {
      */
     boolean modBranch = false;
 
+    /**
+     * changes were made to CASUALInstrumentation
+     */
+    boolean modInstrumentation=false;
+    
+    /**
+     * changes were made to Jodin3
+     */
+     boolean modJodin3;
     private String trunkHeader() {
         String[] credit = new String[]{
             "Just now, " + culprit + " committed Revision " + revision,
@@ -162,12 +171,24 @@ public class CommitDetails {
         if (this.modCASUALCore) {
             partsChanged++;
         }
+        if (this.modJodin3){
+            partsChanged++;
+        }
+        if (this.modInstrumentation){
+            partsChanged++;
+        }
 
         if (partsChanged == 0) {
             sb.append(" a rather new project. ");
         } else if (partsChanged == 1) {
             if (modBranch) {
                 sb.append(" a branch");
+            }
+            if (modInstrumentation){
+                sb.append(" CASUAL Instrumentation");
+            }
+            if (modJodin3){
+                sb.append(" JOdin3");
             }
             if (modCASCADE) {
                 sb.append(" CASCADE");

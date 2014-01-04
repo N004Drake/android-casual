@@ -7,6 +7,7 @@ package com.casual_dev.jodin;
 
 
 //NOTE: Runtime Error == Java is out of date. 
+import java.awt.Image;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -35,7 +36,6 @@ public class JOdinMain extends Application {
         stage.setTitle("JODIN3      powered by Heimdall and CASUAL");
         stage.setResizable(false);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
             public void handle(WindowEvent event) {
                 stage.close();
 

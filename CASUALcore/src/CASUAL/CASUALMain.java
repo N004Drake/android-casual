@@ -74,7 +74,7 @@ public final class CASUALMain {
         String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
 
-        Log.level2Information("CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
+        System.out.println("CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
                 + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
                 + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
                 + "    and you are welcome to redistribute it, under certain conditions; run\n"

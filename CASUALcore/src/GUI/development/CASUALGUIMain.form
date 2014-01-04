@@ -82,7 +82,7 @@
     </Menu>
   </NonVisualComponents>
   <Properties>
-    <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
@@ -121,7 +121,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="DonateButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="informationScrollPanel" alignment="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="informationScrollPanel" alignment="1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -265,14 +265,10 @@
       <SubComponents>
         <Component class="javax.swing.JTextPane" name="ProgressArea">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&lt;html&gt;"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
               <Color id="Text Cursor"/>
             </Property>
           </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
-          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

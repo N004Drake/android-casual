@@ -29,7 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JTextPane;
-import javax.swing.text.StyledDocument;
 
 /**
  * Statics is used for any type of static variable It is the Static Class for
@@ -100,11 +99,7 @@ public class Statics {
      */
     public static iCASUALUI GUI; //Static reference to GUI input/output device
 
-    //TODO: replace this with an interface as JTextPane is not supported on all platforms
-    /**
-     * the Progress area for CASUAL's user interface.
-     */
-    public static JTextPane ProgressPane; //used by log to update Progress
+
 
     /**
      * slash provides a universal reference to the / on linux/mac and a \ on Windows. 
@@ -115,12 +110,7 @@ public class Statics {
      */
     public static String PreProgress = "";  //place to log data before GUI comes up
 
-    //TODO: replace this with an interface as StyledDocument is not supported on all platforms
-    /**
-     * progress document used to document progress.
-     */
-    public static StyledDocument ProgressDoc; //anything in here is displayed to GUI. this is main output device.
-    //Folders
+
 
     /**
      * default SCRIPTS location for CASUAL.
@@ -214,11 +204,8 @@ public class Statics {
         setStatus("working");
         outputGUIVerbosity = 2;
         outputLogVerbosity = 4;
-        if (!java.awt.GraphicsEnvironment.isHeadless()) {
-            ProgressPane = new JTextPane();
-        }
+
         PreProgress = "";
-        ProgressDoc = null;
         SelectedScriptFolder = "";
         WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         CASUALStartupTasks.scriptRunLock = new CASUAL.misc.MandatoryThread();

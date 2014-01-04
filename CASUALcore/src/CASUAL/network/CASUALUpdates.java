@@ -100,19 +100,19 @@ public class CASUALUpdates {
             int lastlength = 0;
             int kilobytes;
             int offset = 1;
-            if (Statics.ProgressDoc != null) {
-                offset = Statics.ProgressDoc.getLength();
-            }
+            
+
             try {
                 int bytesRead;
                 while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
                     output.write(buffer, 0, bytesRead);
                     bytes = bytes + bytesRead;
+                    int length = String.valueOf(1000).length();
                     kilobytes = bytes / 1024;
-                    if (Statics.ProgressDoc != null) {
-                        Log.replaceLine(("..." + Integer.toString(kilobytes)) + "kb ", offset, lastlength);
+                    for (int i=0; i<length; i++){
+                        Log.progress("\b");  //backspace over the old value
                     }
-                    lastlength = 6 + Integer.toString(kilobytes).length();
+                    Log.progress(Integer.toString(kilobytes) + "kb "); //write new
 
                 }
             } finally {

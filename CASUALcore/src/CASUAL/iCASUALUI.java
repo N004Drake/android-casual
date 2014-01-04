@@ -18,7 +18,6 @@ package CASUAL;
 
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
-import java.awt.image.BufferedImage;
 
 /**
  *provides an interface for a main UI in CASUAL.
@@ -47,6 +46,15 @@ import java.awt.image.BufferedImage;
  * @author Adam Outler adamoutler@gmail.com
  */
 public interface iCASUALUI {
+    
+        /**
+     *Categories of possible messages. 
+     */
+    public enum MessageCategory{
+        TIMEOUT, ACTIONREQUIRED, USERCANCELOPTION, USERNOTIFICATION,
+        SHOWINFORMATION, SHOWERROR, SHOWYESNO, TEXTINPUT, COMMANDNOTIFICATION
+    }
+    
     /**
      * returns true if the UI is ready.
      * @return true if ui is ready
@@ -234,12 +242,7 @@ public interface iCASUALUI {
      * @param icon image to display
      * @param text text if image cannot be displayed
      */
-    /**
-     *
-     * @param icon
-     * @param text
-     */
-    void setWindowBannerImage(BufferedImage icon, String text);
+
 
     /**
      * sets the main window banner text if an image is not used
@@ -272,8 +275,24 @@ public interface iCASUALUI {
 
 
 
-
+    /**
+     * used during unzip as a progress indicator
+     * @param i 
+     */
     public void setBlocksUnzipped(int i);
+
+    /**
+     * sends a message to the user console
+     * @param string String to send
+     */
+    public void sendString(String string);
+
+    /**
+     * sends a bit of data at a time, such as a character from a terminal command.
+     * b should backspace. \r should erase line.
+     * @param data data to be sent to UI
+     */
+    public void sendProgress(String data);
     
     
     

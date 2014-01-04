@@ -176,7 +176,7 @@ public class HeimdallInstall {
         Log.level4Debug("deployHeimdallForWindows- verifying Heimdall deployment");
         if (ht.fileIsDeployedProperly(expectedLocation)) { //try with redist files
             Log.level4Debug("heimdall install sucessful");
-            return tempFolder;
+            return expectedLocation;
         }
         return null;
 

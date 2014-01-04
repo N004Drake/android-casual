@@ -67,7 +67,7 @@ public class CommandLineUI implements iCASUALUI {
 
    @Override
     public String displayMessage(CASUALMessageObject messageObject) {
-        int messageType = messageObject.messageType;
+        int messageType = messageObject.getMessageType();
         String title = messageObject.title;
         String messageText = messageObject.messageText;
         String retval = "";
@@ -280,9 +280,6 @@ public class CommandLineUI implements iCASUALUI {
     public void setStatusMessageLabel(String text) {
     }
 
-    @Override
-    public void setWindowBannerImage(BufferedImage icon, String text) {
-    }
 
     @Override
     public void setWindowBannerText(String text) {
@@ -315,5 +312,13 @@ public class CommandLineUI implements iCASUALUI {
     public void setBlocksUnzipped(int blocks) {
         msg("Progress percent:"+blocks);
 
+    }
+
+    @Override
+    public void sendString(String string) {
+    }
+
+    @Override
+    public void sendProgress(String data) {
     }
 }
