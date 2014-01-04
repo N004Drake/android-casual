@@ -11,7 +11,7 @@
   <children>
     <Label layoutX="218.0" layoutY="309.0" rotate="350.0" text="monitor status">
       <font>
-        <Font name="Ubuntu" size="20.0" fx:id="x1" />
+        <Font size="20.0" fx:id="x1" />
       </font>
     </Label>
     <TextArea fx:id="monitorStatus" layoutX="208.0" layoutY="334.0" prefHeight="90.22264099121094" prefWidth="154.0" rotate="349.0" wrapText="true" />
@@ -25,5 +25,6 @@
     <Button fx:id="startFastboot" layoutX="255.0" layoutY="231.0" mnemonicParsing="false" onAction="#startFastboot" text="fastboot" />
     <Button layoutX="229.0" layoutY="295.0" mnemonicParsing="false" onAction="#resetConnection" rotate="351.0" text="reset" />
     <Button layoutX="257.0" layoutY="260.0" mnemonicParsing="false" onAction="#startHeimdall" text="heimdall" />
+    <Button fx:id="pastebinButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#pastebin" text="Pastebin" />
   </children>
 </AnchorPane>
