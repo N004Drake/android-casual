@@ -95,7 +95,8 @@ public class PitEntry {
     }
 
     /**
-     * binary type
+     * The major hardware structure that the partition belongs to. Call
+     * processor or App Processor
      *
      * @return type of binary
      */
@@ -162,11 +163,11 @@ public class PitEntry {
     }
 
     /**
-     * Partition Attributes
+     * Partition Type bootloader, data, bct... This is the type of partition.
      *
      * @return attributes field in PIT
      */
-    public int getAttributes() {
+    public int getPartitionType() {
         return (part_type);
     }
 
@@ -286,6 +287,24 @@ public class PitEntry {
     public String getPartitionName() {
         String partitionName = "";
         return new String(part_name).trim();
+    }
+    
+    /**
+     * Proper name of partition used to reference flash location
+     *
+     * @return partition name
+     */
+    public String getOdinFlashablePartitionName() {
+        String partitionName = "";
+        for (int i = 0; i < part_name.length; i++) {
+            //get first part of filename
+            if (part_name[i] == 0) { //break on first \0 byte.
+                break;
+            } else {
+                partitionName = partitionName + part_name[i];
+            }
+        }
+        return new String(partitionName);
     }
 
     /**
@@ -491,6 +510,8 @@ public class PitEntry {
      */
     public String getPartitionTypeFriendlyName() {
         switch (this.part_type) {
+            case 0:
+                return "Raw";
             case 1:
                 return "Bct";
             case 2:
@@ -508,7 +529,7 @@ public class PitEntry {
             case 9:
                 return "GPT";
             default:
-                return "unknown";
+                return "undocumented";
         }
     }
 
@@ -533,7 +554,7 @@ public class PitEntry {
             case 5:
                 return "EXT4";
             default:
-                return "unknown";
+                return "undocumented";
         }
     }
 
@@ -543,7 +564,7 @@ public class PitEntry {
      *
      * @return the name of the hardware device
      */
-    public String getHardwareTypeFriendlyName() {
+    public String getDeviceTypeFriendlyName() {
         switch (this.device_type) {
             case 1:
                 return "NAND";
@@ -556,7 +577,7 @@ public class PitEntry {
             case 5:
                 return "NAND_X16";
             default:
-                return "unknwon";
+                return "undocumented";
 
         }
     }
@@ -572,18 +593,44 @@ public class PitEntry {
         long bytes = (long) block_count * 512;
         int unit = si ? 1000 : 1024;
         if (bytes < unit) {
-            return bytes + " B";
+            return bytes + "B";
         }
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+        return String.format("%.1f%sB", bytes / Math.pow(unit, exp), pre);
 
     }
 
+    /**
+     * gets the partition Description of the entry in human readable form.
+     *
+     * @return partition description.
+     */
     public String getPartitionDescritpion() {
         String n = System.getProperty("line.separator");
         StringBuilder sb = new StringBuilder();
-        sb.append("This ").append(this.getFilesystemTypeFriendlyName()).append(" format ").append(this.getPartitionTypeFriendlyName()).append(" partition resides on the ").append(this.getBinFriendlyType()).append(" ").append(this.getHardwareTypeFriendlyName()).append(".");
+        sb.append("The ").append(this.getPartitionFriendlyName());
+        sb.append(" partition, ");
+        if (this.getPartID() >= 0) {
+            sb.append("identified as partition number ").append(this.getPartID());
+        } else {
+            sb.append(" is invalid");
+            return sb.toString();
+        }
+        sb.append(", is ").append(getBlockCountFriendly(true)).append(" in size and carries a ")
+                .append(this.getFilesystemTypeFriendlyName())
+                .append(" format. This partition resides on the ")
+                .append(this.getPartitionTypeFriendlyName())
+                .append(" section of the ")
+                .append(this.getBinFriendlyType()).append(" ")
+                .append(this.getDeviceTypeFriendlyName()).append(".");
+
+        if (!this.getFriendlyFileName().equals("") && !this.getFriendlyFileName().startsWith("-")) {
+            sb.append(" It identifies itself to Odin as ").append(this.getFriendlyFileName()).append(".");
+        }
+        if (this.file_offset != 0 && this.file_size != 0) {
+            sb.append("The partition carries a filesize of ").append(this.file_size).append(" and an offset of ").append(this.file_offset).append(".");
+        }
         return sb.toString();
     }
 
@@ -611,16 +658,16 @@ public class PitEntry {
         sb.append("Block Size: ").append(this.block_count).append(" (").append(getBlockCountFriendly(true)).append(")").append(n);
         sb.append("Block range: ").append(this.block_start).append(" - ").append(getPartitionEndBlock());
         sb.append(" (hex 0x").append(Integer.toHexString(this.block_start)).append(" - 0x").append(Integer.toHexString(getPartitionEndBlock())).append(")").append(n);
-        sb.append("PartType: ").append(this.part_type);
-        sb.append("   FilesystemType: ").append(this.filesystem);
-        sb.append("   BinType: ").append(this.bin_type);
-        sb.append("   DevType: ").append(this.device_type).append(n);;
+        sb.append("FilesystemType: ").append(this.filesystem);
+        sb.append("   PartType: ").append(this.part_type);
+        sb.append("   DevType: ").append(this.device_type);
+        sb.append("   BinType: ").append(this.bin_type).append(n);
         sb.append("Offset:").append(this.file_offset);
         sb.append("   Size: ").append(this.file_size);
         sb.append("   FOTA: ").append(this.getFOTAFriendlyName()).append(n);
         sb.append(getPartitionDescritpion());
         if (this.getFotaName().contains("remained")) {
-            sb.append(" The partition will expand to fill the remainder of the ").append(this.getHardwareTypeFriendlyName()).append(".");
+            sb.append(" The partition will expand to fill the remainder of the ").append(this.getDeviceTypeFriendlyName()).append(".");
         }
         sb.append(n).append(n).append(n);
         return sb.toString();

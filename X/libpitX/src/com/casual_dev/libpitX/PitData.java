@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Pitdata provides a way to work with the header information of the PIT file
@@ -35,11 +36,21 @@ import java.util.ArrayList;
 public class PitData {
 
     /**
-     * Magic Number to identify an Odin File
+     * Magic Number to identify an Odin File.
      */
     public static final int FILE_IDENTIFIER = 0x12349876;
-    private int entryCount; // 0x04
+    /**
+     * number of entries available to be read.
+     */
+    public int entryCount;
+    /**
+     * PIT Type in Char array. eg. new char[]{C,O,M,_,T,A,R,2}
+     */
     char[] fileType = new char[8];
+    /**
+     * Pit name in char array. eg new char[]{M,S,M,8,9,2,0,\0,\0,\0,\0,\0} where
+     * \0 is a 0-byte
+     */
     char[] pitName = new char[12];
 
     // Entries start at 0x1C
@@ -47,7 +58,7 @@ public class PitData {
     ByteArrayOutputStream signature = new ByteArrayOutputStream();
 
     /**
-     * Constructor for new PIT file
+     * Constructor for new PIT file.
      */
     public PitData() {
     }
@@ -95,7 +106,7 @@ public class PitData {
                 fileType[i] = (char) pitInputStream.read();
             }
 
-            //read 8 bytes of phone name
+            //read 12 bytes of phone name
             for (int i = 0; i < 12; i++) {
                 pitName[i] = (char) pitInputStream.read();
             }
@@ -164,7 +175,7 @@ public class PitData {
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getBinType()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getDevType()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getPartID()));
-                dataOutputStream.writeInt(Integer.reverseBytes(entry.getAttributes()));
+                dataOutputStream.writeInt(Integer.reverseBytes(entry.getPartitionType()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getFilesystem()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getBlockStart()));
                 dataOutputStream.writeInt(Integer.reverseBytes(entry.getBlockCount()));
@@ -223,7 +234,7 @@ public class PitData {
             PitEntry entry = entries.get(i);
             String s = entry.getPartitionName().trim();
 
-            if (new String(entry.getPartitionName()).equals(partitionName)) {
+            if (entry.getPartitionName().equals(partitionName)) {
                 return (entry);
             }
         }
@@ -383,6 +394,100 @@ public class PitData {
         }
         sb.append(n).append(n);
         return sb.toString();
+    }
+
+    /**
+     * Resizes a pitentry and adjusts starting blocks of all successive
+     * pitentries.
+     *
+     * @param partName name of partition to be resized
+     * @param changeToSize the amount to change the entry This can be positive
+     * or negative and will change the size relatively.
+     * @throws java.lang.ClassNotFoundException
+     * @see #resizePartition(CASUAL.archiving.libpit.PitEntry, int) 
+     */
+    public void resizePartition(String partName, int changeToSize) throws ClassNotFoundException {
+        resizePartition(this.findEntry(partName), changeToSize);
+    }
+
+    /**
+     * Resizes a pitentry and adjusts starting blocks of all successive
+     * pitentries.
+     *
+     * @param entry The entry to be resized
+     * @param changeToSize the amount to change the entry This can be positive
+     * or negative and will change the size relatively.
+     * @throws java.lang.ClassNotFoundException
+     */
+    public void resizePartition(PitEntry entry, int changeToSize) throws ClassNotFoundException {
+        PitEntry[] sorted = sortEntriesByBlockLocation();
+        //get entry location
+        int entryLocation = -1;
+        String type = entry.getPartitionTypeFriendlyName();
+        for (int i = 0; i < sorted.length; i++) {
+            if (entry == sorted[i]) {
+                entryLocation = i;
+                break;
+            }
+        }
+        //halt if not found
+        if (entryLocation == -1) {
+            throw new ClassNotFoundException("The PitEntry Specified was not found:" + entry);
+        }
+        //resize the partition
+        sorted[entryLocation].setBlockCount(sorted[entryLocation].getBlockCount() + changeToSize);
+        //adjust the offset of the remainders
+        for (int i = entryLocation + 1; i < sorted.length; i++) {
+            //ignore partitions on a different device
+            if (sorted[i].getPartitionTypeFriendlyName().equals(type)) {
+                sorted[i].setBlockStart(sorted[i].getBlockStart() + changeToSize);
+            }
+        }
+        //put each entry back into the original array
+        for (PitEntry finalEntry : sorted) {
+            for (int i = 0; i < entries.size(); i++) {
+                if (entries.get(i).getPartID() == finalEntry.getPartID()) {
+                    entries.set(i, finalEntry);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * returns an array of the PitEntries sorted by block location
+     *
+     * @return sorted PitEntries
+     */
+    public PitEntry[] sortEntriesByBlockLocation() {
+        boolean enumerated = false;
+        LinkedList<PitEntry> ll = new LinkedList<PitEntry>();
+        ll.addAll(entries);
+        //while not every entry is enumerated
+        while (!enumerated) {
+            enumerated = true;
+            int lastBlock = 0;
+            //for each entry
+            for (int i = 0; i < ll.size(); i++) {
+                //check
+                if (lastBlock < ll.get(i).getBlockStart()) {
+                    lastBlock = ll.get(i).getBlockStart();
+                } else {
+
+                    if (i != 0) {
+                        enumerated = false;
+                        // this entry needs to be bumped up
+                        ll.add(i - 2, ll.get(i));
+                        ll.remove(i + 1);
+                    }
+
+                }
+            }
+
+        }
+
+        PitEntry[] retval = ll.toArray(new PitEntry[ll.size()]);
+        return retval;
     }
 
 }
