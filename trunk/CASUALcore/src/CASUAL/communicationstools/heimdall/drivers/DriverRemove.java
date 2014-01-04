@@ -43,18 +43,23 @@ public class DriverRemove {
         Log.level2Information("uninstallCADI() Initializing");
         Log.level2Information("uninstallCADI() Scanning for CADI driver package(s)");
         
+        
+    }
+
+    public boolean removeDriver(){
         deleteOemInf();
         Log.level2Information("uninstallCADI() Scanning for orphaned devices");
+        boolean driverRemoved=true;
         for (String vid: windowsDriverBlanket) {
-            removeOrphanedDevices(vid);
+            driverRemoved=removeOrphanedDevices(vid);
         }
 
         Log.level2Information("removeDriver() Windows will now scan for hardware changes");
         if (!new DriverOperations().rescan()) {
             Log.level0Error("removeDriver() rescan() failed!");
         }
+        return driverRemoved;
     }
-
     /**
      * deleteOemInf parses output from devconCommand via regex to extract the
      * name of the *.inf file from Windows driver store. Extraction of the file

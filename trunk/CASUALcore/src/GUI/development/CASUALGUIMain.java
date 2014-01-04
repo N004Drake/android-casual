@@ -66,15 +66,12 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * Creates new form CASUALJFrame2
      */
     public CASUALGUIMain() {
-
+        notificationCASUALSound();
         initComponents();
-
         //set up place to log to for GUI
-        ProgressArea.setContentType("text/html");
-        Statics.ProgressPane = CASUALGUIMain.ProgressArea;
-        Statics.ProgressPane.setContentType("text/html");
-        Statics.ProgressDoc = Statics.ProgressPane.getStyledDocument();
+        //ProgressArea.setContentType("text/html");
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
+        
 
         CASUALStartupTasks.lockGUIformPrep = false;
 
@@ -122,7 +119,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
         FileChooser1.setDialogTitle("Select a CASUAL \"scr\" file");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -209,7 +206,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
         informationScrollPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Ubuntu", 1, 10))); // NOI18N
 
-        ProgressArea.setText("<html>");
         ProgressArea.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         informationScrollPanel.setViewportView(ProgressArea);
 
@@ -284,7 +280,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                                 .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(DonateButton))
-                            .addComponent(informationScrollPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(informationScrollPanel))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -499,7 +495,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     private javax.swing.JMenuItem MenuItemOpenScript;
     private javax.swing.JMenuItem MenuItemShowAboutBox;
     private javax.swing.JMenuItem MenuItemShowDeveloperPane;
-    public static javax.swing.JTextPane ProgressArea;
+    private javax.swing.JTextPane ProgressArea;
     private javax.swing.JLabel StatusLabel;
     private javax.swing.JComboBox<String> comboBoxScriptSelector;
     private javax.swing.JScrollPane informationScrollPanel;
@@ -646,12 +642,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * @param icon image to display
      * @param text text if image cannot be displayed
      */
-    /**
-     *
-     * @param icon
-     * @param text
-     */
-    @Override
     public void setWindowBannerImage(BufferedImage icon, String text) {
         windowBanner.setIcon(new ImageIcon(icon, text));
 
@@ -765,7 +755,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     
     @Override
     public String displayMessage(CASUALMessageObject messageObject) {
-        int messageType = messageObject.messageType;
+        int messageType = messageObject.getMessageType();
         String title = messageObject.title;
         String messageText = messageObject.messageText;
         String retval = "";
@@ -1027,4 +1017,32 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     public void setBlocksUnzipped(int i) {
         this.setInformationScrollBorderText("Unzipping:"+i);
     }
-}
+
+    @Override
+    public void sendString(String string) {
+        ProgressArea.setText(ProgressArea.getText().concat(string));
+     }
+
+
+    
+    
+    @Override
+    public void sendProgress(String data) {
+        char[] dataArray=data.toCharArray();
+        String doc=ProgressArea.getText();
+        for (int c:dataArray){
+            switch (c){
+                case 8: //backspace
+                    doc=doc.substring(0, doc.length()-1);
+                    break;
+
+                default:
+                    doc=doc.concat(data);
+            }
+        }
+        ProgressArea.setText(doc);
+    }
+        
+        
+    }
+

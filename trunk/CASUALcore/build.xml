@@ -180,7 +180,6 @@
             <manifest>
                 <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
-             <zipgroupfileset dir="dist/lib" includes="*.jar"/>
             <fileset dir="build/classes"/>
         </jar>
 
@@ -191,7 +190,6 @@
             <zipfileset src="${CASUALJAR}">
                 <exclude name="SCRIPTS/*"/>
             </zipfileset>
-             <zipgroupfileset dir="dist/lib" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
@@ -204,7 +202,6 @@
             <manifest>
                 <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
-            <zipgroupfileset dir="dist/lib" includes="*.jar"/>
             <fileset dir="src/" includes="SCRIPTS/Simple Reboot.scr" />
             <fileset dir="src/" includes="SCRIPTS/Simple Reboot.txt" />
         </jar>
@@ -225,7 +222,6 @@
             <manifest>
                 <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
-            <zipgroupfileset dir="dist/lib" includes="*.jar"/>
             <fileset dir="build/classes">
                 <exclude name="SCRIPTS/*"/>
                 <exclude name="**/*.java"/>

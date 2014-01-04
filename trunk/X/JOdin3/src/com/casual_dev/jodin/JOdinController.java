@@ -13,6 +13,7 @@ import CASUAL.caspac.Script;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.communicationstools.heimdall.odin.CorruptOdinFileException;
 import CASUAL.communicationstools.heimdall.odin.Odin;
+import CASUAL.iCASUALUI;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -142,6 +144,9 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+                
+                stage.getIcons().add(new Image(getClass().getResource("odinico.png").toExternalForm()));
+
                 deviceDisconnected();
                 checkFilesCheckboxes();
                 displaySurface.setVisible(false);
@@ -228,7 +233,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     public void completePass() {
         passFailLabel.setText("PASS");
         passFailBox.setFill(Paint.valueOf("green"));
-
+        disableControls(false);
     }
 
     public void completeFail() {
@@ -396,32 +401,32 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     public String displayMessage(CASUALMessageObject messageObject) {
         String[] message = new String[]{messageObject.title, messageObject.messageText};
         returnValue = null;
-        switch (messageObject.messageType) {
-            case CASUAL.iCASUALUI.INTERACTION_ACTION_REUIRED:
+        switch (messageObject.category) {
+            case ACTIONREQUIRED:
                 displaySurface(message, new String[]{"I did it", "I didn' do it"},false);
                 break;
-            case CASUAL.iCASUALUI.INTERACTION_COMMAND_NOTIFICATION:
+            case COMMANDNOTIFICATION:
                 displaySurface(message, new String[]{"OK"},false);
                 break;
-            case CASUAL.iCASUALUI.INTERACTION_INPUT_DIALOG:
+            case TEXTINPUT:
                 displaySurface(message, new String[]{"OK","Cancel"},true);
                 break;
-            case CASUAL.iCASUALUI.INTERACTION_SHOW_ERROR:
+            case SHOWERROR:
                 displaySurface(message, new String[]{"OK"},false);
                 break;
-            case CASUAL.iCASUALUI.INTERACTION_SHOW_INFORMATION:
+            case SHOWINFORMATION:
                 displaySurface(message, new String[]{"OK"},false);
                 break;
-            case CASUAL.iCASUALUI.INTERACTION_SHOW_YES_NO:
+            case SHOWYESNO:
                 displaySurface(message, new String[]{"Yes", "no"},false);
                 break;
-            case CASUAL.iCASUALUI.INTERACTION_TIME_OUT:
+            case TIMEOUT:
                 displaySurface(message, new String[]{"Ok"},false);
                 break;
-            case CASUAL.iCASUALUI.INTERACTION_USER_CANCEL_OPTION:
+            case USERCANCELOPTION:
                 displaySurface(message, new String[]{"OK", "Cancel"},false);
                 break;
-            case CASUAL.iCASUALUI.INTERACTION_USER_NOTIFICATION:
+            case USERNOTIFICATION:
                 displaySurface(message, new String[]{"OK"},false);
                 break;
 
@@ -536,13 +541,9 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                     if (!ht.isConnected()) {
                         messageBox.appendText("\nWaiting for device");
                     }
-                    String s = ht.run(runCommand, 9999999, true);
+                    String s = ht.run(runCommand, 9999999, false);
                     messageBox.appendText(s);
-                    if (s.endsWith("successful\n"
-                            + "\n"
-                            + "Ending session...\n"
-                            + "Rebooting device...\n"
-                            + "Releasing device interface...\n") || !s.contains("failed")) {
+                    if (ht.checkErrorMessage(runCommand, s)){
                         completePass();
                     } else {
                         completeFail();
@@ -633,10 +634,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void setWindowBannerImage(BufferedImage icon, String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
     @Override
     public void setWindowBannerText(String text) {
@@ -665,6 +663,8 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     @Override
     public void deviceMultipleConnected(int numberOfDevicesConnected) {
         connectedIndicator.setText("Disconnected");
+        connectedIndicator.setStyle("-fx-background-color: red;");
+
     }
 
     @Override
@@ -698,5 +698,33 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     private void donatePressed(){
         CASUAL.network.LinkLauncher ll = new CASUAL.network.LinkLauncher("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WHZEN3FV6SKAA");
         ll.launch();
+    }
+
+    @Override
+    public void sendString(String string) {
+    
+    }
+
+    @Override
+    public void sendProgress(final String data) {
+        Platform.runLater(new Runnable(){
+            @Override
+            public void run(){
+                char[] dataArray=data.toCharArray();
+                for (int c:dataArray){
+                    switch (c){
+                        case 8: //backspace
+                            String doc=messageBox.getText();
+                            doc=doc.substring(0, doc.length()-1);
+                            messageBox.setText(doc);
+                            break;
+
+                        default:
+                            messageBox.appendText(data);
+                    }
+                }
+
+            }
+        });
     }
 }

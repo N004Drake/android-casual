@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * @author Jeremy Loper jrloper@gmail.com
  */
 public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
-    
+
     //locations to resources within CASUAL. 
     static final String[] windowsLocation = new String[]{"/CASUAL/communicationstools/heimdall/resources/heimdall.exe", "/CASUAL/communicationstools/heimdall/resources/libusb-1.0.dll", "/CASUAL/communicationstools/heimdall/resources/msvcr110.dll", "/CASUAL/communicationstools/heimdall/resources/msvcp110.dll"};
     static final String[] macLocation = new String[]{"/CASUAL/communicationstools/heimdall/resources/heimdall-mac.dmg"};
@@ -60,11 +60,9 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
      * MAXIMUMRETRIESEXCEEDED: We've tried to continue four times now.
      *
      */
+    public enum CommandDisposition {
 
-    
-    
-    public enum CommandDisposition{
-        NOACTIONREQUIRED, RUNAGAIN,ELEVATIONREQUIRED, INSTALLDRIVERS, HALTSCRIPT, MAXIMUMRETRIES
+        NOACTIONREQUIRED, RUNAGAIN, ELEVATIONREQUIRED, INSTALLDRIVERS, HALTSCRIPT, MAXIMUMRETRIES
     }
 
     /**
@@ -79,91 +77,95 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         String shellReturn = run(detectCommand, 4000, true);
         if (shellReturn.contains(connectedString)) {
             Log.level3Verbose("Heimdall Device detected!");
-            errorCycles=100; //this removes the potential annoying error;
+            errorCycles = 100; //this removes the potential annoying error;
             return 1;
         }
         errorCycles++;
-        if(errorCycles==60){
+        if (errorCycles == 60) {
             new CASUALMessageObject("@interactionUnableToDetectDownloadMode").showInformationMessage();
         }
         return 0;
     }
-    
-    int errorCycles=0;
+
+    int errorCycles = 0;
+
     /**
      * {@inheritDoc}
      *
-     * obtains a CommandDisposition by analyzing the return value.  Takes action
-     * based on disposition.  
-     * 
+     * obtains a CommandDisposition by analyzing the return value. Takes action
+     * based on disposition.
+     *
      * @return {@inheritDoc}
      */
     @Override
     public boolean checkErrorMessage(String[] commandRun, String returnValue) {
-     CommandDisposition retval=new HeimdallErrorHandler().doErrorCheck(commandRun, returnValue);
-     errorCycles++;
-     boolean errored;
-     switch(retval){
-         case NOACTIONREQUIRED:
-             errorCycles=0;
-             errored=false;
-             break;
-         case RUNAGAIN:
-             //TODO run again here
-             errored=checkErrorMessage(commandRun,this.doElevatedHeimdallShellCommand(commandRun));
-             if (errorCycles>4){
-                 retval=CommandDisposition.MAXIMUMRETRIES;
-                 errored=true;
-             }
-             break;
-         case ELEVATIONREQUIRED:
-             errored=checkErrorMessage(commandRun,this.doElevatedHeimdallShellCommand(commandRun));
-             if (errorCycles>4){
-                 retval=CommandDisposition.MAXIMUMRETRIES;
-                 errored=true;
-             }
-             break;
-         case INSTALLDRIVERS:
-             errorCycles=0;
-             this.installDriver();
-             errored=checkErrorMessage(commandRun,this.doHeimdallShellCommand(commandRun));
-             break;
-         case HALTSCRIPT:
-             errored=true;
-             break;
-         case MAXIMUMRETRIES:
-             Log.level0Error("Heimdall has encountered an error we did not forsee");
-             errored=true;
-             break;
-         default:
-             errored=true;
-     }                  
+        //exit if this is a detection call
+        if (commandRun[1].equals("detect")) {
+            return true;
+        }
+        CommandDisposition retval = new HeimdallErrorHandler().doErrorCheck(commandRun, returnValue);
+        errorCycles++;
+        boolean errored;
+        switch (retval) {
+            case NOACTIONREQUIRED:
+                errorCycles = 0;
+                errored = false;
+                break;
+            case RUNAGAIN:
+                //TODO run again here
+                errored = checkErrorMessage(commandRun, this.doElevatedHeimdallShellCommand(commandRun));
+                if (errorCycles > 4) {
+                    retval = CommandDisposition.MAXIMUMRETRIES;
+                    errored = true;
+                }
+                break;
+            case ELEVATIONREQUIRED:
+                errored = checkErrorMessage(commandRun, this.doElevatedHeimdallShellCommand(commandRun));
+                if (errorCycles > 4) {
+                    retval = CommandDisposition.MAXIMUMRETRIES;
+                    errored = true;
+                }
+                break;
+            case INSTALLDRIVERS:
+                errorCycles = 0;
+                this.installDriver();
+                errored = checkErrorMessage(commandRun, this.doHeimdallShellCommand(commandRun));
+                break;
+            case HALTSCRIPT:
+                errored = true;
+                break;
+            case MAXIMUMRETRIES:
+                Log.level0Error("Heimdall has encountered an error we did not forsee");
+                errored = true;
+                break;
+            default:
+                errored = true;
+        }
 
-     if (errored){
+        if (errored) {
 //TODO further action is required here
-             //need halt command
-         return false;
-     } else {
-         return true;
-     }
-             
-        
+            //need halt command
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      *
      * @return {@inheritDoc}
      */
     @Override
     public boolean installDriver() {
-        if (OSTools.isWindows()){
+        if (OSTools.isWindows()) {
             return new DriverInstall(0).installKnownDrivers();
         }
-        if (OSTools.isMac()||OSTools.isLinux()){
-            return ! deployBinary(Statics.getTempFolder()).equals("");
+        if (OSTools.isMac() || OSTools.isLinux()) {
+            return !deployBinary(Statics.getTempFolder()).equals("");
         }
-        
+
         return false;
     }
 
@@ -174,7 +176,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
      */
     @Override
     public String deployBinary(String tempFolder) {
-        HeimdallInstall hinstall=new HeimdallInstall();
+        HeimdallInstall hinstall = new HeimdallInstall();
         try {
             if (OSTools.isLinux()) {
                 binaryLocation = hinstall.installLinux(tempFolder);
@@ -184,15 +186,14 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
 
             } else if (OSTools.isWindows()) {
                 binaryLocation = hinstall.installWindows(windowsLocation, tempFolder);
-        }  
+            }
         } catch (InterruptedException ex) {
             Logger.getLogger(HeimdallTools.class.getName()).log(Level.SEVERE, "Error while trying to install heimdall", ex);
         } catch (IOException ex) {
             Logger.getLogger(HeimdallTools.class.getName()).log(Level.SEVERE, "Error while trying to install heimdall", ex);
         }
         return binaryLocation;
-        
-        
+
     }
 
     @Override
@@ -221,11 +222,10 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
     public String getBinaryLocation() {
         //return located heimdall if available
         //here we make new File twice, but this is because binaryLocation may be null.  It's easier to read this way 
-        if (binaryLocation !=null && !binaryLocation.isEmpty() && new File(binaryLocation).isFile() && new File(binaryLocation).exists()) {
+        if (binaryLocation != null && !binaryLocation.isEmpty() && new File(binaryLocation).isFile() && new File(binaryLocation).exists()) {
             return binaryLocation;
         }
 
-        
         //locate heimdall in path or filesystem. Will be blank if not found.
         binaryLocation = locateNativeHeimdall();
         if (!binaryLocation.isEmpty()) {
@@ -233,7 +233,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         }
 
         //install heimdall
-        binaryLocation=deployBinary(Statics.getTempFolder());
+        binaryLocation = deployBinary(Statics.getTempFolder());
         return binaryLocation;
     }
 
@@ -245,8 +245,8 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         if (OSTools.isWindows()) {
             String heimdall = "heimdall";
             String[] cmd = new String[]{heimdall};
-            String retval=shell.sendShellCommand(cmd);
-            if (retval.contains(notFound)||retval.equals("")) {
+            String retval = shell.silentShellCommand(cmd);
+            if (retval.contains(notFound) || retval.equals("")) {
                 return "";
             } else {
                 return heimdall;
@@ -258,20 +258,20 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         String cmd = "/usr/local/bin/heimdall";
         String check = shell.silentShellCommand(new String[]{cmd});
         //we got the file
-        Log.level4Debug("native search /usr/local/bin/heimdall"+ check);
+        Log.level4Debug("native search /usr/local/bin/heimdall" + check);
         if (check.equals(notFound)) {
             cmd = "/usr/bin/heimdall";
             check = shell.silentShellCommand(new String[]{cmd});
-            Log.level4Debug("native search /usr/bin/heimdall"+ check);
+            Log.level4Debug("native search /usr/bin/heimdall" + check);
             //try different things
             if (check.equals(notFound)) {
                 cmd = "/bin/heimdall";
                 check = shell.silentShellCommand(new String[]{cmd});
-                Log.level4Debug("native search /bin/heimdall"+ check);
+                Log.level4Debug("native search /bin/heimdall" + check);
                 if (check.equals(notFound)) {
                     cmd = "heimdall";
                     check = shell.silentShellCommand(new String[]{cmd});
-                    Log.level4Debug("native search heimdall"+ check);
+                    Log.level4Debug("native search heimdall" + check);
                     if (check.equals(notFound)) {
                         cmd = "";
                     }
@@ -321,6 +321,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         return returnValue;
 
     }
+
     /**
      * returns the Instance of Linux's ADB binary
      *

@@ -20,8 +20,6 @@ package GUI.testing;
 import CASUAL.CASUALMessageObject;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
-import java.awt.image.BufferedImage;
-
 /**
  *
  * @author adam
@@ -50,7 +48,7 @@ public class automatic implements CASUAL.iCASUALUI {
         StringBuilder sb=new StringBuilder();
         String n="%n";
         sb.append(mo.title).append(n).append(mo.messageText).append(n);
-        sb.append("MessageType:").append(mo.messageType).append(n);
+        sb.append("MessageType:").append(mo.getMessageType()).append(n);
         return "";
     }
 
@@ -116,10 +114,7 @@ public class automatic implements CASUAL.iCASUALUI {
         
     }
 
-    @Override
-    public void setWindowBannerImage(BufferedImage icon, String text) {
-        
-    }
+
 
     @Override
     public void setWindowBannerText(String text) {
@@ -150,6 +145,14 @@ public class automatic implements CASUAL.iCASUALUI {
     @Override
     public void setBlocksUnzipped(int i) {
         
+    }
+
+    @Override
+    public void sendString(String string) {
+    }
+
+    @Override
+    public void sendProgress(String data) {
     }
     
 }

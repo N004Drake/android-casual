@@ -21,9 +21,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.text.BadLocationException;
 
 /**
  * Logs stuff and things
@@ -39,31 +36,13 @@ public class Log {
     public static PrintStream out = new PrintStream(System.out);
 
     private static void sendToGUI(String data) {
-        if (Statics.GUI!=null&& (Statics.isGUIIsAvailable() || Statics.GUI.isDummyGUI()) && !"".equals(data) && !"\n".equals(data)) {
-            try {
-                Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data + "\n", null);
-                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-            } catch (NullPointerException e) {
-                Statics.PreProgress = Statics.PreProgress + "\n" + data;
-                if (Statics.PreProgress.startsWith("\n")) {
-                    Statics.PreProgress = Statics.PreProgress.replaceFirst("\n", "");
-                }
-            } catch (BadLocationException ex) {
-                //nothing to do, GUI is not running
-            }
+        if (Statics.GUI==null){
+            Statics.PreProgress = Statics.PreProgress + "\n" + data;
+        } else if (!data.equals("\n")||!data.isEmpty()) {
+            Statics.GUI.sendString(data + "\n");
         }
     }
 
-    /**
-     * removes all information from the progress document. (GUI log)
-     */
-    public static void clearGUI() {
-        try {
-            Statics.ProgressDoc.remove(0, Statics.ProgressDoc.getLength());
-        } catch (BadLocationException ex) {
-            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     /**
      * level 0 is used for errors.. basically silent. Use level 1 for for most
@@ -184,6 +163,15 @@ public class Log {
      * @param data data to be written to progress on screen
      */
     public  static void progress(String data) {
+       if (Statics.GUI==null){
+           System.out.println(data);
+       } else  {
+           Statics.GUI.sendProgress(data);
+       }
+       
+    }
+    /*
+    public  static void progress(String data) {
         progressBuffer = progressBuffer + data;
         if (Statics.isGUIIsAvailable() && Statics.ProgressDoc != null) {
             try {
@@ -213,7 +201,7 @@ public class Log {
             out.print(data);
         }
 
-    }
+    }*/
 
     /**
      *
@@ -221,13 +209,8 @@ public class Log {
      */
     public  static void LiveUpdate(String data) {
         out.println(data);
-        if (Statics.isGUIIsAvailable()) {
-            try {
-                Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
-                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-            } catch (BadLocationException ex) {
-                Log.errorHandler(ex);
-            }
+        if (Statics.GUI!=null) {
+            Statics.GUI.sendProgress(data);
         }
 
     }
@@ -242,25 +225,6 @@ public class Log {
         }
     }
 
-    /**
-     * inserts a line of text to a location. Deletes data at position and lenth
-     * specified allowing for a replacement effect. If length 0 is specified the
-     * data will be only inserted.
-     *
-     * @param data Data to be inserted
-     * @param position position to start
-     * @param length length of text to remove.
-     */
-    public  static void replaceLine(String data, int position, int length) {
-        if (Statics.isGUIIsAvailable()) {
-            try {
-                Statics.ProgressDoc.remove(position, length);
-                Statics.ProgressDoc.insertString(position, data, null);
-                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-            } catch (BadLocationException ex) {
-            }
-        }
-    }
 
     /**
      *

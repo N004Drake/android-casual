@@ -214,7 +214,7 @@ public abstract class AbstractDeviceCommunicationsProtocol {
             return retval;
         } else {
 
-            return shell.timeoutShellCommand(runcmd, timeout);
+            return shell.liveShellCommand(runcmd,true);
         }
     }
 

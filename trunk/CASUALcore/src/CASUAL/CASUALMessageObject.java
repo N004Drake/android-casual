@@ -51,19 +51,13 @@ public class CASUALMessageObject {
      */
     public String messageText;
 
-    /**
-     *Categories of possible messages. 
-     */
-    public enum MessageCategory{
-        TimeOut, UserCancelOption, ActionRequired, UserNotification,
-        ShowInformation, ShowError, ShowYesNo, TextInput, CommandNotification
-    }
+
     
     /**
      * category of this message.  The category should be used instead of the old
      * final static variables. 
      */
-    public MessageCategory category;
+    public iCASUALUI.MessageCategory category;
     /**
      * Type of message commanded by this MessageObject
      * iCASUALInteraction.INTERACTION_TIME_OUT=0;
@@ -76,10 +70,9 @@ public class CASUALMessageObject {
      * iCASUALInteraction.INTERACTION_INPUT_DIALOG=7;
      * iCASUALInteraction.INTERACTION_COMMAND_NOTIFICATION=8;
      */
-    public int messageType;
-
+   
     /**
-     * Used by jOptionPane for TimeOutMessages only. Made available for use
+     * Used by jOptionPane for TIMEOUTMessages only. Made available for use
      * under other APIs so that it may be changed if needed.
      *
      * @see javax.swing.JOptionPane
@@ -87,25 +80,25 @@ public class CASUALMessageObject {
     public int timeoutOptionType;
 
     /**
-     * Used by TimeOutMessages only. Specifies the default value for timeout
+     * Used by TIMEOUTMessages only. Specifies the default value for timeout
      * upon timeout.
      */
     public Object timeoutInitialValue;
 
     /**
-     * Used by TimeOutMessages only. Specifies the options for the
-     * TimeOutMessage
+     * Used by TIMEOUTMessages only. Specifies the options for the
+ TIMEOUTMessage
      */
     public Object[] timeoutOptions;
 
     /**
-     * Used by TimeOutMessages only. Specifies the amount of time the message
+     * Used by TIMEOUTMessages only. Specifies the amount of time the message
      * should be displayed before timing out and returning the default value
      */
     public int timeoutPresetTime;
 
     /**
-     * Used by jOptionPane for TimeOutMessages only. Made available for use
+     * Used by jOptionPane for TIMEOUTMessages only. Made available for use
      * under other APIs so that it may be changed if needed.
      *
      * @see javax.swing.JOptionPane
@@ -162,7 +155,7 @@ public class CASUALMessageObject {
      * CASUALInteraction input device
      */
     /**
-     * shows a TimeOutDialog
+     * shows a TIMEOUTDialog
      *
      * @param PRESET_TIME time to show message
      * @param parentComponent where to hover over
@@ -178,8 +171,7 @@ public class CASUALMessageObject {
         this.timeoutOptions = options;
         this.timeoutInitialValue = initialValue;
         this.timeoutPresetTime = PRESET_TIME;
-        this.messageType = iCASUALUI.INTERACTION_TIME_OUT;
-        category=MessageCategory.TimeOut;
+        setType(iCASUALUI.MessageCategory.TIMEOUT);
         expectedReturn = "(String)int from " + Arrays.asList(options).toString();
         if (Statics.GUI==null){
             return 0;
@@ -194,8 +186,7 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public String inputDialog() throws HeadlessException {
-        this.messageType = iCASUALUI.INTERACTION_INPUT_DIALOG;
-        category=MessageCategory.TextInput;
+        setType(iCASUALUI.MessageCategory.TEXTINPUT);
         expectedReturn = "Any String";
         return Statics.GUI.displayMessage(this);
     }
@@ -207,8 +198,7 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public int showActionRequiredDialog() throws HeadlessException {
-        this.messageType = iCASUALUI.INTERACTION_ACTION_REUIRED;
-        category=MessageCategory.ActionRequired;
+        setType(iCASUALUI.MessageCategory.ACTIONREQUIRED);
         expectedReturn = "String 0-continue, 1-stop";
         return Integer.parseInt(Statics.GUI.displayMessage(this));
     }
@@ -219,8 +209,7 @@ public class CASUALMessageObject {
      * @return 1 if cancel was requested
      */
     public int showUserCancelOption() {
-        this.messageType = iCASUALUI.INTERACTION_USER_CANCEL_OPTION;
-        category=MessageCategory.UserCancelOption;
+        setType(iCASUALUI.MessageCategory.USERCANCELOPTION);
         expectedReturn = "String 0-continue, 1-stop";
         return Integer.parseInt(Statics.GUI.displayMessage(this));
     }
@@ -231,8 +220,7 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public void showCommandNotification() throws HeadlessException {
-        this.messageType = iCASUALUI.INTERACTION_COMMAND_NOTIFICATION;
-        category=MessageCategory.CommandNotification;
+        setType(iCASUALUI.MessageCategory.COMMANDNOTIFICATION);
         expectedReturn = "Empty";
         Statics.GUI.displayMessage(this);
     }
@@ -243,8 +231,7 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public void showUserNotification() throws HeadlessException {
-        this.messageType = iCASUALUI.INTERACTION_USER_NOTIFICATION;
-        category=MessageCategory.UserNotification;
+        setType(iCASUALUI.MessageCategory.USERNOTIFICATION);
         expectedReturn = "Empty";
         Statics.GUI.displayMessage(this);
     }
@@ -255,8 +242,7 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public void showInformationMessage() throws HeadlessException {
-        this.messageType = iCASUALUI.INTERACTION_SHOW_INFORMATION;
-        category=MessageCategory.ShowInformation;
+        setType(iCASUALUI.MessageCategory.SHOWINFORMATION);
         expectedReturn = "Empty";
         Log.level3Verbose("showing information message object");
         Statics.GUI.displayMessage(this);
@@ -269,8 +255,7 @@ public class CASUALMessageObject {
      * @throws HeadlessException
      */
     public void showErrorDialog() throws HeadlessException {
-        this.messageType = iCASUALUI.INTERACTION_SHOW_ERROR;
-        category=MessageCategory.ShowError;
+        setType(iCASUALUI.MessageCategory.SHOWERROR);
         expectedReturn = "Empty";
         Statics.GUI.displayMessage(this);
 
@@ -282,8 +267,7 @@ public class CASUALMessageObject {
      * @return true if yes, false if no
      */
     public boolean showYesNoOption() {
-        this.messageType = iCASUALUI.INTERACTION_SHOW_YES_NO;
-        category=MessageCategory.ShowYesNo;
+        setType(iCASUALUI.MessageCategory.SHOWYESNO);
         Boolean retval = Statics.GUI.displayMessage(this).equals("0");
         expectedReturn = "String 0-yes, 1-no";
         return retval;
@@ -293,8 +277,17 @@ public class CASUALMessageObject {
     public String toString(){
         StringBuilder sb = new StringBuilder();
         String n="\n";
+        sb.append(this.category).append(n);
         sb.append("RequestTitle:").append(this.title).append(n);
         sb.append("RequestBody:").append(this.messageText).append(n);
         return sb.toString();
+    }
+    
+    private int setType(iCASUALUI.MessageCategory cat){
+        this.category=cat;
+        return getMessageType();
+    }
+    public int getMessageType(){
+      return category.compareTo(iCASUALUI.MessageCategory.TIMEOUT);
     }
 }

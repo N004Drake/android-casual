@@ -18,6 +18,7 @@ package com.casual_dev.CommitDescription;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -53,6 +54,7 @@ public class CommitInformation {
         CommitDetails cd = new CommitDetails();
         try {
             if (!isNewRevision()) {
+                System.out.println("This is a rebuild, no message sent");
                 System.exit(1);
             }
             cd.culprit = getName();
@@ -67,9 +69,13 @@ public class CommitInformation {
             cd.modCASCADE = isCASCADE(cd.files);
             cd.modCASPACkager = isCASPACkager(cd.files);
             cd.modCASUALCore = isCASUALcore(cd.files);
+            cd.modInstrumentation=isInstrumentation(cd.files);
+            cd.modJodin3=isJodin3(cd.files);
         } catch (MalformedURLException ex) {
+            
             System.exit(1);
         } catch (IOException ex) {
+            System.out.println("IOException");
             System.exit(1);
         }
         return cd;
@@ -97,7 +103,8 @@ public class CommitInformation {
     }
 
     private String getUrlAsString(URL url) throws IOException {
-        BufferedReader is = new BufferedReader(new InputStreamReader(url.openStream()));
+        InputStream urlStream = url.openStream();
+        BufferedReader is = new BufferedReader(new InputStreamReader(urlStream));
         String page = "";
         String line;
         while ((line = is.readLine()) != null) {
@@ -115,7 +122,8 @@ public class CommitInformation {
     }
 
     private boolean isNewRevision() throws IOException {
-        return getXpath("/*/action/cause/shortDescription").contains("with note: Commanded by Revision");
+       boolean x =getXpath("/*/action/cause/shortDescription").contains("with note: Commanded by Revision");
+       return x;
     }
 
     private boolean isTrunk(String[] files) {
@@ -168,6 +176,16 @@ public class CommitInformation {
 
     private boolean isCASUALcore(String[] files) {
         String checkValue = "/trunk/CASUALcore";
+        return checkArrayStartsWith(files, checkValue);
+    }
+
+    private boolean isInstrumentation(String[] files) {
+                String checkValue = "/trunk/CASUALinstruments";
+        return checkArrayStartsWith(files, checkValue);
+    }
+
+    private boolean isJodin3(String[] files) {
+                String checkValue = "/trunk/X/JOdin3";
         return checkArrayStartsWith(files, checkValue);
     }
 

@@ -120,7 +120,7 @@ public class CASUALLanguage {
             dataIn.close();
             if (DriverInstall.removeDriverOnCompletion == 2) {//2 for remove driver 1 for do not remove
                 Log.level2Information("Removing generic USB driver as requested");
-                new DriverRemove();
+                new DriverRemove().deleteOemInf();
             }
             Log.level2Information("@done");
             //yeah yeah, overly broad chatch.  read below. 
@@ -629,7 +629,6 @@ public class CASUALLanguage {
             line = StringOperations.removeLeadingSpaces(line);
             Log.level4Debug("Received Command: " + line);
             Log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
-            HeimdallInstall heimdallInstall = new HeimdallInstall();
             
             if (!new HeimdallTools().run(new String[]{"detect"},5000, true).contains("CritERROR!!!")) {
                 ArrayList<String> intermediateCommand=new ShellTools().parseCommandLine(line);
