@@ -1,11 +1,12 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template fileToBeDownloaded, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.casual_dev.jodin;
 
 import CASUAL.CASUALMessageObject;
+import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Statics;
 import CASUAL.caspac.Caspac;
@@ -13,8 +14,6 @@ import CASUAL.caspac.Script;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.communicationstools.heimdall.odin.CorruptOdinFileException;
 import CASUAL.communicationstools.heimdall.odin.Odin;
-import CASUAL.iCASUALUI;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -144,9 +143,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                
-                stage.getIcons().add(new Image(getClass().getResource("odinico.png").toExternalForm()));
-
                 deviceDisconnected();
                 checkFilesCheckboxes();
                 displaySurface.setVisible(false);

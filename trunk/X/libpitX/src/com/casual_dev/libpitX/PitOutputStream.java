@@ -29,7 +29,13 @@ import java.io.OutputStream;
  */
 public class PitOutputStream {
 
+    /**
+     * OutputStream used for this class
+     */
     private final OutputStream outputStream;
+    /**
+     * buffere used to convert Java signed int to C unsigned int
+     */
     private final byte[] writeBuffer = new byte[4];
 
     /**
@@ -43,7 +49,7 @@ public class PitOutputStream {
     }
 
     /**
-     * writes an integer as four bytes to the outputStream
+     * writes an integer as four bytes to the outputStream. C Unsigned int.
      *
      * @param value an integer or four bytes to be written
      * @see OutputStream
