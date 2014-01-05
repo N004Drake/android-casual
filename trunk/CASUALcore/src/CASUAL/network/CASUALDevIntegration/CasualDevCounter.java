@@ -61,6 +61,7 @@ public class CasualDevCounter {
                 }
             }
         });
+        t.setName("counter.casual-dev.com");
         t.start();
     }
 
