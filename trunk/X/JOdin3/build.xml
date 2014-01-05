@@ -50,4 +50,58 @@
     nbproject/build-impl.xml and nbproject/jfx-impl.xml.
 
     -->
+    <target name="-post-jfx-deploy">
+        <echo>preparing final JOdin3 binary for distribution</echo>
+        <loadproperties srcfile="../../CASUALcore/src/CASUAL/resources/CASUALApp.properties"/>
+        <jar jarfile="dist/JOdin3CASUAL-r${Application.revision}-dist.jar" level="0" compress="false">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/commons-compress-1.5.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/CASUALcore.jar" excludes="META-INF/*" />
+            <!--
+            <zipfileset src="dist/lib/javaws.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/deploy.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/jfxrt.jar" excludes="META-INF/*" />
+             -->  
+            <manifest>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="JavaFX-Version" value="2.2"/>
+                <attribute name="implementation-vendor" value="CASUAL-Dev.com"/>
+                <attribute name="implementation-title" value="JOdin3CASUAL"/>
+                <attribute name="implementation-version" value="1.0"/>
+                <attribute name="JavaFX-Application-Class" value="com.casual_dev.jodin.JOdinMain"/>
+                <attribute name="application-name" value="JOdin3 CASUAL"/>
+                <attribute name="permissions" value="all-permissions"/>
+                <attribute name="Created-By" value="JavaFX Packager"/>
+                <attribute name="Main-Class" value="com/javafx/main/Main"/>
+                <attribute name="codebase" value="*"/>
+
+            </manifest>
+      </jar>
+        <echo>signing</echo>
+
+            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
+            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
+            <signjar keystore="${javafx.signjar.keystore}"
+                storepass="${javafx.signjar.storepass}"
+                alias="${javafx.signjar.alias}"
+                keypass="${javafx.signjar.keypass}">
+                <fileset dir="${basedir}/dist/">
+                                        <include name="Odin3CASUAL-r${Application.revision}-dist.jar}"/>
+
+                </fileset>
+            </signjar>
+        <echo>fxsigning</echo>
+            <echo message="Launching &lt;fx:signjar&gt; task from ${ant-javafx.jar.location}" level="info"/>
+            <fx:signjar keystore="${javafx.signjar.keystore}"
+                storepass="${javafx.signjar.storepass}"
+                alias="${javafx.signjar.alias}"
+                keypass="${javafx.signjar.keypass}">
+                <fileset dir="${basedir}/dist/">
+                    <include name="JOdin3CASUAL-r${Application.revision}-dist.jar}"/>
+                </fileset>
+            </fx:signjar>
+
+    </target>
+    
 </project>
