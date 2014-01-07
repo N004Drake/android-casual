@@ -2,7 +2,6 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
@@ -15,7 +14,7 @@
 
 <AnchorPane id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.000199999995" prefWidth="883.000022070315" snapToPixel="true" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.casual_dev.jodin.JOdinController">
   <children>
-    <AnchorPane id="AnchorPane" fx:id="mainSurface" layoutX="0.0" layoutY="0.0" prefHeight="626.0001831054688" prefWidth="883.0" rotate="0.0" translateX="0.0" visible="true">
+    <AnchorPane id="AnchorPane" fx:id="mainSurface" layoutX="0.0" layoutY="0.0" prefHeight="626.0001831054688" prefWidth="883.0">
       <children>
         <ImageView fitHeight="69.99999699475198" fitWidth="854.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
           <image>
@@ -34,7 +33,7 @@
             <Font name="Arial Bold" size="16.0" />
           </font>
         </Label>
-        <Button fx:id="testButton" layoutX="101.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#installDriverButton" opacity="0.79" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Install Drivers" />
+        <Button fx:id="testButton" layoutX="85.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#installDriverButton" opacity="0.79" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Install Drivers" />
         <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutX="15.0" layoutY="84.0" mouseTransparent="false" prefHeight="154.0" prefWidth="854.0" vbarPolicy="NEVER" visible="true">
           <content>
             <AnchorPane mouseTransparent="false" pickOnBounds="true" prefHeight="154.0" prefWidth="852.0">
@@ -196,21 +195,21 @@
             <Font name="Arial Bold" size="33.0" />
           </font>
         </Label>
-        <Button fx:id="reportProblem" layoutX="195.0" layoutY="582.0" mnemonicParsing="false" onAction="#sendReport" opacity="0.7" prefWidth="109.0" rotate="14.0" text="report problem" />
-        <Button fx:id="donate" layoutX="288.0" layoutY="584.0" minWidth="46.0" mnemonicParsing="false" onAction="#donatePressed" opacity="0.56" prefWidth="107.55675506591797" rotate="14.0" text="Donate" textOverrun="CLIP">
+        <Button fx:id="reportProblem" layoutX="178.0" layoutY="583.0" mnemonicParsing="false" onAction="#sendReport" opacity="0.7" prefWidth="109.0" rotate="14.0" text="report problem" />
+        <Button fx:id="donate" layoutX="264.0" layoutY="582.0" minWidth="46.0" mnemonicParsing="false" onAction="#donatePressed" opacity="0.56" prefWidth="107.55675506591797" rotate="14.0" text="Donate" textOverrun="CLIP">
           <font>
             <Font size="12.0" />
           </font>
         </Button>
-        <Button id="testButton" fx:id="showLegal" layoutX="9.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#showLegal" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Legal" />
+        <Button id="testButton" fx:id="showLegal" layoutX="5.0" layoutY="583.0" minHeight="16.0" mnemonicParsing="false" onAction="#showLegal" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Legal" />
       </children>
-      <rotationAxis>
-        <Point3D x="2.0" y="2.0" z="2.0" />
-      </rotationAxis>
+      <effect>
+        <GaussianBlur radius="7.513157894736842" />
+      </effect>
     </AnchorPane>
-    <AnchorPane id="MessageGroup" fx:id="displaySurface" layoutX="0.0" layoutY="0.0" prefHeight="626.0001831054688" prefWidth="883.0" visible="false">
+    <AnchorPane id="MessageGroup" fx:id="displaySurface" layoutX="-9.0" layoutY="-7.0" visible="false">
       <children>
-        <ScrollPane fx:id="surfaceHider" hbarPolicy="NEVER" layoutX="2.0" layoutY="1.0" mouseTransparent="true" opacity="0.73" prefHeight="627.0" prefWidth="881.0" vbarPolicy="NEVER">
+        <ScrollPane fx:id="surfaceHider" hbarPolicy="NEVER" layoutX="0.0" layoutY="0.0" mouseTransparent="true" opacity="0.73" prefHeight="633.0001831054688" prefWidth="900.0" vbarPolicy="NEVER">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="627.0" prefWidth="890.0" />
           </content>
@@ -231,22 +230,19 @@
         </ScrollPane>
         <AnchorPane fx:id="interactions" layoutX="0.0" layoutY="1.0" prefHeight="634.0" prefWidth="899.0" visible="true">
           <children>
-            <Button id="displaySurface" fx:id="button1" defaultButton="true" layoutX="628.0" layoutY="98.0" mnemonicParsing="false" onAction="#button1ClickAction" prefHeight="113.0" prefWidth="227.0" text="OK">
+            <Button id="displaySurface" fx:id="button1" defaultButton="true" layoutX="635.0" layoutY="98.0" mnemonicParsing="false" onAction="#button1ClickAction" prefHeight="113.0" prefWidth="227.0" text="OK">
               <font>
                 <Font size="40.0" fx:id="x3" />
               </font>
             </Button>
-            <Button fx:id="button2" defaultButton="false" font="$x3" layoutX="628.0" layoutY="269.0" mnemonicParsing="false" onAction="#button2ClickAction" prefHeight="113.0" prefWidth="227.0" text="NO" />
-            <Button fx:id="button3" cancelButton="true" defaultButton="false" font="$x3" layoutX="628.0" layoutY="439.0" mnemonicParsing="false" onAction="#button3ClickAction" prefHeight="113.0" prefWidth="227.0" text="Cancel" />
-            <Label fx:id="messageTitle" font="$x3" layoutX="17.0" layoutY="14.0" prefHeight="75.0" prefWidth="852.0" text="This is a Message How do you react?" textFill="#52ff00" />
-            <TextArea fx:id="messageDisplay" editable="false" layoutX="25.0" layoutY="98.0" opacity="1.0" prefHeight="454.0" prefWidth="546.0" style="    -fx-font: 25px &quot;Arial&quot;;&#10;    -fx-padding: 15;&#10;    -fx-background-color: rgba(50,0,50,.3);&#10;    -fx-text-fill: #44FF44;" text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" wrapText="true" />
+            <Button fx:id="button2" defaultButton="false" font="$x3" layoutX="635.0" layoutY="269.0" mnemonicParsing="false" onAction="#button2ClickAction" prefHeight="113.0" prefWidth="227.0" text="NO" />
+            <Button fx:id="button3" cancelButton="true" defaultButton="false" font="$x3" layoutX="635.0" layoutY="440.0" mnemonicParsing="false" onAction="#button3ClickAction" prefHeight="113.0" prefWidth="227.0" text="Cancel" />
+            <Label fx:id="messageTitle" font="$x3" layoutX="23.0" layoutY="14.0" prefHeight="75.0" prefWidth="854.0" text="This is a Message How do you react?" textFill="#52ff00" />
+            <TextArea fx:id="messageDisplay" editable="false" layoutX="37.0" layoutY="98.0" opacity="1.0" prefHeight="454.0" prefWidth="546.0" style="    -fx-font: 25px &quot;Arial&quot;;&#10;    -fx-padding: 15;&#10;    -fx-background-color: rgba(50,0,50,.3);&#10;    -fx-text-fill: #44FF44;" text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum" wrapText="true" />
             <TextField fx:id="inputText" layoutX="37.0" layoutY="453.0" onAction="#sendReport" prefHeight="70.0" prefWidth="546.0" style="-fx-font-size: 40pt;&#10;-fx-text-fill: lime;&#10;" text="" />
           </children>
         </AnchorPane>
       </children>
-      <rotationAxis>
-        <Point3D />
-      </rotationAxis>
     </AnchorPane>
     <AnchorPane fx:id="legal" layoutX="0.0" layoutY="0.0" prefHeight="620.0" prefWidth="883.0" visible="false">
       <children>
@@ -273,7 +269,7 @@
         </AnchorPane>
       </children>
     </AnchorPane>
-    <AnchorPane fx:id="loading" disable="false" layoutX="0.0" layoutY="0.0" prefHeight="617.0" prefWidth="883.0" visible="false">
+    <AnchorPane fx:id="loading" disable="false" layoutX="0.0" layoutY="0.0" prefHeight="617.0" prefWidth="883.0">
       <children>
         <Label layoutX="172.0" layoutY="250.0" prefHeight="118.0" prefWidth="539.0" text="Loading.... Please wait...">
           <font>

@@ -50,7 +50,37 @@
     nbproject/build-impl.xml and nbproject/jfx-impl.xml.
 
     -->
+    <target name="-pre-compile">
+        <exec outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
+            <arg value="-c" />
+            <redirector>
+                <outputfilterchain>
+                    <tokenfilter>
+                        <replaceregex pattern="^[0-9]*:?" replace="" flags="g"/>
+                        <replaceregex pattern="M" replace="" flags="g"/>
+                    </tokenfilter>
+                </outputfilterchain>
+            </redirector>
+        </exec> 
+        <echo>current directory: ${basedir}</echo>
+        <echo>revision after svnversion command: ${svna.version}</echo>
+        <loadproperties srcfile="nbproject/project.properties"/>
+        <condition property="svna.version" value=""> 
+            <not>
+                <isset property="Application.revision" />
+            </not>
+        </condition>
+        <property name="svna.version" value="${Application.revision}"/>
+        <echo>Loaded property value: ${svna.version}</echo>
+        <echo>revision after loaded property: ${svna.version}</echo>
+        <propertyfile file="nbproject/project.properties">
+            <entry  key="Application.revision" value="${svna.version}"/>
+            <entry key="javafx.application.implementation.version" value="${svna.version}"/>
+        </propertyfile>
+    </target>
+    
     <target name="-post-jfx-deploy">
+        
         <echo>preparing final JOdin3 binary for distribution</echo>
         <loadproperties srcfile="../../CASUALcore/src/CASUAL/resources/CASUALApp.properties"/>
         <jar jarfile="dist/JOdin3CASUAL-r${Application.revision}-dist.jar" level="0" compress="false">
@@ -79,9 +109,9 @@
         <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
         <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
         <signjar keystore="${javafx.signjar.keystore}"
-                     storepass="${javafx.signjar.storepass}"
-                     alias="${javafx.signjar.alias}"
-                     keypass="${javafx.signjar.keypass}">
+                 storepass="${javafx.signjar.storepass}"
+                 alias="${javafx.signjar.alias}"
+                 keypass="${javafx.signjar.keypass}">
             <path>
                 <fileset dir="dist" includes="JOdin3CASUAL-r*.jar" />
             </path>
