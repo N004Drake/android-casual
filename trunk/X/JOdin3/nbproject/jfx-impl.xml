@@ -2154,6 +2154,8 @@
                     var offline = new String(project.getProperty("javafx.deploy.allowoffline"));
                     deploy.setWidth(width);
                     deploy.setHeight(height);
+
+                    
                     deploy.setOutdir(outdir);
                     deploy.setEmbedJNLP(isTrue(embedJNLP));
                     deploy.setUpdateMode(updatemode);
