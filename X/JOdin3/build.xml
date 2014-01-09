@@ -87,7 +87,7 @@
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="dist/lib/commons-compress-1.5.jar" excludes="META-INF/*" />
             <zipfileset src="dist/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar" excludes="META-INF/*" />
-            <zipfileset src="dist/lib/CASUALcore.jar" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/CASUALstatic.jar" excludes="META-INF/*" />
             <!--
            <zipfileset src="dist/lib/javaws.jar" excludes="META-INF/*" />
            <zipfileset src="dist/lib/deploy.jar" excludes="META-INF/*" />
@@ -95,11 +95,11 @@
             -->  
             <manifest>
                 <attribute name="JavaFX-Version" value="2.2"/>
-                <attribute name="implementation-title" value="JOdin3CASUAL"/>
+                <attribute name="Implementation-Title" value="JOdin3CASUAL"/>
                 <attribute name="implementation-version" value="${Application.revision}"/>
                 <attribute name="JavaFX-Application-Class" value="com.casual_dev.jodin.JOdinMain"/>
-                <attribute name="application-name" value="JOdin3 CASUAL"/>
-                <attribute name="permissions" value="all-permissions"/>
+                <attribute name="Application-Name" value="JOdin3 CASUAL"/>
+                <attribute name="Permissions" value="all-permissions"/>
                 <attribute name="Main-Class" value="com/javafx/main/Main"/>
 
 

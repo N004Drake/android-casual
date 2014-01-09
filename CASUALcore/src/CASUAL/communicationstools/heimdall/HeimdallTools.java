@@ -120,7 +120,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
                 }
                 break;
             case ELEVATIONREQUIRED:
-                errored = checkErrorMessage(commandRun, this.doElevatedHeimdallShellCommand(commandRun));
+                errored = checkErrorMessage(commandRun, this.doElevatedHeimdallShellCommand( getBinaryCommandInArray(commandRun)));
                 if (errorCycles > 4) {
                     retval = CommandDisposition.MAXIMUMRETRIES;
                     errored = true;
@@ -295,6 +295,10 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
     }
 
     private String[] getBinaryCommandInArray(String[] command) {
+        if (command[0].equals(getBinaryLocation())){
+            return command;
+         }
+        
         String[] cmd = new String[command.length + 1];
         cmd[0] = getBinaryLocation();
         System.arraycopy(command, 0, cmd, 1, command.length);

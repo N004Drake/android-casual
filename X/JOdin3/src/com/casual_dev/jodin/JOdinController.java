@@ -536,18 +536,21 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                     String pitMessage = "Do you want me to obtain a PIT for you?>>>This application requires what is known as a` 'PIT file'.  The PIT file tells the application where to place files on your device.  If you don't have a PIT file, we can obtain one from your device";
                     boolean obtainPit = new CASUALMessageObject(pitMessage).showYesNoOption();
                     if (obtainPit) {
+                        Log.level3Verbose("obtaining pit");
                         new CASUALMessageObject("You will need to restart your device in Download Mode.>>>In order to obtain a PIT file, the device will be rebooted.  Once it reboots, you will need to put it back into download mode.\n\nPro-Tip: hold the download mode combination and press OK to dismiss this dislog to reboot into download mode immediately").showInformationMessage();
                         HeimdallTools ht = new HeimdallTools();
                         String newPit = Statics.getTempFolder() + "part.pit";
                         ht.run(new String[]{"download-pit", "--output", newPit}, 10000, true);
                         File f = new File(newPit);
-                        if (f.exists()) {
+                        if (f.exists() && f.length()>1) {
+                            Log.level3Verbose("found pit");
                             pitLocation.setText(f.getAbsolutePath());
                             disableControls(false);
                             resetPassFail("waiting");
                             new CASUALMessageObject("Got it!>>>We obtained the PIT file and everything is ready to flash\n\n Click the start button again when you're ready. ").showInformationMessage();
                             return;
                         } else {
+                            Log.level3Verbose("Did not find pit");
                             new CASUALMessageObject("Could not obtain pit.>>>We could not obtain the pit file. We tried, but it didn't work. ").showErrorDialog();
                             disableControls(false);
                             resetPassFail("halted");
@@ -602,6 +605,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                     if (!ht.isConnected()) {
                         messageBox.appendText("\nWaiting for device");
                     }
+                    Log.level3Verbose("running command");
                     String s = ht.run(runCommand, 9999999, false);
                     if (ht.checkErrorMessage(runCommand, s)) {
                         completePass();
