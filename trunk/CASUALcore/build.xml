@@ -152,6 +152,34 @@
 
 
     <target name="-do-jar-with-libraries">
+        
+        
+        <echo>Rebuilding libraries</echo>
+        <echo>rebuilding Commons Compress</echo>
+        <jar jarfile="dist/lib/commons-compress-1.5r.jar" level="0" compress="false" filesetmanifest="merge">
+            <manifest>
+                <attribute name="Application-Name" value="Commons Compress"/>
+                <attribute name="Permissions" value="all-permissions"/>
+            </manifest>
+            <zipfileset src="dist/lib/commons-compress-1.5.jar" />
+        </jar>
+        <delete file="dist/lib/commons-compress-1.5.jar"/>
+        <move file="dist/lib/commons-compress-1.5r.jar" tofile="dist/lib/commons-compress-1.5.jar"/>
+        
+        <echo>Rebuilding copylibstask</echo>
+        <jar jarfile="dist/lib/org-netbeans-modules-java-j2seproject-copylibstaskr.jar" level="0" compress="false" filesetmanifest="merge">
+            <manifest>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="Application-Name" value="copylibs"/>
+                <attribute name="Permissions" value="all-permissions"/>
+            </manifest>
+            <zipfileset src="dist/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar" />
+        </jar>
+        <delete file="dist/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar"/>
+        <move file="dist/lib/org-netbeans-modules-java-j2seproject-copylibstaskr.jar" tofile="dist/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar"/>
+        
+        
+        
         <echo>CASUALcore created. Setting up resources</echo>    
         <echo></echo>
         <copy todir="build/classes/CASUAL/resources">
@@ -178,6 +206,8 @@
         <property name="CASUALJAR" value="dist/CASUAL.jar"/>
         <jar destfile="${CASUALJAR}" level="0" compress="false">
             <manifest>
+                <attribute name="Application-Name" value="CASUALcore"/>
+                <attribute name="Permissions" value="all-permissions"/>
                 <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
             <fileset dir="build/classes"/>
@@ -191,6 +221,8 @@
                 <exclude name="SCRIPTS/*"/>
             </zipfileset>
             <manifest>
+                <attribute name="Application-Name" value="CASUALcore"/>
+                <attribute name="Permissions" value="all-permissions"/>
                 <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
         </jar>
@@ -200,6 +232,8 @@
         <jar jarfile="dist/CASUAL-Revision${svna.version}b.jar" level="0" compress="false">
             <zipfileset src="${CASUALJAR}" excludes="META-INF/*"/>
             <manifest>
+                <attribute name="Application-Name" value="CASUALcore"/>
+                <attribute name="Permissions" value="all-permissions"/>                
                 <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
             <fileset dir="src/" includes="SCRIPTS/Simple Reboot.scr" />
@@ -220,6 +254,8 @@
         <jar destfile="dist/CASUALcore.jar" level="0" compress="false">
             
             <manifest>
+                <attribute name="Application-Name" value="CASUALcore"/>
+                <attribute name="Permissions" value="all-permissions"/>
                 <attribute name="Main-Class" value="CASUAL.CASUALMain"/>
             </manifest>
             <fileset dir="build/classes">

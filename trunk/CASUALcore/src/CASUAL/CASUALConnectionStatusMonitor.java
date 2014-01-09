@@ -144,7 +144,6 @@ public class CASUALConnectionStatusMonitor {
             stateSwitcher(1);
 
         }
-
     }
 
     void stateSwitcher(int state) {
