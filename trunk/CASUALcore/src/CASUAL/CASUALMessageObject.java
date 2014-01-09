@@ -19,6 +19,7 @@ package CASUAL;
 import CASUAL.instrumentation.Instrumentation;
 import java.awt.Component;
 import java.awt.HeadlessException;
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -26,7 +27,8 @@ import java.util.Arrays;
  *
  * @author Adam Outler adamoutler@gmail.com
  */
-public class CASUALMessageObject {
+public class CASUALMessageObject implements Serializable{
+    private static final long serialVersionUID = 1029319L;
 
     /**
      * The message sent into the CASUALMessageObject. Original message includes
