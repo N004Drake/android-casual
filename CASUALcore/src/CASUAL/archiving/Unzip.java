@@ -1,5 +1,5 @@
 /*UnZip unzips files
- *Copyright (C) 2013  Adam Outler
+ *Copyright (C) 2013  Adam Outler <adamoutler@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import java.util.zip.ZipInputStream;
 
 /**
  * Provides methods of accessing Unzip tools.
+ *
  * @author Adam Outler adamoutler@gmail.com
  */
 public class Unzip {
@@ -42,7 +43,7 @@ public class Unzip {
     static int BUFFER = 4096;
     final ZipFile zip;
     /**
-     * Unzip provides a set of methods which work to unzip files. 
+     * Unzip provides a set of methods which work to unzip files.
      */
     public Enumeration<? extends ZipEntry> zipFileEntries;
 
@@ -86,22 +87,22 @@ public class Unzip {
         }
     }
 
-
     /**
      * Unzips the ZipFile that was specified in the constructor of the class.
+     * Creates folder if necessary
      *
      * @param outputFolder folder to be unzipped to
      * @throws ZipException
      * @throws IOException
      * @see CASUAL.archiving.Unzip#Unzip(File)
      */
-    public void unzipFile(String outputFolder) throws ZipException, IOException {
-        unzipFileToFolder(outputFolder);
+    public File[] unzipFile(String outputFolder) throws ZipException, IOException {
+        return unzipFileToFolder(outputFolder);
     }
 
-    private void unzipFileToFolder(String outputFolder) throws ZipException, IOException {
+    private File[] unzipFileToFolder(String outputFolder) throws ZipException, IOException {
         Log.level4Debug("Unzipping " + zip.toString());
-
+        ArrayList<File> files =new ArrayList<File>();
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
         zipFileEntries = zip.entries();
@@ -118,11 +119,13 @@ public class Unzip {
             if (!entry.isDirectory()) {
                 Log.level3Verbose("unzipping " + entry.toString());
                 writeFromZipToFile(zip, entry, newPath);
+                files.add(destFile);
             } else if (entry.isDirectory()) {
                 Log.level4Debug(newPath + entry.getName());
                 new File(newPath + entry.getName()).mkdirs();
             }
         }
+        return files.toArray(new File[files.size()]);
     }
 
     /**
@@ -190,22 +193,22 @@ public class Unzip {
             BufferedInputStream BufferedInputStream = new BufferedInputStream(zipInputStream);
             BufferedOutputStream Destination;
             Destination = new BufferedOutputStream(FileOut);
-            int numberOfCycles=(int)(zipEntry.getSize()/BUFFER);
-            boolean updatePercent=false;
-            if (numberOfCycles>0){
-                updatePercent=true;
+            int numberOfCycles = (int) (zipEntry.getSize() / BUFFER);
+            boolean updatePercent = false;
+            if (numberOfCycles > 0) {
+                updatePercent = true;
             }
-            int currentCycle=0;
+            int currentCycle = 0;
             while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
                 Destination.write(data, 0, currentByte);
-                if (updatePercent){
+                if (updatePercent) {
                     Statics.GUI.setProgressBar(++currentCycle);
                 } else {
                     Statics.GUI.setBlocksUnzipped(++currentCycle);
                 }
-                
+
             }
-            
+
             Destination.flush();
             Destination.close();
         }

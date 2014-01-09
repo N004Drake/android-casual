@@ -1,5 +1,5 @@
 /*CFAutoRootTableException is thrown when the table does not match expected values from CFAutoRoot site
- *Copyright (C) 2013  Adam Outler
+ *Copyright (C) 2013  Adam Outler <adamoutler@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@ package CASUAL.network.CFAutoroot;
  * thrown when the table does not match expected values from CFAutoRoot site
  * @author Adam Outler adamoutler@gmail.com
  */
-class CFAutorootTableException extends Exception {
+public class CFAutorootTableException extends Exception {
+    private static final long serialVersionUID = 1L;
 
     public CFAutorootTableException(String tables_On_autorootchainfireeu_changed) {
         System.out.println(tables_On_autorootchainfireeu_changed);

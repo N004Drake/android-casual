@@ -2195,8 +2195,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public void setStatusMessageLabel(String text) {
     }
 
-
-
+ 
     /**
      * dummy method used to implement iCASUALUI for the purpose of allowing
  CASUAL to throw notifications.
@@ -2264,12 +2263,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
     @Override
     public void sendString(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void sendProgress(String data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /*

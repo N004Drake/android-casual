@@ -1,5 +1,5 @@
 /*CFAutoRootDB Pulls file locations from CFAutoRoot 
- *Copyright (C) 2013  Adam Outler
+ *Copyright (C) 2013  Adam Outler <adamoutler@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,6 +54,9 @@ public class CFAutoRootDb {
         this.deviceList = new ArrayList<Device>();
         BUILDPROP.load(new StringReader(BuildProp));
         grabTable();
+    }
+    public CFAutoRootDb(CASUAL.communicationstools.adb.BuildProp bp) throws URISyntaxException, IOException, MalformedURLException, CFAutorootTableException{
+        this(bp.toString());
     }
 
     /**
