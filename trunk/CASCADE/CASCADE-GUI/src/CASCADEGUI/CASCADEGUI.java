@@ -2229,8 +2229,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
     @Override
     public String displayMessage(CASUALMessageObject messageObject) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        return "0";
+     }
 
     @Override
     public boolean isReady() {
@@ -2249,22 +2249,21 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
     @Override
     public boolean setControlStatus(boolean status) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      return true;
     }
 
     @Override
     public void setBlocksUnzipped(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void sendString(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void sendProgress(String data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     /*
