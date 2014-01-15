@@ -68,15 +68,19 @@ public class AudioHandler {
                         line.close();
                         is.close();
                         //Don't worry about autio exceptions.  Just turn off audio
-                    } catch (IllegalArgumentException ex) {
-                        useSound = false;
-                    } catch (UnsupportedAudioFileException ex) {
-                        useSound = false;
-                    } catch (IOException ex) {
-                        useSound = false;
-                    } catch (LineUnavailableException ex) {
-                        useSound = false;
-                    }
+                        } catch (IOException error) {
+                            Log.level4Debug("Audio File not found");
+                            Log.level3Verbose("File Not Found");
+                        } catch (UnsupportedAudioFileException ex) {
+                            Log.level4Debug("Audio Unsupported Format Exception throw");
+                            useSound = false;
+                        } catch (LineUnavailableException ex) {
+                            Log.level4Debug("Audio Line Unavailable Exception thrown");
+                            useSound = false;
+                        } catch (java.lang.IllegalArgumentException ex) {
+                            Log.level4Debug("Audio Illegal Arguement Exception thrown");
+                            useSound = false;
+                        }
                 }
             }
         });
@@ -111,17 +115,21 @@ public class AudioHandler {
                             sleepTillEndOfClip(clip);
                             clip.drain();
                         } catch (IOException error) {
+                            Log.level4Debug("Audio File not found");
                             Log.level3Verbose("File Not Found");
                         } catch (UnsupportedAudioFileException ex) {
-                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            Log.level4Debug("Audio Unsupported Format Exception throw");
+                            useSound = false;
                         } catch (LineUnavailableException ex) {
-                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            Log.level4Debug("Audio Line Unavailable Exception thrown");
+                            useSound = false;
                         } catch (java.lang.IllegalArgumentException ex) {
-                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            Log.level4Debug("Audio Illegal Arguement Exception thrown");
+                            useSound = false;
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(AudioHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            Log.level4Debug("Audio Interrupted Exception thrown");
+                            useSound = false;
                         }
-
                     }
                 }
 

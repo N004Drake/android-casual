@@ -119,7 +119,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
         FileChooser1.setDialogTitle("Select a CASUAL \"scr\" file");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -441,8 +440,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        CASUALConnectionStatusMonitor.stop();
-        new ADBTools().reset();
+        this.dispose();
     }//GEN-LAST:event_formWindowClosing
     boolean buttonEnableStage = false;
     private void startButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startButtonMouseClicked
@@ -646,6 +644,14 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         windowBanner.setIcon(new ImageIcon(icon, text));
 
     }
+    
+    @Override
+    public void dispose(){
+        this.setVisibile(false);
+        super.dispose();
+        CASUAL.CASUALMain.shutdown(0);
+    }
+    
 
     /**
      * window is closing
@@ -653,6 +659,8 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * @param e closing event
      */
     public void windowCosing(WindowEvent e) {
+        this.setVisibile(false);
+        this.dispose();
         CASUAL.CASUALMain.shutdown(0);
     }
 
