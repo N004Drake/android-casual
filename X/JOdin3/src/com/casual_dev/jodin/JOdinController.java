@@ -14,6 +14,7 @@ import CASUAL.caspac.Script;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.communicationstools.heimdall.odin.CorruptOdinFileException;
 import CASUAL.communicationstools.heimdall.odin.Odin;
+import CASUAL.network.LinkLauncher;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,8 +28,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -37,8 +42,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -144,6 +152,12 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     @FXML
     Button showLegal;
 
+
+    @FXML
+    WebView ad;
+    @FXML
+    Label browserMode;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         CASUAL.Statics.GUI = this;
@@ -159,9 +173,11 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                 new CASUAL.CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.heimdall.HeimdallTools());
                 loading.setVisible(false);
                 hideDisplaySurface();
+
             }
         });
         t.start();
+        initializeAd();
     }
 
     @FXML
@@ -275,6 +291,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
             }
         });
     }
+
     public void resetPassFail(final String message) {
         Platform.runLater(new Runnable() {
             @Override
@@ -285,7 +302,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
             }
         });
     }
-    
 
     public void completeFail() {
         Platform.runLater(new Runnable() {
@@ -542,7 +558,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                         String newPit = Statics.getTempFolder() + "part.pit";
                         ht.run(new String[]{"download-pit", "--output", newPit}, 10000, true);
                         File f = new File(newPit);
-                        if (f.exists() && f.length()>1) {
+                        if (f.exists() && f.length() > 1) {
                             Log.level3Verbose("found pit");
                             pitLocation.setText(f.getAbsolutePath());
                             disableControls(false);
@@ -789,13 +805,12 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                             messageBox.appendText(data);
                     }
                 }
-                String[] test=messageBox.getText().split("\n");
-                String lastline=test[test.length-1];
-                if (lastline.startsWith("Uploading")){
-                    lastline=lastline.replace("Uploading ", "");
+                String[] test = messageBox.getText().split("\n");
+                String lastline = test[test.length - 1];
+                if (lastline.startsWith("Uploading")) {
+                    lastline = lastline.replace("Uploading ", "");
                     passFailLabel.setText(lastline);
                 }
-                
 
             }
         });
@@ -821,6 +836,35 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                 legal.setVisible(false);
             }
         });
+    }
+
+    @FXML
+    private void webviewHover() {
+        ad.setMaxHeight(mainSurface.getHeight());
+        ad.setMinHeight(mainSurface.getHeight());
+        ad.setTranslateY((-mainSurface.getHeight()) + 90);
+        browserMode.setVisible(true);
+    }
+
+    @FXML
+    private void webViewLeave() {
+        ad.setTranslateY(0);
+        ad.setMaxHeight(90);
+        ad.setMinHeight(90);
+        browserMode.setVisible(false);
+    }
+
+    private void initializeAd() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                WebEngine webEngine = ad.getEngine();
+                webEngine.setJavaScriptEnabled(true);
+                webEngine.load("https://builds.casual-dev.com/ad.php");
+
+            }
+        });
+
     }
 
 }
