@@ -70,6 +70,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     /**
      * Creates new form mainWindow
      */
+    private Log Log = new Log();
     //Stores the list of current include files. NOTE: only for current script
     private DefaultListModel<File> fileList = new DefaultListModel<File>();
     /*Stores the list of the current scripts
@@ -253,7 +254,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         updateMessage = new javax.swing.JTextField();
         killswitchMessage = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        scriptListJList = new javax.swing.JList<String>();
+        scriptListJList = new javax.swing.JList();
         deleteScriptButton = new javax.swing.JButton();
         addScriptButton = new javax.swing.JButton();
         editScriptNameButton = new javax.swing.JButton();
@@ -687,11 +688,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
-        scriptListJList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "scriptList.setModel<String>(scriptList)" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        scriptListJList.setModel(scriptList);
         scriptListJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         scriptListJList.setName("scriptListJList"); // NOI18N
         scriptListJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -1472,7 +1469,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
             scriptList.clear();
             Log.level4Debug("Initiating CASPAC load.");
             cp.load();
-            cp.startAndWaitForUnzip();
+            cp.waitForUnzip();
         } catch (ZipException ex) {
             Log.errorHandler(ex);
         } catch (IOException ex) {
@@ -1650,7 +1647,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
                         }
                         // pb.directory(new File(new File( "." ).getCanonicalPath()));
-                        //Log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
+                        //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
                         //Process p = pb.start();
 
                         //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable,"-jar",outputFile+Statics.slash+file});
@@ -1719,7 +1716,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     private javax.swing.JPanel script;
     private javax.swing.JTextArea scriptDescriptionJText;
     private javax.swing.JTabbedPane scriptGroup;
-    private javax.swing.JList<String> scriptListJList;
+    private javax.swing.JList scriptListJList;
     private javax.swing.JLabel scriptNameJLabel;
     private javax.swing.JLabel scriptNameTitleJLabel;
     private javax.swing.JPanel scriptOverview;
@@ -2092,18 +2089,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
 
 
-
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     *
-     * @param status dummy method used to implement iCASUALUI
-     */
-    @Override
-    public boolean setControlStatus(boolean status) {
-        return true;
-    }
-
     /**
      * dummy method used to implement iCASUALUI for the purpose of allowing
  CASUAL to throw notifications.
@@ -2195,7 +2180,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public void setStatusMessageLabel(String text) {
     }
 
- 
+
+
     /**
      * dummy method used to implement iCASUALUI for the purpose of allowing
  CASUAL to throw notifications.
@@ -2234,7 +2220,13 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public void deviceMultipleConnected(int i) {
     }
 
-    
+
+
+ 
+
+
+
+
     @Override
     public String displayMessage(CASUALMessageObject messageObject) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -2255,6 +2247,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     }
 
 
+    @Override
+    public boolean setControlStatus(boolean status) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
     public void setBlocksUnzipped(int i) {
@@ -2263,10 +2259,12 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
     @Override
     public void sendString(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void sendProgress(String data) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /*
