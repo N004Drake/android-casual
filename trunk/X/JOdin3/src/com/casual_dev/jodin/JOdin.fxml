@@ -11,9 +11,10 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
 <?scenebuilder-background-color 0xdfdfdfff?>
 
-<AnchorPane id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.000199999995" prefWidth="883.000022070315" snapToPixel="true" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.casual_dev.jodin.JOdinController">
+<AnchorPane id="AnchorPane" disable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="728.0002999999924" prefWidth="883.000022070315" snapToPixel="true" visible="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.casual_dev.jodin.JOdinController">
   <children>
     <AnchorPane id="AnchorPane" fx:id="mainSurface" layoutX="0.0" layoutY="0.0" prefHeight="626.0001831054688" prefWidth="883.0" rotate="0.0" translateX="0.0" visible="true">
       <children>
@@ -203,11 +204,17 @@
           </font>
         </Button>
         <Button id="testButton" fx:id="showLegal" layoutX="9.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#showLegal" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Legal" />
+        <Label fx:id="browserMode" layoutX="107.0" layoutY="0.0" minHeight="90.0" prefHeight="104.0" prefWidth="674.0" text="Browser Mode" textAlignment="CENTER" textFill="#5200ff" visible="false" wrapText="false">
+          <font>
+            <Font name="System Bold" size="80.0" />
+          </font>
+        </Label>
       </children>
       <rotationAxis>
         <Point3D x="2.0" y="2.0" z="2.0" />
       </rotationAxis>
     </AnchorPane>
+    <WebView fx:id="ad" layoutX="15.0" layoutY="627.0" maxHeight="90.0" maxWidth="1.7976931348623157E308" minHeight="90.0" onMouseEntered="#webviewHover" onMouseExited="#webViewLeave" prefHeight="90.0" prefWidth="863.0" />
     <AnchorPane id="MessageGroup" fx:id="displaySurface" layoutX="0.0" layoutY="0.0" prefHeight="626.0001831054688" prefWidth="883.0" visible="false">
       <children>
         <ScrollPane fx:id="surfaceHider" hbarPolicy="NEVER" layoutX="2.0" layoutY="1.0" mouseTransparent="true" opacity="0.73" prefHeight="627.0" prefWidth="881.0" vbarPolicy="NEVER">
@@ -280,7 +287,7 @@
             <Font size="50.0" />
           </font>
         </Label>
-        <ProgressIndicator layoutX="83.0" layoutY="0.0" opacity="0.14" prefHeight="617.0" prefWidth="717.0" progress="-1.0" />
+        <ProgressIndicator layoutX="83.0" layoutY="0.0" opacity="0.14" prefHeight="617.0" prefWidth="717.0" progress="-1.0" visible="true" />
       </children>
     </AnchorPane>
   </children>
