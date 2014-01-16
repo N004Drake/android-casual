@@ -63,7 +63,7 @@ public class BusyboxTools {
 
     private boolean busyboxIsInstalled() {
 
-        String temp = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 777 " + busyboxLocation + ";ls " + busyboxLocation});
+        String temp = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 711 " + busyboxLocation + " 2&1>dev/null ;ls " + busyboxLocation});
 
         return !temp.contains("No such") && !temp.contains("found");
     }
@@ -98,7 +98,7 @@ public class BusyboxTools {
         }
         rd.copyFromResourceToFile(busyboxResource, busyboxOnHost);
         new Shell().silentShellCommand(installCmd);
-        String check = new Shell().sendShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 777 /data/local/tmp/busybox;ls /data/local/tmp"});
+        String check = new Shell().sendShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 711 /data/local/tmp/busybox 2&1>/dev/null;ls /data/local/tmp"});
         if (check.contains("busybox")) {
             return this.busyboxLocation;
         } else {
