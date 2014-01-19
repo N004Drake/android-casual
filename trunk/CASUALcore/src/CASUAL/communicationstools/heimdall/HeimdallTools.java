@@ -319,6 +319,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         String shellRead; //value from command 
         String returnValue = ""; //concatinated shellRead values from repeats
         shellRead = shell.liveShellCommand(command, true);
+        this.checkErrorMessage(command, shellRead);
         returnValue = returnValue + shellRead;
         timesRun++;
         return returnValue;
