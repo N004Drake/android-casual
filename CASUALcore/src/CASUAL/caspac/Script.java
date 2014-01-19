@@ -371,6 +371,10 @@ public class Script {
                             try {
                                 Log.level4Debug("Examining IDE mode script contents" + scriptZipFile.toString());
                                 actualMD5s.add(new MD5sum().getLinuxMD5Sum(new File((String) scriptZipFile)));
+                                File folder=new File(tempDir);
+                                if (! folder.isDirectory()){
+                                    folder.mkdirs();
+                                }
                                 Unzip unzip = new Unzip(new File((String) scriptZipFile));
                                 unzip.unzipFile(tempDir);
                             } catch (ZipException ex) {

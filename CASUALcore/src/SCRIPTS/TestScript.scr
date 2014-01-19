@@ -1,5 +1,5 @@
-$ADB reboot download
-$HEIMDALL close-pc-screen
+#$ADB reboot download
+#$HEIMDALL close-pc-screen
 
 $ECHO Testing ALL CASUAL commands. Connect your device
 $SLEEPMILLIS 3250
