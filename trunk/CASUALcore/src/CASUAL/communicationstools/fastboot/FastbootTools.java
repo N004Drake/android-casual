@@ -50,7 +50,7 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
      * @return {@inheritDoc}
      */
     @Override
-    public String getBinaryLocation() {
+    public synchronized String getBinaryLocation() {
 
         File loc = new File(binaryLocation);
         if (!loc.isFile() || !loc.exists()) {

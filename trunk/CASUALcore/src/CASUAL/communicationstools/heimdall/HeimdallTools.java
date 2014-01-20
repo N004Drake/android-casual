@@ -218,7 +218,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
     }
 
     @Override
-    public String getBinaryLocation() {
+    public synchronized String getBinaryLocation() {
         //return located heimdall if available
         //here we make new File twice, but this is because binaryLocation may be null.  It's easier to read this way 
         if (binaryLocation != null && !binaryLocation.isEmpty() && new File(binaryLocation).isFile() && new File(binaryLocation).exists()) {
