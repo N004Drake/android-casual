@@ -32,7 +32,7 @@ import static org.junit.Assume.assumeTrue;
 public class DriverRemoveTest {
     
     public DriverRemoveTest() {
-        assumeTrue(OSTools.isWindows());
+        assumeTrue(OSTools.isWindows()&&  !java.awt.GraphicsEnvironment.isHeadless());
         Statics.GUI = new GUI.testing.automatic();
     }
 

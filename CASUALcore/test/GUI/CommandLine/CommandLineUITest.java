@@ -38,6 +38,7 @@ import static org.junit.Assume.assumeTrue;
 public class CommandLineUITest {
     
     public CommandLineUITest() {
+       assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
     }
     
     @BeforeClass
