@@ -88,7 +88,7 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="29.000099999997474" prefWidth="514.0">
               <children>
-                <Button fx:id="pitSelection" layoutX="0.0" layoutY="0.0" mnemonicParsing="false" onAction="#pitPressed" prefHeight="29.0" prefWidth="99.0" text="PIT" />
+                <Button fx:id="pitSelection" layoutX="0.0" layoutY="0.0" mnemonicParsing="false" onMouseReleased="#pitPressed" onTouchReleased="#pitPressed" prefHeight="29.0" prefWidth="99.0" text="PIT" />
                 <TextField fx:id="pitLocation" editable="false" layoutX="104.0" layoutY="1.0" prefHeight="29.0" prefWidth="405.0" />
               </children>
             </AnchorPane>
@@ -100,28 +100,28 @@
               <children>
                 <Group id="Group" layoutX="14.0" layoutY="36.0" scaleX="1.0" scaleY="1.0">
                   <children>
-                    <Button fx:id="pdaSelection" layoutX="19.0" layoutY="0.0" mnemonicParsing="false" onAction="#pdaPressed" prefHeight="29.0" prefWidth="99.0" text="PDA" />
+                    <Button fx:id="pdaSelection" layoutX="19.0" layoutY="0.0" mnemonicParsing="false" onMouseReleased="#pdaPressed" onTouchReleased="#pdaPressed" prefHeight="29.0" prefWidth="99.0" text="PDA" />
                     <CheckBox fx:id="pdaFlash" layoutX="0.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="" />
                     <TextField fx:id="pdaLocation" editable="false" layoutX="118.0" layoutY="0.0" prefHeight="30.0" prefWidth="377.0" text="" />
                   </children>
                 </Group>
                 <Group id="Group" layoutX="14.0" layoutY="0.0">
                   <children>
-                    <Button fx:id="bootloaderSelection" layoutX="19.0" layoutY="0.0" mnemonicParsing="false" onAction="#bootloaderPressed" prefHeight="29.0" prefWidth="99.0" text="Bootloader" />
+                    <Button fx:id="bootloaderSelection" layoutX="19.0" layoutY="0.0" mnemonicParsing="false" onMouseReleased="#bootloaderPressed" onTouchReleased="#bootloaderPressed" prefHeight="29.0" prefWidth="99.0" text="Bootloader" />
                     <CheckBox fx:id="bootloaderFlash" layoutX="0.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="" />
                     <TextField fx:id="bootloaderLocation" editable="false" layoutX="118.0" layoutY="0.0" prefHeight="30.0" prefWidth="377.0" />
                   </children>
                 </Group>
                 <Group id="Group" layoutX="14.0" layoutY="70.0">
                   <children>
-                    <Button fx:id="phoneSelection" layoutX="19.0" layoutY="0.0" mnemonicParsing="false" onAction="#phonePressed" prefHeight="29.000022070315026" prefWidth="99.0001220703125" text="PHONE" />
+                    <Button fx:id="phoneSelection" layoutX="19.0" layoutY="0.0" mnemonicParsing="false" onMouseReleased="#phonePressed" onTouchReleased="#phonePressed" prefHeight="29.000022070315026" prefWidth="99.0001220703125" text="PHONE" />
                     <CheckBox fx:id="phoneFlash" layoutX="0.0" layoutY="6.0" mnemonicParsing="false" selected="false" text="" />
                     <TextField fx:id="phoneLocation" editable="false" layoutX="118.0" layoutY="0.0" prefHeight="30.0" prefWidth="377.0" text="" />
                   </children>
                 </Group>
                 <Group id="Group" layoutX="14.0" layoutY="109.0">
                   <children>
-                    <Button fx:id="cscSelection" layoutX="19.0" layoutY="0.0" mnemonicParsing="false" onAction="#cscPressed" prefHeight="29.0" prefWidth="99.0" text="CSC" />
+                    <Button fx:id="cscSelection" layoutX="19.0" layoutY="0.0" mnemonicParsing="false" onMouseReleased="#cscPressed" onTouchReleased="#cscPressed" prefHeight="29.0" prefWidth="99.0" text="CSC" />
                     <CheckBox fx:id="cscFlash" layoutX="0.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="" />
                     <TextField fx:id="cscLocation" editable="false" layoutX="118.0" layoutY="0.0" prefHeight="30.0" prefWidth="377.0" />
                   </children>
