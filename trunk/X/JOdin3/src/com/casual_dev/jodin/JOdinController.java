@@ -14,7 +14,6 @@ import CASUAL.caspac.Script;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.communicationstools.heimdall.odin.CorruptOdinFileException;
 import CASUAL.communicationstools.heimdall.odin.Odin;
-import CASUAL.network.LinkLauncher;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,12 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -42,7 +37,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.web.WebEngine;
@@ -759,11 +753,8 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                 try {
                     new CASUAL.network.Pastebin().doPosting();
                 } catch (MalformedURLException ex) {
-                    Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
-
-                } catch (IOException ex) {
-                    Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (URISyntaxException ex) {
+                    new CASUALMessageObject("Could not post ").showErrorDialog();
+                } catch (IOException | URISyntaxException ex) {
                     Logger.getLogger(JOdinController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -840,6 +831,9 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     @FXML
     private void webviewHover() {
+        if (! clicked){
+            return;
+        }
         ad.setMaxHeight(mainSurface.getHeight());
         ad.setMinHeight(mainSurface.getHeight());
         ad.setTranslateY((-mainSurface.getHeight()) + 90);
@@ -854,6 +848,16 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         browserMode.setVisible(false);
     }
 
+    private boolean clicked=false;
+    
+    @FXML
+    private void webViewClicked(){
+        clicked=true;
+        WebEngine webEngine = ad.getEngine();
+        webEngine.setJavaScriptEnabled(false); //javascript runs slowly and causes problems. no scripts allowed. 
+        
+        webviewHover();
+    }
     private void initializeAd() {
         Platform.runLater(new Runnable() {
             @Override
