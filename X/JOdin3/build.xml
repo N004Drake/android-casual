@@ -99,15 +99,13 @@
            <zipfileset src="dist/lib/jfxrt.jar" excludes="META-INF/*" />
             -->  
             <manifest>
-                <attribute name="JavaFX-Version" value="2.2"/>
+                <attribute name="JavaFX-Version" value="2.2+"/>
                 <attribute name="Implementation-Title" value="JOdin3CASUAL"/>
                 <attribute name="implementation-version" value="${Application.revision}"/>
                 <attribute name="JavaFX-Application-Class" value="com.casual_dev.jodin.JOdinMain"/>
                 <attribute name="Application-Name" value="JOdin3 CASUAL"/>
                 <attribute name="Permissions" value="all-permissions"/>
                 <attribute name="Main-Class" value="com/javafx/main/Main"/>
-
-
             </manifest>
         </jar>
 

@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -33,7 +34,9 @@ public class JOdinMain extends Application {
         fileToBeDownloaded = this.getParameters().getNamed().get("file");
          //app.getParameters().getNamed("zip");
         stage.setScene(scene);
+        stage.getIcons().add(new Image("odinicon.png"));
         stage.show();
+        
 
         stage.setTitle("JODIN3      powered by Heimdall and CASUAL");
         stage.setResizable(false);
