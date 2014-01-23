@@ -21,10 +21,8 @@ import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Statics;
 import CASUAL.communicationstools.heimdall.drivers.DriverOperations;
-import java.util.regex.Pattern;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
+import org.junit.Test;
 
 /**
  *
@@ -33,6 +31,7 @@ import static org.junit.Assume.assumeTrue;
 public class DriverOperationsTest {
     
     public DriverOperationsTest() {
+        assumeTrue(!System.getProperty("user.name").equals("Jenkins"));
         assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
         assumeTrue(OSTools.isWindows());
         Statics.GUI = new GUI.testing.automatic();

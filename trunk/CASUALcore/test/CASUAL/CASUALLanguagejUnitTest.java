@@ -4,9 +4,7 @@
  */
 package CASUAL;
 
-import CASUAL.communicationstools.adb.ADBTools;
 import org.junit.AfterClass;
-import static org.junit.Assume.assumeTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

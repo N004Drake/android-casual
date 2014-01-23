@@ -18,15 +18,15 @@ package CASUAL.caspac;
 
 import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALTools;
-import CASUAL.FileOperations;
 import CASUAL.CASUALStartupTasks;
+import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
-import CASUAL.misc.StringOperations;
 import CASUAL.archiving.Unzip;
 import CASUAL.archiving.Zip;
 import CASUAL.crypto.MD5sum;
 import java.io.BufferedInputStream;
+import CASUAL.misc.StringOperations;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;

@@ -16,12 +16,11 @@
  */
 package CASUAL;
 
-import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.BusyboxTools;
+import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import CASUAL.communicationstools.fastboot.FastbootTools;
-import CASUAL.communicationstools.heimdall.HeimdallInstall;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.communicationstools.heimdall.drivers.DriverInstall;
 import CASUAL.communicationstools.heimdall.drivers.DriverRemove;

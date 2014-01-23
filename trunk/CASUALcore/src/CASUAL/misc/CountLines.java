@@ -18,7 +18,11 @@ package CASUAL.misc;
 
 import CASUAL.Log;
 import CASUAL.Statics;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *counts lines

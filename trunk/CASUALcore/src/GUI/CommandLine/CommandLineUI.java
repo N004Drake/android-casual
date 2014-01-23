@@ -17,11 +17,11 @@
 
 package GUI.CommandLine;
 
-import CASUAL.caspac.Caspac;
-import CASUAL.caspac.Script;
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.Statics;
+import CASUAL.caspac.Caspac;
+import CASUAL.caspac.Script;
 import CASUAL.iCASUALUI;
 import static CASUAL.iCASUALUI.INTERACTION_ACTION_REUIRED;
 import static CASUAL.iCASUALUI.INTERACTION_COMMAND_NOTIFICATION;
@@ -33,7 +33,6 @@ import static CASUAL.iCASUALUI.INTERACTION_TIME_OUT;
 import static CASUAL.iCASUALUI.INTERACTION_USER_CANCEL_OPTION;
 import static CASUAL.iCASUALUI.INTERACTION_USER_NOTIFICATION;
 import java.awt.HeadlessException;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 

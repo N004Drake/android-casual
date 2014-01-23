@@ -17,14 +17,14 @@
 
 package CASUAL.CommunicationsTools.Fastboot;
 
-import CASUAL.communicationstools.fastboot.FastbootTools;
 import CASUAL.Statics;
+import CASUAL.communicationstools.fastboot.FastbootTools;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

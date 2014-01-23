@@ -17,13 +17,13 @@
 package CASUAL.communicationstools.fastboot;
 
 import CASUAL.CASUALMessageObject;
-import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.ResourceDeployer;
 import CASUAL.Shell;
 import CASUAL.ShellTools;
 import CASUAL.Statics;
+import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
 import CASUAL.misc.StringOperations;
 import java.io.File;
 import java.util.ArrayList;

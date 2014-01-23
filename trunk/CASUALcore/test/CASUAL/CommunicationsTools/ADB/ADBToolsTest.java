@@ -5,10 +5,10 @@
 package CASUAL.CommunicationsTools.ADB;
 
 import CASUAL.CASUALMessageObject;
-import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
-import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.OSTools;
 import CASUAL.Statics;
+import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
+import CASUAL.communicationstools.adb.ADBTools;
 import java.io.File;
 import java.io.IOException;
 import org.junit.After;

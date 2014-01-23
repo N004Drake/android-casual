@@ -22,7 +22,6 @@ import CASUAL.OSTools;
 import CASUAL.Shell;
 import CASUAL.Statics;
 import CASUAL.archiving.Unzip;
-import CASUAL.communicationstools.heimdall.drivers.DriverInstall.*;
 import CASUAL.misc.StringOperations;
 import java.io.FileNotFoundException;
 import java.io.IOException;

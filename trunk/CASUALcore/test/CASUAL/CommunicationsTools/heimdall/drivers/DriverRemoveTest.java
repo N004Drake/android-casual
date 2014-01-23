@@ -21,9 +21,9 @@ import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Statics;
 import CASUAL.communicationstools.heimdall.drivers.DriverRemove;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assume.assumeTrue;
+import org.junit.Test;
 
 /**
  *
@@ -32,6 +32,7 @@ import static org.junit.Assume.assumeTrue;
 public class DriverRemoveTest {
     
     public DriverRemoveTest() {
+        assumeTrue(!System.getProperty("user.name").equals("Jenkins"));
         assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
         assumeTrue(OSTools.isWindows());
         Statics.GUI = new GUI.testing.automatic();

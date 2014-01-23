@@ -17,19 +17,14 @@
 
 package GUI.CommandLine;
 
-import CASUAL.caspac.Caspac;
-import CASUAL.caspac.Script;
 import CASUAL.CASUALMain;
-import CASUAL.CASUALMessageObject;
 import CASUAL.communicationstools.adb.ADBTools;
-import java.awt.image.BufferedImage;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assume.assumeTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeTrue;
 
 /**
  *

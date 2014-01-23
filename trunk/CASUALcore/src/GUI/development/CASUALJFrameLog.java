@@ -18,15 +18,14 @@ package GUI.development;
 
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.network.Pastebin;
 import CASUAL.Statics;
+import CASUAL.network.Pastebin;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
 import javax.swing.JOptionPane;
 
 /**

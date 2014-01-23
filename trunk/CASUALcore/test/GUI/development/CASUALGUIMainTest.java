@@ -18,7 +18,6 @@
 package GUI.development;
 
 import CASUAL.Statics;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.AfterClass;
