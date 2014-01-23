@@ -33,7 +33,8 @@ import static org.junit.Assume.assumeTrue;
 public class DriverInstallTest {
     
     public DriverInstallTest() {
-        assumeTrue(OSTools.isWindows() &&  !java.awt.GraphicsEnvironment.isHeadless());
+        assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
+        assumeTrue(OSTools.isWindows());
         Statics.GUI = new GUI.testing.automatic();
     }
 
