@@ -17,10 +17,10 @@
 package CASUAL.communicationstools.heimdall.drivers;
 
 import CASUAL.Log;
+import CASUAL.communicationstools.heimdall.drivers.DriverOperations.PatternChoice;
 import CASUAL.misc.StringOperations;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import CASUAL.communicationstools.heimdall.drivers.DriverOperations.PatternChoice;
 
 /**
  *

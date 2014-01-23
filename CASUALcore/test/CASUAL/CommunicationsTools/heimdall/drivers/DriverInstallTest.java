@@ -14,25 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package CASUAL.CommunicationsTools.heimdall.drivers;
 
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Statics;
 import CASUAL.communicationstools.heimdall.drivers.DriverInstall;
-import java.util.ArrayList;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
+import org.junit.Test;
 
 /**
  *
  * @author Jeremy
  */
 public class DriverInstallTest {
-    
+
     public DriverInstallTest() {
+        assumeTrue(!System.getProperty("user.name").equals("Jenkins"));
         assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
         assumeTrue(OSTools.isWindows());
         Statics.GUI = new GUI.testing.automatic();
@@ -45,6 +43,6 @@ public class DriverInstallTest {
     public void testInstallKnownDrivers() {
         Log.level4Debug("Testing DriverInstall.installKnownDrivers()");
         DriverInstall instance = new DriverInstall(1);
-        assert(!instance.installKnownDrivers());
+        assert (!instance.installKnownDrivers());
     }
 }

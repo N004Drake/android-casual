@@ -5,7 +5,6 @@
 package CASUAL.network.CASUALDevIntegration;
 
 
-import CASUAL.network.CASUALDevIntegration.CASUALDevQuerier;
 import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;

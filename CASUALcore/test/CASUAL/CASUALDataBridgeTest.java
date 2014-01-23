@@ -4,8 +4,8 @@
  */
 package CASUAL;
 
-import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import CASUAL.communicationstools.adb.ADBTools;
+import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -15,9 +15,9 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

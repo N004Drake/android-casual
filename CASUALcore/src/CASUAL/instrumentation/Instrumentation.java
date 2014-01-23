@@ -17,7 +17,6 @@
 
 package CASUAL.instrumentation;
 
-import CASUAL.Statics;
 import CASUAL.misc.MandatoryThread;
 
 /**

@@ -17,7 +17,6 @@
 package CASUAL.misc;
 
 import CASUAL.instrumentation.Instrumentation;
-import CASUAL.Statics;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**

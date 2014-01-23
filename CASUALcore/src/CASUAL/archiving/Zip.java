@@ -20,8 +20,6 @@
 package CASUAL.archiving;
 
 import CASUAL.Log;
-import CASUAL.Log;
-import CASUAL.Statics;
 import CASUAL.Statics;
 import java.io.Closeable;
 import java.io.File;
