@@ -31,7 +31,7 @@ import org.junit.Test;
 public class DriverOperationsTest {
     
     public DriverOperationsTest() {
-        assumeTrue(!System.getProperty("user.name").equals("Jenkins"));
+        assumeTrue(!System.getProperty("user.name").equals("jenkins"));
         assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
         assumeTrue(OSTools.isWindows());
         Statics.GUI = new GUI.testing.automatic();
