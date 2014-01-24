@@ -156,6 +156,7 @@
         
         <echo>Rebuilding libraries</echo>
         <echo>rebuilding Commons Compress</echo>
+        <copy file="../CASUALcore/Libraries/commons-compress-1.5/commons-compress-1.5.jar" tofile="dist/lib/commons-compress-1.5.jar"/>
         <jar jarfile="dist/lib/commons-compress-1.5r.jar" level="0" compress="false" filesetmanifest="merge">
             <manifest>
                 <attribute name="Application-Name" value="Commons Compress"/>
@@ -167,6 +168,7 @@
         <move file="dist/lib/commons-compress-1.5r.jar" tofile="dist/lib/commons-compress-1.5.jar"/>
         
         <echo>Rebuilding copylibstask</echo>
+        <copy file="../CASUALcore/Libraries/CopyLibs-2/org-netbeans-modules-java-j2seproject-copylibstask.jar" tofile="dist/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar"/>
         <jar jarfile="dist/lib/org-netbeans-modules-java-j2seproject-copylibstaskr.jar" level="0" compress="false" filesetmanifest="merge">
             <manifest>
                 <attribute name="Manifest-Version" value="1.0"/>
