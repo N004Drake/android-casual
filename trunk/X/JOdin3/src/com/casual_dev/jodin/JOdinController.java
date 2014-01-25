@@ -14,6 +14,7 @@ import CASUAL.caspac.Script;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.communicationstools.heimdall.odin.CorruptOdinFileException;
 import CASUAL.communicationstools.heimdall.odin.Odin;
+import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -349,6 +350,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     private void exit() {
         System.exit(0);
+        this.setVisible(false);
     }
 
     @FXML
@@ -512,6 +514,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     }
 
+    @FXML
     @Override
     public void dispose() {
         this.exit();
@@ -542,79 +545,38 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
             public void run() {
                 resetPassFail("running");
                 disableControls(true);
+                //obtain pit file
                 if (pitLocation.getText().isEmpty()) {
                     String pitMessage = "Do you want me to obtain a PIT for you?>>>This application requires what is known as a` 'PIT file'.  The PIT file tells the application where to place files on your device.  If you don't have a PIT file, we can obtain one from your device";
                     boolean obtainPit = new CASUALMessageObject(pitMessage).showYesNoOption();
                     if (obtainPit) {
-                        Log.level3Verbose("obtaining pit");
-                        new CASUALMessageObject("You will need to restart your device in Download Mode.>>>In order to obtain a PIT file, the device will be rebooted.  Once it reboots, you will need to put it back into download mode.\n\nPro-Tip: hold the download mode combination and press OK to dismiss this dislog to reboot into download mode immediately").showInformationMessage();
-                        HeimdallTools ht = new HeimdallTools();
-                        String newPit = Statics.getTempFolder() + "part.pit";
-                        ht.run(new String[]{"download-pit", "--output", newPit}, 10000, true);
-                        File f = new File(newPit);
-                        if (f.exists() && f.length() > 1) {
-                            Log.level3Verbose("found pit");
-                            pitLocation.setText(f.getAbsolutePath());
-                            disableControls(false);
-                            resetPassFail("waiting");
-                            new CASUALMessageObject("Got it!>>>We obtained the PIT file and everything is ready to flash\n\n Click the start button again when you're ready. ").showInformationMessage();
-                            return;
-                        } else {
-                            Log.level3Verbose("Did not find pit");
-                            new CASUALMessageObject("Could not obtain pit.>>>We could not obtain the pit file. We tried, but it didn't work. ").showErrorDialog();
-                            disableControls(false);
-                            resetPassFail("halted");
-                            return;
-                        }
+                        //if approved to get the pit file, get it.
+                        getPitFromDevice();
+                        return;
 
                     } else {
+                        //otherwise inform user that we cannot continue without a pit. 
                         new CASUALMessageObject("We can't continue without a PIT>>>We cannot continue without a PIT file.  Please select one or let CASUAL do it for you.").showInformationMessage();
                         disableControls(false);
                         resetPassFail("halted");
                         return;
                     }
                 }
+                //prepare device flashing
                 ArrayList<File> list = new ArrayList<>();
-                if (bootloaderFlash.isSelected()) {
-                    String location = bootloaderLocation.getText();
-                    list.add(new File(location));
-                }
-                if (pdaFlash.isSelected()) {
-                    String location = pdaLocation.getText();
-                    list.add(new File(location));
-                }
-                if (phoneFlash.isSelected()) {
-                    String location = phoneLocation.getText();
-                    list.add(new File(location));
-                }
-                if (cscFlash.isSelected()) {
-                    String location = cscLocation.getText();
-                    list.add(new File(location));
-                }
+                getOdinPacakages(list);
                 try {
-                    Odin odin = new Odin(new File(pitLocation.getText()));
-                    String[] flashList = odin.getHeimdallFileParametersFromOdinFile(Statics.getTempFolder(), list.toArray(new File[list.size()]));
-                    ArrayList<String> flashCommand = new ArrayList<>();
-                    flashCommand.add("flash");
-                    flashCommand.add("--PIT");
-                    flashCommand.add(pitLocation.getText());
-                    if (repartition.isSelected()) {
-                        flashCommand.add("--repartition");
-                    }
-                    flashCommand.addAll(Arrays.asList(flashList));
-                    if (!autoReboot.isSelected()) {
-                        flashCommand.add("--no-reboot");
-                    }
-                    messageBox.appendText(new HeimdallTools().getBinaryLocation());
-                    String[] runCommand = flashCommand.toArray(new String[flashCommand.size()]);
-                    System.out.println("heimdall Command:");
-                    System.out.println(new HeimdallTools().getBinaryLocation());
-
+                    //get the packages mapped
+                    String[] runCommand = getHeimdallCommandFromOdinPackageList(list);
+                    //stop the monitor
                     CASUAL.CASUALConnectionStatusMonitor.stop();
+                    
+                    //verify device is connected one last time
                     HeimdallTools ht = new HeimdallTools();
                     if (!ht.isConnected()) {
                         messageBox.appendText("\nWaiting for device");
                     }
+                    
                     Log.level3Verbose("running command");
                     String s = ht.run(runCommand, 9999999, false);
                     if (ht.checkErrorMessage(runCommand, s)) {
@@ -650,6 +612,73 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         });
         t.start();
 
+    }
+
+    private String[] getHeimdallCommandFromOdinPackageList(ArrayList<File> list) throws FileNotFoundException, CorruptOdinFileException {
+        Odin odin = new Odin(new File(pitLocation.getText()));
+        String[] flashList = odin.getHeimdallFileParametersFromOdinFile(Statics.getTempFolder(), list.toArray(new File[list.size()]));
+        ArrayList<String> flashCommand = new ArrayList<>();
+        flashCommand.add("flash");
+        flashCommand.add("--PIT");
+        flashCommand.add(pitLocation.getText());
+        if (repartition.isSelected()) {
+            flashCommand.add("--repartition");
+        }
+        flashCommand.addAll(Arrays.asList(flashList));
+        if (!autoReboot.isSelected()) {
+            flashCommand.add("--no-reboot");
+        }
+        messageBox.appendText(new HeimdallTools().getBinaryLocation());
+        String[] runCommand = flashCommand.toArray(new String[flashCommand.size()]);
+        System.out.println("heimdall Command:");
+        System.out.println(new HeimdallTools().getBinaryLocation());
+        return runCommand;
+    }
+
+    private void getPitFromDevice() throws HeadlessException {
+        Log.level3Verbose("obtaining pit");
+        new CASUALMessageObject("You will need to restart your device in Download Mode.>>>In order to obtain a PIT file, the device will be rebooted.  Once it reboots, you will need to put it back into download mode.\n\nPro-Tip: hold the download mode combination and press OK to dismiss this dislog to reboot into download mode immediately").showInformationMessage();
+        HeimdallTools ht = new HeimdallTools();
+        String newPit = Statics.getTempFolder() + "part.pit";
+        ht.run(new String[]{"download-pit", "--output", newPit}, 10000, true);
+        File f = new File(newPit);
+        if (f.exists() && f.length() > 1) {
+            Log.level3Verbose("found pit");
+            pitLocation.setText(f.getAbsolutePath());
+            disableControls(false);
+            resetPassFail("waiting");
+            new CASUALMessageObject("Got it!>>>We obtained the PIT file and everything is ready to flash\n\n Click the start button again when you're ready. ").showInformationMessage();
+            return;
+        } else {
+            Log.level3Verbose("Did not find pit");
+            new CASUALMessageObject("Could not obtain pit.>>>We could not obtain the pit file. We tried, but it didn't work. ").showErrorDialog();
+            disableControls(false);
+            resetPassFail("halted");
+            return;
+        }
+    }
+
+    private void getOdinPacakages(ArrayList<File> list) {
+        if (bootloaderFlash.isSelected()) {
+            String location = bootloaderLocation.getText();
+            list.add(new File(location));
+            Log.level3Verbose("Added bootloader to list " +list );
+        }
+        if (pdaFlash.isSelected()) {
+            String location = pdaLocation.getText();
+            list.add(new File(location));
+            Log.level3Verbose("Added PDA to list " +list );
+        }
+        if (phoneFlash.isSelected()) {
+            String location = phoneLocation.getText();
+            list.add(new File(location));
+            Log.level3Verbose("Added Phone to list " +list );
+        }
+        if (cscFlash.isSelected()) {
+            String location = cscLocation.getText();
+            list.add(new File(location));
+            Log.level3Verbose("Added bootloader to list " +list );
+        }
     }
 
     @Override
@@ -705,17 +734,15 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     @Override
     public void setStatusMessageLabel(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setWindowBannerText(String text) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setVisible(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override

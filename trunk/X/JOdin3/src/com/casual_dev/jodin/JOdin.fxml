@@ -185,7 +185,7 @@
             </AnchorPane>
           </content>
         </TitledPane>
-        <Button fx:id="exit" layoutX="738.0" layoutY="571.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="Exit" />
+        <Button fx:id="exit" layoutX="738.0" layoutY="571.0" mnemonicParsing="false" onAction="#dispose" prefHeight="31.0" prefWidth="109.0" text="Exit" />
         <Button fx:id="reset" defaultButton="false" layoutX="604.0" layoutY="571.0" mnemonicParsing="false" onAction="#reset" prefHeight="31.0" prefWidth="109.0" text="Reset" />
         <Button fx:id="start" defaultButton="false" layoutX="480.0" layoutY="571.0" mnemonicParsing="false" onAction="#StartButtonActionPerformed" prefHeight="31.0" prefWidth="109.0" text="Start" />
         <Label layoutX="53.0" layoutY="28.0" minHeight="31.0" prefHeight="31.0" prefWidth="38.0" text="J" textFill="WHITE">
