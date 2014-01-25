@@ -114,13 +114,32 @@
         <signjar keystore="${javafx.signjar.keystore}"
                  storepass="${javafx.signjar.storepass}"
                  alias="${javafx.signjar.alias}"
-                 keypass="${javafx.signjar.keypass}">
+                 keypass="${javafx.signjar.keypass}"
+                 tsaurl="http://time.certum.pl">
             <path>
+
                 <fileset dir="dist" includes="JOdin3CASUAL-r*.jar" />
             </path>
 
         </signjar>
         <echo>Signed by ${javafx.signjar.alias}</echo>
     </target>
-    
+    <macrodef name="deploy-sign">
+        <sequential>
+            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
+            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
+            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
+            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
+            <signjar keystore="${javafx.signjar.keystore}"
+                storepass="${javafx.signjar.storepass}"
+                alias="${javafx.signjar.alias}"
+                keypass="${javafx.signjar.keypass}"
+                tsaurl="${javafx.signing.tsaurl}"> 
+                <fileset dir="${jfx.deployment.dir}">
+                    <include name="${jfx.deployment.jar}"/>
+                    <include name="lib${file.separator}*.jar"/>
+                </fileset>
+            </signjar>
+        </sequential>
+    </macrodef>
 </project>
