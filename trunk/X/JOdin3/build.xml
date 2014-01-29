@@ -56,7 +56,7 @@
 
     -->
     <target name="-pre-compile">
-        <exec outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
+        <exec dir="../../" outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
             <arg value="-c" />
             <redirector>
                 <outputfilterchain>
