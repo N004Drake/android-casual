@@ -42,7 +42,7 @@ public class Translations {
             Translations.setDefaultLanguage();
         }
 
-        Log.level4Debug("[TRANSLATION]" + line);
+        Log.level4Debug("[TRANSLATION]["+Locale.getDefault().getDisplayLanguage()+ "]" + line);
         //get translation
         String[] splitRef = line.split("( )|(\n)");
         String retVal = "";
@@ -65,7 +65,8 @@ public class Translations {
     private static void setDefaultLanguage() {
         String lang = Locale.getDefault().getDisplayLanguage();
         try {
-            translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English", Locale.getDefault());
+            
+            translation = ResourceBundle.getBundle("CASUAL/resources/Translations/"+lang, Locale.getDefault());
         } catch (Exception e) {
             translation = ResourceBundle.getBundle("CASUAL/resources/Translations/English");
             Log.level3Verbose("Language " + lang + " was not found in CASUAL/resources/Translations/" + lang + ".properties.  CASUAL will accept translations.  Defaulting to english. ");
