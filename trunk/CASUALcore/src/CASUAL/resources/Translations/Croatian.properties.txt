@@ -1,0 +1,116 @@
+#Translations provides a unified translation system for any scripting purpose,
+#or in design-time code.
+#Log().level0Error("@stringToBeTranslated");
+#Log().level2Information("@stringToBeTranslated");
+#CASUALInteraction(@interactionStringToBeTranslated).*;
+#Note: all @interactions consist of a title and message delimited by >>>. eg.
+#@interactionExample=This is a title>>>This is a message
+#any other @stringToBeTranslated is directly translated
+#Strings may be contatinated by using the delimiting characters " " and "\n" ie..
+#Log().level0Error("@string1 mytext @string2\n@string3");
+
+#Interactions display dialogs on screen
+@interactionOfflineNotification=Vaš ureðaj nije na vezi>>>Izgleda da spojeni ureðaj nije uredno uparen.\nVaš ureðaj \"nije na vezi\", ovo se može dogoditi iz par razloga.\n-Molimo iskljuèite ureðaj, i ponovno ga spojite.\nOnda otkljuèajte ureðaj i provjerite poruku na ekranu.\nOznaèite 'Uvjek dopusti s ovog raèunala' onda pritisnite OK.\n-ako to neradi onda resetirajte *sve*...\nresetirajte raèunalo i ureðaj.
+@interactionInsufficientPermissionsWorkaround=Nedovoljno dopuštenja>>>Izgleda da ovo raèunalo\nnije uredno postavljeno za komunikaciju\ns ureðajem.  Kao zaobilazak\npokušati æemo podignuti dopuštenja \nza uredan pristup ureðaju.
+@interactionWindowsDeviceNotDetected=Ureðaj nije detektiran>>>Nismo detektirali vaš spojeni ureðaj.\nMoguæe je da trebate instalirati drivere\nGoogle \"windows driver *vašureðaj*\" za više.
+@interactionLinuxDeviceNotDetected=Ureðaj nije detektiran>>>Nismo detektirali vaš spojeni ureðaj.\nMoguæe je da trebate instalirati libusb \nGoogle \"koristeæi adb Linux *vašureðaj*\" za više.
+@interactionMacDeviceNotDetected=Ureðaj nije detektiran>>>Nismo detektirali vaš spojeni ureðaj.\nVjerovatno trebate instalirati kext\nGoogle \"kext *vašureðaj*\" za više
+@interactionMissingFileVirusScanner=Nedostaje Datoteka>>>Detektirano je da integritet\n CASUALa je ugrožen.\nVjerovatno zbog a\nVirus Skenera.  Molimo iskljuèite\nVirus Skenere i ponovno skinite CASUAL
+@interactionKillSwitch=KRITIÈNA GREŠKA!>>>CASUAL nemože nastaviti zbog aktivacije daljinskog gašenja.\nCASUAL æe vas sada odvesti na stranicu podrške.
+@interactionDownloadFileFailure=KRITIÈNA GREŠKA!>>>Neuspješno skidanje.  CASUAL æe se resetirati.
+@interactionBadDownload=GREŠKA!>>>Tijekom ažuriranja kriva datoteka je skinuta.\nMolimo provjerite vašu internet vezu i pokušajte ponovo.\nAko problem ostaje, prijavite ga.\nCASUAL æe sada izaæi.  Molimo pokušajte ponovo.
+@interactionsystemNotNativelySupported=Upozorenje>>>Vaš sistem nije podržan,\nmolimo instalirajte ADB manualno.\nPonvni pokušaj za nastavak
+@interactionELFCLASS64Error=ELFCLASS64 greška!>>>Nemoguæa egzekucija ADBa. 'Kriva ELF klasa' greška\nOvo može biti riješeni instalacijom ia32-libs\n eg.. sudo apt-get install ia32-libs\nie.. sudo VašUpraviteljPaketa install ia32-libs
+@interactionKillSwitchMessage=KRITIÈNA GREŠKA!>>>CASUAL nemože nastaviti zbog aktivacije daljinskog gašenja.\n CASUAL æe vas sada odvesti na stranicu podrške. 
+@interactionPastebinError=Greška pri slanju zapisa Sistema.>>>Mi æemo poslati vaš zapisnik u CASUAL-Automatizirani Pastebin.  Razvojni programeri mogu ga pogledati da dokuèe što se dešava.\n\nMolimo unesite vaš XDA-Developers korisnièko ime u polje ispod, onda pritisnite 'Ok'.
+@interactionThankyouForPastebin=Hvala!>>>Pastebin URL Kopiran\n\nMolimo pošaljite ga u prikladnu temu foruma.\n Ako želite odgovor, molimo ispunite captchu.
+@interactionUnplugItAndPlugItBackIn=Iskopèajte i ukopèajte ureðaj>>>Za nastavak, morate iskopèati ureðaj i\ni ponovno ukopèati.  Koristite DOBAR ulaz, odzada, ne\nsprijeda.  Takoðer koristite dobar kabel.
+@interactionwindowsRunAsMessage=Greška Dopuštenja>>>Administrativna dopuštenja su potrebna za nastavak.\nMolimo prijavite se kao Administrator Sistema i ponvno pokrenite komandu ili koristite konzolu: \n runas /user:Administrator java -jar
+@interactionDownloadModeNotDetected=Nevidim ureðaj>>>Izgleda da spojeni ureðaj nije prepoznat.\nUreðaj bi trebao biti u modu skidanja.. Dali je?.\n\nAko je u mod skidanja, koristite drugi USB ulaz.\nNekoristite USB središte.  Takoðer, USB ulazi iza\n raèunala su bolji nego prednji.
+@interactionRestartDownloadMode=Resetiranje Moda Skidanja>>>Morate resetirati vaš ureðaj i vratiti ga nazad u mod skidanja.\nOvo možete postiæi tako što æete izvaditi bateriju\nonda držati Volumen dolje + tipka kuæa dok držite tipku paljenje.\nAko nemate tipku kuæa, pritisnite volumen dolje\n dok spajate USB kabel.
+@interactionUnableToDetectDownloadMode=Provjerite kablove>>>Heimdall nemože detektirati vaš telefon u Odin/Mod Skidanja\nPonovno provjerite vaše kablove, pritisnite OK kad ste spremni.  
+@interactionPermissionNotFound=DOPUŠTENJA NISU PRONAÐENA>>>Molimo instalirajte paket 'gksu' ili 'pkexec' 
+@interactionCASUALCorrupt=Detektirano je da CASUALova\nkonzistencija je ugrožena.\nOvo je vjerovatno zbog virusa\nskenera.  Preporuèeno je da iskljuèite\nvirus skenere i ponovno skinite CASUAL.
+@interactionInstallingCADI=CADI>>>CASUAL æe sada instalirati opæi USB driver.\n\nOvo æe omoguæiti komunikaciju izmeðu CASUALA i vašeg ureðaja\n\nŽelite li da CASUAL ukloni ovaj opæi driver kad završimo s operacijom?
+@interactionNeed8gigExternalSD=Umetnite SDKarticu>>>Kao privremeno mjesto za podataka na SDKARTICU.
+@interactionPackageCorrupt=GREŠKA>>>Paket je pokvaren. Nemožemo nastaviti. Gašenje.
+@interactionADBLockedUp=Monitor Locked>>>ADB has locked up.  This generally\nrequres a computer reboot.  Please\nreboot your computer.
+@interactionInstallFastbootDrivers=Instalacija Drivera zahtjevana>>>Molimo osigurajte da ste u Fastboot Modu\n driver instaliran za vaš ureðaj.  Ovo se nemože uèiniti\nautomatski ovaj put.
+@interactionUltimateFlashFailure=Nemojte obustaviti ovo>>>Izgleda da je vaš ureðaj ugrožen.\n CASUAL se mora ugasiti.  Negasite vaš ureðaj. \n There was a problem while flashing. Morate\n potražiti pomoæ s XDA foruma.  Nakon što proèitate ovo\n pritisnite ctrl-L da otvorite zapisnik i koristite pastebin tipku\n uzmite ponuðenu povezicu na XDA forum. 
+@interactionPairingRequired=Ureðaj nije uparen>>>Ureðaj zahtjeva uparivanje.\nPogledajte ureðaj za više informacija.\nTakoðer oznaèite kuæicu da se uparivanje nastavi.
+@interactionFailedToReceive=Nesupješno primanje datoteke>>>Dogodio se problem s prijenosom podataka.\nPonovniPokušaj. 
+@couldNotObtainRootOnDevice=Ureðaj zahtjeva root>>>Root se nemože dobiti na ureðaju.  Operacija neuspješna.
+@interactionWaitingForAdb=Pretraga za ADB ureðaj>>>èekamo dok se ureðaj spoji.\n\nAko niste ukljuèili ADB ili "Mod razvoja", molimo da uèinite to i prikljuèite ureðaj. 
+#Strings display text only onscreen
+@restartingADBSlowly=Polagano resetiranje ADBa
+@restartingADB=Resetiranje ADBa
+@permissionsElevationRequired=Detektiran problem s dopuštenjima. zahtjevanje poveæanja dopuštenja CASUALA.
+@improperCASUALversion=Stara verzija CASUALA detektirana. CASUAL nemože nastaviti.
+@fileNotFound=Datoteka nije pronaðena tijekom pretrage.  Dogodio se problem s neprekidnosti podataka. Gašenje.
+@metaDataError=Dogodio se problem s online metapodacima za ovu skriptu.  Molimo informirajte razvojnog programera.
+@zipFileCorrupt=Zip datoteka je iskvarena. nemožemo nastaviti.
+@shuttingDown=Gašenje
+@sleepingfor4Seconds=pripravan 4 sekunde.
+@disconnectAndReconnect=Ponovno spojite vaš ureðaj.  Provjerite ureðaj za instrukcije.
+@unrecognizedDeviceDetected=Nepoznati ureðaj detektiran\nAko nastavite s problemima, molimo prijavite ovaj problem
+@stateDisconnected=Status Odspojen nareðen
+@stateConnected=Status Spojen nareðen
+@stateMultipleDevices=Više ureðaja detektirano.
+@done=završeno
+@canceledDueToMissingFiles=otkazano na zahtjev korisnika zbog ugroženih paketa
+@canceledAtUserRequest=otkazano na zahtjev korisnika
+@haltedPerformActions=Zaustavljeno.  Odradite potrebne akcije za nastavak.
+@executingHeimdall=Egzekucija Heimdall komandi.
+@waitingForDownloadModeDevice=Èekanje za ureðaj u modu Skidanja.
+@linuxPermissionsElevation=podizanje dopuštenja za Linux.
+@waitingForDeviceToBeDetected=Èekanje veze s ADB ureðajom.  Kada vaš sustav prepozna ureðaj, nastaviti æemo.  Nedirajte ništa.
+@scriptComplete=Skripta završena
+@unrecognizedCommand=Nepoznati argument tijekom startanja. 
+@killSwitchMessage=CASUAL je daljinski zaustavljen zbog kritiènih ažuriranja.  Molimo proèitajte poruku iznad
+@problemDownloading=Dogodio se problem tijekom skidanja skripte.  Provjerite vaš internet i pokušajte ponovno.
+@problemDownlaodingFile=Problem skidanja datoteke s interneta, pokušajte ponovno.
+@executeScriptError=CASUALAnalizatorSkripte().egzkucijaOdabraneSkripte: CASUAL je doživio nepoznatu grešku. Molimo prijavite ovo.
+@couldNotFindScript=Nemoguæ pronalazak skripte tijekom egzkucijaOdabraneSkripte u CASUALAnalizatorSkripte!
+@reportThisError=Molimo prijavite ovu grešku.
+@ioExceptionInExecuteScript=IOIznimka se dogodila tijekom egzkucijaOdabraneSkripte u CASUALAnalizatorSkripte! Vjerovatno je skinuta loša datoteka.
+@md5sVerified=... Ažuriranje uspješno! MD5 oznake vertificirane!
+@casualIsOutOfDate=GREŠKA. CASUAL je prestar. Ova verzija CASUALA nemože nastaviti. Pogledajte URL za više informacija.
+@scriptIsOutOfDate=Ova skripta je prestara. Ažuriranje...
+@metaDataMalformed=Dogodio se problem s online metapodacima.  molimo informirajte razvojnog programera.
+@downloadingUpdates=Skidanje ažuriranja.
+@invalidMD5String=Krivi MD5 niz
+@deployingFastboot=Postavljanje Fastboota...
+@fastbootDeployed=Fastboot postavljen.
+@incompatibleWithHeimdal=Detektirani sistem nije kompatibilan sa Heimdallovom auto-instalacijom. Morate sastaviti i instalirati heimdall iz izvora za nastavak.  Heimdallovom izvoru možete pristupiti sa https://github.com/Benjamin-Dobell/Heimdall.
+@installingVisualCPP=Instaliranje Visual C++ redistribucijski paket\n Trebate pritisnuti sljedeæe za nastavak instalacije.
+@installingCADI=\nDriveri su Potrebni Pokretanja CADI.\nCASUAL Automatski Instaler Drivera od jrloper.\nInstaliranje Drivera sada
+@problemWithOnlineRepo=Dogodio se problem pri pristupu online repozitoriju.
+@additionalFilesAreRequired=Dodatne datoteke su potrebne za nastavak.. Skidanje."
+@heimdallCouldNotBeDeployed=Dogodio se problem tijekom postavljanja instalacije heimdalla.
+@heimdallEncounteredAnError=Heimdall je doživio grešku.
+@criticalError=Dogodio se kritièni problem.  Prijavite grešku sa zapisnikom.
+@problemWhileExecutingCommand=Dogodio se problem tijekom izvršavanja komande.
+@permissionsElevationProblem=Kriva lozinka 3 puta, pokušavanje sa normalnim dopuštenjima
+
+
+@heimdallErrorReport=\n *** [Heimdall Prijava Greške ***\n
+@couldNotFindResource=Nemoguæ pronalazak imenovanog resursa:
+@problemParsingScript=CASUAL greška skripte. CASUAL je doživio grešku tijekom analize komande:
+@fileNotAFolder=Odabrana datoteka nije mapa
+@failedToWriteFile=Neuspješno zapisivanje datoteke
+@criticalErrorWhileCopying=Kritièna Greška tijekom kopiranja datoteke
+@couldNotCreateFolder=Nije moguæe napraviti mapu
+@couldNotDeleteFile=Nije moguæe izbrisati datoteku
+@resourceNotFound=Resurs nije pronaðen
+@fileNotFound=Datoteka nije pronaðena
+@maximumRetries=Premašeni maksimalni pokušaji. Gašenje analizatora.
+@removingFolderAndContents=Uklanjanje mapa i sadržaja:
+@heimdallWasSucessful=Heimdall je uspio
+@textResourceNotFound=nema .txt datoteke ua uèitanu skriptu
+@CASUALScriptFailed=Skripta nemože završiti.  Prijavite ovu grešku
+@CASUALScriptPassed=Skripta uredno završila. 
+@CouldNotRoot=Root pristup nemoguæ.  Molimo rootajte vaš ureðaj i pokušajte ponovo
+@NotForYourDevice=Ovo nije namjenjeno za vaš ureðaj.  Ovo je za drugi ureðaj.  Nemožete ovo pokrenuti na vašem ureðaju.
+@waitingForDownload=Pretraga za ureðaj u mod Downloada.
+@noUpdateRequired=Vertificirano ažurno.
+@couldNotCreateTempFolderProperly=Greška pri izradi privremene mape. Nedovoljno dopuštenja.
