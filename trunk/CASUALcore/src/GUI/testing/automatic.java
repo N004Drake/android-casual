@@ -143,7 +143,7 @@ public class automatic implements CASUAL.iCASUALUI {
 
    
     @Override
-    public void setBlocksUnzipped(int i) {
+    public void setBlocksUnzipped(String i) {
         
     }
 

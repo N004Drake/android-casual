@@ -1277,7 +1277,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         if (checkScriptNameExists(scriptName)) {
             return;
         }
-        if (!(scriptName.isEmpty())) {
+        if (scriptName!=null && !(scriptName.isEmpty())) {
             //get original script selected
             Script orig = scriptList.getElementAt(this.scriptListJList.getSelectedIndex());
             //make a copy with a new name
@@ -2253,7 +2253,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     }
 
     @Override
-    public void setBlocksUnzipped(int i) {
+    public void setBlocksUnzipped(String i) {
     }
 
     @Override

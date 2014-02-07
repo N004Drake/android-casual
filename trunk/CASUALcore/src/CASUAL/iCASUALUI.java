@@ -279,7 +279,7 @@ public interface iCASUALUI {
      * used during unzip as a progress indicator
      * @param i 
      */
-    public void setBlocksUnzipped(int i);
+    public void setBlocksUnzipped(String value);
 
     /**
      * sends a message to the user console

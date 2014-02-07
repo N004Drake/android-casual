@@ -217,14 +217,16 @@ public final class Caspac {
      *
      * @param s script to make active.
      */
-    public void setActiveScript(Script s) {
+    public synchronized void setActiveScript(Script s) {
         CasualDevCounter.doIncrementCounter(s.name+s.metaData.uniqueIdentifier);
         CASUALStartupTasks.caspacScriptPrepLock = true;
         if (type == 1) {  //CASUAL checks for updates
             try {
                 Log.level3Verbose("Setting script " + s.name + " as active and loading");
                 activeScript = s;
-                loadActiveScript();
+                if (!s.isLoaded.get()){
+                    loadActiveScript();
+                }
                 //update script
 
             } catch (MalformedURLException ex) {
@@ -321,7 +323,7 @@ public final class Caspac {
      * @throws ZipException
      * @throws IOException
      */
-    public void loadFirstScriptFromCASPAC() throws ZipException, IOException {
+    public synchronized void loadFirstScriptFromCASPAC() throws ZipException, IOException {
         Log.level4Debug("Starting loadFirstScriptFromCASPAC unzip on " + CASPAC.getAbsolutePath());
         String scriptName = "";
         Unzip unzip = new Unzip(CASPAC);
@@ -349,10 +351,12 @@ public final class Caspac {
      * Loads the active script after its been set. 
      * @throws IOException
      */
-    public void loadActiveScript() throws IOException {
+    public synchronized void loadActiveScript() throws IOException {
         Log.level4Debug("Starting loadActiveScript CASPAC unzip.");
         String scriptName = activeScript.name;
-
+        if (activeScript.isLoaded.get()){
+            return;
+        }
         if (type == 0) {
             Unzip unzip = new Unzip(CASPAC);
             while (unzip.zipFileEntries.hasMoreElements()) {
@@ -373,11 +377,12 @@ public final class Caspac {
             Log.level4Debug("returned from checking updates.");
             //no need to update again because it is being updated
             replaceScriptByName(activeScript);
-
             unzipThreads = new ArrayList<CASUAL.misc.MandatoryThread>();
+            
             CASUAL.misc.MandatoryThread t = new CASUAL.misc.MandatoryThread(activeScript.getExtractionRunnable());
             t.setName("Active Script Preparation");
             this.unzipThreads.add(t);
+            Log.level4Debug("Size of unzipThreads ="+unzipThreads.size());
             performUnzipOnQueue();
         }
 
@@ -442,11 +447,11 @@ public final class Caspac {
      * causes the current thread to wait until all unzipThreads have completed.
      * this is the longest part and the last part of completion of the CASPAC prep. 
      */
-    public void startAndWaitForUnzip() {
+    public synchronized void startAndWaitForUnzip() {
         boolean[] isUnzipping = new boolean[unzipThreads.size()];
         Log.level4Debug("Currently waiting for Threads:" + Integer.toString(isUnzipping.length));
         for (CASUAL.misc.MandatoryThread t : unzipThreads) {
-            if (t!=null&&!t.isComplete()){
+            if (t!=null&&!t.isComplete() && !t.isAlive()){
                 t.start();
                 t.waitFor();
 
@@ -574,7 +579,10 @@ public final class Caspac {
     private void performUnzipOnQueue() {
         Log.level3Verbose("Performing unzip of resources.");
         for (MandatoryThread t : this.unzipThreads) {
-            t.start();
+            if (!t.isComplete() && !t.isAlive()){
+                Log.level4Debug("Starting unzip of "+t.getName()+" from performUnzipOnQueue.");
+                t.start();
+            }
         }
     }
 

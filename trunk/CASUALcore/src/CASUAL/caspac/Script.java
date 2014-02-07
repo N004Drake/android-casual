@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipException;
 
 /**
@@ -60,7 +61,7 @@ public class Script {
     final int CASPAC = 0;
     final int CASUAL = 1;
     final int FILE = 2;
-
+    AtomicBoolean isLoaded=new AtomicBoolean(false);
     /**
      * Specifies the extraction method for the script.
      *final int CASPAC = 0
@@ -357,6 +358,7 @@ public class Script {
                             }
                         }
                     }
+                    isLoaded.set(true);
                 }
             };
             CASUALStartupTasks.caspacScriptPrepLock=false;
@@ -401,6 +403,7 @@ public class Script {
                     /*
                      * CASUAL do not receive MD5s
                      */
+                    isLoaded.set(true);
                 }
             };
             CASUALStartupTasks.caspacScriptPrepLock=false;
@@ -437,7 +440,9 @@ public class Script {
                     } else {
                         new CASUALMessageObject("@interactionPackageCorrupt").showErrorDialog();
                     }
+                    isLoaded.set(true);
                 }
+                
             };
             CASUALStartupTasks.caspacScriptPrepLock=false;
             return r;
