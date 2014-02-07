@@ -97,22 +97,18 @@ public final class CASUALMain {
 
         switch (arguments.getCASPACType()) {
             case CASUAL:
+                Log.level4Debug("Loading CASUAL Type package");
+
                 startGUI();
                 commonCASUALCASPACStartupTasks();
                 waitForGUI();
                 Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
-
-                try {
-                    Statics.CASPAC.loadActiveScript();
-                } catch (IOException ex) {
-                    Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
                 Statics.GUI.setCASPAC(Statics.CASPAC);
                 CASUALStartupTasks.startADB.waitFor();
                 startConnectionStatusMonitor();
                 return;
             case CASPAC:
+                Log.level4Debug("Loading CASPAC Type package");
                 if (Statics.GUI == null) {
                     Statics.GUI = new GUI.CommandLine.CommandLineUI();
                 }

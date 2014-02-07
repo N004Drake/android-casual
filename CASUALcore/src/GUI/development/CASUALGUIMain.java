@@ -19,13 +19,11 @@ package GUI.development;
 import CASUAL.AudioHandler;
 import CASUAL.CASUALConnectionStatusMonitor;
 import CASUAL.CASUALMessageObject;
-import CASUAL.misc.CASUALScrFilter;
 import CASUAL.CASUALScriptParser;
 import CASUAL.CASUALStartupTasks;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
-import CASUAL.network.LinkLauncher;
 
 import CASUAL.archiving.Unzip;
 import CASUAL.caspac.Caspac;
@@ -58,7 +56,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     private static final long serialVersionUID = 1L;
 
     private boolean isReady=false;
-    private boolean isDummyGUI=false;
+    final private boolean isDummyGUI=false;
     Caspac caspac;
     String nonResourceFileName;
     
@@ -700,7 +698,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                 Log.level4Debug("adding " + s.name + " to UI");
             }
             if (caspac.getActiveScript()!=null){
-                this.comboBoxScriptSelector.setSelectedItem(caspac.getActiveScript().name);
                 Log.level2Information(caspac.getScriptByName(this.comboBoxScriptSelector.getSelectedItem().toString()).discription);
             }
         }
@@ -1026,7 +1023,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
 
     @Override
-    public void setBlocksUnzipped(int i) {
+    public void setBlocksUnzipped(String i) {
         this.setInformationScrollBorderText("Unzipping:"+i);
     }
 

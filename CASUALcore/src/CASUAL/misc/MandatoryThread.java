@@ -16,6 +16,7 @@
  */
 package CASUAL.misc;
 
+import CASUAL.Log;
 import CASUAL.instrumentation.Instrumentation;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -54,6 +55,7 @@ public class MandatoryThread extends Thread {
         if (nullThread) {
             return;
         }
+        Log.level4Debug("Beginning MandatoryThread " + this.getName());
         super.start();
         hasStarted.set(true);
         notify();

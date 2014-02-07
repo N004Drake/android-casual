@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -92,6 +93,7 @@ public class Unzip {
      * Creates folder if necessary
      *
      * @param outputFolder folder to be unzipped to
+     * @return array of files unzipped
      * @throws ZipException
      * @throws IOException
      * @see CASUAL.archiving.Unzip#Unzip(File)
@@ -109,7 +111,7 @@ public class Unzip {
         // Process each entry
         while (zipFileEntries.hasMoreElements()) {
             // grab a zip file entry
-            ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+            ZipEntry entry = zipFileEntries.nextElement();
             String currentEntry = entry.getName();
             File destFile = new File(newPath, currentEntry);
             //destFile = new File(newPath, destFile.getName());
@@ -170,7 +172,7 @@ public class Unzip {
 
         zStream.mark(0);
         ZipInputStream zipInputStream;
-        zipInputStream = new ZipInputStream(zStream);
+
         ZipEntry zipEntry;
         zipInputStream = new ZipInputStream(zStream);
         while ((zipEntry = zipInputStream.getNextEntry()) != null) {
@@ -198,20 +200,19 @@ public class Unzip {
             if (numberOfCycles > 0) {
                 updatePercent = true;
             }
-            int currentCycle = 0;
+            Statics.GUI.setProgressBar(-1);
+            BigInteger currentCycle=BigInteger.valueOf(0);
             while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
-                Destination.write(data, 0, currentByte);
-                if (updatePercent) {
-                    Statics.GUI.setProgressBar(++currentCycle);
-                } else {
-                    Statics.GUI.setBlocksUnzipped(++currentCycle);
-                }
-
+                   Destination.write(data, 0, currentByte);
+                   
+                    Statics.GUI.setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
             }
-
             Destination.flush();
             Destination.close();
         }
+        Statics.setStatus("Important Information");
+        Statics.GUI.setProgressBar(0);
+        
         Log.level3Verbose("Unzip Complete");
     }
 

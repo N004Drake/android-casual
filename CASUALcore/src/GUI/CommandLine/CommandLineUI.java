@@ -297,7 +297,7 @@ public class CommandLineUI implements iCASUALUI {
     }
 
     @Override
-    public void setBlocksUnzipped(int blocks) {
+    public void setBlocksUnzipped(String blocks) {
         msg("Progress percent:"+blocks);
 
     }

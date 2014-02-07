@@ -767,8 +767,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     }
 
     @Override
-    public void setBlocksUnzipped(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setBlocksUnzipped(String i) {
     }
 
     @FXML

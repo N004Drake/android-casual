@@ -182,7 +182,7 @@ public class ShellTest {
     }
 
     /**
-     * Test of timeoutValueCheckingShellCommand method, of class Shell.
+     * Test of timeoutShellCommandWithWatchdog method, of class Shell.
      *
      * @throws java.io.IOException
      */
@@ -194,7 +194,7 @@ public class ShellTest {
         String expectedResult = "usage: fastboot";
         int timeout = 4000;
         Shell instance = new Shell();
-        String result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout,false);
+        String result = instance.timeoutShellCommandWithWatchdog(cmd, startTimerOnThisInLine, timeout,false);
         
         assert result.contains(expectedResult);
 
@@ -218,7 +218,7 @@ public class ShellTest {
             }
         }, timeout-1000);
         System.out.println(result);
-        result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout,true);
+        result = instance.timeoutShellCommandWithWatchdog(cmd, startTimerOnThisInLine, timeout,true);
         assert (c.timerElapsed);
         System.out.println("RESULT:"+result);
 
@@ -233,7 +233,7 @@ public class ShellTest {
             }
         }, timeout);
 
-        result = instance.timeoutValueCheckingShellCommand(cmd, startTimerOnThisInLine, timeout,true);
+        result = instance.timeoutShellCommandWithWatchdog(cmd, startTimerOnThisInLine, timeout,true);
         assert (!c.timerElapsed);
         assertEquals(expectedResult, result);
 

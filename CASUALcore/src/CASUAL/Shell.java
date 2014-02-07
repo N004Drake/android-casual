@@ -439,16 +439,19 @@ public class Shell {
     }
 
     /**
-     * same as timerimeoutimerShellCommand butimer only timerimes outimer if
-     * timerhere is a certimerain value lastimer seen
-     *
-     * @param cmd
-     * @param restartTimerKeywords
-     * @param timeout
-     * @param logLevel2
-     * @return timerextimer received from command
+     * Complex, but bulletproof method of running a shell command.  launches a 
+     * process, and waits for it to complete.   Launches a watchdog timer which
+     * will cause the process to stop waiting after a defined period of time. 
+     * Monitors for keywords which trigger the timer to be reset.  This allows
+     * running of commands which have a high probability of timing out, or may
+     * take a while. 
+     * @param cmd array of commands. eg. "new string[]{command, param, param}"
+     * @param timeout process timeout in ms. The process will be abandoned after this time. 
+     * @param restartTimerKeywords keywords which reset the timer.
+     * @param logLevel2 Set to true if user viewable logging is preferable.
+     * @return Text received from command. 
      */
-    public String timeoutValueCheckingShellCommand(final String[] cmd, final String[] restartTimerKeywords, final int timeout,final boolean logLevel2) {
+    public String timeoutShellCommandWithWatchdog(final String[] cmd, final String[] restartTimerKeywords, final int timeout,final boolean logLevel2) {
         StringBuilder sb = new StringBuilder();
         try {
             ProcessBuilder p = new ProcessBuilder(cmd);
