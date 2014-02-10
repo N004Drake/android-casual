@@ -18,6 +18,9 @@ package casualpreloader;
  * 
  * 
  */
+import com.sun.javaws.progress.Progress;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -35,6 +38,9 @@ import javafx.stage.StageStyle;
  import javafx.application.Preloader;
 import javafx.application.Preloader.ProgressNotification;
 import javafx.application.Preloader.StateChangeNotification;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.util.Duration;
 /**
  * Modified from Oracle JavaFX Ensemble Demo.
  * This is a splash
@@ -43,6 +49,7 @@ public class CasualPreloader extends Preloader{
     //variables for storing initial position of the stage at the beginning of drag
     Stage stage;
     ProgressBar bar;
+    Text text;
     private void init(Stage primaryStage) {
                 
                 //create stage which has set stage style transparent
@@ -67,7 +74,7 @@ public class CasualPreloader extends Preloader{
                 bar.setStyle("-fx-accent: green;");
                 bar.setScaleY(2);
                 // CREATE SIMPLE TEXT NODE
-                Text text = new Text("CASUAL"); //20, 110,
+                text = new Text("CASUAL"); //20, 110,
                 text.setFill(Color.WHITESMOKE);
                 text.setEffect(new Lighting());
                 text.setBoundsType(TextBoundsType.VISUAL);
@@ -88,17 +95,54 @@ public class CasualPreloader extends Preloader{
     public void start(Stage primaryStage) throws Exception {
         init(primaryStage);
         primaryStage.show();
+     
     }
     @Override
     public void handleStateChangeNotification(StateChangeNotification scn) {
         if (scn.getType() == StateChangeNotification.Type.BEFORE_START) {
-            stage.hide();
+             FadeTransition ft = new FadeTransition(
+                    Duration.millis(5000), stage.getScene().getRoot());
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            final Stage s = stage;
+            EventHandler<ActionEvent> eh = new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent t) {
+                    s.hide();
+                    s.close();
+                }
+            };
+            ft.setOnFinished(eh);
+            ft.play();
+                
         }
     }
     
+    boolean finalnotification=false;
     @Override
     public void handleProgressNotification(ProgressNotification pn) {
         bar.setProgress(pn.getProgress());
+        if (pn.getProgress()>.98 && finalnotification==false){
+            finalnotification=true;
+            FadeTransition ft = new FadeTransition(
+                    Duration.millis(1000),bar);
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            final Stage s = stage;
+            EventHandler<ActionEvent> eh = new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent t) {
+                    text.setText(text.getText()+"\npreparing");
+                    ScaleTransition st = new ScaleTransition(Duration.millis(1000),text);
+                    st.setFromX(1);
+                    st.setToX(1.5);
+                    st.setFromY(1);
+                    st.setToY(1.5);
+                    st.play();
+                }
+            };
+            ft.setOnFinished(eh);
+            ft.play();
+        }
     }   
     public static void main(String[] args) { launch(args); }
 }
