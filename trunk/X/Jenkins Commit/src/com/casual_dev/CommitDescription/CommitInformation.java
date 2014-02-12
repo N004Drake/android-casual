@@ -122,7 +122,7 @@ public class CommitInformation {
     }
 
     private boolean isNewRevision() throws IOException {
-       boolean x =getXpath("/*/action/cause/shortDescription").contains("with note: Commanded by Revision");
+       boolean x =getXpath("/*/action/cause/shortDescription").contains("with note: Commanded by Revision"); 
        return x;
     }
 
