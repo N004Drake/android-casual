@@ -252,7 +252,7 @@
         <echo>Recreating Creating CASUALcore in Ant</echo>
         <delete file="dist/CASUALcore.jar}"/>
         
-        <echo>recreating CASUALcore for ant jobs </echo>
+        <echo>recreating minimal CASUALcore  </echo>
         <jar destfile="dist/CASUALcore.jar" level="0" compress="false">
             
             <manifest>
@@ -265,17 +265,15 @@
                 <exclude name="**/*.java"/>
                 <exclude name="**/*.form"/>
                 <exclude name="**/SCRIPTS/*"/>
-                <exclude name="CASUAL/resources/fastboot/**"/>
-                <exclude name="CASUAL/Heimdall/resources/heimdall/**"/>
-                <exclude name="CASUAL/resources/sounds/**"/>
-                <exclude name="CASUAL/resources/ADB/**"/>
-                <exclude name="CASUAL/resources/icons/**"/>
-                <exclude name="GUI/development/resources/**"/>
+                <exclude name="**CASUAL/communicationstools/*/resources/**"/>
+                <exclude name="**CASUAL/communicationstools/*/drivers/resources/**"/>
+                <exclude name="**CASUAL/communicationstools/*/busybox/resources/**"/>
+                <exclude name="**GUI/development/resources/**"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </jar>
         
-        
+       
         
     </target>
 

@@ -648,13 +648,11 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
             disableControls(false);
             resetPassFail("waiting");
             new CASUALMessageObject("Got it!>>>We obtained the PIT file and everything is ready to flash\n\n Click the start button again when you're ready. ").showInformationMessage();
-            return;
         } else {
             Log.level3Verbose("Did not find pit");
             new CASUALMessageObject("Could not obtain pit.>>>We could not obtain the pit file. We tried, but it didn't work. ").showErrorDialog();
             disableControls(false);
             resetPassFail("halted");
-            return;
         }
     }
 
@@ -891,6 +889,8 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                 WebEngine webEngine = ad.getEngine();
                 webEngine.setJavaScriptEnabled(true);
                 webEngine.load("https://builds.casual-dev.com/ad.php");
+                new CASUALMessageObject("You will need to restart your device in Download Mode.>>>In order to obtain a PIT file, the device will be rebooted.  Once it reboots, you will need to put it back into download mode.\n\nPro-Tip: hold the download mode combination and press OK to dismiss this dislog to reboot into download mode immediately").showInformationMessage();
+        
 
             }
         });

@@ -17,7 +17,6 @@
 package CASUAL.network.CFAutoroot;
 
 import CASUAL.Log;
-import CASUAL.misc.StringOperations;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -37,7 +36,6 @@ public class CFAutoRootDb {
 
     final Properties BUILDPROP = new Properties();
     final private ArrayList<Device> deviceList;
-    
 
     /**
      * Constructor for CFAutoRootDB parses the buildprop and CFAutoroot site
@@ -55,7 +53,8 @@ public class CFAutoRootDb {
         BUILDPROP.load(new StringReader(BuildProp));
         grabTable();
     }
-    public CFAutoRootDb(CASUAL.communicationstools.adb.BuildProp bp) throws URISyntaxException, IOException, MalformedURLException, CFAutorootTableException{
+
+    public CFAutoRootDb(CASUAL.communicationstools.adb.BuildProp bp) throws URISyntaxException, IOException, MalformedURLException, CFAutorootTableException {
         this(bp.toString());
     }
 
@@ -109,7 +108,7 @@ public class CFAutoRootDb {
         //get url
         URI uri = new URI("http", "autoroot.chainfire.eu", "/" + "", "", null);
         URL url = new URL(uri.toASCIIString());
-        String page = StringOperations.convertStreamToString(url.openStream());
+        String page = convertStreamToString(url.openStream());
         //remove all before <table>
         page = page.substring(page.indexOf("<table>"), page.length());
         //remove all after </table> and add a blank line after.
@@ -165,7 +164,7 @@ public class CFAutoRootDb {
             String line = "";
             //ensure we are reading a full line
             while (!line.endsWith("\n")) {
-                line = line + (char) br.read();
+                line = line + br.read();
                 if (line.endsWith("\uffff")) {
                     return;  //return on end of stream
                 }
@@ -212,6 +211,18 @@ public class CFAutoRootDb {
         }
 
     }
+
+    /**
+     * reads a stream and returns a string
+     *
+     * @param is stream to read
+     * @return stream converted to string
+     */
+    public static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
 }
 
 /**
