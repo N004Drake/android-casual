@@ -211,7 +211,7 @@
                 </fileset>
             </signjar>
             <echo message="Launching &lt;fx:signjar&gt; task from ${ant-javafx.jar.location}" level="info"/>
-            <fx:signjar keystore="${javafx.signjar.keystore}"
+            <signjar keystore="${javafx.signjar.keystore}"
                 storepass="${javafx.signjar.storepass}"
                 alias="${javafx.signjar.alias}"
                 keypass="${javafx.signjar.keypass}"
@@ -221,7 +221,7 @@
                     <include name="lib${file.separator}*.jar"/>
                     <exclude name="lib${file.separator}${javafx.preloader.jar.filename}"/>
                 </fileset>
-            </fx:signjar>
+            </signjar>
             <echo>Deploy-Sign-Blob-preloader by ${javafx.signjar.alias}</echo>
         </sequential>
     </macrodef>
