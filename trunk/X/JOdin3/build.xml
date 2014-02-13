@@ -106,25 +106,25 @@
                 <attribute name="Application-Name" value="JOdin3 CASUAL"/>
                 <attribute name="Permissions" value="all-permissions"/>
                 <attribute name="Main-Class" value="com/javafx/main/Main"/>
+                <attribute name="Application-Library-Allowable-Codebase" value="*.casual-dev.com file://*"/>
             </manifest>
         </jar>
-
-        <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
-        <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
+        <echo message="alias=${javafx.signjar.alias}" />
+        <echo>Signing dist jars</echo>
         <signjar keystore="${javafx.signjar.keystore}"
                  storepass="${javafx.signjar.storepass}"
                  alias="${javafx.signjar.alias}"
                  keypass="${javafx.signjar.keypass}"
-                 tsaurl="http://time.certum.pl">
+                 tsaurl="http://time.certum.pl"
+                 force="true">
             <path>
-
                 <fileset dir="dist" includes="JOdin3CASUAL-r*.jar" />
             </path>
 
         </signjar>
         <echo>Signed by ${javafx.signjar.alias}</echo>
     </target>
-    <macrodef name="deploy-sign">
+        <macrodef name="deploy-sign">
         <sequential>
             <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
             <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
@@ -134,12 +134,95 @@
                 storepass="${javafx.signjar.storepass}"
                 alias="${javafx.signjar.alias}"
                 keypass="${javafx.signjar.keypass}"
-                tsaurl="${javafx.signing.tsaurl}"> 
+                 tsaurl="http://time.certum.pl">
                 <fileset dir="${jfx.deployment.dir}">
                     <include name="${jfx.deployment.jar}"/>
                     <include name="lib${file.separator}*.jar"/>
                 </fileset>
             </signjar>
+            <echo>Deploy-Signed by ${javafx.signjar.alias}</echo>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="deploy-sign-blob">
+        <sequential>
+            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
+            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
+            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
+            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
+            <echo message="Launching &lt;fx:signjar&gt; task from ${ant-javafx.jar.location}" level="info"/>
+            <fx:signjar keystore="${javafx.signjar.keystore}"
+                storepass="${javafx.signjar.storepass}"
+                alias="${javafx.signjar.alias}"
+                keypass="${javafx.signjar.keypass}"
+                 tsaurl="http://time.certum.pl">
+                <fileset dir="${jfx.deployment.dir}">
+                    <include name="${jfx.deployment.jar}"/>
+                    <include name="lib${file.separator}*.jar"/>
+                </fileset>
+            </fx:signjar>
+            <echo>Deploy-Sign-blob by ${javafx.signjar.alias}</echo>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="deploy-sign-preloader">
+        <sequential>
+            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
+            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
+            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
+            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
+            <signjar keystore="${javafx.signjar.keystore}"
+                storepass="${javafx.signjar.storepass}"
+                alias="${javafx.signjar.alias}"
+                keypass="${javafx.signjar.keypass}"
+                 tsaurl="http://time.certum.pl">
+                <fileset dir="${jfx.deployment.dir}">
+                    <include name="lib${file.separator}${javafx.preloader.jar.filename}"/>
+                </fileset>
+            </signjar>
+            <signjar keystore="${javafx.signjar.keystore}"
+                storepass="${javafx.signjar.storepass}"
+                alias="${javafx.signjar.alias}"
+                keypass="${javafx.signjar.keypass}"
+                 tsaurl="http://time.certum.pl">
+                <fileset dir="${jfx.deployment.dir}">
+                    <include name="${jfx.deployment.jar}"/>
+                    <include name="lib${file.separator}*.jar"/>
+                    <exclude name="lib${file.separator}${javafx.preloader.jar.filename}"/>
+                </fileset>
+            </signjar>
+            <echo>Deploy-Sign-preloader by ${javafx.signjar.alias}</echo>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="deploy-sign-blob-preloader">
+        <sequential>
+            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
+            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
+            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
+            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
+            <signjar keystore="${javafx.signjar.keystore}"
+                storepass="${javafx.signjar.storepass}"
+                alias="${javafx.signjar.alias}"
+                keypass="${javafx.signjar.keypass}"
+                 tsaurl="http://time.certum.pl">
+                <fileset dir="${jfx.deployment.dir}">
+                    <include name="lib${file.separator}${javafx.preloader.jar.filename}"/>
+                </fileset>
+            </signjar>
+            <echo message="Launching &lt;fx:signjar&gt; task from ${ant-javafx.jar.location}" level="info"/>
+            <fx:signjar keystore="${javafx.signjar.keystore}"
+                storepass="${javafx.signjar.storepass}"
+                alias="${javafx.signjar.alias}"
+                keypass="${javafx.signjar.keypass}"
+                 tsaurl="http://time.certum.pl">
+                <fileset dir="${jfx.deployment.dir}">
+                    <include name="${jfx.deployment.jar}"/>
+                    <include name="lib${file.separator}*.jar"/>
+                    <exclude name="lib${file.separator}${javafx.preloader.jar.filename}"/>
+                </fileset>
+            </fx:signjar>
+            <echo>Deploy-Sign-Blob-preloader by ${javafx.signjar.alias}</echo>
         </sequential>
     </macrodef>
 </project>
