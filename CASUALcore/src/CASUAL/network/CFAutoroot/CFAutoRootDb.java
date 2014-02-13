@@ -164,8 +164,8 @@ public class CFAutoRootDb {
             String line = "";
             //ensure we are reading a full line
             while (!line.endsWith("\n")) {
-                line = line + br.read();
-                if (line.endsWith("\uffff")) {
+                line = line +(char) br.read();
+                if (line.endsWith("\uffff")||line.endsWith("-1")) {
                     return;  //return on end of stream
                 }
             }
