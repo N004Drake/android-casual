@@ -97,7 +97,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
      */
     @Override
     public void restartConnection() {
-        Log.level3Verbose("@restartingADBSlowly");
+        Log.level3Verbose("Restarting ADB slowly for compatibility");
         Shell shell = new Shell();
         shell.timeoutShellCommand(getKillServerCmd(), 1000);
         String retval = shell.timeoutShellCommand(getDevicesCmd(), 6000);
@@ -356,7 +356,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
      * starts an elevated ADB server.
      */
     public void elevateADBserver() {
-        Log.level3Verbose("@restartingADB");
+        Log.level3Verbose("Elevating ADB server!");
         Shell shell = new Shell();
         shell.silentShellCommand(getKillServerCmd());
         shell.elevateSimpleCommand(getDevicesCmd());

@@ -348,7 +348,7 @@ public class CASUALTools {
                 return "";
             }
         } else {
-            new CASUALMessageObject("@couldNotObtainRootOnDevice").showErrorDialog();
+            new CASUALMessageObject("@interactionCouldNotObtainRootOnDevice").showErrorDialog();
             return "";
         }
     }

@@ -151,7 +151,7 @@ public class CASUALConnectionStatusMonitor {
             Log.level4Debug("State Change Detected, The new state is: " + state);
             switch (state) {
                 case 0:
-                    Log.level4Debug("@stateDisconnected");
+                    Log.level4Debug("Device disconnected commanded");
                     Statics.setStatus("Device Removed");
                     Statics.GUI.deviceDisconnected();
                     Statics.GUI.setControlStatus(false);
