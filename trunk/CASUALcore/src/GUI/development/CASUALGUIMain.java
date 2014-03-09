@@ -373,11 +373,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                     Log.level2Information("@textResourceNotFound");
                 }
                 this.comboBoxScriptSelector.setSelectedItem(nonResourceFileName);
-                Statics.SelectedScriptFolder = Statics.getTempFolder() + new File(nonResourceFileName).getName() + Statics.slash;
-                if (new File(nonResourceFileName.toString() + ".zip").exists()) {
-                    new Unzip(nonResourceFileName.toString() + ".zip").unzipFile(Statics.SelectedScriptFolder);
-                }
-                Statics.ScriptLocation = Statics.SelectedScriptFolder;
                 comboBoxScriptSelector.setEditable(true);
                 ComboBoxValue = getFilenameWithoutExtension(FileName);
                 comboBoxScriptSelector.setSelectedItem(ComboBoxValue);

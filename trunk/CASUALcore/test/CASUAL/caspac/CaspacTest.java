@@ -96,7 +96,7 @@ public class CaspacTest {
     @Test
     public void testSetBuild() {
         System.out.println("setBuild");
-        Properties p = instance.build.buildProp;
+        Properties p = test.build.buildProp;
         p.setProperty("Developer.DonateLink", "OMFG");
         instance.setBuild(p);
         assert (instance.build.donateLink.equals("OMFG"));

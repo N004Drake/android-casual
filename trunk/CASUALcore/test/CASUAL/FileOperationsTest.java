@@ -85,17 +85,17 @@ public class FileOperationsTest {
     public void testFindRecursive() throws IOException {
         System.out.println("findRecursive");
         File testpath = new File(Statics.getTempFolder()+"s"+Statics.slash+"s"+Statics.slash+"s"+Statics.slash+"test");
-        File testFile=new File(testpath.getAbsolutePath()+Statics.slash+"woot");
+        File testFile=new File(testpath.getAbsolutePath()+Statics.slash+"woot11");
         testpath.mkdirs();
         new File(Statics.getTempFolder()+"s"+Statics.slash+"test").createNewFile();
         testFile.createNewFile();
         String PathToSearch = Statics.getTempFolder();
         FileOperations instance =new FileOperations();
         System.out.println("performing recursive search");
-        String result = instance.findRecursive(PathToSearch, "woot");
+        String result = instance.findRecursive(PathToSearch, "woot11");
      System.out.println("result: "+result);
         System.out.println("result: "+result);
-        assertEquals(testpath.getCanonicalPath()+Statics.slash+"woot", result);
+        assertEquals(testpath.getCanonicalPath()+Statics.slash+"woot11", result);
         instance.recursiveDelete(Statics.getTempFolder());
 
     }

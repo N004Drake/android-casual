@@ -200,7 +200,6 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
      */
     @Override
     public synchronized String deployBinary(String tempFolder) {
-        //TODO check that deployBinary is deploying proper working Linux64 binary. 
         Log.level4Debug("Deploying ADB");
 
             String tempBinaryLocation = Statics.getTempFolder() + "adb";
@@ -276,7 +275,6 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
         if (devReturn.equals("List of devices attached \n\n")) {
             return new String[]{};
         } else {
-            //TODO evaluate this and check that line ends with recovery or devices.
             String[] retval;
             try {
                 retval = devReturn.split("List of devices attached ")[1].trim().split("\n");
