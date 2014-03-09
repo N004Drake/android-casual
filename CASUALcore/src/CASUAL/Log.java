@@ -170,39 +170,7 @@ public class Log {
        }
        
     }
-    /*
-    public  static void progress(String data) {
-        progressBuffer = progressBuffer + data;
-        if (Statics.isGUIIsAvailable() && Statics.ProgressDoc != null) {
-            try {
-
-                if (data.contains("\b")) {
-                    writeToLogFile(progressBuffer);
-                    progressBuffer = "";
-                    Statics.ProgressDoc.remove(lastNewLine, Statics.ProgressDoc.getLength() - lastNewLine);
-                    //lastNewLine=Statics.ProgressDoc.getLength();
-
-                }
-                Statics.ProgressDoc.insertString(Statics.ProgressDoc.getLength(), data, null);
-                Statics.ProgressPane.setCaretPosition(Statics.ProgressDoc.getLength());
-
-            } catch (BadLocationException ex) {
-                Log.errorHandler(ex);
-            } catch (NullPointerException e) {
-                level0Error(data + e.toString());
-            }
-            if (data.contains("\n")) {
-                writeToLogFile(progressBuffer.replace("\n", ""));
-                progressBuffer = "";
-                //TODO implement StringBuilder and use that for Log. 
-                //lastNewLine = Statics.GUI.ProgressPane.getCaretPosition() - 1;
-            }
-        } else {
-            out.print(data);
-        }
-
-    }*/
-
+    
     /**
      *
      * @param data data to be written to screen in real time

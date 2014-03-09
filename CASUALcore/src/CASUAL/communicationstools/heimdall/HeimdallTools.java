@@ -112,7 +112,6 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
                 errored = false;
                 break;
             case RUNAGAIN:
-                //TODO run again here
                 errored = checkErrorMessage(commandRun, this.doElevatedHeimdallShellCommand(commandRun));
                 if (errorCycles > 4) {
                     retval = CommandDisposition.MAXIMUMRETRIES;
@@ -142,8 +141,6 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
                 errored = true;
         }
         if (errored) {
-//TODO further action is required here
-            //need halt command
             return false;
         } else {
             return true;

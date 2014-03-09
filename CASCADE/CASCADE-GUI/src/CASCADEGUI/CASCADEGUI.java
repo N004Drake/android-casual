@@ -1992,7 +1992,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      * @throws HeadlessException
      */
     public boolean saveCASPAC() throws HeadlessException {
-        //TODO save as .CASPAC file instead of .zip
         try {
             //Create new file In memory with name from the JTextField
             File file = new File(this.caspacOutputFile.getText());

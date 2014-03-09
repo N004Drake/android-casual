@@ -111,10 +111,6 @@ public class Statics {
 
 
 
-    /**
-     * default SCRIPTS location for CASUAL.
-     */
-    public static String ScriptLocation = "/SCRIPTS/"; //location to scripts
 
     /**
      * Default home folder for CASUAL. Use for permanent storage of data only.
@@ -156,24 +152,8 @@ public class Statics {
     }
     //Cross-Platform data storage
 
-    //TODO It may be possible to remove this as it is handled by the active script 
-    /**
-     * Static reference to active script folder.
-     */
-    public static String SelectedScriptFolder;//Used for script locations on disk
 
-    //TODO: evaluate possibility of removal of elevate.exe
-    /**
-     * Path to elevate.exe as after deployment. Elevate is deployed
-     * automatically on Windows.
-     */
-    public static String WinElevatorInTempFolder = getTempFolder() + "Elevate.exe"; //location of elevate.exe after deployed
-
-    /**
-     * Windows Elevate.exe as resource in CASUAL
-     */
-    final public static String WinPermissionElevatorResource = "/CASUAL/resources/ADB/Elevate.exe";
-
+ 
     /**
      * Windows Visual C++ redistributable downloadable file. This is not used as
      * we include the proper dependencies in CASUAL. Windows Visual C++ redist 
@@ -205,8 +185,6 @@ public class Statics {
         outputLogVerbosity = 4;
 
         PreProgress = "";
-        SelectedScriptFolder = "";
-        WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         CASUALStartupTasks.scriptRunLock = new CASUAL.misc.MandatoryThread();
         CASUALStartupTasks.lockGUIunzip = false;
         ActionEvents = new ArrayList<String>();
@@ -265,8 +243,6 @@ public class Statics {
      */
     public static String setTempFolder(String folder) {
         TempFolder = new File(folder);
-        //TODO move away from setting paths and handle in getHeimdall/ADB/Fastboot location in proper class. 
-        WinElevatorInTempFolder = TempFolder + "Elevate.exe";
         new FastbootTools().reset();
         new ADBTools().reset();
         return TempFolder.toString()+slash;

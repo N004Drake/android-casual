@@ -30,7 +30,6 @@ public class CASPACjUnitTest {
             }
     //@Test
     public void testCASPACOperations() {
-        //TODO: testing is disabled on CASPAC because it is hanging. 
     
         if (!new ADBTools().isConnected()) {
             return;

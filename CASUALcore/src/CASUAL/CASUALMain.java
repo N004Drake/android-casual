@@ -174,7 +174,6 @@ public final class CASUALMain {
         if (Statics.CASPAC != null && Statics.CASPAC.scripts != null && Statics.CASPAC.scripts.size() >= 1) {
             Log.level4Debug("Finalizing active script up to be run");
 
-            //TODO set Active Script in CASPAC here through implementation of a new meta parameter for default script. 
             Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
             Statics.CASPAC.getActiveScript().scriptContinue = true;
         }
