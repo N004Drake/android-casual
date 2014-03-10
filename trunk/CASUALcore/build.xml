@@ -119,8 +119,8 @@
             </classpath>
         </java>
 
-    
-        <exec dir="../../" outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
+        <echo>current directory: ${basedir}</echo>
+        <exec dir="../" outputproperty="svna.version" executable="svnversion" failifexecutionfails="false" >
             <arg value="-c" />
             <redirector>
                 <outputfilterchain>
