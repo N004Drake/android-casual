@@ -1,18 +1,8 @@
-#$ADB reboot download
-#$HEIMDALL close-pc-screen
-
-$ECHO Testing ALL CASUAL commands. Connect your device
-$SLEEPMILLIS 3250
-$SLEEP 1
-$ECHO testing two lines in one
-$IFCONTAINS hi $INCOMMAND $ECHO hi $DO $ECHO testing and operator &&& $ECHO  testing AND operator was sucessful
-
-#testing flashing
 $ECHO flashing adb_usb.ini to sdcard
-$ADB shell rm /sdcard/adb_usb.ini
-$FLASH $ZIPFILEadb_usb.ini , /sdcard/adb_usb.ini
+$FLASH $ZIPFILEfile.img , /sdcard/file.img
+$ECHO Flash Successful
 $PULL /sdcard/adb_usb.ini, $ZIPFILEadb.ini
-
+$ECHO Pull Successful
 #$ECHO verifying flash
 #$ECHO pulling recovery
 #$PULL /dev/block/platform/msm_sdcc.1/by-name/recovery , "$ZIPFILErecovery"

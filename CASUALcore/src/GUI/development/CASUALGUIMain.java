@@ -39,6 +39,8 @@ import java.awt.image.BufferedImage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -47,6 +49,7 @@ import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.YES_OPTION;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.BadLocationException;
 
 /**
  *provides UI for CASUAL. 
@@ -71,8 +74,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         initComponents();
         //set up place to log to for GUI
         //ProgressArea.setContentType("text/html");
+        ProgressArea.setAutoscrolls(true);
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
-        
+
 
         CASUALStartupTasks.lockGUIformPrep = false;
 
@@ -678,6 +682,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         if (caspac.build.alwaysEnableControls) {
             setControlStatus(true);
         }
+        this.setTitle(caspac.build.windowTitle +" -- CASUAL R"+CASUAL.CASUALTools.getSVNVersion());
         if (caspac.scripts.size() > 0) {
             for (Script s : caspac.scripts) {
                 boolean addScript = true;
@@ -1025,6 +1030,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     @Override
     public void sendString(String string) {
         ProgressArea.setText(ProgressArea.getText().concat(string));
+        ProgressArea.setCaretPosition(ProgressArea.getDocument().getLength());
      }
 
 
@@ -1032,19 +1038,22 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     
     @Override
     public void sendProgress(String data) {
-        char[] dataArray=data.toCharArray();
-        String doc=ProgressArea.getText();
-        for (int c:dataArray){
-            switch (c){
-                case 8: //backspace
-                    doc=doc.substring(0, doc.length()-1);
-                    break;
-
-                default:
-                    doc=doc.concat(data);
+        try {
+            char[] dataArray=data.toCharArray();
+            for (int c:dataArray){
+                switch (c){
+                    case 8: //backspace
+                        ProgressArea.getStyledDocument().remove(ProgressArea.getStyledDocument().getLength()-1, ProgressArea.getStyledDocument().getLength()); 
+                        break;
+                    default:
+                        ProgressArea.getStyledDocument().insertString(ProgressArea.getStyledDocument().getLength(), data, null);
+                }
             }
+            
+        } catch (BadLocationException ex) {
+            Logger.getLogger(CASUALGUIMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-        ProgressArea.setText(doc);
+        ProgressArea.setCaretPosition(ProgressArea.getDocument().getLength());
     }
         
         

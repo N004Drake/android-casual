@@ -22,6 +22,7 @@ import CASUAL.Log;
 import CASUAL.Shell;
 import CASUAL.Statics;
 import CASUAL.communicationstools.adb.ADBTools;
+import CASUAL.misc.MandatoryThread;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
@@ -63,22 +64,25 @@ public class CASUALDataBridge {
     final static String port = "27825";
     final static String ip = "127.0.0.1";
     final static Integer WATCHDOGINTERVAL = 2000;
-    private static boolean deviceReadyForReceive = false;
+    static boolean deviceReadyForReceive = false;
     static String deviceSideMessage = "";
     static boolean shutdownBecauseOfError = false;
+    static long bytes = 0;
+    static long lastbytes = -1;
+    static String status = "";
 
+
+
+    final static Object deviceSideReady=new Object();
+    static Object casualSideReady;
+    static Object transmissionInProgress;
+    
+            
     /**
      * used externally to command shutdown. If shutdown is commanded, all
      * operations must halt as soon as possible and return.
      */
     public static boolean commandedShutdown = false;
-    static long bytes = 0;
-    static long lastbytes = -1;
-    static String status = "";
-    final String USBDISCONNECTED = "USB Disconnected";
-    final String DEVICEDISCONNECTED = "error: device not found";
-    final String PERMISSIONERROR = "/system/bin/sh: can't open";
-
     public CASUALDataBridge() {
     }
 
@@ -93,7 +97,7 @@ public class CASUALDataBridge {
      */
     public synchronized String getFile(String remoteFileName, File f) throws IOException, InterruptedException {
         status = "received ";
-
+        Log.level3Verbose("Starting getFile DataBridge");
         FileOutputStream fos = new FileOutputStream(f);
         //begin write
 
@@ -118,10 +122,10 @@ public class CASUALDataBridge {
      */
     public synchronized long sendString(String send, String remoteFileName) throws InterruptedException, SocketException, IOException {
         //make a duplicate of the array, with the \n and 0x3 key to end the file transfer
+        Log.level3Verbose("Starting sendString DataBridge");
         send = send + "\n" + 0x04;
         ByteArrayInputStream bis = new ByteArrayInputStream(send.getBytes());
         long retval = sendStream(bis, remoteFileName);
-
         return retval;
     }
 
@@ -165,15 +169,17 @@ public class CASUALDataBridge {
      */
     public synchronized long sendStream(final InputStream input, final String remoteFileName) throws InterruptedException, SocketException, IOException {
         resetCASUALConnection();
-
+        Log.level3Verbose("Starting sendStream DataBridge");
         //start device-side receiver thread
-        Thread t = new DeviceSide().startDeviceSideServer(remoteFileName, true);
+        MandatoryThread t = new DeviceSideDataBridge(adb).startDeviceSideServer(remoteFileName, true);
 
         //Open the socket
         final Socket socket = setupPort();
         //grab the stream
         OutputStream os = socket.getOutputStream();
         //do the work
+        
+         waitForReadySignal();
         copyStreamToDevice(input, os, true);
         //begin write
         shutdownCommunications(socket, t);
@@ -185,9 +191,11 @@ public class CASUALDataBridge {
 
     private long getStream(OutputStream output, String remoteFileName) throws IOException, InterruptedException {
         resetCASUALConnection();
-
+        Log.level3Verbose("Starting getStream DataBridge");
         //start device-side sender
-        Thread t = new DeviceSide().startDeviceSideServer(remoteFileName, false);
+        MandatoryThread t = new DeviceSideDataBridge(adb).startDeviceSideServer(remoteFileName, false);
+        
+        t.start();
         //open the socket
         final Socket socket = setupPort();
 
@@ -203,8 +211,9 @@ public class CASUALDataBridge {
         try {
             //make a buffer to work with and setup start time
             long startTime = System.currentTimeMillis();
-            byte[] buf = new byte[16384];
+            byte[] buf = new byte[4096];
             timeoutWatchdog.start();
+            Log.level3Verbose("Starting copyStreamToDevice DataBridge");
             BufferedOutputStream bos = new BufferedOutputStream(output);
             BufferedInputStream bis = new BufferedInputStream(input);
             int buflen = buf.length - 1;
@@ -243,6 +252,7 @@ public class CASUALDataBridge {
     private long copyStreamFromDevice(final Socket socket, OutputStream output) {
         try {
             Statics.setStatus("Data transfer initiated, please wait");
+            Log.level3Verbose("Starting copyStreamFromDevice DataBridge");
             BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
             long startTime = System.currentTimeMillis();
             byte[] buf;
@@ -298,40 +308,45 @@ public class CASUALDataBridge {
     }
 
     private void waitForReadySignal() {
-        //open the port for write
-        while (!deviceReadyForReceive && !commandedShutdown) {
-            //wait for deviceReady signal
-            sleep(100);
+        try {
+            //open the port for write
+            synchronized (deviceSideReady){
+                Log.level3Verbose("Waiting for device side to be ready");
+                deviceSideReady.wait();
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Log.level3Verbose("Notified about device side ready");
+        
+                        
+
     }
 
     private Socket setupPort() throws SocketException, IOException, NumberFormatException {
+        Log.level3Verbose("Setup Ports for DataBrdige");
         int p = Integer.parseInt(port);
         final Socket socket = new Socket(ip, p);
         socket.setTrafficClass(0x04);
         return socket;
     }
 
-    private void shutdownCommunications(Socket socket, Thread t) throws InterruptedException, IOException {
-        Log.level4Debug("Flushing port");
+    private void shutdownCommunications(Socket socket, MandatoryThread deviceSideServer) throws InterruptedException, IOException {
+        Log.level4Debug("Flushing DataBridge port");
         deviceReadyForReceive = false;
         socket.getOutputStream().flush();
-        Log.level4Debug("closing ports");
+        Log.level4Debug("closing DataBridge ports");
         socket.shutdownOutput();
         socket.shutdownInput();
         socket.close();
 
         Log.level4Debug("waiting for device-side server to shutdown");
-        t.join();
-    }
-
-    private void sleep(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException ex) {
-            //do nothing 
+        if (!deviceSideServer.isComplete()){
+            deviceSideServer.join();
         }
     }
+
+
     /**
      * timeoutWatchdog checks every WATCHDOGINTERVAL millis to verify bytes have
      * increased. If bytes have not increased, it throws an error and shuts
@@ -359,14 +374,18 @@ public class CASUALDataBridge {
         }
     });
 
+  
+    
     private boolean checkErrors() {
-        return !deviceSideMessage.equals(USBDISCONNECTED) && !deviceSideMessage.equals(DEVICEDISCONNECTED) && !deviceSideMessage.startsWith(PERMISSIONERROR);
+        Log.level3Verbose("checking DataBridge errors.");
+        return !deviceSideMessage.equals(DeviceSideDataBridge.USBDISCONNECTED) && !deviceSideMessage.equals(DeviceSideDataBridge.DEVICEDISCONNECTED) && !deviceSideMessage.startsWith(DeviceSideDataBridge.PERMISSIONERROR);
     }
 
     public String integralGetFile(String remoteFile, File f) {
-
+       
         String retval = "";
         try {
+            Log.level3Verbose("Starting integralGetFile DataBridge");
             retval = getFile(remoteFile, f);
         } catch (IOException ex) {
             Log.errorHandler(ex);
@@ -393,151 +412,9 @@ public class CASUALDataBridge {
         return retval;
     }
 
-    /**
-     * This is a placeholder class to represent the device-server portion of the
-     * DataBridge.
-     */
-    class DeviceSide {
 
-        private Thread startDeviceSideServer(String remoteFileName, boolean forWrite) {
-            Thread t = new Thread(new DeviceSide().openLinkForReadOrWrite(remoteFileName, forWrite));
-            t.setName("Device Write Server");
-            t.start();
-            waitForReadySignal();
-            return t;
-        }
 
-        /**
-         * This returns a runnable server object ready to deploy on any device.
-         *
-         * @param remoteFileName filename on the device
-         * @param forWrite true if writing, false if reading
-         * @return server object ready to be started
-         */
-        private Runnable openLinkForReadOrWrite(final String remoteFileName, final boolean forWrite) {
-            return new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        String[] cmd;
-                        //deploy and get busybox location
-                        String busybox = BusyboxTools.getBusyboxLocation();
-                        String donestring = "operation complete";
-                        //the command executed on the device should end with a keyword.  in this case the keyword is "done" which shows us it has exited properly.
-                        //this command is used if forWrite is true (flash)--  basically netcat>desired file
-                        String sendcommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + port + ">'" + remoteFileName + "';echo " + donestring;
-                        //this command is used if forWrite is false (pull)--  basically netcat<desired file with a sync at the end
-                        String receiveCommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + port + " <'" + remoteFileName + "';sync;echo " + donestring;
+    
 
-                        //build the command to send or receive with root or without. 
-                        //TODO test rootAccessCommand needed by using "busybox 'test -w remoteFileName && echo RootNotRequired||echo root Required';
-                        if (forWrite) {
-                            if (!CASUALTools.rootAccessCommand().equals("")) {
-                                cmd = new String[]{adb.getBinaryLocation(), "shell", sendcommand};
-                            } else {
-                                cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \"" + sendcommand + ";\""};
-                            }
-                        } else {
-                            if (CASUALTools.rootAccessCommand().equals("")) {
-                                cmd = new String[]{adb.getBinaryLocation(), "shell", receiveCommand};
-                            } else {
-                                cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \'" + receiveCommand + "\'"};
-                            }
-                        }
 
-                        //launch the process
-                        ProcessBuilder p = new ProcessBuilder(cmd);
-                        p.redirectErrorStream(true);
-                        Process proc = p.start();
-
-                        //read a byte from the inputstream from the process so it does not halt. 
-                        InputStream is = proc.getInputStream();
-                        is.read(new byte[]{});
-
-                        //wait for the connection to be ready then send the device ready signal
-                        is = waitForDeviceSideConnection(is);
-
-                        //device is ready for transfer
-                        Statics.setStatus("device ready");
-                        deviceReadyForReceive = true;
-                        proc.waitFor();
-
-                        //transfer is complete because host closed connection and device-side process exited
-                        Statics.setStatus("device-side server closed");
-                        deviceSideMessage = convertStreamToString(is);
-
-                        //check for errors.  if any errors were present they would have come before the donestring
-                        if (!deviceSideMessage.startsWith(donestring)) {
-                            if (deviceSideMessage.equals("")) {
-                                deviceSideMessage = USBDISCONNECTED;
-                            }
-                            shutdownBecauseOfError = true;
-                            deviceReadyForReceive = false;
-                            Log.level0Error("Failed to send file. Bytes:" + bytes + " Message:" + deviceSideMessage);
-                            throw new RuntimeException("Server exited improperly- received");
-                        } else {
-                            Log.level4Debug("device reported sucessful shutdown");
-                        }
-
-                        //signal that the device is done before this thread dies.
-                        deviceReadyForReceive = false;
-
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                }
-
-                InputStream waitForDeviceSideConnection(InputStream is) throws IOException {
-                    String[] cmd;
-                    cmd = new String[]{adb.getBinaryLocation(), "shell", "/data/local/tmp/busybox netstat -tul"};
-                    boolean ready = false;
-                    String received = "";
-                    Statics.setStatus("monitoring ports on device");
-                    while (!ready && !commandedShutdown) {
-                        //monitor server status and detect errors
-                        while (is.available() > 0) {
-                            received = received + is.read();
-                            Log.level4Debug(received);
-                            if (received.contains("read-only file system")
-                                    || received.contains("cannot open")
-                                    || received.contains("No such file or directory")
-                                    || received.contains(DEVICEDISCONNECTED)
-                                    || received.contains(USBDISCONNECTED)
-                                    || received.contains(PERMISSIONERROR)
-                                    || received.contains("error: more than one device and emulator")) {
-                                shutdownServer(received);
-                            }
-
-                        }
-                        String returnval = shell.silentShellCommand(cmd);
-                        if (returnval.contains(":" + port)) {
-                            ready = true;
-                        }
-                    }
-                    return is;
-                }
-
-                private void shutdownServer(String message) {
-                    shutdownBecauseOfError = true;
-                    deviceSideMessage = message;
-                    deviceReadyForReceive = true;
-                    Log.level0Error(message);
-                }
-            };
-        }
-    }
-
-    /**
-     * reads a stream and returns a string
-     *
-     * @param is stream to read
-     * @return stream converted to string
-     */
-    public static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
 }
