@@ -5,6 +5,7 @@
  */
 package com.casual_dev.jodin;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.OSTools;
@@ -517,6 +518,8 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     @FXML
     @Override
     public void dispose() {
+        Statics.GUI=null;
+        CASUALMain.shutdown(i);
         this.exit();
     }
 

@@ -649,7 +649,11 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     public void dispose(){
         this.setVisibile(false);
         super.dispose();
+        if (Statics.GUI==this){
+            Statics.GUI=null;
+        }
         CASUAL.CASUALMain.shutdown(0);
+        System.exit(0);
     }
     
 

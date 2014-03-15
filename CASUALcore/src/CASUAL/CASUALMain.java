@@ -210,6 +210,7 @@ public final class CASUALMain {
         }
 
         if (Statics.GUI != null) {
+            Statics.GUI=null;
             Statics.GUI.dispose();
         }
         CASUALConnectionStatusMonitor.stop();
