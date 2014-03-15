@@ -246,7 +246,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
      */
     @Override
     public void shutdown() {
-        super.run(getKillServerCmd(), 4000, false);
+        super.run(new String[]{"kill-server"}, 4000, false);
     }
 
     private void updateADBini() {

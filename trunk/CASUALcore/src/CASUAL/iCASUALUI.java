@@ -158,6 +158,9 @@ public interface iCASUALUI {
     /**
      * disposes the current window.
      * should be used to terminate application.
+     * This method can be used to call CASUALMain.Shutdown for proper shutdown.
+     * This should contain "Statics.GUI=null;" for faster shutdown.
+     * This method can contain System.exit at the end. 
      */
     void dispose();
     /**
