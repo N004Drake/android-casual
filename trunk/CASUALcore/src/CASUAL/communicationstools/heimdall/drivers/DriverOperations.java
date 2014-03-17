@@ -1,18 +1,22 @@
-/*
- * Copyright (C) 2013 Jeremy
+/**
+ * *****************************************************************************
+ * This file is part of CADI a library of CASUAL.
+ * 
+* Copyright (C) 2014 Jeremy R. Loper <jrloper@gmail.com>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * CADI is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+* CADI is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+* You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+******************************************************************************
  */
 package CASUAL.communicationstools.heimdall.drivers;
 
@@ -29,8 +33,12 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ *
+ * @author Jeremy R. Loper <jrloper@gmail.com>
+ */
 public class DriverOperations {
-    
+
     public enum PatternChoice {
 
         ORPHANS, CASUALDRIVER, INF, INSTALL, MATCHINGDEVICES, ALLDEVICES
@@ -49,11 +57,6 @@ public class DriverOperations {
      *
      */
     private static volatile boolean driverExtracted = false;
-
-    /**
-     * CADI Windows Driver for XP.
-     */
-    private final static String cadiXpDrivers = "/CASUAL/communicationstools/heimdall/drivers/resources/xp/CADI.zip";
 
     /**
      * CADI Windows Driver for Windows Vista and higher.
@@ -87,14 +90,7 @@ public class DriverOperations {
      * @return true if successful, false otherwise
      */
     private boolean driverExtract(String pathToExtract) throws FileNotFoundException, IOException {
-        if (OSTools.OSName().contains("Windows XP")) {
-            if (new FileOperations().makeFolder(pathToCADI)) {
-                Log.level4Debug("driverExtract() Unzipping CADI for xp");
-                Unzip.unZipResource(cadiXpDrivers, pathToExtract);
-                return true;
-            }
-            return false;
-        } else if (new FileOperations().makeFolder(pathToCADI)) {
+        if(new FileOperations().makeFolder(pathToCADI)) {
             Log.level4Debug("driverExtract() Unzipping CADI");
             Unzip.unZipResource(cadiDrivers, pathToExtract);
             return true;
