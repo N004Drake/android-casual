@@ -1,18 +1,22 @@
-/*
- * Copyright (C) 2013 Jeremy
+/**
+ * *****************************************************************************
+ * This file is part of CADI a library of CASUAL.
+ * 
+* Copyright (C) 2014 Jeremy R. Loper <jrloper@gmail.com>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * CADI is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+* CADI is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+* You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+******************************************************************************
  */
 package CASUAL.communicationstools.heimdall.drivers;
 
@@ -24,10 +28,9 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Jeremy
+ * @author Jeremy R. Loper <jrloper@gmail.com>
  */
 public class DriverRemove {
-
 
     /**
      * windowsDriverBlanket is a static Array of targeted USB VID (VendorID
@@ -37,21 +40,20 @@ public class DriverRemove {
      * creation.
      */
     private final String[] windowsDriverBlanket;
-    
+
     public DriverRemove() {
         this.windowsDriverBlanket = new String[]{"04E8", "0B05", "0BB4", "22B8", "054C", "2080", "18D1"};
         Log.level2Information("uninstallCADI() Initializing");
         Log.level2Information("uninstallCADI() Scanning for CADI driver package(s)");
-        
-        
+
     }
 
-    public boolean removeDriver(){
+    public boolean removeDriver() {
         deleteOemInf();
         Log.level2Information("uninstallCADI() Scanning for orphaned devices");
-        boolean driverRemoved=true;
-        for (String vid: windowsDriverBlanket) {
-            driverRemoved=removeOrphanedDevices(vid);
+        boolean driverRemoved = true;
+        for (String vid : windowsDriverBlanket) {
+            driverRemoved = removeOrphanedDevices(vid);
         }
 
         Log.level2Information("removeDriver() Windows will now scan for hardware changes");
@@ -60,6 +62,7 @@ public class DriverRemove {
         }
         return driverRemoved;
     }
+
     /**
      * deleteOemInf parses output from devconCommand via regex to extract the
      * name of the *.inf file from Windows driver store. Extraction of the file
