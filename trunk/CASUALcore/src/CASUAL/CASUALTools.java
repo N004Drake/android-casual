@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -322,13 +323,18 @@ public class CASUALTools {
 
     /**
      * compares User ID from id -u on the device to the specified User ID.
-     * @param expectedUID  User ID specified.
+     * @param expectedUIDs  User ID specified.
      * @return True if actua UID matches expected
      */
-    public static boolean uidMatches(String expectedUID) {
+    public static boolean uidMatches(String[] expectedUIDs) {
         String[] cmd = new String[]{new ADBTools().getBinaryLocation(), "shell", "id -u"};
         String retval = new Shell().silentShellCommand(cmd);
-        return retval.contains(expectedUID);
+        for (String expUID:expectedUIDs){
+            if (retval.equals(expUID)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -337,10 +343,12 @@ public class CASUALTools {
      * @return command used to get root, will be blank if unrooted. 
      */
     public static String rootAccessCommand() {
-        if (uidMatches("uid=0(")) {
+        String[] normalUser=new String[]{"\n2000"};
+        String[] rootUser=new String[]{"\nuid=0","\n0"};
+        
+        if (uidMatches(rootUser)) {
             return "";
-        }
-        if (uidMatches("2000")) {
+        } else  if (uidMatches(normalUser)) {
             String retval = new Shell().silentShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "su -c 'id -u'"});
             if (retval.contains("uid=0(")) {
                 return "su -c ";

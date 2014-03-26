@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL;
+package CASUAL.CommunicationsTools.ADB.busybox;
 
+import CASUAL.CASUALScriptParser;
+import CASUAL.Shell;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.BusyboxTools;
 import org.junit.After;
@@ -49,6 +51,6 @@ public class BusyboxToolsTest {
         assert result.contains("busybox");
         result = new CASUALScriptParser().executeOneShotCommand("$ADB shell $BUSYBOX mount");
 
-        assert result.contains("rootfs on /");
+        assert result.contains("rootfs on /")||result.contains("proc type proc");
     }
 }

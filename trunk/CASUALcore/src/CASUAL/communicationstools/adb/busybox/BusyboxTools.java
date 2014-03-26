@@ -28,6 +28,7 @@ import CASUAL.communicationstools.adb.ADBTools;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class BusyboxTools {
+
     /**
      * Busybox for Linux ARMv4tl is the most compatible with all ARM according
      * to Busybox site. This is intended for the device, not the host.
@@ -42,7 +43,6 @@ public class BusyboxTools {
     final String busyboxLocation = "/data/local/tmp/busybox";
     ADBTools adb = new ADBTools();
     Shell shell = new Shell();
-    
 
     private String getDeviceArch() {
         if (Statics.CASPAC != null) {
@@ -82,14 +82,14 @@ public class BusyboxTools {
             return bbtools.deployBusybox();
         }
     }
-    public static void reset(){
-        
+
+    public static void reset() {
+
     }
 
     private String deployBusybox() {
-        ResourceDeployer rd=new ResourceDeployer();
+        ResourceDeployer rd = new ResourceDeployer();
         String busyboxOnHost = Statics.getTempFolder() + "busybox";
-        String[] installCmd = {adb.getBinaryLocation(), "push", busyboxOnHost, busyboxLocation};
         String busyboxResource;
         if (getDeviceArch().equals("ARM")) {
             busyboxResource = busyboxARM;
@@ -97,13 +97,23 @@ public class BusyboxTools {
             busyboxResource = busyboxX86;
         }
         rd.copyFromResourceToFile(busyboxResource, busyboxOnHost);
+        String[] installCmd = {adb.getBinaryLocation(), "push", busyboxOnHost, busyboxLocation};
         new Shell().silentShellCommand(installCmd);
-        String check = new Shell().sendShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 711 /data/local/tmp/busybox 2&1>/dev/null;ls /data/local/tmp"});
+        String[] checkCmd=new String[]{adb.getBinaryLocation(), "shell", "chmod 711 /data/local/tmp/busybox;ls /data/local/tmp"};
+        String check = new Shell().sendShellCommand(checkCmd);
         if (check.contains("busybox")) {
             return this.busyboxLocation;
         } else {
             return null;
         }
 
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Location:").append(busyboxLocation);
+        sb.append("\nDeployed:").append(busyboxIsInstalled());
+        return busyboxLocation;
     }
 }

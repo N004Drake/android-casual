@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL;
+package CASUAL.CommunicationsTools.ADB.busybox;
 
+import CASUAL.Shell;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import java.io.ByteArrayInputStream;
