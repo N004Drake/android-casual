@@ -100,7 +100,7 @@ import java.util.logging.Logger;
                                 cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \'" + receiveCommand + "\'"};
                             }
                         }
-                        
+                        Log.level4Debug("**TARGET SET ON REMOTE DEVICE:"+remoteFileName);
                         //launch the process
                         ProcessBuilder p = new ProcessBuilder(cmd);
                         p.redirectErrorStream(true);
@@ -115,10 +115,10 @@ import java.util.logging.Logger;
 
                         //device is ready for transfer
                         Statics.setStatus("device ready");
+                        CASUALDataBridge.deviceReadyForReceive = true;
                         synchronized(CASUALDataBridge.deviceSideReady){
                             CASUALDataBridge.deviceSideReady.notifyAll();
                         }
-                        CASUALDataBridge.deviceReadyForReceive = true;
                         proc.waitFor();
 
                         //transfer is complete because host closed connection and device-side process exited
@@ -126,7 +126,10 @@ import java.util.logging.Logger;
                         CASUALDataBridge.deviceSideMessage = convertStreamToString(is);
 
                         //check for errors.  if any errors were present they would have come before the donestring
-                        if (!deviceSideMessage.startsWith(donestring)) {
+                        //an error on this line means the server stalled and running this can fix it. 
+                        // adb shell "echo woot|/data/local/tmp/busybox nc 127.0.0.1:27825 "
+                        if (null==deviceSideMessage||!deviceSideMessage.startsWith(donestring)) {
+                            
                             Log.level0Error("Improper Exit of DataBridge");
                             if (deviceSideMessage.equals("")) {
                                 deviceSideMessage = USBDISCONNECTED;

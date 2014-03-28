@@ -348,16 +348,14 @@ public class CASUALTools {
         
         if (uidMatches(rootUser)) {
             return "";
-        } else  if (uidMatches(normalUser)) {
+        } else  {
             String retval = new Shell().silentShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "su -c 'id -u'"});
             if (retval.contains("uid=0(")) {
                 return "su -c ";
             } else {
-                return "";
-            }
-        } else {
             new CASUALMessageObject("@interactionCouldNotObtainRootOnDevice").showErrorDialog();
             return "";
+            }
         }
     }
 

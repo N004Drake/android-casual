@@ -163,9 +163,11 @@ public abstract class AbstractDeviceCommunicationsProtocol {
      *
      */
     public void waitForDevice() {
+        Log.level4Debug("Waiting for device");
         while (!isConnected()) {
             sleep200ms();
         }
+        Log.level4Debug("Device Connected!!!");
     }
 
     /**
