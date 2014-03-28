@@ -77,6 +77,10 @@ public class TwrpCommunications {
     }
     
     
+    public void exitRecovery(){
+        adb.run(new String[]{"reboot"}, timeout, false);
+    }
+    
     /**
      * deposits the script file in /cache/recovery/openrecoveryscript and runs.
      * Running is performed by killing the recovery binary, running in memory
