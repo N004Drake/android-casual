@@ -308,8 +308,10 @@ public class CASUALDataBridge {
     }
 
     private void waitForReadySignal() {
+        if (deviceReadyForReceive){
+            return;
+        }
         try {
-            //open the port for write
             synchronized (deviceSideReady){
                 Log.level3Verbose("Waiting for device side to be ready");
                 deviceSideReady.wait();
@@ -318,7 +320,6 @@ public class CASUALDataBridge {
             Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
         }
         Log.level3Verbose("Notified about device side ready");
-        
                         
 
     }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package CASUAL.CommunicationsTools.Fastboot;
+package CASUAL.communicationstools.fastboot;
 
 import CASUAL.Statics;
 import CASUAL.communicationstools.fastboot.FastbootTools;

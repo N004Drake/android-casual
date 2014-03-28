@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package CASUAL.CommunicationsTools.heimdall.drivers;
+package CASUAL.communicationstools.heimdall.drivers;
 
 import CASUAL.Log;
 import CASUAL.OSTools;
