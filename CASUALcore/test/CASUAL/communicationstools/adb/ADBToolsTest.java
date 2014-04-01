@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL.CommunicationsTools.ADB;
+package CASUAL.communicationstools.adb;
 
 import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALMessageObject;

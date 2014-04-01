@@ -46,8 +46,6 @@ public class FileOperations {
     public FileOperations() {
     }
 
-   
-
     /**
      * recursively deletes a String path
      *
@@ -63,7 +61,7 @@ public class FileOperations {
      * @param path
      */
     public void recursiveDelete(File path) {
-        
+
         File[] c = path.listFiles();
         if (path.exists()) {
             Log.level4Debug("Removing folder and contents:" + path.toString());
@@ -88,7 +86,7 @@ public class FileOperations {
      * @return true if permission to write
      */
     public boolean verifyWritePermissionsRecursive(String path) {
-        
+
         File Check = new File(path);
         File[] c = Check.listFiles();
         if (Check.exists()) {
@@ -110,7 +108,7 @@ public class FileOperations {
      * @return absolute path to folder
      */
     public String findRecursive(String PathToSearch, String FileName) {
-        
+
         File Check = new File(PathToSearch);
         File[] c = Check.listFiles();
         String s = "";
@@ -157,7 +155,7 @@ public class FileOperations {
      * @return true if folder was created
      */
     public boolean makeFolder(String Folder) {
-        
+
         if (Folder == null) {
             return false;
         }
@@ -209,7 +207,7 @@ public class FileOperations {
      * @throws IOException
      */
     public void writeToFile(String Text, String File) throws IOException {
-        
+
         BufferedWriter bw;
         FileWriter fw = new FileWriter(File, true);
         bw = new BufferedWriter(fw);
@@ -227,7 +225,7 @@ public class FileOperations {
      * @throws IOException
      */
     public void overwriteFile(String Text, String File) throws IOException {
-        
+
         BufferedWriter bw;
         bw = new BufferedWriter(new FileWriter(File, false));
         bw.write(Text);
@@ -236,7 +234,7 @@ public class FileOperations {
     }
 
     private boolean writeInputStreamToFile(InputStream is, File file) {
-        
+
         Log.level4Debug("Attempting to write " + file.getPath());
         try {
             BufferedOutputStream out;
@@ -275,7 +273,7 @@ public class FileOperations {
      * @return true if file was deleted
      */
     public Boolean deleteFile(String FileName) {
-        
+
         Boolean Deleted;
         File file = new File(FileName);
         if (file.exists()) {
@@ -320,7 +318,6 @@ public class FileOperations {
      * @throws IOException
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
-        
 
         Log.level4Debug("Copying " + sourceFile.getCanonicalPath() + " to " + destFile.getCanonicalPath());
         if (!destFile.exists()) {
@@ -350,7 +347,7 @@ public class FileOperations {
      * @return current folder
      */
     public String currentDir() {
-        
+
         String CurrentDir = new File(".").getAbsolutePath();
         Log.level4Debug("Detected current folder: " + CurrentDir);
         if (CurrentDir.endsWith(".")) {
@@ -379,8 +376,6 @@ public class FileOperations {
 
     }
 
-
-
     /**
      * takes a filename sets executable returns result
      *
@@ -388,7 +383,7 @@ public class FileOperations {
      * @return true if executable bit was set
      */
     public boolean setExecutableBit(String Executable) {
-        
+
         File Exe = new File(Executable);
         boolean Result = Exe.setExecutable(true);
         Log.level4Debug("Setting executable " + Exe + ". Result=" + Result);
@@ -412,7 +407,7 @@ public class FileOperations {
      * @return string contents of resource
      */
     public String readTextFromResource(String Resource) {
-        
+
         InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(Resource);
         StringBuilder text = new StringBuilder();
         try {
@@ -462,7 +457,7 @@ public class FileOperations {
      * @return string representation of file
      */
     public String readFile(String FileOnDisk) {
-        
+
         String EntireFile = "";
         try {
             String Line;
@@ -532,7 +527,7 @@ public class FileOperations {
      * @throws IOException
      */
     public boolean moveFile(File sourceFile, File destFile) throws IOException {
-        
+
         FileOperations fO = new FileOperations();
         if (!destFile.getParentFile().exists()) {
             File folder = destFile.getParentFile();
@@ -555,7 +550,7 @@ public class FileOperations {
      * @throws IOException
      */
     public boolean moveFile(String sourceFile, String destFile) throws IOException {
-        
+
         FileOperations fo = new FileOperations();
         if (!fo.verifyExists(sourceFile)) {
             Log.level4Debug("[moveFile()] Source doesn't exist");

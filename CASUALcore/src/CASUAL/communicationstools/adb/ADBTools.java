@@ -234,7 +234,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
         String[] devicesCommand=new String[]{tempBinaryLocation,"devices"};
         String[] sendcmd=devicesCommand;
         String deviceList = new Shell().silentTimeoutShellCommand(sendcmd,5000);
-        if (checkErrorMessage(devicesCommand, deviceList)){
+        if (checkErrorMessage(devicesCommand, deviceList)|| deviceList.contains("\toffline\n")){
             binaryLocation=tempBinaryLocation;
         }
         return binaryLocation;

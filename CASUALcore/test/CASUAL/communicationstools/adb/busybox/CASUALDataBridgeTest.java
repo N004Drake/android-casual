@@ -2,11 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package CASUAL.CommunicationsTools.ADB.busybox;
+package CASUAL.communicationstools.adb.busybox;
 
 import CASUAL.Shell;
 import CASUAL.communicationstools.adb.ADBTools;
-import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +25,6 @@ import org.junit.Test;
  */
 public class CASUALDataBridgeTest {
 
- 
     @Before
     public void setUp() {
     }
@@ -36,7 +34,6 @@ public class CASUALDataBridgeTest {
     }
     Shell shell = new Shell();
 
- 
     @Test
     public void testSendString() {
         try {
@@ -62,7 +59,7 @@ public class CASUALDataBridgeTest {
             Logger.getLogger(CASUALDataBridgeTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Test
     public void testSendFile() throws Exception {
         if (!new ADBTools().isConnected()) {
@@ -72,23 +69,24 @@ public class CASUALDataBridgeTest {
         File f = new File("../../CASPAC/testpak.zip");
         String remoteFileName = "/sdcard/testpak";
         CASUALDataBridge instance = new CASUALDataBridge();
-        long retval=instance.sendFile(f, remoteFileName);
-        assert (retval==f.length());
+        long retval = instance.sendFile(f, remoteFileName);
+        assert (retval == f.length());
         shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "pull", "/sdcard/testpak", "test"});
         String originalmd5 = new CASUAL.crypto.MD5sum().getLinuxMD5Sum(f).split(" ")[0];
         File test = new File("test");
         String testmd5 = new CASUAL.crypto.MD5sum().getLinuxMD5Sum(test).split(" ")[0];
-        System.out.println("original md5:"+originalmd5);
-        System.out.println("received md5:"+testmd5);
+        System.out.println("original md5:" + originalmd5);
+        System.out.println("received md5:" + testmd5);
         test.delete();
         shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm /sdcard/testpak"});
         assert (testmd5.equals(originalmd5));
     }
 
-  
     @Test
     public void testGetFile() throws Exception {
-        if (!new ADBTools().isConnected()) return;
+        if (!new ADBTools().isConnected()) {
+            return;
+        }
         System.out.println("getFile");
         File original = new File("../../CASPAC/testpak.zip");
         String remoteFileName = "/sdcard/testpak.zip";
@@ -96,7 +94,7 @@ public class CASUALDataBridgeTest {
         test.delete();
         shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "push", original.getAbsolutePath(), remoteFileName});
         CASUALDataBridge instance = new CASUALDataBridge();
-        instance.getFile(remoteFileName,test);
+        instance.getFile(remoteFileName, test);
         String originalmd5 = new CASUAL.crypto.MD5sum().getLinuxMD5Sum(original).split(" ")[0];
         String testmd5 = new CASUAL.crypto.MD5sum().getLinuxMD5Sum(test).split(" ")[0];
         System.out.println(test.getAbsolutePath());
@@ -106,17 +104,18 @@ public class CASUALDataBridgeTest {
         assert (testmd5.equals(originalmd5));
     }
 
- 
     @Test
     public void testSendStream() throws Exception {
-        if (!new ADBTools().isConnected()) return;
+        if (!new ADBTools().isConnected()) {
+            return;
+        }
         System.out.println("sendStream");
         String expResult = "omfg \n cool! 123456789";
         InputStream input = (InputStream) new ByteArrayInputStream(expResult.getBytes());
         String remoteFileName = "/sdcard/sendstreamtest";
         CASUALDataBridge instance = new CASUALDataBridge();
 
-        long test =instance.sendStream(input, remoteFileName);
+        long test = instance.sendStream(input, remoteFileName);
         String result = shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "cat " + remoteFileName});
         shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + remoteFileName});
         assert (test == expResult.length());
