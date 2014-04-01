@@ -71,18 +71,16 @@ public class CASUALDataBridge {
     static long lastbytes = -1;
     static String status = "";
 
-
-
-    final static Object deviceSideReady=new Object();
+    final static Object deviceSideReady = new Object();
     static Object casualSideReady;
     static Object transmissionInProgress;
-    
-            
+
     /**
      * used externally to command shutdown. If shutdown is commanded, all
      * operations must halt as soon as possible and return.
      */
     public static boolean commandedShutdown = false;
+
     public CASUALDataBridge() {
     }
 
@@ -178,8 +176,8 @@ public class CASUALDataBridge {
         //grab the stream
         OutputStream os = socket.getOutputStream();
         //do the work
-        
-         waitForReadySignal();
+
+        waitForReadySignal();
         copyStreamToDevice(input, os, true);
         //begin write
         shutdownCommunications(socket, t);
@@ -194,7 +192,7 @@ public class CASUALDataBridge {
         Log.level3Verbose("Starting getStream DataBridge");
         //start device-side sender
         MandatoryThread t = new DeviceSideDataBridge(adb).startDeviceSideServer(remoteFileName, false);
-        
+
         t.start();
         //open the socket
         final Socket socket = setupPort();
@@ -308,11 +306,11 @@ public class CASUALDataBridge {
     }
 
     private void waitForReadySignal() {
-        if (deviceReadyForReceive){
+        if (deviceReadyForReceive) {
             return;
         }
         try {
-            synchronized (deviceSideReady){
+            synchronized (deviceSideReady) {
                 Log.level3Verbose("Waiting for device side to be ready");
                 deviceSideReady.wait();
             }
@@ -320,7 +318,6 @@ public class CASUALDataBridge {
             Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
         }
         Log.level3Verbose("Notified about device side ready");
-                        
 
     }
 
@@ -342,11 +339,10 @@ public class CASUALDataBridge {
         socket.close();
 
         Log.level4Debug("waiting for device-side server to shutdown");
-        if (!deviceSideServer.isComplete()){
+        if (!deviceSideServer.isComplete()) {
             deviceSideServer.join();
         }
     }
-
 
     /**
      * timeoutWatchdog checks every WATCHDOGINTERVAL millis to verify bytes have
@@ -375,15 +371,13 @@ public class CASUALDataBridge {
         }
     });
 
-  
-    
     private boolean checkErrors() {
         Log.level3Verbose("checking DataBridge errors.");
         return !deviceSideMessage.equals(DeviceSideDataBridge.USBDISCONNECTED) && !deviceSideMessage.equals(DeviceSideDataBridge.DEVICEDISCONNECTED) && !deviceSideMessage.startsWith(DeviceSideDataBridge.PERMISSIONERROR);
     }
 
     public String integralGetFile(String remoteFile, File f) {
-       
+
         String retval = "";
         try {
             Log.level3Verbose("Starting integralGetFile DataBridge");
@@ -412,10 +406,5 @@ public class CASUALDataBridge {
         }
         return retval;
     }
-
-
-
-    
-
 
 }

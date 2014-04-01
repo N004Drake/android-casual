@@ -60,6 +60,7 @@ public class TwrpCommunicationsTest {
      */
     @Test
     public void testRebootTWRP() {
+        tc.waitForDevice();
         System.out.println("rebootTWRP");
         TwrpCommunications instance = new TwrpCommunications();
         boolean expResult = true;
@@ -72,6 +73,8 @@ public class TwrpCommunicationsTest {
      */
     @Test
     public void testIsTwrpInstalled() {
+        tc.waitForDevice();
+        tc.rebootTWRP();
         System.out.println("isTwrpInstalled");
         TwrpCommunications instance = new TwrpCommunications();
         boolean expResult = false;  //will be false because we are in twrp.
@@ -84,6 +87,8 @@ public class TwrpCommunicationsTest {
      */
     @Test
     public void testIsTwrpRunning() {
+        tc.waitForDevice();
+        tc.rebootTWRP();
         System.out.println("isTwrpRunning");
         TwrpCommunications instance = new TwrpCommunications();
         boolean expResult = true;
@@ -97,16 +102,19 @@ public class TwrpCommunicationsTest {
      */
     @Test
     public void testRunTwrpScript_OpenRecoveryScript() throws Exception {
+        tc.waitForDevice();
+        tc.rebootTWRP();
         System.out.println("runTwrpScript");
         
+        TwrpCommunications instance = new TwrpCommunications();
         OpenRecoveryScript script = new OpenRecoveryScript();
         script.mountSystem();
         script.append("wipe cache");
         script.wipeCache();
         script.wipeDalvik();
                 
-        TwrpCommunications instance = new TwrpCommunications();
         instance.runTwrpScript(script);
+
         instance.rebootTWRP();
         
 
@@ -117,6 +125,8 @@ public class TwrpCommunicationsTest {
      */
     @Test
     public void testRunTwrpScript_String() throws Exception {
+        tc.waitForDevice();
+        tc.rebootTWRP();
         System.out.println("runTwrpScript");
         String script = "";
         TwrpCommunications instance = new TwrpCommunications();

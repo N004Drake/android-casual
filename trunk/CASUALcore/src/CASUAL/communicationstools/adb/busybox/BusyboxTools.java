@@ -96,10 +96,10 @@ public class BusyboxTools {
         } else {
             busyboxResource = busyboxX86;
         }
-         rd.copyFromResourceToFile(busyboxResource, busyboxOnHost);
+        rd.copyFromResourceToFile(busyboxResource, busyboxOnHost);
         String[] installCmd = {adb.getBinaryLocation(), "push", busyboxOnHost, busyboxLocation};
         new Shell().silentShellCommand(installCmd);
-        String[] checkCmd=new String[]{adb.getBinaryLocation(), "shell", "chmod 711 /data/local/tmp/busybox;ls /data/local/tmp"};
+        String[] checkCmd = new String[]{adb.getBinaryLocation(), "shell", "chmod 711 /data/local/tmp/busybox;ls /data/local/tmp"};
         String check = new Shell().sendShellCommand(checkCmd);
         if (check.contains("busybox")) {
             return this.busyboxLocation;

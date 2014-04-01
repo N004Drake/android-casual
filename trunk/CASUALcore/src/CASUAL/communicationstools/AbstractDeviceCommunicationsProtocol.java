@@ -216,7 +216,7 @@ public abstract class AbstractDeviceCommunicationsProtocol {
             return retval;
         } else {
 
-            return shell.liveShellCommand(runcmd,true);
+            return shell.liveShellCommand(runcmd, true);
         }
     }
 
