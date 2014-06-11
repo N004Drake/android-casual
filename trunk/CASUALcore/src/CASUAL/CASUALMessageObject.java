@@ -289,6 +289,11 @@ public class CASUALMessageObject implements Serializable{
         this.category=cat;
         return getMessageType();
     }
+
+    /**
+     *gets message type
+     * @return the message type from MessageCategory.TIMEOUT
+     */
     public int getMessageType(){
       return category.compareTo(iCASUALUI.MessageCategory.TIMEOUT);
     }

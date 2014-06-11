@@ -81,6 +81,9 @@ public class CASUALDataBridge {
      */
     public static boolean commandedShutdown = false;
 
+    /**
+     * default constructor
+     */
     public CASUALDataBridge() {
     }
 
@@ -376,6 +379,12 @@ public class CASUALDataBridge {
         return !deviceSideMessage.equals(DeviceSideDataBridge.USBDISCONNECTED) && !deviceSideMessage.equals(DeviceSideDataBridge.DEVICEDISCONNECTED) && !deviceSideMessage.startsWith(DeviceSideDataBridge.PERMISSIONERROR);
     }
 
+    /**
+     * Gets a file from the device. 
+     * @param remoteFile remote file name
+     * @param f local file name
+     * @return path to local file. 
+     */
     public String integralGetFile(String remoteFile, File f) {
 
         String retval = "";

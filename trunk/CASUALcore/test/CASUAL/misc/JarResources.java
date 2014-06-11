@@ -20,8 +20,11 @@ import java.util.zip.ZipInputStream;
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class JarResources {
 
-    // external debug flag
-    public boolean debugOn = false;
+
+    /**
+     *external debug flag
+     */
+        public boolean debugOn = false;
     // jar resource mapping tables
     private Hashtable htSizes = new Hashtable();
     private Hashtable htJarContents = new Hashtable();
@@ -43,6 +46,7 @@ public final class JarResources {
      * Extracts a jar resource as a blob.
      *
      * @param name a resource name.
+     * @return resource as a byte array. 
      */
     public byte[] getResource(String name) {
         return (byte[]) htJarContents.get(name);
@@ -160,6 +164,8 @@ public final class JarResources {
      *                   );
      *     ...
      * </pre>
+     * @param args args for main method. 
+     * @throws java.io.IOException 
      */
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {

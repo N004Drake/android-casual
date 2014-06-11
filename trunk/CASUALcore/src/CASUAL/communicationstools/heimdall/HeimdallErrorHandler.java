@@ -31,7 +31,12 @@ public class HeimdallErrorHandler {
     static final String[] epicFailures = {"ERROR: No partition with identifier"};
     static final String[] nonErrors={"ERROR: Failed to detect compatible download-mode device."};
     
-    
+    /**
+     * Checks for errors from Heimdall. 
+     * @param command command which was run. 
+     * @param result result from command. 
+     * @return disposition of command. 
+     */
     public HeimdallTools.CommandDisposition doErrorCheck(String[] command, String result){
         return errorCheckHeimdallOutput(result);
     }

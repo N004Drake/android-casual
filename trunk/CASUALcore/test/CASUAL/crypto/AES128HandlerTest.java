@@ -190,6 +190,7 @@ public class AES128HandlerTest {
 
     /**
      * Test of decrypt method, of class AES128Handler.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDecrypt() throws Exception {
@@ -212,6 +213,7 @@ public class AES128HandlerTest {
 
     /**
      * Test of getCipher method, of class AES128Handler.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetCipher() throws Exception {

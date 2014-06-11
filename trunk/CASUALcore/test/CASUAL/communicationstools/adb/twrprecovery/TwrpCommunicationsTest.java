@@ -99,6 +99,7 @@ public class TwrpCommunicationsTest {
 
     /**
      * Test of runTwrpScript method, of class TwrpCommunications.
+     * @throws java.lang.Exception
      */
     @Test
     public void testRunTwrpScript_OpenRecoveryScript() throws Exception {
@@ -122,6 +123,7 @@ public class TwrpCommunicationsTest {
 
     /**
      * Test of runTwrpScript method, of class TwrpCommunications.
+     * @throws java.lang.Exception
      */
     @Test
     public void testRunTwrpScript_String() throws Exception {

@@ -51,8 +51,51 @@ public interface iCASUALUI {
      *Categories of possible messages. 
      */
     public enum MessageCategory{
-        TIMEOUT, ACTIONREQUIRED, USERCANCELOPTION, USERNOTIFICATION,
-        SHOWINFORMATION, SHOWERROR, SHOWYESNO, TEXTINPUT, COMMANDNOTIFICATION
+
+        /**
+         * TIMEOUT message is displayed to user.
+         */
+        TIMEOUT,
+
+        /**
+         * An important message to be displayed.
+         */
+        ACTIONREQUIRED,
+
+        /**
+         * User is given the option to continue or cancel.
+         */
+        USERCANCELOPTION,
+
+        /**
+         * Notification is displayed.
+         */
+        USERNOTIFICATION,
+
+        /**
+         * Information is displayed. 
+         */
+        SHOWINFORMATION,
+
+        /**
+         * Error message is displayed.
+         */
+        SHOWERROR,
+
+        /**
+         * Information with yes/no buttons is displayed. 
+         */
+        SHOWYESNO,
+
+        /**
+         * Information with a string return is displayed. 
+         */
+        TEXTINPUT,
+
+        /**
+         * A command is run, and the return is displayed. 
+         */
+        COMMANDNOTIFICATION
     }
     
     /**
@@ -280,7 +323,7 @@ public interface iCASUALUI {
 
     /**
      * used during unzip as a progress indicator
-     * @param i 
+     * @param value number of blocks unzipped. 
      */
     public void setBlocksUnzipped(String value);
 

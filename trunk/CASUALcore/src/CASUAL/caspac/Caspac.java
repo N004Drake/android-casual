@@ -465,7 +465,9 @@ public final class Caspac {
         Log.level4Debug("Unzipping complete.");
     }
 
-    
+    /**
+     * loops through active unzip threads and waits for all unzip to complete.
+     */
     public void waitForUnzip(){
         for (CASUAL.misc.MandatoryThread t : unzipThreads) {
             if (t==null){

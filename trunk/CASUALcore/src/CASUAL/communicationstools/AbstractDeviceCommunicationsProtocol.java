@@ -220,6 +220,11 @@ public abstract class AbstractDeviceCommunicationsProtocol {
         }
     }
 
+    /**
+     * Verfies file was deployed. 
+     * @param binaryLocation location to file
+     * @return true if file is present. 
+     */
     public boolean fileIsDeployedProperly(String binaryLocation) {
         File f = new File(binaryLocation);
         return (binaryLocation != null

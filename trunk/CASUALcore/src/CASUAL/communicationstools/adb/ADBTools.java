@@ -38,6 +38,9 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
      */
     private static String binaryLocation = ""; //location of ADB after deployment
 
+    /**
+     * ADBTools default constructor. 
+     */
     public ADBTools() {
 
     }

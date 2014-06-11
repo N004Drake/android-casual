@@ -48,6 +48,9 @@ public class CASUALConnectionStatusMonitor {
         paused = true;
     }
 
+    /**
+     *Provides a way to restart the monitor after stop is called. 
+     */
     public static void resumeAfterStop() {
         paused = false;
         if (monitorLastState == null) {
