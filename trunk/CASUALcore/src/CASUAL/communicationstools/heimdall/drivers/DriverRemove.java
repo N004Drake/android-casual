@@ -2,7 +2,7 @@
  * *****************************************************************************
  * This file is part of CADI a library of CASUAL.
  * 
-* Copyright (C) 2014 Jeremy R. Loper <jrloper@gmail.com>
+* Copyright (C) 2014 Jeremy R. Loper &lt;jrloper@gmail.com&gt;
  *
  * CADI is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -14,7 +14,7 @@
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
 * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.
  * 
 ******************************************************************************
  */
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Jeremy R. Loper <jrloper@gmail.com>
+ * @author Jeremy R. Loper &lt;jrloper@gmail.com&gt;
  */
 public class DriverRemove {
 
@@ -66,7 +66,7 @@ public class DriverRemove {
     /**
      * deleteOemInf parses output from devconCommand via regex to extract the
      * name of the *.inf file from Windows driver store. Extraction of the file
-     * name is determined by setup classes & provider names.
+     * name is determined by setup classes &amp; provider names.
      *
      * @return a String Array of *.inf files matching the search criteria.
      */

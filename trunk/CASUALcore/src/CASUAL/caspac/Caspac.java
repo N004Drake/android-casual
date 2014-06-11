@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
 package CASUAL.caspac;
 
@@ -201,7 +201,7 @@ public final class Caspac {
     /**
      * returns an empty CASPAC.
      *
-     * @return empty CASPAC>
+     * @return empty CASPAC &gt;
      * @throws IOException
      */
     final public static Caspac makeGenericCaspac() throws IOException {

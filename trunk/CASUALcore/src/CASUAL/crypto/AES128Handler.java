@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
 package CASUAL.crypto;
 
@@ -238,7 +238,7 @@ public class AES128Handler {
      * will return the length of the CASPAC Header
      *
      * @param f
-     * @return 0 if failed, will be between >18 if valid.
+     * @return 0 if failed, will be between &gt;18 if valid.
      * @throws FileNotFoundException
      * @throws IOException
      */

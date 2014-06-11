@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
 package CASUAL.communicationstools.adb;
 
@@ -93,10 +93,8 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     }
 
     /**
-     * kills and restarts the adb server max duration of 7 seconds. Thread will
-     * be abandoned if time is exceeded
-     *
-     * @inheritDoc
+
+     * {@inheritDoc}
      */
     @Override
     public void restartConnection() {

@@ -33,7 +33,7 @@ Copyright (C) 2012  Adam Outler.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
 
 
@@ -256,7 +256,7 @@ Copyright (C) 2013  Adam Outler
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
 This project contains CADI CASUAL Automated Driver Installer
 Copyright (C) 2013  Jeremey Loper
@@ -269,7 +269,7 @@ Copyright (C) 2013  Jeremey Loper
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
 
 This project contains Fastboot
