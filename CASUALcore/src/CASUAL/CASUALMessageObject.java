@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
 package CASUAL;
 
@@ -32,7 +32,7 @@ public class CASUALMessageObject implements Serializable{
 
     /**
      * The message sent into the CASUALMessageObject. Original message includes
-     * Title and Message delimited by the first comma or >>>.
+     * Title and Message delimited by the first comma or &gt;&gt;&gt;.
      */
     public String originalMessage = ""; //for use with translations
 
@@ -110,7 +110,7 @@ public class CASUALMessageObject implements Serializable{
     /**
      * instantiates an interaction
      *
-     * @param messageInput can be title,message or title>>>message, or just
+     * @param messageInput can be title,message or title&gt;&gt;&gt;message, or just
      * message and title will be automatically chosen
      */
     public CASUALMessageObject(String messageInput) {

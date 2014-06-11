@@ -13,7 +13,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  ***************************************************************************/
 package CASUAL.communicationstools.heimdall.drivers;
 
@@ -38,7 +38,7 @@ import java.util.ArrayList;
  * (MS-LPL). CADI uses libusbK, which is a generic WinUSB compatible driver for
  * libusbx communication via Heimdall. The drivers which are used (containing 
  * both an x86/x64 variant)are built with WDK 8.1 (for Windows 8.1 support). All driver
- * components are built & digitally signed by Jeremy Loper.
+ * components are built &amp; digitally signed by Jeremy Loper.
  *
  * WARNING: Modifications to this class can result in system-wide crash of
  * Windows. (I know, I've seen it :-D ) So plan out all modifications prior, and
