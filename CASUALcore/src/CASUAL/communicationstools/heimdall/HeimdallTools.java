@@ -62,7 +62,36 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
      */
     public enum CommandDisposition {
 
-        NOACTIONREQUIRED, RUNAGAIN, ELEVATIONREQUIRED, INSTALLDRIVERS, HALTSCRIPT, MAXIMUMRETRIES
+        /**
+         * Result was good. 
+         */
+        NOACTIONREQUIRED,
+
+        /**
+         * Result requires retry. 
+         */
+        RUNAGAIN,
+
+        /**
+         * Result indicates that permission problems were encountered.
+         */
+        ELEVATIONREQUIRED,
+
+        /**
+         * Result indicates drivers are required. 
+         */
+        INSTALLDRIVERS,
+
+        /**
+         * Result indicates that an unrecoverable error was encountered. 
+         */
+        HALTSCRIPT,
+
+        /**
+         * This command has been run too many times and a favorable result is 
+         * not likely. 
+         */
+        MAXIMUMRETRIES
     }
 
     /**

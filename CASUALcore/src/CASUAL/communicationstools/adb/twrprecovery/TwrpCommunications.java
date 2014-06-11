@@ -81,10 +81,16 @@ public class TwrpCommunications {
         return twrpval.contains("\nStarting TWRP ");
     }
 
+    /**
+     * exits from TWRP.
+     */
     public void exitRecovery() {
         adb.run(new String[]{"reboot"}, timeout, false);
     }
 
+    /**
+     * Waits for the device to be ready. 
+     */
     public void waitForDevice() {
         adb.waitForDevice();
     }

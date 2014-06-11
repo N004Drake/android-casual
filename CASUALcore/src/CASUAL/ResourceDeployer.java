@@ -29,10 +29,22 @@ import java.util.ArrayList;
  */
 public class ResourceDeployer {
 
+    /**
+     * Deploys a resource from the pacakge to the disk.
+     * @param resourceLocation location of internal resource. 
+     * @param tempFolder disk location.
+     * @return fully qualified path to deployed file.
+     */
     public String deployResourceTo(String resourceLocation, String tempFolder) {
         return deployResourceTo(new String[]{resourceLocation}, tempFolder)[0];
     }
 
+    /**
+     * deploys multiple resources to disk.
+     * @param resourceLocation array of files in jar.
+     * @param tempFolder deployment location.
+     * @return fully qualified paths to new files. 
+     */
     public String[] deployResourceTo(String[] resourceLocation, String tempFolder) {
         ArrayList<String> deployed = new ArrayList<String>();
         for (String res : resourceLocation) {
