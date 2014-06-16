@@ -278,7 +278,6 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
             }
         }
 
-        //TODO optimize this to use file.exists && file.isFile
         //for all unix/linux systems we try common paths for heimdall. 
         String cmd = "/usr/local/bin/heimdall";
         String check = shell.silentShellCommand(new String[]{cmd});
@@ -303,7 +302,6 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
                 }
             }
         }
-        //TODO implement heimdall version checking here
         return cmd;
     }
 
