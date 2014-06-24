@@ -438,11 +438,11 @@ public class CASUALLanguage {
             }
             File[] files = new File(line).listFiles();
             String retval = "";
-            if (files != null && files.length > 0) {
+            if (files != null && files.length > 0 && new ADBTools().isConnected()) {
                 for (File file : files) {
                     retval = retval + file.getAbsolutePath() + "\n";
                     try {
-                        commandHandler("shell \"echo " + file.getCanonicalPath() + "\"");
+                        commandHandler("adb shell \"echo " + file.getCanonicalPath() + "\"");
                     } catch (IOException ex) {
                         Log.errorHandler(ex);
                     }
