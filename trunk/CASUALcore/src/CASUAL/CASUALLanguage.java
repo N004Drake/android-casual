@@ -727,9 +727,7 @@ public class CASUALLanguage {
         String[] commandSplit = checkValueSplit[1].split("\\$DO", 2);
         String command = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);//command to check
         String casualCommand = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);// command to execute if true
-        if (command.startsWith("$ADB")) {
-            command = command.replaceFirst("\\$ADB", "");
-        }
+
         Log.level4Debug("checking for results to be " + ifContains);
         Log.level4Debug("requesting " + command);
 

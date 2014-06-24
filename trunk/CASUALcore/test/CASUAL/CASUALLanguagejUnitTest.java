@@ -26,7 +26,7 @@ public class CASUALLanguagejUnitTest {
     @Test
     public void testCASUALLanguage() {
         CASUAL.CASUALMain.main(new String[]{"-e", "$ECHO hi"});
-        String x = new CASUAL.CASUALScriptParser().executeOneShotCommand("$IFNOTCONTAINS d2cafdan $INCOMMAND shell \"cat /system/build.prop\" $DO $IFNOTCONTAINS d2asdfgtt $INCOMMAND shell \"cat /system/build.prop\" $DO $ECHO hi");
+        String x = new CASUAL.CASUALScriptParser().executeOneShotCommand("$IFNOTCONTAINS d2cafdan $INCOMMAND adb shell \"cat /system/build.prop\" $DO $IFNOTCONTAINS d2asdfgtt $INCOMMAND $ADB shell \"cat /system/build.prop\" $DO $ECHO hi");
         assert x.contains("hi");
     }
 
