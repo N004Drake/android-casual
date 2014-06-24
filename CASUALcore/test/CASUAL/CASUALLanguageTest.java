@@ -242,4 +242,34 @@ public class CASUALLanguageTest {
         assert(result.contains(expResult));
     }   
     
+    @Test
+    public void testADB(){
+        System.out.println("adb test");
+        String expResult = Statics.getTempFolder();
+        String result = csp.executeOneShotCommand("$ADB devices");
+        assert result.contains("List of devices attached");
+        result = csp.executeOneShotCommand("adb devices");
+        assert result.contains("List of devices attached");
+        System.out.println("adb language test completed");  
+    }
+        @Test
+    public void testFastboot(){
+        System.out.println("fastboot test");
+        String expResult = Statics.getTempFolder();
+        String result = csp.executeOneShotCommand("$FASTBOOT --help");
+        assert result.contains("unrecognized option '--help'");
+        result = csp.executeOneShotCommand("fastboot --help");
+        assert result.contains("unrecognized option '--help'");
+        System.out.println("fastboot language test completed");  
+    }
+    @Test
+    public void testHeimdall(){
+        System.out.println("heimdall test");
+        String expResult = Statics.getTempFolder();
+        String result = csp.executeOneShotCommand("$HEIMDALL detect");
+        assert result.contains("download");
+        result = csp.executeOneShotCommand("heimdall detect");
+        assert result.contains("download");
+        System.out.println("heimdall language test completed");  
+    }
 }

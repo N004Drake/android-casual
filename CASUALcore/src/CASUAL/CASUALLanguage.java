@@ -623,7 +623,13 @@ public class CASUALLanguage {
              * SUPPORTED SHELLS
              */
             // if Heimdall, Send to Heimdall shell command
-        } else if (line.startsWith("$HEIMDALL")) {
+        } else if (line.startsWith("$HEIMDALL")||line.startsWith("heimdall")) {
+            if (line.startsWith("heimdall")){
+                line=line.replaceFirst("heimdall","");
+            } else if (line.startsWith("$HEIMDALL")){
+                line=line.replaceFirst("$HEIMDALL", "");
+            }
+            
             line = line.replace("$HEIMDALL", "");
             line = StringOperations.removeLeadingSpaces(line);
             Log.level4Debug("Received Command: " + line);
@@ -632,7 +638,9 @@ public class CASUALLanguage {
             if (!new HeimdallTools().run(new String[]{"detect"},5000, true).contains("CritERROR!!!")) {
                 ArrayList<String> intermediateCommand=new ShellTools().parseCommandLine(line);
                 String[] command=intermediateCommand.toArray(new String[intermediateCommand.size()]);
-                new HeimdallTools().waitForDevice();
+                if (!command[0].equals("detect")){
+                    new HeimdallTools().waitForDevice();
+                }
                 
                 /* if (Statics.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
@@ -645,14 +653,17 @@ public class CASUALLanguage {
                 return new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
             }
 // if Fastboot, Send to fastboot shell command
-        } else if (line.startsWith("$FASTBOOT")) {
-            line = line.replace("$FASTBOOT", "");
+        } else if (line.startsWith("$FASTBOOT") ||(line.startsWith("fastboot"))) {
+            if (line.startsWith("fastboot")){
+                line=line.replaceFirst("fastboot", "");
+            } else if (line.startsWith("$FASTBOOT")){
+                line=line.replaceFirst("\\$FASTBOOT","");
+            }
             line = StringOperations.removeLeadingSpaces(line);
             Log.level4Debug("received fastbot command.");
-            Log.level4Debug("deploying fastboot.");
             new FastbootTools().getBinaryLocation();
             Log.level2Information("@waitingForDownloadModeDevice");
-            if (OSTools.isLinux()) {
+            if (OSTools.isLinux() && !line.isEmpty() && !line.equals("--help")) {
                 Log.level2Information("@linuxPermissionsElevation");
 
                 String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
@@ -666,12 +677,17 @@ public class CASUALLanguage {
             }
 
             // if Fastboot, Send to fastboot shell command
-        } else if (line.startsWith("$ADB")) {
-            line = line.replace("$ADB", "");
+        } else if (line.startsWith("$ADB") || line.startsWith("adb")) {
+            if (line.startsWith("adb")){
+                line=line.replaceFirst("adb","");
+            } else if (line.startsWith("$ADB")){
+                line=line.replaceFirst("\\$ADB","");
+            }
             line = StringOperations.removeLeadingSpaces(line);
             String retVal = doShellCommand(line, null, null);
             Log.level4Debug("return from ADB:" + retVal);
             return retVal;
+                
 // if no prefix, then send command directly to ADB.
         } else {
             StringBuilder sb=new StringBuilder();

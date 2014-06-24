@@ -25,19 +25,18 @@ import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
 
-import CASUAL.archiving.Unzip;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
-import java.awt.Component;
-import java.awt.HeadlessException;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import CASUAL.iCASUALUI;
 import CASUAL.misc.CASUALScrFilter;
 import CASUAL.network.LinkLauncher;
+import java.awt.Component;
+import java.awt.HeadlessException;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,17 +51,19 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
 
 /**
- *provides UI for CASUAL. 
+ * provides UI for CASUAL.
+ *
  * @author Adam Outler adamoutler@gmail.com
  */
 public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI {
+
     private static final long serialVersionUID = 1L;
 
-    private boolean isReady=false;
-    final private boolean isDummyGUI=false;
+    private boolean isReady = false;
+    final private boolean isDummyGUI = false;
     Caspac caspac;
     String nonResourceFileName;
-    
+
     FileOperations fileOperations = new FileOperations();
     private String ComboBoxValue = "";
 
@@ -76,7 +77,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         //ProgressArea.setContentType("text/html");
         ProgressArea.setAutoscrolls(true);
         ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
-
 
         CASUALStartupTasks.lockGUIformPrep = false;
 
@@ -417,7 +417,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }//GEN-LAST:event_DonateButtonActionPerformed
 
 
-
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
         CASUALConnectionStatusMonitor.stop();
         this.setControlStatus(false);
@@ -644,18 +643,17 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         windowBanner.setIcon(new ImageIcon(icon, text));
 
     }
-    
+
     @Override
-    public void dispose(){
-        this.setVisibile(false);
+    public void dispose() {
+        this.setVisible(false);
         super.dispose();
-        if (Statics.GUI==this){
-            Statics.GUI=null;
+        if (Statics.GUI == this) {
+            Statics.GUI = null;
         }
         CASUAL.CASUALMain.shutdown(0);
         System.exit(0);
     }
-    
 
     /**
      * window is closing
@@ -663,7 +661,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * @param e closing event
      */
     public void windowCosing(WindowEvent e) {
-        this.setVisibile(false);
+        this.setVisible(false);
         this.dispose();
         CASUAL.CASUALMain.shutdown(0);
     }
@@ -686,7 +684,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         if (caspac.build.alwaysEnableControls) {
             setControlStatus(true);
         }
-        this.setTitle(caspac.build.windowTitle +" -- CASUAL R"+CASUAL.CASUALTools.getSVNVersion());
+        this.setTitle(caspac.build.windowTitle + " -- CASUAL R" + CASUAL.CASUALTools.getSVNVersion());
         if (caspac.scripts.size() > 0) {
             for (Script s : caspac.scripts) {
                 boolean addScript = true;
@@ -701,7 +699,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
                 Log.level4Debug("adding " + s.name + " to UI");
             }
-            if (caspac.getActiveScript()!=null){
+            if (caspac.getActiveScript() != null) {
                 Log.level2Information(caspac.getScriptByName(this.comboBoxScriptSelector.getSelectedItem().toString()).discription);
             }
         }
@@ -729,11 +727,15 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     /**
-     * sets the window visible. 
-     * @param v set true if window should be visible. 
+     * sets the window visible.
+     *
+     * @param v set true if window should be visible.
      */
-    public void setVisibile(boolean v) {
-        this.setVisible(v);
+    @Override
+    public void setVisible(boolean v) {
+        Log.level3Verbose("Setting window visibility" + v);
+        setLocationRelativeTo(null);
+        super.setVisible(v);
     }
 
     @Override
@@ -757,14 +759,10 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         AudioHandler.playMultipleInputStreams(URLs);
     }
 
-
-
     public void notificationCASUALSound() {
         AudioHandler.playSound("/GUI/development/resources/sounds/CASUAL.wav");
     }
 
-   
-    
     @Override
     public String displayMessage(CASUALMessageObject messageObject) {
         int messageType = messageObject.getMessageType();
@@ -785,12 +783,12 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                 return showUserCancelOptionInteraction(title, messageText);               //break; unreachable
 
             case INTERACTION_USER_NOTIFICATION:
-                 AudioHandler.playSound("/GUI/development/resources/sounds/Notification.wav");
+                AudioHandler.playSound("/GUI/development/resources/sounds/Notification.wav");
                 showUserNotificationInteraction(title, messageText);
                 break;
 
             case INTERACTION_SHOW_INFORMATION:
-               showInformationInteraction(messageText, title);
+                showInformationInteraction(messageText, title);
                 break;
 
             case INTERACTION_SHOW_ERROR:
@@ -815,6 +813,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     /**
      * grabs input from Statics.in (usually stdin).
+     *
      * @return string value containing user input truncated by enter key.
      */
     public String getCommandLineInput() {
@@ -1012,54 +1011,45 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         return isReady;
     }
 
-
     @Override
     public boolean isDummyGUI() {
         return isDummyGUI;
     }
 
-
-
     @Override
     public void setReady(boolean ready) {
-        isReady=ready;
+        isReady = ready;
     }
-
 
     @Override
     public void setBlocksUnzipped(String i) {
-        this.setInformationScrollBorderText("Unzipping:"+i);
+        this.setInformationScrollBorderText("Unzipping:" + i);
     }
 
     @Override
     public void sendString(String string) {
         ProgressArea.setText(ProgressArea.getText().concat(string));
         ProgressArea.setCaretPosition(ProgressArea.getDocument().getLength());
-     }
+    }
 
-
-    
-    
     @Override
     public void sendProgress(String data) {
         try {
-            char[] dataArray=data.toCharArray();
-            for (int c:dataArray){
-                switch (c){
+            char[] dataArray = data.toCharArray();
+            for (int c : dataArray) {
+                switch (c) {
                     case 8: //backspace
-                        ProgressArea.getStyledDocument().remove(ProgressArea.getStyledDocument().getLength()-1, ProgressArea.getStyledDocument().getLength()); 
+                        ProgressArea.getStyledDocument().remove(ProgressArea.getStyledDocument().getLength() - 1, ProgressArea.getStyledDocument().getLength());
                         break;
                     default:
                         ProgressArea.getStyledDocument().insertString(ProgressArea.getStyledDocument().getLength(), data, null);
                 }
             }
-            
+
         } catch (BadLocationException ex) {
             Logger.getLogger(CASUALGUIMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         ProgressArea.setCaretPosition(ProgressArea.getDocument().getLength());
     }
-        
-        
-    }
 
+}
