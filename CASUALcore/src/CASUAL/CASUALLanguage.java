@@ -674,10 +674,9 @@ public class CASUALLanguage {
             return retVal;
 // if no prefix, then send command directly to ADB.
         } else {
-            //TODO throw new runtime exception here and call out the invalid command.
-            String retVal = doShellCommand(line, null, null);
-            Log.level4Debug("return from ADB:" + retVal);
-            return retVal;
+            StringBuilder sb=new StringBuilder();
+            sb.append("ERROR!!!!  Invalid Command:\"").append(line).append("\" is not recognized as a valid command");
+            throw new IOException(sb.toString());
         }
         //final line output for debugging purposes
         Log.level4Debug("COMMAND processed - " +new ADBTools().getBinaryLocation() + " " + line);
