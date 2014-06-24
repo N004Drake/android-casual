@@ -447,6 +447,10 @@ public class CASUALLanguage {
                         Log.errorHandler(ex);
                     }
                 }
+            } else if (files !=null && files.length>0){
+                for (File file:files){
+                    retval=retval+file+"\n";   
+                }
             }
             return retval;
 

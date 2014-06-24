@@ -216,6 +216,7 @@ public class CASUALLanguageTest {
         assert(result.contains(expResult));
 
         result = csp.executeOneShotCommand("$LISTDIR .");
+        
         String[] retvalsplit=result.split("\n");
         boolean test=false;
         for (String res:retvalsplit){
