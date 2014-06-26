@@ -98,7 +98,7 @@ public class CASUALDataBridge {
      */
     public synchronized String getFile(String remoteFileName, File f) throws IOException, InterruptedException {
         status = "received ";
-        Log.level3Verbose("Starting getFile DataBridge");
+        Log.level4Debug("CDB Starting getFile DataBridge");
         FileOutputStream fos = new FileOutputStream(f);
         //begin write
 
@@ -124,7 +124,7 @@ public class CASUALDataBridge {
     public synchronized long sendString(String send, String remoteFileName) throws InterruptedException, SocketException, IOException {
         //make a duplicate of the array, with the \n and 0x3 key to end the file transfer
         Log.level3Verbose("Starting sendString DataBridge");
-        send = send + "\n" + 0x04;
+        send = send;
         ByteArrayInputStream bis = new ByteArrayInputStream(send.getBytes());
         long retval = sendStream(bis, remoteFileName);
         return retval;
@@ -170,7 +170,7 @@ public class CASUALDataBridge {
      */
     public synchronized long sendStream(final InputStream input, final String remoteFileName) throws InterruptedException, SocketException, IOException {
         resetCASUALConnection();
-        Log.level3Verbose("Starting sendStream DataBridge");
+        Log.level4Debug("CDB Starting sendStream DataBridge");
         //start device-side receiver thread
         MandatoryThread t = new DeviceSideDataBridge(adb).startDeviceSideServer(remoteFileName, true);
 
@@ -180,7 +180,6 @@ public class CASUALDataBridge {
         OutputStream os = socket.getOutputStream();
         //do the work
 
-        waitForReadySignal();
         copyStreamToDevice(input, os, true);
         //begin write
         shutdownCommunications(socket, t);
@@ -213,16 +212,17 @@ public class CASUALDataBridge {
             //make a buffer to work with and setup start time
             long startTime = System.currentTimeMillis();
             byte[] buf = new byte[4096];
-            timeoutWatchdog.start();
-            Log.level3Verbose("Starting copyStreamToDevice DataBridge");
+            Log.level4Debug("CDB Starting copyStreamToDevice DataBridge");
             BufferedOutputStream bos = new BufferedOutputStream(output);
             BufferedInputStream bis = new BufferedInputStream(input);
             int buflen = buf.length - 1;
             //pump in 4096 byte chunks at a time. from input to output
             while (bis.available() >= buflen && !commandedShutdown) {
+                timeoutWatchdog.start();
                 bis.read(buf);
                 bos.write(buf);
                 bytes = bytes + buf.length;
+                timeoutWatchdog.stop();
             }
 
             //send final bits less than 4096
@@ -232,7 +232,6 @@ public class CASUALDataBridge {
                 bytes = bytes + buf.length;
                 bos.write(buf);
             }
-            timeoutWatchdog.stop();
             bos.flush();
 
             Statics.setStatus("Sent:" + bytes + "bytes");
@@ -253,7 +252,6 @@ public class CASUALDataBridge {
     private long copyStreamFromDevice(final Socket socket, OutputStream output) {
         try {
             Statics.setStatus("Data transfer initiated, please wait");
-            Log.level3Verbose("Starting copyStreamFromDevice DataBridge");
             BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
             long startTime = System.currentTimeMillis();
             byte[] buf;
@@ -274,9 +272,10 @@ public class CASUALDataBridge {
             double duration = (endTime - startTime) / 1000.000;
             double kb = bytes / duration / 1000;
             String message;
-
+            Log.level4Debug("CDB copyStreamFromDevice() complete");
             Log.level2Information("Sent:" + bytes / 1000 + "kb in " + duration + "s at " + kb + " KB/s");
         } catch (IOException ex) {
+            Log.level4Debug("CDB copyStreamFromDevice() exception!!");
             timeoutWatchdog.stop();
             Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -290,8 +289,7 @@ public class CASUALDataBridge {
         deviceSideMessage = "";
         bytes = 0;
         lastbytes = -1;
-        Log.level4Debug("closing existing stream");
-        Log.level4Debug("restarting server");
+        Log.level4Debug("CDB RESET!!!!!! resetCASUALConnection() commanded");
         new ADBTools().restartConnection();
         shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "forward", "--remove-all"});
         try {
@@ -302,46 +300,55 @@ public class CASUALDataBridge {
         } catch (ConnectException ex) {
         } catch (IOException ex) {
         }
-        Log.level4Debug("establishing ports");
+        Log.level4Debug("CDB resetCASUALConnection() establishing ports");
         shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "killall busybox"});
         shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "forward", "tcp:" + port, "tcp:" + port});
-        Log.level3Verbose("ports established");
+        Log.level3Verbose("CDB resetCASUALConnection() complete");
     }
 
     private void waitForReadySignal() {
+        Log.level4Debug("CDB waitForReadySignal() Waiting for device side to be ready");
         if (deviceReadyForReceive) {
+            Log.level4Debug("CDB waitForReadySignal() deviceReadyForReceive true");
             return;
         }
+        Log.level4Debug("CDB waitForReadySignal() deviceReadyForReceive false");
         try {
             synchronized (deviceSideReady) {
-                Log.level3Verbose("Waiting for device side to be ready");
+                Log.level4Debug("CDB waitForReadySignal() Waiting for device side to be ready");
                 deviceSideReady.wait();
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Log.level3Verbose("Notified about device side ready");
+        Log.level4Debug("CDB waitForReadySignal() Complete");
 
     }
 
     private Socket setupPort() throws SocketException, IOException, NumberFormatException {
-        Log.level3Verbose("Setup Ports for DataBrdige");
+        Log.level4Debug("CDB setupPort()");
+        waitForReadySignal();
         int p = Integer.parseInt(port);
         final Socket socket = new Socket(ip, p);
         socket.setTrafficClass(0x04);
+
         return socket;
     }
 
     private void shutdownCommunications(Socket socket, MandatoryThread deviceSideServer) throws InterruptedException, IOException {
-        Log.level4Debug("Flushing DataBridge port");
+        Log.level4Debug("CDB shutdownCommunications");
         deviceReadyForReceive = false;
         socket.getOutputStream().flush();
-        Log.level4Debug("closing DataBridge ports");
-        socket.shutdownOutput();
-        socket.shutdownInput();
+        Log.level4Debug("CDB shutdownCommunications() closing DataBridge ports");
+
         socket.close();
 
-        Log.level4Debug("waiting for device-side server to shutdown");
+        //todo evaluate potential corruption issues, open socket, write closing character, close socket.
+        Socket s = new Socket(ip, Integer.parseInt(port));
+        s.getOutputStream().write(0x13);
+        s.close();
+
+        Log.level4Debug("CDB shutdownCommunications() waiting for device-side server to shutdown");
         if (!deviceSideServer.isComplete()) {
             deviceSideServer.join();
         }
@@ -380,10 +387,11 @@ public class CASUALDataBridge {
     }
 
     /**
-     * Gets a file from the device. 
+     * Gets a file from the device.
+     *
      * @param remoteFile remote file name
      * @param f local file name
-     * @return path to local file. 
+     * @return path to local file.
      */
     public String integralGetFile(String remoteFile, File f) {
 
