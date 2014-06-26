@@ -45,10 +45,10 @@ public class CASUALDataBridgeTest {
             String send = "wooaoas";
             CASUALDataBridge instance = new CASUALDataBridge();
             instance.sendString(send, "/sdcard/woot");
-            String result = shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "cat /sdcard/woot;"});
+            String result = shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", BusyboxTools.getBusyboxLocation() + " cat /sdcard/woot;"});
             System.out.println(result);
-            shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm /sdcard/woot"});
-            assert (result.contains(send));
+            //shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm /sdcard/woot"});
+            assert (result.equals("\n" + send + "\n\n"));
         } catch (UnknownHostException ex) {
             Logger.getLogger(CASUALDataBridgeTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
@@ -66,7 +66,7 @@ public class CASUALDataBridgeTest {
             return;
         }
         System.out.println("sendFile");
-        File f = new File("../../CASPAC/testpak.zip");
+        File f = new File("../../CASPAC/QualityControl/echoTest.zip");
         String remoteFileName = "/sdcard/testpak";
         CASUALDataBridge instance = new CASUALDataBridge();
         long retval = instance.sendFile(f, remoteFileName);
@@ -78,7 +78,7 @@ public class CASUALDataBridgeTest {
         System.out.println("original md5:" + originalmd5);
         System.out.println("received md5:" + testmd5);
         test.delete();
-        shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm /sdcard/testpak"});
+        //shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm /sdcard/testpak"});
         assert (testmd5.equals(originalmd5));
     }
 

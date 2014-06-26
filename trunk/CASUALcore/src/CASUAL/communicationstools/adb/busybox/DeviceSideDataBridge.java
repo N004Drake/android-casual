@@ -23,6 +23,7 @@ import CASUAL.Statics;
 import CASUAL.communicationstools.adb.ADBTools;
 import static CASUAL.communicationstools.adb.busybox.CASUALDataBridge.ip;
 import CASUAL.misc.MandatoryThread;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -53,7 +54,7 @@ class DeviceSideDataBridge {
         MandatoryThread t = new MandatoryThread(openLinkForReadOrWrite(remoteFileName, forWrite));
         t.setName("Device Write Server");
         t.start();
-        Log.level3Verbose("Started Device-Side thread");
+        Log.level3Verbose("Device-Side thread Started");
         return t;
     }
 
@@ -65,102 +66,107 @@ class DeviceSideDataBridge {
      * @return server object ready to be started
      */
     Runnable openLinkForReadOrWrite(final String remoteFileName, final boolean forWrite) {
+        Log.level4Debug("DEVICE: openLinkForReadOrWrite()" + (forWrite ? "for write to " : "for read from ") + remoteFileName);
         return new Runnable() {
             @Override
             public void run() {
                 try {
-                    Log.level3Verbose("Opening DataBrdige Read/Write Link");
+                    Log.level3Verbose("Device Side Opening DataBrdige Read/Write Link");
                     String[] cmd;
                     //deploy and get busybox location
                     String busybox = BusyboxTools.getBusyboxLocation();
                     String donestring = "operation complete";
-                        //the command executed on the device should end with a keyword.  in this case the keyword is "done" which shows us it has exited properly.
+                    //the command executed on the device should end with a keyword.  in this case the keyword is "done" which shows us it has exited properly.
                     //this command is used if forWrite is true (flash)--  basically netcat>desired file
-                    String sendcommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + ">'" + remoteFileName + "';echo " + donestring;
+                    String sendcommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + " |" + busybox + " dd of='" + remoteFileName + "';echo " + donestring;
                     //this command is used if forWrite is false (pull)--  basically netcat<desired file with a sync at the end
                     String receiveCommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + " <'" + remoteFileName + "';sync;echo " + donestring;
 
-                        //build the command to send or receive with root or without. 
+                    //build the command to send or receive with root or without. 
                     //TODO test rootAccessCommand needed by using "busybox 'test -w remoteFileName && echo RootNotRequired||echo root Required';
                     if (forWrite) {
-                        Log.level3Verbose("DataBridge Write-Mode active");
+                        Log.level3Verbose("Device DataBridge Write-Mode active");
                         if (!CASUALTools.rootAccessCommand().equals("")) {
                             cmd = new String[]{adb.getBinaryLocation(), "shell", sendcommand};
                         } else {
                             cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \"" + sendcommand + ";\""};
                         }
                     } else {
-                        Log.level3Verbose("DataBridge Read-Mode active");
+                        Log.level3Verbose("Device DataBridge Read-Mode active");
                         if (CASUALTools.rootAccessCommand().equals("")) {
                             cmd = new String[]{adb.getBinaryLocation(), "shell", receiveCommand};
                         } else {
                             cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \'" + receiveCommand + "\'"};
                         }
                     }
-                    Log.level4Debug("**TARGET SET ON REMOTE DEVICE:" + remoteFileName);
+                    Log.level4Debug("Device **TARGET SET ON REMOTE DEVICE:" + remoteFileName);
                     //launch the process
                     ProcessBuilder p = new ProcessBuilder(cmd);
                     p.redirectErrorStream(true);
                     Process proc = p.start();
 
                     //read a byte from the inputstream from the process so it does not halt. 
-                    InputStream is = proc.getInputStream();
-                    is.read(new byte[]{});
-                    Log.level3Verbose("DataBridge Process Active");
+                    BufferedInputStream is = new BufferedInputStream(proc.getInputStream());
+                    is.read(new byte[is.available()]);
                     //wait for the connection to be ready then send the device ready signal
-                    is = waitForDeviceSideConnection(is);
+                    Log.level3Verbose("Device DataBridge Process Active");
 
+                    waitForDeviceSideConnection(is);
+
+                    //todo remove this test
+                    Log.level4Debug("port list" + new Shell().sendShellCommand(new String[]{"adb", "forward", "--list"}));
                     //device is ready for transfer
                     Statics.setStatus("device ready");
                     CASUALDataBridge.deviceReadyForReceive = true;
                     synchronized (CASUALDataBridge.deviceSideReady) {
                         CASUALDataBridge.deviceSideReady.notifyAll();
                     }
-                    proc.waitFor();
+                    deviceSideMessage = "";
 
                     //transfer is complete because host closed connection and device-side process exited
                     Statics.setStatus("device-side server closed");
-                    CASUALDataBridge.deviceSideMessage = convertStreamToString(is);
+                    deviceSideMessage = deviceSideMessage + convertStreamToString(is);
+                    Log.level4Debug("FinalMessage" + deviceSideMessage);
 
-                        //check for errors.  if any errors were present they would have come before the donestring
+                    //check for errors.  if any errors were present they would have come before the donestring
                     //an error on this line means the server stalled and running this can fix it. 
                     // adb shell "echo woot|/data/local/tmp/busybox nc 127.0.0.1:27825 "
-                    if (null == deviceSideMessage || !deviceSideMessage.startsWith(donestring)) {
+                    if (null == deviceSideMessage || !deviceSideMessage.contains(donestring)) {
 
+                        Log.level0Error("Failed to send file. Message:" + deviceSideMessage);
                         Log.level0Error("Improper Exit of DataBridge");
                         if (deviceSideMessage.equals("")) {
                             deviceSideMessage = USBDISCONNECTED;
                         }
                         CASUALDataBridge.shutdownBecauseOfError = true;
                         CASUALDataBridge.deviceReadyForReceive = false;
-                        Log.level0Error("Failed to send file. Message:" + deviceSideMessage);
                         throw new RuntimeException("Server exited improperly- received");
                     } else {
+                        Log.level4Debug("DEVICE REPORTED: deviceSideMessage");
                         Log.level4Debug("device reported sucessful shutdown");
                     }
 
                     //signal that the device is done before this thread dies.
                     CASUALDataBridge.deviceReadyForReceive = false;
 
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
+                    Log.level0Error("Error in DeviceSideDataBridge");
                     Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             }
 
-            InputStream waitForDeviceSideConnection(InputStream is) throws IOException {
+            void waitForDeviceSideConnection(BufferedInputStream is) throws IOException {
                 String[] cmd;
                 cmd = new String[]{adb.getBinaryLocation(), "shell", "/data/local/tmp/busybox netstat -tul"};
                 boolean ready = false;
                 String received = "";
                 Statics.setStatus("monitoring ports on device");
-                Log.level3Verbose("Waiting for Device-Side connection for DataBridge");
+                Log.level3Verbose("Device Waiting for Server connection for DataBridge");
                 while (!ready && !CASUALDataBridge.commandedShutdown) {
                     //monitor server status and detect errors
                     while (is.available() > 0) {
-                        received = received + is.read();
+                        received = received + (char) is.read();
                         Log.level4Debug(received);
                         if (received.contains("read-only file system")
                                 || received.contains("cannot open")
@@ -169,6 +175,7 @@ class DeviceSideDataBridge {
                                 || received.contains(USBDISCONNECTED)
                                 || received.contains(PERMISSIONERROR)
                                 || received.contains("error: more than one device and emulator")) {
+                            Log.level4Debug("Device Server Error+" + received);
                             shutdownServer(received);
                         }
 
@@ -178,7 +185,6 @@ class DeviceSideDataBridge {
                         ready = true;
                     }
                 }
-                return is;
             }
 
             private void shutdownServer(String message) {
