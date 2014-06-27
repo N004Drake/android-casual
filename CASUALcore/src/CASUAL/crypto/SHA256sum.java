@@ -26,9 +26,12 @@ import java.io.RandomAccessFile;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *provides several methods for md256 standards
+ * provides several methods for md256 standards
+ *
  * @author Adam Outler adamoutler@gmail.com
  */
 /**
@@ -36,9 +39,10 @@ import java.security.NoSuchAlgorithmException;
  * *Linux* when tested against test vectors from this page:
  * http://www.nsrl.nist.gov/testdata/ I will need to review all data and figure
  * out how to implement this later
-
+ *
  *
  * ad5f9292c7bd44068b5465b48b38bf18c98b4d133e80307957e5f5c372a36f7d logo.xcf
+ *
  * @author Adam Outler adamoutler@gmail.com
  */
 public class SHA256sum {
@@ -52,8 +56,9 @@ public class SHA256sum {
 
     /**
      * constructor to make an SHA256 from a string
+     *
      * @param s string to sha256
-     * @throws IOException 
+     * @throws IOException
      */
     public SHA256sum(String s) throws IOException {
         ByteArrayInputStream bas = new ByteArrayInputStream(s.getBytes());
@@ -63,6 +68,7 @@ public class SHA256sum {
 
     /**
      * constructor to make an SHA256 from an InputStream
+     *
      * @param is inputstream to sha256
      * @throws IOException
      */
@@ -81,6 +87,7 @@ public class SHA256sum {
 
     /**
      * constructor to sha256 a file
+     *
      * @param f file to digest
      * @throws FileNotFoundException
      * @throws IOException
@@ -98,7 +105,8 @@ public class SHA256sum {
 
     /**
      * returns SHA256 sum in standard linux command line format
-     * @param filename to use for filename 
+     *
+     * @param filename to use for filename
      * @return linux sha256sum output
      */
     public String getLinuxSum(String filename) {
@@ -114,12 +122,11 @@ public class SHA256sum {
             return null;
         }
 
-
-
     }
 
     /**
      * returns SHA256 sum in standard linux command line format
+     *
      * @param file to use for filename
      * @return linux sha256sum output
      */
@@ -143,6 +150,7 @@ public class SHA256sum {
 
     /**
      * gets the filename from a commandline sha256sum output
+     *
      * @param sha256sum linux sha256sum to extract name from
      * @return name of file mentioned in sha256sum
      */
@@ -156,6 +164,7 @@ public class SHA256sum {
 
     /**
      * gets the sha256sum portion of a commandline sha256 output
+     *
      * @param sha256sum linux sha256sum to extract sum from
      * @return sum portion of command line sha256 output
      */
@@ -176,31 +185,27 @@ public class SHA256sum {
      */
     public String getSha256() throws IOException, NoSuchAlgorithmException {
         toBeSHA256.reset();
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-            byte[] buffer = new byte[8192];
-            int read;
-            while ((read = toBeSHA256.read(buffer)) > 0) {
-                digest.update(buffer, 0, read);
-            }
-            byte[] md5sum = digest.digest();
-            BigInteger bigInt = new BigInteger(1, md5sum);
-            String output = bigInt.toString(16);
-            while (output.length() != 64) {
-                output = "0" + output;
-            }
-            return output;
-        } catch (NoSuchAlgorithmException ex) {
-            return "ERROR0NoSuchAlgorythemException0";
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-        } catch (IOException ex) {
-            return "ERROR00IOException00000000000000";
+        byte[] buffer = new byte[8192];
+        int read;
+        while ((read = toBeSHA256.read(buffer)) > 0) {
+            digest.update(buffer, 0, read);
         }
+        byte[] md5sum = digest.digest();
+        BigInteger bigInt = new BigInteger(1, md5sum);
+        String output = bigInt.toString(16);
+        while (output.length() != 64) {
+            output = "0" + output;
+        }
+        return output;
+
     }
 
     /**
      * converts a byte array to hexadecimal output
+     *
      * @param bytes to be turned into hex
      * @return hex string from bytes
      */
@@ -214,6 +219,7 @@ public class SHA256sum {
 
     /**
      * formats a sha256sum from a sum and a filename
+     *
      * @param sum the sha256 sum
      * @param name the file name
      * @return equal to command line output from linux sha256sum command
@@ -222,5 +228,18 @@ public class SHA256sum {
         String linuxSHA256;
         linuxSHA256 = sum + LINUXSPACER + name;
         return linuxSHA256;
+    }
+
+    @Override
+    public String toString() {
+        String sum = "INVALID000000000000000000000000000000000000000000000000000000000";
+        try {
+            sum = getSha256();
+        } catch (IOException ex) {
+            Logger.getLogger(SHA256sum.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(SHA256sum.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sum;
     }
 }

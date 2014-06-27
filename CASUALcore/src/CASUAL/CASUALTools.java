@@ -358,5 +358,8 @@ public class CASUALTools {
             }
         }
     }
+    public static boolean rootAccessPossible(){
+        return CASUALTools.uidMatches(new String[]{"root","0"})||!CASUALTools.rootAccessCommand().isEmpty();
+    }
 
 }

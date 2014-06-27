@@ -31,7 +31,7 @@ public class OSTools {
      */
     public static boolean isMac() {
         String os = System.getProperty("os.name").toLowerCase();
-        return os.indexOf("mac") >= 0;
+        return os.contains("mac");
     }
     //Check for Linux
 
@@ -100,7 +100,7 @@ public class OSTools {
      */
     public static boolean isLinux() {
         String os = System.getProperty("os.name").toLowerCase();
-        return os.indexOf("nux") >= 0;
+        return os.contains("nux");
     }
 
     /**
@@ -110,7 +110,7 @@ public class OSTools {
      */
     public static boolean isWindows() {
         String os = System.getProperty("os.name").toLowerCase();
-        return os.indexOf("win") >= 0;
+        return os.contains("win");
     }
 
     /**
