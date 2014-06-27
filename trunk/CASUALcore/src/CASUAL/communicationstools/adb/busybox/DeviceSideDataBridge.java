@@ -78,9 +78,9 @@ class DeviceSideDataBridge {
                     String donestring = "operation complete";
                     //the command executed on the device should end with a keyword.  in this case the keyword is "done" which shows us it has exited properly.
                     //this command is used if forWrite is true (flash)--  basically netcat>desired file
-                    String sendcommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + " |" + busybox + " dd of='" + remoteFileName + "';echo " + donestring;
+                    String sendcommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + " |" + busybox + " dd of='" + remoteFileName + "';sync;echo " + donestring;
                     //this command is used if forWrite is false (pull)--  basically netcat<desired file with a sync at the end
-                    String receiveCommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + " <'" + remoteFileName + "';sync;echo " + donestring;
+                    String receiveCommand = busybox + " stty raw;" + busybox + " dd if='" + remoteFileName + "'|" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + ";echo " + donestring;
 
                     //build the command to send or receive with root or without. 
                     //TODO test rootAccessCommand needed by using "busybox 'test -w remoteFileName && echo RootNotRequired||echo root Required';
@@ -174,6 +174,7 @@ class DeviceSideDataBridge {
                                 || received.contains(DEVICEDISCONNECTED)
                                 || received.contains(USBDISCONNECTED)
                                 || received.contains(PERMISSIONERROR)
+                                || received.contains("no closing quote")
                                 || received.contains("error: more than one device and emulator")) {
                             Log.level4Debug("Device Server Error+" + received);
                             shutdownServer(received);

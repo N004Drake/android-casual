@@ -195,7 +195,6 @@ public class CASUALDataBridge {
         //start device-side sender
         MandatoryThread t = new DeviceSideDataBridge(adb).startDeviceSideServer(remoteFileName, false);
 
-        t.start();
         //open the socket
         final Socket socket = setupPort();
 
