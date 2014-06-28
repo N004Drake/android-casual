@@ -18,8 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class CASUALDataBridgeTest {
 
     @Before
     public void setUp() {
-        assertTrue(new ADBTools().isConnected());
+        assumeTrue(new ADBTools().isConnected());
     }
 
     @After
