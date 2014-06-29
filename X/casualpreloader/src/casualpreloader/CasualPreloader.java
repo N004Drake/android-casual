@@ -14,7 +14,7 @@ package casualpreloader;
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  * 
  * 
  */
@@ -94,14 +94,14 @@ public class CasualPreloader extends Preloader{
     @Override 
     public void start(Stage primaryStage) throws Exception {
         init(primaryStage);
-        primaryStage.show();
+        //primaryStage.show();
      
     }
     @Override
     public void handleStateChangeNotification(StateChangeNotification scn) {
         if (scn.getType() == StateChangeNotification.Type.BEFORE_START) {
              FadeTransition ft = new FadeTransition(
-                    Duration.millis(5000), stage.getScene().getRoot());
+                    Duration.millis(10000), stage.getScene().getRoot());
             ft.setFromValue(1.0);
             ft.setToValue(0.0);
             final Stage s = stage;
