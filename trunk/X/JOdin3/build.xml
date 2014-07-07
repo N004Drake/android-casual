@@ -109,6 +109,7 @@
                 <attribute name="Application-Library-Allowable-Codebase" value="*.casual-dev.com file://*"/>
             </manifest>
         </jar>
+
         <echo message="alias=${javafx.signjar.alias}" />
         <echo>Signing dist jars</echo>
         <signjar keystore="${javafx.signjar.keystore}"
@@ -123,6 +124,10 @@
 
         </signjar>
         <echo>Signed by ${javafx.signjar.alias}</echo>
+        <echo>Adding Icon</echo>
+        <mkdir dir="dist/src"/>
+        <copy file="src/odinicon.ico" todir="dist/src/odinicon.ico"/>
+        <copy file="src/odinicon.png" todir="dist/src/odinicon.png"/>
     </target>
         <macrodef name="deploy-sign">
         <sequential>
