@@ -199,14 +199,15 @@ public final class CASUALMain {
         }
         CASUALConnectionStatusMonitor.stop();
 
-        new ADBTools().shutdown();
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
-        if (!CASUALTools.IDEMode && !Statics.isGUIIsAvailable() && Statics.CASPAC.type != 0) {
-            try {
-                new Pastebin().pasteAnonymousLog();
-            } catch (MalformedURLException ex) {
-                Log.errorHandler(ex);
-            }
+        if (!CASUALTools.IDEMode ){
+            if (!Statics.isGUIIsAvailable() ){
+                    try {
+                        new Pastebin().pasteAnonymousLog();
+                    } catch (MalformedURLException ex) {
+                        Log.errorHandler(ex);
+                    }
+                }
         }
 
         if (Statics.GUI != null) {

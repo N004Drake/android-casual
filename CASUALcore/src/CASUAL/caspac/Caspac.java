@@ -877,6 +877,13 @@ public final class Caspac {
         return -1;
     }
 
+    public int getType() {
+       
+        String s=Integer.toString(type);
+        
+        return type;
+    }
+
     /**
      * build class is a reference to handle -build.properties information
      */
