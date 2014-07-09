@@ -31,7 +31,6 @@
             <Font name="Arial Bold" size="16.0" />
           </font>
         </Label>
-        <Button fx:id="testButton" layoutX="101.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#installDriverButton" opacity="0.79" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Install Drivers" />
         <ScrollPane focusTraversable="false" hbarPolicy="NEVER" layoutX="15.0" layoutY="84.0" mouseTransparent="false" prefHeight="154.0" prefWidth="854.0" vbarPolicy="NEVER" visible="true">
           <content>
             <AnchorPane mouseTransparent="false" pickOnBounds="true" prefHeight="154.0" prefWidth="852.0">
@@ -196,24 +195,24 @@
             <Font name="Arial Bold" size="33.0" />
           </font>
         </Label>
-        <Button fx:id="reportProblem" layoutX="195.0" layoutY="582.0" mnemonicParsing="false" onAction="#sendReport" opacity="0.7" prefWidth="109.0" rotate="14.0" text="report problem" />
-        <Button fx:id="donate" layoutX="288.0" layoutY="584.0" minWidth="46.0" mnemonicParsing="false" onAction="#donatePressed" opacity="0.56" prefWidth="107.55675506591797" rotate="14.0" text="Donate" textOverrun="CLIP">
+        <Button fx:id="donate" layoutX="334.0" layoutY="582.0" minWidth="46.0" mnemonicParsing="false" onAction="#donatePressed" opacity="0.56" prefHeight="31.0" prefWidth="125.0" rotate="14.0" text="Donate" textOverrun="CLIP">
           <font>
             <Font size="12.0" />
           </font>
         </Button>
-        <Button id="testButton" fx:id="showLegal" layoutX="9.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#showLegal" prefHeight="21.0" prefWidth="109.0" rotate="14.0" text="Legal" />
         <Label fx:id="browserMode" layoutX="107.0" layoutY="0.0" minHeight="90.0" prefHeight="104.0" prefWidth="674.0" text="Browser Mode" textAlignment="CENTER" textFill="#5200ff" visible="false" wrapText="false">
           <font>
             <Font name="System Bold" size="80.0" />
           </font>
         </Label>
+        <Button fx:id="reportProblem" layoutX="225.0" layoutY="582.0" mnemonicParsing="false" onAction="#sendReport" opacity="0.7" prefHeight="31.0" prefWidth="125.0" rotate="14.0" text="report problem" />
+        <Button fx:id="testButton" layoutX="120.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#installDriverButton" opacity="0.79" prefHeight="31.0" prefWidth="125.0" rotate="14.0" text="Install Drivers" />
+        <Button id="testButton" fx:id="showLegal" layoutX="9.0" layoutY="582.0" minHeight="16.0" mnemonicParsing="false" onAction="#showLegal" prefHeight="31.0" prefWidth="125.0" rotate="14.0" text="Legal" />
       </children>
       <rotationAxis>
         <Point3D x="2.0" y="2.0" z="2.0" />
       </rotationAxis>
     </AnchorPane>
-    <WebView fx:id="ad" layoutX="15.0" layoutY="627.0" maxHeight="90.0" maxWidth="1.7976931348623157E308" minHeight="90.0" onMouseClicked="#webViewClicked" onMouseEntered="#webviewHover" onMouseExited="#webViewLeave" prefHeight="90.0" prefWidth="863.0" />
     <AnchorPane id="MessageGroup" fx:id="displaySurface" layoutX="0.0" layoutY="0.0" prefHeight="626.0001831054688" prefWidth="883.0" visible="false">
       <children>
         <ScrollPane fx:id="surfaceHider" hbarPolicy="NEVER" layoutX="2.0" layoutY="1.0" mouseTransparent="true" opacity="0.73" prefHeight="627.0" prefWidth="881.0" vbarPolicy="NEVER">
@@ -289,5 +288,6 @@
         <ProgressIndicator cache="true" layoutX="83.0" layoutY="0.0" opacity="0.14" prefHeight="617.0" prefWidth="717.0" progress="-1.0" visible="true" />
       </children>
     </AnchorPane>
+    <WebView fx:id="ad" layoutX="15.0" layoutY="627.0" maxHeight="90.0" maxWidth="1.7976931348623157E308" minHeight="90.0" onMouseClicked="#webViewClicked" onMouseEntered="#webviewHover" onMouseExited="#webViewLeave" prefHeight="90.0" prefWidth="863.0" />
   </children>
 </AnchorPane>
