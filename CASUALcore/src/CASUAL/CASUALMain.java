@@ -79,8 +79,8 @@ public final class CASUALMain {
                 + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
                 + "    and you are welcome to redistribute it, under certain conditions; run\n"
                 + "    '" + CASUALFileName + " --license'\n"
-                + "    for details. http://android-casual.googlecode.com for source.\n"
-                + "Logging:" + Statics.getTempFolder() + "\nSystem: " + System.getProperty("os.name"));
+                + "    for details. http://android-casual.googlecode.com for source.\n");
+        Log.level4Debug(Diagnostics.getDiagnosticReportOneLine());
         main.arguments.checkArguments(args);
         main.startup();
         System.gc();

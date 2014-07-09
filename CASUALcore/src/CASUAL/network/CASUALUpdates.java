@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -101,10 +102,10 @@ public class CASUALUpdates {
             File f = new File(outputFile);
             f.getParentFile().mkdirs();
             OutputStream output = new FileOutputStream(f);
-            int bytes = 0;
+            long bytes = 0;
             Log.progress(friendlyName.replace("/SCRIPTS/", ""));
             int lastlength = 0;
-            int kilobytes;
+            long kilobytes;
             int offset = 1;
             
 
@@ -113,12 +114,12 @@ public class CASUALUpdates {
                 while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
                     output.write(buffer, 0, bytesRead);
                     bytes = bytes + bytesRead;
-                    int length = String.valueOf(1000).length();
                     kilobytes = bytes / 1024;
+                    int length = String.valueOf(kilobytes).length()+2;
                     for (int i=0; i<length; i++){
                         Log.progress("\b");  //backspace over the old value
                     }
-                    Log.progress(Integer.toString(kilobytes) + "kb "); //write new
+                    Log.progress(Long.toString(kilobytes) + "kb "); //write new
 
                 }
             } finally {
@@ -339,5 +340,19 @@ public class CASUALUpdates {
 
         }
         return script;
+    }
+
+    public int tryGetFileSize(URL url) {
+        HttpURLConnection conn = null;
+        try {
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("HEAD");
+            conn.getInputStream();
+            return conn.getContentLength();
+        } catch (IOException e) {
+            return -1;
+        } finally {
+            conn.disconnect();
+        }
     }
 }
