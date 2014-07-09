@@ -73,7 +73,7 @@ public class Statics {
     /**
      * increase or decrease the logging level. 0 is error only, 4 is debug
      */
-    public static int outputGUIVerbosity = 2; //userdata is output to console
+    public static int outputGUIVerbosity = 4; //userdata is output to console
 
     /**
      * increase or decrease the log file output. 0 is error only, 4 is debug
@@ -162,7 +162,7 @@ public class Statics {
      */
     final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
 
-
+    
     //TODO: determine feasability of moving this to CASPAC.Script. 
     /**
      * ActionEvents for the $ON command are set up by script. Trigger Reaction
