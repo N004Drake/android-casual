@@ -162,6 +162,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
             @Override
             public void run() {
                 displaySurface.setVisible(false);
+                Log.level4Debug("Diagnostics " + CASUAL.Diagnostics.getDiagnosticReportOneLine());
                 resetPassFail("");
                 deviceDisconnected();
                 checkFilesCheckboxes();
@@ -169,7 +170,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                 new CASUAL.CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.heimdall.HeimdallTools());
                 loading.setVisible(false);
                 hideDisplaySurface();
-
             }
         });
         t.start();
