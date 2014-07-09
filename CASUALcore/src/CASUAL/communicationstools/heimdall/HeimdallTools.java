@@ -282,20 +282,20 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         String cmd = "/usr/local/bin/heimdall";
         String check = shell.silentShellCommand(new String[]{cmd});
         //we got the file
-        Log.level4Debug("native search /usr/local/bin/heimdall" + check);
+        Log.level4Debug("native search /usr/local/bin/heimdall:" + (check.contains("CritERROR!!!")? "false":"true"));
         if (check.equals(notFound)) {
             cmd = "/usr/bin/heimdall";
             check = shell.silentShellCommand(new String[]{cmd});
-            Log.level4Debug("native search /usr/bin/heimdall" + check);
+            Log.level4Debug("native search /usr/bin/heimdall:" + (check.contains("CritERROR!!!")? "false":"true"));
             //try different things
             if (check.equals(notFound)) {
                 cmd = "/bin/heimdall";
                 check = shell.silentShellCommand(new String[]{cmd});
-                Log.level4Debug("native search /bin/heimdall" + check);
+                Log.level4Debug("native search /bin/heimdall:" + (check.contains("CritERROR!!!")? "false":"true"));
                 if (check.equals(notFound)) {
                     cmd = "heimdall";
                     check = shell.silentShellCommand(new String[]{cmd});
-                    Log.level4Debug("native search heimdall" + check);
+                    Log.level4Debug("native search heimdall:" + (check.contains("CritERROR!!!")? "false":"true"));
                     if (check.equals(notFound)) {
                         cmd = "";
                     }
