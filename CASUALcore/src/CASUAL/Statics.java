@@ -17,7 +17,6 @@
 package CASUAL;
 
 //import java.awt.Color;
-import CASUAL.language.CASUALLanguage;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
@@ -132,7 +131,7 @@ public class Statics {
             String tf = System.getProperty("java.io.tmpdir"); //tempfolder
             tf = tf.endsWith(slash) ? tf : tf + slash;  //make sure temp folder has a slash
             SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
-            TempFolder = new File(tf + "CASUAL" + user + sdf.format(new Date()).toString() + slash); //set /temp/usernameRandom/
+            TempFolder = new File(tf + "CASUAL" + user + sdf.format(new Date()) + slash); //set /temp/usernameRandom/
             setTempFolder(TempFolder.toString());
             fo.makeFolder(TempFolder.toString());
         }
