@@ -5,9 +5,9 @@
 package CASUAL;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 
 /**
  *
@@ -15,9 +15,13 @@ import org.junit.Test;
  */
 public class CASUALLanguagejUnitTest {
 
+    @Before
+    public void setUp() {
+        Statics.GUI = new GUI.testing.automatic();
+    }
+
     @BeforeClass
     public static void setUpClass() {
-        Statics.GUI=new GUI.testing.automatic();
     }
 
     @AfterClass
@@ -27,6 +31,8 @@ public class CASUALLanguagejUnitTest {
     @Test
     public void testCASUALLanguage() {
         CASUAL.CASUALMain.main(new String[]{"-e", "$ECHO hi"});
+        Statics.GUI = new GUI.testing.automatic();
+
         String x = new CASUAL.CASUALScriptParser().executeOneShotCommand("$IFNOTCONTAINS d2cafdan $INCOMMAND adb shell \"cat /system/build.prop\" $DO $IFNOTCONTAINS d2asdfgtt $INCOMMAND $ADB shell \"cat /system/build.prop\" $DO $ECHO hi");
         assert x.contains("hi");
     }
