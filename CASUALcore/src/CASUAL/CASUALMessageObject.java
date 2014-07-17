@@ -27,7 +27,8 @@ import java.util.Arrays;
  *
  * @author Adam Outler adamoutler@gmail.com
  */
-public class CASUALMessageObject implements Serializable{
+public class CASUALMessageObject implements Serializable {
+
     private static final long serialVersionUID = 1029319L;
 
     /**
@@ -53,11 +54,9 @@ public class CASUALMessageObject implements Serializable{
      */
     public String messageText;
 
-
-    
     /**
-     * category of this message.  The category should be used instead of the old
-     * final static variables. 
+     * category of this message. The category should be used instead of the old
+     * final static variables.
      */
     public iCASUALUI.MessageCategory category;
     /**
@@ -72,7 +71,7 @@ public class CASUALMessageObject implements Serializable{
      * iCASUALInteraction.INTERACTION_INPUT_DIALOG=7;
      * iCASUALInteraction.INTERACTION_COMMAND_NOTIFICATION=8;
      */
-   
+
     /**
      * Used by jOptionPane for TIMEOUTMessages only. Made available for use
      * under other APIs so that it may be changed if needed.
@@ -89,7 +88,7 @@ public class CASUALMessageObject implements Serializable{
 
     /**
      * Used by TIMEOUTMessages only. Specifies the options for the
- TIMEOUTMessage
+     * TIMEOUTMessage
      */
     public Object[] timeoutOptions;
 
@@ -110,8 +109,8 @@ public class CASUALMessageObject implements Serializable{
     /**
      * instantiates an interaction
      *
-     * @param messageInput can be title,message or title&gt;&gt;&gt;message, or just
-     * message and title will be automatically chosen
+     * @param messageInput can be title,message or title&gt;&gt;&gt;message, or
+     * just message and title will be automatically chosen
      */
     public CASUALMessageObject(String messageInput) {
 
@@ -139,7 +138,7 @@ public class CASUALMessageObject implements Serializable{
                 this.messageText = messageInput;
             }
         }
-        Instrumentation.updateStatus("-New Message:"+title+" "+messageText);
+        Instrumentation.updateStatus("-New Message:" + title + " " + messageText);
     }
 
     /**
@@ -175,7 +174,7 @@ public class CASUALMessageObject implements Serializable{
         this.timeoutPresetTime = PRESET_TIME;
         setType(iCASUALUI.MessageCategory.TIMEOUT);
         expectedReturn = "(String)int from " + Arrays.asList(options).toString();
-        if (Statics.GUI==null){
+        if (Statics.GUI == null) {
             return 0;
         }
         return Integer.parseInt(Statics.GUI.displayMessage(this));
@@ -185,7 +184,7 @@ public class CASUALMessageObject implements Serializable{
      * shows an input dialog
      *
      * @return value from user input
-     * @throws HeadlessException
+     * @throws HeadlessException when no GUI is present
      */
     public String inputDialog() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.TEXTINPUT);
@@ -197,7 +196,7 @@ public class CASUALMessageObject implements Serializable{
      * shows action required dialog
      *
      * @return 1 if user didn't do it, or 0 if user did it.
-     * @throws HeadlessException
+     * @throws HeadlessException when no GUI is present
      */
     public int showActionRequiredDialog() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.ACTIONREQUIRED);
@@ -219,7 +218,7 @@ public class CASUALMessageObject implements Serializable{
     /**
      * displays command notification
      *
-     * @throws HeadlessException
+     * @throws HeadlessException when no GUI is present
      */
     public void showCommandNotification() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.COMMANDNOTIFICATION);
@@ -230,7 +229,7 @@ public class CASUALMessageObject implements Serializable{
     /**
      * displays user notification
      *
-     * @throws HeadlessException
+     * @throws HeadlessException when no GUI is present
      */
     public void showUserNotification() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.USERNOTIFICATION);
@@ -241,7 +240,7 @@ public class CASUALMessageObject implements Serializable{
     /**
      * displays information message
      *
-     * @throws HeadlessException
+     * @throws HeadlessException when no GUI is present
      */
     public void showInformationMessage() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.SHOWINFORMATION);
@@ -254,7 +253,7 @@ public class CASUALMessageObject implements Serializable{
     /**
      * displays error message
      *
-     * @throws HeadlessException
+     * @throws HeadlessException when no GUI is present
      */
     public void showErrorDialog() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.SHOWERROR);
@@ -274,27 +273,28 @@ public class CASUALMessageObject implements Serializable{
         expectedReturn = "String 0-yes, 1-no";
         return retval;
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
-        String n="\n";
+        String n = "\n";
         sb.append("[").append(this.category).append("] Title:").append(this.title).append(n);
-        sb.append("Message:").append(this.messageText.replace("\n","\\\\n")).append(n);
+        sb.append("Message:").append(this.messageText.replace("\n", "\\\\n")).append(n);
         sb.append("press: ").append(this.expectedReturn).append(n);
         return sb.toString();
     }
-    
-    private int setType(iCASUALUI.MessageCategory cat){
-        this.category=cat;
+
+    private int setType(iCASUALUI.MessageCategory cat) {
+        this.category = cat;
         return getMessageType();
     }
 
     /**
-     *gets message type
+     * gets message type
+     *
      * @return the message type from MessageCategory.TIMEOUT
      */
-    public int getMessageType(){
-      return category.compareTo(iCASUALUI.MessageCategory.TIMEOUT);
+    public int getMessageType() {
+        return category.compareTo(iCASUALUI.MessageCategory.TIMEOUT);
     }
 }
