@@ -166,7 +166,7 @@ public class CASUALLanguage {
      *
      * @param line CASUAL line to process
      * @return value returned from CASUAL command
-     * @throws java.io.IOException
+     * @throws java.io.IOException When permissions problem exists
      */
     public String commandHandler(String line) throws IOException{
         return commandHandler(new Command(line));
@@ -177,7 +177,7 @@ public class CASUALLanguage {
      *
      * @param cmd CASUAL command to process.
      * @return value returned from CASUAL command
-     * @throws java.io.IOException
+     * @throws java.io.IOException When permissions problem exists
      */
     public String commandHandler(Command cmd) throws IOException {
         

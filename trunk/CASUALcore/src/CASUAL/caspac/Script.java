@@ -593,7 +593,7 @@ public class Script {
         /**
          * Constructor for meta if properties file is available.
          *
-         * @param prop
+         * @param prop properties file to load
          */
         public meta(Properties prop) {
             metaProp = prop;
@@ -708,7 +708,7 @@ public class Script {
 
         /**
          *
-         * @param prop
+         * @param prop properties file to load
          */
         public void load(Properties prop) {
             this.metaProp = prop;

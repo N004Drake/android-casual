@@ -60,8 +60,8 @@ public class ResourceDeployer {
     /**
      * copies a resource to a file
      *
-     * @param Resource
-     * @param toFile
+     * @param Resource resource to be deployed
+     * @param toFile file to deploy resource to
      * @return true if complete
      */
     public boolean copyFromResourceToFile(String Resource, String toFile) {

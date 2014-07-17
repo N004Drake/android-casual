@@ -280,7 +280,7 @@ public interface iCASUALUI {
      * This message provides a topical overview of what is happening to the user.
      * It should be used sparingly... eg.. pushing files, flashing devices...
      * 
-     * @param text 
+     * @param text title to set
      */
     void setStatusTitle(String text);
     /**
