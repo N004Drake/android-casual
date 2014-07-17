@@ -17,6 +17,7 @@ public class CASUALLanguagejUnitTest {
 
     @BeforeClass
     public static void setUpClass() {
+        Statics.GUI=new GUI.testing.automatic();
     }
 
     @AfterClass
