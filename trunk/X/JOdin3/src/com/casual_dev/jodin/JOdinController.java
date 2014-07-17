@@ -733,9 +733,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         messageBox.appendText(Text + "\n");
     }
 
-    @Override
-    public void setStatusMessageLabel(String text) {
-    }
 
     @Override
     public void setWindowBannerText(String text) {
@@ -895,6 +892,14 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
             }
         });
 
+    }
+
+    @Override
+    public void setStatusTitle(String string) {
+    }
+
+    @Override
+    public void setStatusSubTitle(String string) {
     }
 
 }
