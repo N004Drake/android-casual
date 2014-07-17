@@ -294,9 +294,9 @@ public class CASUALTools {
      * The GUI API can be specified by modification of Application.GUI. The API 
  only requires that you specify a class which implements the 
  iCASUALUI class.
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.lang.InstantiationException
-     * @throws java.lang.IllegalAccessException
+     * @throws java.lang.ClassNotFoundException when UI cannot be found
+     * @throws java.lang.InstantiationException when UI cannot be instantiated
+     * @throws java.lang.IllegalAccessException when SecurityManager gets in the way
      */
     public static void setGUIAPI() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         String messageAPI = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.GUI");

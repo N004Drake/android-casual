@@ -49,7 +49,7 @@ public class FileOperations {
     /**
      * recursively deletes a String path
      *
-     * @param path
+     * @param path path to delete recursively
      */
     public void recursiveDelete(String path) {
         recursiveDelete(new File(path));
@@ -315,7 +315,7 @@ public class FileOperations {
      *
      * @param sourceFile  file to copy
      * @param destFile destination to copy file (including filename)
-     * @throws IOException
+     * @throws IOException when permission problem exists
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
 

@@ -65,8 +65,8 @@ public class Pastebin {
      * Automatically prompts the user for their XDA username and submits a
      * pasting to Pastebin
      *
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException when Permission problem exists
+     * @throws URISyntaxException if invalid URI 
      */
     public void doPosting() throws IOException, URISyntaxException {
         if (Statics.debugMode) {
@@ -104,7 +104,7 @@ public class Pastebin {
     /**
      * strips user info and pastes an anonymous log to pastebin
      *
-     * @throws MalformedURLException
+     * @throws MalformedURLException when URL cannot be reached
      */
     public void pasteAnonymousLog() throws MalformedURLException {
         Pattern svnRev = Pattern.compile("(?=[setViewedRevision]?.{2})[0-9]{3,4}");
@@ -162,21 +162,22 @@ public class Pastebin {
 
         private String token; //used for instance
         private String devkey; //used for our program
-        private String loginURL = "http://www.pastebin.com/api/api_login.php";
-        private String pasteURL = "http://www.pastebin.com/api/api_post.php";
+        final private String loginURL;
+        final private String pasteURL;
 
         private API() {
+            this.pasteURL = "http://www.pastebin.com/api/api_post.php";
+            this.loginURL = "http://www.pastebin.com/api/api_login.php";
         }
 
         private API(String devkey) {
+            this.pasteURL = "http://www.pastebin.com/api/api_post.php";
+            this.loginURL = "http://www.pastebin.com/api/api_login.php";
             this.devkey = devkey;
         }
 
         private boolean checkResponse(String response) {
-            if (response.substring(0, 15).equals("Bad API request") && response.substring(17) != null) {
-                return false;
-            }
-            return true;
+            return !response.substring(0, 15).equals("Bad API request") || response.substring(17) == null;
         }
 
         public String login(String username, String password) throws UnsupportedEncodingException, MalformedURLException {
