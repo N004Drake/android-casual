@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * holds a command and return value for processing
- * @author adamoutler <adamoutler@gmail.com>
+ * @author adamoutler (adamoutler@gmail.com)
  */
 public class Command {
 
@@ -84,7 +84,6 @@ public class Command {
 
     /**
      * @return true if no problems detected.  false if problem detected.
-     * @throws commandNotRunException if command has not yet been run
      */
     public boolean getReturnPassedOrFailed(){
         return result;
