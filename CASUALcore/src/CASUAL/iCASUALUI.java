@@ -275,13 +275,27 @@ public interface iCASUALUI {
      */
     void setStatusLabelIcon(String Icon, String Text);
 
+    
     /**
-     * sets the message label text
+     * This message provides a topical overview of what is happening to the user.
+     * It should be used sparingly... eg.. pushing files, flashing devices...
+     * 
+     * @param text 
+     */
+    void setStatusTitle(String text);
+    /**
+     * sets the message label subtext.  This message only provides
+     * detail to the user as to the process which is happening and may be used
+     * at any time to update sub-text in the UI. 
      *
      * @param text label text
      */
-    void setStatusMessageLabel(String text);
+    void setStatusSubTitle(String text);
 
+    
+    
+    
+    
     /**
      * sets window banner image
      *

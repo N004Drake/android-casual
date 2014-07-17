@@ -75,9 +75,8 @@ public class AboutController extends Application {
 
     /**
      * shows the about controller
-     * @throws Exception 
      */
-    public void show() throws Exception {
+    public void show() {
         Platform.runLater(() -> {
             try {
                 start(new Stage(StageStyle.TRANSPARENT));

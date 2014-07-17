@@ -14,8 +14,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
-package CASUAL;
+package CASUAL.language;
 
+import CASUAL.CASUALMessageObject;
+import CASUAL.CASUALScriptParser;
+import CASUAL.FileOperations;
+import CASUAL.Log;
+import CASUAL.OSTools;
+import CASUAL.Shell;
+import CASUAL.ShellTools;
+import CASUAL.Statics;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.BusyboxTools;
@@ -25,6 +33,7 @@ import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.communicationstools.heimdall.drivers.DriverInstall;
 import CASUAL.communicationstools.heimdall.drivers.DriverRemove;
 import CASUAL.crypto.MD5sum;
+import CASUAL.language.commands.ControlCommands;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
 import CASUAL.network.Pastebin;
@@ -52,6 +61,7 @@ public class CASUALLanguage {
     final Caspac CASPAC;
     private String deviceBuildPropStorage;
 
+    
     /**
      * instantiates CASUALLanguage with script
      *
@@ -59,14 +69,16 @@ public class CASUALLanguage {
      * @param ScriptTempFolder temp folder to use for script
      */
     public CASUALLanguage(Caspac caspac,  String ScriptTempFolder) {
-
+        
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = caspac;
     }
     
-    static String GOTO = "";
-    int CurrentLine = 1;
 
+    public static String GOTO = "";
+    int currentLine = 1;
+
+    
     /**
      * Constructor for CASUALLanguage
      *
@@ -78,6 +90,14 @@ public class CASUALLanguage {
         this.CASPAC = null;
     }
 
+    /**
+     * resets the script
+     */
+    public static void reset(){
+        GOTO="";
+
+    }
+    
     /**
      * starts the scripting handler spooler and handles flow control
      *
@@ -94,9 +114,9 @@ public class CASUALLanguage {
                 if (Statics.CASPAC.getActiveScript().scriptContinue == false) {
                     return;
                 }
-                CurrentLine++;
+                currentLine++;
                 if (Statics.isGUIIsAvailable()) {
-                    Statics.GUI.setProgressBar(CurrentLine);
+                    Statics.GUI.setProgressBar(currentLine);
                 }
                 if (!GOTO.equals("")) {
 
@@ -141,7 +161,6 @@ public class CASUALLanguage {
         }
 
     }
-
     /**
      * Process a line of CASUAL script.
      *
@@ -149,294 +168,125 @@ public class CASUALLanguage {
      * @return value returned from CASUAL command
      * @throws java.io.IOException
      */
-    public String commandHandler(String line) throws IOException {
-        line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
-        if (line.equals("")) {
+    public String commandHandler(String line) throws IOException{
+        return commandHandler(new Command(line));
+    }
+    
+    /**
+     * Process a CASUAL Command.
+     *
+     * @param cmd CASUAL command to process.
+     * @return value returned from CASUAL command
+     * @throws java.io.IOException
+     */
+    public String commandHandler(Command cmd) throws IOException {
+        
+        Log.level3Verbose("COMMAND HANDLER:"+cmd.toString().replace("\n",""));
+        
+        //line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
+        if (cmd.get().equals("")) {
             //Log.level4Debug("received blank line");
             return "";
         }
-        /*OPERATING SYSTEM COMMANDS
-         * $WINDOWS/$LINUX/$MAC
-         * checks if the operating system is Windows, Linux Or Mac
-         * if it is, it will execute the commands
-         * Command may include $HALT and any other command like $ECHO
+
+        //Process Language commands $WINDOWS $MAC $LINUXWINDOWS $LINUXMAC $LINUX
+        if (new CASUAL.language.commands.OSCommands().operatingSystemCommands(cmd)){
+            Log.level4Debug(cmd+"\n Command not applicable to this OS");
+            return cmd.getReturn();
+        }
+        
+        /*
+         *DEBUG COMMANDS  $SENDLOG 
          */
-        if (line.startsWith("$LINUXMAC")) {
-            if (OSTools.isLinux() || OSTools.isMac()) {
-                String removeCommand = "$LINUXMAC";
-                line = processIdentifiedCommand(removeCommand, line);
-                Log.progress("Linux Or Mac Detected: ");
-                Log.level4Debug("OS IS LINUX or MAC! remaining commands:" + line);
-            } else {
-                return "";
-            }
-        }
-        if (line.startsWith("$LINUXWINDOWS")) {
-            if (OSTools.isLinux() || OSTools.isWindows()) {
-                String removeCommand = "$LINUXWINDOWS";
-                line = processIdentifiedCommand(removeCommand, line);
-                Log.progress("Windows or Linux Detected: ");
-                Log.level4Debug("OS IS WINDOWS OR LINUX! remaining commands:" + line);
-            } else {
-                return "";
-            }
-        }
-        if (line.startsWith("$WINDOWSMAC")) {
-            if (OSTools.isWindows() || OSTools.isMac()) {
-                String removeCommand = "$WINDOWSMAC";
-                line = processIdentifiedCommand(removeCommand, line);
-                Log.progress("Mac or Windows Detected: ");
-                Log.level4Debug("OS IS Windows or Mac! remaining commands:" + line);
-            } else {
-                return "";
-            }
-        }
-        if (line.startsWith("$LINUX")) {
-            if (OSTools.isLinux()) {
-                String removeCommand = "$LINUX";
-                line = processIdentifiedCommand(removeCommand, line);
-                Log.progress("Linux Detected: ");
-                Log.level4Debug("OS IS LINUX! remaining commands:" + line);
-            } else {
-                return "";
-            }
-        }
-        if (line.startsWith("$WINDOWS")) {
-            if (OSTools.isWindows()) {
-                Log.progress("Windows Detected: ");
-                String removeCommand = "$WINDOWS";
-                line = processIdentifiedCommand(removeCommand, line);
-                Log.level4Debug("OS IS WINDOWS! remaining commands:" + line);
-            } else {
-                return "";
-            }
-        }
-        if (line.startsWith("$MAC")) {
-            if (OSTools.isMac()) {
-                Log.progress("Mac Detected: ");
-                String removeCommand = "$MAC";
-                line = processIdentifiedCommand(removeCommand, line);
-                Log.level4Debug("OS IS MAC! remaining commands:" + line);
-            } else {
-                return "";
-            }
-        }
+        if (ControlCommands.checkSendLog(cmd)) return cmd.getReturn();
 
         /*
          * CONTROL COMMANDS
          */
-        //$RECALL, Last Acceptable CASUAL Value from meta, $ANY OTHER COMMAND. Will automatically halt.
-        /* This is for future use not implemented yet.    if (line.startsWith("$RECALL")){
-         if (Statics.SVNRevisionRequired!=0){
-         Log.level3("RECALL CHECK PARSING");
-         line=StringOperations.removeLeadingSpaces(line.replace("$RECALL",""));
-         String splitline[] = line.split(" ");
-         int recallValue=Integer.parseInt(splitline[0]);
-         if (recallValue > Statics.SVNRevisionRequired){
-         Log.level1("This CASUAL has been recalled on your platform");
-         Log.level1("I am now attempting to bring you to the support website");
-         Log.level1(Statics.supportWebsiteFromWeb);
-         if (splitline.length>1){
-         line="$HALT"+line.replaceFirst(Integer.toString(recallValue), "");
-         new LinkLauncher().launchLink(Statics.supportWebsiteFromWeb);
-         }
-                    
-         }
-         }
-            
-         } else {
-         return;
-         }
-         */
-        if (line.startsWith("$HALT")) {
-            if (Statics.CASPAC != null) {
-                Statics.CASPAC.getActiveScript().scriptContinue = false;
-            }
-            //$HALT $ANY OTHER COMMAND will execute any commands after the $HALT command and stop the script.
-            line = line.replace("$HALT", "");
-            Log.level4Debug("HALT RECEIVED");
-            line = StringOperations.removeLeadingSpaces(line);
-            Log.level4Debug("Finishing remaining commands:" + line);
-
-        }
-
-//Sends the log to the pastebin account and informs user.
-        //usage $SENDLOG
-        if (line.startsWith("$SENDLOG")) {
-            line = line.replace("$SENDLOG", "");
-            line = StringOperations.removeLeadingSpaces(line);
-            if (StringOperations.removeLeadingAndTrailingSpaces(line).equals("")) {
-                Log.level4Debug("Sendlog Command Issued!\nNo remaining commands");
-            } else {
-                Log.level4Debug("Sendlog Command Issued!\nFinishing remaining commands:" + line);
-            }
-            try {
-                new Pastebin().doPosting();
-            } catch (IOException ex) {
-                Log.errorHandler(ex);
-            } catch (URISyntaxException ex) {
-                Log.errorHandler(ex);
-            }
-            return "";
-        }
-
-//GOTO #commented line
-        //will go to any line starting with the argumments specified
-        //comments work best because they are otherwise inoperative
-        if (line.startsWith("$GOTO")) {
-            line = line.replace("$GOTO", "");
-            GOTO = StringOperations.removeLeadingAndTrailingSpaces(line);
-            return "";
-        }
-
-//$ON will trigger on an event
-        //PARAM1 = Textual input event
-        //PARAM2 = Command to execute
-        //,= separator
-        // example $ON File Not Found, $HALT
-        // example $ON Permission Denied, su -c !!
-        if (line.startsWith("$ON")) {
-            line = line.replace("$ON", "");
-            line = StringOperations.removeLeadingSpaces(line);
-            String Event[] = line.split(",");
-            try {
-                Statics.ActionEvents.add(Event[0]);
-                Log.level4Debug("***NEW EVENT ADDED***");
-                Log.level4Debug("ON EVENT: " + Event[0]);
-                Statics.ReactionEvents.add(Event[1]);
-                Log.level4Debug("PERFORM ACTION: " + Event[1]);
-            } catch (Exception e) {
-                Log.errorHandler(e);
-
-            }
-            return "";
-
-        }
-
-        // $CLEARON will remove all actions/reactions
-        if (line.startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList<String>();
-            Statics.ReactionEvents = new ArrayList<String>();
-            Log.level4Debug("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
-            return "";
-        }
-
-//# is a comment Disregard commented lines
-        if (line.startsWith("#")) {
-            Log.level4Debug("Ignoring commented line" + line);
-            return "";
-        }
-
-        //Disregard blank lines
-        if (line.equals("")) {
-            return "";
-        }
-        Log.level4Debug("SCRIPT COMMAND:" + line);
-
-        /*
-         * $IFCONTAINS takes:
-         * $IFCONTAINS A test string 
-         * $INCOMMAND a command to be sent to ADB
-         * $DO a CASUAL scripted command to be excuted if test string is found in the command sent to ADB
-         */
-        // $IFNOTCONTAINS foo $INCOMMAND shell "echo foo" $DO $ECHO foo is in foo so we will see this.
-        // $IFNOTCONTAINS foo $INCOMMAND shell "echo bar" $DO $ECHO foo is not in bar so we will not see this.
-        // $IFNOTCONTAINS value $INCOMMAND command $DO $ANY CASUAL COMMAND
-        if (line.startsWith("$IFCONTAINS ")) {
-            line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
-            return doIfContainsReturnResults(line, true);
-        }
-        /*
-         * $IFNOTCONTAINS takes:
-         * $IFNOTCONTAINS A test string 
-         * $INCOMMAND a command to be sent to ADB
-         * $DO a CASUAL scripted command to be excuted if test is not found in the command sent to ADB
-         */
-        // $IFNOTCONTAINS foo $INCOMMAND shell "echo foo" $DO $ECHO foo is in foo so we will not see this.
-        // $IFNOTCONTAINS foo $INCOMMAND shell "echo bar" $DO $ECHO foo is not in bar so we will see this.
-        // $IFNOTCONTAINS value $INCOMMAND command $DO $ANY CASUAL COMMAND
-        if (line.startsWith("$IFNOTCONTAINS ")) {
-            line = StringOperations.removeLeadingSpaces(line.replaceFirst("$IFCONTAINS ", ""));
-            return doIfContainsReturnResults(line, false);
-        }
-        if (line.startsWith("$SLEEP")) {
-            Log.level3Verbose("detected sleep command: " + line);
-            int sleeptime;
-            line = line.replace("$SLEEP", "").trim();
-            if (line.startsWith("MILLIS")) {
-                line = line.replace("MILLIS", "").trim();
-                sleeptime = Integer.parseInt(line);
-            } else {
-                sleeptime = Integer.parseInt(line) * 1000;
-            }
-            if (!(Integer.parseInt(line) >= 0)) {
-                throw new RuntimeException();
-            }
-
-            try {
-                Log.level2Information("sleeping for " + sleeptime / 1000 + " seconds");
-                Thread.sleep(sleeptime);
-            } catch (InterruptedException ex) {
-            }
-            return line;
-
-        }
+        //$HALT
+        ControlCommands.checkHalt(cmd);
+        //$GOTO
+        if (ControlCommands.checkGoto(cmd)) return cmd.getReturn();
+        //$ON
+        if (ControlCommands.checkOn(cmd)) return cmd.getReturn();
+        //$CLEARON
+        if (ControlCommands.checkClearOn(cmd)) return cmd.getReturn();
+        //# comments
+        if (ControlCommands.checkComments(cmd)) return cmd.getReturn();
+        //
+        if (ControlCommands.checkBlankLine(cmd)) return cmd.getReturn();
+        // $IFCONTAINS "value" $INCOMMAND "casual command" $DO "casual command"
+        if (ControlCommands.checkIfContains(cmd)) return ControlCommands.doIfContainsReturnResults(cmd.get(), true);
+        // $IFNOTCONTAINS "value" $INCOMMAND "casual command" $DO "casual command"
+        if (ControlCommands.checkIfNotContains(cmd)) return ControlCommands.doIfContainsReturnResults(cmd.get(), false);
+        //SLEEP  1
+        //SLEEPMILLIS 1000
+        if (checkSleep(cmd)) return cmd.getReturn();
         /*
          * Environmental variables
          */
 //$SLASH will replace with "\" for windows or "/" for linux and mac
-        if (line.contains("$BUSYBOX")) {
-            line = line.replace("$BUSYBOX", BusyboxTools.getBusyboxLocation());
-            Log.level4Debug("Expanded $BUSYBOX: " + line);
+        if (cmd.get().contains("$BUSYBOX")) {
+            cmd.set( cmd.get().replace("$BUSYBOX", BusyboxTools.getBusyboxLocation()));
+            Log.level4Debug("Expanded $BUSYBOX: " + cmd.get());
         }
 
 //$SLASH will replace with "\" for windows or "/" for linux and mac
-        if (line.contains("$SLASH")) {
-            line = line.replace("$SLASH", Statics.slash);
-            Log.level4Debug("Expanded $SLASH: " + line);
+        if (cmd.get().contains("$SLASH")) {
+            cmd.set( cmd.get().replace("$SLASH", Statics.slash));
+            Log.level4Debug("Expanded $SLASH: " + cmd.get());
         }
 //$ZIPFILE is a reference to the Script's .zip file
-        if (line.contains("$ZIPFILE")) {
+        if (cmd.get().contains("$ZIPFILE")) {
 
-            if (!verifyZIPFILEReferencesExist(line)) {
+            if (!verifyZIPFILEReferencesExist(cmd.get())) {
                 return "";
             }
 
-            line = line.replace("$ZIPFILE", ScriptTempFolder);
-            Log.level4Debug("Expanded $ZIPFILE: " + line);
+            cmd.set( cmd.get().replace("$ZIPFILE", ScriptTempFolder));
+            Log.level4Debug("Expanded $ZIPFILE: " + cmd.get());
         }
 
-        if (line.contains("\\n") && (line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERNOTIFICATION") || line.startsWith("$USERCANCELOPTION"))) {
-            line = line.replace("\\n", "\n");
+        if (cmd.get().contains("\\n") && (cmd.get().startsWith("$USERNOTIFICATION") || cmd.get().startsWith("$USERNOTIFICATION") || cmd.get().startsWith("$USERCANCELOPTION"))) {
+            cmd.set( cmd.get().replace("\\n", "\n"));
         }
 //$HOMEFOLDER will reference the user's home folder on the system        
-        if (line.contains("$HOMEFOLDER")) {
+        if (cmd.get().contains("$HOMEFOLDER")) {
             if (!new FileOperations().verifyExists(CASUALHOME)) {
                 new FileOperations().makeFolder(CASUALHOME);
             }
-            line = line.replace("$HOMEFOLDER", CASUALHOME);
-            Log.level4Debug("Expanded $HOMEFOLDER" + line);
+            cmd.set( cmd.get().replace("$HOMEFOLDER", CASUALHOME));
+            Log.level4Debug("Expanded $HOMEFOLDER" + cmd.get());
         }
 
         /*
          * GENERAL PURPOSE COMMANDS
          */
 //$ECHO command will display text in the main window
-        if (line.startsWith("$ECHO")) {
-            Log.level4Debug("Received ECHO command" + line);
-            line = line.replace("$ECHO", "");
-            line = StringOperations.removeLeadingSpaces(line);
-            Log.level2Information(line);
-            return line;
+        if (cmd.get().startsWith("$ECHO")) {
+            Log.level4Debug("Received ECHO command" + cmd.get());
+            cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
+            Log.level2Information(cmd.get());
+            Statics.GUI.setStatusSubTitle(cmd.get());
+            return cmd.getReturn();
+        
+            //TODO: should this be updated automatically by monitoring or by this new command?
+            //I think automatic is the way.. triggered on ADB push, pull, heimdall, and others.
+//$TITLE command is used to inform the user that a new portion of the process has started
+        } else if (cmd.get().startsWith("$TITLE")){
+            Log.level4Debug("Received ECHO command" + cmd.get());
+            cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
+            Statics.GUI.setStatusTitle(cmd.get());
+            return cmd.getReturn();
+        
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
-        } else if (line.startsWith("$LISTDIR")) {
-            line = line.replace("$LISTDIR", "");
-            line = StringOperations.removeLeadingSpaces(line);
+        } else if (cmd.get().startsWith("$LISTDIR")) {
+            cmd.set( cmd.get().replace("$LISTDIR", "").trim());
             if (OSTools.isLinux() || OSTools.isMac()) {
             } else {
-                line = line.replace("/", Statics.slash);
+                cmd.set( cmd.get().replace("/", Statics.slash));
             }
-            File[] files = new File(line).listFiles();
+            File[] files = new File(cmd.get()).listFiles();
             String retval = "";
             if (files != null && files.length > 0 && new ADBTools().isConnected()) {
                 for (File file : files) {
@@ -455,43 +305,41 @@ public class CASUALLanguage {
             return retval;
 
 // $MAKEDIR will make a folder
-        } else if (line.startsWith("$MAKEDIR")) {
-            line = line.replace("$MAKEDIR", "");
-            line = StringOperations.removeLeadingSpaces(line);
-            Log.level4Debug("Creating Folder: " + line);
-            new File(line).mkdirs();
-            return line;
+        } else if (cmd.get().startsWith("$MAKEDIR")) {
+            cmd.set( cmd.get().replace("$MAKEDIR", "").trim());
+            Log.level4Debug("Creating Folder: " + cmd.get());
+            new File(cmd.get()).mkdirs();
+            return cmd.get();
 // $REMOVEDIR will make a folder
-        } else if (line.startsWith("$REMOVEDIR")) {
-            line = line.replace("$REMOVEDIR", "");
-            line = StringOperations.removeLeadingSpaces(line);
-            Log.level4Debug("Creating Folder: " + line);
-            new FileOperations().recursiveDelete(line);
-            return line;
+        } else if (cmd.get().startsWith("$REMOVEDIR")) {
+            cmd.set( cmd.get().replace("$REMOVEDIR", "").trim());
+            Log.level4Debug("Creating Folder: " + cmd.get());
+            new FileOperations().recursiveDelete(cmd.get());
+            return cmd.get();
 
 // Takes a value from a command and returns to text box        
-        } else if (line.startsWith("$COMMANDNOTIFICATION")) {
-            line = line.replace("$COMMANDNOTIFICATION", "").trim();
+        } else if (cmd.get().startsWith("$COMMANDNOTIFICATION")) {
+            cmd.set( cmd.get().replace("$COMMANDNOTIFICATION", "").trim());
             String title = "Return Value";
-            String retval = commandHandler(line);
+            String retval = commandHandler(cmd.get());
             new CASUALMessageObject(title + ">>>" + retval).showCommandNotification();
             return retval;
 
 //$USERNOTIFICATION will stop processing and force the user to 
             // press OK to continueNotification 
-        } else if (line.startsWith("$USERNOTIFICATION")) {
-            line = line.replace("$USERNOTIFICATION", "");
-            new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserNotification();
+        } else if (cmd.get().startsWith("$USERNOTIFICATION")) {
+            cmd.set( cmd.get().replace("$USERNOTIFICATION", "").trim());
+            new CASUALMessageObject(cmd.get().replaceFirst(",", ">>>")).showUserNotification();
             return "";
 
 // $USERCANCELOPTION will give the user the option to halt the script
             //USE: $USERCANCELOPTION Message
             //USE: $USERCANCELOPTION Title, Message
-        } else if (line.startsWith("$USERCANCELOPTION")) {
+        } else if (cmd.get().startsWith("$USERCANCELOPTION")) {
             //CASUALAudioSystem CAS = new CASUALAudioSystem();
             int n;
-            line = StringOperations.removeLeadingSpaces(line.replace("$USERCANCELOPTION", ""));
-            n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showUserCancelOption();
+            cmd.set( cmd.get().replace("$USERCANCELOPTION", "").trim());
+            n = new CASUALMessageObject(cmd.get().replaceFirst(",", ">>>")).showUserCancelOption();
             if (n == 1) {
                 Log.level0Error(this.CASPAC.getActiveScript().name);
                 Log.level0Error("@canceledAtUserRequest");
@@ -501,9 +349,9 @@ public class CASUALLanguage {
             return "";
 
 //$ACTIONREQUIRED Message            
-        } else if (line.startsWith("$ACTIONREQUIRED")) {
-            line = StringOperations.removeLeadingSpaces(line.replace("$ACTIONREQUIRED", ""));
-            int n = new CASUALMessageObject(line.replaceFirst(",", ">>>")).showActionRequiredDialog();
+        } else if (cmd.get().startsWith("$ACTIONREQUIRED")) {
+            cmd.set( cmd.get().replace("$ACTIONREQUIRED", "").trim());
+            int n = new CASUALMessageObject(cmd.get().replaceFirst(",", ">>>")).showActionRequiredDialog();
             if (n == 1) {
                 Log.level0Error(this.CASPAC.getActiveScript().name);
                 Log.level0Error("@haltedPerformActions");
@@ -515,9 +363,9 @@ public class CASUALLanguage {
 //$USERINPUTBOX will accept a String to be injected into ADB
             //Any text will be injected into the $USERINPUT variable    
             //USE: $USERINPUTBOX Title, Message, command $USERINPUT
-        } else if (line.startsWith("$USERINPUTBOX")) {
-            //line = line.replace("\\n", "\n");
-            String[] Message = line.replace("$USERINPUTBOX", "").split(",", 3);
+        } else if (cmd.get().startsWith("$USERINPUTBOX")) {
+            //cmd.set( line.replace("\\n", "\n");
+            String[] Message = cmd.get().replace("$USERINPUTBOX", "").split(",", 3);
             String inputBoxText = new CASUALMessageObject(Message[0] + ">>>" + Message[1]).inputDialog();
             if (inputBoxText == null) {
                 inputBoxText = "";
@@ -532,10 +380,9 @@ public class CASUALLanguage {
             return "";
 //$DOWNLOAD from, to, friendly download name,  Optional standard LINUX MD5 command ouptut.
 
-        } else if (line.startsWith("$DOWNLOAD")) {
-            line = line.replace("$DOWNLOAD", "");
-            line = StringOperations.removeLeadingSpaces(line);
-            String[] downloadCommand = line.split(",");
+        } else if (cmd.get().startsWith("$DOWNLOAD")) {
+            cmd.set( cmd.get().replace("$DOWNLOAD", "").trim());
+            String[] downloadCommand = cmd.get().split(",");
             for (int i = 0; i < downloadCommand.length; i++) {
                 downloadCommand[i] = downloadCommand[i].trim();
             }
@@ -562,30 +409,30 @@ public class CASUALLanguage {
             }
 
 //$EXECUTE will blindly execute commands into the shell.  Usefull only with $LINUX $WINDOWS or $MAC commands.
-        } else if (line.startsWith("$EXECUTE")) {
-            line = StringOperations.removeLeadingSpaces(line.replace("$EXECUTE", ""));
-            ArrayList<String> command = new ShellTools().parseCommandLine(line);
+        } else if (cmd.get().startsWith("$EXECUTE")) {
+            cmd.set( cmd.get().replace("$EXECUTE", "").trim());
+            ArrayList<String> command = new ShellTools().parseCommandLine(cmd.get());
             String[] commandArray = Arrays.copyOf(command.toArray(), command.size(), String[].class);
             return new Shell().sendShellCommand(commandArray);
 
 //$BUILDPROP will silently grab the build.prop from the device
-        } else if (line.startsWith("$BUILDPROP")) {
+        } else if (cmd.get().startsWith("$BUILDPROP")) {
             if (deviceBuildPropStorage != null && deviceBuildPropStorage.contains("ro.")) {
                 return deviceBuildPropStorage;
             } else {
-                String[] cmd = {new ADBTools().getBinaryLocation(), "shell", "cat /system/build.prop"};
-                deviceBuildPropStorage = new Shell().timeoutShellCommand(cmd, 5000);
+                String[] com = {new ADBTools().getBinaryLocation(), "shell", "cat /system/build.prop"};
+                deviceBuildPropStorage = new Shell().timeoutShellCommand(com, 5000);
                 return deviceBuildPropStorage;
             }
 //$FLASH will push a file to the specified block eg $FLASH $ZIPFILEmyFile, /dev/block/mmcblk0p5
-        } else if (line.startsWith("$FLASH")) {
+        } else if (cmd.get().startsWith("$FLASH")) {
 
-            line = line.replace("$FLASH", "").trim();
-            if (!line.contains(",")) {
-                Log.level0Error("Missing Comma in $FLASH command");
+            cmd.set( cmd.get().replace("$FLASH", "").trim());
+            if (!cmd.get().contains(",")) {
+                Log.level0Error("Missing Comma in CASUAL Data Bridge $FLASH command");
                 throw new RuntimeException("no comma to split and specify destination");
             }
-            String[] split = line.split(",");
+            String[] split = cmd.get().split(",");
             File f = new File(split[0].replace("\"", "").trim());
             try {
                 f.createNewFile();
@@ -606,14 +453,14 @@ public class CASUALLanguage {
                 throw new RuntimeException("Failed to write file");
             }
 //$PULL will push a file to the specified block eg $PULL  /dev/block/mmcblk0p5 , $ZIPFILEmyFile
-        } else if (line.startsWith("$PULL")) {
+        } else if (cmd.get().startsWith("$PULL")) {
 
-            line = line.replace("$PULL", "").trim();
-            if (!line.contains(",")) {
+            cmd.set( cmd.get().replace("$PULL", "").trim());
+            if (!cmd.get().contains(",")) {
                 Log.level0Error("Missing Comma in $PULL command");
                 throw new RuntimeException("no comma to split and specify destination");
             }
-            String[] split = line.split(",");
+            String[] split = cmd.get().split(",");
             File f = new File(split[1].replace("\"", "").trim());
 
             new File(f.getParent()).mkdirs();
@@ -627,20 +474,19 @@ public class CASUALLanguage {
              * SUPPORTED SHELLS
              */
             // if Heimdall, Send to Heimdall shell command
-        } else if (line.startsWith("$HEIMDALL")||line.startsWith("heimdall")) {
-            if (line.startsWith("heimdall")){
-                line=line.replaceFirst("heimdall","");
-            } else if (line.startsWith("$HEIMDALL")){
-                line=line.replaceFirst("$HEIMDALL", "");
+        } else if (cmd.get().startsWith("$HEIMDALL")||cmd.get().startsWith("heimdall")) {
+            if (cmd.get().startsWith("heimdall")){
+                cmd.set(cmd.get().replaceFirst("heimdall",""));
+            } else if (cmd.get().startsWith("$HEIMDALL")){
+                cmd.set(cmd.get().replaceFirst("$HEIMDALL", ""));
             }
             
-            line = line.replace("$HEIMDALL", "");
-            line = StringOperations.removeLeadingSpaces(line);
-            Log.level4Debug("Received Command: " + line);
+            cmd.set(cmd.get().replace("$HEIMDALL", ""));
+            Log.level4Debug("Received Command: " + cmd.get());
             Log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
             
             if (!new HeimdallTools().run(new String[]{"detect"},5000, true).contains("CritERROR!!!")) {
-                ArrayList<String> intermediateCommand=new ShellTools().parseCommandLine(line);
+                ArrayList<String> intermediateCommand=new ShellTools().parseCommandLine(cmd.get());
                 String[] command=intermediateCommand.toArray(new String[intermediateCommand.size()]);
                 if (!command[0].equals("detect")){
                     new HeimdallTools().waitForDevice();
@@ -657,59 +503,76 @@ public class CASUALLanguage {
                 return new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
             }
 // if Fastboot, Send to fastboot shell command
-        } else if (line.startsWith("$FASTBOOT") ||(line.startsWith("fastboot"))) {
-            if (line.startsWith("fastboot")){
-                line=line.replaceFirst("fastboot", "");
-            } else if (line.startsWith("$FASTBOOT")){
-                line=line.replaceFirst("\\$FASTBOOT","");
+        } else if (cmd.get().startsWith("$FASTBOOT") ||(cmd.get().startsWith("fastboot"))) {
+            if (cmd.get().startsWith("fastboot")){
+                cmd.set(cmd.get().replaceFirst("fastboot", ""));
+            } else if (cmd.get().startsWith("$FASTBOOT")){
+                cmd.set(cmd.get().replaceFirst("\\$FASTBOOT",""));
             }
-            line = StringOperations.removeLeadingSpaces(line);
             Log.level4Debug("received fastbot command.");
             new FastbootTools().getBinaryLocation();
             Log.level2Information("@waitingForDownloadModeDevice");
-            if (OSTools.isLinux() && !line.isEmpty() && !line.equals("--help")) {
+            if (OSTools.isLinux() && !cmd.get().isEmpty() && !cmd.get().equals("--help")) {
                 Log.level2Information("@linuxPermissionsElevation");
 
-                String returnValue = new FastbootTools().doElevatedFastbootShellCommand(line.replaceAll("\"", "\\\""));
+                String returnValue = new FastbootTools().doElevatedFastbootShellCommand(cmd.get().replaceAll("\"", "\\\""));
                 if (!returnValue.contentEquals("\n")) {
                     return returnValue;
                 }
                 //}
 
             } else {
-                return new FastbootTools().doFastbootShellCommand(line);
+                return new FastbootTools().doFastbootShellCommand(cmd.get());
             }
 
             // if Fastboot, Send to fastboot shell command
-        } else if (line.startsWith("$ADB") || line.startsWith("adb")) {
-            if (line.startsWith("adb")){
-                line=line.replaceFirst("adb","");
-            } else if (line.startsWith("$ADB")){
-                line=line.replaceFirst("\\$ADB","");
+        } else if (cmd.get().startsWith("$ADB") || cmd.get().startsWith("adb")) {
+            if (cmd.get().startsWith("adb")){
+                cmd.set(cmd.get().replaceFirst("adb",""));
+            } else if (cmd.get().startsWith("$ADB")){
+                cmd.set(cmd.get().replaceFirst("\\$ADB",""));
             }
-            line = StringOperations.removeLeadingSpaces(line);
-            String retVal = doShellCommand(line, null, null);
+            String retVal = doShellCommand(cmd.get(), null, null);
             Log.level4Debug("return from ADB:" + retVal);
             return retVal;
                 
 // if no prefix, then send command directly to ADB.
         } else {
             StringBuilder sb=new StringBuilder();
-            sb.append("ERROR!!!!  Invalid Command:\"").append(line).append("\" is not recognized as a valid command");
+            sb.append("ERROR!!!!  Invalid Command:\"").append(cmd.get()).append("\" is not recognized as a valid command");
             throw new IOException(sb.toString());
         }
         //final line output for debugging purposes
-        Log.level4Debug("COMMAND processed - " +new ADBTools().getBinaryLocation() + " " + line);
+        Log.level4Debug("COMMAND processed - " +new ADBTools().getBinaryLocation() + " " + cmd.get());
         return "";
     }
 //END OF SCRIPT PARSER
 
-    private String processIdentifiedCommand(String identified, String line) {
-        line = line.replace(identified, "");
-        Log.level4Debug("Processing " + identified);
-        line = StringOperations.removeLeadingSpaces(line);
-        return line;
+    private boolean checkSleep(Command cmd) throws RuntimeException {
+        if (cmd.get().startsWith("$SLEEP")) {
+            Log.level3Verbose("detected sleep command: " + cmd.get());
+            int sleeptime;
+            cmd.set( cmd.get().replace("$SLEEP", "").trim());
+            if (cmd.get().startsWith("MILLIS")) {
+                cmd.set( cmd.get().replace("MILLIS", "").trim());
+                sleeptime = Integer.parseInt(cmd.get());
+            } else {
+                sleeptime = Integer.parseInt(cmd.get()) * 1000;
+            }
+            if (!(Integer.parseInt(cmd.get()) >= 0)) {
+                throw new RuntimeException();
+            }
+            try {
+                Log.level2Information("sleeping for " + sleeptime / 1000 + " seconds");
+                Thread.sleep(sleeptime);
+            } catch (InterruptedException ex) {
+            }
+            return true;
+        }
+        return false;
     }
+
+
 
     private String returnSafeCharacters(String Str) {
         Str = Str.replace("\\", "\\\\");
@@ -719,40 +582,6 @@ public class CASUALLanguage {
         return Str;
     }
 
-    //split the string from $IFCONTAINS "string string" $INCOMMAND "$ADB command to execute" $DO "CASUAL COMMAND"
-    private String doIfContainsReturnResults(String line, boolean ifContains) {
-        if (line.startsWith("$IFCONTAINS")) {
-            line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFCONTAINS", ""));
-        } else if (line.startsWith("$IFNOTCONTAINS")) {
-            line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFNOTCONTAINS", ""));
-        }
-        String[] checkValueSplit = line.split("\\$INCOMMAND", 2);
-        String checkValue = StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line)); //value to check
-        String[] commandSplit = checkValueSplit[1].split("\\$DO", 2);
-        String command = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);//command to check
-        String casualCommand = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);// command to execute if true
-
-        Log.level4Debug("checking for results to be " + ifContains);
-        Log.level4Debug("requesting " + command);
-
-        String returnValue = new CASUALScriptParser().executeOneShotCommand(command);
-        Log.level4Debug("got " + returnValue);
-        String retValue = "";
-
-        //ifnotcontains==false or ifcontains==true
-        if (returnValue.contains(checkValue) == ifContains) {
-            if (casualCommand.contains("&&&")) {
-                String[] lineSplit = casualCommand.split("&&&");
-                for (String cmd : lineSplit) {
-                    retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(cmd));
-
-                }
-            } else {
-                retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
-            }
-        }
-        return retValue;
-    }
 
     private String doShellCommand(String Line, String ReplaceThis, String WithThis) {
         return executeADBCommand(Line, ReplaceThis, WithThis, true);

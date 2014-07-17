@@ -80,10 +80,13 @@ public class ZodUI extends Application {
         stage.show();
 
         //get the download operations off the main thread
-        ZodDownloader zd = new ZodDownloader(downloadCaspac, title);
+        ZodDownloader downloader = new ZodDownloader(downloadCaspac, title);
+        zui.setDownloader(downloader);
         //launch the first display panel
         displayInitialZod();
-        zd.downloadCaspac(zui);
+        new Thread(()->{
+            downloader.downloadCaspac(zui);
+        }).start();
 
     }
 

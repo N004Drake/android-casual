@@ -265,7 +265,7 @@ public class CommandLineUI implements iCASUALUI {
     }
 
     @Override
-    public void setStatusMessageLabel(String text) {
+    public void setStatusSubTitle(String text) {
     }
 
 
@@ -308,5 +308,9 @@ public class CommandLineUI implements iCASUALUI {
 
     @Override
     public void sendProgress(String data) {
+    }
+
+    @Override
+    public void setStatusTitle(String text) {
     }
 }
