@@ -50,7 +50,7 @@ public final class CASUALMain {
     /**
      * Main method launching the application.
      *
-     * @param args
+     * @param args command line args to send to casual
      */
     public static void main(String[] args) {
         //reset initial variables for everything. 
@@ -66,7 +66,7 @@ public final class CASUALMain {
      * Begins actual CASUAL modes this can be called as a stop for CASUAL
      * without losing state. This does not cause a stop.
      *
-     * @param args
+     * @param args command line args to send to casual
      */
     public static void beginCASUAL(String[] args) {
         CASUALMain main = new CASUALMain();
@@ -200,19 +200,19 @@ public final class CASUALMain {
         CASUALConnectionStatusMonitor.stop();
 
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
-        if (!CASUALTools.IDEMode ){
-            if (!Statics.isGUIIsAvailable() ){
-                    try {
-                        new Pastebin().pasteAnonymousLog();
-                    } catch (MalformedURLException ex) {
-                        Log.errorHandler(ex);
-                    }
+        if (!CASUALTools.IDEMode) {
+            if (!Statics.isGUIIsAvailable()) {
+                try {
+                    new Pastebin().pasteAnonymousLog();
+                } catch (MalformedURLException ex) {
+                    Log.errorHandler(ex);
                 }
+            }
         }
 
         if (Statics.GUI != null) {
             Statics.GUI.dispose();
-            Statics.GUI=null;
+            Statics.GUI = null;
         }
         CASUALConnectionStatusMonitor.stop();
 
