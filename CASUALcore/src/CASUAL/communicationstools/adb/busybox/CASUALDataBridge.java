@@ -93,8 +93,8 @@ public class CASUALDataBridge {
      * @param remoteFileName path to remote file
      * @param f local file to write
      * @return string path to local file
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException when permission problem exists
+     * @throws InterruptedException when interrupted
      */
     public synchronized String getFile(String remoteFileName, File f) throws IOException, InterruptedException {
         status = "received ";
@@ -117,9 +117,9 @@ public class CASUALDataBridge {
      * @param send string to send
      * @param remoteFileName remote block/char/file on deviec
      * @return number of bytes sent
-     * @throws InterruptedException
-     * @throws SocketException
-     * @throws IOException
+     * @throws InterruptedException when interrupted
+     * @throws SocketException when socket cannot be created
+     * @throws IOException when permission problem exists
      */
     public synchronized long sendString(String send, String remoteFileName) throws InterruptedException, SocketException, IOException {
         //make a duplicate of the array, with the \n and 0x3 key to end the file transfer
@@ -136,8 +136,8 @@ public class CASUALDataBridge {
      * @param f local file to send
      * @param remoteFileName path to remote file on device
      * @return number of bytes sent
-     * @throws FileNotFoundException
-     * @throws Exception
+     * @throws FileNotFoundException  when file is not present
+     * @throws Exception when file cannot be sent
      */
     public synchronized long sendFile(File f, String remoteFileName) throws FileNotFoundException, Exception {
         Log.level2Information("sending " + f.getName() + " to device. size=" + f.length());
@@ -164,9 +164,9 @@ public class CASUALDataBridge {
      * @param input stream to be written to remote file
      * @param remoteFileName name of remote file to be written
      * @return number of bytes sent.
-     * @throws InterruptedException
-     * @throws SocketException
-     * @throws IOException
+     * @throws InterruptedException when interrupted
+     * @throws SocketException when socket cannot be created
+     * @throws IOException when permissions problem exists
      */
     public synchronized long sendStream(final InputStream input, final String remoteFileName) throws InterruptedException, SocketException, IOException {
         resetCASUALConnection();
