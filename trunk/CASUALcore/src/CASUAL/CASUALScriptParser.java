@@ -16,6 +16,7 @@
  */
 package CASUAL;
 
+import CASUAL.language.CASUALLanguage;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.misc.CountLines;

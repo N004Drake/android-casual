@@ -550,7 +550,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * @param text label text
      */
     @Override
-    public void setStatusMessageLabel(String text) {
+    public void setStatusSubTitle(String text) {
         this.StatusLabel.setText(text);
     }
 
@@ -741,7 +741,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     @Override
     public void deviceConnected(String mode) {
         setStatusLabelIcon("/GUI/development/resources/images/DeviceConnected.png", "Device Connected");
-        setStatusMessageLabel("Target Acquired");
+        setStatusSubTitle("Target Acquired");
         AudioHandler.playSound("/GUI/development/resources/sounds/Connected-SystemReady.wav");
 
     }
@@ -1050,6 +1050,10 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             Logger.getLogger(CASUALGUIMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         ProgressArea.setCaretPosition(ProgressArea.getDocument().getLength());
+    }
+
+    @Override
+    public void setStatusTitle(String text) {
     }
 
 }

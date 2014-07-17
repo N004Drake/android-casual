@@ -61,7 +61,6 @@ public class CASUALUpdates {
      * Update Required 3=CASUAL update required- cannot continue. 4=download
      * failed
      */
-
     /**
      * downloads a file
      *
@@ -107,7 +106,6 @@ public class CASUALUpdates {
             int lastlength = 0;
             long kilobytes;
             int offset = 1;
-            
 
             try {
                 int bytesRead;
@@ -115,8 +113,8 @@ public class CASUALUpdates {
                     output.write(buffer, 0, bytesRead);
                     bytes = bytes + bytesRead;
                     kilobytes = bytes / 1024;
-                    int length = String.valueOf(kilobytes).length()+2;
-                    for (int i=0; i<length; i++){
+                    int length = String.valueOf(kilobytes).length() + 2;
+                    for (int i = 0; i < length; i++) {
                         Log.progress("\b");  //backspace over the old value
                     }
                     Log.progress(Long.toString(kilobytes) + "kb "); //write new
@@ -165,11 +163,12 @@ public class CASUALUpdates {
 
     /**
      * gets the data from the online script
+     *
      * @param script Script to pull online metadata for
-     * @return String representation of the metadata for the script. 
+     * @return String representation of the metadata for the script.
      * @throws MalformedURLException
      * @throws IOException
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     public String getWebData(String script) throws MalformedURLException, IOException, URISyntaxException {
         URL url = stringToFormattedURL(script);
@@ -193,8 +192,10 @@ public class CASUALUpdates {
 
     /**
      * downloads metadata for the current script from the repository.
+     *
      * @param s Script for information to be pulled
-     * @return InputStream representing a properties file with metadata about online version of the script. 
+     * @return InputStream representing a properties file with metadata about
+     * online version of the script.
      * @throws MalformedURLException
      * @throws URISyntaxException
      * @throws IOException
@@ -222,8 +223,9 @@ public class CASUALUpdates {
 
     /**
      * Opens a file from a URL as a stream
+     *
      * @param link String representation of URL
-     * @return InputStream object to file. 
+     * @return InputStream object to file.
      * @throws MalformedURLException
      * @throws URISyntaxException
      * @throws IOException
@@ -305,10 +307,11 @@ public class CASUALUpdates {
     }
 
     /**
-     * Updates a script.  Uses online repository specified in Statics. 
+     * Updates a script. Uses online repository specified in Statics.
+     *
      * @param script CASUAL.caspac.Script object to be updated
-     * @param tempFolder Temp Folder to use for updating. 
-     * @return New, updated script. 
+     * @param tempFolder Temp Folder to use for updating.
+     * @return New, updated script.
      * @throws ZipException
      * @throws IOException
      * @throws MalformedURLException
@@ -347,9 +350,18 @@ public class CASUALUpdates {
         try {
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("HEAD");
+            conn.setConnectTimeout(5000);
+            System.out.println(conn.getReadTimeout());
             conn.getInputStream();
             return conn.getContentLength();
         } catch (IOException e) {
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.level0Error("@problemDownlaodingFile");
+                    new CASUALMessageObject("@interactionBadDownload");
+                }
+            });
             return -1;
         } finally {
             conn.disconnect();

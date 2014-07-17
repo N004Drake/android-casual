@@ -24,8 +24,7 @@ import CASUAL.Statics;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import com.casual_dev.zodui.Log.ZodLog;
-import static com.casual_dev.zodui.ZodDownloader.getExpectedBytes;
-import static com.casual_dev.zodui.ZodDownloader.getTitle;
+
 import com.casual_dev.zodui.about.AboutController;
 import com.casual_dev.zodui.contentpanel.ZodPanelContent;
 import com.casual_dev.zodui.contentpanel.ZodPanelController;
@@ -74,6 +73,7 @@ public class CASUALZodMainUI
 
     Script activeScript;
 
+    private ZodDownloader downloader;
     /**
      * The panel content currently displayed
      */
@@ -379,7 +379,7 @@ public class CASUALZodMainUI
     }
 
     @Override
-    public void setStatusMessageLabel(String string) {
+    public void setStatusSubTitle(String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -426,9 +426,9 @@ public class CASUALZodMainUI
         Platform.runLater(() -> {
 
             //todo catch download here and send to log
-            if (ZodDownloader.downloadingCASPAC.get()) {
+            if (this.getDownloader().isDownloading()) {
                 try {
-                    panel.setStatus("Downloading " + getTitle() + ":" + string + " of " + getExpectedBytes() + "kb");
+                    panel.setStatus("Downloading " + getDownloader().getTitle() + ":" + string + " of " + getDownloader().getExpectedBytes() + "kb");
                 } catch (NumberFormatException ex) {
                     panel.setStatus(string);
                 }
@@ -436,9 +436,28 @@ public class CASUALZodMainUI
         });
     }
 
+    public void setStatusTitle(String title){
+        content.setMainTitle(title);
+    }
+    
+    
     @FXML
     private void showAbout() throws Exception {
         new AboutController().show();
+    }
+
+    /**
+     * @return the downloader
+     */
+    public ZodDownloader getDownloader() {
+        return downloader;
+    }
+
+    /**
+     * @param download the downloader to set
+     */
+    public void setDownloader(ZodDownloader download) {
+        this.downloader = download;
     }
 
 }

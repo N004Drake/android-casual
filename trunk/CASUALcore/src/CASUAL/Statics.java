@@ -17,6 +17,7 @@
 package CASUAL;
 
 //import java.awt.Color;
+import CASUAL.language.CASUALLanguage;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
@@ -192,7 +193,7 @@ public class Statics {
         new ADBTools().reset();
         new HeimdallTools().reset();
         new FastbootTools().reset(); 
-        CASUALLanguage.GOTO = "";
+        CASUAL.language.CASUALLanguage.reset();
         try {
             Statics.CASPAC.getActiveScript().scriptContinue = false;
         } catch (NullPointerException ex) {

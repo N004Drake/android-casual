@@ -19,13 +19,12 @@ package com.casual_dev.zodui;
 import CASUAL.Statics;
 import static CASUAL.Statics.getTempFolder;
 import CASUAL.caspac.Caspac;
+import CASUAL.misc.MandatoryThread;
 import CASUAL.network.CASUALUpdates;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 
 /**
@@ -33,80 +32,92 @@ import static java.util.logging.Logger.getLogger;
  * @author adamoutler
  */
 
-public class ZodDownloader {
+public final class ZodDownloader {
 
-    static AtomicBoolean downloadingCASPAC = new AtomicBoolean(true);
-    static int expectedKB = 0;
-    static String title = "";
+    int expectedKB = 0;
+    String title = "";
+    String downloadedFile;
+   CASUALZodMainUI ui;
     URL url;
     CASUALUpdates cu = new CASUALUpdates();
-    final static private Object downloadLock = new Object();
-
+static MandatoryThread downloadThread;
     /**
-     *
-     * @param url
-     * @param title
+     * instantiates a download session for ZodDownloader
+     * @param url URL to download from
+     * @param title  title of download for user to see
      */
     public ZodDownloader(URL url, String title) {
         this.url = url;
-        ZodDownloader.title = title;
-        expectedKB = cu.tryGetFileSize(url) / 1_024;
+        this.title = title;
+        this.expectedKB = cu.tryGetFileSize(url) / 1_024;
+        processRemoteCASPAC();
     }
 
+    public void downloadCaspac(CASUALZodMainUI ui){
+        this.ui=ui;
+        downloadThread.start();
+    }
+    
     /**
-     *
+     * downloads a CASPAC and updates UI
      * @param ui  User Interface to be updated.
      */
-    public void downloadCaspac(CASUALZodMainUI ui) {
-        synchronized (downloadLock) {
-            ZodDownloader.downloadingCASPAC.set(true);
-        }
+    public void processRemoteCASPAC() {
 
-        new Thread(() -> {
+        downloadThread=new MandatoryThread(() -> {
             boolean result = cu.downloadFileFromInternet(url, getTempFolder() + "caspac.caspac", title);
-            if (result) {
-                CASUALZodMainUI.content.setSubtitle("CASPAC Download Complete " + expectedKB  + "kb");
-            }
-            ZodDownloader.downloadingCASPAC.set(false);
+            if (!result) {
+                return;
+                
+            } 
+            CASUALZodMainUI.content.setSubtitle("CASPAC Download Complete " + expectedKB  + "kb");
+            downloadedFile=getTempFolder() + "caspac.caspac";
             try {
-                Statics.GUI.sendProgress("Downloaded, examining CASPAC");
-                CASUALZodMainUI.content.setMainTitle("Examining Contents");
-                Statics.CASPAC = new Caspac(new File(getTempFolder() + "caspac.caspac"), getTempFolder(), 0);
-                ui.createNewZod(CASUALZodMainUI.content);
-                CASUALZodMainUI.content.setMainTitle("Loading Script");
-                Statics.CASPAC.loadFirstScriptFromCASPAC();
-                ui.createNewZod(CASUALZodMainUI.content);
-                Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
-                Statics.GUI.setCASPAC(Statics.CASPAC);
-                CASUALZodMainUI.content.setMainTitle("Ready - Click Start");
-                ui.createNewZod(CASUALZodMainUI.content);
-                Statics.GUI.sendProgress("ready");
+                processDownloadedCASPAC();
             } catch (IOException ex) {
                 getLogger(ZodDownloader.class.getName()).log(Level.SEVERE, null, ex);
             }
-            synchronized (downloadLock) {
-                ZodDownloader.downloadLock.notify();
-            }
-        }).start();
+        });
+        
+    }
+
+    private void processDownloadedCASPAC() throws IOException {
+        //TODO: Ugly, move out of downloader and into something else.
+        Statics.GUI.sendProgress("Downloaded, examining CASPAC");
+        CASUALZodMainUI.content.setMainTitle("Examining Contents");
+        Statics.CASPAC = new Caspac(new File(getTempFolder() + "caspac.caspac"), getTempFolder(), 0);
+        ui.createNewZod(CASUALZodMainUI.content);
+        CASUALZodMainUI.content.setMainTitle("Loading Script");
+        Statics.CASPAC.loadFirstScriptFromCASPAC();
+        ui.createNewZod(CASUALZodMainUI.content);
+        Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
+        Statics.GUI.setCASPAC(Statics.CASPAC);
+        CASUALZodMainUI.content.setMainTitle("Ready - Click Start");
+        ui.createNewZod(CASUALZodMainUI.content);
+        Statics.GUI.sendProgress("ready");
     }
 
     /**
-     *
-     * @throws InterruptedException
+     * waits for download. will lock if download is not called first.  Will never lock if download was called. 
+     * @return string path to file
+     * @throws InterruptedException if interrupted
      */
-    public static void waitForDownload() throws InterruptedException {
-        synchronized (downloadLock) {
-            if (downloadingCASPAC.get()) {
-                downloadLock.wait();
-            }
+    public String waitForDownload() throws InterruptedException {
+        if (! downloadThread.isComplete()){
+            downloadThread.waitFor();
         }
+        return downloadedFile;
     }
 
+    public  boolean isDownloading(){
+        return !downloadThread.isComplete();
+    }
+    
     /**
-     *
-     * @return
+     * returns the expected KB that will be downloaded for this ZodDownloader
+     * @return expected kb
      */
-    public static int getExpectedBytes() {
+    public int getExpectedBytes() {
         return expectedKB;
     }
 
@@ -114,8 +125,9 @@ public class ZodDownloader {
      *
      * @return
      */
-    public static String getTitle() {
+    public  String getTitle() {
         return title;
     }
-    private static final Logger LOG = Logger.getLogger(ZodDownloader.class.getName());
+    
+
 }

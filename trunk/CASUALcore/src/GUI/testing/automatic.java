@@ -110,7 +110,7 @@ public class automatic implements CASUAL.iCASUALUI {
     }
 
     @Override
-    public void setStatusMessageLabel(String text) {
+    public void setStatusSubTitle(String text) {
         
     }
 
@@ -153,6 +153,10 @@ public class automatic implements CASUAL.iCASUALUI {
 
     @Override
     public void sendProgress(String data) {
+    }
+
+    @Override
+    public void setStatusTitle(String text) {
     }
     
 }

@@ -2176,7 +2176,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      * @param text dummy method used to implement iCASUALUI
      */
     @Override
-    public void setStatusMessageLabel(String text) {
+    public void setStatusSubTitle(String text) {
     }
 
 
@@ -2263,6 +2263,10 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     @Override
     public void sendProgress(String data) {
         
+    }
+
+    @Override
+    public void setStatusTitle(String text) {
     }
 
     /*
