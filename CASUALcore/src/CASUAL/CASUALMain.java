@@ -211,8 +211,8 @@ public final class CASUALMain {
         }
 
         if (Statics.GUI != null) {
-            Statics.GUI=null;
             Statics.GUI.dispose();
+            Statics.GUI=null;
         }
         CASUALConnectionStatusMonitor.stop();
 
