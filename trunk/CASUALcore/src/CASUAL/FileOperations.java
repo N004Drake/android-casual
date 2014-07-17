@@ -58,7 +58,7 @@ public class FileOperations {
     /**
      * recursively deletes a file path
      *
-     * @param path
+     * @param path path to delete
      */
     public void recursiveDelete(File path) {
 
@@ -82,7 +82,7 @@ public class FileOperations {
     /**
      * verify ability to write to every file in a path
      *
-     * @param path
+     * @param path path to verify.
      * @return true if permission to write
      */
     public boolean verifyWritePermissionsRecursive(String path) {
@@ -90,7 +90,7 @@ public class FileOperations {
         File Check = new File(path);
         File[] c = Check.listFiles();
         if (Check.exists()) {
-            Log.level4Debug("Verifying permissions in folder:" + path.toString());
+            Log.level4Debug("Verifying permissions in folder:" + path);
             for (File file : c) {
                 if (!file.canWrite()) {
                     return false;
@@ -103,8 +103,8 @@ public class FileOperations {
     /**
      * takes a path and a name returns qualified path to file
      *
-     * @param PathToSearch
-     * @param FileName
+     * @param PathToSearch  path to search
+     * @param FileName filename to locate
      * @return absolute path to folder
      */
     public String findRecursive(String PathToSearch, String FileName) {
@@ -113,7 +113,7 @@ public class FileOperations {
         File[] c = Check.listFiles();
         String s = "";
         if (Check.exists()) {
-            Log.level3Verbose("Searching for file in folder:" + PathToSearch.toString());
+            Log.level3Verbose("Searching for file in folder:" + PathToSearch);
             for (File file : c) {
                 if (file.isDirectory()) {
                     return findRecursive(file.getAbsolutePath(), FileName);
@@ -133,7 +133,7 @@ public class FileOperations {
     /**
      * verifies file/folder exists returns a boolean value if the file exists
      *
-     * @param file
+     * @param file  file to check
      * @return true if exists
      */
     public boolean verifyExists(String file) {
@@ -151,7 +151,7 @@ public class FileOperations {
     /**
      * makes a folder, works recursively
      *
-     * @param Folder
+     * @param Folder folder to create
      * @return true if folder was created
      */
     public boolean makeFolder(String Folder) {
@@ -178,8 +178,8 @@ public class FileOperations {
      *
      * @param stream Stream to be written
      * @param destination output file
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException  when destination cannot be created
+     * @throws IOException with permission problems
      */
     public void writeStreamToFile(BufferedInputStream stream, String destination) throws FileNotFoundException, IOException {
         int currentByte;
@@ -202,9 +202,9 @@ public class FileOperations {
     /**
      * takes a string and a filename, writes to the file
      *
-     * @param Text
-     * @param File
-     * @throws IOException
+     * @param Text text to write
+     * @param File file to write to
+     * @throws IOException when permission problems exist
      */
     public void writeToFile(String Text, String File) throws IOException {
 
@@ -220,9 +220,9 @@ public class FileOperations {
     /**
      * takes a string and a filename, overwrites to the file
      *
-     * @param Text
-     * @param File
-     * @throws IOException
+     * @param Text text to write
+     * @param File file to write to
+     * @throws IOException when permission problems exist
      */
     public void overwriteFile(String Text, String File) throws IOException {
 
@@ -269,7 +269,7 @@ public class FileOperations {
     /**
      * takes a string filename returns a boolean if the file was deleted
      *
-     * @param FileName
+     * @param FileName filename to delete
      * @return true if file was deleted
      */
     public Boolean deleteFile(String FileName) {
@@ -313,8 +313,8 @@ public class FileOperations {
     /**
      * copies a file from a source to a destination
      *
-     * @param sourceFile
-     * @param destFile
+     * @param sourceFile  file to copy
+     * @param destFile destination to copy file (including filename)
      * @throws IOException
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
@@ -360,8 +360,8 @@ public class FileOperations {
      * copies a file from a string path to a string path returns a boolean if
      * completed
      *
-     * @param FromFile
-     * @param ToFile
+     * @param FromFile  file to copy
+     * @param ToFile destination to copy to
      * @return true if completed
      */
     public boolean copyFile(String FromFile, String ToFile) {
@@ -379,7 +379,7 @@ public class FileOperations {
     /**
      * takes a filename sets executable returns result
      *
-     * @param Executable
+     * @param Executable file to be set executable on linux/mac/unix
      * @return true if executable bit was set
      */
     public boolean setExecutableBit(String Executable) {
@@ -403,7 +403,7 @@ public class FileOperations {
     /**
      * takes a resource name returns a string of file contents
      *
-     * @param Resource
+     * @param Resource path to resource in jar or filesystem
      * @return string contents of resource
      */
     public String readTextFromResource(String Resource) {
@@ -415,7 +415,7 @@ public class FileOperations {
             in = new InputStreamReader(resourceAsStream, "UTF-8");
             int read;
             while ((read = in.read()) != -1) {
-                char C = Character.valueOf((char) read);
+                char C = (char) read;
                 text.append(C);
             }
             in.close();
@@ -439,7 +439,7 @@ public class FileOperations {
         try {
             int read;
             while ((read = in.read()) != -1) {
-                char C = Character.valueOf((char) read);
+                char C = (char) read;
                 text.append(C);
             }
             in.close();
@@ -524,7 +524,7 @@ public class FileOperations {
      * @param sourceFile from locaton
      * @param destFile to location
      * @return true if moved
-     * @throws IOException
+     * @throws IOException when permission problem exists
      */
     public boolean moveFile(File sourceFile, File destFile) throws IOException {
 
@@ -547,7 +547,7 @@ public class FileOperations {
      * @param sourceFile from location
      * @param destFile to location
      * @return true if moved
-     * @throws IOException
+     * @throws IOException when permissions problems exist
      */
     public boolean moveFile(String sourceFile, String destFile) throws IOException {
 
