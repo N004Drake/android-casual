@@ -63,33 +63,28 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
     public enum CommandDisposition {
 
         /**
-         * Result was good. 
+         * Result was good.
          */
         NOACTIONREQUIRED,
-
         /**
-         * Result requires retry. 
+         * Result requires retry.
          */
         RUNAGAIN,
-
         /**
          * Result indicates that permission problems were encountered.
          */
         ELEVATIONREQUIRED,
-
         /**
-         * Result indicates drivers are required. 
+         * Result indicates drivers are required.
          */
         INSTALLDRIVERS,
-
         /**
-         * Result indicates that an unrecoverable error was encountered. 
+         * Result indicates that an unrecoverable error was encountered.
          */
         HALTSCRIPT,
-
         /**
-         * This command has been run too many times and a favorable result is 
-         * not likely. 
+         * This command has been run too many times and a favorable result is
+         * not likely.
          */
         MAXIMUMRETRIES
     }
@@ -143,14 +138,12 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
             case RUNAGAIN:
                 errored = checkErrorMessage(commandRun, this.doElevatedHeimdallShellCommand(commandRun));
                 if (errorCycles > 4) {
-                    retval = CommandDisposition.MAXIMUMRETRIES;
                     errored = true;
                 }
                 break;
             case ELEVATIONREQUIRED:
-                errored = checkErrorMessage(commandRun, this.doElevatedHeimdallShellCommand( getBinaryCommandInArray(commandRun)));
+                errored = checkErrorMessage(commandRun, this.doElevatedHeimdallShellCommand(getBinaryCommandInArray(commandRun)));
                 if (errorCycles > 4) {
-                    retval = CommandDisposition.MAXIMUMRETRIES;
                     errored = true;
                 }
                 break;
@@ -282,20 +275,20 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         String cmd = "/usr/local/bin/heimdall";
         String check = shell.silentShellCommand(new String[]{cmd});
         //we got the file
-        Log.level4Debug("native search /usr/local/bin/heimdall:" + (check.contains("CritERROR!!!")? "false":"true"));
+        Log.level4Debug("native search /usr/local/bin/heimdall:" + (check.contains("CritERROR!!!") ? "false" : "true"));
         if (check.equals(notFound)) {
             cmd = "/usr/bin/heimdall";
             check = shell.silentShellCommand(new String[]{cmd});
-            Log.level4Debug("native search /usr/bin/heimdall:" + (check.contains("CritERROR!!!")? "false":"true"));
+            Log.level4Debug("native search /usr/bin/heimdall:" + (check.contains("CritERROR!!!") ? "false" : "true"));
             //try different things
             if (check.equals(notFound)) {
                 cmd = "/bin/heimdall";
                 check = shell.silentShellCommand(new String[]{cmd});
-                Log.level4Debug("native search /bin/heimdall:" + (check.contains("CritERROR!!!")? "false":"true"));
+                Log.level4Debug("native search /bin/heimdall:" + (check.contains("CritERROR!!!") ? "false" : "true"));
                 if (check.equals(notFound)) {
                     cmd = "heimdall";
                     check = shell.silentShellCommand(new String[]{cmd});
-                    Log.level4Debug("native search heimdall:" + (check.contains("CritERROR!!!")? "false":"true"));
+                    Log.level4Debug("native search heimdall:" + (check.contains("CritERROR!!!") ? "false" : "true"));
                     if (check.equals(notFound)) {
                         cmd = "";
                     }
@@ -319,10 +312,10 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
     }
 
     private String[] getBinaryCommandInArray(String[] command) {
-        if (command[0].equals(getBinaryLocation())){
+        if (command[0].equals(getBinaryLocation())) {
             return command;
-         }
-        
+        }
+
         String[] cmd = new String[command.length + 1];
         cmd[0] = getBinaryLocation();
         System.arraycopy(command, 0, cmd, 1, command.length);
@@ -333,7 +326,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
      * performs a heimdall command
      *
      * @param command value from heimdall command
-     * @return
+     * @return return from shell command
      */
     public String doHeimdallShellCommand(String[] command) {
         HeimdallErrorHandler heh = new HeimdallErrorHandler();
