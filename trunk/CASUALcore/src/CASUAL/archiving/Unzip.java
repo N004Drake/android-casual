@@ -55,8 +55,8 @@ public class Unzip {
      * be preformed on this ZipFile.
      *
      * @param f java file object to be unziped.
-     * @throws ZipException
-     * @throws IOException
+     * @throws ZipException corrupted
+     * @throws IOException permissions
      * @see ZipFile
      */
     public Unzip(File f) throws ZipException, IOException {
@@ -75,8 +75,8 @@ public class Unzip {
      * converted into a ZipFile.
      *
      * @param f String location of file to be unziped.
-     * @throws ZipException
-     * @throws IOException
+     * @throws ZipException corrupted
+     * @throws IOException permissions
      * @see ZipFile
      */
     public Unzip(String f) throws ZipException, IOException {
@@ -94,8 +94,8 @@ public class Unzip {
      *
      * @param outputFolder folder to be unzipped to
      * @return array of files unzipped
-     * @throws ZipException
-     * @throws IOException
+     * @throws ZipException corrupted
+     * @throws IOException permissions
      * @see CASUAL.archiving.Unzip#Unzip(File)
      */
     public File[] unzipFile(String outputFolder) throws ZipException, IOException {
@@ -104,7 +104,7 @@ public class Unzip {
 
     private File[] unzipFileToFolder(String outputFolder) throws ZipException, IOException {
         Log.level4Debug("Unzipping " + zip.toString());
-        ArrayList<File> files =new ArrayList<File>();
+        ArrayList<File> files = new ArrayList<File>();
         String newPath = outputFolder + System.getProperty("file.separator");
         new File(newPath).mkdir();
         zipFileEntries = zip.entries();
@@ -140,8 +140,8 @@ public class Unzip {
      *
      * @param zipResource name of the java resource to be unzipped
      * @param outputFolder folder to unzip to
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException output folder missing or permissions
+     * @throws IOException permissions
      * @see java.lang.Class#getResource(String)
      *
      */
@@ -161,8 +161,8 @@ public class Unzip {
      *
      * @param zStream input stream to unzip
      * @param outputFolder output folder to unzip to
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException output missing or permissions
+     * @throws IOException permissions
      * @see InputStream
      * @see ZipEntry
      * @see ZipInputStream
@@ -201,18 +201,18 @@ public class Unzip {
                 updatePercent = true;
             }
             Statics.GUI.setProgressBar(-1);
-            BigInteger currentCycle=BigInteger.valueOf(0);
+            BigInteger currentCycle = BigInteger.valueOf(0);
             while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
-                   Destination.write(data, 0, currentByte);
-                   
-                    Statics.GUI.setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
+                Destination.write(data, 0, currentByte);
+
+                Statics.GUI.setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
             }
             Destination.flush();
             Destination.close();
         }
         Statics.setStatus("Important Information");
         Statics.GUI.setProgressBar(0);
-        
+
         Log.level3Verbose("Unzip Complete");
     }
 
@@ -257,8 +257,8 @@ public class Unzip {
      * @param zipFile file to stream from
      * @param entry entry to stream
      * @return stream of file
-     * @throws ZipException
-     * @throws IOException
+     * @throws ZipException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      */
     public static BufferedInputStream streamFileFromZip(File zipFile, Object entry) throws ZipException, IOException {
         ZipFile zip = new ZipFile(zipFile);
@@ -289,9 +289,9 @@ public class Unzip {
      * Retrieves a BufferedInputStream for a specific zip entry in a file.
      *
      * @param entry ZipEntry that is to be pulled from ZipFile to Stream.
-     * @return BufferedInputStream of the specified ZipEntry.
-     * @throws ZipException
-     * @throws IOException
+     * @return BufferedInputStream of the s pecified ZipEntry.
+     * @throws ZipException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      * @see ZipEntry
      * @see ZipFile
      * @see BufferedInputStream

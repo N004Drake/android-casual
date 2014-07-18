@@ -152,8 +152,8 @@ public class CASUALUpdates {
      *
      * @param stringURL raw URL in string format
      * @return URL formatted properly
-     * @throws MalformedURLException
-     * @throws URISyntaxException
+     * @throws MalformedURLException if URL is corrupt
+     * @throws URISyntaxException if URI is corrupt
      */
     public URL stringToFormattedURL(String stringURL) throws MalformedURLException, URISyntaxException {
         URL url = new URL(stringURL);
@@ -166,9 +166,9 @@ public class CASUALUpdates {
      *
      * @param script Script to pull online metadata for
      * @return String representation of the metadata for the script.
-     * @throws MalformedURLException
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws MalformedURLException url is corrupt
+     * @throws IOException permission problem
+     * @throws URISyntaxException uri is corrupt
      */
     public String getWebData(String script) throws MalformedURLException, IOException, URISyntaxException {
         URL url = stringToFormattedURL(script);
@@ -196,9 +196,9 @@ public class CASUALUpdates {
      * @param s Script for information to be pulled
      * @return InputStream representing a properties file with metadata about
      * online version of the script.
-     * @throws MalformedURLException
-     * @throws URISyntaxException
-     * @throws IOException
+     * @throws MalformedURLException URL/URI is corrupt
+     * @throws URISyntaxException URL/URI is corrupt
+     * @throws IOException permission problem
      */
     public InputStream downloadMetaFromRepoForScript(Script s) throws MalformedURLException, URISyntaxException, IOException {
         URL url;
@@ -226,9 +226,9 @@ public class CASUALUpdates {
      *
      * @param link String representation of URL
      * @return InputStream object to file.
-     * @throws MalformedURLException
-     * @throws URISyntaxException
-     * @throws IOException
+     * @throws MalformedURLException URL/URI is corrupt
+     * @throws URISyntaxException URL/URI is corrupt
+     * @throws IOException permission problem
      */
     public InputStream streamFileFromNet(String link) throws MalformedURLException, URISyntaxException, IOException {
         URL url = new URL(link);
@@ -248,9 +248,9 @@ public class CASUALUpdates {
      * ie -"heimdall" will be translated to web url:heimdallWin32.zip,
      * downloaded and the path to the downloaded file is returned.
      * @return file downloaded for system/arch
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws FileNotFoundException file not found 
+     * @throws IOException permission problem 
+     * @throws InterruptedException thread interrupted
      */
     public String CASUALRepoDownload(String propertiesFileInCASUALOnlineRepo) throws FileNotFoundException, IOException, InterruptedException {
         arch = OSTools.is64bitSystem() ? "64" : "32";
@@ -312,10 +312,10 @@ public class CASUALUpdates {
      * @param script CASUAL.caspac.Script object to be updated
      * @param tempFolder Temp Folder to use for updating.
      * @return New, updated script.
-     * @throws ZipException
-     * @throws IOException
-     * @throws MalformedURLException
-     * @throws URISyntaxException
+     * @throws ZipException zip corrupted
+     * @throws IOException permission problem 
+     * @throws MalformedURLException  url/uri malformed
+     * @throws URISyntaxException url/uri malformed
      */
     public Script updateScript(Script script, String tempFolder) throws ZipException, IOException, MalformedURLException, URISyntaxException {
         MD5sum md5sum = new MD5sum();
