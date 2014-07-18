@@ -1989,7 +1989,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      * Saves the active CASPAC from values in the IDE to disk.
      *
      * @return true if successful.
-     * @throws HeadlessException
+     * @throws HeadlessException {@inheritDoc}
      */
     public boolean saveCASPAC() throws HeadlessException {
         try {
@@ -2042,7 +2042,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      * Saves CASPAC and then uses CASPACkager to create a CASUAL.
      *
      * @return true if successful
-     * @throws HeadlessException
+     * @throws HeadlessException {@inheritDoc}
      */
     public boolean saveCASUAL() throws HeadlessException {
 
@@ -2112,7 +2112,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      * dummy method used to implement iCASUALUI for the purpose of allowing
  CASUAL to throw notifications.
      *
-     * @param title
+     * @param title title to set
      */
     @Override
     public void setInformationScrollBorderText(String title) {
