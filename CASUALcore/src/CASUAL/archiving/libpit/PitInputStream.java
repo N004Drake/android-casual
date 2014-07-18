@@ -46,7 +46,7 @@ public class PitInputStream {
      *
      * @return integer value from four bytes
      * @see InputStream
-     * @throws IOException
+     * @throws IOException  {@inheritDoc}
      */
     public int readInt() throws IOException {
         return (inputStream.read() | (inputStream.read() << 8) | (inputStream.read() << 16)
@@ -58,7 +58,7 @@ public class PitInputStream {
      *
      * @return short value from two bytes
      * @see InputStream
-     * @throws IOException
+     * @throws IOException  {@inheritDoc}
      */
     public short readShort() throws IOException {
         return ((short) (inputStream.read() | (inputStream.read() << 8)));
@@ -73,7 +73,7 @@ public class PitInputStream {
      * @return value requested from stream, specified by buffer, offset and
      * length
      * @see InputStream
-     * @throws IOException
+     * @throws IOException  {@inheritDoc}
      */
     public int read(byte[] buffer, int offset, int length) throws IOException {
         return (inputStream.read(buffer, offset, length));

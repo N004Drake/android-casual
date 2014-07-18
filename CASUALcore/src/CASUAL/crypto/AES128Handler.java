@@ -242,7 +242,7 @@ public class AES128Handler {
     /**
      * will return the length of the CASPAC Header
      *
-     * @param f
+     * @param f file to check
      * @return 0 if failed, will be between &gt;18 if valid.
      * @throws FileNotFoundException if file is not present or deleted
      * @throws IOException if permission problem.

@@ -33,7 +33,7 @@ public class CountLines {
     /**
      * Counts lines in a file
      *
-     * @param Filename
+     * @param Filename filename to count
      * @return number of lines in a file
      */
     public int countFileLines(String Filename) {
@@ -57,7 +57,7 @@ public class CountLines {
     /**
      * Takes a resource and returns number of new lines.
      *
-     * @param ResourceName
+     * @param ResourceName resource name to count
      * @return number of lines in a file
      */
     public int countResourceLines(String ResourceName) {

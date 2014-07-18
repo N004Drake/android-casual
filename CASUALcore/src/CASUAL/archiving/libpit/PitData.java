@@ -403,7 +403,7 @@ public class PitData {
      * @param partName name of partition to be resized
      * @param changeToSize the amount to change the entry This can be positive
      * or negative and will change the size relatively.
-     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.ClassNotFoundException {@inheritDoc}
      * @see #resizePartition(CASUAL.archiving.libpit.PitEntry, int) 
      */
     public void resizePartition(String partName, int changeToSize) throws ClassNotFoundException {
@@ -417,7 +417,7 @@ public class PitData {
      * @param entry The entry to be resized
      * @param changeToSize the amount to change the entry This can be positive
      * or negative and will change the size relatively.
-     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.ClassNotFoundException {@inheritDoc}
      */
     public void resizePartition(PitEntry entry, int changeToSize) throws ClassNotFoundException {
         PitEntry[] sorted = sortEntriesByBlockLocation();
