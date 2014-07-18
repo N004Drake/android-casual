@@ -45,7 +45,8 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- *provides a way to encrypt and decrypt given a password
+ * provides a way to encrypt and decrypt given a password
+ *
  * @author Adam Outler adamoutler@gmail.com
  * http://stackoverflow.com/questions/8674018/pbkdf2-with-bouncycastle-in-java
  * inspired by
@@ -64,7 +65,7 @@ public class AES128Handler {
      * 3 represents then number of digits in the revision
      */
     /**
-     * Magic String for CASPAC. 
+     * Magic String for CASPAC.
      */
     final static private String casualID = "EncryptedCASPAC-CASUAL-Revision";
     /**
@@ -77,7 +78,8 @@ public class AES128Handler {
     final static public String header = casualID + revision.length() + revision;
 
     /**
-     * loads a file for use in AES128Handler. 
+     * loads a file for use in AES128Handler.
+     *
      * @param targetFile File to be encrypted
      */
     public AES128Handler(File targetFile) {
@@ -129,8 +131,8 @@ public class AES128Handler {
      * @param output string name of file to output
      * @param key password issued by encrytper
      * @return name of file written, null if error
-     * @throws java.io.FileNotFoundException
-     * @throws java.lang.Exception
+     * @throws java.io.FileNotFoundException if file isn't able to be found
+     * @throws java.lang.Exception if crypto error
      */
     public String decrypt(String output, char[] key) throws Exception {
         try {
@@ -216,15 +218,18 @@ public class AES128Handler {
     }
 
     /**
-     * gets a cypher for encryption 
+     * gets a cypher for encryption
+     *
      * @param key secret key
-     * @param iv initialization vector which is pulled from or appended to the file 
+     * @param iv initialization vector which is pulled from or appended to the
+     * file
      * @param mode encryption or decryption key
-     * @return cypher to be used for encryption or decryption. 
-     * @throws NoSuchPaddingException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws InvalidAlgorithmParameterException
+     * @return cypher to be used for encryption or decryption.
+     * @throws NoSuchPaddingException If Java implementation is incomplete
+     * @throws NoSuchAlgorithmException If Java implementation is incomplete
+     * @throws InvalidKeyException If Java implementation is incomplete
+     * @throws InvalidAlgorithmParameterException If Java implementation is
+     * incomplete
      */
     public Cipher getCipher(byte[] key, byte[] iv, int mode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidAlgorithmParameterException {
         SecretKeySpec skey = new SecretKeySpec(key, "AES");
@@ -239,8 +244,8 @@ public class AES128Handler {
      *
      * @param f
      * @return 0 if failed, will be between &gt;18 if valid.
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException if file is not present or deleted
+     * @throws IOException if permission problem.
      */
     public static int getCASPACHeaderLength(File f) throws FileNotFoundException, IOException {
         AES128Handler c = new AES128Handler(f);

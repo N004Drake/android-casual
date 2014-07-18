@@ -40,13 +40,11 @@ import java.io.IOException;
  */
 public class HeimdallInstall {
 
-    
     /**
      * Heimdall version.
      */
     public static final String heimdallVersion = "140"; //primary version string
 
-    
     final String[] WindowsDriverBlanket = {"18D1", "04E8", "0B05", "0BB4", "22B8", "054C", "2080"};
     /**
      * Vendor ID detected
@@ -56,11 +54,6 @@ public class HeimdallInstall {
      * Device ID detected
      */
     public String PID = "";
-
-
-  
-
-
 
     String installLinux(String tempFolder) {
 
@@ -77,16 +70,14 @@ public class HeimdallInstall {
         } else {
             //unsupported; go get heimdall yourself;
             Log.level0Error("@incompatibleWithHeimdal");
-            resource=new String[]{};
+            resource = new String[]{};
         }
-        ResourceDeployer rd=new ResourceDeployer();
+        ResourceDeployer rd = new ResourceDeployer();
         for (String heimdallResource : resource) {
-            String debDeployed=rd.deployResourceTo(heimdallResource,tempFolder);
+            String debDeployed = rd.deployResourceTo(heimdallResource, tempFolder);
             shell.elevateSimpleCommandWithMessage(new String[]{"dpkg", "-i", debDeployed}, "Permissions escillation required to install Heimdall");
         }
-        String heimdallDeployed = "heimdall";        
-        
-        
+        String heimdallDeployed = "heimdall";
 
         if (checkHeimdallVersion(heimdallDeployed)) {
             return heimdallDeployed;
@@ -99,16 +90,15 @@ public class HeimdallInstall {
     FileOperations FileOperations = new FileOperations();
     Shell shell = new Shell();
 
-  
     /**
      * Installs windows drivers
      *
-     * @return
+     * @return true if drivers installed properly
      */
     public boolean installWindowsDrivers() {
 
         return new DriverInstall(0).installKnownDrivers();
- 
+
     }
 
     /**
@@ -126,11 +116,10 @@ public class HeimdallInstall {
         installWindowsDrivers();
     }
 
-
     /**
      * checks the heimdall version against version expected from Statics
      *
-     * @param binaryLocation
+     * @param binaryLocation lication to Heimdall binary
      * @return true if version is good
      */
     public boolean checkHeimdallVersion(String binaryLocation) {
@@ -154,24 +143,22 @@ public class HeimdallInstall {
         return commandLineVersion >= resourceVersion;
     }
 
-
-
-  /**
+    /**
      * deploys heimdal
      *
      * @return true if deployed
      */
-    String installWindows(String[] windowsLocation,String tempFolder) {
-        HeimdallTools ht=new HeimdallTools();
-        String expectedLocation=tempFolder+"heimdall.exe";
-        if (ht.fileIsDeployedProperly(expectedLocation)){
+    String installWindows(String[] windowsLocation, String tempFolder) {
+        HeimdallTools ht = new HeimdallTools();
+        String expectedLocation = tempFolder + "heimdall.exe";
+        if (ht.fileIsDeployedProperly(expectedLocation)) {
             return expectedLocation;
         }
-        
+
         ResourceDeployer rt = new ResourceDeployer();
         for (String res : HeimdallTools.windowsLocation) {
-                String name=tempFolder+new File(res).getName();
-                rt.copyFromResourceToFile(res, name);
+            String name = tempFolder + new File(res).getName();
+            rt.copyFromResourceToFile(res, name);
         }
         Log.level4Debug("deployHeimdallForWindows- verifying Heimdall deployment");
         if (ht.fileIsDeployedProperly(expectedLocation)) { //try with redist files
@@ -180,13 +167,12 @@ public class HeimdallInstall {
         }
         return null;
 
+    }
 
-    }    
-
-    String installMac(String[] resourceLocation,String tempFolder) throws  InterruptedException, IOException {
-        ResourceDeployer rd=new ResourceDeployer();
+    String installMac(String[] resourceLocation, String tempFolder) throws InterruptedException, IOException {
+        ResourceDeployer rd = new ResourceDeployer();
         String exec;
-        if ((exec=getFile(rd.deployResourceTo(resourceLocation, tempFolder),"")).equals("")){
+        if ((exec = getFile(rd.deployResourceTo(resourceLocation, tempFolder), "")).equals("")) {
             exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
         }
         new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
@@ -194,20 +180,18 @@ public class HeimdallInstall {
         return "heimdall";
     }
 
-    
-    private String getFile(String[] fullyQualifiedPaths, String filename){
-        if (fullyQualifiedPaths.length==1){
+    private String getFile(String[] fullyQualifiedPaths, String filename) {
+        if (fullyQualifiedPaths.length == 1) {
             return fullyQualifiedPaths[0];
         }
-        String retval="";
-        for (String value:fullyQualifiedPaths){
-            if (value.endsWith(filename)){
-                retval=filename;
+        String retval = "";
+        for (String value : fullyQualifiedPaths) {
+            if (value.endsWith(filename)) {
+                retval = filename;
                 break;
             }
         }
         return retval;
     }
-
 
 }
