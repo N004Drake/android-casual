@@ -54,10 +54,10 @@ public class OdinFile {
      * Opens an Odin file and verifies MD5sum
      * @param odinFile file to be opened and verified
      * @throws CorruptOdinFileException Odin checks did not pass
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws org.apache.commons.compress.archivers.ArchiveException
+     * @throws FileNotFoundException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
+     * @throws NoSuchAlgorithmException {@inheritDoc}
+     * @throws org.apache.commons.compress.archivers.ArchiveException {@inheritDoc}
      */
     public OdinFile(File odinFile) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CorruptOdinFileException, ArchiveException {
         this.odinFile = odinFile;
@@ -100,10 +100,10 @@ public class OdinFile {
      * Opens an Odin file and verifies MD5sum
      * @param odinFile file to be opened and verified
      * @throws CorruptOdinFileException Odin checks did not pass
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws org.apache.commons.compress.archivers.ArchiveException
+     * @throws FileNotFoundException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
+     * @throws NoSuchAlgorithmException {@inheritDoc}
+     * @throws org.apache.commons.compress.archivers.ArchiveException {@inheritDoc}
      */
     public OdinFile(String odinFile) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CorruptOdinFileException, ArchiveException {
         this(new File(odinFile));
@@ -115,9 +115,9 @@ public class OdinFile {
      * Extracts Odin contents to outputDir
      * @param outputDir temp folder 
      * @return an array of files extracted from Odin Package
-     * @throws IOException
-     * @throws ArchiveException
-     * @throws NoSuchAlgorithmException 
+     * @throws IOException {@inheritDoc}
+     * @throws ArchiveException {@inheritDoc}
+     * @throws NoSuchAlgorithmException  {@inheritDoc}
      */
     public File[] extractOdinContents(String outputDir) throws IOException, ArchiveException, NoSuchAlgorithmException {
         if (files !=null ){
@@ -158,9 +158,9 @@ public class OdinFile {
      * runs through a file and builds an MD5 of the actual file. Stops when last
      * block size is not 512 bytes as a Tar will be 512. 
      * @return OdinFile's actual MD5
-     * @throws IOException
-     * @throws FileNotFoundException
-     * @throws NoSuchAlgorithmException 
+     * @throws IOException {@inheritDoc}
+     * @throws FileNotFoundException {@inheritDoc}
+     * @throws NoSuchAlgorithmException  {@inheritDoc}
      */
     private String getActualAndExpectedOdinMd5() throws IOException, FileNotFoundException, NoSuchAlgorithmException {
         FileInputStream fis;

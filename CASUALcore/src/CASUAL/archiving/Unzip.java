@@ -237,8 +237,8 @@ public class Unzip {
      * @param entry entry file to deploy
      * @param outputFolder folder to be deployed to
      * @return location of entry deployed
-     * @throws ZipException
-     * @throws IOException
+     * @throws ZipException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      */
     public String deployFileFromZip(Object entry, String outputFolder) throws ZipException, IOException {
 

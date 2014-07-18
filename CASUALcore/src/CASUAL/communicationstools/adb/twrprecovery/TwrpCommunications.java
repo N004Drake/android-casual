@@ -73,7 +73,7 @@ public class TwrpCommunications {
      * verifies TWRP is running by checking for for "\nStarting TWRP " in
      * /tmp/recovery.log.
      *
-     * @return
+     * @return true if TWRP is detected
      */
     public boolean isTwrpRunning() {
         Log.level4Debug("Checking if TWRP is running.");
@@ -100,8 +100,8 @@ public class TwrpCommunications {
      * Running is performed by killing the recovery binary, running in memory
      * then letting TWRP perform the actions in the script.
      *
-     * @param script
-     * @throws java.io.IOException
+     * @param script script to run
+     * @throws java.io.IOException  {@inheritDoc}
      */
     public void runTwrpScript(OpenRecoveryScript script) throws IOException {
         runTwrpScript(script.toString());
@@ -112,8 +112,8 @@ public class TwrpCommunications {
      * Running is performed by killing the recovery binary, running in memory
      * then letting TWRP perform the actions in the script.
      *
-     * @param script
-     * @throws java.io.IOException
+     * @param script script to run 
+     * @throws java.io.IOException {@inheritDoc}
      */
     public void runTwrpScript(String script) throws IOException {
         Log.level2Information("verifying TWRP mode");

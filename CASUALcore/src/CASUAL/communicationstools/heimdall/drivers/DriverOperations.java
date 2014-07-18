@@ -84,8 +84,8 @@ public class DriverOperations {
      *
      * @param pathToExtract the desired destination folders full path.
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      *
      * @return true if successful, false otherwise
      */

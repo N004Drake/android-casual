@@ -16,12 +16,11 @@
  */
 package CASUAL.network.CASUALDevIntegration;
 
+import CASUAL.Log;
 import CASUAL.misc.MandatoryThread;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * provides integration with CASUAL-Dev's counter system.
@@ -35,10 +34,11 @@ public class CasualDevCounter {
      * incrementalCounter has finished
      */
     public MandatoryThread t = new MandatoryThread();
-
-    public static void doIncrementCounter( String name ){
+    
+    public static void doIncrementCounter(String name) {
         new CasualDevCounter().incrementCounter(name);
     }
+
     /**
      * Increments a counter at CASUAL-Dev.com
      *
@@ -53,11 +53,11 @@ public class CasualDevCounter {
                     url = new URL("http://counter.casual-dev.com/?" + name);
                     url.openStream();  // throws an IOException
                     url.getFile();
-
+                    
                 } catch (MalformedURLException ex) {
-                    Logger.getLogger(CasualDevCounter.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.errorHandler(ex);
                 } catch (IOException ex) {
-                    Logger.getLogger(CasualDevCounter.class.getName()).log(Level.SEVERE, null, ex);
+                    Log.errorHandler(ex);
                 }
             }
         });
