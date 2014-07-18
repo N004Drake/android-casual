@@ -443,7 +443,8 @@ public class Zip {
     }
 
     /**
-     * @param file
+     * adds a file to a zip directory.
+     * @param file file to add
      * @throws IOException {@inheritDoc}
      */
     public void addFileToZipDIr(File file) throws IOException {
@@ -518,10 +519,9 @@ public class Zip {
 
     /**
      * Zip up a directory path
-     *
-     * @param directory
-     * @param zos
-     * @param path
+     * @param directory directory to zip
+     * @param zos outputstream to output into
+     * @param path path inside zip
      * @throws IOException {@inheritDoc}
      */
     public void zipDir(String directory, ZipOutputStream zos, String path) throws IOException {

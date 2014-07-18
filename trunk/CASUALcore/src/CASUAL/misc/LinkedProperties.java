@@ -45,8 +45,8 @@ public class LinkedProperties extends Properties {
 
     /**
      * puts a value into the properties list
-     * @param key
-     * @param value
+     * @param key key to set in ordered list
+     * @param value value to set ordered list
      * @return the previous value or null if one did not exist. 
      */
     @Override

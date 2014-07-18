@@ -173,7 +173,7 @@ public class StringOperations {
 
     /**
      * Converts an array to a string delimited by a space.
-     * @param stringarray
+     * @param stringarray string array to merge into single string
      * @return string representaition of an array.
      */
     public static String arrayToString(String[] stringarray) {
