@@ -58,7 +58,7 @@ public class SHA256sum {
      * constructor to make an SHA256 from a string
      *
      * @param s string to sha256
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      */
     public SHA256sum(String s) throws IOException {
         ByteArrayInputStream bas = new ByteArrayInputStream(s.getBytes());
@@ -70,7 +70,7 @@ public class SHA256sum {
      * constructor to make an SHA256 from an InputStream
      *
      * @param is inputstream to sha256
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      */
     public SHA256sum(InputStream is) throws IOException {
 
@@ -89,8 +89,8 @@ public class SHA256sum {
      * constructor to sha256 a file
      *
      * @param f file to digest
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      */
     public SHA256sum(File f) throws FileNotFoundException, IOException {
 
@@ -180,8 +180,8 @@ public class SHA256sum {
      * does the SHA256
      *
      * @return hex string representation of the input
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
+     * @throws IOException {@inheritDoc}
+     * @throws NoSuchAlgorithmException {@inheritDoc}
      */
     public String getSha256() throws IOException, NoSuchAlgorithmException {
         toBeSHA256.reset();

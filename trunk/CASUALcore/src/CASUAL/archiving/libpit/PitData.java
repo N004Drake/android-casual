@@ -76,7 +76,7 @@ public class PitData {
      * Constructor to grab PIT file from a File
      *
      * @param pit PIT file
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException {@inheritDoc}
      */
     public PitData(File pit) throws FileNotFoundException {
         this(new PitInputStream(new FileInputStream(pit)));

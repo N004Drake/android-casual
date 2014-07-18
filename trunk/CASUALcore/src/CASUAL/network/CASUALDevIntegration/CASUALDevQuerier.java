@@ -207,8 +207,8 @@ public class CASUALDevQuerier {
      * @param remoteFolder folder to do work on
      * @param availableURLs reference to the master URL list
      * @return new work items to be addressed.
-     * @throws MalformedURLException
-     * @throws IOException
+     * @throws MalformedURLException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      */
     private String[] folderList(String remoteFolder, Set<String> availableURLs) throws MalformedURLException, IOException {
         try {

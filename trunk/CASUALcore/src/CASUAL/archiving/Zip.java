@@ -58,7 +58,7 @@ public class Zip {
      * Example: ./test.zip
      *
      * @param zip output file to be worked with
-     * @throws IOException
+     * @throws IOException  {@inheritDoc}
      */
     public Zip(File zip) throws IOException {
         this.outputZip = zip;
@@ -101,7 +101,7 @@ public class Zip {
      * directly into the ZipInputStream of another.
      *
      * @param fileToAdd file to be added
-     * @throws IOException
+     * @throws IOException  {@inheritDoc}
      */
     public void addFilesToExistingZip(String fileToAdd) throws IOException {
         File file = new File(fileToAdd);
@@ -116,8 +116,8 @@ public class Zip {
      * directly into the ZipInputStream of another.
      *
      * @param filesToBeZipped file to be added
-     * @throws IOException
-     * @see ZipInputStream
+     * @throws IOException {@inheritDoc}
+     * @see ZipInputStream 
      * @see ZipOutputStream
      */
     public void addFilesToExistingZip(String[] filesToBeZipped) throws IOException {
@@ -138,7 +138,7 @@ public class Zip {
      * directly into the ZipInputStream of another.
      *
      * @param fileToAdd file to be added
-     * @throws IOException
+     * @throws IOException  {@inheritDoc}
      */
     public void addFilesToExistingZip(File fileToAdd) throws IOException {
         addFilesToExistingZip(new File[]{fileToAdd});
@@ -154,7 +154,7 @@ public class Zip {
      * This method is used once the File[] has been created.
      *
      * @param files files to be zipped
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      */
     public void addFilesToExistingZip(File[] files) throws IOException {
         if (!outputZip.exists()){
@@ -187,7 +187,7 @@ public class Zip {
      * @param in the InputStream to be injected into the zipfile
      * @param name the name of the File that the InputStream will create inside
      * the zip
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      * @see InputStream
      */
     public void streamEntryToExistingZip(InputStream in, String name) throws IOException {
@@ -300,7 +300,7 @@ public class Zip {
      *
      * @param nameStream map that contains keys that are Strings, and values
      * that are InputStream
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      * @see Map
      * @see InputStream
      */
@@ -333,7 +333,7 @@ public class Zip {
      *
      * @param newZip output .zip File
      * @param toBeZipped File or folder to be placed in the Zip File.
-     * @throws Exception
+     * @throws Exception {@inheritDoc}
      */
     public void addFolderFilesToNewZip(String newZip, String toBeZipped) throws Exception {
         File directory = new File(toBeZipped);
@@ -444,7 +444,7 @@ public class Zip {
 
     /**
      * @param file
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      */
     public void addFileToZipDIr(File file) throws IOException {
         if (!file.exists()) {
@@ -486,8 +486,8 @@ public class Zip {
      * STATIC Compresses a folder into a .zip file
      *
      * @param file folder to be compressed
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      */
     public void compressZipDir(String file) throws FileNotFoundException, IOException {
         zipDir(file, "");
@@ -496,8 +496,8 @@ public class Zip {
     /**
      * Compresses the TempFolder into a .zip file
      *
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      */
     public void compressZipDir() throws FileNotFoundException, IOException {
         zipDir(TempFolder, "");
@@ -508,7 +508,7 @@ public class Zip {
      *
      * @param directory
      * @param path
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      */
     private void zipDir(String directory, String path) throws IOException {
         ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outputZip));
@@ -522,7 +522,7 @@ public class Zip {
      * @param directory
      * @param zos
      * @param path
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      */
     public void zipDir(String directory, ZipOutputStream zos, String path) throws IOException {
         File zipDir = new File(directory);

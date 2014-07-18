@@ -43,9 +43,9 @@ public class CFAutoRootDb {
      *
      * @param BuildProp string representation of the /system/build.prop from the
      * device
-     * @throws URISyntaxException
-     * @throws IOException
-     * @throws MalformedURLException
+     * @throws URISyntaxException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
+     * @throws MalformedURLException {@inheritDoc}
      * @throws CFAutorootTableException if Chainfire changes his tables
      */
     CFAutoRootDb(String BuildProp) throws URISyntaxException, IOException, MalformedURLException, CFAutorootTableException {
