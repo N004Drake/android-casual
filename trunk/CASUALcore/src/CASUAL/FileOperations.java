@@ -507,8 +507,8 @@ public class FileOperations {
             Log.level0Error("\"@fileNotAFolder");
             return null;
         }
-        String[] childOf = new String[1024];
         File[] list = dir.listFiles();
+        String[] childOf = new String[list.length];
         for (int x = 0; list.length > x; x++) {
             try {
                 childOf[x] = list[x].getCanonicalFile().toString();
@@ -519,6 +519,23 @@ public class FileOperations {
         return childOf;
     }
 
+    public ArrayList<String> listRecursive(String folder){
+        ArrayList<String> filesList=new ArrayList<String>();
+        File[] files=new File(folder).listFiles();
+        for (File file:files){
+            if (file.isDirectory()){
+                filesList.addAll(listRecursive(file.getAbsolutePath()));
+            } else {
+                filesList.add(file.getAbsolutePath());
+            }
+        }
+        
+        
+        return filesList;
+        
+    }
+    
+    
     /**
      *
      * @param sourceFile from locaton
