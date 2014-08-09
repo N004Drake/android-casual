@@ -1,4 +1,4 @@
-/*
+/* Mode tracker logs the modes used in CASUAL
  * Copyright (C) 2014 adamoutler
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,19 +17,21 @@
 
 package CASUAL.instrumentation;
 
-import CASUAL.Log;
-
 /**
- *
+ * Used for mode logging, can be overridden for use in other projects
  * @author adamoutler
  */
-public class ModeTracker {
+public interface ModeTrackerInterface {
+
+    /**
+     * Modes used by setMode().
+     */
     public static enum Mode {
         ADB, 
         ADBsearching, //CASUAL mode for ADB search
         ADBpush,  //adb push
         ADBpull,  //adb pull
-        ADBinstall,//adb install
+        ADBsideload,//adb install
         ADBwaitForDevice,//adb wait-for-device
         ADBreboot,// adb reboot
         ADBshell,// adb shell
@@ -55,8 +57,12 @@ public class ModeTracker {
         CASUALFinished  //CASUAL just finished. Nothing special here.
         
     };
-    public static void setMode(Mode mode){
-        Log.level3Verbose("Mode:"+mode);
-    }
-   
+    
+    /**
+     * logs the current CASUAL mode.
+     * Override this for things like images
+     * @param mode mode desired
+     */
+    public void setMode(Mode mode);
+
 }

@@ -33,17 +33,16 @@ import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.communicationstools.heimdall.drivers.DriverInstall;
 import CASUAL.communicationstools.heimdall.drivers.DriverRemove;
 import CASUAL.crypto.MD5sum;
+import CASUAL.instrumentation.Track;
 import CASUAL.language.commands.ControlCommands;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
-import CASUAL.network.Pastebin;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -143,7 +142,7 @@ public class CASUALLanguage {
             }
             Log.level2Information("@done");
             //yeah yeah, overly broad chatch.  read below. 
-        } catch (Exception e) {
+        } catch (IOException e) {
             /*
              *  Java reports this as an overly broad catch.  Thats fine.  this is 
              *  supposed to be broad.  It is the handler for all errors during 
@@ -426,7 +425,7 @@ public class CASUALLanguage {
             }
 //$FLASH will push a file to the specified block eg $FLASH $ZIPFILEmyFile, /dev/block/mmcblk0p5
         } else if (cmd.get().startsWith("$FLASH")) {
-
+            Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALDataBridgeFlash);
             cmd.set( cmd.get().replace("$FLASH", "").trim());
             if (!cmd.get().contains(",")) {
                 Log.level0Error("Missing Comma in CASUAL Data Bridge $FLASH command");
@@ -454,7 +453,7 @@ public class CASUALLanguage {
             }
 //$PULL will push a file to the specified block eg $PULL  /dev/block/mmcblk0p5 , $ZIPFILEmyFile
         } else if (cmd.get().startsWith("$PULL")) {
-
+            Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALDataBridgePull);
             cmd.set( cmd.get().replace("$PULL", "").trim());
             if (!cmd.get().contains(",")) {
                 Log.level0Error("Missing Comma in $PULL command");
@@ -475,6 +474,7 @@ public class CASUALLanguage {
              */
             // if Heimdall, Send to Heimdall shell command
         } else if (cmd.get().startsWith("$HEIMDALL")||cmd.get().startsWith("heimdall")) {
+            Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.Heimdall);
             if (cmd.get().startsWith("heimdall")){
                 cmd.set(cmd.get().replaceFirst("heimdall",""));
             } else if (cmd.get().startsWith("$HEIMDALL")){
@@ -484,12 +484,16 @@ public class CASUALLanguage {
             cmd.set(cmd.get().replace("$HEIMDALL", ""));
             Log.level4Debug("Received Command: " + cmd.get());
             Log.level4Debug("CASUALLanguage- verifying Heimdall deployment.");
-            
+           
+            Track.setMode(LanguageTracker.heimdall(cmd));
             if (!new HeimdallTools().run(new String[]{"detect"},5000, true).contains("CritERROR!!!")) {
                 ArrayList<String> intermediateCommand=new ShellTools().parseCommandLine(cmd.get());
                 String[] command=intermediateCommand.toArray(new String[intermediateCommand.size()]);
+                Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.HeimdalSearching);
                 if (!command[0].equals("detect")){
                     new HeimdallTools().waitForDevice();
+                    Track.setMode(LanguageTracker.heimdall(cmd));
+                    
                 }
                 
                 /* if (Statics.isLinux()) {   //Is this needed?
@@ -499,11 +503,13 @@ public class CASUALLanguage {
                 
                 
                 return new HeimdallTools().doHeimdallShellCommand(command);
+                
             } else {
                 return new CASUALScriptParser().executeOneShotCommand("$HALT $ECHO You must install Heimdall!");
             }
 // if Fastboot, Send to fastboot shell command
         } else if (cmd.get().startsWith("$FASTBOOT") ||(cmd.get().startsWith("fastboot"))) {
+            Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.Fastboot);
             if (cmd.get().startsWith("fastboot")){
                 cmd.set(cmd.get().replaceFirst("fastboot", ""));
             } else if (cmd.get().startsWith("$FASTBOOT")){
@@ -512,6 +518,7 @@ public class CASUALLanguage {
             Log.level4Debug("received fastbot command.");
             new FastbootTools().getBinaryLocation();
             Log.level2Information("@waitingForDownloadModeDevice");
+            Track.setMode(LanguageTracker.fastboot(cmd));
             if (OSTools.isLinux() && !cmd.get().isEmpty() && !cmd.get().equals("--help")) {
                 Log.level2Information("@linuxPermissionsElevation");
 
@@ -527,6 +534,7 @@ public class CASUALLanguage {
 
             // if Fastboot, Send to fastboot shell command
         } else if (cmd.get().startsWith("$ADB") || cmd.get().startsWith("adb")) {
+            Track.setMode(LanguageTracker.adb(cmd));
             if (cmd.get().startsWith("adb")){
                 cmd.set(cmd.get().replaceFirst("adb",""));
             } else if (cmd.get().startsWith("$ADB")){
@@ -538,12 +546,11 @@ public class CASUALLanguage {
                 
 // if no prefix, then send command directly to ADB.
         } else {
+            Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALFinishedFailure);
             StringBuilder sb=new StringBuilder();
             sb.append("ERROR!!!!  Invalid Command:\"").append(cmd.get()).append("\" is not recognized as a valid command");
             throw new IOException(sb.toString());
         }
-        //final line output for debugging purposes
-        Log.level4Debug("COMMAND processed - " +new ADBTools().getBinaryLocation() + " " + cmd.get());
         return "";
     }
 //END OF SCRIPT PARSER

@@ -19,6 +19,7 @@ package CASUAL;
 import CASUAL.language.CASUALLanguage;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
+import CASUAL.instrumentation.Track;
 import CASUAL.misc.CountLines;
 import CASUAL.misc.StringOperations;
 import java.io.ByteArrayInputStream;
@@ -53,6 +54,7 @@ public class CASUALScriptParser {
      * @param multiThreaded false executes on main thread
      */
     public void loadFileAndExecute(Caspac caspac, boolean multiThreaded) {
+        Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
         Statics.setStatus("Loading from file");
         executeSelectedScript(caspac, multiThreaded);
     }
@@ -65,6 +67,7 @@ public class CASUALScriptParser {
     private DataInputStream getDataStreamFromFile(Caspac caspac) {
 
         try {
+            Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
             Log.level4Debug("Selected file" + caspac.getActiveScript().name);
 
             ScriptName = caspac.getActiveScript().name;
@@ -91,6 +94,7 @@ public class CASUALScriptParser {
      * @return from CASUAL language
      */
     public String executeOneShotCommand(String Line) {
+        Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
         Statics.setStatus("Executing");
         String retvalue = "";
         if (Statics.CASPAC == null) {
@@ -126,7 +130,7 @@ public class CASUALScriptParser {
      * @param startThreaded true if it is to be started on a new thread.
      */
     public void executeSelectedScript(final Caspac caspac, boolean startThreaded) {
-
+        Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
         Statics.ReactionEvents = new ArrayList<String>();
         Statics.ActionEvents = new ArrayList<String>();
         Statics.CASPAC.getActiveScript().scriptContinue = true;
@@ -173,9 +177,9 @@ public class CASUALScriptParser {
         }
     }
 
-    void executeActiveScript(Caspac CASPAC){
+    void executeActiveScript(Caspac CASPAC) {
         Log.level3Verbose("Exection of active script in CASPAC Commensing");
-        Script s=CASPAC.getActiveScript();
+        Script s = CASPAC.getActiveScript();
         Statics.CASPAC.getActiveScript().scriptContinue = true;
 
         Log.level2Information(s.discription);
@@ -195,7 +199,7 @@ public class CASUALScriptParser {
             Log.errorHandler(ex);
         }
     }
-    
+
     void executeFirstScriptInCASPAC(Caspac CASPAC) {
         String scriptName = CASPAC.getScriptNames()[0];
         Script s = CASPAC.getScriptByName(scriptName);

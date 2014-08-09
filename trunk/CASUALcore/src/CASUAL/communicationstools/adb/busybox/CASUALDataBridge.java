@@ -22,6 +22,8 @@ import CASUAL.Log;
 import CASUAL.Shell;
 import CASUAL.Statics;
 import CASUAL.communicationstools.adb.ADBTools;
+import CASUAL.instrumentation.ModeTrackerInterface;
+import CASUAL.instrumentation.Track;
 import CASUAL.misc.MandatoryThread;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -216,6 +218,7 @@ public class CASUALDataBridge {
             BufferedInputStream bis = new BufferedInputStream(input);
             int buflen = buf.length - 1;
             //pump in 4096 byte chunks at a time. from input to output
+            Track.setMode(ModeTrackerInterface.Mode.CASUALDataBridgeFlash);
             while (bis.available() >= buflen && !commandedShutdown) {
                 timeoutWatchdog.start();
                 bis.read(buf);
@@ -255,6 +258,7 @@ public class CASUALDataBridge {
             long startTime = System.currentTimeMillis();
             byte[] buf;
             timeoutWatchdog.start();
+            Track.setMode(ModeTrackerInterface.Mode.CASUALDataBridgePull);
             while (deviceReadyForReceive && !commandedShutdown) {
 
                 while ((buf = new byte[bis.available()]).length > 0) {

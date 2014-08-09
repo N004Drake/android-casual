@@ -98,6 +98,10 @@ public class Command {
     }
 
 
+    /**
+     * sets the CASUAL Command to process.
+     * @param command CASUAL command
+     */
     public void set(String command){
         this.command=command;
     }
