@@ -258,7 +258,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
             rd.copyFromResourceToFile(adbIniResource, adbini);
         } else {
             DiffTextFiles DTF = new DiffTextFiles();
-            DTF.appendDiffToFile(adbini, DTF.diffResourceVersusFile(adbIniResource, adbini));
+            DiffTextFiles.appendDiffToFile(adbini, DTF.diffResourceVersusFile(adbIniResource, adbini));
         }
     }
 

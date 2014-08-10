@@ -120,8 +120,11 @@ public class CASUALLanguage {
                 if (!GOTO.equals("")) {
 
                     bReader.reset();
-                    while (!strLine.startsWith(GOTO)) {
+                    while (strLine !=null && !strLine.startsWith(GOTO)) {
                         strLine = bReader.readLine();
+                    }
+                    if (strLine==null){
+                        strLine="$ECHO parsed to end of script and could not $GOTO:"+GOTO;
                     }
                     GOTO = "";
                 }
