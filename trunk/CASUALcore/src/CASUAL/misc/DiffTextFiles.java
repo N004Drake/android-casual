@@ -42,7 +42,7 @@ public class DiffTextFiles {
      * @param OriginalFile original file to be diffed
      * @return lines in test that are not in original
      */
-    public String diffResourceVersusFile(String TestIStream, String OriginalFile) {
+    public  String diffResourceVersusFile(String TestIStream, String OriginalFile) {
 
         String difference = "";
         InputStream resourceAsStream = this.getClass().getResourceAsStream(TestIStream);
@@ -50,7 +50,7 @@ public class DiffTextFiles {
         BufferedReader testStream = new BufferedReader(new InputStreamReader(resourceAsStream));
         File original = new File(OriginalFile);
         String TestStreamLine = "";
-        String OriginalFileLine="";
+        String OriginalFileLine;
         try {
             while ((TestStreamLine = testStream.readLine()) != null) {
                 boolean LineExists;
@@ -107,11 +107,11 @@ public class DiffTextFiles {
      * @param TestForDiff new file
      * @return lines which are in new file that are not in original
      */
-    public String diffTextFiles(String Original, String TestForDiff) {
+    public static String diffTextFiles(String Original, String TestForDiff) {
         String DifferenceFromFile1 = "";
+        BufferedReader BROriginal = null;
 
         try {
-            BufferedReader BROriginal;
             BufferedReader BRTestDiff = new BufferedReader(new FileReader(TestForDiff));
             String line;
             String line2;
@@ -131,9 +131,15 @@ public class DiffTextFiles {
                 }
 
             }
-            BROriginal.close();
         } catch (IOException e) {
             Log.errorHandler(e);
+        } finally {
+            try {
+               if (BROriginal !=null) BROriginal.close();
+            } catch (IOException ex) {
+                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
 
         return DifferenceFromFile1;
@@ -147,7 +153,7 @@ public class DiffTextFiles {
      * @param file file to be added to
      * @param Diff text to add
      */
-    public void appendDiffToFile(String file, String Diff) {
+    public static void appendDiffToFile(String file, String Diff) {
         if (Diff.equals("")) {
             return;
         }
@@ -163,14 +169,15 @@ public class DiffTextFiles {
                 Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+        PrintWriter out=null;
         try {
-            PrintWriter out=new PrintWriter(new BufferedWriter(new FileWriter(file,true)));
+            out=new PrintWriter(new BufferedWriter(new FileWriter(fileToModify,true)));
             out.println(Diff);
  
-            out.close();
         } catch (IOException ex) {
          Log.errorHandler(ex);
+        } finally {
+            if (out != null) out.close();
         }
     }
 }
