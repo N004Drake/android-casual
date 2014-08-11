@@ -1264,6 +1264,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         loadScript();
     }//GEN-LAST:event_scriptListJListValueChanged
 
+    @SuppressWarnings("unchecked")
     /*
      * Listens for edit icon to be pressed
      */
