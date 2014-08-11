@@ -44,7 +44,7 @@ public class ControlCommands {
 
     public static boolean checkIfContains(Command cmd) {
         if (cmd.get().startsWith("$IFCONTAINS ")) {
-            cmd.set(StringOperations.removeLeadingSpaces(cmd.get().replaceFirst("$IFCONTAINS ", "")));
+            cmd.set(StringOperations.removeLeadingSpaces(cmd.get().replaceFirst("$IFCONTAINS ", "").trim()));
             return true;
         }
         return false;
@@ -81,7 +81,7 @@ public class ControlCommands {
 
     public static  boolean checkGoto(Command cmd) {
         if (cmd.get().startsWith("$GOTO")) {
-            cmd.set(cmd.get().replace("$GOTO", ""));
+            cmd.set(cmd.get().replace("$GOTO", "").trim());
             CASUALLanguage.GOTO = cmd.get();
             return true;
         }
@@ -90,7 +90,7 @@ public class ControlCommands {
 
     public static boolean checkIfNotContains(Command cmd) {
         if (cmd.get().startsWith("$IFNOTCONTAINS ")) {
-            cmd.set(cmd.get().replaceFirst("$IFCONTAINS ", ""));
+            cmd.set(cmd.get().replaceFirst("$IFCONTAINS ", "").trim());
             return true;
         }
         return false;
@@ -116,7 +116,7 @@ public class ControlCommands {
 
     public static boolean checkSendLog(Command cmd) {
         if (cmd.get().startsWith("$SENDLOG")) {
-            cmd.set(cmd.get().replace("$SENDLOG", ""));
+            cmd.set(cmd.get().replace("$SENDLOG", "").trim());
             if (StringOperations.removeLeadingAndTrailingSpaces(cmd.get()).equals("")) {
                 Log.level4Debug("Sendlog Command Issued!\nNo remaining commands");
             } else {
@@ -135,12 +135,12 @@ public class ControlCommands {
     //split the string from $IFCONTAINS "string string" $INCOMMAND "$ADB command to execute" $DO "CASUAL COMMAND"
     public static String doIfContainsReturnResults(String line, boolean ifContains) {
         if (line.startsWith("$IFCONTAINS")) {
-            line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFCONTAINS", ""));
+            line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFCONTAINS", "").trim());
         } else if (line.startsWith("$IFNOTCONTAINS")) {
-            line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFNOTCONTAINS", ""));
+            line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFNOTCONTAINS", "").trim());
         }
         String[] checkValueSplit = line.split("\\$INCOMMAND", 2);
-        String checkValue = StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line));
+        String checkValue = StringOperations.removeLeadingAndTrailingSpaces(checkValueSplit[0].replace("\\$INCOMMAND", line).trim());
         String[] commandSplit = checkValueSplit[1].split("\\$DO", 2);
         String command = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[0]);
         String casualCommand = StringOperations.removeLeadingAndTrailingSpaces(commandSplit[1]);
@@ -153,10 +153,10 @@ public class ControlCommands {
             if (casualCommand.contains("&&&")) {
                 String[] lineSplit = casualCommand.split("&&&");
                 for (String cmd : lineSplit) {
-                    retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(cmd));
+                    retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(cmd).trim());
                 }
             } else {
-                retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand));
+                retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand).trim());
             }
         }
         return retValue;

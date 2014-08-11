@@ -163,6 +163,7 @@ public class CASUALScriptParser {
                 Statics.CASPAC.getActiveScript().deviceArch = "";
                 Statics.setStatus("done");
                 Log.level2Information("@scriptComplete");
+                Statics.GUI.setReady(true);
 
             }
         };

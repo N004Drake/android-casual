@@ -144,6 +144,9 @@ public class CASUALLanguage {
                 new DriverRemove().deleteOemInf();
             }
             Log.level2Information("@done");
+            Statics.GUI.sendProgress("@done");
+            Statics.GUI.setStatusTitle("@done");
+            Statics.GUI.setReady(true);
             //yeah yeah, overly broad chatch.  read below. 
         } catch (IOException e) {
             /*
