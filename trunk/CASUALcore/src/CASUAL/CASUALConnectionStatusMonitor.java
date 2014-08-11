@@ -122,6 +122,7 @@ public class CASUALConnectionStatusMonitor {
             }
 
         });
+        t.setDaemon(true);
         t.setName("Connection Status");
         t.start();
 
