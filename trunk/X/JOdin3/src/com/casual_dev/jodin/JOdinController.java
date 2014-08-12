@@ -148,12 +148,11 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     @FXML
     Button showLegal;
 
-
     @FXML
     WebView ad;
     @FXML
     Label browserMode;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         CASUAL.Statics.GUI = this;
@@ -518,7 +517,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     @FXML
     @Override
     public void dispose() {
-        Statics.GUI=null;
+        Statics.GUI = null;
         CASUALMain.shutdown(i);
         this.exit();
     }
@@ -573,13 +572,13 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
                     String[] runCommand = getHeimdallCommandFromOdinPackageList(list);
                     //stop the monitor
                     CASUAL.CASUALConnectionStatusMonitor.stop();
-                    
+
                     //verify device is connected one last time
                     HeimdallTools ht = new HeimdallTools();
                     if (!ht.isConnected()) {
                         messageBox.appendText("\nWaiting for device");
                     }
-                    
+
                     Log.level3Verbose("running command");
                     String s = ht.run(runCommand, 9999999, false);
                     if (ht.checkErrorMessage(runCommand, s)) {
@@ -663,22 +662,22 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         if (bootloaderFlash.isSelected()) {
             String location = bootloaderLocation.getText();
             list.add(new File(location));
-            Log.level3Verbose("Added bootloader to list " +list );
+            Log.level3Verbose("Added bootloader to list " + list);
         }
         if (pdaFlash.isSelected()) {
             String location = pdaLocation.getText();
             list.add(new File(location));
-            Log.level3Verbose("Added PDA to list " +list );
+            Log.level3Verbose("Added PDA to list " + list);
         }
         if (phoneFlash.isSelected()) {
             String location = phoneLocation.getText();
             list.add(new File(location));
-            Log.level3Verbose("Added Phone to list " +list );
+            Log.level3Verbose("Added Phone to list " + list);
         }
         if (cscFlash.isSelected()) {
             String location = cscLocation.getText();
             list.add(new File(location));
-            Log.level3Verbose("Added bootloader to list " +list );
+            Log.level3Verbose("Added bootloader to list " + list);
         }
     }
 
@@ -701,14 +700,25 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     }
 
     @Override
-    public void setInformationScrollBorderText(String title) {
-        this.messageBox.appendText(title + "\n");
+    public void setInformationScrollBorderText(final String title) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                messageBox.appendText(title + "\n");
+            }
+        });
+
     }
 
     @Override
-    public void setProgressBar(int value) {
+    public void setProgressBar(final int value) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                progress.setProgress(value / max);
 
-        progress.setProgress(value / max);
+            }
+        });
     }
 
     int max = 100;
@@ -729,10 +739,15 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     }
 
     @Override
-    public void setStatusLabelIcon(String Icon, String Text) {
-        messageBox.appendText(Text + "\n");
-    }
+    public void setStatusLabelIcon(String Icon, final String Text) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                messageBox.appendText(Text + "\n");
 
+            }
+        });
+    }
 
     @Override
     public void setWindowBannerText(String text) {
@@ -740,27 +755,45 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     @Override
     public void setVisible(boolean b) {
-        
+
     }
 
     @Override
-    public void deviceConnected(String mode) {
-        connectedIndicator.setText("Connected");
-        connectedIndicator.setStyle("-fx-background-color: lime;");
+    public void deviceConnected(final String mode) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                connectedIndicator.setText("Connected");
+                connectedIndicator.setStyle("-fx-background-color: lime;");
+            }
+        });
 
     }
 
     @Override
     public void deviceDisconnected() {
-        connectedIndicator.setText("Disconnected");
-        connectedIndicator.setStyle("-fx-background-color: red;");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                connectedIndicator.setText("Disconnected");
+                connectedIndicator.setStyle("-fx-background-color: red;");
+            }
+        });
 
     }
 
     @Override
     public void deviceMultipleConnected(int numberOfDevicesConnected) {
-        connectedIndicator.setText("Disconnected");
-        connectedIndicator.setStyle("-fx-background-color: red;");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                connectedIndicator.setText("Disconnected");
+                connectedIndicator.setStyle("-fx-background-color: red;");
+            }
+        });
 
     }
 
@@ -855,7 +888,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     @FXML
     private void webviewHover() {
-        if (! clicked){
+        if (!clicked) {
             return;
         }
         ad.setMaxHeight(mainSurface.getHeight());
@@ -872,16 +905,17 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         browserMode.setVisible(false);
     }
 
-    private boolean clicked=false;
-    
+    private boolean clicked = false;
+
     @FXML
-    private void webViewClicked(){
-        clicked=true;
+    private void webViewClicked() {
+        clicked = true;
         WebEngine webEngine = ad.getEngine();
         webEngine.setJavaScriptEnabled(false); //javascript runs slowly and causes problems. no scripts allowed. 
-        
+
         webviewHover();
     }
+
     private void initializeAd() {
         Platform.runLater(new Runnable() {
             @Override
