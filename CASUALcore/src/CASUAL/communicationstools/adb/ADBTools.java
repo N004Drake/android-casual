@@ -270,8 +270,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
      * @return individual devices listed as strings
      */
     public String[] getIndividualDevices() {
-        Shell shell = new Shell();
-        String devReturn = run(new String[]{"devices"}, 5000,true);
+        String devReturn = run(new String[]{"devices"}, 5000,false);
         checkErrorMessage(getDevicesCmd(), devReturn);
         if (devReturn.equals("List of devices attached \n\n")) {
             return new String[]{};
