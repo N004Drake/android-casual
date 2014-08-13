@@ -34,7 +34,7 @@ public class CASUALConnectionStatusMonitor {
      * seconds, it is considered locked up. If ADB locks up 10 times, monitoring
      * is stopped.
      */
-    final static int TIMERINTERVAL = 1000;
+    final static int TIMERINTERVAL = 2000;
     static boolean paused = false;
 
     /**
@@ -105,15 +105,15 @@ public class CASUALConnectionStatusMonitor {
 
     private void doMonitoring() {
 
+        final AbstractDeviceCommunicationsProtocol stateMonitor = monitor;
         //check device for state changes
         //loop on new thread while the monitor is the same monitor
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
 
-                AbstractDeviceCommunicationsProtocol stateMonitor = monitor;
                 while (CASUALConnectionStatusMonitor.monitor != null && CASUALConnectionStatusMonitor.monitor.equals(stateMonitor)) {
-                    sleepForOneSecond();
+                    sleepForInterval();
                     if (paused) {
                         continue;
                     }
@@ -128,8 +128,8 @@ public class CASUALConnectionStatusMonitor {
 
     }
 
+    static int connectedDevices=0;
     private void doDeviceCheck() {
-        int connectedDevices;
         try {
             connectedDevices = monitor.numberOfDevicesConnected();
         } catch (NullPointerException ex) {
@@ -152,20 +152,21 @@ public class CASUALConnectionStatusMonitor {
 
     void stateSwitcher(int state) {
         if (LastState != state) {
-            Log.level4Debug("State Change Detected, The new state is: " + state);
+            Log.level4Debug("Attempting state change to " + state + " devices connected");
+            boolean switched=false;
             switch (state) {
                 case 0:
                     Log.level4Debug("Device disconnected commanded");
                     Statics.setStatus("Device Removed");
                     Statics.GUI.deviceDisconnected();
-                    Statics.GUI.setControlStatus(false);
+                    switched =! Statics.GUI.setControlStatus(false);
 
                     break;
                 case 1:
                     Statics.setStatus("Device Connected");
                     Log.level4Debug("@stateConnected");
                     Statics.GUI.deviceConnected("ADB");
-                    Statics.GUI.setControlStatus(true);
+                    switched = Statics.GUI.setControlStatus(true);
                     break;
                 default:
                     Statics.setStatus("Multiple Devices Detected");
@@ -174,19 +175,24 @@ public class CASUALConnectionStatusMonitor {
                         Log.level0Error("Remove " + (state - 1) + " device to continue.");
                     }
 
-                    Statics.GUI.setControlStatus(false);
+                    switched =! Statics.GUI.setControlStatus(false);
                     Log.level4Debug("State Multiple Devices Number of devices" + state);
                     Statics.GUI.deviceMultipleConnected(state);
                     break;
 
             }
-            LastState = state;
+            if (switched){ //only set last state if controls were enabled/disabled when requested
+                LastState = state;
+            } else {
+                Log.level4Debug("UI did not respond to state change, retrying.");
+
+            }
         }
     }
 
-    private void sleepForOneSecond() {
+    private void sleepForInterval() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(TIMERINTERVAL);
         } catch (InterruptedException ex) {
             Log.errorHandler(ex);
         }

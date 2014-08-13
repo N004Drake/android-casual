@@ -26,7 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,52 +42,7 @@ public class CASUALTools {
      */
     final public static boolean IDEMode = new CASUALTools().getIDEMode();
 
-
-
-    /**
-     * listScripts scans the CASUAL for scripts -results are stored in
-     * Statics.scriptNames -In IDE mode an MD5 refresh is triggered
-     *
-     * @throws IOException
-     */
-    /*
-     public void listScripts() throws IOException {
-     CodeSource Src = CASUAL.CASUALApp.class.getProtectionDomain().getCodeSource();
-     int Count = 0;
-     ArrayList<String> list = new ArrayList<>();
-     if (Src != null) {
-     URL jar = Src.getLocation();
-     try (ZipInputStream Zip = new ZipInputStream(jar.openStream())) {
-     ZipEntry ZEntry;
-     Log.level4Debug("Picking Jar File:" + jar.getFile());
-     while ((ZEntry = Zip.getNextEntry()) != null) {
-
-     String EntryName = ZEntry.getName();
-     if (EntryName.endsWith(".scr")) {
-
-     list.add(EntryName);
-     }
-     }
-     Log.level4Debug("Found " + list.size() + " CASUAL scripts");
-     Statics.scriptNames = new String[list.size()];
-     for (int n = 0; n < list.size(); n++) {
-     String EntryName = ((String) list.get(n)).replaceFirst("SCRIPTS/", "").replace(".scr", "");
-     Log.level4Debug("Found script: " + EntryName);
-     Statics.scriptNames[n] = EntryName;
-     Count++;
-     }
-
-     if (Count == 0) {
-     Thread update = new Thread(updateMD5s);
-     update.setName("Updating MD5s");
-     update.start();
-     Log.level3Verbose("IDE Mode: Using " + CASUALApp.defaultPackage + ".scr ONLY!");
-     //Statics.scriptLocations = new String[]{""};
-     Statics.scriptNames = new String[]{CASUALApp.defaultPackage};
-     }
-     }
-     }
-     }*/
+    
     /**
      * md5sumTestScript Refreshes the MD5s on the scripts in the /SCRIPTS folder
      */
