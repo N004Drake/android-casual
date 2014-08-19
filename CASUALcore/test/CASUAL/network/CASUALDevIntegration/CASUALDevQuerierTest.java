@@ -49,8 +49,17 @@ public class CASUALDevQuerierTest {
         assert(Arrays.asList(result).contains(expResult));
 
     }
-    
-    
+    @Test
+    public void testGetPackages(){
+        System.out.println("getPackages");
+        CASUALDevQuerier instance = new CASUALDevQuerier(BUILDPROP, new String[]{"CASUAL"});
+        String expResult = "http://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
+        CASUALPackage[] packs=instance.getPackages();
+        for (CASUALPackage pack:packs){
+            System.out.println(pack.isValid());
+            assert (pack.isValid());
+        }
+    }
 
     
 //build prop from oppo x909    
@@ -324,4 +333,6 @@ final static String BUILDPROP="\"# begin build properties\n" +
 "net.bt.name=Android\n" +
 "dalvik.vm.stack-trace-file=/data/anr/traces.txt\n" +
 "\"";
+
+
 }

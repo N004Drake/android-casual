@@ -167,4 +167,9 @@ public class CASUALPackage {
         }
         return filename;
     }
+
+    @Override
+    public String toString(){
+        return this.windowTitle+"\nby: "+this.developer;
+    }
 }
