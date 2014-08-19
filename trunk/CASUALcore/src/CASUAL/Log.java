@@ -133,6 +133,11 @@ public class Log {
             out.println("[DEBUG]" + data);
         }
     }
+    
+    public static void insertChars(String data){
+        writeOutToLog(data);
+        out.print(data);
+    }
 
     /**
      *
