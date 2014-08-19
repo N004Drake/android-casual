@@ -23,8 +23,8 @@ import static CASUAL.Log.level4Debug;
 import CASUAL.Statics;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
+import com.casual_dev.zodui.Downloader.ZodDownloader;
 import com.casual_dev.zodui.Log.ZodLog;
-
 import com.casual_dev.zodui.about.AboutController;
 import com.casual_dev.zodui.contentpanel.ZodPanelContent;
 import com.casual_dev.zodui.contentpanel.ZodPanelController;
@@ -33,6 +33,7 @@ import com.casual_dev.zodui.messagepanel.MessagePanelController;
 import java.io.IOException;
 import static java.lang.System.exit;
 import java.net.URL;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -47,6 +48,7 @@ import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -56,7 +58,8 @@ import javafx.stage.Stage;
 import static javafx.util.Duration.millis;
 
 /**
- *Provides input and output from the main User Interface 
+ * Provides input and output from the main User Interface
+ *
  * @author adamoutler
  */
 public class CASUALZodMainUI
@@ -69,6 +72,8 @@ public class CASUALZodMainUI
     @FXML
     Button startButton;
 
+    @FXML
+    AnchorPane frontPage;
     BorderPane newPanel;
 
     Script activeScript;
@@ -81,13 +86,15 @@ public class CASUALZodMainUI
     MessagePanelController message;
 
     /**
-     * true if running in testing mode.
-     * //todo: delete this later  This is from debugging.
+     * true if running in testing mode. //todo: delete this later This is from
+     * debugging.
      */
     public static boolean testmode = false;
 
+    static boolean messageDisplayed = false;
+    static boolean frontPageDisplayed = false;
     /**
-     *Content used in in ZodPanel.
+     * Content used in in ZodPanel.
      */
     public static ZodPanelContent content = new ZodPanelContent();
     final Object messageCreationLock = new Object();
@@ -95,23 +102,17 @@ public class CASUALZodMainUI
     //double movement = grid.getRowConstraints().get(0).getMaxHeight()+grid.getRowConstraints().get(1).getMaxHeight();
     boolean clicked = false;
     boolean adOpened = false;
-    AtomicBoolean ready = new AtomicBoolean(true);
-
-    /**
-     * default constructor which initializes the ad and creates a zod panel.
-     */
-    public void AnchorController() {
-        this.initializeAd();
-        this.createNewZod(CASUALZodMainUI.content);
-    }
+    public static AtomicBoolean CASUALready = new AtomicBoolean(true);
 
     /**
      * creates a new message for display
+     *
      * @param msg a messagePanelContent object is required
      * @return 0, 1, 2 or text depending on what the user pressed.
      */
     public synchronized String createNewMessage(final MessagePanelContent msg) {
-
+        messageDisplayed = true;
+        organizeFrontPageAndZodPanel();
         //Start the message panel on a new thread and wait for it to create
         Platform.runLater(() -> {
             AnchorPane b = getNewMessage(msg);
@@ -125,6 +126,7 @@ public class CASUALZodMainUI
         try {
             //wait for message to be created and added so we don't run into collision.
             waitForMessageCreation();
+            organizeFrontPageAndZodPanel();
         } catch (InterruptedException ex) {
             Log.errorHandler(ex);
         }
@@ -139,7 +141,40 @@ public class CASUALZodMainUI
         //get rid of the pane
         level4Debug("User clicked Button:\"" + messageButtonValue + "\" after " + message.getCompletionTime() + "ms");
         message.disposeMessagePanel(this.grid);
+        messageDisplayed = false;
+        organizeFrontPageAndZodPanel();
         return messageButtonValue;
+    }
+
+    private void organizeFrontPageAndZodPanel() {
+            if (messageDisplayed) {
+                displayFrontPage(false);
+            } else if (frontPageDisplayed) {
+                displayFrontPage(true);
+            } else {
+                displayFrontPage(false);
+
+            }
+
+
+    }
+
+    private void displayFrontPage(boolean x) {
+        if (frontPage.isVisible() != x) {
+            Platform.runLater(() -> {
+                frontPage.setVisible(x);
+                if (x){
+                    frontPage.toFront();
+                } else {
+                    frontPage.toBack();
+                }
+            });
+        }
+        if (this.getControlStatus() != x) {
+            Platform.runLater(() -> {
+            this.setControlStatus(x);
+            });
+        }
     }
 
     private void notifyMessageCreationCompleted() {
@@ -176,15 +211,19 @@ public class CASUALZodMainUI
 
     /**
      * Creates a new Zod Panel from Zod Panel Content.
+     *
      * @param zpc content used to create new panel.
      */
     public synchronized void createNewZod(ZodPanelContent zpc) {
 
         /**
-         * anonymous inner class to ensure there is no way to access this except here. 
+         * anonymous inner class to ensure there is no way to access this except
+         * here.
          */
         class creator {
+
             CASUALZodMainUI ui;
+
             creator(CASUALZodMainUI ui) {
                 this.ui = ui;
             }
@@ -228,8 +267,6 @@ public class CASUALZodMainUI
         this.panel.setZodPanelContent(zpc);
     }
 
-
-
     @FXML
     private void showLog() {
         new ZodLog().showLog(new Stage());
@@ -269,6 +306,7 @@ public class CASUALZodMainUI
 
     /**
      * returns the current ZodPanelContent
+     *
      * @return content
      */
     public static ZodPanelContent getZodPanelContent() {
@@ -277,6 +315,7 @@ public class CASUALZodMainUI
 
     /**
      * returns a list of nodes representing the children of the panel
+     *
      * @return list of nodes
      */
     public ObservableList<Node> getChildren() {
@@ -285,12 +324,19 @@ public class CASUALZodMainUI
 
     @Override
     public boolean isReady() {
-        return ready.get();
+        return CASUALready.get();
     }
 
     @Override
     public void setReady(boolean bln) {
-        ready.set(bln);
+        CASUALready.set(bln);
+        Platform.runLater(() -> {
+            startButton.setDisable(false);
+            frontPageDisplayed = true;
+            organizeFrontPageAndZodPanel();
+        });
+        this.displayStatusOnFrontPage(bln);
+
     }
 
     @Override
@@ -300,20 +346,23 @@ public class CASUALZodMainUI
 
     @Override
     public String displayMessage(CASUALMessageObject cslm) {
-
-        String retval=createNewMessage(new MessagePanelContent(cslm));
+        messageDisplayed = true;
+        String retval = createNewMessage(new MessagePanelContent(cslm));
         return retval;
 
     }
 
     @Override
     public void dispose() {
-        exit(0);
+        System.exit(0);
     }
 
     @Override
     @FXML
     public void StartButtonActionPerformed() {
+        frontPageDisplayed = false;
+        organizeFrontPageAndZodPanel();
+
         startButton.setDisable(true);
         //execute
         if (Statics.CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
@@ -326,8 +375,15 @@ public class CASUALZodMainUI
 
     @Override
     public boolean setControlStatus(boolean bln) {
-        startButton.setDisable(!bln);
-        return bln;
+        Platform.runLater(() -> {
+            if (bln) {
+                frontPageDisplayed = true;
+            } else {
+                frontPageDisplayed = false;
+            }
+            displayStatusOnFrontPage(bln);
+        });
+        return CASUALready.get();  //true if value was set
     }
 
     @Override
@@ -344,6 +400,9 @@ public class CASUALZodMainUI
 
     @Override
     public void setInformationScrollBorderText(String string) {
+        Platform.runLater(()->{
+            panel.appendToLog(string);
+        });
         ZodPanelContent zpc = new ZodPanelContent(content);
         zpc.setSubtitle(string);
         this.createNewZod(zpc);
@@ -370,42 +429,54 @@ public class CASUALZodMainUI
 
     @Override
     public void setStartButtonText(String string) {
-        startButton.setText(string);
+        Platform.runLater(() -> {
+            startButton.setText(string);
+        });
+
     }
 
     @Override
     public void setStatusLabelIcon(String string, String string1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
     public void setStatusSubTitle(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.panel.getZodPanelContent().setSubtitle(string);
     }
 
     @Override
     public void setWindowBannerText(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Platform.runLater(() -> {
+            bannertext.setText(string);
+        });
     }
 
     @Override
     public void setVisible(boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
     public void deviceConnected(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Platform.runLater(() -> {
+            deviceStatus.setText("Device Detected");
+        });
     }
 
     @Override
     public void deviceDisconnected() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Platform.runLater(() -> {
+            deviceStatus.setText("Not Connected");
+        });
+
     }
 
     @Override
     public void deviceMultipleConnected(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Platform.runLater(() -> {
+            deviceStatus.setText("Please disconnect " + (i - 1) + " devices");
+        });
     }
 
     @Override
@@ -416,6 +487,7 @@ public class CASUALZodMainUI
     @Override
     public void sendString(final String string) {
         Platform.runLater(() -> {
+            panel.appendToLog(string);
             CASUALZodMainUI.content.setStatus(string);
         });
         //todo: send to log
@@ -424,8 +496,6 @@ public class CASUALZodMainUI
     @Override
     public void sendProgress(final String string) {
         Platform.runLater(() -> {
-
-            //todo catch download here and send to log
             if (this.getDownloader().isDownloading()) {
                 try {
                     panel.setStatus("Downloading " + getDownloader().getTitle() + ":" + string + " of " + getDownloader().getExpectedBytes() + "kb");
@@ -436,11 +506,12 @@ public class CASUALZodMainUI
         });
     }
 
-    public void setStatusTitle(String title){
+    @Override
+    public void setStatusTitle(String title) {
+        panel.appendToLog(title);
         content.setMainTitle(title);
     }
-    
-    
+
     @FXML
     private void showAbout() throws Exception {
         new AboutController().show();
@@ -458,6 +529,55 @@ public class CASUALZodMainUI
      */
     public void setDownloader(ZodDownloader download) {
         this.downloader = download;
+    }
+
+    @FXML
+    Label bannertext;
+    @FXML
+    Label title;
+    @FXML
+    Label donateTo;
+    @FXML
+    Label donateLink;
+    @FXML
+    Label developer;
+    @FXML
+    Label deviceStatus;
+    @FXML
+    Label casualStatus;
+
+    @FXML
+    private void launchDonationLink() {
+        CASUAL.network.LinkLauncher ll = new CASUAL.network.LinkLauncher(donateLink.getText());
+        ll.launch();
+    }
+
+    public void updateFrontPageProperties(Properties p) {
+        Platform.runLater(() -> {
+            bannertext.setText(p.getProperty("Window.BannerText", "CASUAL Script"));
+            title.setText(p.getProperty("Window.Title", "CASUAL"));
+            developer.setText(p.getProperty("Developer.Name", "CASUAL Developer"));
+            donateTo.setText(p.getProperty("Developer.DonateToButtonText", "Project CASUAL"));
+            String link = p.getProperty("Developer.DonateLink", "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
+            if (link.isEmpty()) {
+                link = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y";
+            }
+            donateLink.setText(link);
+        });
+    }
+
+    public void displayStatusOnFrontPage(boolean ready) {
+        Platform.runLater(() -> {
+            if (ZodDownloader.isDownloading()) {
+                casualStatus.setText("Downloading");
+            } else if (!CASUALready.get() || !ready) {
+                casualStatus.setText("Preparing");
+            } else if (deviceStatus.getText().equals("Device Detected")) {
+                casualStatus.setText("Waiting for device");
+            } else {
+                casualStatus.setText("ready");
+            }
+        });
     }
 
 }

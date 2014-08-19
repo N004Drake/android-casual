@@ -14,16 +14,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
-package com.casual_dev.zodui;
+package com.casual_dev.zodui.Downloader;
 
 import CASUAL.Statics;
 import static CASUAL.Statics.getTempFolder;
 import CASUAL.caspac.Caspac;
 import CASUAL.misc.MandatoryThread;
 import CASUAL.network.CASUALUpdates;
+import com.casual_dev.zodui.CASUALZodMainUI;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Properties;
 import java.util.logging.Level;
 import static java.util.logging.Logger.getLogger;
 
@@ -49,18 +51,28 @@ static MandatoryThread downloadThread;
     public ZodDownloader(URL url, String title) {
         this.url = url;
         this.title = title;
+        ScriptMeta sm=new ScriptMeta(url.toString());
         this.expectedKB = cu.tryGetFileSize(url) / 1_024;
         processRemoteCASPAC();
     }
 
-    public void downloadCaspac(CASUALZodMainUI ui){
-        this.ui=ui;
-        downloadThread.start();
-    }
-    
     /**
      * downloads a CASPAC and updates UI
      * @param ui  User Interface to be updated.
+     */
+    public void downloadCaspac(CASUALZodMainUI ui){
+        this.ui=ui;
+        ScriptMeta sm=new ScriptMeta(url);
+        sm.getPropsInBackground();
+        downloadThread.start();
+        Properties p=sm.getProperties();
+        ui.updateFrontPageProperties(p);
+        
+        System.out.println(p);
+    }
+
+    /**
+     * processes the caspac
      */
     public void processRemoteCASPAC() {
 
@@ -92,9 +104,12 @@ static MandatoryThread downloadThread;
         ui.createNewZod(CASUALZodMainUI.content);
         Statics.CASPAC.setActiveScript(Statics.CASPAC.getScriptByName(Statics.CASPAC.getScriptNames()[0]));
         Statics.GUI.setCASPAC(Statics.CASPAC);
-        CASUALZodMainUI.content.setMainTitle("Ready - Click Start");
+        CASUALZodMainUI.content.setMainTitle("Ready");
         ui.createNewZod(CASUALZodMainUI.content);
         Statics.GUI.sendProgress("ready");
+        CASUALZodMainUI.CASUALready.set(true);
+        ui.setReady(true);
+        ui.sendString(Statics.CASPAC.getActiveScript().name);
     }
 
     /**
@@ -109,7 +124,7 @@ static MandatoryThread downloadThread;
         return downloadedFile;
     }
 
-    public  boolean isDownloading(){
+    public static boolean isDownloading(){
         return !downloadThread.isComplete();
     }
     
