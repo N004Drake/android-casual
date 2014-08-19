@@ -19,17 +19,20 @@ package com.casual_dev.zodui;
 import CASUAL.Diagnostics;
 import CASUAL.Log;
 import CASUAL.Statics;
+import com.casual_dev.zodui.Downloader.ZodDownloader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -77,13 +80,19 @@ public class ZodUI extends Application {
         //Windows doesn't handle perspectives without 3D
         scene.setCamera(new PerspectiveCamera());
         stage.setScene(scene);
+        stage.setOnCloseRequest((final WindowEvent event) -> {
+            Platform.exit();
+        });
         stage.show();
+        
 
         //get the download operations off the main thread
         ZodDownloader downloader = new ZodDownloader(downloadCaspac, title);
         zui.setDownloader(downloader);
         //launch the first display panel
         displayInitialZod();
+        new CASUAL.CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+
         new Thread(()->{
             downloader.downloadCaspac(zui);
         }).start();

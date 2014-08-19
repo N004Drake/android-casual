@@ -19,7 +19,7 @@ package com.casual_dev.zodui.contentpanel;
 
 import com.casual_dev.zodui.CASUALZodMainUI;
 import com.casual_dev.zodui.Log.ZodLog;
-import com.casual_dev.zodui.messagepanel.LoremIpsumMessage;
+import com.casual_dev.zodui.fonts.FontLoader;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
@@ -27,18 +27,22 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -63,11 +67,10 @@ implements Initializable {
     @FXML
     ProgressIndicator progressIndicator;
     @FXML
-    ImageView casualDude;
-    @FXML
-    Button msgTest;
-    @FXML
-    Button panelTest;
+    TextArea logArea;
+
+    @FXML 
+    Label actionArea;
     @FXML
     Label status;
     CASUALZodMainUI parentPanel;
@@ -79,15 +82,23 @@ implements Initializable {
      */
     public void setParentObject(CASUALZodMainUI mainUI) {
         this.parentPanel = mainUI;
-        if (!CASUALZodMainUI.testmode){
-            this.getChildren().remove(msgTest);
-            this.getChildren().remove(panelTest);
-            
-        }
+
     }
 
+    public void appendToLog(String text){
+        Platform.runLater(()->{
+            logArea.appendText(text);
+        });
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //actionArea.setFont(FontLoader.getOpenEmoji());
+        actionArea.setText("💻");
+        actionArea.setTextFill(Paint.valueOf("green"));
+        //ObjectProperty p=actionArea.fontProperty();
+        //System.out.println(p);
+        
     }
 
     /**
@@ -116,19 +127,6 @@ implements Initializable {
         return zpc;
     }
 
-    @FXML
-    private void messageClicked() {
-        new Thread(() -> {
-                parentPanel.displayMessage(LoremIpsumMessage.createLoremIpsumMessage());
-        }).start();
-    }
-
-    @FXML
-    private void buttonClicked() {
-        Platform.runLater(() -> {
-            parentPanel.createNewZod(CASUALZodMainUI.getZodPanelContent());
-        });
-    }
 
     /**
      * Performs calculations and updates the progress/status bar.
@@ -148,7 +146,16 @@ implements Initializable {
      */
     public void disposeZod(GridPane parent) {
         Platform.runLater(() -> {
-            final BorderPane me=topLevel;
+                        WritableImage snapshot = topLevel.snapshot(new SnapshotParameters(), null);
+            topLevel.setCacheHint(CacheHint.SCALE_AND_ROTATE);
+            topLevel.setCache(true);
+            ImageView i=new ImageView(snapshot);
+            topLevel.setBottom(null);
+            topLevel.setTop(null);
+            topLevel.setRight(null);
+            topLevel.setLeft(null);
+            topLevel.setCenter(i);
+            //final BorderPane me=topLevel;
             ZodPanelController.this.topLevel.setCache(true);
             ZodPanelController.this.topLevel.setCacheHint(CacheHint.SCALE_AND_ROTATE);
             FadeTransition ft = new FadeTransition(Duration.millis((double)200.0), (Node)ZodPanelController.this.topLevel);
@@ -174,7 +181,7 @@ implements Initializable {
             ft.play();
             st.play();
             rt.setOnFinished((ActionEvent actionEvent) -> {
-                parent.getChildren().remove(me);
+                parent.getChildren().remove(topLevel);
             });
         });
     }
@@ -198,15 +205,6 @@ implements Initializable {
     }
     
     
-    /**
-     * This shouldn't be here, but it is for testing.  It hooks finalize and prints a message during garbage collection. This should never be required.
-     * @throws Throwable 
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("Disposing of a zod panel");
-        super.finalize();
-    }
 
 }
 

@@ -60,10 +60,7 @@
 
     <macrodef name="deploy-sign">
         <sequential>
-            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
-            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
-            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
-            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
+
             <signjar keystore="${javafx.signjar.keystore}"
                      storepass="${javafx.signjar.storepass}"
                      alias="${javafx.signjar.alias}"
@@ -80,10 +77,7 @@
 
     <macrodef name="deploy-sign-blob">
         <sequential>
-            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
-            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
-            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
-            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
+
             <echo message="Launching &lt;fx:signjar&gt; task from ${ant-javafx.jar.location}" level="info"/>
             <fx:signjar keystore="${javafx.signjar.keystore}"
                         storepass="${javafx.signjar.storepass}"
@@ -101,11 +95,9 @@
 
     <macrodef name="deploy-sign-preloader">
         <sequential>
-            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
-            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
-            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
-            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
-            <signjar keystore="${javafx.signjar.keystore}"
+
+            <signjar lazy="Yes"
+                     keystore="${javafx.signjar.keystore}"
                      storepass="${javafx.signjar.storepass}"
                      alias="${javafx.signjar.alias}"
                      keypass="${javafx.signjar.keypass}"
@@ -131,21 +123,10 @@
 
     <macrodef name="deploy-sign-blob-preloader">
         <sequential>
-            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
-            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
-            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
-            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
-            <signjar keystore="${javafx.signjar.keystore}"
-                     storepass="${javafx.signjar.storepass}"
-                     alias="${javafx.signjar.alias}"
-                     keypass="${javafx.signjar.keypass}"
-                     tsaurl="http://time.certum.pl">
-                <fileset dir="${jfx.deployment.dir}">
-                    <include name="lib${file.separator}${javafx.preloader.jar.filename}"/>
-                </fileset>
-            </signjar>
+            <!-- note expires dec30 -->
             <echo message="Launching &lt;fx:signjar&gt; task from ${ant-javafx.jar.location}" level="info"/>
-            <signjar keystore="${javafx.signjar.keystore}"
+            <signjar lazy="true"
+                     keystore="${javafx.signjar.keystore}"
                      storepass="${javafx.signjar.storepass}"
                      alias="${javafx.signjar.alias}"
                      keypass="${javafx.signjar.keypass}"
