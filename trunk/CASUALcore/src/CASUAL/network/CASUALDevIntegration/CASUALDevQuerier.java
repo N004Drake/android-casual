@@ -26,6 +26,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -57,6 +58,24 @@ public class CASUALDevQuerier {
         }
     }
 
+    public CASUALPackage[] getPackages(){
+        List<CASUALPackage> cp=getPackagesList();
+        return cp.toArray(new CASUALPackage[cp.size()]);
+    }
+    public List<CASUALPackage> getPackagesList(){
+        ArrayList<CASUALPackage> cp=new ArrayList<CASUALPackage>();
+        String[] list=recursiveFolderSearch();
+        for (String pack : list){
+            CASUALPackage packageMeta=new CASUALPackage(pack);
+            if (packageMeta.isValid()){
+                cp.add(packageMeta);
+            }
+        }
+        
+        return cp;
+        
+    }
+    
     /**
      * Performs a recursive search of builds.casual-dev.com
      *
