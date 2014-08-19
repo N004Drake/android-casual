@@ -75,7 +75,7 @@ public class Statics {
     /**
      * increase or decrease the logging level. 0 is error only, 4 is debug
      */
-    public static int outputGUIVerbosity = 4; //userdata is output to console
+    public static int outputGUIVerbosity = 3; //userdata is output to console
 
     /**
      * increase or decrease the log file output. 0 is error only, 4 is debug

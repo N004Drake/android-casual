@@ -208,14 +208,14 @@ public abstract class AbstractDeviceCommunicationsProtocol {
             runcmd[i] = parameters[i - 1]; //insert the rest of the parameters
             runstring = runstring + " " + runcmd[i];
         }
-        Log.level4Debug("Run " + this.getConnectionMethodName() + " from DeviceCommunicationProtocol:" + runstring);
 
         if (silent) {
             String retval = shell.silentTimeoutShellCommand(runcmd, timeout);
             this.checkErrorMessage(runcmd, retval);
             return retval;
         } else {
-
+            Log.level4Debug("Run " + this.getConnectionMethodName() + " from DeviceCommunicationProtocol:" + runstring);
+            Log.insertChars(",");
             return shell.liveShellCommand(runcmd, true);
         }
     }
