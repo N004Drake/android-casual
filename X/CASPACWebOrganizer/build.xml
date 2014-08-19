@@ -77,7 +77,7 @@
         <loadproperties srcfile="../../CASUALcore/src/CASUAL/resources/CASUALApp.properties"/>
         <jar jarfile="dist/CASPACWebOrganizer-r${Application.revision}-dist.jar" level="0" compress="false">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
-            <zipfileset src="dist/lib/CASUALstatic.jar" excludes="META-INF/*" />
+            <zipfileset src="../../CASUALcore/dist/CASUALstatic.jar" excludes="META-INF/*" />
             <!--
            <zipfileset src="dist/lib/javaws.jar" excludes="META-INF/*" />
            <zipfileset src="dist/lib/deploy.jar" excludes="META-INF/*" />
