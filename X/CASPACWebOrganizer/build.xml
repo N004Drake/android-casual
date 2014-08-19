@@ -70,4 +70,30 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+       <target name="-post-jar">
+        
+        <echo>preparing final JOdin3 binary for distribution</echo>
+        <loadproperties srcfile="../../CASUALcore/src/CASUAL/resources/CASUALApp.properties"/>
+        <jar jarfile="dist/CASPACWebOrganizer-r${Application.revision}-dist.jar" level="0" compress="false">
+            <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+            <zipfileset src="dist/lib/CASUALstatic.jar" excludes="META-INF/*" />
+            <!--
+           <zipfileset src="dist/lib/javaws.jar" excludes="META-INF/*" />
+           <zipfileset src="dist/lib/deploy.jar" excludes="META-INF/*" />
+           <zipfileset src="dist/lib/jfxrt.jar" excludes="META-INF/*" />
+            -->  
+            <manifest>
+                <attribute name="JavaFX-Version" value="2.2+"/>
+                <attribute name="Implementation-Title" value="CASUALWebOrganizer"/>
+                <attribute name="implementation-version" value="${Application.revision}"/>
+                <attribute name="JavaFX-Application-Class" value="com.casual_dev.jodin.JOdinMain"/>
+                <attribute name="Application-Name" value="JOdin3 CASUAL"/>
+                <attribute name="Permissions" value="all-permissions"/>
+                <attribute name="Main-Class" value="com/javafx/main/Main"/>
+                <attribute name="Application-Library-Allowable-Codebase" value="*.casual-dev.com file://*"/>
+            </manifest>
+        </jar>
+
+    </target>
 </project>
