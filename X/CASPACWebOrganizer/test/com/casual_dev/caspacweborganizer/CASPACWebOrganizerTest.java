@@ -52,7 +52,7 @@ public class CASPACWebOrganizerTest {
         for (String file:files){
             if (file.toLowerCase().endsWith(".meta")||file.toLowerCase().endsWith(".properties")){
                 System.out.println("cleaning "+file);
-                new File(file).delete();
+                //new File(file).delete();
             }
         }
         
