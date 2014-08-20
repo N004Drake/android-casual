@@ -72,10 +72,12 @@ public class CASPACWebOrganizer {
 
             try {
                 Unzip unzip = new Unzip(candidate);
-                ZipEntry entry = validateCaspac(unzip);
-                if (null != entry) {
-                    System.out.println("Validated candidate " + candidate);
-                    deployEntries(unzip, entry, candidate);
+                ZipEntry[] entries = validateCaspac(unzip);
+                for (ZipEntry entry:entries){
+                    if (null != entry) {
+                        System.out.println("Validated candidate " + candidate);
+                        deployEntries(unzip, entry, candidate);
+                    }
                 }
             } catch (IOException ex) {
                 System.out.println("organize() Permissions/read error while handling " + candidate);
@@ -84,15 +86,15 @@ public class CASPACWebOrganizer {
 
     }
 
-    private ZipEntry validateCaspac(Unzip unzip) {
-        ZipEntry entry = null;
-        while (unzip.zipFileEntries.hasMoreElements() && null == entry) {
+    private ZipEntry[] validateCaspac(Unzip unzip) {
+        ArrayList<ZipEntry> entry = new ArrayList<ZipEntry>();
+        while (unzip.zipFileEntries.hasMoreElements()) {
             ZipEntry x = unzip.zipFileEntries.nextElement();
             if (x.getName().toLowerCase().endsWith(".properties") || x.getName().toLowerCase().endsWith(".meta")) {
-                entry = x;
+                entry.add(x);
             }
         }
-        return entry;
+        return entry.toArray(new ZipEntry[entry.size()]);
     }
 
     private void buildListOfPossibleCASPACs(String[] files) {
