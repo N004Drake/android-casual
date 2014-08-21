@@ -71,7 +71,7 @@ public class CASUALDevQuerier {
                 cp.add(packageMeta);
             }
         }
-        
+        System.out.println("Found "+cp.size()+ " valid CASPACs");
         return cp;
         
     }
@@ -250,7 +250,7 @@ public class CASUALDevQuerier {
             String[] fileList = fileLine.replaceFirst("\\[", "").replace("\\", "").replace("\"", "").split(",");
             //clean and add String URL references to availableFiles
             for (String file : fileList) {
-                if (!file.endsWith("b.prop")) {
+                if (!file.endsWith("b.prop") && (!file.endsWith(".properties"))) {
                     file = "http://builds.casual-dev.com/" + file.replace("\\/", "/");
                     availableURLs.add(file);
                     System.out.println("Available File: " + file);
