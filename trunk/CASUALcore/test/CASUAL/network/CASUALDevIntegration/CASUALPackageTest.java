@@ -19,7 +19,6 @@ package CASUAL.network.CASUALDevIntegration;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -29,10 +28,12 @@ public class CASUALPackageTest {
     CASUALPackage cp;
     public CASUALPackageTest() {
         cp=new CASUALPackage("https://builds.casual-dev.com/files/all/testpak.zip");
+        System.out.println("Set CASPAC up");
     }
     
     @Before
     public void setUp() {
+        
     }
 
     /**
@@ -40,6 +41,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testIsValid() {
+        System.out.println("isvalid");
         assert cp.isValid();
     }
 
@@ -48,6 +50,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetDescritpion() {
+        System.out.println("getDescription");
         assert !cp.getDescription().isEmpty();
     }
 
@@ -56,6 +59,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetDeveloper() {
+        System.out.println("getDeveloper");
         assert !cp.getDeveloper().isEmpty();
     }
 
@@ -64,6 +68,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetDonateTo() {
+        System.out.println("getDonateTo");
         assert !cp.getDonateTo().isEmpty();
     }
 
@@ -72,6 +77,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetDonateLink() {
+        System.out.println("getDonateLink");
         assert !cp.getDonateLink().contains(".");
     }
 
@@ -80,6 +86,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetWindowTitle() {
+        System.out.println("getWindowTitle");
         assert !cp.getWindowTitle().isEmpty();
     }
 
@@ -88,6 +95,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetDescription() {
+        System.out.println("getDescription");
         assert !cp.getDescription().isEmpty();
     }
 
@@ -96,6 +104,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetRevision() {
+        System.out.println("getRevision");
         assert !cp.getRevision().isEmpty();
     }
 
@@ -104,6 +113,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetSupportURL() {
+        System.out.println("getSupportURL");
         assert !cp.getSupportURL().isEmpty();
     }
 
@@ -112,6 +122,7 @@ public class CASUALPackageTest {
      */
     @Test
     public void testGetUniqueID() {
+        System.out.println("getUniqueID");
         assert !cp.getUniqueID().isEmpty();
     }
     
