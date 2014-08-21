@@ -15,14 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
 package CASUAL.network;
+
+//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.URL;
+
 import java.util.Properties;
 
 /**
@@ -30,26 +36,30 @@ import java.util.Properties;
  * @author adamoutler
  */
 public class NetworkProperties {
-
-    Properties p = new Properties();
+    Properties   p = new Properties();
     final String networkName;
-    public NetworkProperties(String location) throws IOException{
-       networkName=location;
-       setProperties(location);
+
+    public NetworkProperties() {
+        networkName = "";
     }
-    
-    
-    private void setProperties(String location) throws MalformedURLException, IOException{
-        
-        URL url=new URL(location);
-        InputStream is= url.openStream();
+
+    public NetworkProperties(String location) throws IOException {
+        networkName = location;
+        setProperties(location);
+    }
+
+    private void setProperties(String location) throws MalformedURLException, IOException {
+        URL         url = new URL(location);
+        InputStream is  = url.openStream();
+
         p.load(is);
         is.close();
     }
-    
-    public Properties getProperties(){
+
+    public Properties getProperties() {
         return p;
     }
-
-
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

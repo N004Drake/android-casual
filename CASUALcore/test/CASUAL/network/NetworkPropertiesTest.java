@@ -55,7 +55,7 @@ public class NetworkPropertiesTest {
 
     
     //this url should contain minSVN value
-    final String networkPropertiesURL="https://builds.casual-dev.com/files/all/testpak.meta";
+    final String networkPropertiesURL="https://builds.casual-dev.com/files/all/testpak.properties";
     final String minSVN="730";
     
     

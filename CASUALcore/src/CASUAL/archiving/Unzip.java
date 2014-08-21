@@ -326,4 +326,8 @@ public class Unzip {
     public ZipEntry getEntry(Object entry) {
         return (ZipEntry) entry;
     }
+    
+    public String toString(){
+        return zip.getName();
+    }
 }
