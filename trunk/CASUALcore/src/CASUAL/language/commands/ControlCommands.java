@@ -42,6 +42,17 @@ public class ControlCommands {
         return false;
     }
 
+    
+    public static boolean setReturn(Command cmd){
+        if (cmd.get().startsWith("$RETURNVALUE")){
+            cmd.set(cmd.get().replaceFirst("RETURNVALUE", "").trim());
+            CASUALScriptParser.setReturnValue(cmd.get());
+            cmd.setReturn(true, cmd.get());
+            return true;
+        }
+        return false;
+    }
+    
     public static boolean checkIfContains(Command cmd) {
         if (cmd.get().startsWith("$IFCONTAINS ")) {
             cmd.set(StringOperations.removeLeadingSpaces(cmd.get().replaceFirst("$IFCONTAINS ", "").trim()));
