@@ -46,6 +46,7 @@ public class CASUALScriptParser {
     int LinesInScript = 0;
     String ScriptTempFolder = "";
     String ScriptName = "";
+    static String scriptReturnValue="";
 
     /**
      * executes a CASUAL script from a file
@@ -207,5 +208,11 @@ public class CASUALScriptParser {
         CASPAC.setActiveScript(s);
         executeActiveScript(CASPAC);
 
+    }
+    public static void setReturnValue(String value){
+        scriptReturnValue=value;
+    }
+    public static String getReturnValue(){
+        return scriptReturnValue;
     }
 }

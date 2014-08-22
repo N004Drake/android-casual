@@ -208,11 +208,14 @@ public class CASUALLanguage {
         /*
          * CONTROL COMMANDS
          */
-        //$HALT
+        //SETRETURN  "string"  sets return value
+        if (ControlCommands.setReturn(cmd)) return cmd.getReturn();
+
+        //$HALT "$CASUAL command" halts and executes the remainder of the line
         ControlCommands.checkHalt(cmd);
-        //$GOTO
+        //$GOTO "#comment" goes to a commented line
         if (ControlCommands.checkGoto(cmd)) return cmd.getReturn();
-        //$ON
+        //$ON  
         if (ControlCommands.checkOn(cmd)) return cmd.getReturn();
         //$CLEARON
         if (ControlCommands.checkClearOn(cmd)) return cmd.getReturn();
