@@ -20,103 +20,99 @@ import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 
 /**
- *provides an interface for a main UI in CASUAL.
- * Provides all User Interfaces and methods which provide a means of handling
- * Message objects and UI. The intent is to abstract the CASUAL Messaging System
- * using this class so a developer may implement their own GUI using any means
- * they like. This class provides notifications which will halt the progress of
- * the script and present information to the user. This allows the user to
- * interact with CASUAL.
+ * provides an interface for a main UI in CASUAL. Provides all User Interfaces
+ * and methods which provide a means of handling Message objects and UI. The
+ * intent is to abstract the CASUAL Messaging System using this class so a
+ * developer may implement their own GUI using any means they like. This class
+ * provides notifications which will halt the progress of the script and present
+ * information to the user. This allows the user to interact with CASUAL.
  *
  * In order to change the Messaging API for CASUAL, there is a static reference
  * which is located in CASUAL.resources.CASUALApp.properties the property name
  * change required is Application.interactions. This should match the desired
  * class which can handle CASUALMessageObjects
  *
- * It is recommended that any class implementing iCASUALUI handle the
- * following items at a minimum: 1. CASUALMessageObject.messageText 2. *
+ * It is recommended that any class implementing iCASUALUI handle the following
+ * items at a minimum: 1. CASUALMessageObject.messageText 2. *
  * CASUALMessageObject.title
  *
  * The return value for any CASUAL Message Object aside from those which execute
  * commmands or specifically state they return string results: 0- yes, ok,
  * continue 1- no, cancel, stop
  *
- * 
- * 
+ *
+ *
  * @author Adam Outler adamoutler@gmail.com
  */
 public interface iCASUALUI {
-    
-        /**
-     *Categories of possible messages. 
+
+    /**
+     * Categories of possible messages.
      */
-    public enum MessageCategory{
+    public enum MessageCategory {
 
         /**
          * TIMEOUT message is displayed to user.
          */
         TIMEOUT,
-
         /**
          * An important message to be displayed.
          */
         ACTIONREQUIRED,
-
         /**
          * User is given the option to continue or cancel.
          */
         USERCANCELOPTION,
-
         /**
          * Notification is displayed.
          */
         USERNOTIFICATION,
-
         /**
-         * Information is displayed. 
+         * Information is displayed.
          */
         SHOWINFORMATION,
-
         /**
          * Error message is displayed.
          */
         SHOWERROR,
-
         /**
-         * Information with yes/no buttons is displayed. 
+         * Information with yes/no buttons is displayed.
          */
         SHOWYESNO,
-
         /**
-         * Information with a string return is displayed. 
+         * Information with a string return is displayed.
          */
         TEXTINPUT,
-
         /**
-         * A command is run, and the return is displayed. 
+         * A command is run, and the return is displayed.
          */
         COMMANDNOTIFICATION
     }
-    
+
     /**
      * returns true if the UI is ready.
+     *
      * @return true if ui is ready
      */
     public boolean isReady();
+
     /**
-     * provides a setter for UI.  Normally unused, but this is for test purposes.
-     * @param ready GUI has all parts established and is ready for operations. 
+     * provides a setter for UI. Normally unused, but this is for test purposes.
+     *
+     * @param ready GUI has all parts established and is ready for operations.
      */
     public void setReady(boolean ready);
+
     /**
-     * returns true if the UI is a dummy UI.  Dummy UI is used for testing and
-     * for running CASPACs with a UI from the command line.  This is useful for
+     * returns true if the UI is a dummy UI. Dummy UI is used for testing and
+     * for running CASPACs with a UI from the command line. This is useful for
      * situations when you want to run an automated UI on a loop.
-     * @return  true if dummy ui.
+     *
+     * @return true if dummy ui.
      */
     public boolean isDummyGUI();
 
-    
+
     /**
      * MessageType used by CASUALMessageObject and any class implementing this
      * interface. Type 0 is a non-critical time-based message object which will
@@ -196,46 +192,40 @@ public interface iCASUALUI {
      * @return string value which must be interpereted
      */
     String displayMessage(CASUALMessageObject messageObject);
-    
-    
+
     /**
-     * disposes the current window.
-     * should be used to terminate application.
+     * disposes the current window. should be used to terminate application.
      * This method can be used to call CASUALMain.Shutdown for proper shutdown.
-     * This should contain "Statics.GUI=null;" for faster shutdown.
-     * This method can contain System.exit at the end. 
+     * This should contain "Statics.GUI=null;" for faster shutdown. This method
+     * can contain System.exit at the end.
      */
     void dispose();
+
     /**
      * the start button was pressed.
      */
     void StartButtonActionPerformed();
 
-
-
     /**
      * sets controls status
      *
      * @param status commanded value
-     * @return true if enabled false if not
+     * @param numberOfDevicesConnected is the number of connected devices.
+     * @param mode string value representing mode of checking for devices.
+     * @return true if successful
      */
-    boolean setControlStatus(boolean status);
-
-    /**
-     * gets the control status
-     *
-     * @return true if enabled
-     */
-    boolean getControlStatus();
+    boolean setControlStatus(boolean status, int numberOfDevicesConnected, String mode);
 
     /**
      * Sets a reference to the current CASPAC so information can be displayed
+     *
      * @param caspac caspac to reference
      */
     void setCASPAC(Caspac caspac);
 
     /**
-     * Sets the current status of the window. 
+     * Sets the current status of the window.
+     *
      * @param title current status
      */
     void setInformationScrollBorderText(String title);
@@ -256,6 +246,7 @@ public interface iCASUALUI {
 
     /**
      * Sets the active script for the window
+     *
      * @param s script which is now active
      */
     void setScript(Script s);
@@ -268,42 +259,29 @@ public interface iCASUALUI {
     void setStartButtonText(String text);
 
     /**
-     * changes the label icon
+     * This message provides a topical overview of what is happening to the
+     * user. It should be used sparingly... eg.. pushing files, flashing
+     * devices...
      *
-     * @param Icon resource to be displayed
-     * @param Text text if icon is missing
-     */
-    void setStatusLabelIcon(String Icon, String Text);
-
-    
-    /**
-     * This message provides a topical overview of what is happening to the user.
-     * It should be used sparingly... eg.. pushing files, flashing devices...
-     * 
      * @param text title to set
      */
-    void setStatusTitle(String text);
+    void setUserMainMessage(String text);
+
     /**
-     * sets the message label subtext.  This message only provides
-     * detail to the user as to the process which is happening and may be used
-     * at any time to update sub-text in the UI. 
+     * sets the message label subtext. This message only provides detail to the
+     * user as to the process which is happening and may be used at any time to
+     * update sub-text in the UI.
      *
      * @param text label text
      */
-    void setStatusSubTitle(String text);
+    void setUserSubMessage(String text);
 
-    
-    
-    
-    
     /**
      * sets window banner image
      *
      * @param icon image to display
      * @param text text if image cannot be displayed
      */
-
-
     /**
      * sets the main window banner text if an image is not used
      *
@@ -312,50 +290,32 @@ public interface iCASUALUI {
     void setWindowBannerText(String text);
 
     /**
-     * sets the window visibility 
+     * sets the window visibility
+     *
      * @param b true if visibility is commanded
      */
     public void setVisible(boolean b);
-    /**
-     * called when device is connected
-     * @param mode adb/fastboot/heimdall/flashtool
-     */
-    void deviceConnected(String mode);
-
-    /**
-     * Device has disconnected, alert the user
-     */
-    void deviceDisconnected();
-
-    /**
-     * multiple devices are detected.  only one is allowed
-     * @param numberOfDevicesConnected number of devices
-     */
-    void deviceMultipleConnected(int numberOfDevicesConnected);
-
-
 
     /**
      * used during unzip as a progress indicator
-     * @param value number of blocks unzipped. 
+     *
+     * @param value number of blocks unzipped.
      */
     public void setBlocksUnzipped(String value);
 
     /**
      * sends a message to the user console
+     *
      * @param string String to send
      */
     public void sendString(String string);
 
     /**
-     * sends a bit of data at a time, such as a character from a terminal command.
-     * b should backspace. \r should erase line.
+     * sends a bit of data at a time, such as a character from a terminal
+     * command. b should backspace. \r should erase line.
+     *
      * @param data data to be sent to UI
      */
     public void sendProgress(String data);
-    
-    
-    
-    
-    
+
 }

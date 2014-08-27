@@ -217,12 +217,20 @@ public class CommandLineUI implements iCASUALUI {
  
 
     @Override
-    public boolean setControlStatus(boolean status) {
+    public boolean setControlStatus(boolean status,int number, String mode) {
+        switch (number){
+            case 0: this.deviceDisconnected();
+                break;
+            case 1: this.deviceConnected(mode);
+                break;
+            default: this.deviceMultipleConnected(number);
+                break;
+        }
+        
         msg("control status requested:"+status);
-        return status;
+        return true;
     }
 
-    @Override
     public boolean getControlStatus() {
           return true;
     }
@@ -259,13 +267,9 @@ public class CommandLineUI implements iCASUALUI {
     public void setStartButtonText(String text) {
     }
 
-    @Override
-    public void setStatusLabelIcon(String Icon, String text) {
-        msg("Status Label "+text);
-    }
 
     @Override
-    public void setStatusSubTitle(String text) {
+    public void setUserSubMessage(String text) {
     }
 
 
@@ -277,17 +281,14 @@ public class CommandLineUI implements iCASUALUI {
     public void setVisible(boolean b) {
     }
 
-    @Override
     public void deviceConnected(String mode) {
        msg ("Device connected");
       
     }
 
-    @Override
     public void deviceDisconnected() {
     }
 
-    @Override
     public void deviceMultipleConnected(int numberOfDevicesConnected) {
     }
 
@@ -311,6 +312,6 @@ public class CommandLineUI implements iCASUALUI {
     }
 
     @Override
-    public void setStatusTitle(String text) {
+    public void setUserMainMessage(String text) {
     }
 }

@@ -145,7 +145,7 @@ public class CASUALLanguage {
             }
             Log.level2Information("@done");
             Statics.GUI.sendProgress("@done");
-            Statics.GUI.setStatusTitle("@done");
+            Statics.GUI.setUserMainMessage("@done");
             Statics.GUI.setReady(true);
             //yeah yeah, overly broad chatch.  read below. 
         } catch (IOException e) {
@@ -275,7 +275,7 @@ public class CASUALLanguage {
             Log.level4Debug("Received ECHO command" + cmd.get());
             cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
             Log.level2Information(cmd.get());
-            Statics.GUI.setStatusSubTitle(cmd.get());
+            Statics.GUI.setUserSubMessage(cmd.get());
             return cmd.getReturn();
         
             //TODO: should this be updated automatically by monitoring or by this new command?
@@ -284,7 +284,7 @@ public class CASUALLanguage {
         } else if (cmd.get().startsWith("$TITLE")){
             Log.level4Debug("Received ECHO command" + cmd.get());
             cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
-            Statics.GUI.setStatusTitle(cmd.get());
+            Statics.GUI.setUserMainMessage(cmd.get());
             return cmd.getReturn();
         
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND

@@ -48,25 +48,7 @@ public class CASUALGUIMainTest {
     
 
 
-    @Test
-    public void testUserInteraction() {
-        if (!java.awt.GraphicsEnvironment.isHeadless()) {
-            CASUAL.Statics.GUI = new GUI.development.CASUALGUIMain();
-            CASUAL.Statics.GUI.setReady(true);
-            int x = new CASUAL.CASUALMessageObject("testing", "In the window which pops up, you have 4 seconds to \nduble-click the 'Disconnected' icon.").showTimeoutDialog(30, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
-            if (x!=0){
-                return;
-            }
-            CASUAL.Statics.GUI.setVisible(true);
-            
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(CASUALGUIMainTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            assert Statics.GUI.getControlStatus();
-        }
-    }
+
 
     
 }

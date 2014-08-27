@@ -64,15 +64,6 @@ public class automatic implements CASUAL.iCASUALUI {
 
 
 
-    @Override
-    public boolean setControlStatus(boolean status) {
-        return true;
-    }
-
-    @Override
-    public boolean getControlStatus() {
-        return true;
-    }
 
     @Override
     public void setCASPAC(Caspac caspac) {
@@ -104,13 +95,9 @@ public class automatic implements CASUAL.iCASUALUI {
         
     }
 
-    @Override
-    public void setStatusLabelIcon(String Icon, String Text) {
-        
-    }
 
     @Override
-    public void setStatusSubTitle(String text) {
+    public void setUserSubMessage(String text) {
         
     }
 
@@ -126,17 +113,14 @@ public class automatic implements CASUAL.iCASUALUI {
         
     }
 
-    @Override
     public void deviceConnected(String mode) {
         
     }
 
-    @Override
     public void deviceDisconnected() {
         
     }
 
-    @Override
     public void deviceMultipleConnected(int numberOfDevicesConnected) {
         
     }
@@ -156,7 +140,19 @@ public class automatic implements CASUAL.iCASUALUI {
     }
 
     @Override
-    public void setStatusTitle(String text) {
+    public void setUserMainMessage(String text) {
     }
-    
+        @Override
+    public boolean setControlStatus(boolean status,int number, String mode) {
+        switch (number){
+            case 0: this.deviceDisconnected();
+                break;
+            case 1: this.deviceConnected(mode);
+                break;
+            default: this.deviceMultipleConnected(number);
+                break;
+        }
+        
+        return true;
+    }
 }
