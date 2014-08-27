@@ -577,7 +577,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      *
      * @param status commanded value
      * @param number number of devices 
-     * @param string mode mode which is commanded
+     * @param  mode mode which is commanded
      * @return true if enabled false if not
      */
     @Override
