@@ -314,9 +314,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     public void StartButtonActionPerformed() {
         Log.level4Debug("StartButtonActionPerformed() Script Activated");
         Log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
-
+        setReady(false);
         CASUALConnectionStatusMonitor.stop();
-        setControlStatus(false);
+        enableDisableControls(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
 
         //execute
@@ -367,7 +367,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 CASUALConnectionStatusMonitor.stop();
-                this.setControlStatus(false);
+                this.enableDisableControls(false);
                 FileName = FileChooser1.getSelectedFile().getCanonicalPath();
                 nonResourceFileName = this.getFilenameWithoutExtension(FileName);
                 Log.level2Information("Description for " + nonResourceFileName);
@@ -415,11 +415,21 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             launchLink(caspac.build.donateLink);
         }
     }//GEN-LAST:event_DonateButtonActionPerformed
-
+    /**
+     * sets the window visible.
+     *
+     * @param v set true if window should be visible.
+     */
+    @Override
+    public void setVisible(boolean v) {
+        Log.level3Verbose("Setting window visibility" + v);
+        setLocationRelativeTo(null);
+        super.setVisible(v);
+    }
 
     private void comboBoxScriptSelectorPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboBoxScriptSelectorPopupMenuWillBecomeInvisible
         CASUALConnectionStatusMonitor.stop();
-        this.setControlStatus(false);
+        this.enableDisableControls(false);
         CASUALStartupTasks.lockGUIunzip = true;
         String selectedScript = comboBoxScriptSelector.getSelectedItem().toString();
         Log.level4Debug("hiding script selector TargetScript: " + selectedScript);
@@ -513,7 +523,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * @param Icon resource to be displayed
      * @param Text text if icon is missing
      */
-    @Override
     public void setStatusLabelIcon(String Icon, String Text) {
         StatusLabel.setIcon(createImageIcon(Icon, Text));
     }
@@ -550,7 +559,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * @param text label text
      */
     @Override
-    public void setStatusSubTitle(String text) {
+    public void setUserSubMessage(String text) {
         this.StatusLabel.setText(text);
     }
 
@@ -559,7 +568,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      *
      * @return true if enabled
      */
-    @Override
     public boolean getControlStatus() {
         return startButton.isEnabled() && comboBoxScriptSelector.isEnabled();
     }
@@ -568,29 +576,43 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
      * sets controls status
      *
      * @param status commanded value
+     * @param number number of devices 
+     * @param string mode mode which is commanded
      * @return true if enabled false if not
      */
     @Override
-    public boolean setControlStatus(boolean status) {
+    public boolean setControlStatus(boolean status,int number, String mode) {
+        switch (number){
+            case 0: this.deviceDisconnected();
+                break;
+            case 1: this.deviceConnected(mode);
+                break;
+            default: this.deviceMultipleConnected(number);
+                break;
+        }
+        
+        return true;
+    }
 
+    boolean enableDisableControls( boolean requestedStatus){
         if (!CASUALStartupTasks.scriptRunLock.isComplete()) {
             return false;
         }
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
         if (caspac != null) {
             if (caspac.build.alwaysEnableControls) {
-                status = true; //if LockOnADBDisconnect is false then just enable controls
-                startButton.setEnabled(status);
-                comboBoxScriptSelector.setEnabled(status);
+                requestedStatus = true; //if LockOnADBDisconnect is false then just enable controls
+                startButton.setEnabled(requestedStatus);
+                comboBoxScriptSelector.setEnabled(requestedStatus);
                 return true;
             }
         }
         if (!CASUALStartupTasks.lockGUIformPrep) {
             if (!CASUALStartupTasks.lockGUIunzip) {
                 if (!CASUALStartupTasks.scriptRunLock.isAlive()) {
-                    startButton.setEnabled(status);
-                    comboBoxScriptSelector.setEnabled(status);
-                    Log.level4Debug("Controls Enabled status: " + status);
+                    startButton.setEnabled(requestedStatus);
+                    comboBoxScriptSelector.setEnabled(requestedStatus);
+                    Log.level4Debug("Controls Enabled status: " + requestedStatus);
                 } else {
                     Log.level4Debug("Control Change requested but script is running");
                 }
@@ -600,12 +622,15 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         } else {
             Log.level4Debug("Control Change requested but GUI is not ready is set.");
         }
-        return checkGUIStatus(status);
+        return checkGUIStatus(requestedStatus);
+        
     }
-
+       
+       
+       
     private boolean checkGUIStatus(boolean expectedStatus) {
         if (Statics.isGUIIsAvailable()) {
-            return expectedStatus == Statics.GUI.getControlStatus();
+            return expectedStatus == this.startButton.isEnabled();
         } else if (Statics.isGUIIsAvailable()) {  //if gui is not available yet
             return false;
         }
@@ -682,7 +707,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
          //setup banner with CASPAC.logo
          }*/
         if (caspac.build.alwaysEnableControls) {
-            setControlStatus(true);
+            enableDisableControls(true);
         }
         this.setTitle(caspac.build.windowTitle + " -- CASUAL R" + CASUAL.CASUALTools.getSVNVersion());
         if (caspac.scripts.size() > 0) {
@@ -726,34 +751,27 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         }
     }
 
-    /**
-     * sets the window visible.
-     *
-     * @param v set true if window should be visible.
-     */
-    @Override
-    public void setVisible(boolean v) {
-        Log.level3Verbose("Setting window visibility" + v);
-        setLocationRelativeTo(null);
-        super.setVisible(v);
-    }
-
-    @Override
+    static boolean deviceConnected=false;
     public void deviceConnected(String mode) {
+        
         setStatusLabelIcon("/GUI/development/resources/images/DeviceConnected.png", "Device Connected");
-        setStatusSubTitle("Target Acquired");
+        setUserSubMessage("Target Acquired");
         AudioHandler.playSound("/GUI/development/resources/sounds/Connected-SystemReady.wav");
+        deviceConnected=true;
+        if (this.isReady && deviceConnected){
+            this.enableDisableControls(true);
+        }
 
     }
 
-    @Override
     public void deviceDisconnected() {
+        deviceConnected=false;
         setStatusLabelIcon("/GUI/development/resources/images/DeviceDisconnected.png", "Device Not Detected");
         AudioHandler.playSound("/GUI/development/resources/sounds/Disconnected.wav");
     }
 
-    @Override
     public void deviceMultipleConnected(int numberOfDevicesConnected) {
+        deviceConnected=false;
         setStatusLabelIcon("/GUI/development/resources/images/TooManyDevices.png", "Target Acquired");
         String[] URLs = {"/GUI/development/resources/sounds/" + String.valueOf(numberOfDevicesConnected) + ".wav", "/GUI/development/resources/sounds/DevicesDetected.wav"};
         AudioHandler.playMultipleInputStreams(URLs);
@@ -1019,6 +1037,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     @Override
     public void setReady(boolean ready) {
         isReady = ready;
+        if (this.isReady && deviceConnected){
+            this.enableDisableControls(true);
+        }
     }
 
     @Override
@@ -1053,7 +1074,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     @Override
-    public void setStatusTitle(String text) {
+    public void setUserMainMessage(String text) {
     }
 
 }

@@ -2086,19 +2086,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public void StartButtonActionPerformed() {
     }
 
-
-
-
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     *
-     */
-    @Override
-    public boolean getControlStatus() {
-        return true;
-    }
-
     /**
      * dummy method used to implement iCASUALUI for the purpose of allowing
  CASUAL to throw notifications.
@@ -2159,16 +2146,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public void setStartButtonText(String text) {
     }
 
-    /**
-     * dummy method used to implement iCASUALUI for the purpose of allowing
- CASUAL to throw notifications.
-     *
-     * @param text dummy method used to implement iCASUALUI
-     * @param icon dummy method used to implement iCASUALUI
-     */
-    @Override
-    public void setStatusLabelIcon(String icon, String text) {
-    }
+
 
     /**
      * dummy method used to implement iCASUALUI for the purpose of allowing
@@ -2177,7 +2155,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      * @param text dummy method used to implement iCASUALUI
      */
     @Override
-    public void setStatusSubTitle(String text) {
+    public void setUserSubMessage(String text) {
     }
 
 
@@ -2198,7 +2176,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      *
      * @param string dummy method used to implement iCASUALUI
      */
-    @Override
     public void deviceConnected(String string) {
     }
 
@@ -2206,7 +2183,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      * dummy method used to implement iCASUALUI for the purpose of allowing
  CASUAL to throw notifications.
      */
-    @Override
     public void deviceDisconnected() {
     }
 
@@ -2216,7 +2192,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      *
      * @param i dummy method used to implement iCASUALUI
      */
-    @Override
     public void deviceMultipleConnected(int i) {
     }
 
@@ -2248,8 +2223,16 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
 
     @Override
-    public boolean setControlStatus(boolean status) {
-      return true;
+    public boolean setControlStatus(boolean status,int number, String mode) {
+        switch (number){
+            case 0: this.deviceDisconnected();
+                break;
+            case 1: this.deviceConnected(mode);
+                break;
+            default: this.deviceMultipleConnected(number);
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -2267,7 +2250,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     }
 
     @Override
-    public void setStatusTitle(String text) {
+    public void setUserMainMessage(String text) {
     }
 
     /*

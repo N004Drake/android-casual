@@ -681,16 +681,20 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         }
     }
 
-    @Override
-    public boolean setControlStatus(boolean status) {
+        @Override
+    public boolean setControlStatus(boolean status,int number, String mode) {
+        switch (number){
+            case 0: this.deviceDisconnected();
+                break;
+            case 1: this.deviceConnected(mode);
+                break;
+            default: this.deviceMultipleConnected(number);
+                break;
+        }
         this.start.setDisable(!status);
         return !start.isDisabled();
     }
 
-    @Override
-    public boolean getControlStatus() {
-        return !start.isDisabled();
-    }
 
     Caspac caspac;
 
@@ -738,16 +742,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void setStatusLabelIcon(String Icon, final String Text) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                messageBox.appendText(Text + "\n");
 
-            }
-        });
-    }
 
     @Override
     public void setWindowBannerText(String text) {
@@ -758,7 +753,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     }
 
-    @Override
     public void deviceConnected(final String mode) {
         Platform.runLater(new Runnable() {
             @Override
@@ -771,7 +765,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     }
 
-    @Override
     public void deviceDisconnected() {
         Platform.runLater(new Runnable() {
             @Override
@@ -784,7 +777,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     }
 
-    @Override
     public void deviceMultipleConnected(int numberOfDevicesConnected) {
         Platform.runLater(new Runnable() {
             @Override
@@ -797,7 +789,6 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     }
 
-    @Override
     public void setBlocksUnzipped(String i) {
     }
 
@@ -928,12 +919,13 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     }
 
+
     @Override
-    public void setStatusTitle(String string) {
+    public void setUserMainMessage(String string) {
     }
 
     @Override
-    public void setStatusSubTitle(String string) {
+    public void setUserSubMessage(String string) {
     }
 
 }

@@ -81,6 +81,16 @@ public class CASUALConnectionStatusMonitor {
         }
         return sb.toString();
     }
+    
+    
+    private String getConnectionMethodName(){
+        if (null==monitor){
+            return "not monitoring";
+        } else {
+            return monitor.getConnectionMethodName();
+        }
+        
+    }
 
     /**
      * Starts and stops the ADB timer reference with
@@ -96,8 +106,7 @@ public class CASUALConnectionStatusMonitor {
         Log.level3Verbose("Starting: " + mode);
         //lock controls if not available yet.
         if (Statics.isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
-            Statics.GUI.setControlStatus(false);
-            Statics.GUI.setStatusLabelIcon("/CASUAL/resources/icons/DeviceDisconnected.png", "Device Not Detected");
+            Statics.GUI.setControlStatus(false,0,getConnectionMethodName());
             LastState = 0;
         }
         doMonitoring();
@@ -153,20 +162,18 @@ public class CASUALConnectionStatusMonitor {
     void stateSwitcher(int state) {
         if (LastState != state) {
             Log.level4Debug("Attempting state change to " + state + " devices connected");
-            boolean switched=false;
+            boolean switched;
             switch (state) {
                 case 0:
                     Log.level4Debug("Device disconnected commanded");
                     Statics.setStatus("Device Removed");
-                    Statics.GUI.deviceDisconnected();
-                    switched =! Statics.GUI.setControlStatus(false);
+                    switched = Statics.GUI.setControlStatus(false,0,getConnectionMethodName());
 
                     break;
                 case 1:
                     Statics.setStatus("Device Connected");
                     Log.level4Debug("@stateConnected");
-                    Statics.GUI.deviceConnected("ADB");
-                    switched = Statics.GUI.setControlStatus(true);
+                    switched = Statics.GUI.setControlStatus(true,1,getConnectionMethodName());
                     break;
                 default:
                     Statics.setStatus("Multiple Devices Detected");
@@ -175,9 +182,9 @@ public class CASUALConnectionStatusMonitor {
                         Log.level0Error("Remove " + (state - 1) + " device to continue.");
                     }
 
-                    switched =! Statics.GUI.setControlStatus(false);
+                    switched =! Statics.GUI.setControlStatus(false,state,getConnectionMethodName());
                     Log.level4Debug("State Multiple Devices Number of devices" + state);
-                    Statics.GUI.deviceMultipleConnected(state);
+
                     break;
 
             }
