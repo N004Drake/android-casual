@@ -91,7 +91,10 @@ public class ZodUI extends Application {
         zui.setDownloader(downloader);
         //launch the first display panel
         displayInitialZod();
-        new CASUAL.CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+        
+        new Thread( ()->{
+            new CASUAL.CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+        }).start();
 
         new Thread(()->{
             downloader.downloadCaspac(zui);
@@ -112,6 +115,11 @@ public class ZodUI extends Application {
                     } catch (MalformedURLException ex) {
                         Log.errorHandler(ex);
                     }
+                break;
+                case "testStartup":
+                    TestClass.hideMainScreen=true;
+                    TestClass.testEmoticons=true;
+                    break;
             }
         });
         Log.level2Information("  Copyright (C) 2013  CASUAL-Dev / Adam Outler\n"
@@ -146,8 +154,10 @@ public class ZodUI extends Application {
 
     private void displayInitialZod() {
         zui.initializeAd();
-
         zui.createNewZod(CASUALZodMainUI.content);
+        if (TestClass.hideMainScreen){
+            zui.displayFrontPage(false);
+        }
     }
     private static final Logger LOG = Logger.getLogger(ZodUI.class.getName());
 }

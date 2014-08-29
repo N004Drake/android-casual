@@ -16,16 +16,17 @@
  */
 package com.casual_dev.zodui.contentpanel;
 
-import CASUAL.Log;
 import CASUAL.instrumentation.ModeTrackerInterface.Mode;
-import java.awt.Font;
+import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
+import javafx.scene.text.Text;
 
 /**
  * Provides storage of content for ZodPanels
  *
  * @author adamoutler
  */
-public class ZodPanelContent implements CASUAL.instrumentation.ModeTrackerInterface {
+public class ZodPanelContent{
 
     private String mainTitle = "Lorem ipsum dolor sit amet adfasfd asfdasfdasfdas";
     private String subTitle = "Lorem ipsum dolor sit amet";
@@ -38,15 +39,11 @@ public class ZodPanelContent implements CASUAL.instrumentation.ModeTrackerInterf
     private String[] buttonActions = new String[]{"OK"};
     private boolean inputRequired = false;
     private String status = "ready";
-    private Mode mode=Mode.CASUAL;
-    private String logText="";
-    private String action="";
-    /**
-     * default constructor for default content. this will provide a Lorem ipsum
-     * set of content.
-     */
-    public ZodPanelContent() {
-        CASUAL.instrumentation.Track.setTrackerImpl(this);
+
+    private static Text logText=new Text("");
+
+    public ZodPanelContent(){
+        
     }
 
     /**
@@ -63,12 +60,9 @@ public class ZodPanelContent implements CASUAL.instrumentation.ModeTrackerInterf
         inputRequired = zpc.inputRequired;
         status = zpc.status;
         logClosed=zpc.logClosed;
-        logText= zpc.logText;
-        mode=zpc.mode;
-        
-
     }
 
+ 
     /**
      * gets main title
      *
@@ -142,10 +136,10 @@ public class ZodPanelContent implements CASUAL.instrumentation.ModeTrackerInterf
      *
      * @return
      */
-    public String getImage() {
+    public String getImageString() {
         return this.image;
     }
-
+    
     /**
      *
      * @param image
@@ -190,123 +184,24 @@ public class ZodPanelContent implements CASUAL.instrumentation.ModeTrackerInterf
     /**
      * @return the logArea
      */
-    public String getLogText() {
+    public Text getLogText() {
         return logText;
     }
 
     /**
      * @param logArea the logArea to set
      */
-    public void setLogTextrea(String logArea) {
-        this.logText = logArea;
+    public void appendLogAreaText(String logArea) {
+        StringProperty sp=logText.textProperty();
+        sp.setValue(sp.get()+logArea);
     }    
-
-    @Override
-    public void setMode(Mode mode) {
-        this.mode=mode;
-        Log.level3Verbose("*****New Mode set:"+mode.name());
-        switch (mode) {
-            case ADB:
-                image="@images/CASUAL-adb.png";
-                action="";
-                break;
-            case ADBsearching:
-                image="@images/CASUAL-adb.png";
-                action="💻";
-                break;
-            case ADBpush:
-                image="@images/CASUAL-adb.png";
-                action="📥";
-                break;
-            case ADBpull:
-                image="@images/CASUAL-adb.png";
-                action="📤";
-                break;
-            case ADBsideload:
-                image="@images/CASUAL-adb.png";
-                action="📲";
-                break;
-            case ADBwaitForDevice:
-                image="@images/CASUAL-adb.png";
-                action="💻";
-                break;
-            case ADBreboot:
-                image="@images/CASUAL-adb.png";
-                action="🔃";
-                break;
-            case ADBshell:
-                image="@images/CASUAL-adb.png";
-                action="";
-                break;
-            case Fastboot:
-                image="@images/CASUAL-fastboot.png";
-                action="";
-                break;
-            case FastbootSearching:
-                image="@images/CASUAL-fastboot.png";
-                action="💻";
-                break;
-            case FastbootBooting:
-                image="@images/CASUAL-fastboot.png";
-                action="🔐";
-                break;
-            case FastbootFlashing:
-                image="@images/CASUAL-fastboot.png";
-                action="⚠";
-                break;
-            case Heimdall:
-                image="@images/CASUAL-heimdall.png";
-                action="";
-                break;
-            case HeimdalSearching:
-                image="@images/CASUAL-heimdall.png";
-                action="🔎";
-                break;
-            case HeimdallFlash:
-                image="@images/CASUAL-heimdall.png";
-                action="⚠";
-                break;
-            case HeimdallPullPartitionTable:
-                image="@images/CASUAL-heimdall.png";
-                action="💾";
-                break;
-            case HeimdallExaminingOdin3Package:
-                image="@images/CASUAL-heimdall.png";
-                action="📂";
-                break;
-            case CASUAL:
-                image="@images/CASUAL-casual.png";
-                action="";
-                break;
-            case CASUALDownload:
-                image="@images/CASUAL-casual.png";
-                action="📥";
-                break;
-            case CASUALExecuting:
-                image="@images/CASUAL-casual.png";;
-                action="🕛";
-                break;
-            case CASUALDataBridgeFlash:
-                image="@images/CASUAL-casual.png";
-                action="⛗";
-                break;
-            case CASUALDataBridgePull:
-                image="@images/CASUAL-casual.png";
-                action="⛗";
-                break;
-            case CASUALFinishedSucess:
-                image="@images/CASUAL-casual.png";
-                action="☑";
-                break;
-            case CASUALFinishedFailure:
-                image="@images/CASUAL-casual.png";
-                action="☑";
-                break;
-            case CASUALFinished:
-                image="@images/CASUAL-casual.png";
-                action="☑";
-                break;
-        }
+    
+    public Text getLogAreaText(){
+        return logText;
     }
 
+
+    
+
+ 
 }

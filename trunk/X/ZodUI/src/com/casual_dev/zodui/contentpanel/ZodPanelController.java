@@ -38,11 +38,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -53,7 +56,7 @@ import javafx.util.Duration;
  */
 public class ZodPanelController
 extends BorderPane
-implements Initializable {
+implements Initializable, CASUAL.instrumentation.ModeTrackerInterface {
     @FXML
     BorderPane topLevel;
     @FXML
@@ -65,16 +68,18 @@ implements Initializable {
     @FXML
     ProgressBar progressBar;
     @FXML
-    ProgressIndicator progressIndicator;
+    public ProgressIndicator progressIndicator;
     @FXML
     TextArea logArea;
-
+    @FXML
+    AnchorPane imageArea;
     @FXML 
     Label actionArea;
     @FXML
     Label status;
     CASUALZodMainUI parentPanel;
     final Duration transitiontime=Duration.millis((double)10000.0);
+    private static Mode mode=Mode.CASUAL;
 
     /**
      *Sets the parent object for communication.
@@ -93,9 +98,7 @@ implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //actionArea.setFont(FontLoader.getOpenEmoji());
-        actionArea.setText("💻");
-        actionArea.setTextFill(Paint.valueOf("green"));
+    CASUAL.instrumentation.Track.setTrackerImpl(this);
         //ObjectProperty p=actionArea.fontProperty();
         //System.out.println(p);
         
@@ -107,11 +110,19 @@ implements Initializable {
      * @param zpc zod panel content.
      */
     public void setZodPanelContent(ZodPanelContent zpc) {
+
+        AnchorPane a=imageArea;
+
+        Platform.runLater(()->{
         title.setText(zpc.getMainTitle());
         message.setText(zpc.getSubtitle());
         progressBar.setProgress(ZodPanelContent.getProgress()/ZodPanelContent.getProgressMax());
         status.setText(zpc.getStatus());
         progressIndicator.setProgress(ZodPanelContent.getProgress()/ZodPanelContent.getProgressMax());
+        image.setImage(getModeImage());
+        imageArea.getChildren().add(getModeText());
+        System.out.println("woot");
+        });
     }
 
     /**
@@ -146,7 +157,7 @@ implements Initializable {
      */
     public void disposeZod(GridPane parent) {
         Platform.runLater(() -> {
-                        WritableImage snapshot = topLevel.snapshot(new SnapshotParameters(), null);
+            WritableImage snapshot = topLevel.snapshot(new SnapshotParameters(), null);
             topLevel.setCacheHint(CacheHint.SCALE_AND_ROTATE);
             topLevel.setCache(true);
             ImageView i=new ImageView(snapshot);
@@ -162,7 +173,7 @@ implements Initializable {
             ScaleTransition st = new ScaleTransition(ZodPanelController.this.transitiontime, (Node)ZodPanelController.this.topLevel);
             RotateTransition rt = new RotateTransition(ZodPanelController.this.transitiontime, (Node)ZodPanelController.this.topLevel);
             TranslateTransition tt = new TranslateTransition(ZodPanelController.this.transitiontime, (Node)ZodPanelController.this.topLevel);
-            ft.setFromValue(50.0);
+            ft.setFromValue(30.0);
             ft.setToValue(5.0);
             ft.setCycleCount(1);
             ft.setAutoReverse(false);
@@ -202,6 +213,30 @@ implements Initializable {
             status.setText(string);
         });
         
+    }
+
+          @Override
+    public void setMode(Mode setMode) {
+        Platform.runLater(()->{
+            mode = setMode;
+            this.image.setImage(this.getModeImage());
+            if (imageArea.getChildren().size()>1){
+                imageArea.getChildren().remove(1);
+            }
+            this.imageArea.getChildren().add(this.getModeText());
+        });
+    }
+    private Image getModeImage(){
+        return ModeContent.getImage(mode);
+    }
+    
+    private Text getModeText(){
+       
+        Text t=ModeContent.getText(mode);
+        
+        t.setX(150);
+        t.setY(250);
+        return t;
     }
     
     
