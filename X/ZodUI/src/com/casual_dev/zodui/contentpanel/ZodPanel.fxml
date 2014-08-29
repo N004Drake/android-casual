@@ -30,21 +30,11 @@
     </GridPane>
   </bottom>
   <right>
-      <VBox prefHeight="295.0" prefWidth="444.0">
+      <AnchorPane fx:id="logPane" stylesheets="@logarea.css">
          <children>
-            <TextArea id="logarea" fx:id="logArea" editable="false" maxHeight="1.7976931348623157E308" opacity="0.29" prefHeight="338.0" prefWidth="444.0" stylesheets="@logarea.css" wrapText="true">
-               <effect>
-                  <DropShadow />
-               </effect>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding>
-            </TextArea>
+            <TextArea fx:id="logArea" editable="false" layoutY="-3.0" prefHeight="335.0" prefWidth="444.0" stylesheets="@logarea.css" wrapText="true" />
          </children>
-      </VBox>
+      </AnchorPane>
   </right>
   <rotationAxis>
     <Point3D x="2.0" y="-3.0" z="-1.0" />
@@ -76,18 +66,13 @@
     </GridPane>
   </top>
    <left>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="imageArea" prefHeight="200.0" prefWidth="200.0" stylesheets="@logarea.css" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="image" fitHeight="320.0" fitWidth="358.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/CASUAL-casual.png" />
                </image>
             </ImageView>
-            <Label fx:id="actionArea" layoutX="168.0" layoutY="109.0" prefHeight="152.0" prefWidth="138.0" text="ð">
-               <font>
-                  <Font size="96.0" />
-               </font>
-            </Label>
          </children>
       </AnchorPane>
    </left>

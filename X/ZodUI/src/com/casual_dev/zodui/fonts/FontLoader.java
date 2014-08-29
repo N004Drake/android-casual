@@ -30,6 +30,8 @@ public class FontLoader {
     static {
         InputStream is = new FontLoader().getClass().getResourceAsStream("/com/casual_dev/zodui/fonts/OpenEmojiFont.ttf");
         openEmoji = Font.loadFont(is, 40);
+        
+        
     }
 
     public static Font getOpenEmoji() {

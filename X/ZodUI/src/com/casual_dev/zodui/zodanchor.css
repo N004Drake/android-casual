@@ -27,3 +27,11 @@
         
     
 }
+#emoticon{
+    -fx-font: 100px Droid Sans Fallback;
+    -fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, darkgrey 0%, gray 50%);
+    -fx-stroke: transparent;
+    -fx-stroke-width: 1;
+
+}
+

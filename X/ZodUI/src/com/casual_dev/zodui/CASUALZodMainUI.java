@@ -31,7 +31,6 @@ import com.casual_dev.zodui.contentpanel.ZodPanelController;
 import com.casual_dev.zodui.messagepanel.MessagePanelContent;
 import com.casual_dev.zodui.messagepanel.MessagePanelController;
 import java.io.IOException;
-import static java.lang.System.exit;
 import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -115,7 +114,7 @@ public class CASUALZodMainUI
         organizeFrontPageAndZodPanel();
         //Start the message panel on a new thread and wait for it to create
         Platform.runLater(() -> {
-            AnchorPane b = getNewMessage(msg);
+            AnchorPane b = createMessagePanel(msg);
             b.setPrefHeight(panel.getHeight() - 50);
             b.setMaxHeight(panel.getHeight() - 50);
 
@@ -147,23 +146,30 @@ public class CASUALZodMainUI
     }
 
     private void organizeFrontPageAndZodPanel() {
-            if (messageDisplayed) {
-                displayFrontPage(false);
-            } else if (frontPageDisplayed) {
-                displayFrontPage(true);
-            } else {
-                displayFrontPage(false);
+        if (messageDisplayed) {
+            displayFrontPage(false);
+        } else if (frontPageDisplayed) {
+            displayFrontPage(true);
+        } else {
+            displayFrontPage(false);
 
-            }
-
+        }
+        if (TestClass.hideMainScreen) {
+            displayFrontPage(false);
+        }
+        if (TestClass.testEmoticons) {
+            new Thread(() -> {
+                new TestClass().testGUIGraphics();
+            }).start();
+        }
 
     }
 
-    private void displayFrontPage(boolean x) {
+    void displayFrontPage(boolean x) {
         if (frontPage.isVisible() != x) {
             Platform.runLater(() -> {
                 frontPage.setVisible(x);
-                if (x){
+                if (x) {
                     frontPage.toFront();
                 } else {
                     frontPage.toBack();
@@ -172,7 +178,7 @@ public class CASUALZodMainUI
         }
         if (this.getControlStatus() != x) {
             Platform.runLater(() -> {
-            this.setControlStatus(x);
+                this.setControlStatus(x,1,"heimdall");
             });
         }
     }
@@ -191,7 +197,7 @@ public class CASUALZodMainUI
         }
     }
 
-    AnchorPane getNewMessage(MessagePanelContent mpc) {
+    AnchorPane createMessagePanel(MessagePanelContent mpc) {
         try {
 
             URL location = this.getClass().getResource("/com/casual_dev/zodui/messagepanel/MessagePanel.fxml");
@@ -239,6 +245,8 @@ public class CASUALZodMainUI
                     panel = (ZodPanelController) fxmlLoader.getController();
                     panel.setParentObject(ui);
                     panel.setZodPanelContent(zpc);
+
+                    //imageArea.getChildren().add(zpc.getModeText(
                     return (BorderPane) root;
                 } catch (IOException ex) {
                     Log.errorHandler(ex);
@@ -264,7 +272,7 @@ public class CASUALZodMainUI
             });
         });
         Log.level4Debug("new panel created: " + ++x);
-        this.panel.setZodPanelContent(zpc);
+        //this.panel.setZodPanelContent(zpc);
     }
 
     @FXML
@@ -373,20 +381,26 @@ public class CASUALZodMainUI
 
     }
 
-    @Override
-    public boolean setControlStatus(boolean bln) {
+        @Override
+    public boolean setControlStatus(boolean status,int number, String mode) {
+        switch (number){
+            case 0: this.deviceDisconnected();
+                break;
+            case 1: this.deviceConnected(mode);
+                break;
+            default: this.deviceMultipleConnected(number);
+                break;
+        }
         Platform.runLater(() -> {
-            if (bln) {
-                frontPageDisplayed = true;
-            } else {
-                frontPageDisplayed = false;
+            frontPageDisplayed = status;
+            displayStatusOnFrontPage(status);
+            if (TestClass.hideMainScreen) {
+                displayFrontPage(false);
             }
-            displayStatusOnFrontPage(bln);
         });
-        return CASUALready.get();  //true if value was set
+        return true;
     }
 
-    @Override
     public boolean getControlStatus() {
         return !startButton.disableProperty().get();
     }
@@ -400,7 +414,7 @@ public class CASUALZodMainUI
 
     @Override
     public void setInformationScrollBorderText(String string) {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             panel.appendToLog(string);
         });
         ZodPanelContent zpc = new ZodPanelContent(content);
@@ -435,15 +449,6 @@ public class CASUALZodMainUI
 
     }
 
-    @Override
-    public void setStatusLabelIcon(String string, String string1) {
-
-    }
-
-    @Override
-    public void setStatusSubTitle(String string) {
-        this.panel.getZodPanelContent().setSubtitle(string);
-    }
 
     @Override
     public void setWindowBannerText(String string) {
@@ -457,14 +462,12 @@ public class CASUALZodMainUI
 
     }
 
-    @Override
     public void deviceConnected(String string) {
         Platform.runLater(() -> {
             deviceStatus.setText("Device Detected");
         });
     }
 
-    @Override
     public void deviceDisconnected() {
         Platform.runLater(() -> {
             deviceStatus.setText("Not Connected");
@@ -472,7 +475,6 @@ public class CASUALZodMainUI
 
     }
 
-    @Override
     public void deviceMultipleConnected(int i) {
         Platform.runLater(() -> {
             deviceStatus.setText("Please disconnect " + (i - 1) + " devices");
@@ -495,22 +497,31 @@ public class CASUALZodMainUI
 
     @Override
     public void sendProgress(final String string) {
-        Platform.runLater(() -> {
-            if (this.getDownloader().isDownloading()) {
+            if (ZodDownloader.isDownloading()) {
                 try {
-                    panel.setStatus("Downloading " + getDownloader().getTitle() + ":" + string + " of " + getDownloader().getExpectedBytes() + "kb");
-                } catch (NumberFormatException ex) {
-                    panel.setStatus(string);
+                    ZodDownloader d = getDownloader();
+                    String s=string.replace("kb ", "");
+                    int i=Integer.valueOf(s);
+                    
+                    int max = d.getExpectedBytes();
+                    ZodPanelContent c = this.panel.getZodPanelContent();
+                    ZodPanelContent.setProgressMax(max);
+                    ZodPanelContent.setProgress(i);
+                    panel.setStatus("Downloading " + d.getTitle() + ":" + string + " of " + d.getExpectedBytes() + "kb");
+                    Platform.runLater(() -> {
+                        panel.updateProgress();
+                    });
+                } catch (NumberFormatException | NullPointerException ex) {
+                    Platform.runLater(() -> {
+                        panel.setStatus(string);
+                    });
+
                 }
             }
-        });
+        
     }
 
-    @Override
-    public void setStatusTitle(String title) {
-        panel.appendToLog(title);
-        content.setMainTitle(title);
-    }
+
 
     @FXML
     private void showAbout() throws Exception {
@@ -578,6 +589,18 @@ public class CASUALZodMainUI
                 casualStatus.setText("ready");
             }
         });
+    }
+
+
+
+    @Override
+    public void setUserMainMessage(String string) {
+        panel.appendToLog(string);
+        content.setMainTitle(string);    }
+
+    @Override
+    public void setUserSubMessage(String string) {
+        this.panel.getZodPanelContent().setSubtitle(string);
     }
 
 }
