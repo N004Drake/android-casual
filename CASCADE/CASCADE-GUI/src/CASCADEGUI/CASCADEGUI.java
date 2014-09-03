@@ -215,60 +215,45 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         popupMenuForZipManagement = new javax.swing.JPopupMenu();
         removeZipFile = new javax.swing.JMenuItem();
         mainPanel = new javax.swing.JPanel();
-        outputFIle = new javax.swing.JPanel();
-        caspacOutputFile = new javax.swing.JTextField();
-        makeCASPAC = new javax.swing.JButton();
-        loadButton = new javax.swing.JButton();
-        caspacOutputBrowseButton = new javax.swing.JButton();
-        useEncryption = new javax.swing.JCheckBox();
-        CASPACkagerPanel = new javax.swing.JPanel();
-        casualOutputFile = new javax.swing.JTextField();
-        makeItCasualButton = new javax.swing.JButton();
-        casualOutputBrowseButton = new javax.swing.JButton();
-        typeCheckBox = new javax.swing.JCheckBox();
-        typeTextBox = new javax.swing.JTextField();
-        saveCreateRunCASUAL = new javax.swing.JButton();
         workArea = new javax.swing.JTabbedPane();
         scriptGroup = new javax.swing.JTabbedPane();
         scriptOverview = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        scriptListJList = new javax.swing.JList();
+        jPanel7 = new javax.swing.JPanel();
+        addScriptButton = new javax.swing.JButton();
+        deleteScriptButton = new javax.swing.JButton();
+        editScriptNameButton = new javax.swing.JButton();
         scriptNameTitleJLabel = new javax.swing.JLabel();
+        scriptNameJLabel = new javax.swing.JLabel();
+        updateMessageTitleJLabel = new javax.swing.JLabel();
+        scriptRevision = new javax.swing.JTextField();
+        uniqueIDTitleJLabel = new javax.swing.JLabel();
+        killswitchMessage = new javax.swing.JTextField();
         minSVNversionTitleJLabel = new javax.swing.JLabel();
         scriptRevisionTitleJLabel = new javax.swing.JLabel();
-        uniqueIDTitleJLabel = new javax.swing.JLabel();
-        supportURLTitleJLabel = new javax.swing.JLabel();
-        updateMessageTitleJLabel = new javax.swing.JLabel();
+        supportURL = new javax.swing.JTextField();
         killswitchMessageTitleJLabel = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        scriptDescriptionJText = new javax.swing.JTextArea();
+        supportURLTitleJLabel = new javax.swing.JLabel();
+        minSVNversion = new javax.swing.JTextField();
+        updateMessage = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
-        scriptNameJLabel = new javax.swing.JLabel();
-        minSVNversion = new javax.swing.JTextField();
-        scriptRevision = new javax.swing.JTextField();
         uniqueID = new javax.swing.JTextField();
-        supportURL = new javax.swing.JTextField();
-        updateMessage = new javax.swing.JTextField();
-        killswitchMessage = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        scriptListJList = new javax.swing.JList();
-        deleteScriptButton = new javax.swing.JButton();
-        addScriptButton = new javax.swing.JButton();
-        editScriptNameButton = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        scriptDescriptionJText = new javax.swing.JTextArea();
         script = new javax.swing.JPanel();
         scriptText = new javax.swing.JScrollPane();
         scriptWorkArea = new javax.swing.JTextArea();
-        overviewScrollPane = new javax.swing.JScrollPane();
-        overviewWorkArea = new javax.swing.JTextArea();
         buildPropertiesPanel = new javax.swing.JPanel();
         donationPanel = new javax.swing.JPanel();
         dontateTextPanel = new javax.swing.JPanel();
         donateText = new javax.swing.JTextField();
-        dontateLinkPanel = new javax.swing.JPanel();
-        donateLink = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         alwaysEnableControls = new javax.swing.JCheckBox();
         audioEnabled = new javax.swing.JCheckBox();
@@ -286,6 +271,21 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         developerNamePanel = new javax.swing.JPanel();
         developerName = new javax.swing.JTextField();
         logoLabel = new javax.swing.JLabel();
+        dontateLinkPanel = new javax.swing.JPanel();
+        donateLink = new javax.swing.JTextField();
+        outputFIle = new javax.swing.JPanel();
+        caspacOutputFile = new javax.swing.JTextField();
+        makeCASPAC = new javax.swing.JButton();
+        loadButton = new javax.swing.JButton();
+        caspacOutputBrowseButton = new javax.swing.JButton();
+        useEncryption = new javax.swing.JCheckBox();
+        CASPACkagerPanel = new javax.swing.JPanel();
+        casualOutputFile = new javax.swing.JTextField();
+        makeItCasualButton = new javax.swing.JButton();
+        casualOutputBrowseButton = new javax.swing.JButton();
+        typeCheckBox = new javax.swing.JCheckBox();
+        typeTextBox = new javax.swing.JTextField();
+        saveCreateRunCASUAL = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("CASCADEGUI/resources/Bundle"); // NOI18N
         popupMenuForZipManagement.setLabel(bundle.getString("CASCADEGUI.popupMenuForZipManagement.label")); // NOI18N
@@ -301,10 +301,725 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         popupMenuForZipManagement.add(removeZipFile);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(1024, 768));
         setName("Form"); // NOI18N
 
         mainPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.mainPanel.border.title"))); // NOI18N
         mainPanel.setName("mainPanel"); // NOI18N
+
+        workArea.setName(""); // NOI18N
+
+        scriptGroup.setName("scriptGroup"); // NOI18N
+
+        scriptOverview.setMaximumSize(new java.awt.Dimension(600, 800));
+        scriptOverview.setName("scriptOverview"); // NOI18N
+        scriptOverview.setPreferredSize(new java.awt.Dimension(1031, 800));
+        scriptOverview.setRequestFocusEnabled(false);
+
+        jPanel1.setName("jPanel1"); // NOI18N
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.jPanel2.border.title"))); // NOI18N
+        jPanel2.setName("jPanel2"); // NOI18N
+        jPanel2.setPreferredSize(new java.awt.Dimension(599, 800));
+        jPanel2.setVerifyInputWhenFocusTarget(false);
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel6.setName("jPanel6"); // NOI18N
+
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        scriptListJList.setModel(scriptList);
+        scriptListJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        scriptListJList.setName("scriptListJList"); // NOI18N
+        scriptListJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                scriptListJListValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(scriptListJList);
+
+        jPanel7.setName("jPanel7"); // NOI18N
+
+        addScriptButton.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        addScriptButton.setText(bundle.getString("CASCADEGUI.addScriptButton.text")); // NOI18N
+        addScriptButton.setName("addScriptButton"); // NOI18N
+        addScriptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addScriptButtonActionPerformed(evt);
+            }
+        });
+
+        deleteScriptButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASCADEGUI/resources/recyclebin.png"))); // NOI18N
+        deleteScriptButton.setName("deleteScriptButton"); // NOI18N
+        deleteScriptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteScriptButtonActionPerformed(evt);
+            }
+        });
+
+        editScriptNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASCADEGUI/resources/pencil-icon.png"))); // NOI18N
+        editScriptNameButton.setName("editScriptNameButton"); // NOI18N
+        editScriptNameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editScriptNameButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addComponent(editScriptNameButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteScriptButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addScriptButton)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(editScriptNameButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(deleteScriptButton, javax.swing.GroupLayout.Alignment.TRAILING))))
+        );
+
+        scriptNameTitleJLabel.setText(bundle.getString("CASCADEGUI.scriptNameTitleJLabel.text")); // NOI18N
+        scriptNameTitleJLabel.setName("scriptNameTitleJLabel"); // NOI18N
+
+        scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(scriptNameTitleJLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(scriptNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(scriptNameJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(scriptNameTitleJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        updateMessageTitleJLabel.setText(bundle.getString("CASCADEGUI.updateMessageTitleJLabel.text")); // NOI18N
+        updateMessageTitleJLabel.setName("updateMessageTitleJLabel"); // NOI18N
+
+        scriptRevision.setText(bundle.getString("CASCADEGUI.scriptRevision.text")); // NOI18N
+        scriptRevision.setName("scriptRevision"); // NOI18N
+        scriptRevision.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                scriptRevisionCaretUpdate(evt);
+            }
+        });
+
+        uniqueIDTitleJLabel.setText(bundle.getString("CASCADEGUI.uniqueIDTitleJLabel.text")); // NOI18N
+        uniqueIDTitleJLabel.setName("uniqueIDTitleJLabel"); // NOI18N
+
+        killswitchMessage.setText(bundle.getString("CASCADEGUI.killswitchMessage.text")); // NOI18N
+        killswitchMessage.setName("killswitchMessage"); // NOI18N
+        killswitchMessage.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                killswitchMessageCaretUpdate(evt);
+            }
+        });
+
+        minSVNversionTitleJLabel.setText(bundle.getString("CASCADEGUI.minSVNversionTitleJLabel.text")); // NOI18N
+        minSVNversionTitleJLabel.setName("minSVNversionTitleJLabel"); // NOI18N
+
+        scriptRevisionTitleJLabel.setText(bundle.getString("CASCADEGUI.scriptRevisionTitleJLabel.text")); // NOI18N
+        scriptRevisionTitleJLabel.setMaximumSize(null);
+        scriptRevisionTitleJLabel.setMinimumSize(null);
+        scriptRevisionTitleJLabel.setName("scriptRevisionTitleJLabel"); // NOI18N
+
+        supportURL.setText(bundle.getString("CASCADEGUI.supportURL.text")); // NOI18N
+        supportURL.setName("supportURL"); // NOI18N
+        supportURL.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                supportURLCaretUpdate(evt);
+            }
+        });
+
+        killswitchMessageTitleJLabel.setText(bundle.getString("CASCADEGUI.killswitchMessageTitleJLabel.text")); // NOI18N
+        killswitchMessageTitleJLabel.setName("killswitchMessageTitleJLabel"); // NOI18N
+
+        supportURLTitleJLabel.setText(bundle.getString("CASCADEGUI.supportURLTitleJLabel.text")); // NOI18N
+        supportURLTitleJLabel.setName("supportURLTitleJLabel"); // NOI18N
+
+        minSVNversion.setText(bundle.getString("CASCADEGUI.minSVNversion.text")); // NOI18N
+        minSVNversion.setName("minSVNversion"); // NOI18N
+        minSVNversion.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                minSVNversionCaretUpdate(evt);
+            }
+        });
+
+        updateMessage.setText(bundle.getString("CASCADEGUI.updateMessage.text")); // NOI18N
+        updateMessage.setName("updateMessage"); // NOI18N
+        updateMessage.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                updateMessageCaretUpdate(evt);
+            }
+        });
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.jPanel5.border.title"))); // NOI18N
+        jPanel5.setName("jPanel5"); // NOI18N
+
+        jScrollPane3.setName("jScrollPane3"); // NOI18N
+
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Drop files here" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jList1.setName("jList1"); // NOI18N
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(jList1);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+
+        uniqueID.setText(bundle.getString("CASCADEGUI.uniqueID.text")); // NOI18N
+        uniqueID.setName("uniqueID"); // NOI18N
+        uniqueID.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                uniqueIDCaretUpdate(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(killswitchMessageTitleJLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(killswitchMessage))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(updateMessageTitleJLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateMessage))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(supportURLTitleJLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(supportURL))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(uniqueIDTitleJLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(uniqueID, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(scriptRevisionTitleJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scriptRevision, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(minSVNversionTitleJLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(minSVNversion)))
+                .addGap(8, 8, 8))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(minSVNversionTitleJLabel)
+                    .addComponent(minSVNversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(scriptRevisionTitleJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scriptRevision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uniqueIDTitleJLabel)
+                    .addComponent(uniqueID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(supportURLTitleJLabel)
+                    .addComponent(supportURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updateMessageTitleJLabel)
+                    .addComponent(updateMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(killswitchMessageTitleJLabel)
+                    .addComponent(killswitchMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.jPanel3.border.title"))); // NOI18N
+        jPanel3.setName("jPanel3"); // NOI18N
+
+        jScrollPane4.setName("jScrollPane4"); // NOI18N
+
+        scriptDescriptionJText.setColumns(20);
+        scriptDescriptionJText.setLineWrap(true);
+        scriptDescriptionJText.setRows(5);
+        scriptDescriptionJText.setName("scriptDescriptionJText"); // NOI18N
+        scriptDescriptionJText.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                scriptDescriptionJTextCaretUpdate(evt);
+            }
+        });
+        jScrollPane4.setViewportView(scriptDescriptionJText);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout scriptOverviewLayout = new javax.swing.GroupLayout(scriptOverview);
+        scriptOverview.setLayout(scriptOverviewLayout);
+        scriptOverviewLayout.setHorizontalGroup(
+            scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(scriptOverviewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        scriptOverviewLayout.setVerticalGroup(
+            scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(scriptOverviewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(scriptOverviewLayout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(1, 1, 1)))
+                .addContainerGap())
+        );
+
+        scriptGroup.addTab(bundle.getString("CASCADEGUI.scriptOverview.TabConstraints.tabTitle"), scriptOverview); // NOI18N
+
+        script.setName("script"); // NOI18N
+
+        scriptText.setName("scriptText"); // NOI18N
+
+        scriptWorkArea.setColumns(20);
+        scriptWorkArea.setLineWrap(true);
+        scriptWorkArea.setRows(5);
+        scriptWorkArea.setName("scriptWorkArea"); // NOI18N
+        scriptWorkArea.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                scriptWorkAreaCaretUpdate(evt);
+            }
+        });
+        scriptText.setViewportView(scriptWorkArea);
+
+        javax.swing.GroupLayout scriptLayout = new javax.swing.GroupLayout(script);
+        script.setLayout(scriptLayout);
+        scriptLayout.setHorizontalGroup(
+            scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 766, Short.MAX_VALUE)
+        );
+        scriptLayout.setVerticalGroup(
+            scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+        );
+
+        scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
+
+        workArea.addTab(bundle.getString("CASCADEGUI.scriptGroup.TabConstraints.tabTitle"), scriptGroup); // NOI18N
+
+        buildPropertiesPanel.setName("buildPropertiesPanel"); // NOI18N
+
+        donationPanel.setName("donationPanel"); // NOI18N
+
+        dontateTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.dontateTextPanel.border.title"))); // NOI18N
+        dontateTextPanel.setName("dontateTextPanel"); // NOI18N
+
+        donateText.setText(System.getProperty("user.name"));
+        donateText.setBorder(null);
+        donateText.setName("donateText"); // NOI18N
+        donateText.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                donateTextCaretUpdate(evt);
+            }
+        });
+
+        javax.swing.GroupLayout dontateTextPanelLayout = new javax.swing.GroupLayout(dontateTextPanel);
+        dontateTextPanel.setLayout(dontateTextPanelLayout);
+        dontateTextPanelLayout.setHorizontalGroup(
+            dontateTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dontateTextPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(donateText)
+                .addContainerGap())
+        );
+        dontateTextPanelLayout.setVerticalGroup(
+            dontateTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dontateTextPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(donateText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout donationPanelLayout = new javax.swing.GroupLayout(donationPanel);
+        donationPanel.setLayout(donationPanelLayout);
+        donationPanelLayout.setHorizontalGroup(
+            donationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(dontateTextPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        donationPanelLayout.setVerticalGroup(
+            donationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(dontateTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        jPanel4.setName("jPanel4"); // NOI18N
+
+        alwaysEnableControls.setText(bundle.getString("CASCADEGUI.alwaysEnableControls.text")); // NOI18N
+        alwaysEnableControls.setName("alwaysEnableControls"); // NOI18N
+        alwaysEnableControls.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                alwaysEnableControlsStateChanged(evt);
+            }
+        });
+
+        audioEnabled.setSelected(true);
+        audioEnabled.setText(bundle.getString("CASCADEGUI.audioEnabled.text")); // NOI18N
+        audioEnabled.setName("audioEnabled"); // NOI18N
+        audioEnabled.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                audioEnabledStateChanged(evt);
+            }
+        });
+
+        BannerPicOrText.add(useBannerText);
+        useBannerText.setSelected(true);
+        useBannerText.setText(bundle.getString("CASCADEGUI.useBannerText.text")); // NOI18N
+        useBannerText.setName("useBannerText"); // NOI18N
+        useBannerText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useBannerTextActionPerformed(evt);
+            }
+        });
+
+        BannerPicOrText.add(useBannerPic);
+        useBannerPic.setText(bundle.getString("CASCADEGUI.useBannerPic.text")); // NOI18N
+        useBannerPic.setName("useBannerPic"); // NOI18N
+        useBannerPic.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useBannerPicActionPerformed(evt);
+            }
+        });
+
+        windowTitlePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.windowTitlePanel.border.title"))); // NOI18N
+        windowTitlePanel.setName("windowTitlePanel"); // NOI18N
+
+        windowText.setText(bundle.getString("CASCADEGUI.windowText.text")); // NOI18N
+        windowText.setBorder(null);
+        windowText.setName("windowText"); // NOI18N
+        windowText.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                windowTextCaretUpdate(evt);
+            }
+        });
+
+        javax.swing.GroupLayout windowTitlePanelLayout = new javax.swing.GroupLayout(windowTitlePanel);
+        windowTitlePanel.setLayout(windowTitlePanelLayout);
+        windowTitlePanelLayout.setHorizontalGroup(
+            windowTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(windowTitlePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(windowText, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(101, Short.MAX_VALUE))
+        );
+        windowTitlePanelLayout.setVerticalGroup(
+            windowTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(windowText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        buttonTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.buttonTextPanel.border.title"))); // NOI18N
+        buttonTextPanel.setName("buttonTextPanel"); // NOI18N
+
+        buttonText.setText(bundle.getString("CASCADEGUI.buttonText.text")); // NOI18N
+        buttonText.setBorder(null);
+        buttonText.setName("buttonText"); // NOI18N
+        buttonText.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                buttonTextCaretUpdate(evt);
+            }
+        });
+
+        javax.swing.GroupLayout buttonTextPanelLayout = new javax.swing.GroupLayout(buttonTextPanel);
+        buttonTextPanel.setLayout(buttonTextPanelLayout);
+        buttonTextPanelLayout.setHorizontalGroup(
+            buttonTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(buttonTextPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonText, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        buttonTextPanelLayout.setVerticalGroup(
+            buttonTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(buttonText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        bannerTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.bannerTextPanel.border.title"))); // NOI18N
+        bannerTextPanel.setName("bannerTextPanel"); // NOI18N
+
+        bannerText.setText(bundle.getString("CASCADEGUI.bannerText.text")); // NOI18N
+        bannerText.setBorder(null);
+        bannerText.setName("bannerText"); // NOI18N
+        bannerText.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                bannerTextCaretUpdate(evt);
+            }
+        });
+
+        javax.swing.GroupLayout bannerTextPanelLayout = new javax.swing.GroupLayout(bannerTextPanel);
+        bannerTextPanel.setLayout(bannerTextPanelLayout);
+        bannerTextPanelLayout.setHorizontalGroup(
+            bannerTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bannerTextPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        bannerTextPanelLayout.setVerticalGroup(
+            bannerTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bannerTextPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bannerText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        bannerPicPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.bannerPicPanel.border.title"))); // NOI18N
+        bannerPicPanel.setName("bannerPicPanel"); // NOI18N
+
+        bannerPic.setBorder(null);
+        bannerPic.setEnabled(false);
+        bannerPic.setName("bannerPic"); // NOI18N
+        bannerPic.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                bannerPicCaretUpdate(evt);
+            }
+        });
+
+        browseLogo.setIcon(UIManager.getIcon("Tree.openIcon"));
+        browseLogo.setText(bundle.getString("CASCADEGUI.browseLogo.text")); // NOI18N
+        browseLogo.setName("browseLogo"); // NOI18N
+        browseLogo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseLogoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout bannerPicPanelLayout = new javax.swing.GroupLayout(bannerPicPanel);
+        bannerPicPanel.setLayout(bannerPicPanelLayout);
+        bannerPicPanelLayout.setHorizontalGroup(
+            bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bannerPicPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bannerPic)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(browseLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        bannerPicPanelLayout.setVerticalGroup(
+            bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bannerPicPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bannerPicPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(bannerPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(browseLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(useBannerPic)
+                    .addComponent(useBannerText))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bannerPicPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bannerTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(windowTitlePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(alwaysEnableControls, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(audioEnabled, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonTextPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(alwaysEnableControls)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(audioEnabled, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(windowTitlePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(useBannerText)
+                    .addComponent(bannerTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(useBannerPic)
+                    .addComponent(bannerPicPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        developerNamePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.developerNamePanel.border.title"))); // NOI18N
+        developerNamePanel.setName("developerNamePanel"); // NOI18N
+
+        developerName.setText(System.getProperty("user.name"));
+        developerName.setBorder(null);
+        developerName.setName("developerName"); // NOI18N
+        developerName.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                developerNameCaretUpdate(evt);
+            }
+        });
+
+        javax.swing.GroupLayout developerNamePanelLayout = new javax.swing.GroupLayout(developerNamePanel);
+        developerNamePanel.setLayout(developerNamePanelLayout);
+        developerNamePanelLayout.setHorizontalGroup(
+            developerNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(developerNamePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(developerName)
+                .addContainerGap())
+        );
+        developerNamePanelLayout.setVerticalGroup(
+            developerNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(developerNamePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(developerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        logoLabel.setText(bundle.getString("CASCADEGUI.logoLabel.text")); // NOI18N
+        logoLabel.setName("logoLabel"); // NOI18N
+
+        dontateLinkPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.dontateLinkPanel.border.title"))); // NOI18N
+        dontateLinkPanel.setName("dontateLinkPanel"); // NOI18N
+
+        donateLink.setText(bundle.getString("CASCADEGUI.donateLink.text")); // NOI18N
+        donateLink.setBorder(null);
+        donateLink.setName("donateLink"); // NOI18N
+
+        javax.swing.GroupLayout dontateLinkPanelLayout = new javax.swing.GroupLayout(dontateLinkPanel);
+        dontateLinkPanel.setLayout(dontateLinkPanelLayout);
+        dontateLinkPanelLayout.setHorizontalGroup(
+            dontateLinkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dontateLinkPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        dontateLinkPanelLayout.setVerticalGroup(
+            dontateLinkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dontateLinkPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(donateLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout buildPropertiesPanelLayout = new javax.swing.GroupLayout(buildPropertiesPanel);
+        buildPropertiesPanel.setLayout(buildPropertiesPanelLayout);
+        buildPropertiesPanelLayout.setHorizontalGroup(
+            buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(buildPropertiesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(developerNamePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(buildPropertiesPanelLayout.createSequentialGroup()
+                        .addComponent(donationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dontateLinkPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        buildPropertiesPanelLayout.setVerticalGroup(
+            buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buildPropertiesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(developerNamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(donationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dontateLinkPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        workArea.addTab(bundle.getString("CASCADEGUI.buildPropertiesPanel.TabConstraints.tabTitle"), buildPropertiesPanel); // NOI18N
 
         outputFIle.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.outputFIle.border.title"))); // NOI18N
         outputFIle.setName("outputFIle"); // NOI18N
@@ -348,8 +1063,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
             .addGroup(outputFIleLayout.createSequentialGroup()
                 .addComponent(caspacOutputBrowseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(caspacOutputFile)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(caspacOutputFile, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
                 .addComponent(loadButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(makeCASPAC)
@@ -453,727 +1168,18 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        workArea.setName(""); // NOI18N
-
-        scriptGroup.setName("scriptGroup"); // NOI18N
-
-        scriptOverview.setName("scriptOverview"); // NOI18N
-
-        jPanel1.setName("jPanel1"); // NOI18N
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.jPanel2.border.title"))); // NOI18N
-        jPanel2.setName("jPanel2"); // NOI18N
-
-        scriptNameTitleJLabel.setText(bundle.getString("CASCADEGUI.scriptNameTitleJLabel.text")); // NOI18N
-        scriptNameTitleJLabel.setName("scriptNameTitleJLabel"); // NOI18N
-
-        minSVNversionTitleJLabel.setText(bundle.getString("CASCADEGUI.minSVNversionTitleJLabel.text")); // NOI18N
-        minSVNversionTitleJLabel.setName("minSVNversionTitleJLabel"); // NOI18N
-
-        scriptRevisionTitleJLabel.setText(bundle.getString("CASCADEGUI.scriptRevisionTitleJLabel.text")); // NOI18N
-        scriptRevisionTitleJLabel.setMaximumSize(null);
-        scriptRevisionTitleJLabel.setMinimumSize(null);
-        scriptRevisionTitleJLabel.setName("scriptRevisionTitleJLabel"); // NOI18N
-
-        uniqueIDTitleJLabel.setText(bundle.getString("CASCADEGUI.uniqueIDTitleJLabel.text")); // NOI18N
-        uniqueIDTitleJLabel.setName("uniqueIDTitleJLabel"); // NOI18N
-
-        supportURLTitleJLabel.setText(bundle.getString("CASCADEGUI.supportURLTitleJLabel.text")); // NOI18N
-        supportURLTitleJLabel.setName("supportURLTitleJLabel"); // NOI18N
-
-        updateMessageTitleJLabel.setText(bundle.getString("CASCADEGUI.updateMessageTitleJLabel.text")); // NOI18N
-        updateMessageTitleJLabel.setName("updateMessageTitleJLabel"); // NOI18N
-
-        killswitchMessageTitleJLabel.setText(bundle.getString("CASCADEGUI.killswitchMessageTitleJLabel.text")); // NOI18N
-        killswitchMessageTitleJLabel.setName("killswitchMessageTitleJLabel"); // NOI18N
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.jPanel3.border.title"))); // NOI18N
-        jPanel3.setName("jPanel3"); // NOI18N
-
-        jScrollPane4.setName("jScrollPane4"); // NOI18N
-
-        scriptDescriptionJText.setColumns(20);
-        scriptDescriptionJText.setLineWrap(true);
-        scriptDescriptionJText.setRows(5);
-        scriptDescriptionJText.setName("scriptDescriptionJText"); // NOI18N
-        scriptDescriptionJText.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                scriptDescriptionJTextCaretUpdate(evt);
-            }
-        });
-        jScrollPane4.setViewportView(scriptDescriptionJText);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-        );
-
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.jPanel5.border.title"))); // NOI18N
-        jPanel5.setName("jPanel5"); // NOI18N
-
-        jScrollPane3.setName("jScrollPane3"); // NOI18N
-
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Drop files here" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList1.setName("jList1"); // NOI18N
-        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList1MouseClicked(evt);
-            }
-        });
-        jScrollPane3.setViewportView(jList1);
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
-        );
-
-        scriptNameJLabel.setName("scriptNameJLabel"); // NOI18N
-
-        minSVNversion.setText(bundle.getString("CASCADEGUI.minSVNversion.text")); // NOI18N
-        minSVNversion.setName("minSVNversion"); // NOI18N
-        minSVNversion.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                minSVNversionCaretUpdate(evt);
-            }
-        });
-
-        scriptRevision.setText(bundle.getString("CASCADEGUI.scriptRevision.text")); // NOI18N
-        scriptRevision.setName("scriptRevision"); // NOI18N
-        scriptRevision.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                scriptRevisionCaretUpdate(evt);
-            }
-        });
-
-        uniqueID.setText(bundle.getString("CASCADEGUI.uniqueID.text")); // NOI18N
-        uniqueID.setName("uniqueID"); // NOI18N
-        uniqueID.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                uniqueIDCaretUpdate(evt);
-            }
-        });
-
-        supportURL.setText(bundle.getString("CASCADEGUI.supportURL.text")); // NOI18N
-        supportURL.setName("supportURL"); // NOI18N
-        supportURL.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                supportURLCaretUpdate(evt);
-            }
-        });
-
-        updateMessage.setText(bundle.getString("CASCADEGUI.updateMessage.text")); // NOI18N
-        updateMessage.setName("updateMessage"); // NOI18N
-        updateMessage.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                updateMessageCaretUpdate(evt);
-            }
-        });
-
-        killswitchMessage.setText(bundle.getString("CASCADEGUI.killswitchMessage.text")); // NOI18N
-        killswitchMessage.setName("killswitchMessage"); // NOI18N
-        killswitchMessage.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                killswitchMessageCaretUpdate(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(supportURLTitleJLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(supportURL))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(scriptNameTitleJLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scriptNameJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(minSVNversionTitleJLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minSVNversion))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(scriptRevisionTitleJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scriptRevision))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(uniqueIDTitleJLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(uniqueID))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(updateMessageTitleJLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(updateMessage))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(killswitchMessageTitleJLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(killswitchMessage)))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(scriptNameTitleJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(scriptNameJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(minSVNversionTitleJLabel)
-                    .addComponent(minSVNversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(scriptRevisionTitleJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scriptRevision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(uniqueIDTitleJLabel)
-                    .addComponent(uniqueID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(supportURLTitleJLabel)
-                    .addComponent(supportURL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(updateMessageTitleJLabel)
-                    .addComponent(updateMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(killswitchMessageTitleJLabel)
-                    .addComponent(killswitchMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
-
-        scriptListJList.setModel(scriptList);
-        scriptListJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        scriptListJList.setName("scriptListJList"); // NOI18N
-        scriptListJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                scriptListJListValueChanged(evt);
-            }
-        });
-        jScrollPane1.setViewportView(scriptListJList);
-
-        deleteScriptButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASCADEGUI/resources/recyclebin.png"))); // NOI18N
-        deleteScriptButton.setName("deleteScriptButton"); // NOI18N
-        deleteScriptButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteScriptButtonActionPerformed(evt);
-            }
-        });
-
-        addScriptButton.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        addScriptButton.setText(bundle.getString("CASCADEGUI.addScriptButton.text")); // NOI18N
-        addScriptButton.setName("addScriptButton"); // NOI18N
-        addScriptButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addScriptButtonActionPerformed(evt);
-            }
-        });
-
-        editScriptNameButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/CASCADEGUI/resources/pencil-icon.png"))); // NOI18N
-        editScriptNameButton.setName("editScriptNameButton"); // NOI18N
-        editScriptNameButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editScriptNameButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout scriptOverviewLayout = new javax.swing.GroupLayout(scriptOverview);
-        scriptOverview.setLayout(scriptOverviewLayout);
-        scriptOverviewLayout.setHorizontalGroup(
-            scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(scriptOverviewLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-                    .addGroup(scriptOverviewLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(editScriptNameButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteScriptButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        scriptOverviewLayout.setVerticalGroup(
-            scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, scriptOverviewLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(scriptOverviewLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(scriptOverviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(addScriptButton)
-                            .addComponent(deleteScriptButton, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(editScriptNameButton, javax.swing.GroupLayout.Alignment.LEADING)))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
-        scriptGroup.addTab(bundle.getString("CASCADEGUI.scriptOverview.TabConstraints.tabTitle"), scriptOverview); // NOI18N
-
-        script.setName("script"); // NOI18N
-
-        scriptText.setName("scriptText"); // NOI18N
-
-        scriptWorkArea.setColumns(20);
-        scriptWorkArea.setLineWrap(true);
-        scriptWorkArea.setRows(5);
-        scriptWorkArea.setName("scriptWorkArea"); // NOI18N
-        scriptWorkArea.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                scriptWorkAreaCaretUpdate(evt);
-            }
-        });
-        scriptText.setViewportView(scriptWorkArea);
-
-        javax.swing.GroupLayout scriptLayout = new javax.swing.GroupLayout(script);
-        script.setLayout(scriptLayout);
-        scriptLayout.setHorizontalGroup(
-            scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 1019, Short.MAX_VALUE)
-        );
-        scriptLayout.setVerticalGroup(
-            scriptLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scriptText, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
-        );
-
-        scriptGroup.addTab(bundle.getString("CASCADEGUI.script.TabConstraints.tabTitle"), script); // NOI18N
-
-        workArea.addTab(bundle.getString("CASCADEGUI.scriptGroup.TabConstraints.tabTitle"), scriptGroup); // NOI18N
-
-        overviewScrollPane.setName("overviewScrollPane"); // NOI18N
-
-        overviewWorkArea.setColumns(20);
-        overviewWorkArea.setLineWrap(true);
-        overviewWorkArea.setRows(5);
-        overviewWorkArea.setWrapStyleWord(true);
-        overviewWorkArea.setName("overviewWorkArea"); // NOI18N
-        overviewWorkArea.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                overviewWorkAreaCaretUpdate(evt);
-            }
-        });
-        overviewScrollPane.setViewportView(overviewWorkArea);
-
-        workArea.addTab(bundle.getString("CASCADEGUI.overviewScrollPane.TabConstraints.tabTitle"), overviewScrollPane); // NOI18N
-
-        buildPropertiesPanel.setName("buildPropertiesPanel"); // NOI18N
-
-        donationPanel.setName("donationPanel"); // NOI18N
-
-        dontateTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.dontateTextPanel.border.title"))); // NOI18N
-        dontateTextPanel.setName("dontateTextPanel"); // NOI18N
-
-        donateText.setText(System.getProperty("user.name"));
-        donateText.setBorder(null);
-        donateText.setName("donateText"); // NOI18N
-        donateText.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                donateTextCaretUpdate(evt);
-            }
-        });
-
-        javax.swing.GroupLayout dontateTextPanelLayout = new javax.swing.GroupLayout(dontateTextPanel);
-        dontateTextPanel.setLayout(dontateTextPanelLayout);
-        dontateTextPanelLayout.setHorizontalGroup(
-            dontateTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dontateTextPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(donateText, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        dontateTextPanelLayout.setVerticalGroup(
-            dontateTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dontateTextPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(donateText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        dontateLinkPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.dontateLinkPanel.border.title"))); // NOI18N
-        dontateLinkPanel.setName("dontateLinkPanel"); // NOI18N
-
-        donateLink.setText(bundle.getString("CASCADEGUI.donateLink.text")); // NOI18N
-        donateLink.setBorder(null);
-        donateLink.setName("donateLink"); // NOI18N
-
-        javax.swing.GroupLayout dontateLinkPanelLayout = new javax.swing.GroupLayout(dontateLinkPanel);
-        dontateLinkPanel.setLayout(dontateLinkPanelLayout);
-        dontateLinkPanelLayout.setHorizontalGroup(
-            dontateLinkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dontateLinkPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(donateLink, javax.swing.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        dontateLinkPanelLayout.setVerticalGroup(
-            dontateLinkPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dontateLinkPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(donateLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout donationPanelLayout = new javax.swing.GroupLayout(donationPanel);
-        donationPanel.setLayout(donationPanelLayout);
-        donationPanelLayout.setHorizontalGroup(
-            donationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(donationPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(dontateTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dontateLinkPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        donationPanelLayout.setVerticalGroup(
-            donationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(donationPanelLayout.createSequentialGroup()
-                .addGroup(donationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(dontateTextPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dontateLinkPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 9, Short.MAX_VALUE))
-        );
-
-        jPanel4.setName("jPanel4"); // NOI18N
-
-        alwaysEnableControls.setText(bundle.getString("CASCADEGUI.alwaysEnableControls.text")); // NOI18N
-        alwaysEnableControls.setName("alwaysEnableControls"); // NOI18N
-        alwaysEnableControls.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                alwaysEnableControlsStateChanged(evt);
-            }
-        });
-
-        audioEnabled.setSelected(true);
-        audioEnabled.setText(bundle.getString("CASCADEGUI.audioEnabled.text")); // NOI18N
-        audioEnabled.setName("audioEnabled"); // NOI18N
-        audioEnabled.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                audioEnabledStateChanged(evt);
-            }
-        });
-
-        BannerPicOrText.add(useBannerText);
-        useBannerText.setSelected(true);
-        useBannerText.setText(bundle.getString("CASCADEGUI.useBannerText.text")); // NOI18N
-        useBannerText.setName("useBannerText"); // NOI18N
-        useBannerText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                useBannerTextActionPerformed(evt);
-            }
-        });
-
-        BannerPicOrText.add(useBannerPic);
-        useBannerPic.setText(bundle.getString("CASCADEGUI.useBannerPic.text")); // NOI18N
-        useBannerPic.setName("useBannerPic"); // NOI18N
-        useBannerPic.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                useBannerPicActionPerformed(evt);
-            }
-        });
-
-        windowTitlePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.windowTitlePanel.border.title"))); // NOI18N
-        windowTitlePanel.setName("windowTitlePanel"); // NOI18N
-
-        windowText.setText(bundle.getString("CASCADEGUI.windowText.text")); // NOI18N
-        windowText.setBorder(null);
-        windowText.setName("windowText"); // NOI18N
-        windowText.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                windowTextCaretUpdate(evt);
-            }
-        });
-
-        javax.swing.GroupLayout windowTitlePanelLayout = new javax.swing.GroupLayout(windowTitlePanel);
-        windowTitlePanel.setLayout(windowTitlePanelLayout);
-        windowTitlePanelLayout.setHorizontalGroup(
-            windowTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(windowTitlePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(windowText, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        windowTitlePanelLayout.setVerticalGroup(
-            windowTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(windowTitlePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(windowText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        buttonTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.buttonTextPanel.border.title"))); // NOI18N
-        buttonTextPanel.setName("buttonTextPanel"); // NOI18N
-
-        buttonText.setText(bundle.getString("CASCADEGUI.buttonText.text")); // NOI18N
-        buttonText.setBorder(null);
-        buttonText.setName("buttonText"); // NOI18N
-        buttonText.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                buttonTextCaretUpdate(evt);
-            }
-        });
-
-        javax.swing.GroupLayout buttonTextPanelLayout = new javax.swing.GroupLayout(buttonTextPanel);
-        buttonTextPanel.setLayout(buttonTextPanelLayout);
-        buttonTextPanelLayout.setHorizontalGroup(
-            buttonTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonTextPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(buttonText, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        buttonTextPanelLayout.setVerticalGroup(
-            buttonTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonTextPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(buttonText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        bannerTextPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.bannerTextPanel.border.title"))); // NOI18N
-        bannerTextPanel.setName("bannerTextPanel"); // NOI18N
-
-        bannerText.setText(bundle.getString("CASCADEGUI.bannerText.text")); // NOI18N
-        bannerText.setBorder(null);
-        bannerText.setName("bannerText"); // NOI18N
-        bannerText.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                bannerTextCaretUpdate(evt);
-            }
-        });
-
-        javax.swing.GroupLayout bannerTextPanelLayout = new javax.swing.GroupLayout(bannerTextPanel);
-        bannerTextPanel.setLayout(bannerTextPanelLayout);
-        bannerTextPanelLayout.setHorizontalGroup(
-            bannerTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(bannerTextPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(bannerText, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        bannerTextPanelLayout.setVerticalGroup(
-            bannerTextPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(bannerTextPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(bannerText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        bannerPicPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.bannerPicPanel.border.title"))); // NOI18N
-        bannerPicPanel.setName("bannerPicPanel"); // NOI18N
-
-        bannerPic.setBorder(null);
-        bannerPic.setEnabled(false);
-        bannerPic.setName("bannerPic"); // NOI18N
-        bannerPic.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                bannerPicCaretUpdate(evt);
-            }
-        });
-
-        browseLogo.setIcon(UIManager.getIcon("Tree.openIcon"));
-        browseLogo.setText(bundle.getString("CASCADEGUI.browseLogo.text")); // NOI18N
-        browseLogo.setName("browseLogo"); // NOI18N
-        browseLogo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseLogoActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout bannerPicPanelLayout = new javax.swing.GroupLayout(bannerPicPanel);
-        bannerPicPanel.setLayout(bannerPicPanelLayout);
-        bannerPicPanelLayout.setHorizontalGroup(
-            bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(bannerPicPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(bannerPic, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(browseLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        bannerPicPanelLayout.setVerticalGroup(
-            bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(bannerPicPanelLayout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
-                .addGroup(bannerPicPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(bannerPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseLogo)))
-        );
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(windowTitlePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(alwaysEnableControls)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(audioEnabled))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(useBannerPic)
-                            .addComponent(useBannerText))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(bannerTextPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bannerPicPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(windowTitlePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(alwaysEnableControls)
-                            .addComponent(audioEnabled))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(useBannerText)
-                    .addComponent(bannerTextPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(useBannerPic)
-                    .addComponent(bannerPicPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(56, 56, 56))
-        );
-
-        developerNamePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("CASCADEGUI.developerNamePanel.border.title"))); // NOI18N
-        developerNamePanel.setName("developerNamePanel"); // NOI18N
-
-        developerName.setText(System.getProperty("user.name"));
-        developerName.setBorder(null);
-        developerName.setName("developerName"); // NOI18N
-        developerName.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                developerNameCaretUpdate(evt);
-            }
-        });
-
-        javax.swing.GroupLayout developerNamePanelLayout = new javax.swing.GroupLayout(developerNamePanel);
-        developerNamePanel.setLayout(developerNamePanelLayout);
-        developerNamePanelLayout.setHorizontalGroup(
-            developerNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(developerNamePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(developerName)
-                .addContainerGap())
-        );
-        developerNamePanelLayout.setVerticalGroup(
-            developerNamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(developerNamePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(developerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        logoLabel.setText(bundle.getString("CASCADEGUI.logoLabel.text")); // NOI18N
-        logoLabel.setName("logoLabel"); // NOI18N
-
-        javax.swing.GroupLayout buildPropertiesPanelLayout = new javax.swing.GroupLayout(buildPropertiesPanel);
-        buildPropertiesPanel.setLayout(buildPropertiesPanelLayout);
-        buildPropertiesPanelLayout.setHorizontalGroup(
-            buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buildPropertiesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(donationPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(developerNamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-            .addGroup(buildPropertiesPanelLayout.createSequentialGroup()
-                .addGap(119, 119, 119)
-                .addComponent(logoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 805, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(100, Short.MAX_VALUE))
-        );
-        buildPropertiesPanelLayout.setVerticalGroup(
-            buildPropertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buildPropertiesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(developerNamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(donationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        workArea.addTab(bundle.getString("CASCADEGUI.buildPropertiesPanel.TabConstraints.tabTitle"), buildPropertiesPanel); // NOI18N
-
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(workArea, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(outputFIle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addComponent(CASPACkagerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(CASPACkagerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(workArea, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                .addComponent(workArea)
+                .addComponent(workArea, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(outputFIle, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1188,7 +1194,9 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -1220,219 +1228,12 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         return password;
     }
 
-    /*
-     * Listener set up to listen for the + button to add script
-     */
-    private void addScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addScriptButtonActionPerformed
-        // Prompt for script name
-        String s = JOptionPane.showInputDialog(this, "What would you like to name the script:\n",
-                "Script Name", JOptionPane.QUESTION_MESSAGE);
-
-        //If there is a name in prompt
-        if (checkScriptNameExists(s)) {
-            return;
-        }
-        if (!(s.isEmpty())) {
-
-            scriptList.addElement(new Script(s, Statics.getTempFolder() + s));
-
-            //Set that script as current script
-            this.scriptListJList.setSelectedIndex(scriptList.getSize() - 1);
-
-            //Rerender all of the Info to current script
-            loadScript();
-            this.scriptListJList.setSelectedIndex(this.scriptListJList.getLastVisibleIndex());
-            disableCasual();
-        }
-
-    }//GEN-LAST:event_addScriptButtonActionPerformed
-
-    /*
-     * Listens for a new selection on the list and then loads that script info
-     * into the current displayed information.
-     */
-    private void scriptListJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_scriptListJListValueChanged
-        //this.scriptListJList.getSelectedIndex() = this.scriptListJList.getSelectedIndex();
-        //System.out.println(this.scriptListJList.getSelectedIndex());
-        if (this.scriptListJList.getSelectedIndex() == -1) {
-            this.editScriptNameButton.setEnabled(false);
-            this.deleteScriptButton.setEnabled(false);
-        } else {
-            this.editScriptNameButton.setEnabled(true);
-            this.deleteScriptButton.setEnabled(true);
-        }
-        loadScript();
-    }//GEN-LAST:event_scriptListJListValueChanged
-
-    @SuppressWarnings("unchecked")
-    /*
-     * Listens for edit icon to be pressed
-     */
-    private void editScriptNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editScriptNameButtonActionPerformed
-        //Prompts for the new string name.
-        String scriptName = JOptionPane.showInputDialog(this, "Please enter the new name for the script:\n"
-                + "Leave empty to keep the existing name",
-                "Script Name", JOptionPane.QUESTION_MESSAGE);
-
-        //Only changes name if input string is not blank
-        if (checkScriptNameExists(scriptName)) {
-            return;
-        }
-        if (scriptName!=null && !(scriptName.isEmpty())) {
-            //get original script selected
-            Script orig = scriptList.getElementAt(this.scriptListJList.getSelectedIndex());
-            //make a copy with a new name
-            Script newScript = orig.copyOf(scriptName, orig.tempDir);
-            //add the new script
-            cp.scripts.set(cp.scripts.indexOf(cp.getScriptByName(orig.name)), newScript);
-            //remove the original
-            cp.scripts.remove(orig);
-            //get the list
-            DefaultListModel<String> lm = new DefaultListModel<String>();
-            for (Script s : cp.scripts) {
-                lm.addElement(s.name);
-            }
-            this.scriptListJList.setModel(lm);
-
-            loadScript();
-            disableCasual();
-        }
-
-    }//GEN-LAST:event_editScriptNameButtonActionPerformed
-
-    /*
-     * Listener for script delete button
-     */
-    private void deleteScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteScriptButtonActionPerformed
-        int i = JOptionPane.showConfirmDialog(this, "Are you sure you wish to delete this script?\n"
-                + "THIS IS IRREVERSABLE", "Confirm Deletion:", JOptionPane.WARNING_MESSAGE);
-        if (i == JOptionPane.YES_OPTION) {
-            if (this.scriptListJList.getSelectedIndex() != -1) {
-                scriptList.removeElementAt(this.scriptListJList.getSelectedIndex());
-                clearAll();
-            }
-        }
-        disableCasual();
-    }//GEN-LAST:event_deleteScriptButtonActionPerformed
-
-    /*
-     * Listener to dynamically save the minSVNversion
-     */
-    private void minSVNversionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_minSVNversionCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion = (minSVNversion.getText());
-        }
-        disableCasual();
-    }//GEN-LAST:event_minSVNversionCaretUpdate
-
-    /*
-     * Listener to dynamically save the scriptRevision
-     */
-    private void scriptRevisionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptRevisionCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.scriptRevision = (scriptRevision.getText());
-        }
-        disableCasual();
-    }//GEN-LAST:event_scriptRevisionCaretUpdate
-
-    /*
-     * Listener to dynamically save the uniqueId
-     */
-    private void uniqueIDCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_uniqueIDCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.uniqueIdentifier = uniqueID.getText();
-        }
-        disableCasual();
-    }//GEN-LAST:event_uniqueIDCaretUpdate
-
-    /*
-     * Listener to dynamically save the supportURL
-     */
-    private void supportURLCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_supportURLCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.supportURL = supportURL.getText();
-        }
-        disableCasual();
-    }//GEN-LAST:event_supportURLCaretUpdate
-
-    /*
-     * Listener to dynamically save the updateMessage
-     */
-    private void updateMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_updateMessageCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.updateMessage = updateMessage.getText();
-        }
-        disableCasual();
-    }//GEN-LAST:event_updateMessageCaretUpdate
-
-    /*
-     * Listener to dynamically save the killswitchMessage
-     */
-    private void killswitchMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_killswitchMessageCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.killSwitchMessage = killswitchMessage.getText();
-        }
-        disableCasual();
-    }//GEN-LAST:event_killswitchMessageCaretUpdate
-
-    /*
-     * Listener to dynamically save the script
-     */
-    private void scriptWorkAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptWorkAreaCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents = (this.scriptWorkArea.getText());
-        }
-        disableCasual();
-    }//GEN-LAST:event_scriptWorkAreaCaretUpdate
-
     private void removeZipFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeZipFileActionPerformed
         this.popupMenuForZipManagement.setVisible(false);
 
         jList1.remove(this.jList1.getSelectedIndex());
 
     }//GEN-LAST:event_removeZipFileActionPerformed
-
-    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-        int X = (int) this.jList1.getBounds().getMaxX();
-
-        java.awt.Point point = evt.getPoint();
-        int index = jList1.locationToIndex(point);
-        if (jList1.isSelectedIndex(index)) {
-
-            File f = scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.get(index);
-
-            if (f.exists() && f.getAbsolutePath().contains(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).tempDir)) {
-                f.delete();
-            }
-            listModel.remove(index);
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.remove(index);
-            disableCasual();
-        }
-
-    }//GEN-LAST:event_jList1MouseClicked
-
-    private void browseLogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseLogoActionPerformed
-        final JFileChooser fc = new JFileChooser();
-        int returnValue = fc.showOpenDialog(this);
-        if (returnValue == JFileChooser.OPEN_DIALOG) {
-            if (fc.getSelectedFile().toString().contains(".png")) {
-                this.bannerPic.setText(fc.getSelectedFile().toString());
-                try {
-                    logo = ImageIO.read(ImageIO.createImageInputStream(new FileInputStream(fc.getSelectedFile())));
-                    logoLabel.setIcon(new ImageIcon(logo));
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "File must be a PNG "
-                        + "image.", "Incorrect Format", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        disableCasual();
-    }//GEN-LAST:event_browseLogoActionPerformed
 
     private void loadCaspacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCaspacActionPerformed
 
@@ -1554,57 +1355,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         }
     }//GEN-LAST:event_CASPACkagerPanelPropertyChange
 
-    private void scriptDescriptionJTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptDescriptionJTextCaretUpdate
-        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription = this.scriptDescriptionJText.getText();
-        }
-        disableCasual();
-    }//GEN-LAST:event_scriptDescriptionJTextCaretUpdate
-
-    private void overviewWorkAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_overviewWorkAreaCaretUpdate
-        disableCasual();
-    }//GEN-LAST:event_overviewWorkAreaCaretUpdate
-
-    private void developerNameCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_developerNameCaretUpdate
-        disableCasual();
-    }//GEN-LAST:event_developerNameCaretUpdate
-
-    private void donateTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_donateTextCaretUpdate
-        disableCasual();
-    }//GEN-LAST:event_donateTextCaretUpdate
-
-    private void windowTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_windowTextCaretUpdate
-        disableCasual();
-    }//GEN-LAST:event_windowTextCaretUpdate
-
-    private void buttonTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_buttonTextCaretUpdate
-        disableCasual();
-    }//GEN-LAST:event_buttonTextCaretUpdate
-
-    private void alwaysEnableControlsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_alwaysEnableControlsStateChanged
-        disableCasual();
-    }//GEN-LAST:event_alwaysEnableControlsStateChanged
-
-    private void audioEnabledStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_audioEnabledStateChanged
-        disableCasual();
-    }//GEN-LAST:event_audioEnabledStateChanged
-
-    private void useBannerPicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBannerPicActionPerformed
-        disableCasual();
-    }//GEN-LAST:event_useBannerPicActionPerformed
-
-    private void useBannerTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBannerTextActionPerformed
-        disableCasual();
-    }//GEN-LAST:event_useBannerTextActionPerformed
-
-    private void bannerTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_bannerTextCaretUpdate
-        disableCasual();
-    }//GEN-LAST:event_bannerTextCaretUpdate
-
-    private void bannerPicCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_bannerPicCaretUpdate
-        disableCasual();
-    }//GEN-LAST:event_bannerPicCaretUpdate
-
     private void saveCreateRunCASUALActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveCreateRunCASUALActionPerformed
         this.saveCASPAC();
         this.saveCASUAL();
@@ -1662,6 +1412,263 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         }
     }//GEN-LAST:event_saveCreateRunCASUALActionPerformed
 
+    private void developerNameCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_developerNameCaretUpdate
+        disableCasual();
+    }//GEN-LAST:event_developerNameCaretUpdate
+
+    private void browseLogoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseLogoActionPerformed
+        final JFileChooser fc = new JFileChooser();
+        int returnValue = fc.showOpenDialog(this);
+        if (returnValue == JFileChooser.OPEN_DIALOG) {
+            if (fc.getSelectedFile().toString().contains(".png")) {
+                this.bannerPic.setText(fc.getSelectedFile().toString());
+                try {
+                    logo = ImageIO.read(ImageIO.createImageInputStream(new FileInputStream(fc.getSelectedFile())));
+                    logoLabel.setIcon(new ImageIcon(logo));
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(CASCADEGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "File must be a PNG "
+                    + "image.", "Incorrect Format", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        disableCasual();
+    }//GEN-LAST:event_browseLogoActionPerformed
+
+    private void bannerPicCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_bannerPicCaretUpdate
+        disableCasual();
+    }//GEN-LAST:event_bannerPicCaretUpdate
+
+    private void bannerTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_bannerTextCaretUpdate
+        disableCasual();
+    }//GEN-LAST:event_bannerTextCaretUpdate
+
+    private void buttonTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_buttonTextCaretUpdate
+        disableCasual();
+    }//GEN-LAST:event_buttonTextCaretUpdate
+
+    private void windowTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_windowTextCaretUpdate
+        disableCasual();
+    }//GEN-LAST:event_windowTextCaretUpdate
+
+    private void useBannerPicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBannerPicActionPerformed
+        disableCasual();
+    }//GEN-LAST:event_useBannerPicActionPerformed
+
+    private void useBannerTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useBannerTextActionPerformed
+        disableCasual();
+    }//GEN-LAST:event_useBannerTextActionPerformed
+
+    private void audioEnabledStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_audioEnabledStateChanged
+        disableCasual();
+    }//GEN-LAST:event_audioEnabledStateChanged
+
+    private void alwaysEnableControlsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_alwaysEnableControlsStateChanged
+        disableCasual();
+    }//GEN-LAST:event_alwaysEnableControlsStateChanged
+
+    private void donateTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_donateTextCaretUpdate
+        disableCasual();
+    }//GEN-LAST:event_donateTextCaretUpdate
+
+    /*
+     * Listener to dynamically save the script
+     */
+    private void scriptWorkAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptWorkAreaCaretUpdate
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents = (this.scriptWorkArea.getText());
+        }
+        disableCasual();
+    }//GEN-LAST:event_scriptWorkAreaCaretUpdate
+
+    private void scriptDescriptionJTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptDescriptionJTextCaretUpdate
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription = this.scriptDescriptionJText.getText();
+        }
+        disableCasual();
+    }//GEN-LAST:event_scriptDescriptionJTextCaretUpdate
+
+    /*
+     * Listener to dynamically save the uniqueId
+     */
+    private void uniqueIDCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_uniqueIDCaretUpdate
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.uniqueIdentifier = uniqueID.getText();
+        }
+        disableCasual();
+    }//GEN-LAST:event_uniqueIDCaretUpdate
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        int X = (int) this.jList1.getBounds().getMaxX();
+
+        java.awt.Point point = evt.getPoint();
+        int index = jList1.locationToIndex(point);
+        if (jList1.isSelectedIndex(index)) {
+
+            File f = scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.get(index);
+
+            if (f.exists() && f.getAbsolutePath().contains(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).tempDir)) {
+                f.delete();
+            }
+            listModel.remove(index);
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.remove(index);
+            disableCasual();
+        }
+    }//GEN-LAST:event_jList1MouseClicked
+
+    /*
+     * Listener to dynamically save the updateMessage
+     */
+    private void updateMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_updateMessageCaretUpdate
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.updateMessage = updateMessage.getText();
+        }
+        disableCasual();
+    }//GEN-LAST:event_updateMessageCaretUpdate
+
+    /*
+     * Listener to dynamically save the minSVNversion
+     */
+    private void minSVNversionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_minSVNversionCaretUpdate
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion = (minSVNversion.getText());
+        }
+        disableCasual();
+    }//GEN-LAST:event_minSVNversionCaretUpdate
+
+    /*
+     * Listener to dynamically save the supportURL
+     */
+    private void supportURLCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_supportURLCaretUpdate
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.supportURL = supportURL.getText();
+        }
+        disableCasual();
+    }//GEN-LAST:event_supportURLCaretUpdate
+
+    /*
+     * Listener to dynamically save the killswitchMessage
+     */
+    private void killswitchMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_killswitchMessageCaretUpdate
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.killSwitchMessage = killswitchMessage.getText();
+        }
+        disableCasual();
+    }//GEN-LAST:event_killswitchMessageCaretUpdate
+
+    /*
+     * Listener to dynamically save the scriptRevision
+     */
+    private void scriptRevisionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptRevisionCaretUpdate
+        if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.scriptRevision = (scriptRevision.getText());
+        }
+        disableCasual();
+    }//GEN-LAST:event_scriptRevisionCaretUpdate
+
+    @SuppressWarnings("unchecked")
+    /*
+     * Listens for edit icon to be pressed
+     */
+    private void editScriptNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editScriptNameButtonActionPerformed
+        //Prompts for the new string name.
+        String scriptName = JOptionPane.showInputDialog(this, "Please enter the new name for the script:\n"
+            + "Leave empty to keep the existing name",
+            "Script Name", JOptionPane.QUESTION_MESSAGE);
+
+        //Only changes name if input string is not blank
+        if (checkScriptNameExists(scriptName)) {
+            return;
+        }
+        if (scriptName!=null && !(scriptName.isEmpty())) {
+            //get original script selected
+            Script orig = scriptList.getElementAt(this.scriptListJList.getSelectedIndex());
+            //make a copy with a new name
+            Script newScript = orig.copyOf(scriptName, orig.tempDir);
+            //add the new script
+            cp.scripts.set(cp.scripts.indexOf(cp.getScriptByName(orig.name)), newScript);
+            //remove the original
+            cp.scripts.remove(orig);
+            //get the list
+            DefaultListModel<String> lm = new DefaultListModel<String>();
+            for (Script s : cp.scripts) {
+                lm.addElement(s.name);
+            }
+            this.scriptListJList.setModel(lm);
+
+            loadScript();
+            disableCasual();
+        }
+    }//GEN-LAST:event_editScriptNameButtonActionPerformed
+
+    /*
+     * Listener for script delete button
+     */
+    private void deleteScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteScriptButtonActionPerformed
+        int i = JOptionPane.showConfirmDialog(this, "Are you sure you wish to delete this script?\n"
+            + "THIS IS IRREVERSABLE", "Confirm Deletion:", JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            if (this.scriptListJList.getSelectedIndex() != -1) {
+                scriptList.removeElementAt(this.scriptListJList.getSelectedIndex());
+                clearAll();
+            }
+        }
+        disableCasual();
+    }//GEN-LAST:event_deleteScriptButtonActionPerformed
+
+    /*
+     * Listener set up to listen for the + button to add script
+     */
+    private void addScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addScriptButtonActionPerformed
+        
+         if (! this.scriptList.isEmpty()){
+             JOptionPane.showMessageDialog(this, "You must delete a script first.\n We no longer allow multiple scripts per CASPAC.",
+            "Only One Script Per CASPAC", JOptionPane.ERROR_MESSAGE);
+             return;
+         }
+// Prompt for script name
+        String s = JOptionPane.showInputDialog(this, "What would you like to name the script:\n",
+            "Script Name", JOptionPane.QUESTION_MESSAGE);
+
+        //If there is a name in prompt
+        if (checkScriptNameExists(s)) {
+            return;
+        }
+        if (!(s.isEmpty())) {
+
+            scriptList.addElement(new Script(s, Statics.getTempFolder() + s));
+
+            //Set that script as current script
+            this.scriptListJList.setSelectedIndex(scriptList.getSize() - 1);
+
+            //Rerender all of the Info to current script
+            loadScript();
+            this.scriptListJList.setSelectedIndex(this.scriptListJList.getLastVisibleIndex());
+            disableCasual();
+        }
+    }//GEN-LAST:event_addScriptButtonActionPerformed
+
+    /*
+     * Listens for a new selection on the list and then loads that script info
+     * into the current displayed information.
+     */
+    private void scriptListJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_scriptListJListValueChanged
+        //this.scriptListJList.getSelectedIndex() = this.scriptListJList.getSelectedIndex();
+        //System.out.println(this.scriptListJList.getSelectedIndex());
+        if (this.scriptListJList.getSelectedIndex() == -1) {
+            this.editScriptNameButton.setEnabled(false);
+            this.deleteScriptButton.setEnabled(false);
+        } else {
+            this.editScriptNameButton.setEnabled(true);
+            this.deleteScriptButton.setEnabled(true);
+        }
+        loadScript();
+    }//GEN-LAST:event_scriptListJListValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BannerPicOrText;
@@ -1696,6 +1703,8 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1709,8 +1718,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     private javax.swing.JTextField minSVNversion;
     private javax.swing.JLabel minSVNversionTitleJLabel;
     private javax.swing.JPanel outputFIle;
-    private javax.swing.JScrollPane overviewScrollPane;
-    private javax.swing.JTextArea overviewWorkArea;
     private javax.swing.JPopupMenu popupMenuForZipManagement;
     private javax.swing.JMenuItem removeZipFile;
     private javax.swing.JButton saveCreateRunCASUAL;
@@ -1796,7 +1803,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
             casp.scripts.add(scriptList.get(j));
         }
         Log.level2Information("Setting Overview");
-        casp.overview = this.overviewWorkArea.getText();
+        casp.overview = this.scriptDescriptionJText.getText();
         return casp;
     }
 
@@ -1982,7 +1989,6 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         this.useBannerPic.setSelected(cp.build.usePictureForBanner);
         this.bannerPic.setText(cp.build.bannerPic);
         this.bannerText.setText(cp.build.bannerText);
-        this.overviewWorkArea.setText(cp.overview);
         this.logo = cp.logo;
     }
 
