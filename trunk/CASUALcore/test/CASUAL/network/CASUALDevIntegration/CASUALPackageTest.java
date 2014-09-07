@@ -27,7 +27,7 @@ import org.junit.Test;
 public class CASUALPackageTest {
     CASUALPackage cp;
     public CASUALPackageTest() {
-        cp=new CASUALPackage("https://builds.casual-dev.com/files/all/testpak.zip");
+        cp=new CASUALPackage("https://builds.casual-dev.com/files/CASPAC/all/testpak.zip");
         System.out.println("Set CASPAC up");
     }
     
