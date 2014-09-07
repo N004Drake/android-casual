@@ -36,8 +36,8 @@ public class CASUALDevQuerierTest {
     public void testDoPropertySearch() throws Exception {
         System.out.println("getData");
         CASUALDevQuerier instance = new CASUALDevQuerier(BUILDPROP, new String[]{"CASUAL"});
-        String expResult = "http://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
-        String[] result=new String[]{};
+        String expResult = "http://builds.casual-dev.com/files/CASPAC/all/testpak.zip";
+        String[] result;
         //for (int i=0; i<30; i++){
             result=instance.recursiveFolderSearch();
         //}
