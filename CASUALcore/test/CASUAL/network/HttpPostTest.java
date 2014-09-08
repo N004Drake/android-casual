@@ -15,16 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package CASUAL.network.CASUALDevIntegration;
+package CASUAL.network;
+
+import java.io.File;
+import java.io.IOException;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author adamoutler
  */
-public class NoMetaException extends Exception {
-        private static final long serialVersionUID = 1L;
-
-    public NoMetaException(String errorMessage) {
-        super(errorMessage);
+public class HttpPostTest {
+    
+    public HttpPostTest() {
     }
+    
+    @Before
+    public void setUp() {
+    }
+
+    /**
+     * Test of post method, of class HttpPostFile.
+     */
+    @Test
+    public void testPost() throws IOException {
+        
+        File f=new File("../test/CASUAL/network/build.prop");
+        System.out.println(f.getAbsolutePath());
+        String url="https://builds.casual-dev.com/availableCaspacs/CASUALComms.php";
+        String s=HttpPost.postFile(f, url);
+        assert (s.contains("START JSON OUTPUT"));
+    }
+    
 }

@@ -72,9 +72,17 @@ public class Shell {
 
     }
 
+    public String maintainedShell(String[] cmd, String message){
+        String x="";
+    
+        
+        return x;
+    }
+    
+    
+    
     private String elevateSimpleCommands(String[] cmd, String message) {
         FileOperations FileOperations = new FileOperations();
-        Shell Shell = new Shell();
         String Result = "";
 
         String Command = "";
@@ -94,11 +102,11 @@ public class Shell {
 
             boolean useGKSU = true;
             String[] testGKSudo = {"which", "gksudo"};
-            String testReturn = Shell.silentShellCommand(testGKSudo);
+            String testReturn = silentShellCommand(testGKSudo);
             if (testReturn.contains("CritERROR!!!") || testReturn.equals("\n") || testReturn.isEmpty()) {
                 useGKSU = false;
                 String[] testPKexec = {"which", "pkexec"};
-                testReturn = Shell.silentShellCommand(testPKexec);
+                testReturn =silentShellCommand(testPKexec);
                 if (testReturn.contains("CritERROR!!!") || testReturn.equals("\n") || testReturn.isEmpty()) {
                     new CASUALMessageObject("@interactionPermissionNotFound").showTimeoutDialog(60, null, javax.swing.JOptionPane.OK_OPTION, javax.swing.JOptionPane.ERROR_MESSAGE, null, null);
                 }
@@ -116,19 +124,19 @@ public class Shell {
             Result = "";
             if (useGKSU) {
                 if (message == null) {
-                    Result = Shell.liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
+                    Result = liveShellCommand(new String[]{"gksudo", "-k", "-D", "CASUAL", ScriptFile}, true);
                 } else {
-                    Result = Shell.liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile}, true);
+                    Result = liveShellCommand(new String[]{"gksudo", "--message", message, "-k", "-D", "CASUAL", ScriptFile}, true);
                 }
             } else {
                 int i = 0;
                 //give the user 3 retries for password
                 while (Result.equals("") || Result.contains("Error executing command as another user")) {
-                    Result = Shell.liveShellCommand(new String[]{"pkexec", ScriptFile}, true);
+                    Result = liveShellCommand(new String[]{"pkexec", ScriptFile}, true);
                     i++;
                     if (Result.contains("Error executing command as another user:") && i >= 3) {
                         Log.level2Information("@permissionsElevationProblem");
-                        Result = Shell.liveShellCommand(new String[]{ScriptFile}, true);
+                        Result = liveShellCommand(new String[]{ScriptFile}, true);
                         break;
                     }
                 }
