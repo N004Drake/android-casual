@@ -25,7 +25,6 @@ public class NoMetaException extends Exception {
         private static final long serialVersionUID = 1L;
 
     public NoMetaException(String errorMessage) {
-        System.out.println(errorMessage);
-        System.out.println("CASPAC is invalid");
+        super(errorMessage);
     }
 }
