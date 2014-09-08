@@ -67,17 +67,36 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 public class CASUALDevQuerier2 {
 
     final static String buildsURL = "https://builds.casual-dev.com/availableCaspacs/CASUALComms.php";
-    final static String rootPath="https://builds.casual-dev.com";
+    final static String rootPath = "https://builds.casual-dev.com";
     final String buildProp;
 
+    /**
+     * accepts a build prop in CASUAL's BuildProp format
+     *
+     * @param bp BuildProp to be sent to server
+     * @param additionalProps additional lines of properties to claim as valid
+     */
     public CASUALDevQuerier2(BuildProp bp, String[] additionalProps) {
         buildProp = addAdditionalPropsToBuildProp(bp.toString(), additionalProps);
     }
 
+    /**
+     * accepts a build prop in file format
+     *
+     * @param bp BuildProp to be sent to server
+     * @param additionalProps additional lines of properties to claim as valid
+     * @throws FileNotFoundException
+     */
     public CASUALDevQuerier2(File bp, String[] additionalProps) throws FileNotFoundException {
         buildProp = addAdditionalPropsToBuildProp(convertStreamToString(new FileInputStream(bp)), additionalProps);
     }
 
+    /**
+     * accepts a buildprop in string format
+     *
+     * @param bp BuildProp to be sent to server
+     * @param additionalProps additional lines of properties to claim as valid
+     */
     public CASUALDevQuerier2(String bp, String[] additionalProps) {
         addAdditionalPropsToBuildProp(bp, additionalProps);
         this.buildProp = bp;
@@ -95,11 +114,22 @@ public class CASUALDevQuerier2 {
         return s.hasNext() ? s.next() : "";
     }
 
+    /**
+     * gets an array of CASUALPackages available for this query on the build
+     * prop
+     *
+     * @return casualpackages array
+     */
     public CASUALPackage[] getPackages() {
         List<CASUALPackage> cp = getPackagesList();
         return cp.toArray(new CASUALPackage[cp.size()]);
     }
 
+    /**
+     * gets a list of URLs available for this query on the build prop
+     *
+     * @return String array of available URLs.
+     */
     public String[] getPackagesString() {
         CASUALPackage[] packs = getPackages();
         ArrayList<String> stringPacks = new ArrayList<String>();
@@ -109,6 +139,11 @@ public class CASUALDevQuerier2 {
         return stringPacks.toArray(new String[stringPacks.size()]);
     }
 
+    /**
+     * gets a list of CASUALPackages available for this query on the build prop
+     *
+     * @return list of CASUALPackages
+     */
     public List<CASUALPackage> getPackagesList() {
         ArrayList<CASUALPackage> cp = new ArrayList<CASUALPackage>();
 
@@ -137,22 +172,9 @@ public class CASUALDevQuerier2 {
     private ArrayList<String> folderList() {
         try {
             //get JSON from website
-            BufferedReader in = new BufferedReader(new StringReader(HttpPost.postString(buildProp,buildsURL)));
+            BufferedReader in = new BufferedReader(new StringReader(HttpPost.postString(buildProp, buildsURL)));
             String json = extractJSONFromHTTPResponse(in);
-           
-            // create a JavaScript engine
-            ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
-            int x = 0;
-
-            //evaluate the json as a JavaScript String[].. String parsed=json[1];
-            String parsed;
-            ArrayList<String> returnedObjects = new ArrayList<String>();
-            while (null != (parsed = (String) engine.eval(json + "[" + x + "]"))) {
-                returnedObjects.add(rootPath+parsed);
-                x++;
-            }
-            return returnedObjects;
-
+            return parseCDevJSON(json);
         } catch (MalformedURLException ex) {
             Logger.getLogger(CASUALDevQuerier2.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -162,6 +184,19 @@ public class CASUALDevQuerier2 {
         }
 
         return new ArrayList();
+    }
+
+    private ArrayList<String> parseCDevJSON(String json) throws ScriptException {
+        ArrayList<String> returnList = new ArrayList<String>();
+        // create a JavaScript engine
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+        String parsed;
+        int x = 0;
+        //evaluate the json as a JavaScript String[].. String parsed=json[1];
+        while (null != (parsed = (String) engine.eval(json + "[" + x++ + "]"))) {
+            returnList.add(rootPath + parsed);
+        }
+        return returnList;
     }
 
     private String extractJSONFromHTTPResponse(BufferedReader in) throws IOException {
