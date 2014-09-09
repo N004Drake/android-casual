@@ -13,7 +13,7 @@ package com.casual_dev.libpitX;
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
 
 import java.io.ByteArrayOutputStream;
@@ -76,7 +76,7 @@ public class PitData {
      * Constructor to grab PIT file from a File
      *
      * @param pit PIT file
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException {@inheritDoc}
      */
     public PitData(File pit) throws FileNotFoundException {
         this(new PitInputStream(new FileInputStream(pit)));
@@ -403,7 +403,7 @@ public class PitData {
      * @param partName name of partition to be resized
      * @param changeToSize the amount to change the entry This can be positive
      * or negative and will change the size relatively.
-     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.ClassNotFoundException {@inheritDoc}
      * @see #resizePartition(CASUAL.archiving.libpit.PitEntry, int) 
      */
     public void resizePartition(String partName, int changeToSize) throws ClassNotFoundException {
@@ -417,7 +417,7 @@ public class PitData {
      * @param entry The entry to be resized
      * @param changeToSize the amount to change the entry This can be positive
      * or negative and will change the size relatively.
-     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.ClassNotFoundException {@inheritDoc}
      */
     public void resizePartition(PitEntry entry, int changeToSize) throws ClassNotFoundException {
         PitEntry[] sorted = sortEntriesByBlockLocation();

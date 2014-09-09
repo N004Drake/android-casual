@@ -13,7 +13,7 @@ package com.casual_dev.libpitX;
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class PitOutputStream {
      * creates an OutputStream for a PIT file
      *
      * @see OutputStream
-     * @param outputStream
+     * @param outputStream outputstream to set 
      */
     public PitOutputStream(OutputStream outputStream) {
         this.outputStream = outputStream;
@@ -53,7 +53,7 @@ public class PitOutputStream {
      *
      * @param value an integer or four bytes to be written
      * @see OutputStream
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      */
     public void writeInt(int value) throws IOException {
         writeBuffer[0] = (byte) (value & 0xFF);
@@ -69,7 +69,7 @@ public class PitOutputStream {
      *
      * @see OutputStream
      * @param value short value to be written
-     * @throws IOException
+     * @throws IOException {@inheritDoc}
      */
     public void writeShort(short value) throws IOException {
         writeBuffer[0] = (byte) (value & 0xFF);
@@ -84,8 +84,8 @@ public class PitOutputStream {
      * @param buffer the data.
      * @param offset the start offset in the data.
      * @param length the number of bytes to write.
-     * @see OutputStream
-     * @throws IOException
+     * @see OutputStream {@inheritDoc}
+     * @throws IOException {@inheritDoc}
      */
     public void write(byte[] buffer, int offset, int length) throws IOException {
         outputStream.write(buffer, offset, length);
