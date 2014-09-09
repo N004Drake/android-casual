@@ -37,7 +37,6 @@ import java.net.URLEncoder;
  */
 public class HttpPost {
 
-    static URL u;
 
     
     
@@ -54,7 +53,7 @@ public class HttpPost {
 
     private static String postStream( InputStream fis,String url) throws IOException, MalformedURLException {
         HttpPost post = new HttpPost();
-        post.u = new URL(url);
+        URL u = new URL(url);
         
         //open the connection
         URLConnection uc = u.openConnection();
