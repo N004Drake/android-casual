@@ -13,7 +13,7 @@ package com.casual_dev.libpitX;
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
 
 import java.util.Arrays;
@@ -408,7 +408,7 @@ public class PitEntry {
     /**
      * Name of file when transferred from device
      *
-     * @param filename
+     * @param filename filename in pit entry
      */
     public void setFilename(byte[] filename) {
         file_name = convertByteArrayToCharArray(filename);
@@ -417,7 +417,7 @@ public class PitEntry {
     /**
      * Name of file when transferred from device
      *
-     * @param filename
+     * @param filename filename in pit entry
      */
     public void setFilename(String filename) {
         if (filename.length() < file_name.length) { // "Less than" due to null byte.
@@ -482,7 +482,7 @@ public class PitEntry {
     /**
      * Name of file when receiving an OTA update
      *
-     * @param fotaName
+     * @param fotaName name to set for FOTA entry
      */
     public void setFotaName(byte[] fotaName) {
         fota_name = convertByteArrayToCharArray(fotaName);
@@ -491,7 +491,7 @@ public class PitEntry {
     /**
      * Name of file when receiving an OTA update
      *
-     * @param fotaName
+     * @param fotaName name to set for FOTA entry
      */
     public void setFotaName(String fotaName) {
         if (fotaName.length() < file_name.length) { // "Less than" due to null byte.
@@ -686,7 +686,7 @@ public class PitEntry {
     /**
      * converts a byte array to an equivalent char array
      *
-     * @param byteArray
+     * @param byteArray array of bytes to be converted into chars
      * @return byte representation of char array
      */
     public char[] convertByteArrayToCharArray(byte[] byteArray) {
@@ -700,7 +700,7 @@ public class PitEntry {
     /**
      * converts a char array to an equivalent byte array
      *
-     * @param charArray
+     * @param charArray array to be converted into bytes
      * @return byte representation of char array
      */
     public byte[] convertCharArrayToByteArray(char[] charArray) {
