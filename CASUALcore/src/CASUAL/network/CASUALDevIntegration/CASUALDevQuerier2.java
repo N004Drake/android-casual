@@ -183,7 +183,7 @@ public class CASUALDevQuerier2 {
             Logger.getLogger(CASUALDevQuerier2.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return new ArrayList();
+        return new ArrayList<String>();
     }
 
     private ArrayList<String> parseCDevJSON(String json) throws ScriptException {
