@@ -230,4 +230,22 @@
             <echo>Deploy-Sign-Blob-preloader by ${javafx.signjar.alias}</echo>
         </sequential>
     </macrodef>
+    
+    
+    <target name="-check-dpkg-presence" depends="-check-native-bundling-type" if="need.dpkg.presence">
+        <local name="exec.which.dpkg.result"/>
+        <local name="exec.which.dpkg.output"/>
+        <exec executable="dpkg" failifexecutionfails="false" failonerror="false" resultproperty="exec.which.dpkg.result" outputproperty="exec.which.dpkg.output">
+            <arg line="--version"/>
+        </exec>
+      
+        <condition property="missing.dpkg">
+            <not><and>
+                <isset property="exec.which.dpkg.result"/>
+                <equals arg1="${exec.which.dpkg.result}" arg2="0"/>
+                <isset property="exec.which.dpkg.output"/>
+                <not><equals arg1="${exec.which.dpkg.output}" arg2=""/></not>
+            </and></not>
+        </condition>
+    </target>
 </project>
