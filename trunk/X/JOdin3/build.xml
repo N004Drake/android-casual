@@ -106,7 +106,8 @@
                 <attribute name="Application-Name" value="JOdin3 CASUAL"/>
                 <attribute name="Permissions" value="all-permissions"/>
                 <attribute name="Main-Class" value="com/javafx/main/Main"/>
-                <attribute name="Application-Library-Allowable-Codebase" value="*.casual-dev.com file://*"/>
+                <attribute name="manifest.custom.codebase" value="builds.casual-dev.com jodin3.casual-dev.com casual-dev.com file\://* c\:* localhost\:*"/>
+                <attribute name="Application-Library-Allowable-Codebase" value="builds.casual-dev.com jodin3.casual-dev.com casual-dev.com file\://* c\:* localhost\:*"/>
             </manifest>
         </jar>
 
