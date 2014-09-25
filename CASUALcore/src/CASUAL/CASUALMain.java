@@ -17,7 +17,6 @@
 package CASUAL;
 
 import CASUAL.caspac.Caspac;
-import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.misc.MandatoryThread;
 import CASUAL.network.Pastebin;
 import java.io.File;
@@ -128,6 +127,15 @@ public final class CASUALMain {
                 //caspacExecute();
                 break;
             case EXECUTE:
+                try {
+                    CASUALTools.setiCASUALGUI(Class.forName("GUI.CommandLine.CommandLineUI"));
+                } catch (ClassNotFoundException ex) {
+                    Log.level0Error("Could not find Command Line class");
+                } catch (InstantiationException ex) {
+                    Log.level0Error("Could not instantiate Command Line class");
+                } catch (IllegalAccessException ex) {
+                    Log.level0Error("Could not access Command Line class");
+                }
                 this.doConsoleStartup(arguments.getExecuteCommand());
                 break;
             case EXIT:

@@ -269,7 +269,7 @@ public class CASUALTools {
         }
     }
 
-    private static void setiCASUALGUI(Class<?> cls) throws InstantiationException, IllegalAccessException {
+    public static void setiCASUALGUI(Class<?> cls) throws InstantiationException, IllegalAccessException {
         iCASUALUI clsInstance;
         clsInstance = (CASUAL.iCASUALUI) cls.newInstance();
         CASUAL.Statics.GUI = clsInstance;
