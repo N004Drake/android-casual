@@ -275,7 +275,7 @@ public class CASUALLanguage {
             Log.level4Debug("Received ECHO command" + cmd.get());
             cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
             Log.level2Information(cmd.get());
-            Statics.GUI.setUserSubMessage(cmd.get());
+            Statics.GUI.setUserSubMessage(cmd.getReturn());
             return cmd.getReturn();
         
             //TODO: should this be updated automatically by monitoring or by this new command?
