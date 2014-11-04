@@ -26,8 +26,9 @@ public class CFAutoRootDbTest {
         /**
          * 
          * 
-         * 
-         * Testing is disabled until this feature is used
+         * //TODO reenable CFAutoRootDB Test
+         * Testing is disabled because it fails and the feature
+         * is feature is used.
          * 
          * 
          * 
