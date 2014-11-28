@@ -45,7 +45,7 @@ public class ControlCommands {
     
     public static boolean setReturn(Command cmd){
         if (cmd.get().startsWith("$RETURNVALUE")){
-            cmd.set(cmd.get().replaceFirst("RETURNVALUE", "").trim());
+            cmd.set(cmd.get().replaceFirst("$RETURNVALUE", "").trim());
             CASUALScriptParser.setReturnValue(cmd.get());
             cmd.setReturn(true, cmd.get());
             return true;
@@ -144,7 +144,7 @@ public class ControlCommands {
     }
 
     //split the string from $IFCONTAINS "string string" $INCOMMAND "$ADB command to execute" $DO "CASUAL COMMAND"
-    public static String doIfContainsReturnResults(String line, boolean ifContains) {
+    public static String doIfContainsReturnResults(String line, boolean ifContains) throws Exception {
         if (line.startsWith("$IFCONTAINS")) {
             line = StringOperations.removeLeadingSpaces(line.replaceFirst("\\$IFCONTAINS", "").trim());
         } else if (line.startsWith("$IFNOTCONTAINS")) {

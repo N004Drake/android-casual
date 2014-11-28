@@ -28,7 +28,7 @@ public class AuxiliaryTesting {
     public static void tearDownClass() {
     }
     @Test
-    public void testCasualAuxilliaryFunctions() {
+    public void testCasualAuxilliaryFunctions() throws Exception {
 
         //run CASUAL to set environmental values
         CASUAL.CASUALMain.main(new String[]{"-e", "$ADB devices"});

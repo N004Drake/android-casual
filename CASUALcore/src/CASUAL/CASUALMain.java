@@ -239,7 +239,11 @@ public final class CASUALMain {
     private void doConsoleStartup(String cmd) {
         CASUALConnectionStatusMonitor.stop();
         CASUALScriptParser csp = new CASUALScriptParser();
-        csp.executeOneShotCommand(cmd);
+        try {
+            csp.executeOneShotCommand(cmd);
+        } catch (Exception ex) {
+            Log.errorHandler(ex);
+        }
         Log.level2Information("@scriptComplete");
 
     }

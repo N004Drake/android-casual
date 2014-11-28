@@ -21,6 +21,8 @@ import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALScriptParser;
 import CASUAL.Log;
 import CASUAL.OSTools;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Used for detection and reaction to errors in heimdall. 
@@ -48,7 +50,11 @@ public class HeimdallErrorHandler {
         Log.level0Error(result);
         Log.level0Error("@heimdallErrorReport");
         CASUALScriptParser cLang = new CASUALScriptParser();
-        cLang.executeOneShotCommand("$HALT $SENDLOG");
+        try {
+            cLang.executeOneShotCommand("$HALT $SENDLOG");
+        } catch (Exception ex) {
+            Log.errorHandler(ex);
+        }
     }
 
     /**
@@ -105,7 +111,11 @@ public class HeimdallErrorHandler {
             
             if (heimdallOutput.contains("Protocol initialisation failed!")) {
                 CASUALScriptParser cLang = new CASUALScriptParser();
-                cLang.executeOneShotCommand("$HALT $ECHO A random error occurred while attempting initial communications with the device.\nYou will need disconnect USB and pull your battery out to restart your device.\nDo the same for CASUAL.");
+                try {
+                    cLang.executeOneShotCommand("$HALT $ECHO A random error occurred while attempting initial communications with the device.\nYou will need disconnect USB and pull your battery out to restart your device.\nDo the same for CASUAL.");
+                } catch (Exception ex) {
+                    Logger.getLogger(HeimdallErrorHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 Log.level0Error("Protocol Init failure");
                 return HeimdallTools.CommandDisposition.RUNAGAIN;
             }
