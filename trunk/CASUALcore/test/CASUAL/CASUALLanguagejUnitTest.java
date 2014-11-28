@@ -29,7 +29,7 @@ public class CASUALLanguagejUnitTest {
     }
 
     @Test
-    public void testCASUALLanguage() {
+    public void testCASUALLanguage() throws Exception {
         CASUAL.CASUALMain.main(new String[]{"-e", "$ECHO hi"});
         Statics.GUI = new GUI.testing.automatic();
 

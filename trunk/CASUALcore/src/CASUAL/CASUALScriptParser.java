@@ -47,6 +47,7 @@ public class CASUALScriptParser {
     String ScriptTempFolder = "";
     String ScriptName = "";
     static String scriptReturnValue="";
+    public final static String NEWLINE=";;;";
 
     /**
      * executes a CASUAL script from a file
@@ -94,7 +95,7 @@ public class CASUALScriptParser {
      * @param Line line to execute
      * @return from CASUAL language
      */
-    public String executeOneShotCommand(String Line) {
+    public String executeOneShotCommand(String Line) throws Exception {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
         Statics.setStatus("Executing");
         String retvalue = "";
@@ -104,8 +105,8 @@ public class CASUALScriptParser {
         }
         try {
 
-            if (Line.contains(";;;")) {
-                String[] lineArray = Line.split(";;;");
+            if (Line.contains(NEWLINE)) {
+                String[] lineArray = Line.split(NEWLINE);
                 for (String linesplit : lineArray) {
                     retvalue = retvalue + new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(linesplit) + "\n";
                 }

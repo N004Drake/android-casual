@@ -91,8 +91,21 @@ public class StringMathTest {
         } catch (CASUALMathOperationException ex) {
             Logger.getLogger(StringMathTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+        mathProblem = "3*(34/23+23)+22+Sdfa";
+        expResult = "95.43478260869566";
+        try {
+            result = instance.performRoundedMathOperation(mathProblem);
+        } catch (CASUALMathOperationException ex) {
+            Logger.getLogger(StringMathTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         assertEquals(expResult, result);
-        
+                mathProblem = "3asdf";
+        expResult = "95.43478260869566";
+        try {
+            result = instance.performRoundedMathOperation(mathProblem);
+        } catch (CASUALMathOperationException ex) {
+            Logger.getLogger(StringMathTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

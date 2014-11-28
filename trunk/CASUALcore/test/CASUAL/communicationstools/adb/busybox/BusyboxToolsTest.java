@@ -41,7 +41,7 @@ public class BusyboxToolsTest {
     }
 
     @Test
-    public void testBusyboxCASUALCommand() {
+    public void testBusyboxCASUALCommand() throws Exception {
         if (!new ADBTools().isConnected()) {
             return;
         }

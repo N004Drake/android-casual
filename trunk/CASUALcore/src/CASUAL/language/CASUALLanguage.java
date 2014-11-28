@@ -35,6 +35,7 @@ import CASUAL.communicationstools.heimdall.drivers.DriverRemove;
 import CASUAL.crypto.MD5sum;
 import CASUAL.instrumentation.Track;
 import CASUAL.language.commands.ControlCommands;
+import CASUAL.language.commands.MathCommands;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
 import java.io.BufferedReader;
@@ -59,7 +60,6 @@ public class CASUALLanguage {
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     final Caspac CASPAC;
     private String deviceBuildPropStorage;
-
     
     /**
      * instantiates CASUALLanguage with script
@@ -148,7 +148,7 @@ public class CASUALLanguage {
             Statics.GUI.setUserMainMessage("@done");
             Statics.GUI.setReady(true);
             //yeah yeah, overly broad chatch.  read below. 
-        } catch (IOException e) {
+        } catch (Exception e) {
             /*
              *  Java reports this as an overly broad catch.  Thats fine.  this is 
              *  supposed to be broad.  It is the handler for all errors during 
@@ -163,6 +163,7 @@ public class CASUALLanguage {
             Log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
             Log.level0Error("@problemParsingScript");
             Log.level0Error(strLine);
+
         }
 
     }
@@ -173,7 +174,7 @@ public class CASUALLanguage {
      * @return value returned from CASUAL command
      * @throws java.io.IOException When permissions problem exists
      */
-    public String commandHandler(String line) throws IOException{
+    public String commandHandler(String line) throws Exception{
         return commandHandler(new Command(line));
     }
     
@@ -184,7 +185,7 @@ public class CASUALLanguage {
      * @return value returned from CASUAL command
      * @throws java.io.IOException When permissions problem exists
      */
-    public String commandHandler(Command cmd) throws IOException {
+    public String commandHandler(Command cmd) throws Exception {
         
         Log.level3Verbose("COMMAND HANDLER:"+cmd.toString().replace("\n",""));
         
@@ -199,6 +200,8 @@ public class CASUALLanguage {
             Log.level4Debug(cmd+"\n Command not applicable to this OS");
             return cmd.getReturn();
         }
+        
+        
         
         /*
          *DEBUG COMMANDS  $SENDLOG 
@@ -230,6 +233,8 @@ public class CASUALLanguage {
         //SLEEP  1
         //SLEEPMILLIS 1000
         if (checkSleep(cmd)) return cmd.getReturn();
+        
+        if (MathCommands.doMath(cmd)) return cmd.getReturn();
         /*
          * Environmental variables
          */

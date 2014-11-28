@@ -302,7 +302,11 @@ public class Shell {
                 if (!Statics.ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
                     for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
                         if (Statics.ActionEvents != null && LineRead.contains(Statics.ActionEvents.get(i))) {
-                            new CASUALScriptParser().executeOneShotCommand(Statics.ReactionEvents.get(i));
+                            try {
+                                new CASUALScriptParser().executeOneShotCommand(Statics.ReactionEvents.get(i));
+                            } catch (Exception ex) {
+                                Log.errorHandler(ex);
+                            }
                         }
                     }
                     LineRead = "";
