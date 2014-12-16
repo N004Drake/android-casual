@@ -39,7 +39,7 @@ public class ZodPanelContent{
     private String[] buttonActions = new String[]{"OK"};
     private boolean inputRequired = false;
     private String status = "ready";
-
+    private String  log="";
     private static Text logText=new Text("");
 
     public ZodPanelContent(){
@@ -59,10 +59,22 @@ public class ZodPanelContent{
         buttonActions = zpc.buttonActions;
         inputRequired = zpc.inputRequired;
         status = zpc.status;
-        logClosed=zpc.logClosed;
+        log=zpc.log;
     }
 
- 
+  public String toString(){
+      StringBuilder sb=new StringBuilder();
+      sb.append("Title:").append(mainTitle);
+      sb.append("subtitle:").append(subTitle).append("\n");
+      sb.append("log Closed:").append(logClosed).append("\n");
+      sb.append("image:").append(image).append("\n");
+      sb.append("button actions:").append(buttonActions).append("\n");
+      sb.append("inputRequired:").append(inputRequired).append("\n");
+      sb.append("status:").append(status).append("\n");
+      sb.append("logClosed:").append(logClosed).append("\n");
+      
+      return sb.toString();
+  }
     /**
      * gets main title
      *
@@ -198,6 +210,20 @@ public class ZodPanelContent{
     
     public Text getLogAreaText(){
         return logText;
+    }
+
+    /**
+     * @return the log
+     */
+    public String getLog() {
+        return log;
+    }
+
+    /**
+     * @param log the log to set
+     */
+    public void setLog(String log) {
+        this.log = log;
     }
 
 

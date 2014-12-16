@@ -130,11 +130,12 @@ implements Initializable, CASUAL.instrumentation.ModeTrackerInterface {
      * @return new ZodPanelContent
      */
     public ZodPanelContent getZodPanelContent() {
+        
         ZodPanelContent zpc = new ZodPanelContent();
         zpc.setMainTitle(this.title.getText());
         zpc.setSubtitle(this.title.getText());
         zpc.setStatus(status.getText());
-        
+        zpc.setLog(this.logArea.getText());
         return zpc;
     }
 
