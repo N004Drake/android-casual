@@ -28,7 +28,7 @@ import java.util.HashMap;
  * @author adamoutler
  */
 public class Variables {
-    private HashMap<String,String> variables=new HashMap();
+    private HashMap<String,String> variables=new HashMap<String,String>();
     public void parseVarialbesInString(Command c) throws CASUALLanguageException{
         //multiple varialbes may be present, keep parsing until line no longer begins with "var=val".
         while (c.get().split(" ")[0].contains("=")){
