@@ -56,6 +56,9 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import static javafx.util.Duration.millis;
 
+
+//TODO: if this window gets closed, we need to send a result to MessageHandler!
+
 /**
  * Provides input and output from the main User Interface
  *
