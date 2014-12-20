@@ -159,7 +159,7 @@ public class AES128Handler {
     }
 
     private String writeCipherFile(InputStream fis, byte[] iv, String output, char[] key, int mode) throws NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, FileNotFoundException, IOException {
-        byte[] bkey = oneWayHash(key);
+        byte[] bkey = new PBKDF2_128().oneWayHash(key,null);
         Cipher c = getCipher(bkey, iv, mode);
         CipherInputStream cis = new CipherInputStream(fis, c);
 
@@ -190,32 +190,6 @@ public class AES128Handler {
         return bytes;
     }
 
-    /**
-     * provides a one-way hash on a password
-     *
-     * @param input your password
-     * @return PBKDF2 with HMAC SHA1 password
-     */
-    public byte[] oneWayHash(char[] input) {
-        try {
-
-            int maxSecurity = Cipher.getMaxAllowedKeyLength("AES");
-            Log.level4Debug("The maximum security allowed on this system is AES " + maxSecurity);
-            if (maxSecurity > 128) {
-                maxSecurity = 128;
-            }
-            Log.level4Debug("For the sake of compatibility with US Import/Export laws we are using AES " + maxSecurity);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            KeySpec keyspec = new PBEKeySpec(input, "--salt--".getBytes(), 100000, maxSecurity);
-            Key key = factory.generateSecret(keyspec);
-            return key.getEncoded();
-        } catch (NoSuchAlgorithmException ex) {
-            Log.errorHandler(ex);
-        } catch (InvalidKeySpecException ex) {
-            Log.errorHandler(ex);
-        }
-        return null;
-    }
 
     /**
      * gets a cypher for encryption

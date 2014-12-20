@@ -204,9 +204,9 @@ public class AES128HandlerTest {
     public void testOneWayHash() {
         System.out.println("oneWayHash");
         char[] input = "test".toCharArray();
-        AES128Handler instance = new AES128Handler(new File("../../CASPAC/testpak.zip"));
+        PBKDF2_128  instance = new PBKDF2_128();
         byte[] expResult = new byte[]{-39,7,54,-119,-22,57,-32,-92,-99,-122,69,-64,61,47,-42,-103};
-        byte[] result = instance.oneWayHash(input);
+        byte[] result = instance.oneWayHash(input,null);
         assertArrayEquals(expResult, result);
 
     }
