@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package CASUAL.language.commands;
 
 import CASUAL.language.Command;
@@ -28,17 +27,19 @@ import java.util.logging.Logger;
  * @author adamoutler
  */
 public class MathCommands {
-    public static boolean doMath(Command math) throws CASUALMathOperationException{
-        if (math.get().startsWith("$MATH ")){
-            String cmd=math.get().replaceFirst("\\$MATH","").trim();
+
+    public static boolean doMath(Command math) throws CASUALMathOperationException {
+        String s = math.get();
+        if (math.get().startsWith("$MATH")) {
+            String cmd = math.get().trim().replaceFirst("\\$MATH", "").trim();
             try {
-               math.setReturn(true, new StringMath().performRoundedMathOperation(cmd));
-               return true;
+                math.setReturn(true, new StringMath().performRoundedMathOperation(cmd));
+                return true;
             } catch (CASUALMathOperationException ex) {
-               math.setReturn(false, "Math Error");
-               throw ex;
+                math.setReturn(false, "Math Error");
+                throw ex;
             }
-            
+
         }
         return false;
     }

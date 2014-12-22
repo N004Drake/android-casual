@@ -18,6 +18,7 @@
 package CASUAL.language.commands;
 
 import CASUAL.CASUALScriptParser;
+import CASUAL.Log;
 import CASUAL.language.CASUALLanguageException;
 import CASUAL.language.Command;
 import CASUAL.misc.StringOperations;
@@ -28,32 +29,54 @@ import java.util.HashMap;
  * @author adamoutler
  */
 public class Variables {
-    private HashMap<String,String> variables=new HashMap<String,String>();
-    public void parseVarialbesInString(Command c) throws CASUALLanguageException{
+    private static final HashMap<String,String> variables=new HashMap<String,String>();
+    public static void parseVariablesInCommandString(Command c) throws CASUALLanguageException{
         //multiple varialbes may be present, keep parsing until line no longer begins with "var=val".
-        while (c.get().split(" ")[0].contains("=")){
-            String[] replacement=c.get().split(" ")[0].split("=");
+        if (c.get().split(" ")[0].contains("=")){
+            String[] replacement=c.get().split("=",2);
             replacement[1]=StringOperations.replaceLast(replacement[1], CASUALScriptParser.NEWLINE, "");
-            String returnValue;
+            String returnValue=replacement[1];
             try {
                 returnValue=new CASUALScriptParser().executeOneShotCommand(replacement[1]);
             } catch (Exception ex){
-                throw new CASUALLanguageException("Problem while setting variable:"+replacement[0]);
+                System.out.println("variable is not a command");
+                //throw new CASUALLanguageException("Problem while setting variable:"+replacement[0]);
             }
-            if (returnValue.equals("")){
-            
-               variables.put(replacement[0], replacement[1]);
-            } else {
+            if (returnValue.equals("")){  // didn't return a value, errored
+                           variables.put(replacement[0], replacement[1]);
+            } else {  //value received, replace it.
                variables.put(replacement[0], returnValue);
+               c.set(returnValue);
+               
             }
             
             c.set(c.get().replaceFirst(c.get().split(" ")[0], returnValue));
+             Log.level4Debug("new variable added"+varDump());
+
         }
-        
-        
         for (String k:variables.keySet()){
-            c.set(c.get().replaceAll(k, variables.get(k)));
+            if (c.get().contains(k)){
+                 c.set(c.get().replaceAll(k, variables.get(k)));
+            }
         }
-        
     }
+    
+    public static void reset(){
+        variables.clear();
+    }
+    
+    @Override
+    public String toString(){
+       return varDump();
+    }
+    public static String varDump(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("---Variable Dump ---\n");
+       for (String key: variables.keySet()){
+           sb.append("var:").append(key).append(" == val:").append(variables.get(key)).append("\n");
+       }
+       return sb.toString();
+    }
+    
+    
 }
