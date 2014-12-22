@@ -36,6 +36,7 @@ import CASUAL.crypto.MD5sum;
 import CASUAL.instrumentation.Track;
 import CASUAL.language.commands.ControlCommands;
 import CASUAL.language.commands.MathCommands;
+import CASUAL.language.commands.Variables;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.CASUALUpdates;
 import java.io.BufferedReader;
@@ -189,9 +190,8 @@ public class CASUALLanguage {
         
         Log.level3Verbose("COMMAND HANDLER:"+cmd.toString().replace("\n",""));
         
-        //line = StringOperations.removeLeadingSpaces(line);// prepare line for parser
-        if (cmd.get().equals("")) {
-            //Log.level4Debug("received blank line");
+        if (cmd.get().trim().equals("")||cmd.get().trim().startsWith("#")) {
+                        //Log.level4Debug("received blank line");
             return "";
         }
 
@@ -201,7 +201,10 @@ public class CASUALLanguage {
             return cmd.getReturn();
         }
         
-        
+        /*
+        * check for = in the first part of the command...   VAR=Value
+        */
+        Variables.parseVariablesInCommandString(cmd);
         
         /*
          *DEBUG COMMANDS  $SENDLOG 
@@ -562,6 +565,9 @@ public class CASUALLanguage {
         } else {
             Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALFinishedFailure);
             StringBuilder sb=new StringBuilder();
+            if (cmd.getReturnPassedOrFailed()){
+                return cmd.getReturn();
+            }
             sb.append("ERROR!!!!  Invalid Command:\"").append(cmd.get()).append("\" is not recognized as a valid command");
             throw new IOException(sb.toString());
         }

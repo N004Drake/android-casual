@@ -292,6 +292,15 @@ public class CASUALLanguageTest {
     }
     
     @Test
+    public void testVariablesWithMath() throws Exception{
+        System.out.println("Variable test");
+        String result = casualScriptParser.executeOneShotCommand("mvar1=5;;;$MATH mvar1+4");
+        String expectedResult="9";
+        assertEquals(result, expectedResult);
+         System.out.println("$MATH test completed");  
+    }
+    
+    @Test
     public void testHeimdall() throws Exception{
         System.out.println("heimdall test");
         String expResult = Statics.getTempFolder();

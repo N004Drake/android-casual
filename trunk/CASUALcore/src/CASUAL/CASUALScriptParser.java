@@ -103,8 +103,6 @@ public class CASUALScriptParser {
             ScriptName = "oneShot";
             ScriptTempFolder = Statics.getTempFolder();
         }
-        try {
-
             if (Line.contains(NEWLINE)) {
                 String[] lineArray = Line.split(NEWLINE);
                 for (String linesplit : lineArray) {
@@ -114,9 +112,7 @@ public class CASUALScriptParser {
                 retvalue = new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(Line);
 
             }
-        } catch (IOException ex) {
-            Logger.getLogger(CASUALScriptParser.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
         return retvalue;
     }
 

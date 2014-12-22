@@ -64,6 +64,7 @@ public class Unzip {
         try {
             this.zipFileEntries = zip.entries();
         } catch (Exception e) {
+            Log.level0Error("could not process file "+f);
             Log.errorHandler(e);
         }
     }
