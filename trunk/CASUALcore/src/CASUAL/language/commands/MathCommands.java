@@ -33,7 +33,7 @@ public class MathCommands {
         if (math.get().startsWith("$MATH")) {
             String cmd = math.get().trim().replaceFirst("\\$MATH", "").trim();
             try {
-                math.setReturn(true, new StringMath().performRoundedMathOperation(cmd));
+                math.setReturn(true, new StringMath().performRoundedMathOperation(cmd).trim());
                 return true;
             } catch (CASUALMathOperationException ex) {
                 math.setReturn(false, "Math Error");

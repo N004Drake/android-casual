@@ -58,11 +58,12 @@ public class VariablesTest {
     @Test
     public void testParseVariablesInString() throws Exception {
         System.out.println("parseVariablesInString");
-        Command c = new Command("var=x");
+        Command c = new Command("var=y");
         Variables.parseVariablesInCommandString(c);
-        c=new Command("var");
+        Variables.reset();
+        c=new Command("var=x");
         Variables.parseVariablesInCommandString(c);
-        assert c.get().equals("x");
+        assertEquals("x",c.get());
         // TODO review the generated test code and remove the default call to fail.
     }
     @Test
