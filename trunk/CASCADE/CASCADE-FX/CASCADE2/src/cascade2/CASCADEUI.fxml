@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cascade2.CASCADEUIController">
+   <children>
+      <Accordion prefHeight="476.0" prefWidth="1024.0">
+        <panes>
+          <TitledPane animated="false" prefHeight="635.0" prefWidth="1024.0" text="Overview">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <FlowPane layoutX="11.0" layoutY="25.0" prefHeight="717.0" prefWidth="1022.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <TitledPane animated="false" collapsible="false" prefHeight="412.0" prefWidth="546.0" text="Script Info">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="403.0" prefWidth="544.0">
+                                       <children>
+                                          <VBox layoutX="32.4" layoutY="30.4" prefHeight="449.0" prefWidth="502.0" AnchorPane.bottomAnchor="191.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                                             <children>
+                                                <TextField fx:id="scriptName" prefHeight="24.0" prefWidth="393.0" promptText="Script Name" />
+                                                <HBox prefHeight="25.0" prefWidth="393.0">
+                                                   <children>
+                                                      <Button fx:id="editScriptName" mnemonicParsing="false" text="edit" />
+                                                      <Button fx:id="newScript" mnemonicParsing="false" text="new" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Minimum CASUAL Version:" />
+                                                      <TextField fx:id="minRev" promptText="Minimum version of CASUAL required" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Script Revision: " />
+                                                      <TextField fx:id="scriptRevision" promptText="Your Script version" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Unique ID:" />
+                                                      <TextField fx:id="uniqueID" promptText="Random unique ID, for blacklisting at a later time, if needed" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Support URL:" />
+                                                      <TextField fx:id="supportURL" promptText="http://forum.xda-developers.com/showthread.php?t=1509224" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Develoepr Name: " />
+                                                      <TextField fx:id="devName" promptText="Your Name here" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Donate to Person(s): " />
+                                                      <TextField fx:id="donateTo" promptText="Name of person/organization to make donations" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Donation Link: " />
+                                                      <TextField fx:id="donateLink" promptText="your donation link" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Application Title: " />
+                                                      <TextField fx:id="applicationTitle" promptText="The title of the window" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="Start Button Prompt:" />
+                                                      <TextField fx:id="startButtonText" promptText="Prompt the user to start (usually &quot;Do It!&quot;)" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="21.0" prefWidth="503.0">
+                                                   <children>
+                                                      <Label text="User Text" />
+                                                      <TextField fx:id="bannerText" promptText="A quick message to the user about what this does" HBox.hgrow="ALWAYS" />
+                                                   </children>
+                                                </HBox>
+                                                <ToggleButton fx:id="enableControls" mnemonicParsing="false" text="Enable Controls even when no device is connected" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </TitledPane>
+                              <TitledPane animated="false" collapsible="false" prefHeight="412.0" prefWidth="429.0" text="Description">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="384.0" prefWidth="427.0">
+                                       <children>
+                                          <TextArea fx:id="scriptDescription" layoutX="14.0" layoutY="14.0" prefHeight="384.0" prefWidth="421.0" promptText="The full description of your script" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </TitledPane>
+                           </children>
+                        </FlowPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </TitledPane>
+          <TitledPane animated="false" text="Scripting">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="575.0" prefWidth="1022.0">
+                     <children>
+                        <HBox layoutX="10.399999618530273" layoutY="10.399999618530273">
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <TitledPane collapsible="false" prefHeight="115.0" prefWidth="234.0" text="ZIPFILE Resources (drop here)">
+                                       <content>
+                                          <ListView fx:id="zipFiles" prefHeight="200.0" prefWidth="200.0" />
+                                       </content>
+                                    </TitledPane>
+                                    <TitledPane animated="false" collapsible="false" text="Command Assistant" VBox.vgrow="ALWAYS">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="251.0" prefWidth="232.0">
+                                             <children>
+                                                <TreeView fx:id="commandAssistant" layoutX="10.4" layoutY="10.4" prefHeight="251.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </TitledPane>
+                                 </children>
+                              </VBox>
+                              <TitledPane collapsible="false" text="Write Script Here">
+                                 <content>
+                                    <TextArea fx:id="scriptingArea" prefHeight="413.0" prefWidth="775.0" HBox.hgrow="ALWAYS" />
+                                 </content>
+                              </TitledPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </TitledPane>
+        </panes>
+      </Accordion>
+      <TitledPane animated="false" collapsible="false" prefHeight="90.0" prefWidth="1024.0" text="CASPAC File">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="40.0" prefWidth="1022.0">
+               <children>
+                  <VBox layoutX="21.4" layoutY="20.4" prefHeight="64.0" prefWidth="1022.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="47.0" prefWidth="1002.0">
+                           <children>
+                              <Button mnemonicParsing="false" text="select" />
+                              <TextField fx:id="pathToCaspac" promptText="path_to/myCaspac.zip" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="reloadCASPAC" mnemonicParsing="false" text="reload" />
+                              <Button fx:id="saveCASPAC" mnemonicParsing="false" text="save" />
+                              <CheckBox fx:id="encrypt" mnemonicParsing="false" prefHeight="18.0" prefWidth="85.0" text="encrypt" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
+      <TitledPane animated="false" collapsible="false" prefHeight="89.0" prefWidth="1024.0" text="CASPAC Output">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="107.0" prefWidth="1022.0">
+               <children>
+                  <VBox layoutX="21.4" layoutY="20.4" prefHeight="141.0" prefWidth="1001.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="47.0" prefWidth="1002.0">
+                           <children>
+                              <TextField fx:id="caspacOutputFolder" promptText="folder to place CASPAC/CASUAL" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="chooseFolder" mnemonicParsing="false" text="choose folder" />
+                              <CheckBox fx:id="useTag" mnemonicParsing="false" prefHeight="18.0" prefWidth="85.0" text="use tag" />
+                              <TextField fx:id="tagAppend" promptText="nightly" />
+                              <Button fx:id="saveCASUAL" mnemonicParsing="false" text="Save CASUAL" />
+                              <Button fx:id="runCASUAL" mnemonicParsing="false" text="Run CASUAL" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </content>
+      </TitledPane>
+   </children>
+</VBox>
