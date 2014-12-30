@@ -294,9 +294,9 @@ public class CASUALLanguageTest {
     @Test
     public void testVariablesWithMath() throws Exception{
         System.out.println("Variable test");
-        String result = casualScriptParser.executeOneShotCommand("mvar1=5;;;$MATH mvar1+4");
+        String result = casualScriptParser.executeOneShotCommand("mvar=5;;;$MATH mvar+4").trim();
         String expectedResult="9";
-        assertEquals(result, expectedResult);
+        assertEquals( expectedResult,result);
          System.out.println("$MATH test completed");  
     }
     

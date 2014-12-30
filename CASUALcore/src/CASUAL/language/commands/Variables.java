@@ -30,35 +30,50 @@ import java.util.HashMap;
  */
 public class Variables {
     private static final HashMap<String,String> variables=new HashMap<String,String>();
-    public static void parseVariablesInCommandString(Command c) throws CASUALLanguageException{
+    public static boolean parseVariablesInCommandString(Command c) throws CASUALLanguageException{
         //multiple varialbes may be present, keep parsing until line no longer begins with "var=val".
-        if (c.get().split(" ")[0].contains("=")){
+        String[] split=c.get().split(" ");
+        if (split[0].equals("$CLEARVAR")){
+            c.setReturn(true,"");
+            if (split[1].equals("ALL")){
+                reset();
+                return true;
+            } else {
+                variables.remove(split[1]);
+                return true;
+            }
+            
+        }
+       replaceVariablesWithValues(c);
+        if (split[0].contains("=")){
             String[] replacement=c.get().split("=",2);
             replacement[1]=StringOperations.replaceLast(replacement[1], CASUALScriptParser.NEWLINE, "");
             String returnValue=replacement[1];
             try {
-                returnValue=new CASUALScriptParser().executeOneShotCommand(replacement[1]);
-            } catch (Exception ex){
-                System.out.println("variable is not a command");
-                //throw new CASUALLanguageException("Problem while setting variable:"+replacement[0]);
-            }
-            if (returnValue.equals("")){  // didn't return a value, errored
-                           variables.put(replacement[0], replacement[1]);
-            } else {  //value received, replace it.
+                returnValue=new CASUALScriptParser().executeOneShotCommand(replacement[1]).trim();
                variables.put(replacement[0], returnValue);
                c.set(returnValue);
-               
+            } catch (Exception ex){
+                System.out.println("variable is not a command");
+                   variables.put(replacement[0], replacement[1]);
+                //throw new CASUALLanguageException("Problem while setting variable:"+replacement[0]);
             }
-            
-            c.set(c.get().replaceFirst(c.get().split(" ")[0], returnValue));
+             c.set(c.get().replaceFirst(c.get().split(" ")[0], returnValue));
              Log.level4Debug("new variable added"+varDump());
-
+             return true;
         }
+        return false;
+    }
+
+    private static boolean replaceVariablesWithValues(Command c) {
+        boolean changed=false;
         for (String k:variables.keySet()){
             if (c.get().contains(k)){
-                 c.set(c.get().replaceAll(k, variables.get(k)));
+                c.set(c.get().replaceAll(k, variables.get(k)));
+                changed=true;
             }
         }
+        return changed;
     }
     
     public static void reset(){
@@ -71,9 +86,9 @@ public class Variables {
     }
     public static String varDump(){
         StringBuilder sb = new StringBuilder();
-        sb.append("---Variable Dump ---\n");
+        sb.append("---Variable Dump ---");
        for (String key: variables.keySet()){
-           sb.append("var:").append(key).append(" == val:").append(variables.get(key)).append("\n");
+           sb.append("\nvar:").append(key).append(" == val:").append(variables.get(key)).append("\n");
        }
        return sb.toString();
     }

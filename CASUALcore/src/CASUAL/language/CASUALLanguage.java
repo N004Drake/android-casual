@@ -202,9 +202,10 @@ public class CASUALLanguage {
         }
         
         /*
+         * VARIABLES
         * check for = in the first part of the command...   VAR=Value
         */
-        Variables.parseVariablesInCommandString(cmd);
+        if (Variables.parseVariablesInCommandString(cmd)) return cmd.getReturn();
         
         /*
          *DEBUG COMMANDS  $SENDLOG 
