@@ -8,9 +8,9 @@
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cascade2.CASCADEUIController">
    <children>
-      <Accordion prefHeight="476.0" prefWidth="1024.0">
+      <Accordion fx:id="scripting" prefHeight="476.0" prefWidth="1024.0">
         <panes>
-          <TitledPane animated="false" prefHeight="635.0" prefWidth="1024.0" text="Overview">
+          <TitledPane prefHeight="635.0" prefWidth="1024.0" text="Overview">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -26,7 +26,7 @@
                                                 <HBox prefHeight="25.0" prefWidth="393.0">
                                                    <children>
                                                       <Button fx:id="editScriptName" mnemonicParsing="false" text="edit" />
-                                                      <Button fx:id="newScript" mnemonicParsing="false" text="new" />
+                                                      <Button fx:id="newScript" mnemonicParsing="false" onAction="#newButtonClicked" text="new" />
                                                    </children>
                                                 </HBox>
                                                 <HBox prefHeight="21.0" prefWidth="503.0">
@@ -55,7 +55,7 @@
                                                 </HBox>
                                                 <HBox prefHeight="21.0" prefWidth="503.0">
                                                    <children>
-                                                      <Label text="Develoepr Name: " />
+                                                      <Label text="Developer Name: " />
                                                       <TextField fx:id="devName" promptText="Your Name here" HBox.hgrow="ALWAYS" />
                                                    </children>
                                                 </HBox>
@@ -96,11 +96,11 @@
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                              <TitledPane animated="false" collapsible="false" prefHeight="412.0" prefWidth="429.0" text="Description">
+                              <TitledPane animated="false" collapsible="false" prefHeight="412.0" prefWidth="454.0" text="Description">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="384.0" prefWidth="427.0">
                                        <children>
-                                          <TextArea fx:id="scriptDescription" layoutX="14.0" layoutY="14.0" prefHeight="384.0" prefWidth="421.0" promptText="The full description of your script" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TextArea fx:id="scriptDescription" layoutX="20.4" layoutY="21.4" prefHeight="386.0" prefWidth="427.0" promptText="The full description of your script" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -111,7 +111,7 @@
                   </AnchorPane>
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Scripting">
+          <TitledPane expanded="false" text="Scripting">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="575.0" prefWidth="1022.0">
                      <children>
@@ -148,7 +148,7 @@
           </TitledPane>
         </panes>
       </Accordion>
-      <TitledPane animated="false" collapsible="false" prefHeight="90.0" prefWidth="1024.0" text="CASPAC File">
+      <TitledPane fx:id="caspacFile" animated="false" collapsible="false" prefHeight="90.0" prefWidth="1024.0" text="CASPAC File">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="40.0" prefWidth="1022.0">
                <children>
@@ -156,10 +156,10 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="47.0" prefWidth="1002.0">
                            <children>
-                              <Button mnemonicParsing="false" text="select" />
+                              <Button fx:id="selectCaspac" mnemonicParsing="false" onAction="#selectCaspac" text="select" />
                               <TextField fx:id="pathToCaspac" promptText="path_to/myCaspac.zip" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="reloadCASPAC" mnemonicParsing="false" text="reload" />
-                              <Button fx:id="saveCASPAC" mnemonicParsing="false" text="save" />
+                              <Button fx:id="reloadCASPAC" mnemonicParsing="false" onAction="#reloadClicked" text="reload" />
+                              <Button fx:id="saveCASPAC" mnemonicParsing="false" onAction="#saveClicked" text="save" />
                               <CheckBox fx:id="encrypt" mnemonicParsing="false" prefHeight="18.0" prefWidth="85.0" text="encrypt" />
                            </children>
                         </HBox>
@@ -169,7 +169,7 @@
             </AnchorPane>
         </content>
       </TitledPane>
-      <TitledPane animated="false" collapsible="false" prefHeight="89.0" prefWidth="1024.0" text="CASPAC Output">
+      <TitledPane fx:id="caspacOutput" animated="false" collapsible="false" prefHeight="89.0" prefWidth="1024.0" text="CASPAC Output">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="107.0" prefWidth="1022.0">
                <children>
@@ -178,11 +178,11 @@
                         <HBox alignment="CENTER" prefHeight="47.0" prefWidth="1002.0">
                            <children>
                               <TextField fx:id="caspacOutputFolder" promptText="folder to place CASPAC/CASUAL" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="chooseFolder" mnemonicParsing="false" text="choose folder" />
+                              <Button fx:id="chooseFolder" mnemonicParsing="false" onAction="#chooseFolder" text="choose folder" />
                               <CheckBox fx:id="useTag" mnemonicParsing="false" prefHeight="18.0" prefWidth="85.0" text="use tag" />
                               <TextField fx:id="tagAppend" promptText="nightly" />
-                              <Button fx:id="saveCASUAL" mnemonicParsing="false" text="Save CASUAL" />
-                              <Button fx:id="runCASUAL" mnemonicParsing="false" text="Run CASUAL" />
+                              <Button fx:id="saveCASUAL" mnemonicParsing="false" onAction="#saveCASUALClicked" text="Save CASUAL" />
+                              <Button fx:id="runCASUAL" mnemonicParsing="false" onAction="#runCASUALClicked" text="Run CASUAL" />
                            </children>
                         </HBox>
                      </children>

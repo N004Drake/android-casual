@@ -16,19 +16,27 @@
  */
 package cascade2;
 
+import cascade2.fileOps.CASPACFileSelection;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 
 /**
  *
@@ -36,6 +44,13 @@ import javafx.scene.control.TreeView;
  */
 public class CASCADEUIController implements Initializable {
 
+    //Scripting and Overview 
+    @FXML
+    Accordion scripting;
+
+    //Overview Tab
+    @FXML
+    Button newScript;
     @FXML
     TextField scriptName;
     @FXML
@@ -43,13 +58,11 @@ public class CASCADEUIController implements Initializable {
     @FXML
     TextField uniqueID;
     @FXML
+    TextField devName;
+    @FXML
+    TextField scriptRevision;
+    @FXML
     TextField supportURL;
-    @FXML
-    TextArea  scriptDescription;
-   @FXML
-    TextField  scriptRevision ;
-    @FXML
-     TextField devName;
     @FXML
     TextField donateTo;
     @FXML
@@ -57,53 +70,138 @@ public class CASCADEUIController implements Initializable {
     @FXML
     TextField applicationTitle;
     @FXML
+    TextArea scriptDescription;
+    @FXML
     TextField startButtonText;
     @FXML
     TextField bannerText;
     @FXML
-    TextField pathToCaspac;
-    @FXML
-    TextField caspacOutputFolder;
-    @FXML
-    TextField tagAppend;
-    @FXML
-    Button editScriptName;
-    @FXML
-    Button newScript;
-    @FXML
-    Button reloadCASPAC;
-    @FXML
-    Button saveCASPAC;
-    @FXML
-    Button chooseFolder;
-    @FXML
-    Button saveCASUAL;
-   @FXML
-    Button runCASUAL;
-    @FXML
     ToggleButton enableControls;
+
+    //Scripting panel
+    @FXML
+    TextArea scriptingArea;
     @FXML
     ListView zipFiles;
     @FXML
     TreeView commandAssistant;
+
+    //CASPAC FIle area
     @FXML
-    TextArea scriptingArea;
+    TitledPane caspacFile;
+    @FXML
+    Button selectCaspac;
+    @FXML
+    TextField pathToCaspac;
+    Button reloadCASPAC;
+    @FXML
+    Button saveCASPAC;
     @FXML
     CheckBox encrypt;
-    @FXML 
+
+    //CASPACOutputArea 
+    @FXML
+    TitledPane caspacOutput;
+    @FXML
+    TextField caspacOutputFolder;
+    @FXML
+    Button editScriptName;
+    @FXML
     CheckBox useTag;
-    
-    
-    
-    
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        
+    @FXML
+    Button chooseFolder;
+    @FXML
+    TextField tagAppend;
+    @FXML
+    Button saveCASUAL;
+    @FXML
+    Button runCASUAL;
+
+    private TextInputControl[] textControls ;
+    private static CASCADEUIController uiController;
+
+    public CASCADEUIController getInstance() {
+        return uiController;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        uiController = this;
+        textControls = new TextInputControl[]{minRev, scriptRevision, uniqueID, supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription, pathToCaspac, caspacOutputFolder, caspacOutputFolder, scriptingArea};
+        zipFiles.setOnDragDropped((DragEvent event) -> {
+            System.out.println("Drop detected");
+            final Dragboard dragboard = event.getDragboard();
+            if (dragboard.hasFiles()) {
+                System.out.println(dragboard.getUrl());
+                
+            }
+              
+        });  
+        
     }
+
+    public void disableAll() {
+        scripting.setDisable(true);
+        caspacFile.setDisable(true);
+        caspacOutput.setDisable(true);
+    }
+
+    public void enableScripting() {
+        scripting.setDisable(false);
+    }
+
+    public void enableCaspac() {
+        caspacFile.setDisable(false);
+    }
+
+    public void enableCaspacOutput() {
+        caspacOutput.setDisable(false);
+    }
+
+    @FXML
+    private void newButtonClicked() {
+        setTextAreaBlank(textControls);
+        enableControls.setSelected(false);
+        caspacOutput.setDisable(true);
+        
+    }
+
+    @FXML
+    private void selectCaspac(){
+        pathToCaspac.setText(new CASPACFileSelection().showFileChooser(CASCADE2.getStage(), pathToCaspac.getText() ));
+    }
+    
+    @FXML
+    private void chooseFolder(){
+        caspacOutputFolder.setText(new CASPACFileSelection().showFolderChooser(CASCADE2.getStage(), caspacOutputFolder.getText()));
+    }
+    
+    private void setTextAreaBlank(TextInputControl[] fields) {
+        for (TextInputControl field : fields) {
+             System.out.println(field);
+            field.setText("");
+        }
+    }
+    
+    @FXML
+    private void reloadClicked(){
+        
+    }
+    
+    
+    @FXML
+    private void saveClicked(){
+        
+    }
+    
+    @FXML
+    private void saveCASUALClicked(){
+        
+    }
+
+    @FXML private void runCASUALClicked(){
+        
+    }
+    
 
 }
