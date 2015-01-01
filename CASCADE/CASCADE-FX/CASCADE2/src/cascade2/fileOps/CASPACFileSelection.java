@@ -19,9 +19,11 @@ public class CASPACFileSelection {
     public String showFileChooser(Stage stage, String initial) {
         FileChooser chooser = new FileChooser();
          chooser.setTitle("Select CASPAC file");
+         if (!new File(initial).isDirectory()) initial=new File(initial).getParent();
         chooser.setInitialDirectory(ifInitialEmptySetToPeriod(initial));
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CASPAC files (*.CASPAC)", "*.caspac");
-        chooser.getExtensionFilters().add(extFilter);
+        FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("All Files (*.*)", "*.*");
+        FileChooser.ExtensionFilter cpFilter = new FileChooser.ExtensionFilter("CASPAC files (*.CASPAC)", "*.caspac");
+        chooser.getExtensionFilters().addAll(cpFilter,allFilter);
         File file = chooser.showOpenDialog(stage);
         if (file != null) {
             return file.getAbsolutePath();

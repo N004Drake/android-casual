@@ -10,7 +10,7 @@
    <children>
       <Accordion fx:id="scripting" prefHeight="476.0" prefWidth="1024.0">
         <panes>
-          <TitledPane prefHeight="635.0" prefWidth="1024.0" text="Overview">
+          <TitledPane fx:id="overview" prefHeight="635.0" prefWidth="1024.0" text="Overview">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
