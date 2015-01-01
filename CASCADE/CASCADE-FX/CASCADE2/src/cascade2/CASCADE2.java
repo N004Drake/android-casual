@@ -28,12 +28,21 @@ import javafx.stage.Stage;
  */
 public class CASCADE2 extends Application {
     
+    
+    private static Stage stage;
+    private static Scene scene;
+    public static Stage getStage(){
+        return stage;
+    }
+    
+    public static Scene getScene(){
+        return scene;
+    }
     @Override
     public void start(Stage stage) throws Exception {
+        this.stage=stage;
         Parent root = FXMLLoader.load(getClass().getResource("CASCADEUI.fxml"));
-        
-        Scene scene = new Scene(root);
-        
+        scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
