@@ -24,10 +24,13 @@ import cascade2.fileOps.CASPACFileSelection;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -144,28 +147,10 @@ public class CASCADEUIController implements Initializable {
         Platform.runLater(() -> {
             uiController = CASCADEUIController.this;
             textControls = new TextInputControl[]{minRev, scriptRevision, uniqueID, supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription, pathToCaspac, caspacOutputFolder, caspacOutputFolder, scriptingArea};
-            zipFiles.setOnDragDropped((DragEvent event) -> {
-                System.out.println("Drop detected");
-                final Dragboard dragboard = event.getDragboard();
-                if (dragboard.hasFiles()) {
-                    System.out.println(dragboard.getUrl());
 
-                }
-
-            });
             overview.setExpanded(true);
         });
-
-        zipFiles.setOnMouseClicked((MouseEvent mouseEvent) -> {
-            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                if (mouseEvent.getClickCount() == 2) {
-
-                    String replacement = "\"$ZIPFILE" + new File(zipFiles.getSelectionModel().getSelectedItem().toString()).getName()+"\"";
-                    insertTextIntoScriptingAreaAtCursor(replacement);
-
-                }
-            }
-        });
+        zipFiles.getItems().add("woot");
     }
 
     private void insertTextIntoScriptingAreaAtCursor(String replacement) {
@@ -206,7 +191,7 @@ public class CASCADEUIController implements Initializable {
     @FXML
     private void selectCaspac() {
         pathToCaspac.setText(new CASPACFileSelection().showFileChooser(CASCADE2.getStage(), pathToCaspac.getText()));
-        reloadClicked() ;
+        reloadClicked();
     }
 
     @FXML
@@ -223,7 +208,7 @@ public class CASCADEUIController implements Initializable {
 
     @FXML
     private void reloadClicked() {
-try {
+        try {
             Caspac cp = new Caspac(new File(pathToCaspac.getText()), Statics.getTempFolder(), 0);
             new Thread(() -> {
                 setIDEInfoFromCASPAC(cp);
@@ -292,8 +277,57 @@ try {
     }
 
     @FXML
-    private void zipFileResourcesClicked() {
+    private void zipFileResourcesClicked(MouseEvent mouseEvent) {
+        if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+            if (mouseEvent.getClickCount() == 2) {
 
+                String replacement = "\"$ZIPFILE" + new File(zipFiles.getSelectionModel().getSelectedItem().toString()).getName() + "\"";
+                insertTextIntoScriptingAreaAtCursor(replacement);
+
+            }
+        }
+        if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+            zipFiles.getItems().remove(zipFiles.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    long time = 0;
+    List<File> fileListForDropEvent;
+
+    @FXML
+
+    private void setzipFileEventList(DragEvent event) {
+        if (null == event) {
+            return;
+        }
+        fileListForDropEvent=event.getDragboard().getFiles();
+        System.out.println("Files released to list");
+    }
+
+    @FXML
+    protected void dragOver(DragEvent event) {
+        System.out.println("test    exit");
+        setzipFileEventList(event);
+    }
+    
+    @FXML
+    protected void testex(DragEvent event) {
+                time = System.currentTimeMillis() + 100;
+
+    }
+
+    @FXML
+    protected void testmo() {
+        if (time >= System.currentTimeMillis()) {
+            System.out.println("drop!");
+            for (File f : fileListForDropEvent) {
+                if (f.exists()){
+                    String filename=f.getAbsolutePath();
+                    if (!zipFiles.getItems().contains(filename))
+                    zipFiles.getItems().add(filename);
+                }
+            }
+        }
     }
 
 }
