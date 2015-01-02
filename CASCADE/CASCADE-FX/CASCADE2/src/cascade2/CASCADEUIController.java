@@ -35,6 +35,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -159,20 +160,24 @@ public class CASCADEUIController implements Initializable {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                 if (mouseEvent.getClickCount() == 2) {
 
-                    int cursorPosition = scriptingArea.getCaretPosition();
-                    String s = scriptingArea.getText();
-                    String pre = s.substring(0, cursorPosition);
-                    String post = s.substring(cursorPosition);
-                    scriptingArea.setText(pre + "$ZIPFILE" + new File(zipFiles.getSelectionModel().getSelectedItem().toString()).getName() + post);
-                    scriptingArea.positionCaret(cursorPosition);
+                    String replacement = "\"$ZIPFILE" + new File(zipFiles.getSelectionModel().getSelectedItem().toString()).getName()+"\"";
+                    insertTextIntoScriptingAreaAtCursor(replacement);
 
                 }
             }
         });
     }
 
+    private void insertTextIntoScriptingAreaAtCursor(String replacement) {
+        final IndexRange selection = scriptingArea.getSelection();
+        if (selection.getLength() == 0) {
+            scriptingArea.insertText(selection.getStart(), replacement);
+        } else {
+            scriptingArea.replaceText(selection.getStart(), selection.getEnd(), replacement);
+        }
+    }
 
-public void disableAll() {
+    public void disableAll() {
         scripting.setDisable(true);
         caspacFile.setDisable(true);
         caspacOutput.setDisable(true);
@@ -191,7 +196,7 @@ public void disableAll() {
     }
 
     @FXML
-        private void newButtonClicked() {
+    private void newButtonClicked() {
         setTextAreaBlank(textControls);
         enableControls.setSelected(false);
         caspacOutput.setDisable(true);
@@ -199,24 +204,22 @@ public void disableAll() {
     }
 
     @FXML
-        private void selectCaspac() {
+    private void selectCaspac() {
         pathToCaspac.setText(new CASPACFileSelection().showFileChooser(CASCADE2.getStage(), pathToCaspac.getText()));
         try {
             Caspac cp = new Caspac(new File(pathToCaspac.getText()), Statics.getTempFolder(), 0);
             new Thread(() -> {
                 setIDEInfoFromCASPAC(cp);
             }).start();
-        
 
-} catch (IOException ex) {
-            Logger.getLogger(CASCADEUIController.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(CASCADEUIController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @FXML
-        private void chooseFolder() {
+    private void chooseFolder() {
         caspacOutputFolder.setText(new CASPACFileSelection().showFolderChooser(CASCADE2.getStage(), caspacOutputFolder.getText()));
     }
 
@@ -228,21 +231,20 @@ public void disableAll() {
     }
 
     @FXML
-        private void reloadClicked() {
+    private void reloadClicked() {
 
     }
 
     private void setIDEInfoFromCASPAC(final Caspac cp) {
         try {
             cp.load();
-        
+            cp.waitForUnzip();
 
-} catch (IOException ex) {
-            Logger.getLogger(CASCADEUIController.class  
+        } catch (IOException ex) {
+            Logger.getLogger(CASCADEUIController.class
+                    .getName()).log(Level.SEVERE, null, ex);
 
-    .getName()).log(Level.SEVERE, null, ex);
-
-return;
+            return;
         }
         Platform.runLater(() -> {
             Script script = cp.scripts.get(0);
@@ -274,23 +276,23 @@ return;
     }
 
     @FXML
-        private void saveClicked() {
+    private void saveClicked() {
         CASPACcreator cpc = new CASPACcreator();
 
     }
 
     @FXML
-        private void saveCASUALClicked() {
+    private void saveCASUALClicked() {
 
     }
 
     @FXML
-        private void runCASUALClicked() {
+    private void runCASUALClicked() {
 
     }
 
     @FXML
-        private void zipFileResourcesClicked() {
+    private void zipFileResourcesClicked() {
 
     }
 
