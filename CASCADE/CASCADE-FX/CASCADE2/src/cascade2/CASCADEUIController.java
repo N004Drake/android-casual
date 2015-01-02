@@ -206,16 +206,7 @@ public class CASCADEUIController implements Initializable {
     @FXML
     private void selectCaspac() {
         pathToCaspac.setText(new CASPACFileSelection().showFileChooser(CASCADE2.getStage(), pathToCaspac.getText()));
-        try {
-            Caspac cp = new Caspac(new File(pathToCaspac.getText()), Statics.getTempFolder(), 0);
-            new Thread(() -> {
-                setIDEInfoFromCASPAC(cp);
-            }).start();
-
-        } catch (IOException ex) {
-            Logger.getLogger(CASCADEUIController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
+        reloadClicked() ;
     }
 
     @FXML
@@ -232,7 +223,16 @@ public class CASCADEUIController implements Initializable {
 
     @FXML
     private void reloadClicked() {
+try {
+            Caspac cp = new Caspac(new File(pathToCaspac.getText()), Statics.getTempFolder(), 0);
+            new Thread(() -> {
+                setIDEInfoFromCASPAC(cp);
+            }).start();
 
+        } catch (IOException ex) {
+            Logger.getLogger(CASCADEUIController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void setIDEInfoFromCASPAC(final Caspac cp) {
