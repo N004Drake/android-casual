@@ -121,7 +121,7 @@
                                  <children>
                                     <TitledPane collapsible="false" prefHeight="115.0" prefWidth="234.0" text="ZIPFILE Resources (drop here)">
                                        <content>
-                                          <ListView fx:id="zipFiles" prefHeight="200.0" prefWidth="200.0" />
+                                          <ListView fx:id="zipFiles" cacheShape="false" centerShape="false" editable="true" focusTraversable="false" onDragEntered="#dragOver" onDragExited="#testex" onMouseClicked="#zipFileResourcesClicked" onMouseEntered="#testmo" pickOnBounds="false" prefHeight="200.0" prefWidth="200.0" scaleShape="false" />
                                        </content>
                                     </TitledPane>
                                     <TitledPane animated="false" collapsible="false" text="Command Assistant" VBox.vgrow="ALWAYS">
