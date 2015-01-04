@@ -92,7 +92,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public CASCADEGUI() {
         this.scriptFiles = new ArrayList<String>();
         initComponents();
-        CASUAL.caspac.Caspac.debug = true;
+        CASUAL.caspac.Caspac.setDebug(true);
         setThisAsCASUALGUI();
         this.setVisible(true);
         if (!new File(this.caspacOutputFile.getText()).exists()){
@@ -144,7 +144,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                         files = (List<File>) transferable.getTransferData(flavor);
                         for (File f : files) {
                             String file = f.getCanonicalPath();
-                            scriptList.getElementAt(scriptListJList.getSelectedIndex()).individualFiles.add(f);
+                            scriptList.getElementAt(scriptListJList.getSelectedIndex()).getIndividualFiles().add(f);
                             listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.slash) + 1), "$ZIPFILE"));
 
                         }
@@ -550,7 +550,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addComponent(minSVNversionTitleJLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minSVNversion)))
+                        .addComponent(minSVNversion, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)))
                 .addGap(8, 8, 8))
         );
         jPanel2Layout.setVerticalGroup(
@@ -1279,7 +1279,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         }
         Caspac tempcas;
         tempcas = cp;
-        for (Script s : tempcas.scripts) {
+        for (Script s : tempcas.getScripts()) {
             scriptList.addElement(s);
 
             //Set that script as current script
@@ -1480,14 +1480,14 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     private void scriptWorkAreaCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptWorkAreaCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
 
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents = (this.scriptWorkArea.getText());
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).setScriptContents(this.scriptWorkArea.getText());
         }
         disableCasual();
     }//GEN-LAST:event_scriptWorkAreaCaretUpdate
 
     private void scriptDescriptionJTextCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptDescriptionJTextCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription = this.scriptDescriptionJText.getText();
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).setDiscription(this.scriptDescriptionJText.getText());
         }
         disableCasual();
     }//GEN-LAST:event_scriptDescriptionJTextCaretUpdate
@@ -1497,7 +1497,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      */
     private void uniqueIDCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_uniqueIDCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.uniqueIdentifier = uniqueID.getText();
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setUniqueIdentifier(uniqueID.getText());
         }
         disableCasual();
     }//GEN-LAST:event_uniqueIDCaretUpdate
@@ -1509,13 +1509,13 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         int index = jList1.locationToIndex(point);
         if (jList1.isSelectedIndex(index)) {
 
-            File f = scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.get(index);
+            File f = scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getIndividualFiles().get(index);
 
-            if (f.exists() && f.getAbsolutePath().contains(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).tempDir)) {
+            if (f.exists() && f.getAbsolutePath().contains(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getTempDir())) {
                 f.delete();
             }
             listModel.remove(index);
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.remove(index);
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getIndividualFiles().remove(index);
             disableCasual();
         }
     }//GEN-LAST:event_jList1MouseClicked
@@ -1525,7 +1525,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      */
     private void updateMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_updateMessageCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.updateMessage = updateMessage.getText();
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setUpdateMessage(updateMessage.getText());
         }
         disableCasual();
     }//GEN-LAST:event_updateMessageCaretUpdate
@@ -1535,7 +1535,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      */
     private void minSVNversionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_minSVNversionCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion = (minSVNversion.getText());
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setMinSVNversion(minSVNversion.getText());
         }
         disableCasual();
     }//GEN-LAST:event_minSVNversionCaretUpdate
@@ -1545,7 +1545,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      */
     private void supportURLCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_supportURLCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.supportURL = supportURL.getText();
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setSupportURL(supportURL.getText());
         }
         disableCasual();
     }//GEN-LAST:event_supportURLCaretUpdate
@@ -1555,7 +1555,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      */
     private void killswitchMessageCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_killswitchMessageCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.killSwitchMessage = killswitchMessage.getText();
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setKillSwitchMessage(killswitchMessage.getText());
         }
         disableCasual();
     }//GEN-LAST:event_killswitchMessageCaretUpdate
@@ -1565,7 +1565,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
      */
     private void scriptRevisionCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_scriptRevisionCaretUpdate
         if (!scriptList.isEmpty() && this.scriptListJList.getSelectedIndex() != -1) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.scriptRevision = (scriptRevision.getText());
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setScriptRevision(scriptRevision.getText());
         }
         disableCasual();
     }//GEN-LAST:event_scriptRevisionCaretUpdate
@@ -1588,15 +1588,15 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
             //get original script selected
             Script orig = scriptList.getElementAt(this.scriptListJList.getSelectedIndex());
             //make a copy with a new name
-            Script newScript = orig.copyOf(scriptName, orig.tempDir);
+            Script newScript = orig.copyOf(scriptName, orig.getTempDir());
             //add the new script
-            cp.scripts.set(cp.scripts.indexOf(cp.getScriptByName(orig.name)), newScript);
+            cp.getScripts().set(cp.getScripts().indexOf(cp.getScriptByName(orig.getName())), newScript);
             //remove the original
-            cp.scripts.remove(orig);
+            cp.getScripts().remove(orig);
             //get the list
             DefaultListModel<String> lm = new DefaultListModel<String>();
-            for (Script s : cp.scripts) {
-                lm.addElement(s.name);
+            for (Script s : cp.getScripts()) {
+                lm.addElement(s.getName());
             }
             this.scriptListJList.setModel(lm);
 
@@ -1771,7 +1771,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         Collections.reverse(list);
 
         for (int i : list) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles.remove(i);
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getIndividualFiles().remove(i);
             fileList.remove(i);
         }
 
@@ -1797,13 +1797,13 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         Caspac casp = new Caspac(new File(this.caspacOutputFile.getText()), Statics.getTempFolder(), 0);
         Log.level2Information("Setting CASPAC build");
         casp.setBuild(buildMaker());
-        casp.logo = logo;
+        casp.setLogo(logo);
         Log.level2Information("Adding scripts from memory to CASPAC");
         for (int j = 0; j < scriptList.getSize(); j++) {
-            casp.scripts.add(scriptList.get(j));
+            casp.getScripts().add(scriptList.get(j));
         }
         Log.level2Information("Setting Overview");
-        casp.overview = this.scriptDescriptionJText.getText();
+        casp.setOverview(this.scriptDescriptionJText.getText());
         return casp;
     }
 
@@ -1819,50 +1819,50 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         if (this.scriptListJList.getSelectedIndex() == -1) {
             return;
         }
-        this.scriptNameJLabel.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).name);
-        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents = "#Enter CASUAL commands here";
+        this.scriptNameJLabel.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getName());
+        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getScriptContentsString().isEmpty()) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).setScriptContents("#Enter CASUAL commands here");
         }
 
-        this.scriptWorkArea.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).scriptContents);
+        this.scriptWorkArea.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getScriptContentsString());
 
-        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription = "Describe your script here";
+        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getDiscription().isEmpty()) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).setDiscription("Describe your script here");
         }
-        this.scriptDescriptionJText.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).discription);
+        this.scriptDescriptionJText.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getDiscription());
 
-        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.killSwitchMessage.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.killSwitchMessage = "CASUAL cannot continue. The SVN version is too low";
+        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getKillSwitchMessage().isEmpty()) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setKillSwitchMessage("CASUAL cannot continue. The SVN version is too low");
         }
-        this.killswitchMessage.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.killSwitchMessage);
+        this.killswitchMessage.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getKillSwitchMessage());
 
-        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion = (Integer.toString(CASUAL.CASUALTools.getSVNVersion()));
+        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getMinSVNversion().isEmpty()) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setMinSVNversion(Integer.toString(CASUAL.CASUALTools.getSVNVersion()));
         }
-        this.minSVNversion.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.minSVNversion);
+        this.minSVNversion.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getMinSVNversion());
 
-        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.scriptRevision.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.scriptRevision = "0";
+        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getScriptRevision().isEmpty()) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setScriptRevision("0");
         }
-        this.scriptRevision.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.scriptRevision);
+        this.scriptRevision.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getScriptRevision());
 
-        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.supportURL.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.supportURL = "http://xda-developers.com";
+        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getSupportURL().isEmpty()) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setSupportURL("http://xda-developers.com");
         }
-        this.supportURL.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.supportURL);
+        this.supportURL.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getSupportURL());
 
-        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.uniqueIdentifier.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.uniqueIdentifier = ("Unique Update ID " + StringOperations.generateRandomHexString(8));
+        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getUniqueIdentifier().isEmpty()) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setUniqueIdentifier("Unique Update ID " + StringOperations.generateRandomHexString(8));
         }
-        this.uniqueID.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.uniqueIdentifier);
+        this.uniqueID.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getUniqueIdentifier());
 
-        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.updateMessage.isEmpty()) {
-            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.updateMessage = ("Inital Release.");
+        if (scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getUpdateMessage().isEmpty()) {
+            scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().setUpdateMessage("Inital Release.");
         }
-        this.updateMessage.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).metaData.updateMessage);
+        this.updateMessage.setText(scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getMetaData().getUpdateMessage());
 
         listModel.removeAllElements();
-        for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles) {
+        for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getIndividualFiles()) {
             String file = f.toString();
             listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.slash) + 1), "$ZIPFILE"));
             //listModel.addElement(f);
@@ -1968,7 +1968,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
 
     private boolean checkScriptNameExists(String testName) {
         for (int i = 0; i < scriptList.getSize(); i++) {
-            if (scriptList.get(i).name.equals(testName)) {
+            if (scriptList.get(i).getName().equals(testName)) {
                 Log.level0Error("The script \"" + testName + "\" already exists");
                 JOptionPane.showMessageDialog(this, "The script \"" + testName + "\" already exists",
                         "Script Alreay Exists", JOptionPane.ERROR_MESSAGE);
@@ -1979,17 +1979,17 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     }
 
     private void updateBuildAndOverview(Caspac cp) {
-        this.developerName.setText(cp.build.developerName);
-        this.donateLink.setText(cp.build.donateLink);
-        this.donateText.setText(cp.build.developerDonateButtonText);
-        this.windowText.setText(cp.build.windowTitle);
-        this.buttonText.setText(cp.build.executeButtonText);
-        this.audioEnabled.setSelected(cp.build.audioEnabled);
-        this.alwaysEnableControls.setSelected(cp.build.alwaysEnableControls);
-        this.useBannerPic.setSelected(cp.build.usePictureForBanner);
-        this.bannerPic.setText(cp.build.bannerPic);
-        this.bannerText.setText(cp.build.bannerText);
-        this.logo = cp.logo;
+        developerName.setText(cp.getBuild().getDeveloperName());
+        donateLink.setText(cp.getBuild().getDonateLink());
+        donateText.setText(cp.getBuild().getDeveloperDonateButtonText());
+        windowText.setText(cp.getBuild().getWindowTitle());
+        buttonText.setText(cp.getBuild().getExecuteButtonText());
+        audioEnabled.setSelected(cp.getBuild().isAudioEnabled());
+        alwaysEnableControls.setSelected(cp.getBuild().isAlwaysEnableControls());
+        useBannerPic.setSelected(cp.getBuild().isUsePictureForBanner());
+        bannerPic.setText(cp.getBuild().getBannerPic());
+        bannerText.setText(cp.getBuild().getBannerText());
+        logo = cp.getLogo();
     }
 
     /**
@@ -2001,7 +2001,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
     public boolean saveCASPAC() throws HeadlessException {
         try {
             //Create new file In memory with name from the JTextField
-            File file = new File(this.caspacOutputFile.getText());
+            File file = new File(caspacOutputFile.getText());
             if (!file.toString().endsWith(".zip")&&!file.toString().endsWith(".CASPAC")) {
                 JOptionPane.showMessageDialog(this, "The file: \n"
                         + this.caspacOutputFile.getText() + "\n is not a valid zip file.\n"
@@ -2033,7 +2033,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
             }
             Log.level2Information("CASPAC write successfull!!!");
             if (useEncryption.isSelected()) {
-                File temp = new File(cp.CASPAC.getAbsolutePath() + ".tmp");
+                File temp = new File(cp.getCASPAC().getAbsolutePath() + ".tmp");
                 new FileOperations().copyFile(file, temp);
                 new AES128Handler(temp).encrypt(file.getAbsolutePath(), getPassword());
                 temp.delete();
