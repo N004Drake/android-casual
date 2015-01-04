@@ -196,7 +196,7 @@ public class Statics {
         new FastbootTools().reset(); 
         CASUAL.language.CASUALLanguage.reset();
         try {
-            Statics.CASPAC.getActiveScript().scriptContinue = false;
+            Statics.CASPAC.getActiveScript().setScriptContinue(false);
         } catch (NullPointerException ex) {
             //do nothing at all 
         }

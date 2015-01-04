@@ -70,10 +70,10 @@ public class CASUALScriptParser {
 
         try {
             Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
-            Log.level4Debug("Selected file" + caspac.getActiveScript().name);
+            Log.level4Debug("Selected file" + caspac.getActiveScript().getName());
 
-            ScriptName = caspac.getActiveScript().name;
-            ScriptTempFolder = caspac.getActiveScript().tempDir;
+            ScriptName = caspac.getActiveScript().getName();
+            ScriptTempFolder = caspac.getActiveScript().getTempDir();
             LinesInScript = new CountLines().countISLines(caspac.getActiveScript().getScriptContents());
             Log.level4Debug("Lines in Script " + LinesInScript);
             return new DataInputStream(caspac.getActiveScript().getScriptContents());
@@ -131,8 +131,8 @@ public class CASUALScriptParser {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
         Statics.ReactionEvents = new ArrayList<String>();
         Statics.ActionEvents = new ArrayList<String>();
-        Statics.CASPAC.getActiveScript().scriptContinue = true;
-        scriptInput = new DataInputStream(StringOperations.convertStringToStream(caspac.getActiveScript().scriptContents));
+        Statics.CASPAC.getActiveScript().setScriptContinue(true);
+        scriptInput = new DataInputStream(caspac.getActiveScript().getScriptContents());
         Log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
         Runnable r = new Runnable() {
             @Override
@@ -144,7 +144,7 @@ public class CASUALScriptParser {
                     Statics.GUI.setProgressBarMax(LinesInScript);
                 }
                 Log.level4Debug("Reading datastream" + scriptInput);
-                new CASUALLanguage(caspac, caspac.getActiveScript().tempDir).beginScriptingHandler(scriptInput);
+                new CASUALLanguage(caspac, caspac.getActiveScript().getTempDir()).beginScriptingHandler(scriptInput);
 
                 if (Statics.isGUIIsAvailable()) {
                     //return to normal.
@@ -158,7 +158,7 @@ public class CASUALScriptParser {
                 } catch (IOException ex) {
                     Log.errorHandler(ex);
                 }
-                Statics.CASPAC.getActiveScript().deviceArch = "";
+                Statics.CASPAC.getActiveScript().setDeviceArch("");
                 Statics.setStatus("done");
                 Log.level2Information("@scriptComplete");
                 Statics.GUI.setReady(true);
@@ -179,24 +179,20 @@ public class CASUALScriptParser {
     void executeActiveScript(Caspac CASPAC) {
         Log.level3Verbose("Exection of active script in CASPAC Commensing");
         Script s = CASPAC.getActiveScript();
-        Statics.CASPAC.getActiveScript().scriptContinue = true;
+        Statics.CASPAC.getActiveScript().setScriptContinue(true);
 
-        Log.level2Information(s.discription);
+        Log.level2Information(s.getDiscription());
         int CASUALSVN = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
-        int scriptSVN = Integer.parseInt(s.metaData.minSVNversion);
+        int scriptSVN = Integer.parseInt(s.getMetaData().getMinSVNversion());
         if (CASUALSVN < scriptSVN) {
             Log.level0Error("@improperCASUALversion");
             return;
         }
 
-        try {
-            ByteArrayInputStream scriptStream = new ByteArrayInputStream(s.scriptContents.getBytes("UTF-8"));
-            DataInputStream dis = new DataInputStream(scriptStream);
+            DataInputStream dis = new DataInputStream(s.getScriptContents());
             CASPAC.setActiveScript(s);
-            new CASUALLanguage(CASPAC, s.tempDir).beginScriptingHandler(dis);
-        } catch (UnsupportedEncodingException ex) {
-            Log.errorHandler(ex);
-        }
+            new CASUALLanguage(CASPAC, s.getTempDir()).beginScriptingHandler(dis);
+        
     }
 
     void executeFirstScriptInCASPAC(Caspac CASPAC) {

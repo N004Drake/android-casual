@@ -111,7 +111,7 @@ public class CASUALLanguage {
             bReader.mark(1);
             while ((strLine = bReader.readLine()) != null) {
 
-                if (Statics.CASPAC.getActiveScript().scriptContinue == false) {
+                if (Statics.CASPAC.getActiveScript().isScriptContinue() == false) {
                     return;
                 }
                 currentLine++;
@@ -358,9 +358,9 @@ public class CASUALLanguage {
             cmd.set( cmd.get().replace("$USERCANCELOPTION", "").trim());
             n = new CASUALMessageObject(cmd.get().replaceFirst(",", ">>>")).showUserCancelOption();
             if (n == 1) {
-                Log.level0Error(this.CASPAC.getActiveScript().name);
+                Log.level0Error(this.CASPAC.getActiveScript().getName());
                 Log.level0Error("@canceledAtUserRequest");
-                Statics.CASPAC.getActiveScript().scriptContinue = false;
+                Statics.CASPAC.getActiveScript().setScriptContinue(false);
                 return "";
             }
             return "";
@@ -370,9 +370,9 @@ public class CASUALLanguage {
             cmd.set( cmd.get().replace("$ACTIONREQUIRED", "").trim());
             int n = new CASUALMessageObject(cmd.get().replaceFirst(",", ">>>")).showActionRequiredDialog();
             if (n == 1) {
-                Log.level0Error(this.CASPAC.getActiveScript().name);
+                Log.level0Error(this.CASPAC.getActiveScript().getName());
                 Log.level0Error("@haltedPerformActions");
-                Statics.CASPAC.getActiveScript().scriptContinue = false;
+                Statics.CASPAC.getActiveScript().setScriptContinue(false);
                 return "";
             }
             return "";
@@ -666,9 +666,9 @@ public class CASUALLanguage {
     private void fileNotFound() {
         int n = new CASUALMessageObject("@interactionMissingFileVirusScanner").showUserCancelOption();
         if (n == 1) {
-            Log.level0Error(this.CASPAC.getActiveScript().name);
+            Log.level0Error(this.CASPAC.getActiveScript().getName());
             Log.level0Error("@canceledDueToMissingFiles");
-            Statics.CASPAC.getActiveScript().scriptContinue = false;
+            Statics.CASPAC.getActiveScript().setScriptContinue(false);
         }
     }
 

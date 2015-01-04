@@ -59,7 +59,7 @@ public class CASUALJUnitTest {
         ca.main(new String[]{});
         Thread.sleep(7000);
         Script s=Statics.CASPAC.getActiveScript();
-        assert s.name.equals("TestScript");
+        assert s.getName().equals("TestScript");
         System.out.println(Statics.getTempFolder());
     }
 }

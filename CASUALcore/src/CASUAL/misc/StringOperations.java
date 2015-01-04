@@ -19,7 +19,8 @@ package CASUAL.misc;
 import CASUAL.Log;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -122,10 +123,10 @@ public class StringOperations {
      * @param list input array list
      * @return output string array
      */
-    public static String[] convertArrayListToStringArray(ArrayList<String> list) {
+    public static String[] convertArrayListToStringArray(List<String> list) {
         String[] StringArray = new String[list.size()];
         for (int i = 0; i <= list.size() - 1; i++) {
-            StringArray[i] = list.get(i).toString();
+            StringArray[i] = list.get(i);
         }
         return StringArray;
     }
@@ -178,10 +179,10 @@ public class StringOperations {
      */
     public static String arrayToString(String[] stringarray) {
         String str = " ";
-        for (int i = 0; i < stringarray.length; i++) {
-            str = str + " " + stringarray[i];
+        for (String stringarray1 : stringarray) {
+            str = str + " " + stringarray1;
         }
-        Log.level4Debug("arrayToString " + stringarray + " expanded to: " + str);
+        Log.level4Debug("arrayToString " + Arrays.toString(stringarray) + " expanded to: " + str);
         return str;
     }
 }

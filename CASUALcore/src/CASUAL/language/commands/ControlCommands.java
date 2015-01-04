@@ -64,7 +64,7 @@ public class ControlCommands {
     public static void checkHalt(Command cmd) {
         if (cmd.get().startsWith("$HALT")) {
             if (Statics.CASPAC != null) {
-                Statics.CASPAC.getActiveScript().scriptContinue = false;
+                Statics.CASPAC.getActiveScript().setScriptContinue(false);
             }
             cmd.set(cmd.get().replace("$HALT", "").trim());
             Log.level4Debug("HALT RECEIVED");
