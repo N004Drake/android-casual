@@ -46,8 +46,8 @@ public class BusyboxTools {
 
     private String getDeviceArch() {
         if (Statics.CASPAC != null) {
-            if (!Statics.CASPAC.getActiveScript().deviceArch.equals("")) {
-                return Statics.CASPAC.getActiveScript().deviceArch;
+            if (!Statics.CASPAC.getActiveScript().getDeviceArch().equals("")) {
+                return Statics.CASPAC.getActiveScript().getDeviceArch();
             }
         }
         String cpuinfo = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "cat /proc/cpuinfo"});

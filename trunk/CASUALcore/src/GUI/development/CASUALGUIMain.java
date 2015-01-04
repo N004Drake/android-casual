@@ -322,7 +322,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         //execute
         if (Statics.CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
             Log.level4Debug("Loading internal resource: " + script);
-            Statics.CASPAC.getActiveScript().scriptContinue = true;
+            Statics.CASPAC.getActiveScript().setScriptContinue(true);
             new CASUALScriptParser().executeSelectedScript(caspac, true);
         }
 
@@ -400,19 +400,19 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     private void DonateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DonateButtonActionPerformed
         this.setInformationScrollBorderText("Donate");
-        int DResult = new CASUALMessageObject("Donate to the developers", "This application was developed by " + caspac.build.developerName + " using CASUAL framework.\n"
+        int DResult = new CASUALMessageObject("Donate to the developers", "This application was developed by " + caspac.getBuild().getDeveloperName() + " using CASUAL framework.\n"
                 + "Donations give developers a tangeble reason to continue quality software development\n").showTimeoutDialog(
                         60, //timeout
                         null, //parentComponent
                         //DisplayTitle
                         javax.swing.JOptionPane.OK_OPTION, // Options buttons
                         javax.swing.JOptionPane.INFORMATION_MESSAGE, //Icon
-                        new String[]{"Donate To CASUAL", "Donate To " + caspac.build.developerName}, // option buttons
+                        new String[]{"Donate To CASUAL", "Donate To " + caspac.getBuild().getDeveloperName()}, // option buttons
                         "No"); //Default{
         if (DResult == 0) {
             launchLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZYM99W5RHRY3Y");
         } else if (DResult == 1) {
-            launchLink(caspac.build.donateLink);
+            launchLink(caspac.getBuild().getDonateLink());
         }
     }//GEN-LAST:event_DonateButtonActionPerformed
     /**
@@ -434,7 +434,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         String selectedScript = comboBoxScriptSelector.getSelectedItem().toString();
         Log.level4Debug("hiding script selector TargetScript: " + selectedScript);
         caspac.setActiveScript(caspac.getScriptByName(selectedScript));
-        Log.level2Information(caspac.getActiveScript().discription);
+        Log.level2Information(caspac.getActiveScript().getDiscription());
         caspac.startAndWaitForUnzip();
 
         CASUALStartupTasks.lockGUIunzip = false;
@@ -482,7 +482,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             try {
                 this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS\\-build").getString("Window.ExecuteButtonText"));
             } catch (java.util.MissingResourceException er) {
-                this.startButton.setText(Statics.CASPAC.build.executeButtonText);
+                this.startButton.setText(Statics.CASPAC.getBuild().getExecuteButtonText());
             }
         }
         buttonEnableStage = false;
@@ -600,7 +600,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         }
         //LockOnADBDisconnect tells CASUAL to disregard ADB status.
         if (caspac != null) {
-            if (caspac.build.alwaysEnableControls) {
+            if (caspac.getBuild().isAlwaysEnableControls()) {
                 requestedStatus = true; //if LockOnADBDisconnect is false then just enable controls
                 startButton.setEnabled(requestedStatus);
                 comboBoxScriptSelector.setEnabled(requestedStatus);
@@ -702,41 +702,41 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         this.caspac = caspac;
         isReady = true;
 
-        Log.level2Information(caspac.overview);
+        Log.level2Information(caspac.getOverview());
         /* if (caspac.build.usePictureForBanner) {
          //setup banner with CASPAC.logo
          }*/
-        if (caspac.build.alwaysEnableControls) {
+        if (caspac.getBuild().isAlwaysEnableControls()) {
             enableDisableControls(true);
         }
-        this.setTitle(caspac.build.windowTitle + " -- CASUAL R" + CASUAL.CASUALTools.getSVNVersion());
-        if (caspac.scripts.size() > 0) {
-            for (Script s : caspac.scripts) {
+        this.setTitle(caspac.getBuild().getWindowTitle() + " -- CASUAL R" + CASUAL.CASUALTools.getSVNVersion());
+        if (caspac.getScripts().size() > 0) {
+            for (Script s : caspac.getScripts()) {
                 boolean addScript = true;
                 for (int i = 0; i < comboBoxScriptSelector.getItemCount(); i++) {
-                    if (comboBoxScriptSelector.getItemAt(i).equals(s.name)) {
+                    if (comboBoxScriptSelector.getItemAt(i).equals(s.getName())) {
                         addScript = false;
                     }
                 }
                 if (addScript) {
-                    this.comboBoxScriptSelector.addItem(s.name);
+                    this.comboBoxScriptSelector.addItem(s.getName());
                 }
 
-                Log.level4Debug("adding " + s.name + " to UI");
+                Log.level4Debug("adding " + s.getName() + " to UI");
             }
             if (caspac.getActiveScript() != null) {
-                Log.level2Information(caspac.getScriptByName(this.comboBoxScriptSelector.getSelectedItem().toString()).discription);
+                Log.level2Information(caspac.getScriptByName(this.comboBoxScriptSelector.getSelectedItem().toString()).getDiscription());
             }
         }
         if (comboBoxScriptSelector.getItemCount() < 1) {
             // comboBoxScriptSelector.setVisible(false);
         }
-        this.startButton.setText(caspac.build.executeButtonText);
+        this.startButton.setText(caspac.getBuild().getExecuteButtonText());
         setWindowBannerText("");
-        if (caspac.logo != null && caspac.logo.getMinX() < 40) {
-            setWindowBannerImage(caspac.logo, caspac.build.bannerText);
+        if (caspac.getLogo() != null && caspac.getLogo().getMinX() < 40) {
+            setWindowBannerImage(caspac.getLogo(), caspac.getBuild().getBannerText());
         } else {
-            setWindowBannerText(caspac.build.bannerText);
+            setWindowBannerText(caspac.getBuild().getBannerText());
         }
     }
     long time = System.currentTimeMillis();

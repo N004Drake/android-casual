@@ -202,8 +202,8 @@ public class CASUALUpdates {
      */
     public InputStream downloadMetaFromRepoForScript(Script s) throws MalformedURLException, URISyntaxException, IOException {
         URL url;
-        String parentFolder = new File(s.tempDir).getParent() + "/";
-        String meta = s.name + ".meta";
+        String parentFolder = new File(s.getTempDir()).getParent() + "/";
+        String meta = s.getName() + ".meta";
         if (CASUALTools.IDEMode) {
             url = stringToFormattedURL(CASUALRepo + "/SCRIPTS/" + meta);
         } else {
@@ -320,7 +320,7 @@ public class CASUALUpdates {
     public Script updateScript(Script script, String tempFolder) throws ZipException, IOException, MalformedURLException, URISyntaxException {
         MD5sum md5sum = new MD5sum();
 
-        for (String md5 : script.metaData.md5s) {
+        for (String md5 : script.getMetaData().getMd5s()) {
             FileOperations fo = new FileOperations();
             String targetFilename = md5sum.getFileNamefromLinuxMD5String(md5);
             URL url;
@@ -330,11 +330,11 @@ public class CASUALUpdates {
             String localFilename = tempFolder + targetFilename;
 
             if (targetFilename.endsWith(".scr")) {
-                script.scriptContents = StringOperations.convertStreamToString(url.openStream());
-                script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.scriptContents), targetFilename));
+                script.setScriptContents(StringOperations.convertStreamToString(url.openStream()));
+                script.getActualMD5s().add(md5sum.getLinuxMD5Sum(script.getScriptContents(), targetFilename));
             } else if (targetFilename.endsWith(".txt")) {
-                script.discription = StringOperations.convertStreamToString(url.openStream());
-                script.actualMD5s.add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.discription), targetFilename));
+                script.setDiscription(StringOperations.convertStreamToString(url.openStream()));
+                script.getActualMD5s().add(md5sum.getLinuxMD5Sum(StringOperations.convertStringToStream(script.getDiscription()), targetFilename));
             } else if (targetFilename.endsWith(".zip")) {
                 this.downloadFileFromInternet(url, localFilename, targetFilename);
                 script.scriptZipFile = localFilename;

@@ -19,7 +19,6 @@ package CASUAL.caspac;
 import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALTools;
 import CASUAL.CASUALStartupTasks;
-import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.archiving.Unzip;
@@ -27,13 +26,10 @@ import CASUAL.archiving.Zip;
 import CASUAL.crypto.MD5sum;
 import java.io.BufferedInputStream;
 import CASUAL.misc.StringOperations;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -52,6 +48,13 @@ import java.util.zip.ZipException;
  * @author loganludington
  */
 public class Script {
+
+    /**
+     * @return the slash
+     */
+    public static String getSlash() {
+        return slash;
+    }
 
     /**
      * extractionMethod = 0 for CASPAC (File, zipFile/zipFile) 1 for CASUAL
@@ -78,57 +81,56 @@ public class Script {
      * CASPAC only. used to show zipfile location on disk. Used to determine
      * parent
      */
-    public Unzip zipfile; //CASPAC only.
+    private Unzip zipfile; //CASPAC only.
 
     /**
      * Name of the Script (script filename without extension).
      */
-    final public String name;
+    private String name;
 
     /**
      * Working folder for this Script.
      */
-    final public String tempDir;
+    private String tempDir;
 
     /**
      * Contents of the Script which are to be executed by CASUAL. This is
      * populated by the Script SCR file.
      */
-    public String scriptContents = "";
+    private String scriptContents = "";
 
     /**
      * An array of resources after decompression from the Script's ZIP file.
      */
-    public List<File> individualFiles = new ArrayList<File>();
+    private List<File> individualFiles = new ArrayList<File>();
 
     /**
      * Metadata from the script. This is populated from the Script META file.
      */
-    public meta metaData = new meta();
+    private ScriptMeta metaData = new ScriptMeta(this);
 
     /**
      * The description of the script. This is populated from the Script TXT
      * file.
      */
-    public String discription = "";
+    private String discription = "";
 
     /**
      * While scriptContinue is true, the script may continue. If scriptContinue
      * is false, the script will not execute further lines.
      */
-    public boolean scriptContinue = false;
-    private static String slash = System.getProperty("file.separator");
+    private boolean scriptContinue = false;
+    private final static String slash = System.getProperty("file.separator");
 
     /**
      * Device Arch. This is used by busybox to determine what dependency to use.
      */
-    public String deviceArch = "";
-    Map<? extends String, ? extends InputStream> getAllAsStringAndInputStream;
+    private String deviceArch = "";
 
     /**
      * MD5 array as read from files directly.
      */
-    public List<String> actualMD5s = new ArrayList<String>();
+    private List<String> actualMD5s = new ArrayList<String>();
 
     /**
      * Creates a duplicate script from an old one.
@@ -145,7 +147,6 @@ public class Script {
         this.zipfile = s.zipfile;
         this.discription = s.discription;
         this.scriptContinue = s.scriptContinue;
-        this.getAllAsStringAndInputStream = s.getAllAsStringAndInputStream;
         this.deviceArch = s.deviceArch;
     }
 
@@ -214,7 +215,7 @@ public class Script {
         this.name = name;
         this.scriptContents = script;
         this.individualFiles = includeFiles;
-        this.metaData = new meta(prop);
+        this.metaData = new ScriptMeta(prop, this);
         this.tempDir = tempDir;
         this.extractionMethod = type;
     }
@@ -236,7 +237,7 @@ public class Script {
         this.name = name;
         this.scriptContents = script;
         this.individualFiles = includeFiles;
-        this.metaData = new meta(prop);
+        this.metaData = new ScriptMeta(prop, this);
         this.tempDir = tempDir;
         extractionMethod = 0;
     }
@@ -273,7 +274,6 @@ public class Script {
         s.zipfile = zipfile;
         s.discription = discription;
         s.scriptContinue = scriptContinue;
-        s.getAllAsStringAndInputStream = getAllAsStringAndInputStream;
         return s;
     }
 
@@ -302,6 +302,10 @@ public class Script {
         InputStream is = StringOperations.convertStringToStream(scriptContents);
         return new DataInputStream(is);
     }
+    
+    public String getScriptContentsString(){
+        return scriptContents;
+    }
 
     @Override
     public String toString() {
@@ -310,13 +314,13 @@ public class Script {
 
     private void addMD5ToMeta(String linuxMD5, int md5Position) {
         Log.level3Verbose("evaluated MD5 to " + linuxMD5);
-        metaData.metaProp.setProperty("Script.MD5[" + md5Position + "]", linuxMD5);
+        metaData.getMetaProp().setProperty("Script.MD5[" + md5Position + "]", linuxMD5);
     }
 
     private void addMD5ToMeta(MD5sum md5sum, String filePath, int md5Position) {
         String linuxMD5 = md5sum.getLinuxMD5Sum(new File(filePath));
         Log.level3Verbose("evaluated MD5 to " + linuxMD5);
-        metaData.metaProp.setProperty("Script.MD5[" + md5Position + "]", linuxMD5);
+        metaData.getMetaProp().setProperty("Script.MD5[" + md5Position + "]", linuxMD5);
     }
 
     /*
@@ -338,13 +342,13 @@ public class Script {
                     Log.level4Debug("Examining CASPAC mode package contents");
                     BufferedInputStream bis = null;
                     try {
-                        Log.level4Debug("Unzipping CASPAC member " + name);
+                        Log.level4Debug("Unzipping CASPAC member " + getName());
                         bis = myCASPAC.streamFileFromZip(entry);
-                        actualMD5s.add(new MD5sum().getLinuxMD5Sum(bis, entry.toString()));
+                        getActualMD5s().add(new MD5sum().getLinuxMD5Sum(bis, entry.toString()));
                         bis = myCASPAC.streamFileFromZip(entry);
-                        Unzip.unZipInputStream(bis, tempDir);
+                        Unzip.unZipInputStream(bis, getTempDir());
                         bis.close();
-                        Log.level4Debug("Extracted entry " + myCASPAC.getEntryName(entry) + "to " + tempDir);
+                        Log.level4Debug("Extracted entry " + myCASPAC.getEntryName(entry) + "to " + getTempDir());
 
                     } catch (ZipException ex) {
                         Log.errorHandler(ex);
@@ -359,15 +363,15 @@ public class Script {
                             Log.errorHandler(ex);
                         }
                     }
-                    File[] files = new File(tempDir).listFiles();
+                    File[] files = new File(getTempDir()).listFiles();
                     if (files != null) {
-                        individualFiles.addAll(Arrays.asList(files));
-                        for (String md5 : metaData.md5s) {
+                        getIndividualFiles().addAll(Arrays.asList(files));
+                        for (String md5 : getMetaData().getMd5s()) {
                             if (!Arrays.asList(actualMD5s.toArray(new String[]{})).contains(md5)) {
-                                Log.level4Debug("Could not find " + md5 + " in list " + StringOperations.arrayToString(actualMD5s.toArray(new String[]{})));
+                                Log.level4Debug("Could not find " + md5 + " in list " + StringOperations.arrayToString(getActualMD5s().toArray(new String[]{})));
                                 new CASUALMessageObject("@interactionPackageCorrupt").showErrorDialog();
-                                if (!Caspac.debug) {
-                                    scriptContents = "";
+                                if (!Caspac.isDebug()) {
+                                    setScriptContents("");
                                 }
                             }
                         }
@@ -386,13 +390,13 @@ public class Script {
                         if (CASUALTools.IDEMode) {
                             try {
                                 Log.level4Debug("Examining IDE mode script contents" + scriptZipFile.toString());
-                                actualMD5s.add(new MD5sum().getLinuxMD5Sum(new File((String) scriptZipFile)));
-                                File folder = new File(tempDir);
+                                getActualMD5s().add(new MD5sum().getLinuxMD5Sum(new File((String) scriptZipFile)));
+                                File folder = new File(getTempDir());
                                 if (!folder.isDirectory()) {
                                     folder.mkdirs();
                                 }
                                 Unzip unzip = new Unzip(new File((String) scriptZipFile));
-                                unzip.unzipFile(tempDir);
+                                unzip.unzipFile(getTempDir());
                             } catch (ZipException ex) {
                                 Log.errorHandler(ex);
                             } catch (IOException ex) {
@@ -401,15 +405,15 @@ public class Script {
                         } else {
                             try {
                                 Log.level4Debug("Examining CASUAL mode script contents:" + scriptZipFile.toString());
-                                actualMD5s.add(new MD5sum().getLinuxMD5Sum(getClass().getResourceAsStream("/" + scriptZipFile.toString()), scriptZipFile.toString()));
+                                getActualMD5s().add(new MD5sum().getLinuxMD5Sum(getClass().getResourceAsStream("/" + scriptZipFile.toString()), scriptZipFile.toString()));
                                 Log.level4Debug("unzip of " + scriptZipFile.toString() + " is beginning.");
-                                Unzip.unZipResource("/" + scriptZipFile.toString(), tempDir);
+                                Unzip.unZipResource("/" + scriptZipFile.toString(), getTempDir());
                             } catch (FileNotFoundException ex) {
                                 Log.errorHandler(ex);
                             } catch (IOException ex) {
                                 Log.errorHandler(ex);
                             }
-                            Log.level4Debug("unzip of " + name + " is complete.");
+                            Log.level4Debug("unzip of " + getName() + " is complete.");
                         }
                     } else {
                         Log.level3Verbose("script Zipfile was null");
@@ -428,24 +432,24 @@ public class Script {
                 @Override
                 public void run() {
                     Log.level4Debug("Examining updated script contents on filesystem");
-                    actualMD5s.add(new MD5sum().getLinuxMD5Sum(new File(scriptZipFile.toString())));
+                    getActualMD5s().add(new MD5sum().getLinuxMD5Sum(new File(scriptZipFile.toString())));
                     String ziplocation = scriptZipFile.toString();
                     try {
                         Unzip unzip = new Unzip(ziplocation);
-                        Log.level4Debug("Unzipping from " + ziplocation + " to " + tempDir);
-                        unzip.unzipFile(tempDir);
+                        Log.level4Debug("Unzipping from " + ziplocation + " to " + getTempDir());
+                        unzip.unzipFile(getTempDir());
                     } catch (ZipException ex) {
                         Log.errorHandler(ex);
                     } catch (IOException ex) {
                         Log.errorHandler(ex);
                     }
                     Log.level4Debug("examining MD5s");
-                    for (String md5 : metaData.md5s) {
+                    for (String md5 : getMetaData().getMd5s()) {
                         if (!(Arrays.asList(actualMD5s.toArray()).contains(md5))) {
                             Log.level4Debug("Md5 mismatch!!  Expected:" + md5);
 
-                            if (!Caspac.debug) {
-                                scriptContents = "";
+                            if (!Caspac.isDebug()) {
+                                setScriptContents("");
                             }
                         }
                     }
@@ -538,200 +542,136 @@ public class Script {
     }
 
     /**
-     * Meta provides a holding area and parsing for the metadata in the script.
+     * @return the zipfile
      */
-    public class meta {
-
-        /**
-         * Minimum Subversion revision required for script.
-         */
-        public String minSVNversion = "";
-
-        /**
-         * The revision of this script (used to determine update required
-         * status).
-         */
-        public String scriptRevision = "";
-
-        /**
-         * Unique script identification string.
-         */
-        public String uniqueIdentifier = "";
-
-        /**
-         * URL for support of this Script.
-         */
-        public String supportURL = "";
-
-        /**
-         * Message to be shown during script update.
-         */
-        public String updateMessage = "";
-
-        /**
-         * Message to be shown if killswitch is thrown on script.
-         */
-        public String killSwitchMessage = "";
-
-        /**
-         * Properties extracted from meta.properties.
-         */
-        public Properties metaProp;
-
-        /**
-         * List of expected MD5s for all files in the script (except meta).
-         */
-        public List<String> md5s = new ArrayList<String>();
-
-        /**
-         * constructor for new Meta.
-         */
-        public meta() {
-            metaProp = new Properties();
-        }
-
-        /**
-         * Constructor for meta if properties file is available.
-         *
-         * @param prop properties file to load
-         */
-        public meta(Properties prop) {
-            metaProp = prop;
-            setVariablesFromProperties(prop);
-        }
-
-        /**
-         * Constructor for meta if inputstrem properties is available.
-         *
-         * @param prop properties as inputstream.
-         * @throws IOException when permissions problem exists.
-         */
-        public meta(InputStream prop) throws IOException {
-            metaProp.load(prop);
-            setVariablesFromProperties(metaProp);
-        }
-
-        /**
-         * verifies metadata is not empty
-         *
-         * @return true if filled in
-         */
-        public boolean verifyMeta() {
-            boolean testingBool = true;
-            testingBool = !(minSVNversion.isEmpty()) && testingBool;
-            testingBool = !(scriptRevision.isEmpty()) && testingBool;
-            testingBool = !(uniqueIdentifier.isEmpty()) && testingBool;
-            testingBool = !(supportURL.isEmpty()) && testingBool;
-            testingBool = !(updateMessage.isEmpty()) && testingBool;
-            testingBool = !(killSwitchMessage.isEmpty()) && testingBool;
-            return testingBool;
-
-        }
-
-        /**
-         * gets the metadata as an inputstream
-         *
-         * @return metadata as inputstream.
-         */
-        public InputStream getMetaInputStream() {
-            setPropsFromVariables();
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            try {
-                metaProp.store(output, "This properties file was generated by CASUAL");
-            } catch (IOException ex) {
-                Log.errorHandler(ex);
-            }
-            return new ByteArrayInputStream(output.toByteArray());
-
-        }
-
-        /**
-         * writes meta properties to a file
-         *
-         * @param output file to write
-         * @return true if file was written
-         * @throws FileNotFoundException when file cannot be created
-         * @throws IOException when permissions problem exists.
-         */
-        public boolean write(String output) throws FileNotFoundException, IOException {
-            File f = new File(output);
-            return write(f);
-        }
-
-        /**
-         * writes meta properties to a file
-         *
-         * @param output file to write
-         * @return true if file was written
-         * @throws FileNotFoundException when file cannot be created
-         * @throws IOException when permissions problem exists.
-         */
-        public boolean write(File output) throws FileNotFoundException, IOException {
-            setPropsFromVariables();
-            FileOutputStream fos = new FileOutputStream(output);
-            metaProp.store(fos, "This properties file was generated by CASUAL");
-            return new FileOperations().verifyExists(output.toString());
-        }
-
-        /**
-         * sets the properties object from local variables for writing
-         */
-        public void setPropsFromVariables() {
-            metaProp.setProperty("CASUAL.minSVN", minSVNversion);
-            metaProp.setProperty("Script.Revision", scriptRevision);
-            metaProp.setProperty("Script.ID", uniqueIdentifier);
-            metaProp.setProperty("Script.SupportURL", supportURL);
-            metaProp.setProperty("Script.UpdateMessage", updateMessage);
-            metaProp.setProperty("Script.KillSwitchMessage", killSwitchMessage);
-        }
-
-        /**
-         * sets the variables from properties object for loading
-         *
-         * @param prop properties file
-         */
-        private void setVariablesFromProperties(Properties prop) {
-            minSVNversion = prop.getProperty("CASUAL.minSVN", "");
-            scriptRevision = prop.getProperty("Script.Revision", "");
-            uniqueIdentifier = prop.getProperty("Script.ID", "");
-            supportURL = prop.getProperty("Script.SupportURL", "");
-            updateMessage = prop.getProperty("Script.UpdateMessage", "");
-            killSwitchMessage = prop.getProperty("Script.KillSwitchMessage", "");
-            md5s = new ArrayList<String>();
-            int i = 0;
-            while (!prop.getProperty("Script.MD5[" + i + "]", "").equals("")) {
-                md5s.add(prop.getProperty("Script.MD5[" + i + "]"));
-                i++;
-            }
-
-        }
-
-        /**
-         *
-         * @param prop properties file to load
-         */
-        public void load(Properties prop) {
-            this.metaProp = prop;
-            setVariablesFromProperties(metaProp);
-        }
-
-        void load(BufferedInputStream streamFileFromZip) {
-            try {
-                this.metaProp.load(streamFileFromZip);
-            } catch (IOException ex) {
-                Log.errorHandler(ex);
-            }
-            setVariablesFromProperties(metaProp);
-
-        }
-
-        /**
-         * Minimum CASUAL SVN version requied by this script.
-         *
-         * @return svn version required.
-         */
-        public int minSVNversion() {
-            return Integer.parseInt(minSVNversion);
-        }
+    public Unzip getZipfile() {
+        return zipfile;
     }
+
+    /**
+     * @param zipfile the zipfile to set
+     */
+    public void setZipfile(Unzip zipfile) {
+        this.zipfile = zipfile;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the tempDir
+     */
+    public String getTempDir() {
+        return tempDir;
+    }
+
+    /**
+     * @param tempDir the tempDir to set
+     */
+    public void setTempDir(String tempDir) {
+        this.tempDir = tempDir;
+    }
+
+    /**
+     * @param scriptContents the scriptContents to set
+     */
+    public void setScriptContents(String scriptContents) {
+        this.scriptContents = scriptContents;
+    }
+
+    /**
+     * @return the individualFiles
+     */
+    public List<File> getIndividualFiles() {
+        return individualFiles;
+    }
+
+    /**
+     * @param individualFiles the individualFiles to set
+     */
+    public void setIndividualFiles(List<File> individualFiles) {
+        this.individualFiles = individualFiles;
+    }
+
+    /**
+     * @return the metaData
+     */
+    public ScriptMeta getMetaData() {
+        return metaData;
+    }
+
+    /**
+     * @param metaData the metaData to set
+     */
+    public void setMetaData(ScriptMeta metaData) {
+        this.metaData = metaData;
+    }
+
+    /**
+     * @return the discription
+     */
+    public String getDiscription() {
+        return discription;
+    }
+
+    /**
+     * @param discription the discription to set
+     */
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
+
+    /**
+     * @return the scriptContinue
+     */
+    public boolean isScriptContinue() {
+        return scriptContinue;
+    }
+
+    /**
+     * @param scriptContinue the scriptContinue to set
+     */
+    public void setScriptContinue(boolean scriptContinue) {
+        this.scriptContinue = scriptContinue;
+    }
+
+    /**
+     * @return the deviceArch
+     */
+    public String getDeviceArch() {
+        return deviceArch;
+    }
+
+    /**
+     * @param deviceArch the deviceArch to set
+     */
+    public void setDeviceArch(String deviceArch) {
+        this.deviceArch = deviceArch;
+    }
+
+    /**
+     * @return the actualMD5s
+     */
+    public List<String> getActualMD5s() {
+        return actualMD5s;
+    }
+
+    /**
+     * @param actualMD5s the actualMD5s to set
+     */
+    public void setActualMD5s(List<String> actualMD5s) {
+        this.actualMD5s = actualMD5s;
+    }
+
 }

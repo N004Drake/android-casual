@@ -179,11 +179,11 @@ public final class CASUALMain {
     }
 
     private void setDefaultCASPACScript() {
-        if (Statics.CASPAC != null && Statics.CASPAC.scripts != null && Statics.CASPAC.scripts.size() >= 1) {
+        if (Statics.CASPAC != null && Statics.CASPAC.getScripts() != null && Statics.CASPAC.getScripts().size() >= 1) {
             Log.level4Debug("Finalizing active script up to be run");
 
-            Statics.CASPAC.setActiveScript(Statics.CASPAC.scripts.get(0));
-            Statics.CASPAC.getActiveScript().scriptContinue = true;
+            Statics.CASPAC.setActiveScript(Statics.CASPAC.getScripts().get(0));
+            Statics.CASPAC.getActiveScript().setScriptContinue(true);
         }
     }
 
@@ -203,7 +203,7 @@ public final class CASUALMain {
         AudioHandler.useSound = false;
         Log.out.flush();
         if (Statics.CASPAC != null && Statics.CASPAC.getActiveScript() != null) {
-            Statics.CASPAC.getActiveScript().scriptContinue = false;
+            Statics.CASPAC.getActiveScript().setScriptContinue(false);
         }
         CASUALConnectionStatusMonitor.stop();
 
