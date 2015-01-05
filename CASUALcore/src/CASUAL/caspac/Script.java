@@ -285,9 +285,12 @@ public class Script {
      */
     public boolean verifyScript() {
         boolean testingBool = true;
-        testingBool = !(name.isEmpty()) && testingBool;
+        testingBool = !(getName().isEmpty()) && testingBool;
         testingBool = !(scriptContents.isEmpty()) && testingBool;
-        testingBool = !(individualFiles.isEmpty()) && testingBool;
+       /*
+          individualfiles are not absolutely needed, so not testing this. 
+        */
+       // testingBool = !(individualFiles.isEmpty()) && testingBool;
         testingBool = !(discription.isEmpty()) && testingBool;
         testingBool = metaData.verifyMeta() && testingBool;
         return testingBool;
