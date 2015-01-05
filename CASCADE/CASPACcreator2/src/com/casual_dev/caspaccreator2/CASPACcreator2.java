@@ -28,19 +28,17 @@ import java.util.Map;
 public class CASPACcreator2 extends ParametersImpl {
 
     String returnValue = "Starting";
-    public ParametersImpl parameters;
     private Caspac caspac;
-    boolean halt = false;
     private boolean loadedFromExisting = false;
 
-    private CASPACcreator2(String[] args) {
+    public CASPACcreator2(String[] args) {
         super(args);
     }
 
-    private String doPackaging() {
+    private String doPackaging() throws IOException, MissingParameterException {
 
         Map x = this.getNamed();
-        try {
+
             if (getNamed().containsKey("caspac")) {
                 loadCaspac();
 
@@ -50,12 +48,8 @@ public class CASPACcreator2 extends ParametersImpl {
             setGeneralCaspacInfo();
             setCaspacBuildInfo();
             setScriptFiles();
-            setScriptMeta();
             caspac.write();
-        } catch (NullPointerException | IOException | MissingParameterException ex) {
-            helpStatement();
-            Log.errorHandler(ex);
-        }
+      
         return returnValue;
     }
 
@@ -106,7 +100,7 @@ public class CASPACcreator2 extends ParametersImpl {
                 script.setIndividualFiles(includeFiles);
             }
         } else {
-            String[] params = new String[]{"scriptname", "description", "script"};
+            String[] params = new String[]{"scriptname", "scriptdescription", "scriptcode"};
             for (String param : params) {
                 if (null == getNamed().get(param)) {
                     throw new MissingParameterException(param);
@@ -116,10 +110,11 @@ public class CASPACcreator2 extends ParametersImpl {
             script = new Script(
                     getNamed().get("scriptname"),
                     getNamed().get("scriptcode"),
-                    getNamed().get("description"),
+                    getNamed().get("scriptdescription"),
                     includeFiles,
-                    Statics.getTempFolder() + getNamed().get("script"));
+                    Statics.getTempFolder() + getNamed().get("scriptname"));
         }
+        setScriptMeta(script);
         if (!script.verifyScript()) {
             throw new MissingParameterException("Script is incomplete");
         }
@@ -148,8 +143,8 @@ public class CASPACcreator2 extends ParametersImpl {
         }
     }
 
-    private void setScriptMeta() throws MissingParameterException {
-        Script script = caspac.getScripts().get(0);
+    private void setScriptMeta(Script script) throws MissingParameterException {
+        
         ScriptMeta meta = script.getMetaData();
         meta.setKillSwitchMessage(loadOptionalString("killswitchmessage",meta.getKillSwitchMessage(), "This Script was deemed unsafe and is deactivated")).
                 setScript(script).setScriptRevision(loadOptionalString("scriptrevision", meta.getScriptRevision(),"1")).
@@ -183,7 +178,7 @@ public class CASPACcreator2 extends ParametersImpl {
          caspac.scripts.get(0).scriptContinue = false;*/
     }
 
-    private void helpStatement() {
+    private static void helpStatement() {
         String n = System.getProperty("line.separator");
         String helpstatement = "CASUAL's CASPACCreator" + n
                 + "mandatory:" + n
@@ -222,7 +217,7 @@ public class CASPACcreator2 extends ParametersImpl {
         caspac.setCASPACLocation(cplocation);
 
     }
-   public Caspac createNewCaspac(){
+   public Caspac createNewCaspac() throws IOException, MissingParameterException{
         iCASUALUI oldGUI = Statics.GUI;
         Statics.GUI = new GUI.testing.automatic();
 
@@ -236,7 +231,12 @@ public class CASPACcreator2 extends ParametersImpl {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        try{
        new CASPACcreator2(args).createNewCaspac();
+         } catch (NullPointerException | IOException | MissingParameterException ex) {
+            helpStatement();
+            Log.errorHandler(ex);
+        }
     }
 
 }
