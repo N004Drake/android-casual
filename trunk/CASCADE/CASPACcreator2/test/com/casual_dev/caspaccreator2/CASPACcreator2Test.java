@@ -70,6 +70,7 @@ public class CASPACcreator2Test {
         };
         CASPACcreator2 cc = new CASPACcreator2(args);
         cc.createNewCaspac();
+        fail("ScriptName not set, not detected");
     }    
     
     @Test(expected=MissingParameterException.class)
@@ -81,7 +82,7 @@ public class CASPACcreator2Test {
         };
         CASPACcreator2 cc = new CASPACcreator2(args);
         cc.createNewCaspac();
-        fail("");
+        fail("Descript not set, not detected");
     }
       @Test(expected=MissingParameterException.class)
     public void testColdLoadWithErrorScriptCode() throws IOException, MissingParameterException {
@@ -93,7 +94,7 @@ public class CASPACcreator2Test {
         };
         CASPACcreator2 cc = new CASPACcreator2(args);
         cc.createNewCaspac();
-        fail("");
+        fail("script code not set, not detected");
     }    
     
     @Test
