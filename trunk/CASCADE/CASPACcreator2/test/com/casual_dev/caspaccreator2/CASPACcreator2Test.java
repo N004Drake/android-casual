@@ -6,6 +6,8 @@
 package com.casual_dev.caspaccreator2;
 
 import com.casual_dev.caspaccreator2.CASPACcreator2;
+import com.casual_dev.caspaccreator2.exception.MissingParameterException;
+import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -49,5 +51,68 @@ public class CASPACcreator2Test {
         
         // TODO review the generated test code and remove the default call to fail.
     }
+    
+    @Test(expected=MissingParameterException.class)
+    public void testColdLoadWithErrorOutput() throws IOException, MissingParameterException {
+        System.out.println("main");
+        String[] args = new String[]{
+        };
+        CASPACcreator2 cc = new CASPACcreator2(args);
+        cc.createNewCaspac();
+        fail("Script not set, not detected");
+    }
+        
+    @Test(expected=MissingParameterException.class)
+    public void testColdLoadWithErrorScriptName() throws IOException, MissingParameterException {
+        System.out.println("main");
+        String[] args = new String[]{
+            "--output=/tmp/new.zip",
+        };
+        CASPACcreator2 cc = new CASPACcreator2(args);
+        cc.createNewCaspac();
+    }    
+    
+    @Test(expected=MissingParameterException.class)
+    public void testColdLoadWithErrordescription() throws IOException, MissingParameterException {
+        System.out.println("main");
+        String[] args = new String[]{
+            "--output=/tmp/new.zip",
+            "--scriptname=newscript"
+        };
+        CASPACcreator2 cc = new CASPACcreator2(args);
+        cc.createNewCaspac();
+        fail("");
+    }
+      @Test(expected=MissingParameterException.class)
+    public void testColdLoadWithErrorScriptCode() throws IOException, MissingParameterException {
+        System.out.println("main");
+        String[] args = new String[]{
+            "--output=/tmp/new.zip",
+            "--scriptname=newscript",
+            "--scriptdescription=\"a cool script thingy\nwoot!\""
+        };
+        CASPACcreator2 cc = new CASPACcreator2(args);
+        cc.createNewCaspac();
+        fail("");
+    }    
+    
+    @Test
+    public void testMinimalLoad() throws IOException, MissingParameterException {
+        System.out.println("main");
+        String[] args = new String[]{
+            "--output=/tmp/new.zip",
+            "--scriptname=newscript",
+            "--scriptdescription=\"a cool script thingy\nwoot!\"",
+            "--scriptcode=#testing scriptinjection\nmoretesting\"'"
+        };
+        CASPACcreator2 cc = new CASPACcreator2(args);
+       try {
+           cc.createNewCaspac();
+       } catch (Exception ex){
+           fail("Exception detected");
+       }
+
+    }
+    
     
 }
