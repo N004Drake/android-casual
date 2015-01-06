@@ -6,15 +6,12 @@
 package com.casual_dev.caspaccreator2;
 
 import CASUAL.Log;
-import CASUAL.Statics;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.misc.StringOperations;
-import com.casual_dev.caspaccreator2.CASPACcreator2;
 import com.casual_dev.caspaccreator2.exception.MissingParameterException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -69,8 +66,8 @@ public class CASPACcreator2Test {
     @Test
     public void testLoadAndSave() {
         System.out.println("main");
-        String[] args = new String[]{"--caspac=../../CASPAC/testpak.zip", "--output=" + myTempDir + "new.zip", "--scriptfiles=file 1", "--scriptfiles=file 2"};
-        CASPACcreator2.main(args);
+        String[] argsl = new String[]{"--caspac=../../CASPAC/testpak.zip", "--output=" + myTempDir + "new.zip", "--scriptfiles=file 1", "--scriptfiles=file 2"};
+        CASPACcreator2.main(argsl);
 
         // TODO review the generated test code and remove the default call to fail.
     }
@@ -78,8 +75,8 @@ public class CASPACcreator2Test {
     @Test(expected = MissingParameterException.class)
     public void testColdLoadWithErrorOutput() throws IOException, MissingParameterException {
         System.out.println("Cold Load output");
-        String[] args = new String[]{};
-        CASPACcreator2 cc = new CASPACcreator2(args);
+        String[] argsl = new String[]{};
+        CASPACcreator2 cc = new CASPACcreator2(argsl);
         cc.createNewCaspac();
         fail("Script not set, not detected");
     }
@@ -87,9 +84,9 @@ public class CASPACcreator2Test {
     @Test(expected = MissingParameterException.class)
     public void testColdLoadWithErrorScriptName() throws IOException, MissingParameterException {
         System.out.println("cold load scriptname");
-        String[] args = new String[]{
+        String[] argsl = new String[]{
             "--output=" + myTempDir + "new.zip",};
-        CASPACcreator2 cc = new CASPACcreator2(args);
+        CASPACcreator2 cc = new CASPACcreator2(argsl);
         cc.createNewCaspac();
         fail("ScriptName not set, not detected");
     }
@@ -97,11 +94,11 @@ public class CASPACcreator2Test {
     @Test(expected = MissingParameterException.class)
     public void testColdLoadWithErrordescription() throws IOException, MissingParameterException {
         System.out.println("coldload description");
-        String[] args = new String[]{
+        String[] argsl = new String[]{
             "--output=" + myTempDir + "new.zip",
             "--scriptname=newscript"
         };
-        CASPACcreator2 cc = new CASPACcreator2(args);
+        CASPACcreator2 cc = new CASPACcreator2(argsl);
         cc.createNewCaspac();
         fail("Descript not set, not detected");
     }
@@ -109,12 +106,12 @@ public class CASPACcreator2Test {
     @Test(expected = MissingParameterException.class)
     public void testColdLoadWithErrorScriptCode() throws IOException, MissingParameterException {
         System.out.println("cold load scriptcode");
-        String[] args = new String[]{
+        String[] argsl = new String[]{
             "--output=" + myTempDir + "new.zip",
             "--scriptname=newscript",
             "--scriptdescription=\"a cool script thingy\nwoot!\""
         };
-        CASPACcreator2 cc = new CASPACcreator2(args);
+        CASPACcreator2 cc = new CASPACcreator2(argsl);
         cc.createNewCaspac();
         fail("script code not set, not detected");
     }
@@ -122,16 +119,16 @@ public class CASPACcreator2Test {
     @Test
     public void testMinimalLoad() throws IOException, MissingParameterException {
         System.out.println("cold load mimimal");
-        String[] args = new String[]{
+        String[] argsl = new String[]{
             "--output=" + myTempDir + "new.zip",
             "--scriptname=newscript",
             "--scriptdescription=\"a cool script thingy\nwoot!\"",
             "--scriptcode=#testing scriptinjection\nmoretesting\"'"
         };
-        CASPACcreator2 cc = new CASPACcreator2(args);
+        CASPACcreator2 cc = new CASPACcreator2(argsl);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             fail("Exception detected");
         }
     }
@@ -146,7 +143,7 @@ public class CASPACcreator2Test {
     public void testMinimalLoadWithFiles() throws IOException, MissingParameterException {
         System.out.println("cold load mimimal");
 
-        String[] args = new String[]{
+        String[] argsl = new String[]{
             "--output=" + getTemp(),
             "--scriptname=newscript",
             "--scriptdescription=" + this.scriptdescription,
@@ -156,10 +153,10 @@ public class CASPACcreator2Test {
             "--overview=\"this is an overview\nand a good one\""
         };
 
-        CASPACcreator2 cc = new CASPACcreator2(args);
+        CASPACcreator2 cc = new CASPACcreator2(argsl);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -179,11 +176,9 @@ public class CASPACcreator2Test {
     }
 
     private String[] getArgsOfLength(int len) {
-        String[] args = new String[len];
-        for (int i = 0; i < args.length; i++) {
-            args[i] = this.args[i];
-        }
-        return args;
+        String[] localargs = new String[len];
+        System.arraycopy(this.args, 0, localargs, 0, localargs.length);
+        return localargs;
     }
 
     @Test
@@ -194,7 +189,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -210,7 +205,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -228,7 +223,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -247,7 +242,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -267,7 +262,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -286,7 +281,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -305,7 +300,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -324,7 +319,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -343,7 +338,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -361,7 +356,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -379,7 +374,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -398,7 +393,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
@@ -417,7 +412,7 @@ public class CASPACcreator2Test {
         CASPACcreator2 cc = new CASPACcreator2(myArgs);
         try {
             cc.createNewCaspac();
-        } catch (Exception ex) {
+        } catch (IOException | MissingParameterException ex) {
             Log.errorHandler(ex);
             fail("exception detected");
         }
