@@ -35,19 +35,23 @@ public class CASPACcreator2 extends ParametersImpl {
         super(args);
     }
 
+    public Caspac getCaspac(){
+        return caspac;
+    }
+    
     private String doPackaging() throws IOException, MissingParameterException {
 
         Map x = this.getNamed();
 
             if (getNamed().containsKey("caspac")) {
                 loadCaspac();
-
             }
             setCaspacOutputLocation();
             setCASPACProperties();
             setGeneralCaspacInfo();
             setCaspacBuildInfo();
             setScriptFiles();
+            caspac.getCASPACLocation().delete();
             caspac.write();
       
         return returnValue;
@@ -70,17 +74,19 @@ public class CASPACcreator2 extends ParametersImpl {
     }
 
     private void setCaspacBuildInfo() throws MissingParameterException {
-        Build b = caspac.getBuild();
-        b.setAudioEnabled(false).
+        Build b;
+        b=(loadedFromExisting? caspac.getBuild():new Build(caspac));
+        b.setAudioEnabled(false);
+        b.
                 setUsePictureForBanner(false).
                 setBannerPic("").
                 setDeveloperName(loadOptionalString("devname", b.getDeveloperName(), "Anonymous")).
-                setAlwaysEnableControls(loadOptionalString("enableControls", Boolean.toString(b.isAlwaysEnableControls()), "false").equals("true")).
+                setAlwaysEnableControls(loadOptionalString("enablecontrols", Boolean.toString(b.isAlwaysEnableControls()), "false").equals("true")).
                 setBannerText(loadOptionalString("bannertext", b.getBannerText(), "bannertext unspecified")).
-                setDeveloperDonateButtonText(loadOptionalString("dontebuttontext", b.getDeveloperDonateButtonText(), "donatebuttontext unspecified")).
+                setDeveloperDonateButtonText(loadOptionalString("donatebuttontext", b.getDeveloperDonateButtonText(), "donatebuttontext unspecified")).
                 setDonateLink(loadOptionalString("donatelink", b.getDonateLink(), "http://casual-dev.com")).
                 setExecuteButtonText(loadOptionalString("startbutton", b.getExecuteButtonText(), "Do It!")).
-                setWindowTitle(loadOptionalString("Window Title", b.getWindowTitle(), "title unspecified"));
+                setWindowTitle(loadOptionalString("windowtitle", b.getWindowTitle(), "title unspecified"));
         caspac.setBuild(b);
     }
 
@@ -89,56 +95,68 @@ public class CASPACcreator2 extends ParametersImpl {
         this.getRaw().stream().filter((arg) -> (arg.startsWith("--zipfile="))).forEach((arg) -> {
             includeFiles.add(new File(arg.split("=")[1]));
         });
-
-        Script script;
-        if (loadedFromExisting) {
-            script = caspac.getScripts().get(0);
-            script.setName(loadString("scriptname", script.getName()));
-            script.setScriptContents(loadString("scriptcode", script.getScriptContentsString()));
-            script.setDiscription(loadString("description", script.getDiscription()));
-            if (includeFiles.size() > 0) {
-                script.setIndividualFiles(includeFiles);
-            }
-        } else {
-            String[] params = new String[]{"scriptname", "scriptdescription", "scriptcode"};
-            for (String param : params) {
-                if (null == getNamed().get(param)) {
-                    throw new MissingParameterException(param);
-                }
-
-            }
-            script = new Script(
-                    getNamed().get("scriptname"),
-                    getNamed().get("scriptcode"),
-                    getNamed().get("scriptdescription"),
-                    includeFiles,
-                    Statics.getTempFolder() + getNamed().get("scriptname"));
-        }
+        Script script = caspac.getFirstScript();
+        script=(loadedFromExisting?
+                loadNewValuesToExistingScript(script, includeFiles):
+                createNewScriptFromScratch(includeFiles));
         setScriptMeta(script);
-        if (!script.verifyScript()) {
-            throw new MissingParameterException("Script is incomplete");
-        }
-        if (loadedFromExisting) {
-            caspac.removeScript(caspac.getScripts().get(0));
-        }
-        caspac.addScript(script);
+        verifyScript(script);
+       caspac.removeAllScripts();
+       caspac.addScript(script);
     }
 
+    private void verifyScript(Script script) throws MissingParameterException {
+        if (!script.verifyScript()) {
+            throw new MissingParameterException("  UNKNOWN PARAMETER MISSING! THIS SHOULD NOT HAPPEN --");
+        }
+    }
+
+    private Script createNewScriptFromScratch(List<File> includeFiles) throws MissingParameterException {
+        Script script;
+        String[] params = new String[]{"scriptname", "scriptdescription", "scriptcode"};
+        for (String param : params) {
+            if (null == getNamed().get(param)) {
+                throw new MissingParameterException(param);
+            }
+            
+        }
+        script = new Script(
+                getNamed().get("scriptname"),
+                getNamed().get("scriptcode"),
+                getNamed().get("scriptdescription"),
+                includeFiles,
+                Statics.getTempFolder() + getNamed().get("scriptname"));
+        return script;
+    }
+
+    private Script loadNewValuesToExistingScript(Script script, List<File> includeFiles) throws MissingParameterException {
+        script = caspac.getScripts().get(0);
+        if (includeFiles.size() > 0) {
+            script.setIndividualFiles(includeFiles);
+        }
+        script.setName(loadString("scriptname", script.getName())).
+                setScriptContents(loadString("scriptcode", script.getScriptContentsString())).
+                setDiscription(loadString("description", script.getDiscription()));
+        return script;
+    }
+
+    
     private String loadString(String key, String existing) throws MissingParameterException {
         if (null != getNamed().get(key)) {
             return (getNamed().get(key));   //try to return the requested value.
         } else {
-            if (!loadedFromExisting) {
+            if (!loadedFromExisting ||null==existing||existing.isEmpty()) {
                 throw new MissingParameterException(key);  //throw an error if this was not loaded from a caspac
             }
-            return existing;  //return the default value
+            return existing;  //return the existing CASPAC value
         }
+        
     }
 
     private String loadOptionalString(String key, String existing, String defaultValue) throws MissingParameterException {
-        if (loadedFromExisting) {
-            return getNamed().getOrDefault(key, existing);
-        } else {
+        if (loadedFromExisting) {  //if this was a previously existing caspac, use key or existing
+            return getNamed().getOrDefault(key, existing);  
+        } else {  //if this is a new caspac, use key or default value (since existing is missing)
             return getNamed().getOrDefault(key, defaultValue);
         }
     }
