@@ -1,4 +1,4 @@
-/*CASCADE2 is CASUAL's Automated Scripting Action Development Environment GUI 2
+ /*CASCADE2 is CASUAL's Automated Scripting Action Development Environment GUI 2
  *Copyright (C) 2013  Adam Outler & Logan Ludington
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,7 @@
  */
 package cascade2;
 
-import java.io.File;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -48,6 +46,11 @@ public class CASCADE2 extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("CASCADEUI.fxml"));
         scene = new Scene(root);
         stage.setScene(scene);
+        stage.setMinWidth(800);
+        stage.setMinHeight(400);
+        stage.setMaxWidth(1024);
+        stage.setMaxHeight(600);
+              ;
         stage.show();
     }
 
