@@ -82,6 +82,15 @@ public final class Build {
     private Caspac caspac;
 
     /**
+     * Creates a blank build.prop file
+     * @param caspac reference to caspac
+     */
+    public Build(Caspac caspac){
+        
+    }
+    
+    
+    /**
      * Accepts a -Build.properties file via InputStream.
      *
      * @param prop Properties file.

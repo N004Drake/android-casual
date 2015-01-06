@@ -568,8 +568,9 @@ public class Script {
     /**
      * @param name the name to set
      */
-    public void setName(String name) {
+    public Script setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
@@ -582,15 +583,17 @@ public class Script {
     /**
      * @param tempDir the tempDir to set
      */
-    public void setTempDir(String tempDir) {
+    public Script setTempDir(String tempDir) {
         this.tempDir = tempDir;
+        return this;
     }
 
     /**
      * @param scriptContents the scriptContents to set
      */
-    public void setScriptContents(String scriptContents) {
+    public Script setScriptContents(String scriptContents) {
         this.scriptContents = scriptContents;
+        return this;
     }
 
     /**
@@ -603,8 +606,9 @@ public class Script {
     /**
      * @param individualFiles the individualFiles to set
      */
-    public void setIndividualFiles(List<File> individualFiles) {
+    public Script setIndividualFiles(List<File> individualFiles) {
         this.individualFiles = individualFiles;
+        return this;
     }
 
     /**
@@ -617,8 +621,9 @@ public class Script {
     /**
      * @param metaData the metaData to set
      */
-    public void setMetaData(ScriptMeta metaData) {
+    public Script setMetaData(ScriptMeta metaData) {
         this.metaData = metaData;
+        return this;
     }
 
     /**
@@ -631,8 +636,9 @@ public class Script {
     /**
      * @param discription the discription to set
      */
-    public void setDiscription(String discription) {
+    public Script setDiscription(String discription) {
         this.discription = discription;
+        return this;
     }
 
     /**

@@ -275,6 +275,18 @@ public final class Caspac {
         return this;
     }
 
+    public Caspac removeAllScripts(){
+        this.scripts.clear();
+        return this;
+    }
+    
+    public Script getFirstScript(){
+        if (scripts.size()>0){
+            return scripts.get(0);
+        }
+        return null;
+    }
+    
     public Caspac addScript(Script script){
         if (!scripts.contains(script)){
             scripts.add(script);
