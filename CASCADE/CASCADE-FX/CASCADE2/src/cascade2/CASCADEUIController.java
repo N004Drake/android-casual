@@ -16,25 +16,24 @@
  */
 package cascade2;
 
-import CASPACcreator.CASPACcreator;
+import CASUAL.Log;
 import CASUAL.Statics;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
+import cascade2.drag_event.DragEventHandler;
 import cascade2.fileOps.CASPACFileSelection;
+import com.casual_dev.caspaccreator2.CASPACcreator2;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -47,7 +46,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
@@ -66,10 +64,6 @@ public class CASCADEUIController implements Initializable {
     Button newScript;
     @FXML
     TextField scriptName;
-    @FXML
-    TextField minRev;
-    @FXML
-    TextField uniqueID;
     @FXML
     TextField devName;
     @FXML
@@ -146,7 +140,7 @@ public class CASCADEUIController implements Initializable {
         }).start();
         Platform.runLater(() -> {
             uiController = CASCADEUIController.this;
-            textControls = new TextInputControl[]{minRev, scriptRevision, uniqueID, supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription, pathToCaspac, caspacOutputFolder, caspacOutputFolder, scriptingArea};
+            textControls = new TextInputControl[]{ scriptRevision,  supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription, pathToCaspac, caspacOutputFolder, caspacOutputFolder, scriptingArea};
 
             overview.setExpanded(true);
         });
@@ -191,7 +185,9 @@ public class CASCADEUIController implements Initializable {
     @FXML
     private void selectCaspac() {
         pathToCaspac.setText(new CASPACFileSelection().showFileChooser(CASCADE2.getStage(), pathToCaspac.getText()));
-        reloadClicked();
+        if (!pathToCaspac.getText().isEmpty()) {
+            reloadClicked();
+        }
     }
 
     @FXML
@@ -201,7 +197,6 @@ public class CASCADEUIController implements Initializable {
 
     private void setTextAreaBlank(TextInputControl[] fields) {
         for (TextInputControl field : fields) {
-            System.out.println(field);
             field.setText("");
         }
     }
@@ -232,22 +227,20 @@ public class CASCADEUIController implements Initializable {
             return;
         }
         Platform.runLater(() -> {
-            Script script = cp.scripts.get(0);
-            this.minRev.setText(script.metaData.minSVNversion);
-            this.scriptRevision.setText(script.metaData.scriptRevision);
-            this.supportURL.setText(script.metaData.supportURL);
-            this.uniqueID.setText(script.metaData.uniqueIdentifier);
-            this.scriptName.setText(script.name);
-            this.scriptDescription.setText(script.discription);
-            this.scriptingArea.setText(script.scriptContents);
-            this.bannerText.setText(cp.overview);
-            devName.setText(cp.build.developerName);
-            donateLink.setText(cp.build.donateLink);
-            donateTo.setText(cp.build.developerDonateButtonText);
-            applicationTitle.setText(cp.build.windowTitle);
-            startButtonText.setText(cp.build.executeButtonText);
-            enableControls.setSelected(cp.build.alwaysEnableControls);
-            zipFiles.getItems().addAll(script.individualFiles);
+            Script script = cp.getScripts().get(0);
+            this.scriptRevision.setText(script.getMetaData().getScriptRevision());
+            this.supportURL.setText(script.getMetaData().getSupportURL());
+            this.scriptName.setText(script.getName());
+            this.scriptDescription.setText(script.getDiscription());
+            this.scriptingArea.setText(script.getScriptContentsString());
+            this.bannerText.setText(cp.getOverview());
+            devName.setText(cp.getBuild().getDeveloperName());
+            donateLink.setText(cp.getBuild().getDonateLink());
+            donateTo.setText(cp.getBuild().getDeveloperDonateButtonText());
+            applicationTitle.setText(cp.getBuild().getWindowTitle());
+            startButtonText.setText(cp.getBuild().getExecuteButtonText());
+            enableControls.setSelected(cp.getBuild().isAlwaysEnableControls());
+            zipFiles.getItems().addAll(script.getIndividualFiles());
 
             /*
              listModel.removeAllElements();
@@ -262,7 +255,26 @@ public class CASCADEUIController implements Initializable {
 
     @FXML
     private void saveClicked() {
-        CASPACcreator cpc = new CASPACcreator();
+        List<String> argsArray = new ArrayList<>();
+        argsArray.add("--output=" + this.pathToCaspac.getText());
+        argsArray.add("--scriptname=" + scriptName.getText());
+        argsArray.add("--scriptdescription=" + this.scriptDescription.getText());
+        argsArray.add("--scriptcode=" + this.scriptingArea.getText());
+        zipFiles.getItems().stream().forEach((file) -> {
+            argsArray.add(((File) file).getAbsolutePath());
+        });
+        argsArray.add("--overview=" + this.scriptDescription.getText());
+        argsArray.add("--devname=" + this.devName.getText());
+        argsArray.add("--enablecontrols=" + this.enableControls.isSelected());
+        argsArray.add("--bannertext=" + this.bannerText.getText());
+        argsArray.add("--donatebuttontext=" + this.donateTo.getText());
+        argsArray.add("--donatelink=" + this.donateLink.getText());
+        argsArray.add("--startbutton=" + this.startButtonText.getText());
+        argsArray.add("--windowtitle=" + this.applicationTitle.getText());
+        argsArray.add("--scriptrevision=" + this.scriptRevision.getText());
+        argsArray.add("--supporturl=" + this.supportURL.getText());
+
+        CASPACcreator2 cpc = new CASPACcreator2(argsArray.toArray(new String[argsArray.size()]));
 
     }
 
@@ -286,48 +298,33 @@ public class CASCADEUIController implements Initializable {
 
             }
         }
-        if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
+        if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
             zipFiles.getItems().remove(zipFiles.getSelectionModel().getSelectedItem());
         }
     }
 
-    long time = 0;
-    List<File> fileListForDropEvent;
-
     @FXML
-
-    private void setzipFileEventList(DragEvent event) {
-        if (null == event) {
-            return;
-        }
-        fileListForDropEvent=event.getDragboard().getFiles();
-        System.out.println("Files released to list");
+    protected void zipFileDragOver(DragEvent event) {
+        new DragEventHandler().setzipFileEventList(event);
+        event.consume();
     }
 
     @FXML
-    protected void dragOver(DragEvent event) {
-        System.out.println("test    exit");
-        setzipFileEventList(event);
-    }
-    
-    @FXML
-    protected void testex(DragEvent event) {
-                time = System.currentTimeMillis() + 100;
+    protected void zipFileDragExited(DragEvent event) {
+        new DragEventHandler().markTimeOfDrop();
 
     }
 
     @FXML
-    protected void testmo() {
-        if (time >= System.currentTimeMillis()) {
-            System.out.println("drop!");
-            for (File f : fileListForDropEvent) {
-                if (f.exists()){
-                    String filename=f.getAbsolutePath();
-                    if (!zipFiles.getItems().contains(filename))
-                    zipFiles.getItems().add(filename);
-                }
+    protected void zipFileMouseEnter() {
+
+        List<File> fileList = new DragEventHandler().ifTimerInRangeSetFileList();
+        fileList.stream().forEach((f) -> {
+            if (f.isFile() && f.exists() && !zipFiles.getItems().contains(f.getAbsolutePath())) {
+                zipFiles.getItems().add(f.getAbsolutePath());
+            } else {
+                Log.level4Debug("Invalid drop event detected:" + f);
             }
-        }
+        });
     }
-
 }
