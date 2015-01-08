@@ -65,6 +65,7 @@ public class PackagerMain {
     static ArrayList<String[]> replaceFile;//used to replace files in zip
     private final String slash = Statics.slash;
      File outputFile=null;
+     File returnFile=null;
     /**
      * Packages a CASPAC into a CASUAL.
      *
@@ -97,7 +98,7 @@ public class PackagerMain {
         } else {
             pm.mergeCaspacCasual();
         }
-        return pm.outputFile;
+         return pm.returnFile;
     }
     /**
      * Merges the specified Caspac with the included CASUAL.
@@ -219,6 +220,7 @@ public class PackagerMain {
         } catch (IOException ex) {
             Logger.getLogger(PackagerMain.class.getName()).log(Level.SEVERE, null, ex);
         }
+        returnFile=outputFile;
     }
 
     private  void processCommandline(String[] args) {
