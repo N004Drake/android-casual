@@ -235,6 +235,8 @@ public class CASPACcreator2 extends ParametersImpl {
         caspac.setCASPACLocation(cplocation);
 
     }
+    
+    
    public Caspac createNewCaspac() throws IOException, MissingParameterException{
         iCASUALUI oldGUI = Statics.GUI;
         Statics.GUI = new GUI.testing.automatic();
