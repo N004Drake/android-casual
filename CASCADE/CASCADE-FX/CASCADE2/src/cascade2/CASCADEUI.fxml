@@ -110,14 +110,14 @@
                                        <children>
                                           <TitledPane collapsible="false" prefHeight="125.0" prefWidth="234.0" text="ZIPFILE Resources (drop here)" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <ListView fx:id="zipFiles" cacheShape="false" centerShape="false" editable="true" focusTraversable="false" onDragEntered="#zipFileDragOver" onDragExited="#zipFileDragExited" onMouseClicked="#zipFileResourcesClicked" onMouseEntered="#zipFileMouseEnter" pickOnBounds="false" prefHeight="86.0" prefWidth="313.0" scaleShape="false" />
+                                                <ListView fx:id="zipFiles" cacheShape="false" centerShape="false" editable="true" focusTraversable="false" minHeight="86.0" onDragEntered="#zipFileDragOver" onDragExited="#zipFileDragExited" onMouseClicked="#zipFileResourcesClicked" onMouseEntered="#zipFileMouseEnter" pickOnBounds="false" prefHeight="86.0" prefWidth="313.0" scaleShape="false" />
                                              </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" collapsible="false" text="Command Assistant" VBox.vgrow="ALWAYS">
+                                          <TitledPane fx:id="commandAssistant" animated="false" collapsible="false" text="Command Assistant" VBox.vgrow="ALWAYS">
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="231.0" prefWidth="232.0">
                                                    <children>
-                                                      <TreeView fx:id="commandAssistant" layoutX="20.4" layoutY="52.4" prefHeight="218.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <TreeView layoutX="20.4" layoutY="52.4" prefHeight="218.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>
@@ -125,9 +125,9 @@
                                        </children>
                                     </VBox>
                                     <TitledPane collapsible="false" text="Write Script Here" HBox.hgrow="ALWAYS">
-                                       <content>
-                                          <TextArea fx:id="scriptingArea" cacheHint="QUALITY" cacheShape="false" centerShape="false" depthTest="ENABLE" scaleShape="false" HBox.hgrow="ALWAYS" />
-                                       </content>
+                                 <content>
+                                    <TextArea fx:id="scriptingArea" prefHeight="200.0" prefWidth="666.0" />
+                                 </content>
                                     </TitledPane>
                                  </children>
                               </HBox>
