@@ -24,6 +24,7 @@ import CASUAL.Statics;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.crypto.AES128Handler;
+import cascade2.assistant_ui.CASUALAssistantUI;
 import cascade2.drag_event.DragEventHandler;
 import cascade2.fileOps.CASPACFileSelection;
 import com.casual_dev.caspaccreator2.CASPACcreator2;
@@ -33,15 +34,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -53,18 +51,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import org.controlsfx.DialogResources;
+
 
 /**
  *
@@ -108,7 +101,7 @@ public class CASCADEUIController implements Initializable {
     @FXML
     ListView zipFiles;
     @FXML
-    TreeView commandAssistant;
+    TitledPane  commandAssistant;
 
     //CASPAC FIle area
     @FXML
@@ -157,10 +150,22 @@ public class CASCADEUIController implements Initializable {
         }).start();
         Platform.runLater(() -> {
             uiController = CASCADEUIController.this;
-            textControls = new TextInputControl[]{ scriptRevision,  supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription, pathToCaspac, caspacOutputFolder, caspacOutputFolder, scriptingArea};
-
+            textControls = new TextInputControl[]{scriptRevision, supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription, pathToCaspac, caspacOutputFolder, caspacOutputFolder, scriptingArea};
             overview.setExpanded(true);
         });
+        final TextArea sa = scriptingArea;
+        final TitledPane pane=this.commandAssistant;
+        new Thread(() -> {
+            final TreeView commandTreeView = new CASUALAssistantUI().getCasualLanguageTreeView(sa);
+            
+            Platform.runLater(() -> {
+                pane.setContent(commandTreeView);
+                
+                
+            });
+           
+        }).start();
+
     }
 
     private void insertTextIntoScriptingAreaAtCursor(String replacement) {
@@ -273,7 +278,7 @@ public class CASCADEUIController implements Initializable {
     private File saveClicked() throws IOException {
         this.disableControls(true);
         List<String> argsArray = new ArrayList<>();
-        argsArray.add("--output=" +this.pathToCaspac.getText());
+        argsArray.add("--output=" + this.pathToCaspac.getText());
         argsArray.add("--scriptname=" + scriptName.getText());
         argsArray.add("--scriptdescription=" + this.scriptDescription.getText());
         argsArray.add("--scriptcode=" + this.scriptingArea.getText());
@@ -292,81 +297,79 @@ public class CASCADEUIController implements Initializable {
         argsArray.add("--supporturl=" + this.supportURL.getText());
 
         CASPACcreator2 cpc = new CASPACcreator2(argsArray.toArray(new String[argsArray.size()]));
-        Caspac caspac=null;
+        Caspac caspac = null;
         try {
             caspac = cpc.createNewCaspac();
         } catch (MissingParameterException ex) {
             Logger.getLogger(CASCADEUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
-         if (this.encrypt.isSelected()){
-               File temp = new File(caspac.getCASPAC().getAbsolutePath() + ".tmp");
-                if (new AES128Handler(caspac.getCASPAC()).encrypt(temp.getAbsolutePath(), getPassword())){
-                    caspac.getCASPAC().delete();
-                    new FileOperations().moveFile(temp, caspac.getCASPAC());
-              } 
-         }
+
+        if (this.encrypt.isSelected()) {
+            File temp = new File(caspac.getCASPAC().getAbsolutePath() + ".tmp");
+            if (new AES128Handler(caspac.getCASPAC()).encrypt(temp.getAbsolutePath(), getPassword())) {
+                caspac.getCASPAC().delete();
+                new FileOperations().moveFile(temp, caspac.getCASPAC());
+            }
+        }
         disableControls(false);
-         return caspac.getCASPAC();
+        return caspac.getCASPAC();
     }
 
-    private char[] getPassword(){
-        Dialog dialog=new Dialog();
+    private char[] getPassword() {
+        Dialog dialog = new Dialog();
         dialog.setTitle("CASPAC Encryption");
         dialog.setHeaderText("Enter your password");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.APPLY);
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
         dialog.getDialogPane().setContent(password);
-        
+
         dialog.showAndWait();
 
-
-        
-         return password.getText().toCharArray();
+        return password.getText().toCharArray();
     }
-    
+
     @FXML
     private File saveCASUALClicked() throws IOException {
-        File caspacFile=saveClicked();
-       File casualFile=PackagerMain.doPackaging(new String[]{"--CASPAC",caspacFile.getAbsolutePath(),"--output", this.caspacOutputFolder.getText()});
-              return casualFile;
+        File caspacFile = saveClicked();
+        File casualFile = PackagerMain.doPackaging(new String[]{"--CASPAC", caspacFile.getAbsolutePath(), "--output", this.caspacOutputFolder.getText()});
+        return casualFile;
     }
 
     @FXML
     private void runCASUALClicked() throws IOException {
-          File casual=saveCASUALClicked();
-            String exe = "";
+        File casual = saveCASUALClicked();
+        String exe = "";
+        if (OSTools.isWindows()) {
+            exe = ".exe";
+        }
+        final String executable = exe;
+        final String outputFile = casual.getAbsolutePath();
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+
+                //CASUAL.JavaSystem.restart(new String[]{outputFile+Statics.slash+file});
+                ProcessBuilder pb;
                 if (OSTools.isWindows()) {
-                    exe = ".exe";
+                    System.out.println("executing " + "cmd.exe /c start  " + System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable + " -jar " + outputFile);
+                    new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + "\""}, true);
+                } else {
+                    System.out.println("Executing" + System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable + " -jar " + outputFile);
+
+                    new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable, "-jar", outputFile}, true);
+
                 }
-                final String executable = exe;
-                final String outputFile = casual.getAbsolutePath();
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-
-                        //CASUAL.JavaSystem.restart(new String[]{outputFile+Statics.slash+file});
-                        ProcessBuilder pb;
-                        if (OSTools.isWindows()) {
-                            System.out.println("executing " + "cmd.exe /c start  " + System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable + " -jar " + outputFile);
-                            new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + "\""}, true);
-                        } else {
-                            System.out.println("Executing" + System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable + " -jar " + outputFile);
-
-                            new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable, "-jar", outputFile}, true);
-
-                        }
                         // pb.directory(new File(new File( "." ).getCanonicalPath()));
-                        //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
-                        //Process p = pb.start();
+                //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
+                //Process p = pb.start();
 
-                        //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable,"-jar",outputFile+Statics.slash+file});
-                    }
-                };
-                Thread t = new Thread(r);
+                //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable,"-jar",outputFile+Statics.slash+file});
+            }
+        };
+        Thread t = new Thread(r);
 
-                t.start();
+        t.start();
     }
 
     @FXML
