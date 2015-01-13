@@ -17,6 +17,7 @@
 package cascade2;
 
 import CASPACkager.PackagerMain;
+import CASUAL.CASUALMessageObject;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
@@ -25,6 +26,8 @@ import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.crypto.AES128Handler;
 import cascade2.assistant_ui.CASUALAssistantUI;
+import cascade2.assistant_ui.AutomaticUI;
+import cascade2.assistant_ui.MessageHandler;
 import cascade2.drag_event.DragEventHandler;
 import cascade2.fileOps.CASPACFileSelection;
 import com.casual_dev.caspaccreator2.CASPACcreator2;
@@ -63,7 +66,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @author adamoutler
  */
-public class CASCADEUIController implements Initializable {
+public class CASCADEUIController extends AutomaticUI  implements Initializable {
 
     //Scripting and Overview 
     @FXML
@@ -146,7 +149,7 @@ public class CASCADEUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         new Thread(() -> {
-            Statics.GUI = new GUI.testing.automatic();
+            Statics.GUI = this;
         }).start();
         Platform.runLater(() -> {
             uiController = CASCADEUIController.this;
@@ -410,5 +413,10 @@ public class CASCADEUIController implements Initializable {
                 Log.level4Debug("Invalid drop event detected:" + f);
             }
         });
+    }
+    
+    @Override
+    public String displayMessage(CASUALMessageObject mo) {
+        return new MessageHandler().sendMessage(mo);
     }
 }

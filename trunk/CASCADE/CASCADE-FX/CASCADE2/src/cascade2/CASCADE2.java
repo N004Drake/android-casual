@@ -50,7 +50,6 @@ public class CASCADE2 extends Application {
         stage.setMinHeight(400);
         stage.setMaxWidth(1024);
         stage.setMaxHeight(600);
-              ;
         stage.show();
     }
 
