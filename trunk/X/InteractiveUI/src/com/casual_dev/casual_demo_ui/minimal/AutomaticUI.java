@@ -1,3 +1,5 @@
+package com.casual_dev.casual_demo_ui.minimal;
+
 /*
  * Copyright (C) 2013 adam
  *
@@ -15,7 +17,7 @@
  * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
  */
 
-package cascade2.assistant_ui;
+
 
 import CASUAL.CASUALMessageObject;
 import CASUAL.caspac.Caspac;
@@ -45,12 +47,9 @@ public class AutomaticUI implements CASUAL.iCASUALUI {
 
     @Override
     public String displayMessage(CASUALMessageObject mo) {
-        StringBuilder sb=new StringBuilder();
-        String n="%n";
-        sb.append(mo.title).append(n).append(mo.messageText).append(n);
-        sb.append("MessageType:").append(mo.getMessageType()).append(n);
+      return new MessageHandler().sendMessage(mo, null);
         
-        return "0";
+        
     }
 
     @Override

@@ -1,15 +1,13 @@
+package com.casual_dev.casual_demo_ui.minimal;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cascade2.assistant_ui;
-
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.Statics;
-import cascade2.CASCADE2;
-import cascade2.CASCADEUIController;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -43,8 +41,8 @@ public class MessageHandler extends Application {
 
     final private static String title = "CASCADE";
 
-    public String sendMessage(CASUALMessageObject mo) {
-        String retval = displayMessage(mo);
+    public String sendMessage(CASUALMessageObject mo, Parent p) {
+        String retval = displayMessage(mo, p);
         return retval;
 
     }
@@ -54,38 +52,38 @@ public class MessageHandler extends Application {
 
     }
 
-    synchronized public static String displayMessage(CASUALMessageObject messageObject) {
+    synchronized public static String displayMessage(CASUALMessageObject messageObject, Parent p) {
         Log.Level1Interaction(messageObject.toString());
 
         String[] message = new String[]{messageObject.title, messageObject.messageText};
         String returnValue = "";
         switch (messageObject.category) {
             case ACTIONREQUIRED:
-                return displaySurface(messageObject, new String[]{"I did it", "I didn' do it"}, AlertType.CONFIRMATION);
+                return displaySurface(messageObject, new String[]{"I did it", "I didn' do it"}, AlertType.CONFIRMATION, p);
 
             case COMMANDNOTIFICATION:
-                return displaySurface(messageObject, new String[]{"OK"}, AlertType.INFORMATION);
+                return displaySurface(messageObject, new String[]{"OK"}, AlertType.INFORMATION, p);
 
             case TEXTINPUT:
-                return displaySurface(messageObject, new String[]{"OK", "Cancel"}, AlertType.CONFIRMATION);
+                return displaySurface(messageObject, new String[]{"OK", "Cancel"}, AlertType.CONFIRMATION, p);
 
             case SHOWERROR:
-                return displaySurface(messageObject, new String[]{"OK"}, AlertType.ERROR);
+                return displaySurface(messageObject, new String[]{"OK"}, AlertType.ERROR, p);
 
             case SHOWINFORMATION:
-                return displaySurface(messageObject, new String[]{"OK"}, AlertType.INFORMATION);
+                return displaySurface(messageObject, new String[]{"OK"}, AlertType.INFORMATION, p);
 
             case SHOWYESNO:
-                return displaySurface(messageObject, new String[]{"Yes", "no"}, AlertType.CONFIRMATION);
+                return displaySurface(messageObject, new String[]{"Yes", "no"}, AlertType.CONFIRMATION, p);
 
             case TIMEOUT:
-                return displaySurface(messageObject, new String[]{"Ok"}, AlertType.NONE);
+                return displaySurface(messageObject, new String[]{"Ok"}, AlertType.NONE, p);
 
             case USERCANCELOPTION:
-                return displaySurface(messageObject, new String[]{"OK", "Cancel"}, AlertType.WARNING);
+                return displaySurface(messageObject, new String[]{"OK", "Cancel"}, AlertType.WARNING, p);
 
             case USERNOTIFICATION:
-                return displaySurface(messageObject, new String[]{"OK"}, AlertType.INFORMATION);
+                return displaySurface(messageObject, new String[]{"OK"}, AlertType.INFORMATION, p);
 
         }
 
@@ -98,24 +96,15 @@ public class MessageHandler extends Application {
     static SimpleIntegerProperty count = new SimpleIntegerProperty(40);
 
     @FXML
-    private static String displaySurface(CASUALMessageObject cmo, final String[] buttonText, AlertType type) {
+    private static String displaySurface(CASUALMessageObject cmo, final String[] buttonText, AlertType type, Parent p) {
         Alert dialogBox = new Alert(type);
-       dialogBox.setTitle(title);
+        dialogBox.setTitle(title);
         ButtonType[] buttonTypes = convertButtonTextToButtonTypes(buttonText);
-       dialogBox.getButtonTypes().setAll(buttonTypes);
+        dialogBox.getButtonTypes().setAll(buttonTypes);
         dialogBox.setHeaderText(cmo.title);
         dialogBox.setContentText(cmo.messageText);
 
         TextArea userMessage = new TextArea(cmo.messageText);
-
-        userMessage.setText(cmo.messageText);
-        userMessage.setWrapText(true);
-        userMessage.setStyle(" -fx-background-color: transparent;");
-        userMessage.setEditable(false);
-        final Text text=new Text(cmo.messageText);
-        userMessage.setPrefWidth(600);
-        text.setWrappingWidth(600);
-        userMessage.setPrefHeight(text.getLayoutBounds().getHeight()+50);
         userMessage.skinProperty().addListener(new ChangeListener<Skin<?>>() {
 
             @Override
@@ -137,19 +126,24 @@ public class MessageHandler extends Application {
                 }
             }
         });
+        userMessage.setText(cmo.messageText);
+        userMessage.setWrapText(true);
+        userMessage.setEditable(false);
+        final Text text = new Text(cmo.messageText);
+        userMessage.setPrefWidth(600);
+        text.setWrappingWidth(600);
+        userMessage.setPrefHeight(text.getLayoutBounds().getHeight() + 50);
 
-
-       
-        
-        dialogBox.getDialogPane().setContent(userMessage);
+        dialogBox.getDialogPane().setContent(new VBox(userMessage));
         userMessage.autosize();
         dialogBox.getDialogPane().autosize();
 
+        dialogBox.getDialogPane().getStylesheets().add("/com/casual_dev/casual_ui/automatic/MessageHandler.css");
         if (cmo.category.equals(cmo.category.TEXTINPUT)) {
             TextField userInput = new TextField();
-            userMessage.setPrefHeight(userMessage.getPrefHeight()+40);
+            userMessage.setPrefHeight(userMessage.getPrefHeight());
             dialogBox.getDialogPane().setContent(new VBox(userMessage, userInput));
-            return showTextInputDialog(dialogBox, userInput);
+            return showTextInputDialog(dialogBox, userInput, p);
         } else {
             Optional clickResult = showDialogWithCustomButtons(dialogBox);
             String result = null;
@@ -163,11 +157,13 @@ public class MessageHandler extends Application {
         return dialogBox.showAndWait();
     }
 
-    private static String showTextInputDialog(Alert dialogBox, TextField userInput) {
+    private static String showTextInputDialog(Alert dialogBox, TextField userInput, Parent p) {
         ButtonType[] buttonText = new ButtonType[]{new ButtonType("Submit")};
 
-        if (null != CASCADE2.getScene()) {
-            dialogBox.initOwner(CASCADE2.getScene().getWindow());
+        if (null != p) {
+            if (null != p.getScene()) {
+                dialogBox.initOwner(p.getScene().getWindow());
+            }
         }
 
 //        dialogBox.getDialogPane().setPrefWidth(400);
@@ -196,8 +192,8 @@ public class MessageHandler extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        CASUALMessageObject cmo = new CASUALMessageObject("This is a title", "Here is a message.  This message is intended to give lots of information about what is supposed to happen here.  If it gets too long we neeed to handle that. "+"Here is a message.  This message is intended to give lots of information about what is supposed to happen here.  If it gets too long we neeed to handle that. "+"Here is a message.  This message is intended to give lots of information about what is supposed to happen here.  If it gets too long we neeed to handle that. "+"Here is a message.  This message is intended to give lots of information about what is supposed to happen here.  If it gets too long we neeed to handle that. ");
-        Statics.GUI = new CASCADEUIController();
+        CASUALMessageObject cmo = new CASUALMessageObject("This is a title", "Here is a message.  This message is intended to give lots of information about what is supposed to happen here.  If it gets too long we neeed to handle that. ");
+        Statics.GUI = new AutomaticUI();
         try {
             /* cmo.title = "show yes no option";
              System.out.println(cmo.showYesNoOption());
@@ -211,10 +207,14 @@ public class MessageHandler extends Application {
              System.out.println(cmo.showUserCancelOption());
              cmo.title = "user notification";
              cmo.showUserNotification();*/
-            cmo.title = "show yes no";
-            System.out.println(cmo.showYesNoOption());
-            cmo.title = "return string";
-            System.out.println(cmo.inputDialog());
+            while (true) {
+                cmo.title = "show yes no";
+                System.out.println(cmo.showYesNoOption());
+                Thread.sleep(100);
+                cmo.title = "return string";
+                System.out.println(cmo.inputDialog());
+                Thread.sleep(100);
+            }
 
         } catch (NullPointerException ex) {
             Log.errorHandler(ex);
