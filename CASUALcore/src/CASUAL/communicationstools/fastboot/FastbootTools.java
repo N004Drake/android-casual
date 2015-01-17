@@ -22,7 +22,7 @@ import CASUAL.OSTools;
 import CASUAL.ResourceDeployer;
 import CASUAL.Shell;
 import CASUAL.ShellTools;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
 import CASUAL.misc.StringOperations;
 import java.io.File;
@@ -54,7 +54,7 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
 
         File loc = new File(binaryLocation);
         if (!loc.isFile() || !loc.exists()) {
-            return deployBinary(Statics.getTempFolder());
+            return deployBinary(CASUALSessionData.getInstance().getTempFolder());
         } else {
             return binaryLocation;
         }
@@ -174,7 +174,7 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
 
         if (binaryLocation.isEmpty()) {
             String fastbootResource;
-            binaryLocation = Statics.getTempFolder() + "fastboot";
+            binaryLocation = CASUALSessionData.getInstance().getTempFolder() + "fastboot";
             if (OSTools.isWindows()) {
                 binaryLocation = binaryLocation + ".exe";
                 new CASUALMessageObject("@interactionInstallFastbootDrivers").showInformationMessage();

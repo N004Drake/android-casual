@@ -112,7 +112,7 @@ public class Shell {
                 }
             }
 
-            String ScriptFile = Statics.getTempFolder() + "ElevateScript.sh";
+            String ScriptFile = CASUALSessionData.getInstance().getTempFolder() + "ElevateScript.sh";
             FileOperations.deleteFile(ScriptFile);
             try {
                 FileOperations.writeToFile("#!/bin/sh\n" + Command, ScriptFile);
@@ -143,7 +143,7 @@ public class Shell {
             }
 
         } else if (OSTools.isMac()) {
-            String ScriptFile = Statics.getTempFolder() + "ElevateScript.sh";
+            String ScriptFile = CASUALSessionData.getInstance().getTempFolder() + "ElevateScript.sh";
             try {
                 FileOperations.writeToFile(""
                         + "#!/bin/sh \n"
@@ -299,11 +299,11 @@ public class Shell {
                     Log.progress(CharRead);
                 }
 
-                if (!Statics.ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
-                    for (int i = 0; i <= Statics.ActionEvents.size() - 1; i++) {
-                        if (Statics.ActionEvents != null && LineRead.contains(Statics.ActionEvents.get(i))) {
+                if (!CASUALSessionData.getInstance().ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
+                    for (int i = 0; i <= CASUALSessionData.getInstance().ActionEvents.size() - 1; i++) {
+                        if (CASUALSessionData.getInstance().ActionEvents != null && LineRead.contains(CASUALSessionData.getInstance().ActionEvents.get(i))) {
                             try {
-                                new CASUALScriptParser().executeOneShotCommand(Statics.ReactionEvents.get(i));
+                                new CASUALScriptParser().executeOneShotCommand(CASUALSessionData.getInstance().ReactionEvents.get(i));
                             } catch (Exception ex) {
                                 Log.errorHandler(ex);
                             }

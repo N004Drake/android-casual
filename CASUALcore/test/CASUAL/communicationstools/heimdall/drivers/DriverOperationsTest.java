@@ -19,7 +19,7 @@ package CASUAL.communicationstools.heimdall.drivers;
 
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.heimdall.drivers.DriverOperations;
 import static org.junit.Assume.assumeTrue;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class DriverOperationsTest {
         assumeTrue(!System.getProperty("user.name").equals("jenkins"));
         assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
         assumeTrue(OSTools.isWindows());
-        Statics.GUI = new GUI.testing.automatic();
+        CASUALSessionData.getInstance().GUI = new GUI.testing.automatic();
     }
 
     /**

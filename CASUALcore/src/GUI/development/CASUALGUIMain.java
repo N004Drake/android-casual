@@ -23,7 +23,7 @@ import CASUAL.CASUALScriptParser;
 import CASUAL.CASUALStartupTasks;
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
@@ -76,7 +76,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         //set up place to log to for GUI
         //ProgressArea.setContentType("text/html");
         ProgressArea.setAutoscrolls(true);
-        ProgressArea.setText(Statics.PreProgress + ProgressArea.getText());
+        ProgressArea.setText(CASUALSessionData.getInstance().PreProgress + ProgressArea.getText());
 
         CASUALStartupTasks.lockGUIformPrep = false;
 
@@ -320,9 +320,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         String script = comboBoxScriptSelector.getSelectedItem().toString();
 
         //execute
-        if (Statics.CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
+        if (CASUALSessionData.getInstance().CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
             Log.level4Debug("Loading internal resource: " + script);
-            Statics.CASPAC.getActiveScript().setScriptContinue(true);
+            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
             new CASUALScriptParser().executeSelectedScript(caspac, true);
         }
 
@@ -482,7 +482,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             try {
                 this.startButton.setText(java.util.ResourceBundle.getBundle("SCRIPTS\\-build").getString("Window.ExecuteButtonText"));
             } catch (java.util.MissingResourceException er) {
-                this.startButton.setText(Statics.CASPAC.getBuild().getExecuteButtonText());
+                this.startButton.setText(CASUALSessionData.getInstance().CASPAC.getBuild().getExecuteButtonText());
             }
         }
         buttonEnableStage = false;
@@ -629,9 +629,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
        
        
     private boolean checkGUIStatus(boolean expectedStatus) {
-        if (Statics.isGUIIsAvailable()) {
+        if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
             return expectedStatus == this.startButton.isEnabled();
-        } else if (Statics.isGUIIsAvailable()) {  //if gui is not available yet
+        } else if (CASUALSessionData.getInstance().isGUIIsAvailable()) {  //if gui is not available yet
             return false;
         }
         return true; //gui is not used for this CASUAL.
@@ -673,8 +673,8 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     public void dispose() {
         this.setVisible(false);
         super.dispose();
-        if (Statics.GUI == this) {
-            Statics.GUI = null;
+        if (CASUALSessionData.getInstance().GUI == this) {
+            CASUALSessionData.getInstance().GUI = null;
         }
         CASUAL.CASUALMain.shutdown(0);
         System.exit(0);
@@ -830,17 +830,17 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     /**
-     * grabs input from Statics.in (usually stdin).
+     * grabs input from CASUALSessionData.getInstance().in (usually stdin).
      *
      * @return string value containing user input truncated by enter key.
      */
     public String getCommandLineInput() {
         try {
             Log.out.flush();
-            String s = Statics.in.readLine();
+            String s = CASUALSessionData.getInstance().in.readLine();
             if (s == null) {
                 while (s == null) {
-                    s = Statics.in.readLine();
+                    s = CASUALSessionData.getInstance().in.readLine();
                 }
             }
             return s;
@@ -855,8 +855,8 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     private String showTimeOutInteraction(CASUALMessageObject messageObject, String messageText, String title) {
-        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
-            return Integer.toString(new TimeOutOptionPane().timeoutDialog(messageObject.timeoutPresetTime, (Component) Statics.GUI, messageText, title, messageObject.timeoutOptionType, messageObject.timeoutMessageType, messageObject.timeoutOptions, messageObject.timeoutInitialValue));
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && !isDummyGUI) {
+            return Integer.toString(new TimeOutOptionPane().timeoutDialog(messageObject.timeoutPresetTime, (Component) CASUALSessionData.getInstance().GUI, messageText, title, messageObject.timeoutOptionType, messageObject.timeoutMessageType, messageObject.timeoutOptions, messageObject.timeoutInitialValue));
         } else {
             Log.Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText + "\n[RESPONSEEXPECTED]");
             String s = getCommandLineInput();
@@ -871,12 +871,11 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         String retval;
         Log.level4Debug("Displaying Action Is Required Dialog:" + messageText);
         int n = 9999;
-        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && !isDummyGUI) {
             Object[] Options = {"I did it", "I didn't do it"};
             messageText = "<html>" + messageText.replace("\\n", "<BR>");
 
-            n = JOptionPane.showOptionDialog(
-                    (Component) Statics.GUI,
+            n = JOptionPane.showOptionDialog((Component) CASUALSessionData.getInstance().GUI,
                     messageText,
                     "Dont click through this!",
                     JOptionPane.YES_NO_OPTION,
@@ -904,10 +903,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     private String showUserCancelOptionInteraction(String title, String messageText) throws HeadlessException {
         int cancelReturn;
         Object[] Options = {"Continue", "Stop"};
-        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
-                cancelReturn = JOptionPane.showOptionDialog(
-                        (Component) Statics.GUI,
+                cancelReturn = JOptionPane.showOptionDialog((Component) CASUALSessionData.getInstance().GUI,
                         messageText,
                         "Do you wish to continue?",
                         JOptionPane.YES_NO_OPTION,
@@ -916,8 +914,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                         Options,
                         Options[1]);
             } else {
-                cancelReturn = JOptionPane.showOptionDialog(
-                        (Component) Statics.GUI,
+                cancelReturn = JOptionPane.showOptionDialog((Component) CASUALSessionData.getInstance().GUI,
                         messageText,
                         title,
                         JOptionPane.YES_NO_OPTION,
@@ -941,14 +938,14 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     private void showUserNotificationInteraction(String title, String messageText) throws HeadlessException {
         Log.level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
-        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && !isDummyGUI) {
             if (title != null) {
-                JOptionPane.showMessageDialog((Component) Statics.GUI,
+                JOptionPane.showMessageDialog((Component) CASUALSessionData.getInstance().GUI,
                         messageText,
                         title,
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog((Component) Statics.GUI,
+                JOptionPane.showMessageDialog((Component) CASUALSessionData.getInstance().GUI,
                         messageText,
                         "Information",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -960,8 +957,8 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     private void showInformationInteraction(String messageText, String title) throws HeadlessException {
-        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
-            JOptionPane.showMessageDialog((Component) Statics.GUI,
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && !isDummyGUI) {
+            JOptionPane.showMessageDialog((Component) CASUALSessionData.getInstance().GUI,
                     messageText, title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -971,8 +968,8 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     }
 
     private void showErrorInteraction(String messageText, String title) throws HeadlessException {
-        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
-            JOptionPane.showMessageDialog((Component) Statics.GUI, messageText, title, ERROR_MESSAGE);
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && !isDummyGUI) {
+            JOptionPane.showMessageDialog((Component) CASUALSessionData.getInstance().GUI, messageText, title, ERROR_MESSAGE);
         } else {
             Log.Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
@@ -981,12 +978,11 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     private String showYesNoInteraction(String title, String messageText) throws HeadlessException {
         Log.level4Debug("Displaying Yes/No Dialog: " + title + " message: " + messageText + "\n[RESPONSEEXPECTED]");
-        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
                 title = "Yes or No";
             }
-            boolean val = (JOptionPane.showConfirmDialog(
-                    (Component) Statics.GUI,
+            boolean val = (JOptionPane.showConfirmDialog((Component) CASUALSessionData.getInstance().GUI,
                     messageText,
                     title,
                     JOptionPane.YES_NO_OPTION) == YES_OPTION);
@@ -1011,11 +1007,11 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     private String showInputDialog(String title, String messageText) throws HeadlessException {
         Log.level4Debug("Requesting User Input.. Title:" + title + " -message:" + messageText + "\n[RESPONSEEXPECTED]");
         messageText = "<html>" + messageText.replace("\\n", "\n");
-        if (Statics.isGUIIsAvailable() && !isDummyGUI) {
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
-                return JOptionPane.showInputDialog((Component) Statics.GUI, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
+                return JOptionPane.showInputDialog((Component) CASUALSessionData.getInstance().GUI, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
             } else {
-                return JOptionPane.showInputDialog((Component) Statics.GUI, messageText, title, JOptionPane.QUESTION_MESSAGE);
+                return JOptionPane.showInputDialog((Component) CASUALSessionData.getInstance().GUI, messageText, title, JOptionPane.QUESTION_MESSAGE);
             }
         } else {
             Log.Level1Interaction("[INPUT][ANY]" + title + messageText + "\n input:");

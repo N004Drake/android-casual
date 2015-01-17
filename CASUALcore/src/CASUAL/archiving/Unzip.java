@@ -18,7 +18,7 @@ package CASUAL.archiving;
 
 import CASUAL.CASUALMain;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -201,18 +201,18 @@ public class Unzip {
             if (numberOfCycles > 0) {
                 updatePercent = true;
             }
-            Statics.GUI.setProgressBar(-1);
+            CASUALSessionData.getInstance().GUI.setProgressBar(-1);
             BigInteger currentCycle = BigInteger.valueOf(0);
             while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
                 Destination.write(data, 0, currentByte);
 
-                Statics.GUI.setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
+                CASUALSessionData.getInstance().GUI.setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
             }
             Destination.flush();
             Destination.close();
         }
-        Statics.setStatus("Important Information");
-        Statics.GUI.setProgressBar(0);
+        CASUALSessionData.getInstance().setStatus("Important Information");
+        CASUALSessionData.getInstance().GUI.setProgressBar(0);
 
         Log.level3Verbose("Unzip Complete");
     }

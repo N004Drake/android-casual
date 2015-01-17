@@ -18,7 +18,7 @@ package com.casual_dev.zodui;
 
 import CASUAL.Diagnostics;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import com.casual_dev.zodui.Downloader.ZodDownloader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -74,7 +74,7 @@ public class ZodUI extends Application {
 
         Scene scene = new Scene((Parent) fxmlLoader.load(fxmlLoader.getLocation().openStream()));
         this.zui = (CASUALZodMainUI) fxmlLoader.getController();
-        Statics.GUI = zui;
+        CASUALSessionData.getInstance().GUI = zui;
 
         //initialize the 3D Camera
         //Windows doesn't handle perspectives without 3D

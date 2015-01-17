@@ -47,13 +47,13 @@ public class CASUALTools {
      * md5sumTestScript Refreshes the MD5s on the scripts in the /SCRIPTS folder
      */
     private void md5sumTestScripts() {
-        Statics.setStatus("Setting MD5s");
+        CASUALSessionData.getInstance().setStatus("Setting MD5s");
         Log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
         incrementBuildNumber();
 
         if (getIDEMode()) { //if we are in development mode
             //Set up scripts path
-            String scriptsPath = System.getProperty("user.dir") + Statics.slash + "SCRIPTS" + Statics.slash;
+            String scriptsPath = System.getProperty("user.dir") + CASUALSessionData.getInstance().slash + "SCRIPTS" + CASUALSessionData.getInstance().slash;
             final File folder = new File(scriptsPath);
             if (folder.isDirectory()) {
                 for (final File fileEntry : folder.listFiles()) {
@@ -141,7 +141,7 @@ public class CASUALTools {
         public void run() {
             try {
                 setGUIAPI();
-                Statics.GUI.setVisible(true);
+                CASUALSessionData.getInstance().GUI.setVisible(true);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InstantiationException ex) {
@@ -173,7 +173,7 @@ public class CASUALTools {
 
         Caspac caspac;
         try {
-            caspac = new Caspac(CASPAC, Statics.getTempFolder(), 0);
+            caspac = new Caspac(CASPAC, CASUALSessionData.getInstance().getTempFolder(), 0);
             caspac.load();
             caspac.write();
             System.exit(0);
@@ -238,7 +238,7 @@ public class CASUALTools {
         iCASUALUI clsInstance;
         if (!java.awt.GraphicsEnvironment.isHeadless()) {
             clsInstance = (CASUAL.iCASUALUI) cls.newInstance();
-            CASUAL.Statics.GUI = clsInstance;
+            CASUAL.CASUALSessionData.getInstance().GUI = clsInstance;
         }
 
     }
@@ -272,7 +272,7 @@ public class CASUALTools {
     public static void setiCASUALGUI(Class<?> cls) throws InstantiationException, IllegalAccessException {
         iCASUALUI clsInstance;
         clsInstance = (CASUAL.iCASUALUI) cls.newInstance();
-        CASUAL.Statics.GUI = clsInstance;
+        CASUAL.CASUALSessionData.getInstance().GUI = clsInstance;
     }
 
     /**

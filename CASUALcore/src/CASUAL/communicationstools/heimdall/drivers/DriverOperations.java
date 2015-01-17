@@ -24,7 +24,7 @@ import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Shell;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.archiving.Unzip;
 import CASUAL.misc.StringOperations;
 import java.io.FileNotFoundException;
@@ -64,7 +64,7 @@ public class DriverOperations {
     private final static String cadiDrivers = "/CASUAL/communicationstools/heimdall/drivers/resources/CADI.zip";
 
     public DriverOperations() {
-        this.pathToCADI = Statics.getTempFolder() + "CADI" + Statics.slash;
+        this.pathToCADI = CASUALSessionData.getInstance().getTempFolder() + "CADI" + CASUALSessionData.getInstance().slash;
         if (!driverExtracted) {
             try {
                 driverExtract(pathToCADI);

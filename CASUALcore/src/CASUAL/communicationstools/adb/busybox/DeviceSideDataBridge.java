@@ -19,7 +19,7 @@ package CASUAL.communicationstools.adb.busybox;
 import CASUAL.CASUALTools;
 import CASUAL.Log;
 import CASUAL.Shell;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.adb.ADBTools;
 import static CASUAL.communicationstools.adb.busybox.CASUALDataBridge.ip;
 import CASUAL.misc.MandatoryThread;
@@ -116,7 +116,7 @@ class DeviceSideDataBridge {
                     //todo remove this test
                     Log.level4Debug("port list" + new Shell().sendShellCommand(new String[]{"adb", "forward", "--list"}));
                     //device is ready for transfer
-                    Statics.setStatus("device ready");
+                    CASUALSessionData.getInstance().setStatus("device ready");
                     CASUALDataBridge.deviceReadyForReceive = true;
                     synchronized (CASUALDataBridge.deviceSideReady) {
                         CASUALDataBridge.deviceSideReady.notifyAll();
@@ -124,7 +124,7 @@ class DeviceSideDataBridge {
                     deviceSideMessage = "";
 
                     //transfer is complete because host closed connection and device-side process exited
-                    Statics.setStatus("device-side server closed");
+                    CASUALSessionData.getInstance().setStatus("device-side server closed");
                     deviceSideMessage = deviceSideMessage + convertStreamToString(is);
                     Log.level4Debug("FinalMessage" + deviceSideMessage);
 
@@ -161,7 +161,7 @@ class DeviceSideDataBridge {
                 cmd = new String[]{adb.getBinaryLocation(), "shell", "/data/local/tmp/busybox netstat -tul"};
                 boolean ready = false;
                 String received = "";
-                Statics.setStatus("monitoring ports on device");
+                CASUALSessionData.getInstance().setStatus("monitoring ports on device");
                 Log.level3Verbose("Device Waiting for Server connection for DataBridge");
                 while (!ready && !CASUALDataBridge.commandedShutdown) {
                     //monitor server status and detect errors

@@ -57,7 +57,7 @@ public class CommandLineUITest {
         assumeTrue(new ADBTools().isConnected());
         System.out.println("main");
         String[] args = new String[]{"--caspac","../../CASPAC/testpak.zip"};
-        CASUAL.Statics.GUI=new GUI.testing.automatic();
+        CASUAL.CASUALSessionData.getInstance().GUI=new GUI.testing.automatic();
         CASUALMain.beginCASUAL(args);
 
     }

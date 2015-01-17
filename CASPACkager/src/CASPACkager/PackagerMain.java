@@ -18,7 +18,7 @@
 package CASPACkager;
 
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.misc.StringOperations;
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,14 +56,14 @@ public class PackagerMain {
      * output directory for package
      */
     protected  String userOutputDir = "";//the output folder 
-    final private  String defaultOutputDir = Statics.CASUALHome + "PACKAGES" + Statics.slash;
+    final private  String defaultOutputDir = CASUALSessionData.getInstance().CASUALHome + "PACKAGES" + CASUALSessionData.getInstance().slash;
     private  String caspacWithPath = ""; //path to CASPAC
     String appendToName = ""; //string after name and before file extension
     String processFolder = "";//folder to be processed
     static boolean hasProcessedFolder = false;//once folder is complete this is true
     static ArrayList<String[]> replaceText;//used to replace text in script
     static ArrayList<String[]> replaceFile;//used to replace files in zip
-    private final String slash = Statics.slash;
+    private final String slash = CASUALSessionData.getInstance().slash;
      File outputFile=null;
      File returnFile=null;
     /**
@@ -89,7 +89,7 @@ public class PackagerMain {
     }
 
     public static File doPackaging(String[] args){
-        Statics.GUI=new GUI.testing.automatic();
+        CASUALSessionData.getInstance().GUI=new GUI.testing.automatic();
         PackagerMain pm=new PackagerMain();
         pm.processCommandline(args);
         Log.level2Information("[CASPACkager] Command line utility started");
@@ -282,7 +282,7 @@ public class PackagerMain {
         if (!processFolder.equals("") && userOutputDir.equals("")) {
             Log.level2Information("No output directory supplied will place "
                     + processFolder + "CASUAL");
-            userOutputDir = processFolder + "CASUAL" + Statics.slash;
+            userOutputDir = processFolder + "CASUAL" + CASUALSessionData.getInstance().slash;
             if (!(new File(userOutputDir).exists())) {
                 File outdir = new File(userOutputDir);
                 outdir.mkdirs();
@@ -302,8 +302,8 @@ public class PackagerMain {
         //if we are using userOutputDir
         if (!userOutputDir.equals("")) {
             // verify there is a slash at the end of userOutputDir
-            if (!userOutputDir.endsWith(Statics.slash)) {
-                userOutputDir = userOutputDir + Statics.slash;
+            if (!userOutputDir.endsWith(CASUALSessionData.getInstance().slash)) {
+                userOutputDir = userOutputDir + CASUALSessionData.getInstance().slash;
             }
             // set output dir to the same as the file    
         }
@@ -317,7 +317,7 @@ public class PackagerMain {
             showMessageAndExit();
         }
 
-        if (appendToName.contains(Statics.slash)) {
+        if (appendToName.contains(CASUALSessionData.getInstance().slash)) {
             Log.level0Error("Append to name contains illegal characters");
             showMessageAndExit();
         }
@@ -440,7 +440,7 @@ public class PackagerMain {
     }
 
     private InputStream replaceFileIfNeeded(InputStream zin, ZipEntry entry) {
-        String working = Statics.getTempFolder() + "extractionof" + entry + Statics.slash;
+        String working = CASUALSessionData.getInstance().getTempFolder() + "extractionof" + entry + CASUALSessionData.getInstance().slash;
         new File(working).mkdirs();
         try {
             CASUAL.archiving.Unzip.unZipInputStream(zin, working);
@@ -471,9 +471,9 @@ public class PackagerMain {
     private InputStream repackEntry(ZipEntry entry, String working) {
         //TODO examine this to see if this is the cleanest way to handle this
         try {
-            CASUAL.archiving.Zip zip = new CASUAL.archiving.Zip(new File(Statics.getTempFolder() + entry.getName()));
+            CASUAL.archiving.Zip zip = new CASUAL.archiving.Zip(new File(CASUALSessionData.getInstance().getTempFolder() + entry.getName()));
             zip.compressZipDir(working);
-            return new FileInputStream(Statics.getTempFolder() + entry.getName());
+            return new FileInputStream(CASUALSessionData.getInstance().getTempFolder() + entry.getName());
         } catch (IOException ex) {
             return null;
         }

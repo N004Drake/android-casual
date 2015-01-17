@@ -20,7 +20,7 @@ import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALScriptParser;
 import CASUAL.Log;
 import static CASUAL.Log.level4Debug;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import com.casual_dev.zodui.Downloader.ZodDownloader;
@@ -376,9 +376,9 @@ public class CASUALZodMainUI
 
         startButton.setDisable(true);
         //execute
-        if (Statics.CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
+        if (CASUALSessionData.getInstance().CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
             Log.level4Debug("Loading internal resource: " + activeScript);
-            Statics.CASPAC.getActiveScript().scriptContinue = true;
+            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
             new CASUALScriptParser().executeSelectedScript(activeCASPAC, true);
         }
 
@@ -439,8 +439,8 @@ public class CASUALZodMainUI
     @Override
     public void setScript(Script script) {
         this.activeScript = script;
-        content.setMainTitle(script.name);
-        content.setSubtitle(script.discription);
+        content.setMainTitle(script.getName());
+        content.setSubtitle(script.getDiscription());
         this.createNewZod(content);
     }
 

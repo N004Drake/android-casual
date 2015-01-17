@@ -20,7 +20,7 @@
 package CASUAL.archiving;
 
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,7 +46,7 @@ public class Zip {
 
     private final File outputZip;
     private Log log = new Log();
-    private String TempFolder = Statics.getTempFolder();
+    private String TempFolder = CASUALSessionData.getInstance().getTempFolder();
     byte[] BUFFER = new byte[4096];
 
     /**
@@ -78,16 +78,16 @@ public class Zip {
     /**
      * Changes the depth of the tempfolder.
      * <p>
-     * This is used to specify a different temp folder then the tempfolder
-     * stated in CASUAL.Statics. It will add a new folder within that tempfolder
-     * to be used too add all the files that must be zipped up into.
-     * <p>
+ This is used to specify a different temp folder then the tempfolder
+ stated in CASUAL.CASUALSessionData.getInstance(). It will add a new folder within that tempfolder
+ to be used too add all the files that must be zipped up into.
+ <p>
      * If the folder does not exist it will be created.
      *
      * @param TempFolder string of name of folder to dive into
      */
     public void addToTempFolderLoc(String TempFolder) {
-        this.TempFolder = this.TempFolder + Statics.slash + TempFolder;
+        this.TempFolder = this.TempFolder + CASUALSessionData.getInstance().slash + TempFolder;
         if (!(new File(this.TempFolder).exists())) {
             new File(this.TempFolder).mkdirs();
         }
@@ -244,11 +244,11 @@ public class Zip {
     public void injectZip(File injectionZip, String injectionPath) {
         try {
             if (!injectionPath.equals("")) {
-                if (injectionPath.startsWith(Statics.slash)) {
-                    injectionPath = injectionPath.replaceFirst(Statics.slash, "");
+                if (injectionPath.startsWith(CASUALSessionData.getInstance().slash)) {
+                    injectionPath = injectionPath.replaceFirst(CASUALSessionData.getInstance().slash, "");
                 }
-                if (!injectionPath.endsWith(Statics.slash)) {
-                    injectionPath = injectionPath.concat(Statics.slash);
+                if (!injectionPath.endsWith(CASUALSessionData.getInstance().slash)) {
+                    injectionPath = injectionPath.concat(CASUALSessionData.getInstance().slash);
                 }
             }
             byte[] buf = new byte[1024];
@@ -396,7 +396,7 @@ public class Zip {
 
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
-        File fileToAdd = new File(TempFolder + Statics.slash + file.getName());
+        File fileToAdd = new File(TempFolder + CASUALSessionData.getInstance().slash + file.getName());
         if (!fileToAdd.exists()) {
             fileToAdd.createNewFile();
         }
@@ -433,7 +433,7 @@ public class Zip {
 
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
-        File fileToAdd = new File(destFolder.toString() + Statics.slash + file.getName());
+        File fileToAdd = new File(destFolder.toString() + CASUALSessionData.getInstance().slash + file.getName());
         if (!fileToAdd.exists()) {
             fileToAdd.createNewFile();
         }
@@ -466,9 +466,9 @@ public class Zip {
     private void addDirectoryToZipDir(File folder, File parent) throws IOException {
         File dirToAdd;
         if (parent == null) {
-            dirToAdd = new File(TempFolder + Statics.slash + folder.getName());
+            dirToAdd = new File(TempFolder + CASUALSessionData.getInstance().slash + folder.getName());
         } else {
-            dirToAdd = new File(parent.toString() + Statics.slash + folder.getName());
+            dirToAdd = new File(parent.toString() + CASUALSessionData.getInstance().slash + folder.getName());
         }
         if (!dirToAdd.exists()) {
             dirToAdd.mkdir();

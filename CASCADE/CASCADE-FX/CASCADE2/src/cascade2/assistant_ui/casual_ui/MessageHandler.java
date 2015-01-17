@@ -1,4 +1,4 @@
-package com.casual_dev.casual_demo_ui.minimal;
+package cascade2.assistant_ui.casual_ui;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -9,7 +9,10 @@ import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -40,10 +43,34 @@ import javafx.stage.Stage;
 public class MessageHandler extends Application {
 
     final private static String title = "CASCADE";
+    final Object waitLock = new Object();
 
     public String sendMessage(CASUALMessageObject mo, Parent p) {
-        String retval = displayMessage(mo, p);
-        return retval;
+        class Temp {
+
+            public String returnValue;
+        }
+
+        final Temp retval = new Temp();
+
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(() -> {
+                synchronized (waitLock) {
+                    retval.returnValue = displayMessage(mo, p);
+                    waitLock.notifyAll();
+                }
+            });
+            try {
+                synchronized (waitLock){
+                    waitLock.wait();
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MessageHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return retval.returnValue;
+        } else {
+            return retval.returnValue = displayMessage(mo, p);
+        }
 
     }
 
@@ -138,7 +165,7 @@ public class MessageHandler extends Application {
         userMessage.autosize();
         dialogBox.getDialogPane().autosize();
 
-        dialogBox.getDialogPane().getStylesheets().add("/com/casual_dev/casual_ui/automatic/MessageHandler.css");
+        dialogBox.getDialogPane().getStylesheets().add("/cascade2.assistant_ui.casual_ui/MessageHandler.css");
         if (cmo.category.equals(cmo.category.TEXTINPUT)) {
             TextField userInput = new TextField();
             userMessage.setPrefHeight(userMessage.getPrefHeight());

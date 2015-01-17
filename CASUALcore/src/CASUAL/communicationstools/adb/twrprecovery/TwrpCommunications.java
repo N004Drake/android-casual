@@ -17,7 +17,7 @@
 package CASUAL.communicationstools.adb.twrprecovery;
 
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.adb.ADBTools;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -119,7 +119,7 @@ public class TwrpCommunications {
         Log.level2Information("verifying TWRP mode");
         rebootTWRP();  //reboot twrp
         Log.level4Debug("writing recovery script to temp location");
-        String diskLocation = Statics.getTempFolder() + "openrecoveryscript";
+        String diskLocation = CASUALSessionData.getInstance().getTempFolder() + "openrecoveryscript";
         writeToFile(script, diskLocation); //create a local file
         pushRecoveryScript(diskLocation); //push it to the device
         restartTWRP();

@@ -19,7 +19,7 @@ package GUI.CommandLine;
 
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.iCASUALUI;
@@ -109,16 +109,16 @@ public class CommandLineUI implements iCASUALUI {
     }
 
     /**
-     * grabs input from Statics.in (usually stdin).
+     * grabs input from CASUALSessionData.getInstance().in (usually stdin).
      * @return string value containing user input truncated by enter key.
      */
     public String getCommandLineInput() {
         try {
             Log.out.flush();
-            String s = Statics.in.readLine();
+            String s = CASUALSessionData.getInstance().in.readLine();
             if (s == null) {
                 while (s == null) {
-                    s = Statics.in.readLine();
+                    s = CASUALSessionData.getInstance().in.readLine();
                 }
             }
             return s;
@@ -238,7 +238,7 @@ public class CommandLineUI implements iCASUALUI {
     @Override
     public void setCASPAC(Caspac caspac) {
         msg("Setting caspac"+caspac);
-        Statics.CASPAC=caspac;
+        CASUALSessionData.getInstance().CASPAC=caspac;
     }
 
     @Override
@@ -294,7 +294,7 @@ public class CommandLineUI implements iCASUALUI {
 
    
     public void setThisAsGUI(){
-        Statics.GUI=this;
+        CASUALSessionData.getInstance().GUI=this;
     }
 
     @Override

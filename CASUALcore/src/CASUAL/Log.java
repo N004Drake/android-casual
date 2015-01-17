@@ -36,10 +36,10 @@ public class Log {
     public static PrintStream out = new PrintStream(System.out);
 
     private static void sendToGUI(String data) {
-        if (Statics.GUI==null){
-            Statics.PreProgress = Statics.PreProgress + "\n" + data;
+        if (CASUALSessionData.getInstance().GUI==null){
+            CASUALSessionData.getInstance().PreProgress = CASUALSessionData.getInstance().PreProgress + "\n" + data;
         } else if (!data.equals("\n")||!data.isEmpty()) {
-            Statics.GUI.sendString(data + "\n");
+            CASUALSessionData.getInstance().GUI.sendString(data + "\n");
         }
     }
 
@@ -55,11 +55,11 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[ERROR]" + data);
-        if (Statics.outputGUIVerbosity >= 0) {
+        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 0) {
             sendToGUI(data);
 
         }
-        if (Statics.outputLogVerbosity >= 0) {
+        if (CASUALSessionData.getInstance().outputLogVerbosity >= 0) {
             out.println("[ERROR]" + data);
 
         }
@@ -75,10 +75,10 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[INTERACTION]" + data);
-        if (Statics.outputGUIVerbosity >= 1) {
+        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 1) {
             sendToGUI(data);
         }
-        if (Statics.outputLogVerbosity >= 1) {
+        if (CASUALSessionData.getInstance().outputLogVerbosity >= 1) {
             out.println("[INTERACTION]" + data);
 
         }
@@ -96,10 +96,10 @@ public class Log {
             data = Translations.get(data);
         }
         writeOutToLog("[INFO]" + data);
-        if (Statics.outputGUIVerbosity >= 2) {
+        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 2) {
             sendToGUI(data);
         }
-        if (Statics.outputLogVerbosity >= 2) {
+        if (CASUALSessionData.getInstance().outputLogVerbosity >= 2) {
             out.println("[INFO]" + data);
         }
     }
@@ -111,10 +111,10 @@ public class Log {
      */
     public static void level3Verbose(String data) {
         writeOutToLog("[VERBOSE]" + data);
-        if (Statics.outputGUIVerbosity >= 3) {
+        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 3) {
             sendToGUI(data);
         }
-        if (Statics.outputLogVerbosity >= 3) {
+        if (CASUALSessionData.getInstance().outputLogVerbosity >= 3) {
             out.println("[VERBOSE]" + data);
         }
     }
@@ -126,10 +126,10 @@ public class Log {
     public static void level4Debug(String data) {
         writeOutToLog("[DEBUG]" + data);
 
-        if (Statics.outputGUIVerbosity >= 4) {
+        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 4) {
             sendToGUI(data);
         }
-        if (Statics.outputLogVerbosity >= 4) {
+        if (CASUALSessionData.getInstance().outputLogVerbosity >= 4) {
             out.println("[DEBUG]" + data);
         }
     }
@@ -150,7 +150,7 @@ public class Log {
     private static synchronized void writeOutToLog(String data) {
         FileWriter WriteFile;
         try {
-            WriteFile = new FileWriter(Statics.getTempFolder() + "Log.txt", true);
+            WriteFile = new FileWriter(CASUALSessionData.getInstance().getTempFolder() + "Log.txt", true);
             PrintWriter output = new PrintWriter(WriteFile);
             output.write(data + "\n");
             WriteFile.close();
@@ -168,10 +168,10 @@ public class Log {
      * @param data data to be written to progress on screen
      */
     public  static void progress(String data) {
-       if (Statics.GUI==null){
+       if (CASUALSessionData.getInstance().GUI==null){
            System.out.print(data);
        } else  {
-           Statics.GUI.sendProgress(data);
+           CASUALSessionData.getInstance().GUI.sendProgress(data);
        }
        
     }
@@ -182,8 +182,8 @@ public class Log {
      */
     public  static void LiveUpdate(String data) {
         out.print(data);
-        if (Statics.GUI!=null) {
-            Statics.GUI.sendProgress(data);
+        if (CASUALSessionData.getInstance().GUI!=null) {
+            CASUALSessionData.getInstance().GUI.sendProgress(data);
         }
 
     }
@@ -193,7 +193,7 @@ public class Log {
      */
     public  static void beginLine() {
         out.println();
-        if (Statics.isGUIIsAvailable()) {
+        if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
             progress("\n");
         }
     }

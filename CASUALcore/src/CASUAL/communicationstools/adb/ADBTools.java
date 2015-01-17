@@ -21,7 +21,7 @@ import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.ResourceDeployer;
 import CASUAL.Shell;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.misc.DiffTextFiles;
 import java.awt.HeadlessException;
 import java.io.File;
@@ -53,7 +53,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     private static final String adbIniResource = "/CASUAL/communicationstools/adb/resources/adb_usb.ini";
 
     private String getAdbIniLocation() {
-        return System.getProperty("user.home") + Statics.slash + ".android" + Statics.slash + "adb_usb.ini";
+        return System.getProperty("user.home") + CASUALSessionData.getInstance().slash + ".android" + CASUALSessionData.getInstance().slash + "adb_usb.ini";
     }
 
 
@@ -203,7 +203,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     public synchronized String deployBinary(String tempFolder) {
         Log.level4Debug("Deploying ADB");
 
-            String tempBinaryLocation = Statics.getTempFolder() + "adb";
+            String tempBinaryLocation = CASUALSessionData.getInstance().getTempFolder() + "adb";
             String[] resourceLocation;
             if (OSTools.isLinux()) {
                 Log.level4Debug("Found Linux Computer for ADB deployment");
@@ -287,9 +287,9 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     }
     private String getDefaultBinaryName(){
         if (OSTools.isWindows()){
-            return Statics.getTempFolder()+"adb.exe";
+            return CASUALSessionData.getInstance().getTempFolder()+"adb.exe";
         }
-        return Statics.getTempFolder()+"adb";
+        return CASUALSessionData.getInstance().getTempFolder()+"adb";
     }
     /**
      * method to get the wait-for-device command for ADB use
@@ -363,7 +363,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     @Override
     public synchronized String getBinaryLocation() {
         if (binaryLocation.isEmpty() || !new File(binaryLocation).exists()) {
-            deployBinary(Statics.getTempFolder());
+            deployBinary(CASUALSessionData.getInstance().getTempFolder());
         }
         return binaryLocation;
     }

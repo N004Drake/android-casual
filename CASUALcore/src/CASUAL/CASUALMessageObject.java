@@ -173,11 +173,11 @@ public class CASUALMessageObject implements Serializable {
         this.timeoutInitialValue = initialValue;
         this.timeoutPresetTime = PRESET_TIME;
         setType(iCASUALUI.MessageCategory.TIMEOUT);
-        expectedReturn = "(String)int from " + Arrays.asList(options).toString();
-        if (Statics.GUI == null) {
+        expectedReturn = "Type any whole number as a response and Press Enter " + Arrays.asList(options).toString();
+        if (CASUALSessionData.getInstance().GUI == null) {
             return 0;
         }
-        return Integer.parseInt(Statics.GUI.displayMessage(this));
+        return Integer.parseInt(CASUALSessionData.getInstance().GUI.displayMessage(this));
     }
 
     /**
@@ -188,8 +188,8 @@ public class CASUALMessageObject implements Serializable {
      */
     public String inputDialog() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.TEXTINPUT);
-        expectedReturn = "Any String";
-        return Statics.GUI.displayMessage(this);
+        expectedReturn = "Type your response and Press Enter";
+        return CASUALSessionData.getInstance().GUI.displayMessage(this);
     }
 
     /**
@@ -201,7 +201,7 @@ public class CASUALMessageObject implements Serializable {
     public int showActionRequiredDialog() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.ACTIONREQUIRED);
         expectedReturn = "String 0-continue, 1-stop";
-        return Integer.parseInt(Statics.GUI.displayMessage(this));
+        return Integer.parseInt(CASUALSessionData.getInstance().GUI.displayMessage(this));
     }
 
     /**
@@ -212,7 +212,7 @@ public class CASUALMessageObject implements Serializable {
     public int showUserCancelOption() {
         setType(iCASUALUI.MessageCategory.USERCANCELOPTION);
         expectedReturn = "String 0-continue, 1-stop";
-        return Integer.parseInt(Statics.GUI.displayMessage(this));
+        return Integer.parseInt(CASUALSessionData.getInstance().GUI.displayMessage(this));
     }
 
     /**
@@ -222,8 +222,8 @@ public class CASUALMessageObject implements Serializable {
      */
     public void showCommandNotification() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.COMMANDNOTIFICATION);
-        expectedReturn = "Empty";
-        Statics.GUI.displayMessage(this);
+        expectedReturn = "Press Enter";
+        CASUALSessionData.getInstance().GUI.displayMessage(this);
     }
 
     /**
@@ -233,8 +233,8 @@ public class CASUALMessageObject implements Serializable {
      */
     public void showUserNotification() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.USERNOTIFICATION);
-        expectedReturn = "Empty";
-        Statics.GUI.displayMessage(this);
+        expectedReturn = "Press Enter";
+        CASUALSessionData.getInstance().GUI.displayMessage(this);
     }
 
     /**
@@ -244,9 +244,9 @@ public class CASUALMessageObject implements Serializable {
      */
     public void showInformationMessage() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.SHOWINFORMATION);
-        expectedReturn = "Empty";
+        expectedReturn = "Press Enter";
         Log.level3Verbose("showing information message object");
-        Statics.GUI.displayMessage(this);
+        CASUALSessionData.getInstance().GUI.displayMessage(this);
         Log.level3Verbose("Done with message object");
     }
 
@@ -257,8 +257,8 @@ public class CASUALMessageObject implements Serializable {
      */
     public void showErrorDialog() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.SHOWERROR);
-        expectedReturn = "Empty";
-        Statics.GUI.displayMessage(this);
+        expectedReturn = "Press Enter";
+        CASUALSessionData.getInstance().GUI.displayMessage(this);
 
     }
 
@@ -269,8 +269,8 @@ public class CASUALMessageObject implements Serializable {
      */
     public boolean showYesNoOption() {
         setType(iCASUALUI.MessageCategory.SHOWYESNO);
-        Boolean retval = Statics.GUI.displayMessage(this).equals("0");
-        expectedReturn = "String 0-yes, 1-no";
+        Boolean retval = CASUALSessionData.getInstance().GUI.displayMessage(this).equals("0");
+        expectedReturn = "Press 0-yes, 1-no then Press Enter";
         return retval;
     }
 

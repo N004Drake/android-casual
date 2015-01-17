@@ -19,7 +19,7 @@ package com.casual_dev.zodui.Log;
 import CASUAL.Diagnostics;
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
@@ -111,14 +111,14 @@ public class ZodLog extends Application {
         setSubmitListener();
         //add content to the log
         stage.setTitle("CASUAL Log");
-        logArea.setText(new FileOperations().readFile(Statics.getTempFolder() + "Log.txt"));
+        logArea.setText(new FileOperations().readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt"));
 
     }
 
     private void setRefreshListener() {
         refresh.setOnAction((ActionEvent event) -> {
             logArea.setText("");
-            logArea.setText(new FileOperations().readFile(Statics.getTempFolder() + "Log.txt") +"\n" + Statics.getTempFolder() +"Log.txt refreshed "+ ++x+" times.");
+            logArea.setText(new FileOperations().readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt") +"\n" + CASUALSessionData.getInstance().getTempFolder() +"Log.txt refreshed "+ ++x+" times.");
         });
 
     }

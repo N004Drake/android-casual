@@ -5,6 +5,7 @@
  */
 package cascade2.assistant_ui;
 
+import CASUAL.Log;
 import cascade2.CASCADE2;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -100,7 +101,7 @@ public class CASUALAssistantUI extends Application {
             });
         return tree;
         } catch (IOException ex) {
-            Logger.getLogger(CASUALAssistantUI.class.getName()).log(Level.SEVERE, null, ex);
+           Log.level4Debug("Could not connect to server in a timely manner.  retrying.");
         }
            
         }
