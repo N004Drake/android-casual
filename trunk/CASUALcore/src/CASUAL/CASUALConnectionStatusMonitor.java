@@ -94,7 +94,7 @@ public class CASUALConnectionStatusMonitor {
 
     /**
      * Starts and stops the ADB timer reference with
-     * Statics.casualConnectionStatusMonitor.DeviceCheck ONLY;
+ CASUALSessionData.casualConnectionStatusMonitor.DeviceCheck ONLY;
      *
      * @param mode sets the monitoring mode
      */
@@ -105,8 +105,8 @@ public class CASUALConnectionStatusMonitor {
         monitor = mode;
         Log.level3Verbose("Starting: " + mode);
         //lock controls if not available yet.
-        if (Statics.isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
-            Statics.GUI.setControlStatus(false,0,getConnectionMethodName());
+        if (CASUALSessionData.getInstance().isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
+            CASUALSessionData.getInstance().GUI.setControlStatus(false,0,getConnectionMethodName());
             LastState = 0;
         }
         doMonitoring();
@@ -166,23 +166,23 @@ public class CASUALConnectionStatusMonitor {
             switch (state) {
                 case 0:
                     Log.level4Debug("Device disconnected commanded");
-                    Statics.setStatus("Device Removed");
-                    switched = Statics.GUI.setControlStatus(false,0,getConnectionMethodName());
+                    CASUALSessionData.getInstance().setStatus("Device Removed");
+                    switched = CASUALSessionData.getInstance().GUI.setControlStatus(false,0,getConnectionMethodName());
 
                     break;
                 case 1:
-                    Statics.setStatus("Device Connected");
+                    CASUALSessionData.getInstance().setStatus("Device Connected");
                     Log.level4Debug("@stateConnected");
-                    switched = Statics.GUI.setControlStatus(true,1,getConnectionMethodName());
+                    switched = CASUALSessionData.getInstance().GUI.setControlStatus(true,1,getConnectionMethodName());
                     break;
                 default:
-                    Statics.setStatus("Multiple Devices Detected");
+                    CASUALSessionData.getInstance().setStatus("Multiple Devices Detected");
                     if (state == 2) {
                         Log.level0Error("@stateMultipleDevices");
                         Log.level0Error("Remove " + (state - 1) + " device to continue.");
                     }
 
-                    switched =! Statics.GUI.setControlStatus(false,state,getConnectionMethodName());
+                    switched =! CASUALSessionData.getInstance().GUI.setControlStatus(false,state,getConnectionMethodName());
                     Log.level4Debug("State Multiple Devices Number of devices" + state);
 
                     break;

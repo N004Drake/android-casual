@@ -23,7 +23,7 @@ import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Shell;
 import CASUAL.ShellTools;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.BusyboxTools;
@@ -111,12 +111,12 @@ public class CASUALLanguage {
             bReader.mark(1);
             while ((strLine = bReader.readLine()) != null) {
 
-                if (Statics.CASPAC.getActiveScript().isScriptContinue() == false) {
+                if (CASUALSessionData.getInstance().CASPAC.getActiveScript().isScriptContinue() == false) {
                     return;
                 }
                 currentLine++;
-                if (Statics.isGUIIsAvailable()) {
-                    Statics.GUI.setProgressBar(currentLine);
+                if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
+                    CASUALSessionData.getInstance().GUI.setProgressBar(currentLine);
                 }
                 if (!GOTO.equals("")) {
 
@@ -145,9 +145,9 @@ public class CASUALLanguage {
                 new DriverRemove().deleteOemInf();
             }
             Log.level2Information("@done");
-            Statics.GUI.sendProgress("@done");
-            Statics.GUI.setUserMainMessage("@done");
-            Statics.GUI.setReady(true);
+            CASUALSessionData.getInstance().GUI.sendProgress("@done");
+            CASUALSessionData.getInstance().GUI.setUserMainMessage("@done");
+            CASUALSessionData.getInstance().GUI.setReady(true);
             //yeah yeah, overly broad chatch.  read below. 
         } catch (Exception e) {
             /*
@@ -250,7 +250,7 @@ public class CASUALLanguage {
 
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (cmd.get().contains("$SLASH")) {
-            cmd.set( cmd.get().replace("$SLASH", Statics.slash));
+            cmd.set(cmd.get().replace("$SLASH", CASUALSessionData.getInstance().slash));
             Log.level4Debug("Expanded $SLASH: " + cmd.get());
         }
 //$ZIPFILE is a reference to the Script's .zip file
@@ -284,7 +284,7 @@ public class CASUALLanguage {
             Log.level4Debug("Received ECHO command" + cmd.get());
             cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
             Log.level2Information(cmd.get());
-            Statics.GUI.setUserSubMessage(cmd.getReturn());
+            CASUALSessionData.getInstance().GUI.setUserSubMessage(cmd.getReturn());
             return cmd.getReturn();
         
             //TODO: should this be updated automatically by monitoring or by this new command?
@@ -293,7 +293,7 @@ public class CASUALLanguage {
         } else if (cmd.get().startsWith("$TITLE")){
             Log.level4Debug("Received ECHO command" + cmd.get());
             cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
-            Statics.GUI.setUserMainMessage(cmd.get());
+            CASUALSessionData.getInstance().GUI.setUserMainMessage(cmd.get());
             return cmd.getReturn();
         
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
@@ -301,7 +301,7 @@ public class CASUALLanguage {
             cmd.set( cmd.get().replace("$LISTDIR", "").trim());
             if (OSTools.isLinux() || OSTools.isMac()) {
             } else {
-                cmd.set( cmd.get().replace("/", Statics.slash));
+                cmd.set(cmd.get().replace("/", CASUALSessionData.getInstance().slash));
             }
             File[] files = new File(cmd.get()).listFiles();
             String retval = "";
@@ -360,7 +360,7 @@ public class CASUALLanguage {
             if (n == 1) {
                 Log.level0Error(this.CASPAC.getActiveScript().getName());
                 Log.level0Error("@canceledAtUserRequest");
-                Statics.CASPAC.getActiveScript().setScriptContinue(false);
+                CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
                 return "";
             }
             return "";
@@ -372,7 +372,7 @@ public class CASUALLanguage {
             if (n == 1) {
                 Log.level0Error(this.CASPAC.getActiveScript().getName());
                 Log.level0Error("@haltedPerformActions");
-                Statics.CASPAC.getActiveScript().setScriptContinue(false);
+                CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
                 return "";
             }
             return "";
@@ -514,7 +514,7 @@ public class CASUALLanguage {
                     
                 }
                 
-                /* if (Statics.isLinux()) {   //Is this needed?
+                /* if (CASUALSessionData.getInstance().isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
                  }*/
                 Log.level2Information("@executingHeimdall");
@@ -668,7 +668,7 @@ public class CASUALLanguage {
         if (n == 1) {
             Log.level0Error(this.CASPAC.getActiveScript().getName());
             Log.level0Error("@canceledDueToMissingFiles");
-            Statics.CASPAC.getActiveScript().setScriptContinue(false);
+            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
         }
     }
 

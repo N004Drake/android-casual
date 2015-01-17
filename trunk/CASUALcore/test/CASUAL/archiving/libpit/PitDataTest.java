@@ -56,7 +56,7 @@ public class PitDataTest {
     public void testPack() {
         try {
             System.out.println("pack");
-            String testFile = CASUAL.Statics.getTempFolder() + "test.pit";
+            String testFile = CASUAL.CASUALSessionData.getInstance().getTempFolder() + "test.pit";
             PitData instance = new PitData(pitFile);
             instance.pack(new DataOutputStream(new FileOutputStream(testFile)));
             System.out.println("packed " + testFile);

@@ -9,7 +9,7 @@ import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
@@ -155,7 +155,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        CASUAL.Statics.GUI = this;
+        CASUAL.CASUALSessionData.getInstance().GUI = this;
         ready = true;
         Thread t = new Thread(new Runnable() {
             @Override
@@ -517,7 +517,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
     @FXML
     @Override
     public void dispose() {
-        Statics.GUI = null;
+        CASUALSessionData.getInstance().GUI = null;
         CASUALMain.shutdown(i);
         this.exit();
     }
@@ -618,7 +618,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
 
     private String[] getHeimdallCommandFromOdinPackageList(ArrayList<File> list) throws FileNotFoundException, CorruptOdinFileException {
         Odin odin = new Odin(new File(pitLocation.getText()));
-        String[] flashList = odin.getHeimdallFileParametersFromOdinFile(Statics.getTempFolder(), list.toArray(new File[list.size()]));
+        String[] flashList = odin.getHeimdallFileParametersFromOdinFile(CASUALSessionData.getInstance().getTempFolder(), list.toArray(new File[list.size()]));
         ArrayList<String> flashCommand = new ArrayList<>();
         flashCommand.add("flash");
         flashCommand.add("--PIT");
@@ -641,7 +641,7 @@ public class JOdinController implements Initializable, CASUAL.iCASUALUI {
         Log.level3Verbose("obtaining pit");
         new CASUALMessageObject("You will need to restart your device in Download Mode.>>>In order to obtain a PIT file, the device will be rebooted.  Once it reboots, you will need to put it back into download mode.\n\nPro-Tip: hold the download mode combination and press OK to dismiss this dislog to reboot into download mode immediately").showInformationMessage();
         HeimdallTools ht = new HeimdallTools();
-        String newPit = Statics.getTempFolder() + "part.pit";
+        String newPit = CASUALSessionData.getInstance().getTempFolder() + "part.pit";
         ht.run(new String[]{"download-pit", "--output", newPit}, 10000, true);
         File f = new File(newPit);
         if (f.exists() && f.length() > 1) {

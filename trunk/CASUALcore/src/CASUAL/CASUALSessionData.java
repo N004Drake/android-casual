@@ -1,4 +1,4 @@
-/*Statics is where the static variables from CASUAL reside
+/*CASUALSessionData is where the static variables from CASUAL reside
  *Copyright (C) 2013  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -32,40 +32,45 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Statics is used for any type of static variable It is the Static Class for
- * information to be used everywhere in the program.
+ * CASUALSessionData is used for any type of static variable It is the Static Class for
+ information to be used everywhere in the program.
  *
  * @author Adam Outler adamoutler@gmail.com
  */
-public class Statics {
+public class CASUALSessionData {
 
     /**
      * CASUAL does not look to GUI to execute. Execution will start
      * autonomously. Terminal is used for input and output. GUI is a display.
      */
-   // public static boolean dumbTerminalGUI = false; //used by CASPAC mode
     private static String currentStatus = "working";
 
+    private static CASUALSessionData statics=new CASUALSessionData();
+    /**
+     * gets the instance of this class
+     * @return instance of this casual-session data
+     */
+    public static CASUALSessionData getInstance(){
+        return statics;
+    }
+    
     /**
      * true if debugMode. Do not send logs in debug mode. We create too many
      * errors, thanks.
      */
-    public static boolean debugMode = false;
+    public  boolean debugMode = false;
 
     /**
      * reference to CASPAC used by this CASUAL
      */
     public static Caspac CASPAC;
 
-    /**
-     * true when GUI is ready.
-     */
-    //public static boolean guiReady = false;
+
 
     /**
      * @return the GUIIsAvailable
      */
-    public static boolean isGUIIsAvailable() {
+    public  boolean isGUIIsAvailable() {
         if (GUI != null) {
             return GUI.isReady() && !java.awt.GraphicsEnvironment.isHeadless();
         }
@@ -75,30 +80,25 @@ public class Statics {
     /**
      * increase or decrease the logging level. 0 is error only, 4 is debug
      */
-    public static int outputGUIVerbosity = 3; //userdata is output to console
+    public  int outputGUIVerbosity = 3; //userdata is output to console
 
     /**
      * increase or decrease the log file output. 0 is error only, 4 is debug
      */
-    public static int outputLogVerbosity = 4; //all logs are output to file
+    public  int outputLogVerbosity = 4; //all logs are output to file
 
-    /**
-     * static reference to interactions object for CASUALMessageObject.
-    /**
-     * static reference to interactions object for CASUALMessageObject.
-     */
 
 
     /**
      * Input Device for CASUAL. Generally System.in (STDIN) but may be
      * reassigned to any inputstream.
      */
-    public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    public  BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     
     /**
-     * static reference for class implementing interface for CASUAL's GUI.
+     *  reference for class implementing interface for CASUAL's GUI.
      */
-    public static iCASUALUI GUI; //Static reference to GUI input/output device
+    public  iCASUALUI GUI; // reference to GUI input/output device
 
 
 
@@ -107,9 +107,9 @@ public class Statics {
      */
     final public static String slash = System.getProperty("file.separator"); //file separator for system \ or /
     /**
-     * ProgressDoc provides a static reference to the program output.
+     * ProgressDoc provides a  reference to the program output.
      */
-    public static String PreProgress = "";  //place to log data before GUI comes up
+    public  String PreProgress = "";  //place to log data before GUI comes up
 
 
 
@@ -119,14 +119,14 @@ public class Statics {
      * Located in the users home folder, in a folder called ".CASUAL".
      */
     public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
-    private static File TempFolder;
+    private  File TempFolder;
 
     /**
      * Creates and returns the temp folder if required.
      *
      * @return temp folder string location.
      */
-    public static String getTempFolder() {
+    public  String getTempFolder() {
         FileOperations fo = new FileOperations();
         if (TempFolder == null) {
             String user = System.getProperty("user.name");  //username
@@ -170,17 +170,17 @@ public class Statics {
      * ActionEvents for the $ON command are set up by script. Trigger Reaction
      * events.
      */
-    public static ArrayList<String> ActionEvents = new ArrayList<String>(); //Action events for $ON command. set by script
+    public  ArrayList<String> ActionEvents = new ArrayList<String>(); //Action events for $ON command. set by script
 
     /**
      * ReactionEvents are triggered by ActionEvents and created by $ON command.
      */
-    public static ArrayList<String> ReactionEvents = new ArrayList<String>(); //Reactions for $ON command. . set by script
+    public  ArrayList<String> ReactionEvents = new ArrayList<String>(); //Reactions for $ON command. . set by script
 
     /**
      * Resets all variables in CASUAL to provide, basically, a warm reboot.
      */
-    public static void initializeStatics() {
+    public  void initializeStatics() {
         CASUALDataBridge.commandedShutdown = true;
         setStatus("working");
         outputGUIVerbosity = 2;
@@ -196,7 +196,7 @@ public class Statics {
         new FastbootTools().reset(); 
         CASUAL.language.CASUALLanguage.reset();
         try {
-            Statics.CASPAC.getActiveScript().setScriptContinue(false);
+            CASUALSessionData.CASPAC.getActiveScript().setScriptContinue(false);
         } catch (NullPointerException ex) {
             //do nothing at all 
         }
@@ -209,7 +209,7 @@ public class Statics {
      *
      * @param status status to be displayed to user.
      */
-    public static void setStatus(final String status) {
+    public  void setStatus(final String status) {
         Log.level4Debug(status);
         currentStatus = status;
 
@@ -234,7 +234,7 @@ public class Statics {
      *
      * @return current status.
      */
-    public static String getStatus() {
+    public  String getStatus() {
         return currentStatus;
     }
 
@@ -245,7 +245,7 @@ public class Statics {
      * @param folder dir to make temp folder.
      * @return path to new temp folder.
      */
-    public static String setTempFolder(String folder) {
+    public  String setTempFolder(String folder) {
         TempFolder = new File(folder);
         new FastbootTools().reset();
         new ADBTools().reset();

@@ -148,9 +148,9 @@
                            <children>
                               <Button fx:id="selectCaspac" mnemonicParsing="false" onAction="#selectCaspac" text="select" />
                               <TextField fx:id="pathToCaspac" promptText="path_to/myCaspac.zip" text="../../../CASPAC/testpak.zip" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="reloadCASPAC" mnemonicParsing="false" onAction="#reloadClicked" text="reload" />
-                              <Button fx:id="saveCASPAC" mnemonicParsing="false" onAction="#saveClicked" text="save" />
-                              <CheckBox fx:id="encrypt" mnemonicParsing="false" prefHeight="18.0" prefWidth="85.0" text="encrypt" />
+                              <Button fx:id="reloadCASPAC" mnemonicParsing="false" onAction="#reloadClicked" text="Load/Reload CASPAC" />
+                              <Button fx:id="saveCASPAC" mnemonicParsing="false" onAction="#saveClicked" text="Save CASPAC" />
+                              <CheckBox fx:id="encrypt" mnemonicParsing="false" prefHeight="40.0" prefWidth="85.0" text="Encrypt on Save" wrapText="true" />
                            </children>
                         </HBox>
                      </children>

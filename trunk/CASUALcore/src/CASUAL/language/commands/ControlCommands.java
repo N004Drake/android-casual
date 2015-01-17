@@ -19,7 +19,7 @@ package CASUAL.language.commands;
 
 import CASUAL.CASUALScriptParser;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.language.CASUALLanguage;
 import CASUAL.language.Command;
 import CASUAL.misc.StringOperations;
@@ -63,8 +63,8 @@ public class ControlCommands {
 
     public static void checkHalt(Command cmd) {
         if (cmd.get().startsWith("$HALT")) {
-            if (Statics.CASPAC != null) {
-                Statics.CASPAC.getActiveScript().setScriptContinue(false);
+            if (CASUALSessionData.getInstance().CASPAC != null) {
+                CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
             }
             cmd.set(cmd.get().replace("$HALT", "").trim());
             Log.level4Debug("HALT RECEIVED");
@@ -74,8 +74,8 @@ public class ControlCommands {
 
     public static boolean checkClearOn(Command cmd) {
         if (cmd.get().startsWith("$CLEARON")) {
-            Statics.ActionEvents = new ArrayList<String>();
-            Statics.ReactionEvents = new ArrayList<String>();
+            CASUALSessionData.getInstance().ActionEvents = new ArrayList<String>();
+            CASUALSessionData.getInstance().ReactionEvents = new ArrayList<String>();
             Log.level4Debug("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return true;
         }
@@ -112,10 +112,10 @@ public class ControlCommands {
             cmd.set(cmd.get().replace("$ON", "").trim());
             String[] Event = cmd.get().split(",");
             try {
-                Statics.ActionEvents.add(Event[0]);
+                CASUALSessionData.getInstance().ActionEvents.add(Event[0]);
                 Log.level4Debug("***NEW EVENT ADDED***");
                 Log.level4Debug("ON EVENT: " + Event[0]);
-                Statics.ReactionEvents.add(Event[1]);
+                CASUALSessionData.getInstance().ReactionEvents.add(Event[1]);
                 Log.level4Debug("PERFORM ACTION: " + Event[1]);
             } catch (Exception e) {
                 Log.errorHandler(e);

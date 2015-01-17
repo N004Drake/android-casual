@@ -7,7 +7,7 @@ package com.casual_dev.casual_demo_ui.minimal;
  */
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -193,7 +193,7 @@ public class MessageHandler extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         CASUALMessageObject cmo = new CASUALMessageObject("This is a title", "Here is a message.  This message is intended to give lots of information about what is supposed to happen here.  If it gets too long we neeed to handle that. ");
-        Statics.GUI = new AutomaticUI();
+        CASUALSessionData.getInstance().GUI = new AutomaticUI();
         try {
             /* cmo.title = "show yes no option";
              System.out.println(cmo.showYesNoOption());

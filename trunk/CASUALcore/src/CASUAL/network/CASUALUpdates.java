@@ -21,7 +21,7 @@ import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Script;
 import CASUAL.crypto.MD5sum;
 import CASUAL.misc.StringOperations;
@@ -260,11 +260,11 @@ public class CASUALUpdates {
         Log.level3Verbose("Found " + system + " " + arch + "computer");
         String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
         //download location, md5, and version information
-        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, Statics.getTempFolder() + basename, "locating files");
+        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, CASUALSessionData.getInstance().getTempFolder() + basename, "locating files");
         Log.level3Verbose("downloaded" + propertiesFileInCASUALOnlineRepo);
         //Set properties file
         Properties prop = new Properties();
-        prop.load(new FileInputStream(Statics.getTempFolder() + basename));
+        prop.load(new FileInputStream(CASUALSessionData.getInstance().getTempFolder() + basename));
         // get information from properties file
         int counter = 1;
         String filenumber = "";
@@ -283,7 +283,7 @@ public class CASUALUpdates {
 
             String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/') + 1, downloadURL.length());
             String availableVersion = prop.getProperty(system + arch + filenumber + "Version");
-            String downloadedFile = Statics.getTempFolder() + downloadBasename;
+            String downloadedFile = CASUALSessionData.getInstance().getTempFolder() + downloadBasename;
             //download update based on information available.
 
             downloadFileFromInternet(downloadURL, downloadedFile, downloadBasename + " ver" + availableVersion);
@@ -302,12 +302,12 @@ public class CASUALUpdates {
         }
         String downloadURL = prop.getProperty(system + arch);
         String downloadBasename = new File(downloadURL).getName();
-        return Statics.getTempFolder() + downloadBasename;
+        return CASUALSessionData.getInstance().getTempFolder() + downloadBasename;
 
     }
 
     /**
-     * Updates a script. Uses online repository specified in Statics.
+     * Updates a script. Uses online repository specified in CASUALSessionData.getInstance().
      *
      * @param script CASUAL.caspac.Script object to be updated
      * @param tempFolder Temp Folder to use for updating.

@@ -4,7 +4,7 @@
  */
 package CASUAL.caspac;
 
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -24,11 +24,11 @@ import org.junit.Test;
 public class CaspacTest {
     Caspac test;
     public CaspacTest() {
-        Statics.GUI=new GUI.testing.automatic();
+        CASUALSessionData.getInstance().GUI=new GUI.testing.automatic();
         try {
-            test=new Caspac(new File("../../CASPAC/QualityControl/echoTest.zip"),Statics.getTempFolder(),0);
+            test=new Caspac(new File("../../CASPAC/QualityControl/echoTest.zip"),CASUALSessionData.getInstance().getTempFolder(),0);
             test.loadFirstScriptFromCASPAC();
-            this.instance = new Caspac(new File("../../CASPAC/testpak.zip"), Statics.getTempFolder(), 0);
+            this.instance = new Caspac(new File("../../CASPAC/testpak.zip"), CASUALSessionData.getInstance().getTempFolder(), 0);
             System.out.println(instance.getCASPACLocation().getCanonicalPath());
         } catch (IOException ex) {
             Logger.getLogger(CaspacTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,14 +118,14 @@ public class CaspacTest {
         assert test.getBuild().isAudioEnabled()==true;
         assert test.getBuild().isUsePictureForBanner()==false;
         assert test.getBuild().isAlwaysEnableControls()==false;
-        assert test.getTempFolder().equals(Statics.getTempFolder());
+        assert test.getTempFolder().equals(CASUALSessionData.getInstance().getTempFolder());
         assert test.getBuild().getDeveloperDonateButtonText().equals("test");
         assert test.getBuild().getDeveloperDonateButtonText().equals("test");
         assert test.getCASPACLocation().getCanonicalFile().equals(new File("../../CASPAC/QualityControl/echoTest.zip").getCanonicalFile());
         assert test.getScripts().get(0).extractionMethod==0;
         assert test.getScripts().get(0).getName().equals("echoTest");
         String x=test.getScripts().get(0).getTempDir();
-        assert test.getScripts().get(0).getTempDir().contains(Statics.getTempFolder()+test.getScripts().get(0).getName());
+        assert test.getScripts().get(0).getTempDir().contains(CASUALSessionData.getInstance().getTempFolder()+test.getScripts().get(0).getName());
         assert test.getScripts().get(0).getScriptContentsString().equals("$ECHO test");
         assert test.getScripts().get(0).getIndividualFiles().size() ==0;
         assert test.getScripts().get(0).getMetaData().getMinSVNversion().equals("0");

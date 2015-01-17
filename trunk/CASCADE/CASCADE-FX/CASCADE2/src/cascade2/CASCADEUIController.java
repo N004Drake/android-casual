@@ -21,13 +21,13 @@ import CASUAL.CASUALMessageObject;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.crypto.AES128Handler;
 import cascade2.assistant_ui.CASUALAssistantUI;
-import cascade2.assistant_ui.AutomaticUI;
-import cascade2.assistant_ui.MessageHandler;
+import cascade2.assistant_ui.casual_ui.AutomaticUI;
+import cascade2.assistant_ui.casual_ui.MessageHandler;
 import cascade2.drag_event.DragEventHandler;
 import cascade2.fileOps.CASPACFileSelection;
 import com.casual_dev.caspaccreator2.CASPACcreator2;
@@ -149,7 +149,7 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         new Thread(() -> {
-            Statics.GUI = this;
+            CASUALSessionData.getInstance().GUI = this;
         }).start();
         Platform.runLater(() -> {
             uiController = CASCADEUIController.this;
@@ -227,16 +227,24 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
 
     @FXML
     private void reloadClicked() {
-        try {
-            Caspac cp = new Caspac(new File(pathToCaspac.getText()), Statics.getTempFolder(), 0);
             new Thread(() -> {
-                setIDEInfoFromCASPAC(cp);
+              Caspac cp;
+              File file=new File(pathToCaspac.getText());
+                try {
+                    if (AES128Handler.getCASPACHeaderLength(file) > 20) {
+                        cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0, getPassword());
+                    } else {
+                        cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0);
+                    }
+                    setIDEInfoFromCASPAC(cp);
+                } catch (IOException ex) {
+new CASUALMessageObject("There was a permissions problem reading the file"," Could not read the file").showErrorDialog();
+            Log.errorHandler(ex);
+                    } catch (Exception ex) {
+                    new CASUALMessageObject("Exception while reading CASPAC","please see log for more details").showErrorDialog();
+            Log.errorHandler(ex);
+                }
             }).start();
-
-        } catch (IOException ex) {
-            Logger.getLogger(CASCADEUIController.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private void setIDEInfoFromCASPAC(final Caspac cp) {
@@ -245,8 +253,8 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
             cp.waitForUnzip();
 
         } catch (IOException ex) {
-            Logger.getLogger(CASCADEUIController.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            new CASUALMessageObject("There was a problem reading the caspac","Problem reading the CASPAC while unzipping.  Please see log for more details.").showErrorDialog();
+            Log.errorHandler(ex);
 
             return;
         }
@@ -270,7 +278,7 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
              listModel.removeAllElements();
              for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles) {
              String file = f.toString();
-             listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(Statics.slash) + 1), "$ZIPFILE"));
+             listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(CASUALSessionData.getInstance().slash) + 1), "$ZIPFILE"));
              //listModel.addElement(f);
              }*/
         });
@@ -304,7 +312,10 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
         try {
             caspac = cpc.createNewCaspac();
         } catch (MissingParameterException ex) {
-            Logger.getLogger(CASCADEUIController.class.getName()).log(Level.SEVERE, null, ex);
+            //message here
+            new CASUALMessageObject("missing parameters"," you have not filled out all parameters properly.").showErrorDialog();
+            Log.errorHandler(ex);
+            return null;
         }
 
         if (this.encrypt.isSelected()) {
@@ -315,10 +326,39 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
             }
         }
         disableControls(false);
+        if (caspac==null){
+            new CASUALMessageObject("Could not write CASPAC","Errors were detected while writing out the CASPAC.\n"+cpc.toString()).showErrorDialog();
+            return null;
+        }
         return caspac.getCASPAC();
     }
 
-    private char[] getPassword() {
+   private char[] getPassword() {
+       if (Platform.isFxApplicationThread()){
+            return showPasswordDialog().getText().toCharArray();
+       }
+       class Temp{
+           String password="";
+       }
+       final Temp temp=new Temp();       
+       Platform.runLater(()->{
+           synchronized (temp){
+                  temp.password= showPasswordDialog().getText();
+                  temp.notifyAll();
+           }
+       });
+
+       synchronized(temp){
+           try {
+               temp.wait();
+           } catch (InterruptedException ex) {
+               Logger.getLogger(CASCADEUIController.class.getName()).log(Level.SEVERE, null, ex);
+           }
+       }
+       return temp.password.toCharArray();
+    }
+
+    private PasswordField showPasswordDialog() {
         Dialog dialog = new Dialog();
         dialog.setTitle("CASPAC Encryption");
         dialog.setHeaderText("Enter your password");
@@ -326,16 +366,14 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
         dialog.getDialogPane().setContent(password);
-
         dialog.showAndWait();
-
-        return password.getText().toCharArray();
+        return password;
     }
 
     @FXML
     private File saveCASUALClicked() throws IOException {
-        File caspacFile = saveClicked();
-        File casualFile = PackagerMain.doPackaging(new String[]{"--CASPAC", caspacFile.getAbsolutePath(), "--output", this.caspacOutputFolder.getText()});
+        File myCaspacFile = saveClicked();
+        File casualFile = PackagerMain.doPackaging(new String[]{"--CASPAC", myCaspacFile .getAbsolutePath(), "--output", this.caspacOutputFolder.getText()});
         return casualFile;
     }
 
@@ -348,27 +386,23 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
         }
         final String executable = exe;
         final String outputFile = casual.getAbsolutePath();
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-
-                //CASUAL.JavaSystem.restart(new String[]{outputFile+Statics.slash+file});
-                ProcessBuilder pb;
-                if (OSTools.isWindows()) {
-                    System.out.println("executing " + "cmd.exe /c start  " + System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable + " -jar " + outputFile);
-                    new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + "\""}, true);
-                } else {
-                    System.out.println("Executing" + System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable + " -jar " + outputFile);
-
-                    new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable, "-jar", outputFile}, true);
-
-                }
-                        // pb.directory(new File(new File( "." ).getCanonicalPath()));
-                //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
-                //Process p = pb.start();
-
-                //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + Statics.slash + "bin" + Statics.slash + "java" + executable,"-jar",outputFile+Statics.slash+file});
+        Runnable r = () -> {
+            //CASUAL.JavaSystem.restart(new String[]{outputFile+CASUALSessionData.getInstance().slash+file});
+            ProcessBuilder pb;
+            if (OSTools.isWindows()) {
+                System.out.println("executing " + "cmd.exe /c start  " + System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable + " -jar " + outputFile);
+                new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + "\""}, true);
+            } else {
+                System.out.println("Executing" + System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable + " -jar " + outputFile);
+                
+                new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable, "-jar", outputFile}, true);
+                
             }
+            // pb.directory(new File(new File( "." ).getCanonicalPath()));
+            //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
+            //Process p = pb.start();
+            
+            //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable,"-jar",outputFile+CASUALSessionData.getInstance().slash+file});
         };
         Thread t = new Thread(r);
 
@@ -417,6 +451,6 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
     
     @Override
     public String displayMessage(CASUALMessageObject mo) {
-        return new MessageHandler().sendMessage(mo);
+        return new MessageHandler().sendMessage(mo,CASCADE2.getScene().getRoot());
     }
 }

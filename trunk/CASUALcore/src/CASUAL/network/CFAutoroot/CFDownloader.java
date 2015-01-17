@@ -18,7 +18,7 @@
 package CASUAL.network.CFAutoroot;
 
 import CASUAL.CASUALMessageObject;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.archiving.Unzip;
 import CASUAL.network.CASUALUpdates;
 import java.awt.HeadlessException;
@@ -38,7 +38,7 @@ import java.util.Arrays;
  */
 public class CFDownloader {
     
-    final static String localCFRoot=Statics.getTempFolder()+"cfautoroot.zip";
+    final static String localCFRoot=CASUALSessionData.getInstance().getTempFolder()+"cfautoroot.zip";
     final static File[] empty=new File[]{};
     /**
      * returns a list of files downloaded and unzipped from CFAutoroot
@@ -53,7 +53,7 @@ public class CFDownloader {
         }
         
         //clear out a space for the download
-        File zip=new File(Statics.getTempFolder()+localCFRoot);
+        File zip=new File(CASUALSessionData.getInstance().getTempFolder()+localCFRoot);
         if (!deleteFile(zip)){
             new CASUALMessageObject("Insufficient permissions>>>We don't have permissions to remove or delete the file "+localCFRoot).showErrorDialog();
             return empty;

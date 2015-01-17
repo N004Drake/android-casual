@@ -6,7 +6,7 @@
 package com.casual_dev.caspaccreator2;
 
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Build;
 import CASUAL.caspac.Script;
@@ -35,30 +35,30 @@ public class CASPACcreator2 extends ParametersImpl {
         super(args);
     }
 
-    public Caspac getCaspac(){
+    public Caspac getCaspac() {
         return caspac;
     }
-    
+
     private String doPackaging() throws IOException, MissingParameterException {
 
         Map x = this.getNamed();
 
-            if (getNamed().containsKey("caspac")) {
-                loadCaspac();
-            }
-            setCaspacOutputLocation();
-            setCASPACProperties();
-            setGeneralCaspacInfo();
-            setCaspacBuildInfo();
-            setScriptFiles();
-            caspac.getCASPACLocation().delete();
-            caspac.write();
-      
+        if (getNamed().containsKey("caspac")) {
+            loadCaspac();
+        }
+        setCaspacOutputLocation();
+        setCASPACProperties();
+        setGeneralCaspacInfo();
+        setCaspacBuildInfo();
+        setScriptFiles();
+        caspac.getCASPACLocation().delete();
+        caspac.write();
+
         return returnValue;
     }
 
     private void loadCaspac() throws IOException {
-        caspac = new Caspac(new File(getNamed().get("caspac")), Statics.getTempFolder(), 0);
+        caspac = new Caspac(new File(getNamed().get("caspac")), CASUALSessionData.getInstance().getTempFolder(), 0);
         caspac.loadFirstScriptFromCASPAC();
         caspac.waitForUnzip();
         loadedFromExisting = true;
@@ -70,12 +70,12 @@ public class CASPACcreator2 extends ParametersImpl {
 
     private void setGeneralCaspacInfo() throws MissingParameterException {
         caspac.setLogo(null);
-        caspac.setOverview(loadOptionalString("overview",caspac.getOverview(), "overview unspecified"));
+        caspac.setOverview(loadOptionalString("overview", caspac.getOverview(), "overview unspecified"));
     }
 
     private void setCaspacBuildInfo() throws MissingParameterException {
         Build b;
-        b=(loadedFromExisting? caspac.getBuild():new Build(caspac));
+        b = (loadedFromExisting ? caspac.getBuild() : new Build(caspac));
         b.setAudioEnabled(false);
         b.
                 setUsePictureForBanner(false).
@@ -96,13 +96,13 @@ public class CASPACcreator2 extends ParametersImpl {
             includeFiles.add(new File(arg.split("=")[1]));
         });
         Script script = caspac.getFirstScript();
-        script=(loadedFromExisting?
-                loadNewValuesToExistingScript(script, includeFiles):
-                createNewScriptFromScratch(includeFiles));
+        script = (loadedFromExisting
+                ? loadNewValuesToExistingScript(script, includeFiles)
+                : createNewScriptFromScratch(includeFiles));
         setScriptMeta(script);
         verifyScript(script);
-       caspac.removeAllScripts();
-       caspac.addScript(script);
+        caspac.removeAllScripts();
+        caspac.addScript(script);
     }
 
     private void verifyScript(Script script) throws MissingParameterException {
@@ -118,14 +118,14 @@ public class CASPACcreator2 extends ParametersImpl {
             if (null == getNamed().get(param)) {
                 throw new MissingParameterException(param);
             }
-            
+
         }
         script = new Script(
                 getNamed().get("scriptname"),
                 getNamed().get("scriptcode"),
                 getNamed().get("scriptdescription"),
                 includeFiles,
-                Statics.getTempFolder() + getNamed().get("scriptname"));
+                CASUALSessionData.getInstance().getTempFolder() + getNamed().get("scriptname"));
         return script;
     }
 
@@ -140,35 +140,34 @@ public class CASPACcreator2 extends ParametersImpl {
         return script;
     }
 
-    
     private String loadString(String key, String existing) throws MissingParameterException {
         if (null != getNamed().get(key)) {
             return (getNamed().get(key));   //try to return the requested value.
         } else {
-            if (!loadedFromExisting ||null==existing||existing.isEmpty()) {
+            if (!loadedFromExisting || null == existing || existing.isEmpty()) {
                 throw new MissingParameterException(key);  //throw an error if this was not loaded from a caspac
             }
             return existing;  //return the existing CASPAC value
         }
-        
+
     }
 
     private String loadOptionalString(String key, String existing, String defaultValue) throws MissingParameterException {
         if (loadedFromExisting) {  //if this was a previously existing caspac, use key or existing
-            return getNamed().getOrDefault(key, existing);  
+            return getNamed().getOrDefault(key, existing);
         } else {  //if this is a new caspac, use key or default value (since existing is missing)
             return getNamed().getOrDefault(key, defaultValue);
         }
     }
 
     private void setScriptMeta(Script script) throws MissingParameterException {
-        
+
         ScriptMeta meta = script.getMetaData();
-        meta.setKillSwitchMessage(loadOptionalString("killswitchmessage",meta.getKillSwitchMessage(), "This Script was deemed unsafe and is deactivated")).
-                setScript(script).setScriptRevision(loadOptionalString("scriptrevision", meta.getScriptRevision(),"1")).
-                setSupportURL(loadOptionalString("supporturl", meta.getSupportURL(),"http://forums.xda-developers.com")).
-                setUniqueIdentifier(loadOptionalString("uniqueid", meta.getUniqueIdentifier(), StringOperations.generateRandomHexString(10)+script.getName())).
-                setUpdateMessage(loadOptionalString("updatemessage",meta.getUpdateMessage(), "Script updated to new version")).
+        meta.setKillSwitchMessage(loadOptionalString("killswitchmessage", meta.getKillSwitchMessage(), "This Script was deemed unsafe and is deactivated")).
+                setScript(script).setScriptRevision(loadOptionalString("scriptrevision", meta.getScriptRevision(), "1")).
+                setSupportURL(loadOptionalString("supporturl", meta.getSupportURL(), "http://forums.xda-developers.com")).
+                setUniqueIdentifier(loadOptionalString("uniqueid", meta.getUniqueIdentifier(), StringOperations.generateRandomHexString(10) + script.getName())).
+                setUpdateMessage(loadOptionalString("updatemessage", meta.getUpdateMessage(), "Script updated to new version")).
                 setMinSVNversion(Integer.toString(CASUAL.CASUALTools.getSVNVersion()));
         script.setMetaData(meta);
 
@@ -180,7 +179,7 @@ public class CASPACcreator2 extends ParametersImpl {
         
          caspac.getScripts().get(0).name.equals("echoTest");
          String x = test.scripts.get(0).tempDir;
-         caspac.getScripts().get(0).tempDir.contains(Statics.getTempFolder() + test.scripts.get(0).name);
+         caspac.getScripts().get(0).tempDir.contains(CASUALSessionData.getInstance().getTempFolder() + test.scripts.get(0).name);
          caspac.getScripts().get(0).scriptContents.equals("$ECHO test");
          caspac.scripts.get(0).individualFiles.size() = 0;
          caspac.getScripts().get(0).metaData.minSVNversion.equals("0");
@@ -230,33 +229,43 @@ public class CASPACcreator2 extends ParametersImpl {
         }
         File cplocation = new File(getNamed().get("output"));
         if (null == caspac) {
-            caspac = new Caspac(cplocation, Statics.getTempFolder(), 0);
+            caspac = new Caspac(cplocation, CASUALSessionData.getInstance().getTempFolder(), 0);
         }
         caspac.setCASPACLocation(cplocation);
 
     }
-    
-    
-   public Caspac createNewCaspac() throws IOException, MissingParameterException{
-        iCASUALUI oldGUI = Statics.GUI;
-        Statics.GUI = new GUI.testing.automatic();
 
-       doPackaging();
+    public Caspac createNewCaspac() throws IOException, MissingParameterException {
+        iCASUALUI oldGUI = CASUALSessionData.getInstance().GUI;
+        CASUALSessionData.getInstance().GUI = new GUI.testing.automatic();
 
-        Statics.GUI = oldGUI;
+        doPackaging();
+
+        CASUALSessionData.getInstance().GUI = oldGUI;
         Log.Level1Interaction("new CASPAC located at " + caspac.getCASPACLocation().getAbsolutePath());
         return caspac;
-   }
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try{
-       new CASPACcreator2(args).createNewCaspac();
-         } catch (NullPointerException | IOException | MissingParameterException ex) {
+        try {
+            new CASPACcreator2(args).createNewCaspac();
+        } catch (NullPointerException | IOException | MissingParameterException ex) {
             helpStatement();
             Log.errorHandler(ex);
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (loadedFromExisting) {
+            sb.append("Loaded from file: ").append(this.caspac.getCASPACLocation()).append("\n");
+        }
+        sb.append("status:").append(returnValue);
+        return sb.toString();
     }
 
 }

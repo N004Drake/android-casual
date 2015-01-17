@@ -58,8 +58,8 @@ public class CASUALJUnitTest {
         }
         ca.main(new String[]{});
         Thread.sleep(7000);
-        Script s=Statics.CASPAC.getActiveScript();
+        Script s=CASUALSessionData.getInstance().CASPAC.getActiveScript();
         assert s.getName().equals("TestScript");
-        System.out.println(Statics.getTempFolder());
+        System.out.println(CASUALSessionData.getInstance().getTempFolder());
     }
 }

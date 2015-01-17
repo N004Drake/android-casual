@@ -21,7 +21,7 @@ import CASUAL.CASUALMessageObject;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -69,7 +69,7 @@ public class Pastebin {
      * @throws URISyntaxException if invalid URI 
      */
     public void doPosting() throws IOException, URISyntaxException {
-        if (Statics.debugMode) {
+        if (CASUALSessionData.getInstance().debugMode) {
             return;
         }
         String xdaUsername = new CASUALMessageObject("@interactionPastebinError").inputDialog();
@@ -84,7 +84,7 @@ public class Pastebin {
                     paste.setToken(lResult);
                     Log.level4Debug("Pastebin Login Successful");
                 }
-                String pasteData = new FileOperations().readFile(Statics.getTempFolder() + "Log.txt");
+                String pasteData = new FileOperations().readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt");
 
                 String output = paste.makePaste(pasteData, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-" + xdaUsername, format);
                 if (output.substring(0, 4).equals("http")) {
@@ -109,10 +109,10 @@ public class Pastebin {
     public void pasteAnonymousLog() throws MalformedURLException {
         Pattern svnRev = Pattern.compile("(?=[setViewedRevision]?.{2})[0-9]{3,4}");
         FileOperations fO = new FileOperations();
-        if (!fO.verifyExists(Statics.getTempFolder() + "Log.txt")) {
+        if (!fO.verifyExists(CASUALSessionData.getInstance().getTempFolder() + "Log.txt")) {
             return;
         }
-        String casualLog = fO.readFile(Statics.getTempFolder() + "Log.txt");
+        String casualLog = fO.readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt");
         Matcher matcher;
         try {
             matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));
@@ -124,7 +124,7 @@ public class Pastebin {
         if ((SVNrev - 5) >= CASRev && casualLog.contains("failed") || casualLog.contains("FAILED") || casualLog.contains("ERROR")) { //build.prop contains the word error on some devices so error is not a good word to track. 
             String slashrep = OSTools.isWindows() ? "\\" : "//";
             String userhome = System.getProperty("user.home");
-            casualLog = casualLog.replace(userhome, slashrep + "USERHOME" + (userhome.endsWith(Statics.slash) ? slashrep : ""));
+            casualLog = casualLog.replace(userhome, slashrep + "USERHOME" + (userhome.endsWith(CASUALSessionData.getInstance().slash) ? slashrep : ""));
             String username = System.getProperty("user.name");
             if (username == null || username.equals("")) {
                 username = System.getenv("USERNAME");
@@ -132,7 +132,7 @@ public class Pastebin {
             if (username != null && casualLog.contains(username)) {
                 casualLog = casualLog.replace(username, "USER");
             }
-            if (Statics.debugMode || Arrays.asList(incompetentUsers).contains(username)) {
+            if (CASUALSessionData.getInstance().debugMode || Arrays.asList(incompetentUsers).contains(username)) {
                 return; //only log results from non-devs :)
             }
 

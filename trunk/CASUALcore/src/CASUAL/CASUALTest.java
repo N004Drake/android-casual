@@ -65,7 +65,7 @@ public class CASUALTest {
 
             toAppPipedInputStream = new PipedInputStream(BUFFER);
             writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
-            CASUAL.Statics.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
+            CASUAL.CASUALSessionData.getInstance().in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
         } catch (IOException ex) {
             Log.errorHandler(ex);
@@ -95,7 +95,7 @@ public class CASUALTest {
 
             toAppPipedInputStream = new PipedInputStream(BUFFER);
             writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
-            CASUAL.Statics.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
+            CASUAL.CASUALSessionData.getInstance().in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
         } catch (IOException ex) {
             Log.errorHandler(ex);

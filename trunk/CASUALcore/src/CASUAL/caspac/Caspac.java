@@ -20,7 +20,7 @@ import CASUAL.CASUALStartupTasks;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.archiving.Unzip;
 import CASUAL.archiving.Zip;
 import CASUAL.crypto.AES128Handler;
@@ -217,9 +217,9 @@ public final class Caspac {
      * @throws IOException when permission problem exists
      */
     final public static Caspac makeGenericCaspac() throws IOException {
-        File f = new File(Statics.getTempFolder() + "newfile");
-        Caspac c = new Caspac(f, Statics.getTempFolder(), 2);
-        Script s = new Script("oneshot", Statics.getTempFolder());
+        File f = new File(CASUALSessionData.getInstance().getTempFolder() + "newfile");
+        Caspac c = new Caspac(f, CASUALSessionData.getInstance().getTempFolder(), 2);
+        Script s = new Script("oneshot", CASUALSessionData.getInstance().getTempFolder());
 
         return c;
     }
@@ -565,7 +565,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + Statics.slash, this.type);
+        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + CASUALSessionData.getInstance().slash, this.type);
         //Add script 
         scripts.add(script);
         return scripts.get(scripts.indexOf(script));
@@ -591,7 +591,7 @@ public final class Caspac {
         } catch (Exception ex) {
         }
         if (!scriptName.isEmpty()) {
-            Script s = new Script(scriptName, this.TempFolder + scriptName + Statics.slash, this.type);
+            Script s = new Script(scriptName, this.TempFolder + scriptName + CASUALSessionData.getInstance().slash, this.type);
             this.scripts.add(s);
             return this.scripts.get(scripts.size() - 1);
         } else {
@@ -624,7 +624,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script s = new Script(name, this.TempFolder + Statics.slash + name + Statics.slash, this.type);
+        Script s = new Script(name, this.TempFolder + CASUALSessionData.getInstance().slash + name + CASUALSessionData.getInstance().slash, this.type);
         this.scripts.add(s);
         return this.scripts.get(scripts.size() - 1);
     }

@@ -20,7 +20,7 @@ import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALTools;
 import CASUAL.CASUALStartupTasks;
 import CASUAL.Log;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
 import CASUAL.archiving.Unzip;
 import CASUAL.archiving.Zip;
 import CASUAL.crypto.MD5sum;
@@ -497,7 +497,7 @@ public class Script {
         //get md5 and stream for zip
         //go to folder above and create stream
         File masterTempDir = new File(tempDir).getParentFile();
-        File instanceZip = new File(masterTempDir + Statics.slash + name + ".zip");
+        File instanceZip = new File(masterTempDir + CASUALSessionData.getInstance().slash + name + ".zip");
         if (!instanceZip.exists()) {
             try {
                 instanceZip.createNewFile();

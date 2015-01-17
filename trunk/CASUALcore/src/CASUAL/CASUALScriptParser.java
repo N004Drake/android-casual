@@ -57,7 +57,7 @@ public class CASUALScriptParser {
      */
     public void loadFileAndExecute(Caspac caspac, boolean multiThreaded) {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
-        Statics.setStatus("Loading from file");
+        CASUALSessionData.getInstance().setStatus("Loading from file");
         executeSelectedScript(caspac, multiThreaded);
     }
 
@@ -97,11 +97,11 @@ public class CASUALScriptParser {
      */
     public String executeOneShotCommand(String Line) throws Exception {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
-        Statics.setStatus("Executing");
+        CASUALSessionData.getInstance().setStatus("Executing");
         String retvalue = "";
-        if (Statics.CASPAC == null) {
+        if (CASUALSessionData.getInstance().CASPAC == null) {
             ScriptName = "oneShot";
-            ScriptTempFolder = Statics.getTempFolder();
+            ScriptTempFolder = CASUALSessionData.getInstance().getTempFolder();
         }
             if (Line.contains(NEWLINE)) {
                 String[] lineArray = Line.split(NEWLINE);
@@ -129,9 +129,9 @@ public class CASUALScriptParser {
      */
     public void executeSelectedScript(final Caspac caspac, boolean startThreaded) {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
-        Statics.ReactionEvents = new ArrayList<String>();
-        Statics.ActionEvents = new ArrayList<String>();
-        Statics.CASPAC.getActiveScript().setScriptContinue(true);
+        CASUALSessionData.getInstance().ReactionEvents = new ArrayList<String>();
+        CASUALSessionData.getInstance().ActionEvents = new ArrayList<String>();
+        CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
         scriptInput = new DataInputStream(caspac.getActiveScript().getScriptContents());
         Log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
         Runnable r = new Runnable() {
@@ -140,13 +140,13 @@ public class CASUALScriptParser {
                 //int updateStatus;
                 Log.level4Debug("CASUAL has initiated a multithreaded execution environment");
 
-                if (Statics.isGUIIsAvailable()) {
-                    Statics.GUI.setProgressBarMax(LinesInScript);
+                if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
+                    CASUALSessionData.getInstance().GUI.setProgressBarMax(LinesInScript);
                 }
                 Log.level4Debug("Reading datastream" + scriptInput);
                 new CASUALLanguage(caspac, caspac.getActiveScript().getTempDir()).beginScriptingHandler(scriptInput);
 
-                if (Statics.isGUIIsAvailable()) {
+                if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
                     //return to normal.
                     CASUALConnectionStatusMonitor.resumeAfterStop();
                 } else {
@@ -158,16 +158,16 @@ public class CASUALScriptParser {
                 } catch (IOException ex) {
                     Log.errorHandler(ex);
                 }
-                Statics.CASPAC.getActiveScript().setDeviceArch("");
-                Statics.setStatus("done");
+                CASUALSessionData.getInstance().CASPAC.getActiveScript().setDeviceArch("");
+                CASUALSessionData.getInstance().setStatus("done");
                 Log.level2Information("@scriptComplete");
-                Statics.GUI.setReady(true);
+                CASUALSessionData.getInstance().GUI.setReady(true);
 
             }
         };
         if (startThreaded) {
             CASUALStartupTasks.scriptRunLock = new CASUAL.misc.MandatoryThread(r);
-            Statics.setStatus("Executing");
+            CASUALSessionData.getInstance().setStatus("Executing");
             CASUALStartupTasks.scriptRunLock.setName("CASUAL Script Executor");
             CASUALStartupTasks.scriptRunLock.start();
         } else {
@@ -179,7 +179,7 @@ public class CASUALScriptParser {
     void executeActiveScript(Caspac CASPAC) {
         Log.level3Verbose("Exection of active script in CASPAC Commensing");
         Script s = CASPAC.getActiveScript();
-        Statics.CASPAC.getActiveScript().setScriptContinue(true);
+        CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
 
         Log.level2Information(s.getDiscription());
         int CASUALSVN = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));

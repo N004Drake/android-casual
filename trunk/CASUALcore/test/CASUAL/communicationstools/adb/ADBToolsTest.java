@@ -8,8 +8,8 @@ import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALMessageObject;
 import CASUAL.OSTools;
 import CASUAL.OSTools;
-import CASUAL.Statics;
-import CASUAL.Statics;
+import CASUAL.CASUALSessionData;
+import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
 import CASUAL.communicationstools.adb.ADBTools;
 import java.io.File;
@@ -59,7 +59,7 @@ public class ADBToolsTest {
         String expResult = "adb";
         String result = new ADBTools().getBinaryLocation();
         assert (result.contains(expResult));
-        assert (result.contains(Statics.getTempFolder()));
+        assert (result.contains(CASUALSessionData.getInstance().getTempFolder()));
         assert (new File(result).exists());
     }
 
@@ -172,7 +172,7 @@ public class ADBToolsTest {
         String expResult = "adb";
         String result = instance.getBinaryLocation();
         assert result.contains(expResult);
-        assert result.contains(Statics.getTempFolder());
+        assert result.contains(CASUALSessionData.getInstance().getTempFolder());
     }
 
     /**
@@ -219,9 +219,9 @@ public class ADBToolsTest {
     @Test
     public void testDeployBinary() {
         System.out.println("deployBinary");
-        String TempFolder = Statics.getTempFolder();
+        String TempFolder = CASUALSessionData.getInstance().getTempFolder();
         ADBTools instance = new ADBTools();
-        String expResult = Statics.getTempFolder()+ (OSTools.isWindows()?"adb.exe":"adb");
+        String expResult = CASUALSessionData.getInstance().getTempFolder()+ (OSTools.isWindows()?"adb.exe":"adb");
         //use old binary if it exists
         String result = instance.deployBinary(TempFolder);
         assertEquals(expResult, result);
