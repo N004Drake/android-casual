@@ -145,7 +145,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                         for (File f : files) {
                             String file = f.getCanonicalPath();
                             scriptList.getElementAt(scriptListJList.getSelectedIndex()).getIndividualFiles().add(f);
-                            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(CASUALSessionData.getInstance().slash) + 1), "$ZIPFILE"));
+                            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(CASUALSessionData.slash) + 1), "$ZIPFILE"));
 
                         }
 
@@ -182,7 +182,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                         File firstFile = files.get(0);
                         if (firstFile.isDirectory()) {
                             String newFile = firstFile.getCanonicalPath();
-                            newFile = newFile + CASUALSessionData.getInstance().slash + "newCaspac.CASPAC";
+                            newFile = newFile + CASUALSessionData.slash + "newCaspac.CASPAC";
                             caspacOutputFile.setText(newFile);
                         } else if (firstFile.isFile() && firstFile.exists()) {
                             caspacOutputFile.setText(files.get(0).getCanonicalPath());
@@ -1094,7 +1094,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
             }
         });
 
-        casualOutputFile.setText(System.getProperty("user.dir")+CASUALSessionData.getInstance().slash+"generatedCASUALs");
+        casualOutputFile.setText(System.getProperty("user.dir")+CASUALSessionData.slash+"generatedCASUALs");
         casualOutputFile.setEnabled(CASPACkagerPanel.isEnabled());
         casualOutputFile.setName("casualOutputFile"); // NOI18N
 
@@ -1363,9 +1363,9 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         String args[] = argBuilder();
         String filename;
         if (args[1].endsWith(".zip")){ 
-            filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(CASUALSessionData.getInstance().slash) + 1), ".zip", "");
+            filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(CASUALSessionData.slash) + 1), ".zip", "");
         } else {
-            filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(CASUALSessionData.getInstance().slash) + 1), ".CASPAC", "");
+            filename = CASUAL.misc.StringOperations.replaceLast(args[1].substring(args[1].lastIndexOf(CASUALSessionData.slash) + 1), ".CASPAC", "");
         }
         final String version = Integer.toString(CASUAL.CASUALTools.getSVNVersion());
         final String folder = this.casualOutputFile.getText();
@@ -1386,22 +1386,22 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
                     @Override
                     public void run() {
 
-                        //CASUAL.JavaSystem.restart(new String[]{outputFile+CASUALSessionData.getInstance().slash+file});
+                        //CASUAL.JavaSystem.restart(new String[]{outputFile+CASUALSessionData.slash+file});
                         ProcessBuilder pb;
                         if (OSTools.isWindows()) {
-                            System.out.println("executing " + "cmd.exe /c start " + System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable + "-jar " + outputFile + CASUALSessionData.getInstance().slash + file);
-                            new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + CASUALSessionData.getInstance().slash + file + "\""}, true);
+                            System.out.println("executing " + "cmd.exe /c start " + System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable + "-jar " + outputFile + CASUALSessionData.slash + file);
+                            new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + CASUALSessionData.slash + file + "\""}, true);
                         } else {
-                            System.out.println("Executing" + System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable + " -jar " + outputFile + CASUALSessionData.getInstance().slash + file);
+                            System.out.println("Executing" + System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable + " -jar " + outputFile + CASUALSessionData.slash + file);
 
-                            new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable, "-jar", outputFile + CASUALSessionData.getInstance().slash + file}, true);
+                            new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable, "-jar", outputFile + CASUALSessionData.slash + file}, true);
 
                         }
                         // pb.directory(new File(new File( "." ).getCanonicalPath()));
                         //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
                         //Process p = pb.start();
 
-                        //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable,"-jar",outputFile+CASUALSessionData.getInstance().slash+file});
+                        //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable,"-jar",outputFile+CASUALSessionData.slash+file});
                     }
                 };
                 Thread t = new Thread(r);
@@ -1864,7 +1864,7 @@ public class CASCADEGUI extends javax.swing.JFrame implements CASUAL.iCASUALUI {
         listModel.removeAllElements();
         for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).getIndividualFiles()) {
             String file = f.toString();
-            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(CASUALSessionData.getInstance().slash) + 1), "$ZIPFILE"));
+            listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(CASUALSessionData.slash) + 1), "$ZIPFILE"));
             //listModel.addElement(f);
         }
 
