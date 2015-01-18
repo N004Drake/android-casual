@@ -39,6 +39,9 @@ import java.util.Date;
  */
 public class CASUALSessionData {
 
+    private CASUALSessionData(){
+        statics=this;
+    }
     /**
      * CASUAL does not look to GUI to execute. Execution will start
      * autonomously. Terminal is used for input and output. GUI is a display.
@@ -63,14 +66,14 @@ public class CASUALSessionData {
     /**
      * reference to CASPAC used by this CASUAL
      */
-    public static Caspac CASPAC;
+    public  Caspac CASPAC;
 
 
 
     /**
-     * @return the GUIIsAvailable
+     *  @return the GUIIsAvailable
      */
-    public  boolean isGUIIsAvailable() {
+         public  boolean isGUIIsAvailable() {
         if (GUI != null) {
             return GUI.isReady() && !java.awt.GraphicsEnvironment.isHeadless();
         }
@@ -80,7 +83,7 @@ public class CASUALSessionData {
     /**
      * increase or decrease the logging level. 0 is error only, 4 is debug
      */
-    public  int outputGUIVerbosity = 3; //userdata is output to console
+    public  int outputGUIVerbosity = 2; //userdata is output to console
 
     /**
      * increase or decrease the log file output. 0 is error only, 4 is debug
@@ -181,11 +184,8 @@ public class CASUALSessionData {
      * Resets all variables in CASUAL to provide, basically, a warm reboot.
      */
     public  void initializeStatics() {
-        CASUALDataBridge.commandedShutdown = true;
+        CASUALDataBridge.shutdown();
         setStatus("working");
-        outputGUIVerbosity = 2;
-        outputLogVerbosity = 4;
-
         PreProgress = "";
         CASUALStartupTasks.scriptRunLock = new CASUAL.misc.MandatoryThread();
         CASUALStartupTasks.lockGUIunzip = false;
@@ -196,7 +196,7 @@ public class CASUALSessionData {
         new FastbootTools().reset(); 
         CASUAL.language.CASUALLanguage.reset();
         try {
-            CASUALSessionData.CASPAC.getActiveScript().setScriptContinue(false);
+            CASPAC.getActiveScript().setScriptContinue(false);
         } catch (NullPointerException ex) {
             //do nothing at all 
         }

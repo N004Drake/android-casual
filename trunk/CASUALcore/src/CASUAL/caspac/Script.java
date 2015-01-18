@@ -497,7 +497,7 @@ public class Script {
         //get md5 and stream for zip
         //go to folder above and create stream
         File masterTempDir = new File(tempDir).getParentFile();
-        File instanceZip = new File(masterTempDir + CASUALSessionData.getInstance().slash + name + ".zip");
+        File instanceZip = new File(masterTempDir + CASUALSessionData.slash + name + ".zip");
         if (!instanceZip.exists()) {
             try {
                 instanceZip.createNewFile();

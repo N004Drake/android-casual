@@ -384,7 +384,7 @@ public class CASUALSettings {
     }
 
     private void showHelpMessageAndExit() {
-        Log.level2Information("\n" + " Usage: casual.jar [optional parameters]\n" + " without arguments - Launch the GUI\n" + " [--help] shows this message and exits\n" + " [--license] -shows license and exits\n" + " [--execute/-e \"command\"]-executes any CASUAL command and exits. Launch CASUAL GUI to read about commands" + " [--caspac/-c path_to" + CASUALSessionData.getInstance().slash + "CASPACzip] -launches CASUAL with a CASPAC" + " [--gui/-g)] - performs actions with a GUI\n");
+        Log.level2Information("\n" + " Usage: casual.jar [optional parameters]\n" + " without arguments - Launch the GUI\n" + " [--help] shows this message and exits\n" + " [--license] -shows license and exits\n" + " [--execute/-e \"command\"]-executes any CASUAL command and exits. Launch CASUAL GUI to read about commands" + " [--caspac/-c path_to" + CASUALSessionData.slash + "CASPACzip] -launches CASUAL with a CASPAC" + " [--gui/-g)] - performs actions with a GUI\n");
         setCASPACType(CASUALMode.EXIT);
     }
 

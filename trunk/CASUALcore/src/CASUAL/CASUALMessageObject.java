@@ -258,6 +258,7 @@ public class CASUALMessageObject implements Serializable {
     public void showErrorDialog() throws HeadlessException {
         setType(iCASUALUI.MessageCategory.SHOWERROR);
         expectedReturn = "Press Enter";
+        iCASUALUI ui=CASUALSessionData.getInstance().GUI;
         CASUALSessionData.getInstance().GUI.displayMessage(this);
 
     }

@@ -565,7 +565,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + CASUALSessionData.getInstance().slash, this.type);
+        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + CASUALSessionData.slash, this.type);
         //Add script 
         scripts.add(script);
         return scripts.get(scripts.indexOf(script));
@@ -591,7 +591,7 @@ public final class Caspac {
         } catch (Exception ex) {
         }
         if (!scriptName.isEmpty()) {
-            Script s = new Script(scriptName, this.TempFolder + scriptName + CASUALSessionData.getInstance().slash, this.type);
+            Script s = new Script(scriptName, this.TempFolder + scriptName + CASUALSessionData.slash, this.type);
             this.scripts.add(s);
             return this.scripts.get(scripts.size() - 1);
         } else {
@@ -624,7 +624,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script s = new Script(name, this.TempFolder + CASUALSessionData.getInstance().slash + name + CASUALSessionData.getInstance().slash, this.type);
+        Script s = new Script(name, this.TempFolder + CASUALSessionData.slash + name + CASUALSessionData.slash, this.type);
         this.scripts.add(s);
         return this.scripts.get(scripts.size() - 1);
     }

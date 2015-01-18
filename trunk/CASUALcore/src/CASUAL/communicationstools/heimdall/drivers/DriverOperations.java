@@ -64,7 +64,7 @@ public class DriverOperations {
     private final static String cadiDrivers = "/CASUAL/communicationstools/heimdall/drivers/resources/CADI.zip";
 
     public DriverOperations() {
-        this.pathToCADI = CASUALSessionData.getInstance().getTempFolder() + "CADI" + CASUALSessionData.getInstance().slash;
+        this.pathToCADI = CASUALSessionData.getInstance().getTempFolder() + "CADI" + CASUALSessionData.slash;
         if (!driverExtracted) {
             try {
                 driverExtract(pathToCADI);

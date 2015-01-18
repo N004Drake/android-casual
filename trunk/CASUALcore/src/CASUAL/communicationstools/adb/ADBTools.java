@@ -53,7 +53,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     private static final String adbIniResource = "/CASUAL/communicationstools/adb/resources/adb_usb.ini";
 
     private String getAdbIniLocation() {
-        return System.getProperty("user.home") + CASUALSessionData.getInstance().slash + ".android" + CASUALSessionData.getInstance().slash + "adb_usb.ini";
+        return System.getProperty("user.home") + CASUALSessionData.slash + ".android" + CASUALSessionData.slash + "adb_usb.ini";
     }
 
 

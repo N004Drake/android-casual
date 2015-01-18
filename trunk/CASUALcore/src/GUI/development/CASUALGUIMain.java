@@ -314,7 +314,6 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
     public void StartButtonActionPerformed() {
         Log.level4Debug("StartButtonActionPerformed() Script Activated");
         Log.level4Debug("Script known as " + this.comboBoxScriptSelector.getSelectedItem().toString() + " is running");
-        setReady(false);
         CASUALConnectionStatusMonitor.stop();
         enableDisableControls(false);
         String script = comboBoxScriptSelector.getSelectedItem().toString();
@@ -1071,6 +1070,13 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     @Override
     public void setUserMainMessage(String text) {
+    }
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Ready:"+this.isReady).append("\n is dummy:").append(this.isDummyGUI()).append("\nStatus:").append(this.StatusLabel.getText()).append("\n").append(this.caspac);
+        return sb.toString();
     }
 
 }

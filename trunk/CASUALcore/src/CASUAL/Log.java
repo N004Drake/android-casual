@@ -54,7 +54,7 @@ public class Log {
         if (data.startsWith("@")) {
             data = Translations.get(data);
         }
-        writeOutToLog("[ERROR]" + data);
+        writeOutToLog("e/"+getCaller()+" - " + data);
         if (CASUALSessionData.getInstance().outputGUIVerbosity >= 0) {
             sendToGUI(data);
 
@@ -63,26 +63,6 @@ public class Log {
             out.println("[ERROR]" + data);
 
         }
-    }
-
-    /**
-     * level 1 is used for interactive tasks.
-     *
-     * @param data is data to be written to log
-     */
-    public static void Level1Interaction(String data) {
-        if (data.startsWith("@")) {
-            data = Translations.get(data);
-        }
-        writeOutToLog("[INTERACTION]" + data);
-        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 1) {
-            sendToGUI(data);
-        }
-        if (CASUALSessionData.getInstance().outputLogVerbosity >= 1) {
-            out.println("[INTERACTION]" + data);
-
-        }
-
     }
 
     /**
@@ -95,13 +75,33 @@ public class Log {
         if (data.startsWith("@")) {
             data = Translations.get(data);
         }
-        writeOutToLog("[INFO]" + data);
+        writeOutToLog("i/" +getCaller()+" - "+ data);
+        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 1) {
+            sendToGUI(data);
+        }
+        if (CASUALSessionData.getInstance().outputLogVerbosity >= 1) {
+            out.println("[INFO]" + data);
+        }
+    }
+
+    /**
+     * level 1 is used for interactive tasks.
+     *
+     * @param data is data to be written to log
+     */
+    public static void Level1Interaction(String data) {
+        if (data.startsWith("@")) {
+            data = Translations.get(data);
+        }
+        writeOutToLog("interaction/"+getCaller()+" - " + data);
         if (CASUALSessionData.getInstance().outputGUIVerbosity >= 2) {
             sendToGUI(data);
         }
         if (CASUALSessionData.getInstance().outputLogVerbosity >= 2) {
-            out.println("[INFO]" + data);
+            out.println("[INTERACTION]" + data);
+
         }
+
     }
 
     /**
@@ -110,7 +110,7 @@ public class Log {
      * @param data is data to be written to log
      */
     public static void level3Verbose(String data) {
-        writeOutToLog("[VERBOSE]" + data);
+        writeOutToLog("v/"+getCaller()+" - " + data);
         if (CASUALSessionData.getInstance().outputGUIVerbosity >= 3) {
             sendToGUI(data);
         }
@@ -124,7 +124,7 @@ public class Log {
      * @param data is data to be written to log
      */
     public static void level4Debug(String data) {
-        writeOutToLog("[DEBUG]" + data);
+        writeOutToLog("d/"+getCaller()+" - " + data);
 
         if (CASUALSessionData.getInstance().outputGUIVerbosity >= 4) {
             sendToGUI(data);
@@ -212,5 +212,11 @@ public class Log {
 
     static void initialize() {
         out = new PrintStream(System.out);
+    }
+    
+      static private String getCaller() {
+        StackTraceElement caller = Thread.currentThread().getStackTrace()[3];
+        return caller.getFileName().replace("java", "") + caller.getMethodName() + "()";
+
     }
 }

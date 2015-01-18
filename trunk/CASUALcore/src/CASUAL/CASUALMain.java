@@ -101,28 +101,30 @@ public final class CASUALMain {
                 startGUI();
                 commonCASUALCASPACStartupTasks();
                 waitForGUI();
-                CASUALSessionData.CASPAC.setActiveScript(CASUALSessionData.CASPAC.getScriptByName(CASUALSessionData.CASPAC.getScriptNames()[0]));
-                CASUALSessionData.getInstance().GUI.setCASPAC(CASUALSessionData.CASPAC);
+                CASUALSessionData.getInstance().CASPAC.setActiveScript(CASUALSessionData.getInstance().CASPAC.getScriptByName(CASUALSessionData.getInstance().CASPAC.getScriptNames()[0]));
+                CASUALSessionData.getInstance().GUI.setCASPAC(CASUALSessionData.getInstance().CASPAC);
                 CASUALStartupTasks.startADB.waitFor();
                 startConnectionStatusMonitor();
                 return;
             case CASPAC:
                 Log.level4Debug("Loading CASPAC Type package");
+                iCASUALUI gui=CASUALSessionData.getInstance().GUI;
+                        
                 if (CASUALSessionData.getInstance().GUI == null) {
                     CASUALSessionData.getInstance().GUI = new GUI.CommandLine.CommandLineUI();
                 }
-                ;
+                
                 commonCASUALCASPACStartupTasks();
-                CASUALSessionData.CASPAC.setActiveScript(CASUALSessionData.CASPAC.getScriptByName(CASUALSessionData.CASPAC.getScriptNames()[0]));
+                CASUALSessionData.getInstance().CASPAC.setActiveScript(CASUALSessionData.getInstance().CASPAC.getScriptByName(CASUALSessionData.getInstance().CASPAC.getScriptNames()[0]));
                 try {
-                    CASUALSessionData.CASPAC.loadActiveScript();
+                    CASUALSessionData.getInstance().CASPAC.loadActiveScript();
                 } catch (IOException ex) {
                     Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CASUALStartupTasks.caspacPrepLock.waitFor();
-                CASUALSessionData.CASPAC.waitForUnzip();
+                CASUALSessionData.getInstance().CASPAC.waitForUnzip();
                 CASUALStartupTasks.startADB.waitFor();
-                new CASUALScriptParser().executeActiveScript(CASUALSessionData.CASPAC);
+                new CASUALScriptParser().executeActiveScript(CASUALSessionData.getInstance().CASPAC);
 
                 //caspacExecute();
                 break;
@@ -158,6 +160,7 @@ public final class CASUALMain {
     }
 
     private void commonCASUALCASPACStartupTasks() {
+        CASUALStartupTasks.startADB.setName("ADB Startup Task");
         CASUALStartupTasks.startADB.start();
         prepareCaspac();
         setDefaultCASPACScript();
@@ -172,18 +175,18 @@ public final class CASUALMain {
         //start the device monitor
         //wait for complete;
         CASUALConnectionStatusMonitor.stop();
-        CASUALSessionData.CASPAC.startAndWaitForUnzip();
+        CASUALSessionData.getInstance().CASPAC.startAndWaitForUnzip();
 
-        new CASUALScriptParser().executeActiveScript(CASUALSessionData.CASPAC);
+        new CASUALScriptParser().executeActiveScript(CASUALSessionData.getInstance().CASPAC);
 
     }
 
     private void setDefaultCASPACScript() {
-        if (CASUALSessionData.CASPAC != null && CASUALSessionData.CASPAC.getScripts() != null && CASUALSessionData.CASPAC.getScripts().size() >= 1) {
+        if (CASUALSessionData.getInstance().CASPAC != null && CASUALSessionData.getInstance().CASPAC.getScripts() != null && CASUALSessionData.getInstance().CASPAC.getScripts().size() >= 1) {
             Log.level4Debug("Finalizing active script up to be run");
 
-            CASUALSessionData.CASPAC.setActiveScript(CASUALSessionData.CASPAC.getScripts().get(0));
-            CASUALSessionData.CASPAC.getActiveScript().setScriptContinue(true);
+            CASUALSessionData.getInstance().CASPAC.setActiveScript(CASUALSessionData.getInstance().CASPAC.getScripts().get(0));
+            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
         }
     }
 
@@ -202,8 +205,8 @@ public final class CASUALMain {
         Log.level4Debug("Shutting Down");
         AudioHandler.useSound = false;
         Log.out.flush();
-        if (CASUALSessionData.CASPAC != null && CASUALSessionData.CASPAC.getActiveScript() != null) {
-            CASUALSessionData.CASPAC.getActiveScript().setScriptContinue(false);
+        if (CASUALSessionData.getInstance().CASPAC != null && CASUALSessionData.getInstance().CASPAC.getActiveScript() != null) {
+            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
         }
         CASUALConnectionStatusMonitor.stop();
 
@@ -265,7 +268,7 @@ public final class CASUALMain {
 
                     }
                     cp.loadFirstScriptFromCASPAC();
-                    CASUALSessionData.CASPAC = cp;
+                    CASUALSessionData.getInstance().CASPAC = cp;
                 } catch (IOException ex) {
                     Log.errorHandler(ex);
                 } catch (Exception ex) {
@@ -280,7 +283,7 @@ public final class CASUALMain {
                     cp = new Caspac(src, CASUALSessionData.getInstance().getTempFolder(), 1);
 
                     //cp.load();
-                    CASUALSessionData.CASPAC = cp;
+                    CASUALSessionData.getInstance().CASPAC = cp;
                 } catch (ZipException ex) {
 
                     Log.errorHandler(ex);
