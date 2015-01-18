@@ -73,6 +73,8 @@ public class CASUALDataBridge {
     static long lastbytes = -1;
     static String status = "";
 
+    MandatoryThread worker=new MandatoryThread();
+    Socket socket=new Socket();
     final static Object deviceSideReady = new Object();
     static Object casualSideReady;
     static Object transmissionInProgress;
@@ -81,14 +83,39 @@ public class CASUALDataBridge {
      * used externally to command shutdown. If shutdown is commanded, all
      * operations must halt as soon as possible and return.
      */
-    public static boolean commandedShutdown = false;
+   boolean commandedShutdown = false;
 
+   
+   static CASUALDataBridge instance;
     /**
      * default constructor
      */
     public CASUALDataBridge() {
+        if (instance!=null){
+            instance.commandedShutdown=true;
+            instance.worker.interrupt();
+        }
+        instance=this;
     }
 
+    public static CASUALDataBridge getInstance(){
+        return instance;
+    }
+    
+    public static void shutdown(){
+        if (getInstance()==null|| getInstance().socket==null){
+            return;
+        }
+        try {
+            instance.shutdownCommunications(getInstance().socket,getInstance().worker);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
     /**
      * gets a file from the device.
      *
@@ -174,8 +201,9 @@ public class CASUALDataBridge {
         resetCASUALConnection();
         Log.level4Debug("CDB Starting sendStream DataBridge");
         //start device-side receiver thread
-        MandatoryThread t = new DeviceSideDataBridge(adb).startDeviceSideServer(remoteFileName, true);
+        worker= new DeviceSideDataBridge(adb).startDeviceSideServer(remoteFileName, true);
 
+               
         //Open the socket
         final Socket socket = setupPort();
         //grab the stream
@@ -184,7 +212,7 @@ public class CASUALDataBridge {
 
         copyStreamToDevice(input, os, true);
         //begin write
-        shutdownCommunications(socket, t);
+        shutdownCommunications(socket, worker);
         if (shutdownBecauseOfError) {
             return 0;
         }
@@ -322,7 +350,7 @@ public class CASUALDataBridge {
                 deviceSideReady.wait();
             }
         } catch (InterruptedException ex) {
-            Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
+            Log.errorHandler(ex);
         }
         Log.level4Debug("CDB waitForReadySignal() Complete");
 
@@ -339,6 +367,10 @@ public class CASUALDataBridge {
     }
 
     private void shutdownCommunications(Socket socket, MandatoryThread deviceSideServer) throws InterruptedException, IOException {
+        if (!socket.isConnected()){
+            return;
+        }
+        
         Log.level4Debug("CDB shutdownCommunications");
         deviceReadyForReceive = false;
         socket.getOutputStream().flush();

@@ -53,7 +53,7 @@ public class CASUALTools {
 
         if (getIDEMode()) { //if we are in development mode
             //Set up scripts path
-            String scriptsPath = System.getProperty("user.dir") + CASUALSessionData.getInstance().slash + "SCRIPTS" + CASUALSessionData.getInstance().slash;
+            String scriptsPath = System.getProperty("user.dir") + CASUALSessionData.slash + "SCRIPTS" + CASUALSessionData.slash;
             final File folder = new File(scriptsPath);
             if (folder.isDirectory()) {
                 for (final File fileEntry : folder.listFiles()) {

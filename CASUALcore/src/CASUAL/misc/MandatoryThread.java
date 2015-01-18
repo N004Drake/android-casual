@@ -55,9 +55,9 @@ public class MandatoryThread extends Thread {
         if (nullThread) {
             return;
         }
-        Log.level4Debug("Beginning MandatoryThread " + this.getName());
-        super.start();
         hasStarted.set(true);
+        super.start();
+        Log.level4Debug("Started MandatoryThread " + this.getName());
         notify();
         Instrumentation.trackThread(this);
     }

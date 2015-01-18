@@ -163,7 +163,7 @@ class DeviceSideDataBridge {
                 String received = "";
                 CASUALSessionData.getInstance().setStatus("monitoring ports on device");
                 Log.level3Verbose("Device Waiting for Server connection for DataBridge");
-                while (!ready && !CASUALDataBridge.commandedShutdown) {
+                while (!ready && !CASUALDataBridge.getInstance().commandedShutdown) {
                     //monitor server status and detect errors
                     while (is.available() > 0) {
                         received = received + (char) is.read();

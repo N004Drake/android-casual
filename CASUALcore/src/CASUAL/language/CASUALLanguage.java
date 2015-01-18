@@ -250,7 +250,7 @@ public class CASUALLanguage {
 
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (cmd.get().contains("$SLASH")) {
-            cmd.set(cmd.get().replace("$SLASH", CASUALSessionData.getInstance().slash));
+            cmd.set(cmd.get().replace("$SLASH", CASUALSessionData.slash));
             Log.level4Debug("Expanded $SLASH: " + cmd.get());
         }
 //$ZIPFILE is a reference to the Script's .zip file
@@ -301,7 +301,7 @@ public class CASUALLanguage {
             cmd.set( cmd.get().replace("$LISTDIR", "").trim());
             if (OSTools.isLinux() || OSTools.isMac()) {
             } else {
-                cmd.set(cmd.get().replace("/", CASUALSessionData.getInstance().slash));
+                cmd.set(cmd.get().replace("/", CASUALSessionData.slash));
             }
             File[] files = new File(cmd.get()).listFiles();
             String retval = "";

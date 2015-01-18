@@ -69,7 +69,6 @@ public class Zip {
      * before they get steamed into a zip file.
      *
      * @return the string for the location of the TempFolder
-     * @see CASUAL.Statics#TempFolder
      */
     public String getTempFolder() {
         return TempFolder;
@@ -87,7 +86,7 @@ public class Zip {
      * @param TempFolder string of name of folder to dive into
      */
     public void addToTempFolderLoc(String TempFolder) {
-        this.TempFolder = this.TempFolder + CASUALSessionData.getInstance().slash + TempFolder;
+        this.TempFolder = this.TempFolder + CASUALSessionData.slash + TempFolder;
         if (!(new File(this.TempFolder).exists())) {
             new File(this.TempFolder).mkdirs();
         }
@@ -244,11 +243,11 @@ public class Zip {
     public void injectZip(File injectionZip, String injectionPath) {
         try {
             if (!injectionPath.equals("")) {
-                if (injectionPath.startsWith(CASUALSessionData.getInstance().slash)) {
-                    injectionPath = injectionPath.replaceFirst(CASUALSessionData.getInstance().slash, "");
+                if (injectionPath.startsWith(CASUALSessionData.slash)) {
+                    injectionPath = injectionPath.replaceFirst(CASUALSessionData.slash, "");
                 }
-                if (!injectionPath.endsWith(CASUALSessionData.getInstance().slash)) {
-                    injectionPath = injectionPath.concat(CASUALSessionData.getInstance().slash);
+                if (!injectionPath.endsWith(CASUALSessionData.slash)) {
+                    injectionPath = injectionPath.concat(CASUALSessionData.slash);
                 }
             }
             byte[] buf = new byte[1024];
@@ -396,7 +395,7 @@ public class Zip {
 
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
-        File fileToAdd = new File(TempFolder + CASUALSessionData.getInstance().slash + file.getName());
+        File fileToAdd = new File(TempFolder + CASUALSessionData.slash + file.getName());
         if (!fileToAdd.exists()) {
             fileToAdd.createNewFile();
         }
@@ -433,7 +432,7 @@ public class Zip {
 
         //First we need to create the file (empty) in the temp directory if its
         //not there all ready
-        File fileToAdd = new File(destFolder.toString() + CASUALSessionData.getInstance().slash + file.getName());
+        File fileToAdd = new File(destFolder.toString() + CASUALSessionData.slash + file.getName());
         if (!fileToAdd.exists()) {
             fileToAdd.createNewFile();
         }
@@ -466,9 +465,9 @@ public class Zip {
     private void addDirectoryToZipDir(File folder, File parent) throws IOException {
         File dirToAdd;
         if (parent == null) {
-            dirToAdd = new File(TempFolder + CASUALSessionData.getInstance().slash + folder.getName());
+            dirToAdd = new File(TempFolder + CASUALSessionData.slash + folder.getName());
         } else {
-            dirToAdd = new File(parent.toString() + CASUALSessionData.getInstance().slash + folder.getName());
+            dirToAdd = new File(parent.toString() + CASUALSessionData.slash + folder.getName());
         }
         if (!dirToAdd.exists()) {
             dirToAdd.mkdir();
