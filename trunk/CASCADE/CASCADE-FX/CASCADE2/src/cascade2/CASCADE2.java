@@ -20,8 +20,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.stage.Stage;
 
 /**
@@ -31,10 +29,10 @@ import javafx.stage.Stage;
 public class CASCADE2 extends Application {
     
     
-    private static Stage stage;
+    private static Stage myStage;
     private static Scene scene;
     public static Stage getStage(){
-        return stage;
+        return myStage;
     }
     
     public static Scene getScene(){
@@ -42,7 +40,7 @@ public class CASCADE2 extends Application {
     }
     @Override
     public void start(Stage stage) throws Exception {
-        this.stage=stage;
+        myStage=stage;
         Parent root = FXMLLoader.load(getClass().getResource("CASCADEUI.fxml"));
         scene = new Scene(root);
         stage.setScene(scene);

@@ -278,7 +278,7 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
              listModel.removeAllElements();
              for (File f : scriptList.getElementAt(this.scriptListJList.getSelectedIndex()).individualFiles) {
              String file = f.toString();
-             listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(CASUALSessionData.getInstance().slash) + 1), "$ZIPFILE"));
+             listModel.addElement(file.replace(file.substring(0, file.lastIndexOf(CASUALSessionData.slash) + 1), "$ZIPFILE"));
              //listModel.addElement(f);
              }*/
         });
@@ -387,22 +387,22 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
         final String executable = exe;
         final String outputFile = casual.getAbsolutePath();
         Runnable r = () -> {
-            //CASUAL.JavaSystem.restart(new String[]{outputFile+CASUALSessionData.getInstance().slash+file});
+            //CASUAL.JavaSystem.restart(new String[]{outputFile+CASUALSessionData.slash+file});
             ProcessBuilder pb;
             if (OSTools.isWindows()) {
-                System.out.println("executing " + "cmd.exe /c start  " + System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable + " -jar " + outputFile);
+                System.out.println("executing " + "cmd.exe /c start  " + System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable + " -jar " + outputFile);
                 new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + "\""}, true);
             } else {
-                System.out.println("Executing" + System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable + " -jar " + outputFile);
+                System.out.println("Executing" + System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable + " -jar " + outputFile);
                 
-                new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable, "-jar", outputFile}, true);
+                new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable, "-jar", outputFile}, true);
                 
             }
             // pb.directory(new File(new File( "." ).getCanonicalPath()));
             //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
             //Process p = pb.start();
             
-            //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.getInstance().slash + "bin" + CASUALSessionData.getInstance().slash + "java" + executable,"-jar",outputFile+CASUALSessionData.getInstance().slash+file});
+            //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable,"-jar",outputFile+CASUALSessionData.slash+file});
         };
         Thread t = new Thread(r);
 
