@@ -8,6 +8,7 @@ package cascade2.assistant_ui.casual_ui;
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
+import CASUAL.iCASUALUI;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,17 +17,12 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -82,7 +78,6 @@ public class MessageHandler extends Application {
     synchronized public static String displayMessage(CASUALMessageObject messageObject, Parent p) {
         Log.Level1Interaction(messageObject.toString());
 
-        String[] message = new String[]{messageObject.title, messageObject.messageText};
         String returnValue = "";
         switch (messageObject.category) {
             case ACTIONREQUIRED:
@@ -117,8 +112,6 @@ public class MessageHandler extends Application {
         return returnValue;
 
     }
-    private static Text textHolder = new Text();
-    private static double oldHeight = 0;
 
     static SimpleIntegerProperty count = new SimpleIntegerProperty(40);
 
@@ -165,21 +158,21 @@ public class MessageHandler extends Application {
         userMessage.autosize();
         dialogBox.getDialogPane().autosize();
 
-        dialogBox.getDialogPane().getStylesheets().add("/cascade2.assistant_ui.casual_ui/MessageHandler.css");
-        if (cmo.category.equals(cmo.category.TEXTINPUT)) {
+        dialogBox.getDialogPane().getStylesheets().add("cascade2/assistant_ui/casual_ui/MessageHandler.css");
+        if (cmo.category.equals(iCASUALUI.MessageCategory.TEXTINPUT)) {
             TextField userInput = new TextField();
             userMessage.setPrefHeight(userMessage.getPrefHeight());
             dialogBox.getDialogPane().setContent(new VBox(userMessage, userInput));
             return showTextInputDialog(dialogBox, userInput, p);
         } else {
-            Optional clickResult = showDialogWithCustomButtons(dialogBox);
+            Optional<ButtonType> clickResult = showDialogWithCustomButtons(dialogBox);
             String result = null;
             result = getButtonNumberPressedFromOptional(buttonTypes, clickResult, result);
             return result;
         }
     }
 
-    private static Optional showDialogWithCustomButtons(Alert dialogBox) {
+    private static Optional<ButtonType> showDialogWithCustomButtons(Alert dialogBox) {
 
         return dialogBox.showAndWait();
     }
@@ -195,14 +188,14 @@ public class MessageHandler extends Application {
 
 //        dialogBox.getDialogPane().setPrefWidth(400);
         dialogBox.getDialogPane().getButtonTypes().setAll(buttonText);
-        Optional o = dialogBox.showAndWait();
+        Optional<ButtonType> o = dialogBox.showAndWait();
         return userInput.getText();
     }
 
-    private static String getButtonNumberPressedFromOptional(ButtonType[] buttonTypes, Optional clickResult, String result) {
+    private static String getButtonNumberPressedFromOptional(ButtonType[] buttonTypes, Optional<ButtonType> clickResult, String result) {
         for (int i = 0; i < buttonTypes.length; i++) {
             if (buttonTypes[i].equals(clickResult.get())) {
-                System.out.println(((ButtonType) clickResult.get()).getButtonData());
+                System.out.println( clickResult.get().getButtonData());
                 result = Integer.toString(i);
             }
         }
@@ -237,10 +230,10 @@ public class MessageHandler extends Application {
             while (true) {
                 cmo.title = "show yes no";
                 System.out.println(cmo.showYesNoOption());
-                Thread.sleep(100);
+                sleep(100);
                 cmo.title = "return string";
                 System.out.println(cmo.inputDialog());
-                Thread.sleep(100);
+                sleep(100);
             }
 
         } catch (NullPointerException ex) {
@@ -249,4 +242,11 @@ public class MessageHandler extends Application {
 
     }
 
+    private void sleep(int time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MessageHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

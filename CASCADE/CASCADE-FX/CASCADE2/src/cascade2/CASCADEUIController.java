@@ -22,6 +22,7 @@ import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.CASUALSessionData;
+import CASUAL.CASUALSettings.MonitorMode;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.crypto.AES128Handler;
@@ -49,24 +50,24 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.IndexRange;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-
 /**
  *
  * @author adamoutler
  */
-public class CASCADEUIController extends AutomaticUI  implements Initializable {
+public class CASCADEUIController extends AutomaticUI implements Initializable {
 
     //Scripting and Overview 
     @FXML
@@ -95,16 +96,14 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
     TextField startButtonText;
     @FXML
     TextField bannerText;
-    @FXML
-    ToggleButton enableControls;
 
     //Scripting panel
     @FXML
     TextArea scriptingArea;
     @FXML
-    ListView zipFiles;
+    ListView<File> zipFiles;
     @FXML
-    TitledPane  commandAssistant;
+    TitledPane commandAssistant;
 
     //CASPAC FIle area
     @FXML
@@ -138,6 +137,15 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
     Button runCASUAL;
 
     @FXML
+    RadioButton adb;
+    @FXML
+    RadioButton fastboot;
+    @FXML
+    RadioButton heimdall;
+    @FXML
+    RadioButton always;
+
+    @FXML
     TitledPane overview;
     private TextInputControl[] textControls;
     private static CASCADEUIController uiController;
@@ -153,22 +161,20 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
         }).start();
         Platform.runLater(() -> {
             uiController = CASCADEUIController.this;
-            textControls = new TextInputControl[]{scriptRevision, supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription, pathToCaspac, caspacOutputFolder, caspacOutputFolder, scriptingArea};
+            textControls = new TextInputControl[]{scriptRevision, scriptName, supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription,  caspacOutputFolder, caspacOutputFolder, scriptingArea};
             overview.setExpanded(true);
         });
         final TextArea sa = scriptingArea;
-        final TitledPane pane=this.commandAssistant;
+        final TitledPane pane = this.commandAssistant;
         new Thread(() -> {
-            final TreeView commandTreeView = new CASUALAssistantUI().getCasualLanguageTreeView(sa);
-            
+            final TreeView<Label> commandTreeView = new CASUALAssistantUI().getCasualLanguageTreeView(sa);
+
             Platform.runLater(() -> {
                 pane.setContent(commandTreeView);
-                
-                
-            });
-           
-        }).start();
 
+            });
+
+        }).start();
     }
 
     private void insertTextIntoScriptingAreaAtCursor(String replacement) {
@@ -200,8 +206,8 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
 
     @FXML
     private void newButtonClicked() {
-        setTextAreaBlank(textControls);
-        enableControls.setSelected(false);
+        setTextAreasBlank(textControls);
+        this.adb.setSelected(true);
         caspacOutput.setDisable(true);
 
     }
@@ -219,32 +225,38 @@ public class CASCADEUIController extends AutomaticUI  implements Initializable {
         caspacOutputFolder.setText(new CASPACFileSelection().showFolderChooser(CASCADE2.getStage(), caspacOutputFolder.getText()));
     }
 
-    private void setTextAreaBlank(TextInputControl[] fields) {
+    private void setTextAreasBlank(TextInputControl[] fields) {
         for (TextInputControl field : fields) {
             field.setText("");
         }
+        zipFiles.getItems().clear();
     }
 
     @FXML
     private void reloadClicked() {
-            new Thread(() -> {
-              Caspac cp;
-              File file=new File(pathToCaspac.getText());
-                try {
-                    if (AES128Handler.getCASPACHeaderLength(file) > 20) {
-                        cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0, getPassword());
-                    } else {
-                        cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0);
-                    }
-                    setIDEInfoFromCASPAC(cp);
-                } catch (IOException ex) {
-new CASUALMessageObject("There was a permissions problem reading the file"," Could not read the file").showErrorDialog();
-            Log.errorHandler(ex);
-                    } catch (Exception ex) {
-                    new CASUALMessageObject("Exception while reading CASPAC","please see log for more details").showErrorDialog();
-            Log.errorHandler(ex);
+        newButtonClicked();
+        new Thread(() -> {
+            Caspac cp;
+            File file = new File(pathToCaspac.getText());
+            try {
+                if (AES128Handler.getCASPACHeaderLength(file) > 20) {
+                    cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0, getPassword());
+                } else {
+                    cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0);
                 }
-            }).start();
+                setIDEInfoFromCASPAC(cp);
+            } catch (IOException ex) {
+                if (new File(pathToCaspac.getText()).exists()){
+                    new CASUALMessageObject("There was a permissions problem reading the file", " Could not read the file:\"" + pathToCaspac.getText()+"\"").showErrorDialog();
+                } else {
+                    new CASUALMessageObject("File not found", "The file named:\n   \"" + pathToCaspac.getText()+"\"\ndoes not exist").showErrorDialog();
+                }
+                Log.errorHandler(ex);
+            } catch (Exception ex) {
+                new CASUALMessageObject("Exception while reading CASPAC", "please see log for more details").showErrorDialog();
+                Log.errorHandler(ex);
+            }
+        }).start();
     }
 
     private void setIDEInfoFromCASPAC(final Caspac cp) {
@@ -253,7 +265,7 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
             cp.waitForUnzip();
 
         } catch (IOException ex) {
-            new CASUALMessageObject("There was a problem reading the caspac","Problem reading the CASPAC while unzipping.  Please see log for more details.").showErrorDialog();
+            new CASUALMessageObject("There was a problem reading the caspac", "Problem reading the CASPAC while unzipping.  Please see log for more details.").showErrorDialog();
             Log.errorHandler(ex);
 
             return;
@@ -271,7 +283,23 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
             donateTo.setText(cp.getBuild().getDeveloperDonateButtonText());
             applicationTitle.setText(cp.getBuild().getWindowTitle());
             startButtonText.setText(cp.getBuild().getExecuteButtonText());
-            enableControls.setSelected(cp.getBuild().isAlwaysEnableControls());
+            MonitorMode mode = script.getMetaData().getMonitorMode();
+            switch (mode) {
+                case ADB:
+                    this.adb.setSelected(true);
+                    break;
+                case FASTBOOT:
+                    this.adb.setSelected(true);
+                    break;
+                case HEIMDALL:
+                    this.adb.setSelected(true);
+                    break;
+                case NONE:
+                    this.always.setSelected(true);
+                    break;
+                default:
+                    this.adb.setSelected(true);
+            }
             zipFiles.getItems().addAll(script.getIndividualFiles());
 
             /*
@@ -294,11 +322,17 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
         argsArray.add("--scriptdescription=" + this.scriptDescription.getText());
         argsArray.add("--scriptcode=" + this.scriptingArea.getText());
         zipFiles.getItems().stream().forEach((file) -> {
-            argsArray.add(((File) file).getAbsolutePath());
+            argsArray.add("--zipfile="+file.getAbsolutePath());
         });
         argsArray.add("--overview=" + this.scriptDescription.getText());
         argsArray.add("--devname=" + this.devName.getText());
-        argsArray.add("--enablecontrols=" + this.enableControls.isSelected());
+
+        //monitormode
+        argsArray.add("--monitormode" + (adb.isSelected() ? "ADB" : //adb mode
+                fastboot.isSelected() ? "FASTBOOT" : //fastboot mode
+                        heimdall.isSelected() ? "HEIMDALL" : //heimdall mode
+                                always.isSelected() ? "NONE" : //always enable controls
+                                        "ADB"));  //default
         argsArray.add("--bannertext=" + this.bannerText.getText());
         argsArray.add("--donatebuttontext=" + this.donateTo.getText());
         argsArray.add("--donatelink=" + this.donateLink.getText());
@@ -308,12 +342,12 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
         argsArray.add("--supporturl=" + this.supportURL.getText());
 
         CASPACcreator2 cpc = new CASPACcreator2(argsArray.toArray(new String[argsArray.size()]));
-        Caspac caspac = null;
+        Caspac caspac;
         try {
             caspac = cpc.createNewCaspac();
         } catch (MissingParameterException ex) {
             //message here
-            new CASUALMessageObject("missing parameters"," you have not filled out all parameters properly.").showErrorDialog();
+            new CASUALMessageObject("missing parameters", " you have not filled out all parameters properly.").showErrorDialog();
             Log.errorHandler(ex);
             return null;
         }
@@ -326,40 +360,41 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
             }
         }
         disableControls(false);
-        if (caspac==null){
-            new CASUALMessageObject("Could not write CASPAC","Errors were detected while writing out the CASPAC.\n"+cpc.toString()).showErrorDialog();
+        if (caspac == null) {
+            new CASUALMessageObject("Could not write CASPAC", "Errors were detected while writing out the CASPAC.\n" + cpc.toString()).showErrorDialog();
             return null;
         }
         return caspac.getCASPAC();
     }
 
-   private char[] getPassword() {
-       if (Platform.isFxApplicationThread()){
+    private char[] getPassword() {
+        if (Platform.isFxApplicationThread()) {
             return showPasswordDialog().getText().toCharArray();
-       }
-       class Temp{
-           String password="";
-       }
-       final Temp temp=new Temp();       
-       Platform.runLater(()->{
-           synchronized (temp){
-                  temp.password= showPasswordDialog().getText();
-                  temp.notifyAll();
-           }
-       });
+        }
+        class Temp {
 
-       synchronized(temp){
-           try {
-               temp.wait();
-           } catch (InterruptedException ex) {
-               Logger.getLogger(CASCADEUIController.class.getName()).log(Level.SEVERE, null, ex);
-           }
-       }
-       return temp.password.toCharArray();
+            String password = "";
+        }
+        final Temp temp = new Temp();
+        Platform.runLater(() -> {
+            synchronized (temp) {
+                temp.password = showPasswordDialog().getText();
+                temp.notifyAll();
+            }
+        });
+
+        synchronized (temp) {
+            try {
+                temp.wait();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CASCADEUIController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return temp.password.toCharArray();
     }
 
     private PasswordField showPasswordDialog() {
-        Dialog dialog = new Dialog();
+        Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("CASPAC Encryption");
         dialog.setHeaderText("Enter your password");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.APPLY);
@@ -373,7 +408,7 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
     @FXML
     private File saveCASUALClicked() throws IOException {
         File myCaspacFile = saveClicked();
-        File casualFile = PackagerMain.doPackaging(new String[]{"--CASPAC", myCaspacFile .getAbsolutePath(), "--output", this.caspacOutputFolder.getText()});
+        File casualFile = PackagerMain.doPackaging(new String[]{"--CASPAC", myCaspacFile.getAbsolutePath(), "--output", this.caspacOutputFolder.getText()});
         return casualFile;
     }
 
@@ -394,14 +429,14 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
                 new CASUAL.Shell().liveShellCommand(new String[]{"cmd.exe", "/C", "\"" + outputFile + "\""}, true);
             } else {
                 System.out.println("Executing" + System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable + " -jar " + outputFile);
-                
+
                 new CASUAL.Shell().liveShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable, "-jar", outputFile}, true);
-                
+
             }
             // pb.directory(new File(new File( "." ).getCanonicalPath()));
             //log.level3Verbose("Launching CASUAL \""+pb.command().get(0)+" "+pb.command().get(1)+" "+pb.command().get(2));
             //Process p = pb.start();
-            
+
             //new CASUAL.Shell().sendShellCommand(new String[]{System.getProperty("java.home") + CASUALSessionData.slash + "bin" + CASUALSessionData.slash + "java" + executable,"-jar",outputFile+CASUALSessionData.slash+file});
         };
         Thread t = new Thread(r);
@@ -442,15 +477,15 @@ new CASUALMessageObject("There was a permissions problem reading the file"," Cou
         List<File> fileList = new DragEventHandler().ifTimerInRangeSetFileList();
         fileList.stream().forEach((f) -> {
             if (f.isFile() && f.exists() && !zipFiles.getItems().contains(f.getAbsolutePath())) {
-                zipFiles.getItems().add(f.getAbsolutePath());
+                zipFiles.getItems().add(f);
             } else {
                 Log.level4Debug("Invalid drop event detected:" + f);
             }
         });
     }
-    
+
     @Override
     public String displayMessage(CASUALMessageObject mo) {
-        return new MessageHandler().sendMessage(mo,CASCADE2.getScene().getRoot());
+        return new MessageHandler().sendMessage(mo, CASCADE2.getScene().getRoot());
     }
 }

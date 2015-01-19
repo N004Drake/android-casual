@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
 /**
@@ -312,6 +314,10 @@ public class Script {
 
     @Override
     public String toString() {
+        StringBuilder sb=new StringBuilder();
+        sb.append("Name:").append(this.name);
+        sb.append("\nMonitoring: ").append(this.metaData.getMonitorMode());
+        sb.append("temp dir:").append(this.getTempDir());
         return name;
     }
 
@@ -342,6 +348,7 @@ public class Script {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
+                    ArrayList<File> unzipped=new ArrayList<File>();
                     Log.level4Debug("Examining CASPAC mode package contents");
                     BufferedInputStream bis = null;
                     try {
@@ -349,7 +356,7 @@ public class Script {
                         bis = myCASPAC.streamFileFromZip(entry);
                         getActualMD5s().add(new MD5sum().getLinuxMD5Sum(bis, entry.toString()));
                         bis = myCASPAC.streamFileFromZip(entry);
-                        Unzip.unZipInputStream(bis, getTempDir());
+                        unzipped=Unzip.unZipInputStream(bis, getTempDir());
                         bis.close();
                         Log.level4Debug("Extracted entry " + myCASPAC.getEntryName(entry) + "to " + getTempDir());
 
@@ -366,9 +373,10 @@ public class Script {
                             Log.errorHandler(ex);
                         }
                     }
-                    File[] files = new File(getTempDir()).listFiles();
-                    if (files != null) {
-                        getIndividualFiles().addAll(Arrays.asList(files));
+                    
+                    getIndividualFiles().clear();;
+                    getIndividualFiles().addAll(unzipped);
+                    if (getIndividualFiles().size()>0) {
                         for (String md5 : getMetaData().getMd5s()) {
                             if (!Arrays.asList(actualMD5s.toArray(new String[]{})).contains(md5)) {
                                 Log.level4Debug("Could not find " + md5 + " in list " + StringOperations.arrayToString(getActualMD5s().toArray(new String[]{})));
@@ -498,18 +506,18 @@ public class Script {
         //go to folder above and create stream
         File masterTempDir = new File(tempDir).getParentFile();
         File instanceZip = new File(masterTempDir + CASUALSessionData.slash + name + ".zip");
-        if (!instanceZip.exists()) {
-            try {
-                instanceZip.createNewFile();
-            } catch (IOException ex) {
-                Log.errorHandler(ex);
-            }
+        try {
+            instanceZip.delete();
+            instanceZip.createNewFile();
+        } catch (IOException ex) {
+            Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
         }
         Log.level3Verbose("set script $ZIPFILE to " + instanceZip.getAbsolutePath());
         try {
             Zip zip;
 
             zip = new Zip(instanceZip);
+            zip.removeAllEntries();
             zip.addFilesToExistingZip(individualFiles.toArray(new File[individualFiles.size()]));
 
             Log.level3Verbose("Adding zip:" + instanceZip.getAbsolutePath());

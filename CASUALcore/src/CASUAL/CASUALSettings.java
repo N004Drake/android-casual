@@ -119,7 +119,12 @@ public class CASUALSettings {
         /**
          * Fastboot mode will use FastbootTools for monitoring device status. 
          */
-        FASTBOOT
+        FASTBOOT,
+        
+        /**
+         * always enable controls.
+         */
+        NONE
     }
     
     
