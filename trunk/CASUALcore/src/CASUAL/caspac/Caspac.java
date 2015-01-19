@@ -320,9 +320,11 @@ public final class Caspac {
         }
         for (Script s : scripts) {
             //individualFiles.toArray();
-            File[] list = new File(s.getTempDir()).listFiles();
+            File[]list=s.getIndividualFiles().toArray(new File[s.getIndividualFiles().size()]);
             if (list != null) {
                 for (File test : list) {
+                    
+                    //todo: what does this do?
                     boolean delete = true;
                     for (File f : s.getIndividualFiles()) {
                         if (test.getCanonicalFile().equals(f.getCanonicalFile())) {
@@ -341,7 +343,8 @@ public final class Caspac {
         }
 
         Log.level4Debug("Placeing the following files in the caspac Zip");
-        zip.streamEntryToExistingZip(nameStream);
+        String s= zip.streamEntryToExistingZip(nameStream).getAbsolutePath();
+        System.out.println(s);
     }
 
     /**
@@ -846,6 +849,7 @@ public final class Caspac {
                 }
 
             } catch (ZipException ex) {
+                Log.errorHandler(ex );
             }
 
         }

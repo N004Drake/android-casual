@@ -16,6 +16,8 @@
  */
 package CASUAL.caspac;
 
+import CASUAL.CASUALSettings;
+import CASUAL.CASUALSettings.MonitorMode;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import java.io.BufferedInputStream;
@@ -69,6 +71,7 @@ public class ScriptMeta {
     private List<String> md5s = new ArrayList<String>();
     private Script script;
 
+    private CASUALSettings.MonitorMode monitorMode=MonitorMode.ADB;
     /**
      * constructor for new Meta.
      *
@@ -176,6 +179,7 @@ public class ScriptMeta {
         metaProp.setProperty("Script.SupportURL", supportURL);
         metaProp.setProperty("Script.UpdateMessage", updateMessage);
         metaProp.setProperty("Script.KillSwitchMessage", killSwitchMessage);
+        metaProp.setProperty("Script.MonitorMode",this.monitorMode.name());
         return this;
     }
 
@@ -193,6 +197,7 @@ public class ScriptMeta {
         killSwitchMessage = prop.getProperty("Script.KillSwitchMessage", "");
         md5s = new ArrayList<String>();
         int i = 0;
+        monitorMode=MonitorMode.valueOf(prop.getProperty("Script.MonitorMode","ADB"));
         while (!prop.getProperty("Script.MD5[" + i + "]", "").equals("")) {
             md5s.add(prop.getProperty("Script.MD5[" + i + "]"));
             i++;
@@ -362,6 +367,8 @@ public class ScriptMeta {
     public Script getScript() {
         return script;
     }
+    
+    
 
     /**
      * @param script the script to set
@@ -369,6 +376,21 @@ public class ScriptMeta {
      */
     public ScriptMeta setScript(Script script) {
         this.script = script;
+        return this;
+    }
+
+    /**
+     * @return the monitorMode
+     */
+    public CASUALSettings.MonitorMode getMonitorMode() {
+        return monitorMode;
+    }
+
+    /**
+     * @param monitorMode the monitorMode to set
+     */
+    public ScriptMeta  setMonitorMode(CASUALSettings.MonitorMode monitorMode) {
+        this.monitorMode = monitorMode;
         return this;
     }
 

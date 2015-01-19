@@ -162,6 +162,7 @@ public class Unzip {
      *
      * @param zStream input stream to unzip
      * @param outputFolder output folder to unzip to
+     * @return array list of files extract
      * @throws FileNotFoundException output missing or permissions
      * @throws IOException permissions
      * @see InputStream
@@ -169,11 +170,11 @@ public class Unzip {
      * @see ZipInputStream
      * @see ZipFile
      */
-    public static void unZipInputStream(InputStream zStream, String outputFolder) throws FileNotFoundException, IOException {
+    public static ArrayList<File> unZipInputStream(InputStream zStream, String outputFolder) throws FileNotFoundException, IOException {
 
         zStream.mark(0);
         ZipInputStream zipInputStream;
-
+        ArrayList<File> unzipped=new ArrayList<File>();
         ZipEntry zipEntry;
         zipInputStream = new ZipInputStream(zStream);
         while ((zipEntry = zipInputStream.getNextEntry()) != null) {
@@ -191,8 +192,8 @@ public class Unzip {
             // establish buffer for writing file
             byte data[] = new byte[BUFFER];
             String currentEntry = zipEntry.getName();
-            File DestFile = new File(outputFolder + System.getProperty("file.separator"), currentEntry);
-            FileOutputStream FileOut = new FileOutputStream(DestFile);
+            File destFile = new File(outputFolder + System.getProperty("file.separator"), currentEntry);
+            FileOutputStream FileOut = new FileOutputStream(destFile);
             BufferedInputStream BufferedInputStream = new BufferedInputStream(zipInputStream);
             BufferedOutputStream Destination;
             Destination = new BufferedOutputStream(FileOut);
@@ -210,11 +211,13 @@ public class Unzip {
             }
             Destination.flush();
             Destination.close();
+            unzipped.add(destFile);
         }
         CASUALSessionData.getInstance().setStatus("Important Information");
         CASUALSessionData.getInstance().GUI.setProgressBar(0);
 
         Log.level3Verbose("Unzip Complete");
+        return unzipped;
     }
 
     /**

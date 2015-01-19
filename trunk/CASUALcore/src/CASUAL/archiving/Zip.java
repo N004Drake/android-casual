@@ -34,6 +34,8 @@ import java.nio.channels.FileChannel;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -303,10 +305,9 @@ public class Zip {
      * @see Map
      * @see InputStream
      */
-    public void streamEntryToExistingZip(Map<String, InputStream> nameStream) throws IOException {
+    public File streamEntryToExistingZip(Map<String, InputStream> nameStream) throws IOException {
         File tempFile = File.createTempFile(outputZip.getName(), null);
         // delete it, otherwise you cannot rename your existing zip to it.
-        tempFile.delete();
         getTemporaryOutputZip(tempFile, BUFFER);
         ZipOutputStream out;
         ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
@@ -319,8 +320,8 @@ public class Zip {
         }
         // Complete the ZIP file
         out.close();
-        tempFile.delete();
-
+        
+       return tempFile;
 
     }
 
@@ -632,5 +633,16 @@ public class Zip {
         }
         // Complete the entry
         out.closeEntry();
+    }
+
+    public void removeAllEntries() {
+        this.outputZip.delete();
+        try {  
+            new ZipOutputStream(new FileOutputStream(outputZip)).closeEntry();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Zip.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Zip.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

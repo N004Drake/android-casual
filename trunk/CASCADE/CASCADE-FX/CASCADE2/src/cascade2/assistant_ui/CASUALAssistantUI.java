@@ -47,14 +47,14 @@ public class CASUALAssistantUI extends Application {
         StackPane root = new StackPane();
         VBox vbox = new VBox();
         TextInputControl ta = new TextArea();
-        TreeView tree = getCasualLanguageTreeView(ta);
+        TreeView<Label> tree = getCasualLanguageTreeView(ta);
         vbox.getChildren().addAll(tree, ta);
 
         primaryStage.setScene(new Scene(vbox, 300, 250));
         primaryStage.show();
     }
 
-    public TreeView getCasualLanguageTreeView(TextInputControl ctl) {
+    public TreeView<Label> getCasualLanguageTreeView(TextInputControl ctl) {
   
 
         for (int i=0; i<3; i++){
@@ -105,7 +105,7 @@ public class CASUALAssistantUI extends Application {
         }
            
         }
-        return new TreeView();
+        return new TreeView<Label>();
     }
 
     private final int defaultDismissTimeout = ToolTipManager.sharedInstance().getDismissDelay();

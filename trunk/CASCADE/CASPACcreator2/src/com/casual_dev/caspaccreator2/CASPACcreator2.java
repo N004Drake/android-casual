@@ -7,6 +7,8 @@ package com.casual_dev.caspaccreator2;
 
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
+import CASUAL.CASUALSettings;
+import CASUAL.CASUALSettings.MonitorMode;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Build;
 import CASUAL.caspac.Script;
@@ -40,8 +42,6 @@ public class CASPACcreator2 extends ParametersImpl {
     }
 
     private String doPackaging() throws IOException, MissingParameterException {
-
-        Map x = this.getNamed();
 
         if (getNamed().containsKey("caspac")) {
             loadCaspac();
@@ -91,7 +91,7 @@ public class CASPACcreator2 extends ParametersImpl {
     }
 
     private void setScriptFiles() throws MissingParameterException {
-        List<File> includeFiles = new ArrayList();
+        List<File> includeFiles = new ArrayList<>();
         this.getRaw().stream().filter((arg) -> (arg.startsWith("--zipfile="))).forEach((arg) -> {
             includeFiles.add(new File(arg.split("=")[1]));
         });
@@ -168,7 +168,9 @@ public class CASPACcreator2 extends ParametersImpl {
                 setSupportURL(loadOptionalString("supporturl", meta.getSupportURL(), "http://forums.xda-developers.com")).
                 setUniqueIdentifier(loadOptionalString("uniqueid", meta.getUniqueIdentifier(), StringOperations.generateRandomHexString(10) + script.getName())).
                 setUpdateMessage(loadOptionalString("updatemessage", meta.getUpdateMessage(), "Script updated to new version")).
-                setMinSVNversion(Integer.toString(CASUAL.CASUALTools.getSVNVersion()));
+                setMinSVNversion(Integer.toString(CASUAL.CASUALTools.getSVNVersion())).
+                setMonitorMode(MonitorMode.valueOf(loadOptionalString("monitormode",meta.getMonitorMode().name(),MonitorMode.valueOf("ADB").name()).toUpperCase()));
+          
         script.setMetaData(meta);
 
         /*
