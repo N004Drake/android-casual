@@ -88,7 +88,7 @@ public final class Caspac {
     /**
      * CASPAC which is being used.
      */
-   private File CASPAC;
+    private File CASPAC;
 
     /**
      * CodeSource if available to CASPAC. Generally used in place of CASPAC
@@ -144,7 +144,11 @@ public final class Caspac {
         this.CASPACsrc = null;
         this.TempFolder = tempDir;
         this.type = type;
-        loadCASPACcontrolFilesFromCASPAC();
+        if (caspac.exists()) {
+            loadCASPACcontrolFilesFromCASPAC();
+        } else {
+            Log.level4Debug("CASPAC Not Found, treating as a request to create new CASPAC");
+        }
     }
 
     /**
@@ -228,7 +232,7 @@ public final class Caspac {
      * Sets the active script to an instace of a script.
      *
      * @param s script to make active.
-     * @return 
+     * @return
      */
     public synchronized Script setActiveScript(Script s) {
         CasualDevCounter.doIncrementCounter(s.getName() + s.getMetaData().getUniqueIdentifier());
@@ -265,7 +269,7 @@ public final class Caspac {
      * removes a script
      *
      * @param script Script reference
-     * @return 
+     * @return
      */
     public Caspac removeScript(Script script) {
         if (scripts.contains(script)) {
@@ -275,28 +279,27 @@ public final class Caspac {
         return this;
     }
 
-    public Caspac removeAllScripts(){
+    public Caspac removeAllScripts() {
         this.scripts.clear();
         return this;
     }
-    
-    public Script getFirstScript(){
-        if (scripts.size()>0){
+
+    public Script getFirstScript() {
+        if (scripts.size() > 0) {
             return scripts.get(0);
         }
         return null;
     }
-    
-    public Caspac addScript(Script script){
-        if (!scripts.contains(script)){
+
+    public Caspac addScript(Script script) {
+        if (!scripts.contains(script)) {
             scripts.add(script);
-            Log.level4Debug("Adding Script " +script.getName());
-                    
+            Log.level4Debug("Adding Script " + script.getName());
+
         }
         return this;
     }
-    
-    
+
     /**
      * writes a CASPAC
      *
@@ -320,10 +323,10 @@ public final class Caspac {
         }
         for (Script s : scripts) {
             //individualFiles.toArray();
-            File[]list=s.getIndividualFiles().toArray(new File[s.getIndividualFiles().size()]);
+            File[] list = s.getIndividualFiles().toArray(new File[s.getIndividualFiles().size()]);
             if (list != null) {
                 for (File test : list) {
-                    
+
                     //todo: what does this do?
                     boolean delete = true;
                     for (File f : s.getIndividualFiles()) {
@@ -343,7 +346,7 @@ public final class Caspac {
         }
 
         Log.level4Debug("Placeing the following files in the caspac Zip");
-        String s= zip.streamEntryToExistingZip(nameStream).getAbsolutePath();
+        String s = zip.streamEntryToExistingZip(nameStream).getAbsolutePath();
         System.out.println(s);
     }
 
@@ -353,7 +356,7 @@ public final class Caspac {
      * @param prop properties file
      * @return build.prop
      */
-    public  Build setBuild(Properties prop) {
+    public Build setBuild(Properties prop) {
         build = new Build(prop, this);
         build.loadPropsToVariables();
         return build;
@@ -363,7 +366,7 @@ public final class Caspac {
      * parses CASPAC and loads the first script seen identified by non-caspac
      * controller files.
      *
-     * @return 
+     * @return
      * @throws ZipException when zip file is corrupt
      * @throws IOException when permission problem exists
      */
@@ -388,13 +391,13 @@ public final class Caspac {
         }
         Log.level4Debug("loading CASPAC script");
         performUnzipOnQueue();
-       return this;
+        return this;
     }
 
     /**
      * Loads the active script after its been set.
      *
-     * @return 
+     * @return
      * @throws IOException when permission problem exists
      */
     public synchronized Script loadActiveScript() throws IOException {
@@ -437,7 +440,7 @@ public final class Caspac {
     /**
      * loads a CASPAC.zip file
      *
-     * @return 
+     * @return
      * @throws ZipException when zip file is corrupt
      * @throws IOException when permission problem exists
      */
@@ -470,7 +473,7 @@ public final class Caspac {
      * waits for unzip to complete and executes a runnable.
      *
      * @param action runnable to execute.
-     * @return this caspac 
+     * @return this caspac
      */
     public Caspac waitForUnzipAndRun(Runnable action) {
         waitForUnzipAndRun(action, false, null);
@@ -520,9 +523,10 @@ public final class Caspac {
 
     /**
      * loops through active unzip threads and waits for all unzip to complete.
-     * @return 
+     *
+     * @return
      */
-    public Caspac  waitForUnzip() {
+    public Caspac waitForUnzip() {
         for (CASUAL.misc.MandatoryThread t : unzipThreads) {
             if (t == null) {
                 continue;
@@ -849,7 +853,7 @@ public final class Caspac {
                 }
 
             } catch (ZipException ex) {
-                Log.errorHandler(ex );
+                Log.errorHandler(ex);
             }
 
         }
@@ -875,25 +879,27 @@ public final class Caspac {
         return s;
         //TODO reenable SCRIPT updates. 
     }
-    
+
     /**
      * sets the CASPAC location
+     *
      * @param f File to use for new CASPAC location
-     * @return 
+     * @return
      */
-    public Caspac setCASPACLocation(File f){
-        this.CASPAC=f;
+    public Caspac setCASPACLocation(File f) {
+        this.CASPAC = f;
         return this;
     }
-    
+
     /**
      * gets the CASPAC location
+     *
      * @return path to CASPAC
      */
-    public File getCASPACLocation(){
+    public File getCASPACLocation() {
         return CASPAC;
     }
-    
+
     /*
      
      if (s.metaData.minSVNversion.isEmpty()) {
@@ -934,7 +940,6 @@ public final class Caspac {
      }
 
      } */
-
     /**
      * replaces a script in list array.
      *
@@ -964,7 +969,6 @@ public final class Caspac {
         return type;
     }
 
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -979,7 +983,7 @@ public final class Caspac {
     /**
      * @param type the type to set
      */
-    private  void setType(int type) {
+    private void setType(int type) {
         this.type = type;
     }
 
@@ -992,7 +996,7 @@ public final class Caspac {
 
     /**
      * @param logo the logo to set
-     * @return 
+     * @return
      */
     public Caspac setLogo(BufferedImage logo) {
         this.logo = logo;
@@ -1008,7 +1012,7 @@ public final class Caspac {
 
     /**
      * @param CASPAC the CASPAC to set
-     * @return 
+     * @return
      */
     public Caspac setCASPAC(File CASPAC) {
         this.CASPAC = CASPAC;
@@ -1024,7 +1028,7 @@ public final class Caspac {
 
     /**
      * @param CASPACsrc the CASPACsrc to set
-     * @return 
+     * @return
      */
     public Caspac setCASPACsrc(CodeSource CASPACsrc) {
         this.CASPACsrc = CASPACsrc;
@@ -1040,7 +1044,7 @@ public final class Caspac {
 
     /**
      * @param overview the overview to set
-     * @return 
+     * @return
      */
     public Caspac setOverview(String overview) {
         this.overview = overview;
@@ -1056,7 +1060,7 @@ public final class Caspac {
 
     /**
      * @param build the build to set
-     * @return 
+     * @return
      */
     public Caspac setBuild(Build build) {
         this.build = build;
@@ -1072,7 +1076,7 @@ public final class Caspac {
 
     /**
      * @param scripts the scripts to set
-     * @return 
+     * @return
      */
     public Caspac setScripts(ArrayList<Script> scripts) {
         this.scripts = scripts;
@@ -1088,7 +1092,7 @@ public final class Caspac {
 
     /**
      * @param TempFolder the TempFolder to set
-     * @return 
+     * @return
      */
     public Caspac setTempFolder(String TempFolder) {
         this.TempFolder = TempFolder;
@@ -1104,7 +1108,7 @@ public final class Caspac {
 
     /**
      * @param unzipThreads the unzipThreads to set
-     * @return 
+     * @return
      */
     public Caspac setUnzipThreads(ArrayList<CASUAL.misc.MandatoryThread> unzipThreads) {
         this.unzipThreads = unzipThreads;
@@ -1119,8 +1123,9 @@ public final class Caspac {
     }
 
     /**
-     * @param caspacShouldBeDeletedAfterExtraction the caspacShouldBeDeletedAfterExtraction to set
-     * @return 
+     * @param caspacShouldBeDeletedAfterExtraction the
+     * caspacShouldBeDeletedAfterExtraction to set
+     * @return
      */
     public Caspac setCaspacShouldBeDeletedAfterExtraction(boolean caspacShouldBeDeletedAfterExtraction) {
         this.caspacShouldBeDeletedAfterExtraction = caspacShouldBeDeletedAfterExtraction;
@@ -1136,7 +1141,7 @@ public final class Caspac {
 
     /**
      * @param tempbannerpic the tempbannerpic to set
-     * @return 
+     * @return
      */
     public Caspac setTempbannerpic(String tempbannerpic) {
         this.tempbannerpic = tempbannerpic;
@@ -1152,7 +1157,7 @@ public final class Caspac {
 
     /**
      * @param controlFiles the controlFiles to set
-     * @return 
+     * @return
      */
     public Caspac setControlFiles(String[] controlFiles) {
         this.controlFiles = controlFiles;

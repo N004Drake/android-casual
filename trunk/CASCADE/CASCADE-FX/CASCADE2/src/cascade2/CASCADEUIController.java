@@ -161,7 +161,7 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
         }).start();
         Platform.runLater(() -> {
             uiController = CASCADEUIController.this;
-            textControls = new TextInputControl[]{scriptRevision, scriptName, supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription,  caspacOutputFolder, caspacOutputFolder, scriptingArea};
+            textControls = new TextInputControl[]{scriptRevision, scriptName, supportURL, devName, donateTo, donateLink, applicationTitle, startButtonText, bannerText, scriptDescription, caspacOutputFolder, caspacOutputFolder, scriptingArea};
             overview.setExpanded(true);
         });
         final TextArea sa = scriptingArea;
@@ -192,23 +192,15 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
         caspacOutput.setDisable(e);
     }
 
-    public void enableScripting() {
-        scripting.setDisable(false);
-    }
 
-    public void enableCaspac() {
-        caspacFile.setDisable(false);
-    }
-
-    public void enableCaspacOutput() {
-        caspacOutput.setDisable(false);
-    }
 
     @FXML
     private void newButtonClicked() {
-        setTextAreasBlank(textControls);
-        this.adb.setSelected(true);
-        caspacOutput.setDisable(true);
+        Platform.runLater(() -> {
+            setTextAreasBlank(textControls);
+            this.adb.setSelected(true);
+            caspacOutput.setDisable(true);
+        });
 
     }
 
@@ -234,10 +226,14 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
 
     @FXML
     private void reloadClicked() {
-        newButtonClicked();
+        final File file = new File(pathToCaspac.getText());
+        if (!file.exists()) {
+            return;
+        }
+
         new Thread(() -> {
             Caspac cp;
-            File file = new File(pathToCaspac.getText());
+            newButtonClicked();
             try {
                 if (AES128Handler.getCASPACHeaderLength(file) > 20) {
                     cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0, getPassword());
@@ -246,10 +242,10 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
                 }
                 setIDEInfoFromCASPAC(cp);
             } catch (IOException ex) {
-                if (new File(pathToCaspac.getText()).exists()){
-                    new CASUALMessageObject("There was a permissions problem reading the file", " Could not read the file:\"" + pathToCaspac.getText()+"\"").showErrorDialog();
+                if (new File(pathToCaspac.getText()).exists()) {
+                    new CASUALMessageObject("There was a permissions problem reading the file", " Could not read the file:\"" + pathToCaspac.getText() + "\"").showErrorDialog();
                 } else {
-                    new CASUALMessageObject("File not found", "The file named:\n   \"" + pathToCaspac.getText()+"\"\ndoes not exist").showErrorDialog();
+                    new CASUALMessageObject("File not found", "The file named:\n   \"" + pathToCaspac.getText() + "\"\ndoes not exist").showErrorDialog();
                 }
                 Log.errorHandler(ex);
             } catch (Exception ex) {
@@ -313,19 +309,36 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
 
     }
 
+    private String verifyNotEmpty(String value,String description) throws MissingParameterException{
+        if (value.isEmpty()){
+            new CASUALMessageObject("Form not complete!"," We checked and the "+description+ " field is empty! you've got to fill it out.").showErrorDialog();
+            throw new MissingParameterException(description+ " is empty");
+        }
+        return value;
+    }
+    
+    private String ifBlankUseDefault(String value, String defaultValue){
+        if (value.isEmpty()){
+            return defaultValue;
+        }
+        return value;
+    }
+    
+    
     @FXML
     private File saveClicked() throws IOException {
-        this.disableControls(true);
         List<String> argsArray = new ArrayList<>();
-        argsArray.add("--output=" + this.pathToCaspac.getText());
-        argsArray.add("--scriptname=" + scriptName.getText());
-        argsArray.add("--scriptdescription=" + this.scriptDescription.getText());
-        argsArray.add("--scriptcode=" + this.scriptingArea.getText());
+        try{
+        this.disableControls(true);
+        argsArray.add("--output=" + verifyNotEmpty(this.pathToCaspac.getText(),"CASPAC Path"));
+        argsArray.add("--scriptname=" +  verifyNotEmpty(scriptName.getText(),"Script Name"));
+        argsArray.add("--scriptdescription=" +  verifyNotEmpty(this.scriptDescription.getText(),"Script Description"));
+        argsArray.add("--scriptcode=" +  verifyNotEmpty(this.scriptingArea.getText(),"Script Contents"));
         zipFiles.getItems().stream().forEach((file) -> {
-            argsArray.add("--zipfile="+file.getAbsolutePath());
+            argsArray.add("--zipfile=" + file.getAbsolutePath());
         });
-        argsArray.add("--overview=" + this.scriptDescription.getText());
-        argsArray.add("--devname=" + this.devName.getText());
+        argsArray.add("--overview=" +  verifyNotEmpty(this.scriptDescription.getText(),"Script Description"));
+        argsArray.add("--devname=" +  verifyNotEmpty(this.devName.getText(),"Developer Name"));
 
         //monitormode
         argsArray.add("--monitormode" + (adb.isSelected() ? "ADB" : //adb mode
@@ -333,20 +346,25 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
                         heimdall.isSelected() ? "HEIMDALL" : //heimdall mode
                                 always.isSelected() ? "NONE" : //always enable controls
                                         "ADB"));  //default
-        argsArray.add("--bannertext=" + this.bannerText.getText());
-        argsArray.add("--donatebuttontext=" + this.donateTo.getText());
-        argsArray.add("--donatelink=" + this.donateLink.getText());
-        argsArray.add("--startbutton=" + this.startButtonText.getText());
-        argsArray.add("--windowtitle=" + this.applicationTitle.getText());
-        argsArray.add("--scriptrevision=" + this.scriptRevision.getText());
-        argsArray.add("--supporturl=" + this.supportURL.getText());
-
+        argsArray.add("--bannertext=" + verifyNotEmpty( this.bannerText.getText(),"Brief Overview"));
+        argsArray.add("--donatebuttontext=" +  ifBlankUseDefault(this.donateTo.getText(),"casual-dev"));
+        argsArray.add("--donatelink=" +  ifBlankUseDefault(this.donateLink.getText(),"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MYEHK66JLBVXY"));
+        argsArray.add("--startbutton=" + ifBlankUseDefault(this.startButtonText.getText(),"Do It!"));
+        argsArray.add("--windowtitle=" + ifBlankUseDefault(this.applicationTitle.getText(),"Generated by CASCADE"));
+        argsArray.add("--scriptrevision=" +  ifBlankUseDefault(this.scriptRevision.getText(),"1"));
+        argsArray.add("--supporturl=" +  ifBlankUseDefault(this.supportURL.getText(),"http://xda-developers.com"));
+        } catch (MissingParameterException ex){
+            this.disableControls(false);
+            return null;
+        }
         CASPACcreator2 cpc = new CASPACcreator2(argsArray.toArray(new String[argsArray.size()]));
         Caspac caspac;
         try {
             caspac = cpc.createNewCaspac();
         } catch (MissingParameterException ex) {
             //message here
+                    this.disableControls(false);
+
             new CASUALMessageObject("missing parameters", " you have not filled out all parameters properly.").showErrorDialog();
             Log.errorHandler(ex);
             return null;
@@ -408,12 +426,13 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
     @FXML
     private File saveCASUALClicked() throws IOException {
         File myCaspacFile = saveClicked();
+        this.disableControls(false);
         File casualFile = PackagerMain.doPackaging(new String[]{"--CASPAC", myCaspacFile.getAbsolutePath(), "--output", this.caspacOutputFolder.getText()});
         return casualFile;
     }
 
     @FXML
-    private void runCASUALClicked() throws IOException {
+    private void runCASUALClicked() throws IOException{
         File casual = saveCASUALClicked();
         String exe = "";
         if (OSTools.isWindows()) {
@@ -476,7 +495,7 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
 
         List<File> fileList = new DragEventHandler().ifTimerInRangeSetFileList();
         fileList.stream().forEach((f) -> {
-            if (f.isFile() && f.exists() && !zipFiles.getItems().contains(f.getAbsolutePath())) {
+            if (f.isFile() && f.exists() && !zipFiles.getItems().contains(f)) {
                 zipFiles.getItems().add(f);
             } else {
                 Log.level4Debug("Invalid drop event detected:" + f);

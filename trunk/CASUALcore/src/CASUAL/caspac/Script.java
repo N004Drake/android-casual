@@ -62,7 +62,6 @@ public class Script {
      * extractionMethod = 0 for CASPAC (File, zipFile/zipFile) 1 for CASUAL
      * (Resource, /SCRIPTS/zipFile 2 for Filesystem (File, zipFile)
      */
-
     final int CASPAC = 0;
     final int CASUAL = 1;
     final int FILE = 2;
@@ -286,16 +285,23 @@ public class Script {
      * @return true if valid script.
      */
     public boolean verifyScript() {
-        boolean testingBool = true;
-        testingBool = !(getName().isEmpty()) && testingBool;
-        testingBool = !(scriptContents.isEmpty()) && testingBool;
-       /*
-          individualfiles are not absolutely needed, so not testing this. 
-        */
-       // testingBool = !(individualFiles.isEmpty()) && testingBool;
-        testingBool = !(discription.isEmpty()) && testingBool;
-        testingBool = metaData.verifyMeta() && testingBool;
-        return testingBool;
+        if (getName().isEmpty()) {
+            Log.level0Error("Missing Script Name! Cannot continue.");
+            return false;
+        }
+        if (scriptContents.isEmpty()) {
+            Log.level0Error(getName()+ " Script contents are empty! Cannot continue.");
+            return false;
+        }
+        if (discription.isEmpty()) {
+            Log.level0Error(getName()+ " Script discription is empty! Cannot continue.");
+            return false;
+        }
+        if (!metaData.verifyMeta()) {
+            Log.level0Error(getName()+ " Script Meta data is incomplete! Cannot continue.");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -307,14 +313,14 @@ public class Script {
         InputStream is = StringOperations.convertStringToStream(scriptContents);
         return new DataInputStream(is);
     }
-    
-    public String getScriptContentsString(){
+
+    public String getScriptContentsString() {
         return scriptContents;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb=new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append("Name:").append(this.name);
         sb.append("\nMonitoring: ").append(this.metaData.getMonitorMode());
         sb.append("temp dir:").append(this.getTempDir());
@@ -348,7 +354,7 @@ public class Script {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<File> unzipped=new ArrayList<File>();
+                    ArrayList<File> unzipped = new ArrayList<File>();
                     Log.level4Debug("Examining CASPAC mode package contents");
                     BufferedInputStream bis = null;
                     try {
@@ -356,7 +362,7 @@ public class Script {
                         bis = myCASPAC.streamFileFromZip(entry);
                         getActualMD5s().add(new MD5sum().getLinuxMD5Sum(bis, entry.toString()));
                         bis = myCASPAC.streamFileFromZip(entry);
-                        unzipped=Unzip.unZipInputStream(bis, getTempDir());
+                        unzipped = Unzip.unZipInputStream(bis, getTempDir());
                         bis.close();
                         Log.level4Debug("Extracted entry " + myCASPAC.getEntryName(entry) + "to " + getTempDir());
 
@@ -373,10 +379,10 @@ public class Script {
                             Log.errorHandler(ex);
                         }
                     }
-                    
+
                     getIndividualFiles().clear();;
                     getIndividualFiles().addAll(unzipped);
-                    if (getIndividualFiles().size()>0) {
+                    if (getIndividualFiles().size() > 0) {
                         for (String md5 : getMetaData().getMd5s()) {
                             if (!Arrays.asList(actualMD5s.toArray(new String[]{})).contains(md5)) {
                                 Log.level4Debug("Could not find " + md5 + " in list " + StringOperations.arrayToString(getActualMD5s().toArray(new String[]{})));

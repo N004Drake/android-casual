@@ -71,7 +71,8 @@ public class ScriptMeta {
     private List<String> md5s = new ArrayList<String>();
     private Script script;
 
-    private CASUALSettings.MonitorMode monitorMode=MonitorMode.ADB;
+    private CASUALSettings.MonitorMode monitorMode = MonitorMode.ADB;
+
     /**
      * constructor for new Meta.
      *
@@ -113,14 +114,31 @@ public class ScriptMeta {
      * @return true if filled in
      */
     public boolean verifyMeta() {
-        boolean testingBool = true;
-        testingBool = !(minSVNversion.isEmpty()) && testingBool;
-        testingBool = !(scriptRevision.isEmpty()) && testingBool;
-        testingBool = !(uniqueIdentifier.isEmpty()) && testingBool;
-        testingBool = !(supportURL.isEmpty()) && testingBool;
-        testingBool = !(updateMessage.isEmpty()) && testingBool;
-        testingBool = !(killSwitchMessage.isEmpty()) && testingBool;
-        return testingBool;
+        if (minSVNversion.isEmpty()) {
+            Log.level0Error(script.getName() + "minSVNversion is empty! Cannot continue.");
+            return false;
+        }
+        if (scriptRevision.isEmpty()) {
+            Log.level0Error(script.getName() + "scriptRevision is empty! Cannot continue.");
+            return false;
+        }
+        if (uniqueIdentifier.isEmpty()) {
+            Log.level0Error(script.getName() + "uniqueIdentifier  is empty! Cannot continue.");
+            return false;
+        }
+        if (supportURL.isEmpty()) {
+            Log.level0Error(script.getName() + "supportURL  is empty! Cannot continue.");
+            return false;
+        }
+        if (updateMessage.isEmpty()) {
+            Log.level0Error(script.getName() + "updateMessage is empty! Cannot continue.");
+            return false;
+        }
+        if (killSwitchMessage.isEmpty()) {
+            Log.level0Error(script.getName() + " killSwitchMessage is empty! Cannot continue.");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -179,7 +197,7 @@ public class ScriptMeta {
         metaProp.setProperty("Script.SupportURL", supportURL);
         metaProp.setProperty("Script.UpdateMessage", updateMessage);
         metaProp.setProperty("Script.KillSwitchMessage", killSwitchMessage);
-        metaProp.setProperty("Script.MonitorMode",this.monitorMode.name());
+        metaProp.setProperty("Script.MonitorMode", this.monitorMode.name());
         return this;
     }
 
@@ -197,7 +215,7 @@ public class ScriptMeta {
         killSwitchMessage = prop.getProperty("Script.KillSwitchMessage", "");
         md5s = new ArrayList<String>();
         int i = 0;
-        monitorMode=MonitorMode.valueOf(prop.getProperty("Script.MonitorMode","ADB"));
+        monitorMode = MonitorMode.valueOf(prop.getProperty("Script.MonitorMode", "ADB"));
         while (!prop.getProperty("Script.MD5[" + i + "]", "").equals("")) {
             md5s.add(prop.getProperty("Script.MD5[" + i + "]"));
             i++;
@@ -367,8 +385,6 @@ public class ScriptMeta {
     public Script getScript() {
         return script;
     }
-    
-    
 
     /**
      * @param script the script to set
@@ -389,7 +405,7 @@ public class ScriptMeta {
     /**
      * @param monitorMode the monitorMode to set
      */
-    public ScriptMeta  setMonitorMode(CASUALSettings.MonitorMode monitorMode) {
+    public ScriptMeta setMonitorMode(CASUALSettings.MonitorMode monitorMode) {
         this.monitorMode = monitorMode;
         return this;
     }

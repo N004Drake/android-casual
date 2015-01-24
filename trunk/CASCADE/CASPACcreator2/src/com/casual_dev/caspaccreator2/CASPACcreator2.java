@@ -231,6 +231,7 @@ public class CASPACcreator2 extends ParametersImpl {
         }
         File cplocation = new File(getNamed().get("output"));
         if (null == caspac) {
+            
             caspac = new Caspac(cplocation, CASUALSessionData.getInstance().getTempFolder(), 0);
         }
         caspac.setCASPACLocation(cplocation);
