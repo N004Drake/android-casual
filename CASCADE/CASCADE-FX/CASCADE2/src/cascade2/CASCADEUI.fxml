@@ -74,7 +74,7 @@
                                                       </HBox>
                                                       <HBox prefHeight="21.0" prefWidth="503.0">
                                                          <children>
-                                                            <Label text="User Text" />
+                                                            <Label text="Brief Overview" />
                                                             <TextField fx:id="bannerText" promptText="A quick message to the user about what this does" HBox.hgrow="ALWAYS" />
                                                          </children>
                                                       </HBox>
