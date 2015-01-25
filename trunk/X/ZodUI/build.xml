@@ -62,6 +62,7 @@
         <sequential>
 
             <signjar keystore="${javafx.signjar.keystore}"
+                     storetype="${javafx.signjar.type}"
                      storepass="${javafx.signjar.storepass}"
                      alias="${javafx.signjar.alias}"
                      keypass="${javafx.signjar.keypass}"
