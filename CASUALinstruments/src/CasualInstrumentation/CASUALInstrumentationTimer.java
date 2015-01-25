@@ -9,6 +9,7 @@ import CASUAL.CASUALConnectionStatusMonitor;
 import java.awt.Toolkit;
 import java.util.Timer;
 import java.util.TimerTask;
+import javafx.application.Platform;
 
 /**
  *
@@ -27,10 +28,14 @@ public class CASUALInstrumentationTimer {
 
         @Override
         public void run() {
-            String status = CASUALConnectionStatusMonitor.getStatus();
-            CASUALInstrumentation.doc.monitorStatus.setText(status);
+            final String status = CASUALConnectionStatusMonitor.getStatus();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    CASUALInstrumentation.doc.monitorStatus.setText(status);
+                }
+            });
         }
-
     }
 
     public void start() {
