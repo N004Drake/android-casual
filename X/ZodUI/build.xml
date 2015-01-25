@@ -81,6 +81,7 @@
 
             <echo message="Launching &lt;fx:signjar&gt; task from ${ant-javafx.jar.location}" level="info"/>
             <fx:signjar keystore="${javafx.signjar.keystore}"
+                        storetype="${javafx.signjar.type}"
                         storepass="${javafx.signjar.storepass}"
                         alias="${javafx.signjar.alias}"
                         keypass="${javafx.signjar.keypass}"
@@ -98,6 +99,7 @@
         <sequential>
 
             <signjar lazy="Yes"
+                     storetype="${javafx.signjar.type}"
                      keystore="${javafx.signjar.keystore}"
                      storepass="${javafx.signjar.storepass}"
                      alias="${javafx.signjar.alias}"
@@ -108,6 +110,7 @@
                 </fileset>
             </signjar>
             <signjar keystore="${javafx.signjar.keystore}"
+                    storetype="${javafx.signjar.type}"
                      storepass="${javafx.signjar.storepass}"
                      alias="${javafx.signjar.alias}"
                      keypass="${javafx.signjar.keypass}"
