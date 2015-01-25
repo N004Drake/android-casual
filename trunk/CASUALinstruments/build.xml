@@ -60,14 +60,14 @@
     
     <macrodef name="deploy-sign">
         <sequential>
-            <echo message="keystore=${javafx.signjar.keystore}" level="verbose"/>
-            <echo message="storepass=${javafx.signjar.storepass}" level="verbose"/>
-            <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
-            <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
-            <signjar keystore="${javafx.signjar.keystore}"
-                storepass="${javafx.signjar.storepass}"
-                alias="${javafx.signjar.alias}"
-                keypass="${javafx.signjar.keypass}"
+            <echo message="keystore=${javafx.signing.keystore}" level="verbose"/>
+            <echo message="storepass=${javafx.signing.storepass}" level="verbose"/>
+            <echo message="alias=${javafx.signing.alias}" level="verbose"/>
+            <echo message="keypass=${javafx.signing.keypass}" level="verbose"/>
+            <signjar keystore="${javafx.signing.keystore}"
+                storepass="${javafx.signing.storepass}"
+                alias="${javafx.signing.alias}"
+                keypass="${javafx.signing.keypass}"
                 tsaurl="${javafx.signing.tsaurl}"> 
                 <fileset dir="${jfx.deployment.dir}">
                     <include name="${jfx.deployment.jar}"/>
