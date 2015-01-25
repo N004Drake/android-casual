@@ -114,7 +114,6 @@
         <echo message="alias=${javafx.signjar.alias}" />
         <echo>Signing dist jars</echo>
         <signjar keystore="${javafx.signjar.keystore}"
-                storetype="${javafx.signjar.type}"
                  storepass="${javafx.signjar.storepass}"
                  alias="${javafx.signjar.alias}"
                  keypass="${javafx.signjar.keypass}"
@@ -138,7 +137,6 @@
             <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
             <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
             <signjar keystore="${javafx.signjar.keystore}"
-                storetype="${javafx.signjar.type}"
                 storepass="${javafx.signjar.storepass}"
                 alias="${javafx.signjar.alias}"
                 keypass="${javafx.signjar.keypass}"
@@ -180,7 +178,6 @@
             <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
             <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
             <signjar keystore="${javafx.signjar.keystore}"
-            storetype="${javafx.signjar.type}"
                 storepass="${javafx.signjar.storepass}"
                 alias="${javafx.signjar.alias}"
                 keypass="${javafx.signjar.keypass}"
@@ -190,7 +187,6 @@
                 </fileset>
             </signjar>
             <signjar keystore="${javafx.signjar.keystore}"
-            storetype="${javafx.signjar.type}"
                 storepass="${javafx.signjar.storepass}"
                 alias="${javafx.signjar.alias}"
                 keypass="${javafx.signjar.keypass}"
@@ -212,7 +208,6 @@
             <echo message="alias=${javafx.signjar.alias}" level="verbose"/>
             <echo message="keypass=${javafx.signjar.keypass}" level="verbose"/>
             <signjar keystore="${javafx.signjar.keystore}"
-             storetype="${javafx.signjar.type}"
                 storepass="${javafx.signjar.storepass}"
                 alias="${javafx.signjar.alias}"
                 keypass="${javafx.signjar.keypass}"
@@ -223,7 +218,6 @@
             </signjar>
             <echo message="Launching &lt;fx:signjar&gt; task from ${ant-javafx.jar.location}" level="info"/>
             <signjar keystore="${javafx.signjar.keystore}"
-            storetype="${javafx.signjar.type}"
                 storepass="${javafx.signjar.storepass}"
                 alias="${javafx.signjar.alias}"
                 keypass="${javafx.signjar.keypass}"
