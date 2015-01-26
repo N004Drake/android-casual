@@ -133,7 +133,12 @@ public class CASUALSessionData {
         FileOperations fo = new FileOperations();
         if (TempFolder == null) {
             String user = System.getProperty("user.name");  //username
-            String tf = System.getProperty("java.io.tmpdir"); //tempfolder
+            String tf;
+            if (System.getenv().containsKey("TMPDIR") &&  !System.getenv("TMPDIR").isEmpty() && new File(System.getenv("TMPDIR")).isDirectory()){
+                  tf = System.getenv("TMPDIR"); // user temp folder
+            } else {
+                  tf = System.getProperty("java.io.tmpdir"); //tempfolder
+            }
             tf = tf.endsWith(slash) ? tf : tf + slash;  //make sure temp folder has a slash
             SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
             TempFolder = new File(tf + "CASUAL" + user + sdf.format(new Date()) + slash); //set /temp/usernameRandom/
