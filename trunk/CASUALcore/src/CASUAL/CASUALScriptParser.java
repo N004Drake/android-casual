@@ -21,15 +21,10 @@ import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.instrumentation.Track;
 import CASUAL.misc.CountLines;
-import CASUAL.misc.StringOperations;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Parses and prepares CASUAL Script for CASUAL Language interperater.
