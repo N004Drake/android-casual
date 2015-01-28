@@ -109,25 +109,22 @@ public class CASUALLanguage {
             BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
 
             bReader.mark(1);
-            while ((strLine = bReader.readLine()) != null) {
+            while ((strLine = bReader.readLine()) != null)  {
 
+                //verify continue
                 if (CASUALSessionData.getInstance().CASPAC.getActiveScript().isScriptContinue() == false) {
                     return;
                 }
+                
+               //set progress
                 currentLine++;
                 if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
                     CASUALSessionData.getInstance().GUI.setProgressBar(currentLine);
                 }
+                
+                //check GOTO commands
                 if (!GOTO.equals("")) {
-
-                    bReader.reset();
-                    while (strLine !=null && !strLine.startsWith(GOTO)) {
-                        strLine = bReader.readLine();
-                    }
-                    if (strLine==null){
-                        strLine="$ECHO parsed to end of script and could not $GOTO:"+GOTO;
-                    }
-                    GOTO = "";
+                    strLine = doGotoRoutine(bReader, strLine);
                 }
                 if (strLine.contains(";;;")) {
                     String[] lineArray = strLine.split(";;;");
@@ -140,10 +137,7 @@ public class CASUALLanguage {
             }
             //Close the input stream
             dataIn.close();
-            if (DriverInstall.removeDriverOnCompletion == 2) {//2 for remove driver 1 for do not remove
-                Log.level2Information("Removing generic USB driver as requested");
-                new DriverRemove().deleteOemInf();
-            }
+            uninstallDriverMaybe();
             Log.level2Information("@done");
             CASUALSessionData.getInstance().GUI.sendProgress("@done");
             CASUALSessionData.getInstance().GUI.setUserMainMessage("@done");
@@ -168,6 +162,33 @@ public class CASUALLanguage {
         }
 
     }
+
+    private void uninstallDriverMaybe() {
+        if (DriverInstall.removeDriverOnCompletion == 2) {//2 for remove driver 1 for do not remove
+            Log.level2Information("Removing generic USB driver as requested");
+            new DriverRemove().deleteOemInf();
+        }
+    }
+
+    private String doGotoRoutine(BufferedReader bReader, String strLine) throws IOException {
+        bReader.reset();
+        //use Label method
+        while (strLine !=null&&  !strLine.replaceAll("\\s", "").startsWith("$LABEL" + GOTO) ){
+            strLine = bReader.readLine();
+        }
+        //use old compatibility method
+        if (strLine==null || !strLine.replaceAll("\\s", "").startsWith("$LABEL" + GOTO) ){
+            bReader.reset();
+            while (strLine !=null && !strLine.startsWith(GOTO)) {  //burn blanks at the beginning
+                strLine = bReader.readLine();
+            }
+        }
+        if (strLine==null){
+            strLine="$ECHO parsed to end of script and could not $GOTO:"+GOTO;
+        }
+        GOTO = "";
+        return strLine;
+    }
     /**
      * Process a line of CASUAL script.
      *
@@ -190,8 +211,8 @@ public class CASUALLanguage {
         
         Log.level3Verbose("COMMAND HANDLER:"+cmd.toString().replace("\n",""));
         
-        if (cmd.get().trim().equals("")||cmd.get().trim().startsWith("#")) {
-                        //Log.level4Debug("received blank line");
+        if (cmd.get().trim().equals("")||cmd.get().trim().startsWith("#")||cmd.get().trim().equals("")||cmd.get().trim().startsWith("$LABEL")) {
+                        //Log.level4Debug("received comment");  
             return "";
         }
 
