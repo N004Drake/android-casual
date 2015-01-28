@@ -16,6 +16,7 @@
  */
 package cascade2;
 
+import java.net.URL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,21 +28,24 @@ import javafx.stage.Stage;
  * @author adamoutler
  */
 public class CASCADE2 extends Application {
-    
-    
+
     private static Stage myStage;
     private static Scene scene;
-    public static Stage getStage(){
+
+    public static Stage getStage() {
         return myStage;
     }
-    
-    public static Scene getScene(){
+
+    public static Scene getScene() {
         return scene;
     }
+
     @Override
     public void start(Stage stage) throws Exception {
-        myStage=stage;
-        Parent root = FXMLLoader.load(getClass().getResource("CASCADEUI.fxml"));
+        myStage = stage;
+        Parent  root = FXMLLoader.load(getClass().getResource("CASCADEUI.fxml"));
+
+        System.out.println(getClass().getClassLoader().getResource("cascade2/CASCADEUI.fxml"));
         scene = new Scene(root);
         stage.setScene(scene);
         stage.setMinWidth(800);
@@ -56,6 +60,6 @@ public class CASCADE2 extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+        
     }
-    
 }
