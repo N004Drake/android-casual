@@ -19,9 +19,7 @@ package casualpreloader;
  * 
  */
 
-import com.sun.javaws.progress.Progress;
 import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -37,8 +35,6 @@ import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.application.Preloader;
-import javafx.application.Preloader.ProgressNotification;
-import javafx.application.Preloader.StateChangeNotification;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
@@ -53,7 +49,7 @@ public class CasualPreloader extends Preloader {
     ProgressBar bar;
     Text text;
     FadeTransition finalFadeOut;
-
+    boolean prepairingShowed=false;
     @Override
     public void start(Stage primaryStage) throws Exception {
         //create stage which has set stage style transparent
@@ -100,11 +96,12 @@ public class CasualPreloader extends Preloader {
         //add all nodes to main root group
         //show the stage
         primaryStage.show();
-        this.finalFadeOut = new FadeTransition(Duration.millis((double) 7000.0), primaryStage.getScene().getRoot());
+        this.finalFadeOut = new FadeTransition(Duration.millis((double) 4000.0), primaryStage.getScene().getRoot());
         this.finalFadeOut.setFromValue(1.0);
         this.finalFadeOut.setToValue(0.0);
         EventHandler<ActionEvent> eh = new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle(ActionEvent t) {
                 primaryStage.hide();
                 primaryStage.close();
@@ -122,6 +119,7 @@ public class CasualPreloader extends Preloader {
         this.finalFadeOut.play();
     }
 
+    
     @Override
     public void handleProgressNotification(Preloader.ProgressNotification pn) {
 
@@ -129,7 +127,11 @@ public class CasualPreloader extends Preloader {
         if (pn.getProgress() <= 0.98) {
             return;
         }
-        CasualPreloader.this.text.setText(CasualPreloader.this.text.getText() + "\npreparing");
+        if (! prepairingShowed){
+            prepairingShowed=true;
+            CasualPreloader.this.text.setText(CasualPreloader.this.text.getText() + "\npreparing");
+            
+        }
     }
 
     public static void main(String[] args) {
