@@ -147,6 +147,9 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
 
     @FXML
     TitledPane overview;
+    @FXML
+    TitledPane scriptingpanel;
+    
     private TextInputControl[] textControls;
     private static CASCADEUIController uiController;
 
