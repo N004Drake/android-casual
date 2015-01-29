@@ -122,7 +122,7 @@
                   </HBox>
             </content>
           </TitledPane>
-          <TitledPane prefHeight="635.0" prefWidth="1024.0" text="Scripting">
+          <TitledPane fx:id="scriptingpanel" prefHeight="635.0" prefWidth="1024.0" text="Scripting">
             <content>
                   <AnchorPane prefHeight="372.0" prefWidth="974.0">
                      <children>

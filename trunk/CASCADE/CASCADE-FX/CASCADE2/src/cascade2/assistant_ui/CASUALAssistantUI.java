@@ -8,8 +8,7 @@ package cascade2.assistant_ui;
 import CASUAL.Log;
 import cascade2.CASCADE2;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -56,23 +55,30 @@ public class CASUALAssistantUI extends Application {
 
     public TreeView<Label> getCasualLanguageTreeView(TextInputControl ctl) {
   
-
+        final TreeItem<Label> rootItem = new TreeItem<>(new Label("Commands-hover for description"));
+        Elements sections=new Elements();
+        TreeView<Label> tree=new TreeView();
         for (int i=0; i<3; i++){
         try {
-            TreeItem<Label> rootItem = new TreeItem<>(new Label("Commands-hover for description"));
+          
             rootItem.setExpanded(true);
-            TreeView<Label> tree = new TreeView<>(rootItem);
+             tree=new TreeView<>(rootItem);
             tree.setEditable(false);
             Document casualCommandsAndVariables = Jsoup.connect("http://casual-dev.com/casual-commands-and-variables/").get();
-            Elements sections = casualCommandsAndVariables.select("section");
+            sections = casualCommandsAndVariables.select("section");
 
+        } catch (IOException ex) {
+           Log.level4Debug("Could not connect to server in a timely manner.  retrying.");
+           continue;
+        }
+        Log.level4Debug("Preparing CASUALAssistantUI with "+ sections.size() + " sections.");
             sections.stream().map((e) -> {
-                System.out.println(">>>>>>>SECTION:    " + e.attr("data-name"));
                 return e;
             }).map((Element e) -> {
                 TreeItem<Label>  section = new TreeItem<>(new Label(e.attr("data-name")));
-                System.out.println(e.getElementsByTag("p").get(1).text());
                 Elements cmds = e.getElementsByTag("article");
+                Log.level4Debug(e.attr("data-name") + " section contains "+ cmds.size() + " elements.");
+                               
                 cmds.stream().forEach((cmd) -> {
                     //get strings and then remove so whatever is left is the tooltip.
                     Elements commandName = cmd.getElementsByTag("li");
@@ -91,21 +97,15 @@ public class CASUALAssistantUI extends Application {
                     TreeItem<Label> l=new TreeItem<>(label);
                     section.getChildren().add(l);
                     section.setExpanded(false);
-                    System.out.println("--" + name);
-                    System.out.println("----" + tooltip);
-                    System.out.println("####" + code);
                 });
                 return section;
             }).forEach((section) -> {
                 rootItem.getChildren().add(section);
             });
         return tree;
-        } catch (IOException ex) {
-           Log.level4Debug("Could not connect to server in a timely manner.  retrying.");
-        }
            
         }
-        return new TreeView<Label>();
+        return new TreeView<>();
     }
 
     private final int defaultDismissTimeout = ToolTipManager.sharedInstance().getDismissDelay();
