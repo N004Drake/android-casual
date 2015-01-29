@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 
 /**
  * Logs stuff and things
@@ -30,19 +31,33 @@ import java.io.StringWriter;
  */
 public class Log {
 
+    public static enum LogLevel {
+
+        ERROR, INTERACTION, INFORMATION, VERBOSE, DEBUG
+
+    }
+    /**
+     * increase or decrease the logging level. 0 is error only, 4 is debug
+     */
+     public static LogLevel[] outputGUIVerbosity = {LogLevel.ERROR, LogLevel.INFORMATION}; //userdata is output to console
+
+    /**
+     * increase or decrease the log file output. 0 is error only, 4 is debug
+     */
+    public static LogLevel[] outputLogVerbosity = {LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG}; //all logs are output to file
+
     /**
      * output device
      */
     public static PrintStream out = new PrintStream(System.out);
 
     private static void sendToGUI(String data) {
-        if (CASUALSessionData.getInstance().GUI==null){
+        if (CASUALSessionData.getInstance().GUI == null) {
             CASUALSessionData.getInstance().PreProgress = CASUALSessionData.getInstance().PreProgress + "\n" + data;
-        } else if (!data.equals("\n")||!data.isEmpty()) {
+        } else if (!data.equals("\n") || !data.isEmpty()) {
             CASUALSessionData.getInstance().GUI.sendString(data + "\n");
         }
     }
-
 
     /**
      * level 0 is used for errors.. basically silent. Use level 1 for for most
@@ -51,18 +66,8 @@ public class Log {
      * @param data is data to be written to log
      */
     public static void level0Error(String data) {
-        if (data.startsWith("@")) {
-            data = Translations.get(data);
-        }
-        writeOutToLog("e/"+getCaller()+" - " + data);
-        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 0) {
-            sendToGUI(data);
-
-        }
-        if (CASUALSessionData.getInstance().outputLogVerbosity >= 0) {
-            out.println("[ERROR]" + data);
-
-        }
+        data = performTranslation(data);
+        routeLogsToGUIAndFile(LogLevel.ERROR, data);
     }
 
     /**
@@ -72,16 +77,15 @@ public class Log {
      */
     // level 2 is for info-type data
     public static void level2Information(String data) {
+        data = performTranslation(data);
+        routeLogsToGUIAndFile(LogLevel.INFORMATION, data);
+    }
+
+    private static String performTranslation(String data) {
         if (data.startsWith("@")) {
             data = Translations.get(data);
         }
-        writeOutToLog("i/" +getCaller()+" - "+ data);
-        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 1) {
-            sendToGUI(data);
-        }
-        if (CASUALSessionData.getInstance().outputLogVerbosity >= 1) {
-            out.println("[INFO]" + data);
-        }
+        return data;
     }
 
     /**
@@ -90,17 +94,8 @@ public class Log {
      * @param data is data to be written to log
      */
     public static void Level1Interaction(String data) {
-        if (data.startsWith("@")) {
-            data = Translations.get(data);
-        }
-        writeOutToLog("interaction/"+getCaller()+" - " + data);
-        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 2) {
-            sendToGUI(data);
-        }
-        if (CASUALSessionData.getInstance().outputLogVerbosity >= 2) {
-            out.println("[INTERACTION]" + data);
-
-        }
+        data = performTranslation(data);
+        routeLogsToGUIAndFile(LogLevel.INTERACTION, data);
 
     }
 
@@ -110,13 +105,7 @@ public class Log {
      * @param data is data to be written to log
      */
     public static void level3Verbose(String data) {
-        writeOutToLog("v/"+getCaller()+" - " + data);
-        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 3) {
-            sendToGUI(data);
-        }
-        if (CASUALSessionData.getInstance().outputLogVerbosity >= 3) {
-            out.println("[VERBOSE]" + data);
-        }
+        routeLogsToGUIAndFile(LogLevel.VERBOSE, data);
     }
 
     /**
@@ -124,17 +113,20 @@ public class Log {
      * @param data is data to be written to log
      */
     public static void level4Debug(String data) {
-        writeOutToLog("d/"+getCaller()+" - " + data);
+        routeLogsToGUIAndFile(LogLevel.DEBUG, data);
+    }
 
-        if (CASUALSessionData.getInstance().outputGUIVerbosity >= 4) {
+    private static void routeLogsToGUIAndFile(LogLevel ll, String data) {
+        writeOutToLog("e/" + getCaller() + " - " + data);
+        if (Arrays.asList(outputGUIVerbosity).contains(ll)) {
             sendToGUI(data);
         }
-        if (CASUALSessionData.getInstance().outputLogVerbosity >= 4) {
-            out.println("[DEBUG]" + data);
+        if (Arrays.asList(outputLogVerbosity).contains(ll)) {
+            out.println("[" + ll.name() + "]" + data);
         }
     }
-    
-    public static void insertChars(String data){
+
+    public static void insertChars(String data) {
         writeOutToLog(data);
         out.print(data);
     }
@@ -167,22 +159,22 @@ public class Log {
      *
      * @param data data to be written to progress on screen
      */
-    public  static void progress(String data) {
-       if (CASUALSessionData.getInstance().GUI==null){
-           System.out.print(data);
-       } else  {
-           CASUALSessionData.getInstance().GUI.sendProgress(data);
-       }
-       
+    public static void progress(String data) {
+        if (CASUALSessionData.getInstance().GUI == null) {
+            System.out.print(data);
+        } else {
+            CASUALSessionData.getInstance().GUI.sendProgress(data);
+        }
+
     }
-    
+
     /**
      *
      * @param data data to be written to screen in real time
      */
-    public  static void LiveUpdate(String data) {
+    public static void LiveUpdate(String data) {
         out.print(data);
-        if (CASUALSessionData.getInstance().GUI!=null) {
+        if (CASUALSessionData.getInstance().GUI != null) {
             CASUALSessionData.getInstance().GUI.sendProgress(data);
         }
 
@@ -191,19 +183,18 @@ public class Log {
     /**
      * begins a new line
      */
-    public  static void beginLine() {
+    public static void beginLine() {
         out.println();
         if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
             progress("\n");
         }
     }
 
-
     /**
      *
      * @param e is any Throwable.
      */
-    public  static void errorHandler(Exception e) {
+    public static void errorHandler(Exception e) {
         StringWriter writer = new StringWriter();
         e.printStackTrace(new PrintWriter(writer));
         level0Error("[CRITICAL]" + e.getLocalizedMessage() + "\n" + e.getMessage() + "\n" + e.toString() + "\n" + "\n" + writer.toString());
@@ -213,8 +204,8 @@ public class Log {
     static void initialize() {
         out = new PrintStream(System.out);
     }
-    
-      static private String getCaller() {
+
+    static private String getCaller() {
         StackTraceElement caller = Thread.currentThread().getStackTrace()[3];
         return caller.getFileName().replace("java", "") + caller.getMethodName() + "()";
 

@@ -80,15 +80,7 @@ public class CASUALSessionData {
         return false;
     }
 
-    /**
-     * increase or decrease the logging level. 0 is error only, 4 is debug
-     */
-    public  int outputGUIVerbosity = 2; //userdata is output to console
-
-    /**
-     * increase or decrease the log file output. 0 is error only, 4 is debug
-     */
-    public  int outputLogVerbosity = 4; //all logs are output to file
+         
 
 
 

@@ -18,6 +18,7 @@ package GUI.development;
 
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
+import CASUAL.Log.LogLevel;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
@@ -150,9 +151,9 @@ public class CASUALJFrameAboutBox extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         if (jCheckBox1.isSelected()) {
-            CASUALSessionData.getInstance().outputGUIVerbosity = 4;
+            Log.outputGUIVerbosity=new LogLevel[]{LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG};
         } else {
-            CASUALSessionData.getInstance().outputGUIVerbosity = 1;
+            Log.outputGUIVerbosity= new LogLevel[]{LogLevel.ERROR,  LogLevel.INFORMATION};
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
