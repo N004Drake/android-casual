@@ -20,7 +20,7 @@ public class CASPACFileSelection {
         FileChooser chooser = new FileChooser();
          chooser.setTitle("Select CASPAC file");
          if (!new File(initial).isDirectory()) initial=new File(initial).getParent();
-        chooser.setInitialDirectory(ifInitialEmptySetToPeriod(initial));
+        chooser.setInitialDirectory(ifInitialEmptyUseHome(initial));
         FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("All Files (*.*)", "*.*");
         FileChooser.ExtensionFilter cpFilter = new FileChooser.ExtensionFilter("CASPAC files (*.CASPAC)", "*.caspac");
         chooser.getExtensionFilters().addAll(cpFilter,allFilter);
@@ -36,7 +36,7 @@ public class CASPACFileSelection {
          chooser.setTitle("Select Folder");
 
          
-        chooser.setInitialDirectory( ifInitialEmptySetToPeriod(initial));      
+        chooser.setInitialDirectory( ifInitialEmptyUseHome(initial));      
         File dir = chooser.showDialog(stage);
 
         if (dir != null) {
@@ -45,9 +45,9 @@ public class CASPACFileSelection {
         return "";
     }
     
-    private File ifInitialEmptySetToPeriod(String initial){
+    private File ifInitialEmptyUseHome(String initial){
         if (initial==null||initial.isEmpty()){
-             initial=".";
+             initial=System.getProperty("user.home");
          }
         return new File(initial);
     }
