@@ -130,6 +130,24 @@ public final class Caspac {
      * purposes.
      */
     private static boolean debug = false;
+    /**
+     * Constructor for Caspac
+     *
+     * @param caspac file containing CASPAC information.
+     * @param tempDir temp folder to use
+     * @throws IOException when permission problem exists
+     */
+    public Caspac(File caspac, String tempDir) throws IOException {
+        this.CASPAC = caspac;
+        this.CASPACsrc = null;
+        this.TempFolder = tempDir;
+        this.type = 0;
+        if (caspac.exists()) {
+            loadCASPACcontrolFilesFromCASPAC();
+        } else {
+            Log.level4Debug("CASPAC Not Found, treating as a request to create new CASPAC");
+        }
+    }
 
     /**
      * Constructor for Caspac

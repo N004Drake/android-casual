@@ -38,7 +38,7 @@ public class CASUALScriptParser {
     /**
      * If true, script will continue. False to shutdown.
      */
-    int LinesInScript = 0;
+    public int LinesInScript = 0;
     String ScriptTempFolder = "";
     String ScriptName = "";
     static String scriptReturnValue="";
@@ -53,7 +53,7 @@ public class CASUALScriptParser {
     public void loadFileAndExecute(Caspac caspac, boolean multiThreaded) {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
         CASUALSessionData.getInstance().setStatus("Loading from file");
-        executeSelectedScript(caspac, multiThreaded);
+        executeSelectedScript(caspac, multiThreaded ,CASUALSessionData.getInstance());
     }
 
     /**
@@ -114,7 +114,7 @@ public class CASUALScriptParser {
     /*
      * Script Handler contains all script commands and will execute commands
      */
-    DataInputStream scriptInput;
+    public DataInputStream scriptInput;
 
     /**
      * executes the Active Script in the provided CASPAC
@@ -122,11 +122,11 @@ public class CASUALScriptParser {
      * @param caspac CASPAC to have script executed
      * @param startThreaded true if it is to be started on a new thread.
      */
-    public void executeSelectedScript(final Caspac caspac, boolean startThreaded) {
+    public void executeSelectedScript(final Caspac caspac, boolean startThreaded , final CASUALSessionData data) {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
-        CASUALSessionData.getInstance().ReactionEvents = new ArrayList<String>();
-        CASUALSessionData.getInstance().ActionEvents = new ArrayList<String>();
-        CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
+        data.ReactionEvents = new ArrayList<String>();
+        data.ActionEvents = new ArrayList<String>();
+        data.CASPAC.getActiveScript().setScriptContinue(true);
         scriptInput = new DataInputStream(caspac.getActiveScript().getScriptContents());
         Log.level4Debug("Executing Scripted Datastream" + scriptInput.toString());
         Runnable r = new Runnable() {
@@ -135,13 +135,13 @@ public class CASUALScriptParser {
                 //int updateStatus;
                 Log.level4Debug("CASUAL has initiated a multithreaded execution environment");
 
-                if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
-                    CASUALSessionData.getInstance().GUI.setProgressBarMax(LinesInScript);
+                if (data.isGUIIsAvailable()) {
+                    data.GUI.setProgressBarMax(LinesInScript);
                 }
                 Log.level4Debug("Reading datastream" + scriptInput);
                 new CASUALLanguage(caspac, caspac.getActiveScript().getTempDir()).beginScriptingHandler(scriptInput);
 
-                if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
+                if (data.isGUIIsAvailable()) {
                     //return to normal.
                     CASUALConnectionStatusMonitor.resumeAfterStop();
                 } else {
@@ -153,10 +153,10 @@ public class CASUALScriptParser {
                 } catch (IOException ex) {
                     Log.errorHandler(ex);
                 }
-                CASUALSessionData.getInstance().CASPAC.getActiveScript().setDeviceArch("");
-                CASUALSessionData.getInstance().setStatus("done");
+                data.CASPAC.getActiveScript().setDeviceArch("");
+                data.setStatus("done");
                 Log.level2Information("@scriptComplete");
-                CASUALSessionData.getInstance().GUI.setReady(true);
+                data.GUI.setReady(true);
 
             }
         };

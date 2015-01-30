@@ -322,7 +322,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         if (CASUALSessionData.getInstance().CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
             Log.level4Debug("Loading internal resource: " + script);
             CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
-            new CASUALScriptParser().executeSelectedScript(caspac, true);
+            new CASUALScriptParser().executeSelectedScript(caspac, true, CASUALSessionData.getInstance());
         }
 
     }
