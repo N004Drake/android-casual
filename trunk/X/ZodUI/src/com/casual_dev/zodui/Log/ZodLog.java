@@ -16,10 +16,10 @@
  */
 package com.casual_dev.zodui.Log;
 
+import CASUAL.CASUALMain;
 import CASUAL.Diagnostics;
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.CASUALSessionData;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
@@ -111,14 +111,14 @@ public class ZodLog extends Application {
         setSubmitListener();
         //add content to the log
         stage.setTitle("CASUAL Log");
-        logArea.setText(new FileOperations().readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt"));
+        logArea.setText(new FileOperations().readFile(Log.getLogFile().getAbsolutePath()));
 
     }
 
     private void setRefreshListener() {
         refresh.setOnAction((ActionEvent event) -> {
             logArea.setText("");
-            logArea.setText(new FileOperations().readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt") +"\n" + CASUALSessionData.getInstance().getTempFolder() +"Log.txt refreshed "+ ++x+" times.");
+            logArea.setText(new FileOperations().readFile(Log.getLogFile().getAbsolutePath()) +"\n" + CASUALMain.getSession().getTempFolder() +"Log.txt refreshed "+ ++x+" times.");
         });
 
     }
@@ -142,7 +142,7 @@ public class ZodLog extends Application {
      */
     public static void main(String args[]) {
         Log.level4Debug("OMFG");
-        Log.level4Debug(Diagnostics.diagnosticReport());
+        Log.level4Debug(Diagnostics.diagnosticReport(CASUALMain.getSession()));
         Platform.runLater(() -> {
             try {
 

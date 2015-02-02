@@ -17,6 +17,7 @@
 
 package GUI.CommandLine;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
@@ -115,10 +116,10 @@ public class CommandLineUI implements iCASUALUI {
     public String getCommandLineInput() {
         try {
             Log.out.flush();
-            String s = CASUALSessionData.getInstance().in.readLine();
+            String s =CASUALMain.getSession().in.readLine();
             if (s == null) {
                 while (s == null) {
-                    s = CASUALSessionData.getInstance().in.readLine();
+                    s = CASUALMain.getSession().in.readLine();
                 }
             }
             return s;
@@ -238,7 +239,7 @@ public class CommandLineUI implements iCASUALUI {
     @Override
     public void setCASPAC(Caspac caspac) {
         msg("Setting caspac"+caspac);
-        CASUALSessionData.getInstance().CASPAC=caspac;
+        CASUALMain.getSession().CASPAC=caspac;
     }
 
     @Override
@@ -294,7 +295,7 @@ public class CommandLineUI implements iCASUALUI {
 
    
     public void setThisAsGUI(){
-        CASUALSessionData.getInstance().GUI=this;
+        CASUALSessionData.setGUI(this);
     }
 
     @Override

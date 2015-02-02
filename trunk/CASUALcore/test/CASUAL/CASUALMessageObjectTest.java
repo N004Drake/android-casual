@@ -20,7 +20,7 @@ public class CASUALMessageObjectTest {
 
     public CASUALMessageObjectTest() {
         if (! java.awt.GraphicsEnvironment.isHeadless() ){
-            CASUAL.CASUALSessionData.getInstance().GUI=new GUI.development.CASUALGUIMain();
+            CASUAL.CASUALSessionData.setGUI(new GUI.development.CASUALGUIMain());
         }
     }
 
@@ -41,7 +41,7 @@ public class CASUALMessageObjectTest {
         String message = "Testing Message";
         //InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
 
-        CASUAL.CASUALSessionData.getInstance().GUI.setReady(false);
+        CASUAL.CASUALSessionData.getGUI().setReady(false);
         CASUAL.CASUALMessageObject ci = new CASUAL.CASUALMessageObject(title, message);
         setContinue();
         assertEquals("", ci.inputDialog());
@@ -62,10 +62,10 @@ public class CASUALMessageObjectTest {
         assertEquals(0, ci.showUserCancelOption());
         setContinue();
         ci.showUserNotification();
-        CASUAL.CASUALSessionData.getInstance().GUI.setReady(true);
+        CASUAL.CASUALSessionData.getGUI().setReady(true);
         if (!java.awt.GraphicsEnvironment.isHeadless()){
             int x = new CASUAL.CASUALMessageObject("testing", "Do you want to perform the full array of GUI tests?\ntest").showTimeoutDialog(10, null, 1, 1, new String[]{"ok", "cancel"}, "cancel");
-            CASUAL.CASUALSessionData.getInstance().GUI.setReady(true);
+            CASUAL.CASUALSessionData.getGUI().setReady(true);
             if (x == 0) {
                 ci = new CASUAL.CASUALMessageObject("Text Input", "Press\n1");
                 assertEquals("1", ci.inputDialog());
@@ -81,7 +81,7 @@ public class CASUALMessageObjectTest {
                 ci.showErrorDialog();
                 ci = new CASUAL.CASUALMessageObject("Information Dialog", "hit\nOK!");
                 ci.showInformationMessage();
-                ci = new CASUAL.CASUALMessageObject("Notification Dialog", "In the next window, double-click the Disconnected logo to enable the controls");
+                ci = new CASUAL.CASUALMessageObject("Notification Dialog", "hit\nOK!");
                 ci.showUserNotification();
                 
             }
@@ -95,12 +95,12 @@ public class CASUALMessageObjectTest {
     private void setContinue() {
         String string = "\n";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.CASUALSessionData.getInstance().in = new BufferedReader(new InputStreamReader(stringStream));
+        CASUALMain.getSession().in = new BufferedReader(new InputStreamReader(stringStream));
     }
 
     private void setQuit() {
         String string = "q";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());
-        CASUAL.CASUALSessionData.getInstance().in = new BufferedReader(new InputStreamReader(stringStream));
+        CASUALMain.getSession().in = new BufferedReader(new InputStreamReader(stringStream));
     }
 }

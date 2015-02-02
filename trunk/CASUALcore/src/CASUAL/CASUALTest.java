@@ -31,6 +31,7 @@ import java.util.Arrays;
  */
 public class CASUALTest {
 
+   final  CASUALSessionData sd;
     static String[] args;
     /**
      * true if shutdown is commanded
@@ -50,7 +51,8 @@ public class CASUALTest {
     /**
      * sets up logging and parameters
      */
-    public CASUALTest() {
+    public CASUALTest(CASUALSessionData sd) {
+        this.sd=sd;
         valuesWeWantToSee = new String[]{""};
         goodChecks = new boolean[valuesWeWantToSee.length];
         Arrays.fill(goodChecks, Boolean.FALSE);
@@ -65,7 +67,7 @@ public class CASUALTest {
 
             toAppPipedInputStream = new PipedInputStream(BUFFER);
             writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
-            CASUAL.CASUALSessionData.getInstance().in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
+            sd.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
         } catch (IOException ex) {
             Log.errorHandler(ex);
@@ -80,7 +82,8 @@ public class CASUALTest {
      * @param valuesToCheckDuringRun desirable values from CASUAL
      * @param valuesWeDontWantToSee undesirable values reported from CASUAL
      */
-    public CASUALTest(String[] CASUALLaunchCommand, String[] valuesToCheckDuringRun, String[] valuesWeDontWantToSee) {
+    public CASUALTest(CASUALSessionData sd, String[] CASUALLaunchCommand, String[] valuesToCheckDuringRun, String[] valuesWeDontWantToSee) {
+        this.sd=sd;
         valuesWeWantToSee = valuesToCheckDuringRun;
         goodChecks = new boolean[valuesWeWantToSee.length];
         Arrays.fill(goodChecks, Boolean.FALSE);
@@ -95,7 +98,7 @@ public class CASUALTest {
 
             toAppPipedInputStream = new PipedInputStream(BUFFER);
             writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
-            CASUAL.CASUALSessionData.getInstance().in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
+            sd.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
 
         } catch (IOException ex) {
             Log.errorHandler(ex);
@@ -211,7 +214,7 @@ public class CASUALTest {
     Runnable launchCASUAL = new Runnable() {
         @Override
         public void run() {
-            CASUAL.CASUALMain.beginCASUAL(args);
+            CASUAL.CASUALMain.beginCASUAL(args,sd);
             shutdown = true;
             CASUAL.CASUALMain.shutdown(0);
             shutdown = false;

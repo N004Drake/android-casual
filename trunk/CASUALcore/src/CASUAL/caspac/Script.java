@@ -51,6 +51,7 @@ import java.util.zip.ZipException;
  */
 public class Script {
 
+    final CASUALSessionData sd;
     /**
      * @return the slash
      */
@@ -88,11 +89,6 @@ public class Script {
      * Name of the Script (script filename without extension).
      */
     private String name;
-
-    /**
-     * Working folder for this Script.
-     */
-    private String tempDir;
 
     /**
      * Contents of the Script which are to be executed by CASUAL. This is
@@ -136,12 +132,13 @@ public class Script {
     /**
      * Creates a duplicate script from an old one.
      *
+     * @param sd
      * @param s script to use as base.
      */
-    public Script(Script s) {
+    public Script(CASUALSessionData sd,Script s) {
+        this.sd=sd;
         Log.level4Debug("Setting up script " + s.name + " from preexisting script");
         this.name = s.name;
-        this.tempDir = s.tempDir;
         this.extractionMethod = 2;
         this.metaData = s.metaData;
         this.individualFiles = s.individualFiles;
@@ -157,50 +154,53 @@ public class Script {
      * @param name name of script.
      * @param tempDir temp folder to use.
      */
-    public Script(String name, String tempDir) {
+    public Script(CASUALSessionData sd, String name, String tempDir) {
+        this.sd=sd;
         Log.level4Debug("Setting up script " + name + " with name and tempdir");
         this.name = name;
-        this.tempDir = tempDir;
         this.extractionMethod = 0;
     }
 
     /**
      * Creates a new script from a name, tempdir and type.
      *
+     * @param sd
      * @param name name of script
      * @param tempDir temp folder to use.
      * @param type this.CASPAC, this.CASUAL, this.FILE. final int CASPAC = 0
      * final int CASUAL = 1; final int FILE = 2;
      */
-    public Script(String name, String tempDir, int type) {
+    public Script(CASUALSessionData sd,String name, String tempDir, int type) {
+        this.sd=sd;
         Log.level4Debug("Setting up script " + name + " with name, tempdir and type");
         this.name = name;
-        this.tempDir = tempDir;
         this.extractionMethod = type;
     }
 
     /**
      * creates a new script with several parameters
      *
+     * @param sd
      * @param name name of script
      * @param script Script contents to use for script (scr file)
      * @param discription description of script (txt file)
      * @param includeFiles files to be used in script (zipfile)
      * @param tempDir temp folder to use.
      */
-    public Script(String name, String script, String discription, List<File> includeFiles, String tempDir) {
+    public Script(CASUALSessionData sd,String name, String script, String discription, List<File> includeFiles, String tempDir) {
+        this.sd=sd;
         Log.level4Debug("Setting up script " + name + " with name, script, description, included files and tempdir");
         this.discription = discription;
         this.name = name;
         this.scriptContents = script;
         this.individualFiles = includeFiles;
-        this.tempDir = tempDir;
         extractionMethod = 0;
     }
 
     /**
      * creates a new script with several parameters
      *
+     * @param sd
      * @param name name of script
      * @param script Script contents to use for script (scr file)
      * @param discription description of script (txt file)
@@ -209,21 +209,22 @@ public class Script {
      * @param tempDir temp folder to use.
      * @param type type of script (this.CASUAL this.CASPAC this.FILE).
      */
-    public Script(String name, String script, String discription,
+    public Script(CASUALSessionData sd, String name, String script, String discription,
             List<File> includeFiles, Properties prop, String tempDir, int type) {
+        this.sd=sd;
         Log.level4Debug("Setting up script " + name + " with name, script, description, included files, propeties, type and tempdir");
         this.discription = discription;
         this.name = name;
         this.scriptContents = script;
         this.individualFiles = includeFiles;
         this.metaData = new ScriptMeta(prop, this);
-        this.tempDir = tempDir;
         this.extractionMethod = type;
     }
 
     /**
      * creates a new script with several parameters
      *
+     * @param sd
      * @param name name of script
      * @param script Script contents to use for script (scr file)
      * @param discription description of script (txt file)
@@ -231,32 +232,33 @@ public class Script {
      * @param prop properties file to be used in script (meta)
      * @param tempDir temp folder to use.
      */
-    public Script(String name, String script, String discription,
+    public Script(CASUALSessionData sd,String name, String script, String discription,
             List<File> includeFiles, Properties prop, String tempDir) {
+        this.sd=sd;
         Log.level4Debug("Setting up script " + name + " with name, script, description includedFiles, properties, and tempdir");
         this.discription = discription;
         this.name = name;
         this.scriptContents = script;
         this.individualFiles = includeFiles;
         this.metaData = new ScriptMeta(prop, this);
-        this.tempDir = tempDir;
         extractionMethod = 0;
     }
 
     /**
      * creates a new script with several parameters
      *
+     * @param sd
      * @param name name of script
      * @param script Script contents to use for script (scr file)
      * @param discription description of script (txt file)
      * @param tempDir temp folder to use.
      */
-    public Script(String name, String script, String discription, String tempDir) {
+    public Script(CASUALSessionData sd,String name, String script, String discription, String tempDir) {
+        this.sd=sd;
         Log.level4Debug("Setting up script " + name + " with name, script, description and tempdir");
         this.name = name;
         this.scriptContents = script;
         this.discription = discription;
-        this.tempDir = tempDir;
         extractionMethod = 0;
     }
 
@@ -269,7 +271,7 @@ public class Script {
      */
     public Script copyOf(String newScriptName, String newTempDir) {
         Log.level4Debug("Setting up script " + newScriptName + " from preexisting script");
-        Script s = new Script(newScriptName, tempDir);
+        Script s = new Script(sd,newScriptName, sd.getTempFolder());
         s.metaData = metaData;
         s.individualFiles = individualFiles;
         s.zipfile = zipfile;
@@ -362,7 +364,7 @@ public class Script {
                         bis = myCASPAC.streamFileFromZip(entry);
                         getActualMD5s().add(new MD5sum().getLinuxMD5Sum(bis, entry.toString()));
                         bis = myCASPAC.streamFileFromZip(entry);
-                        unzipped = Unzip.unZipInputStream(bis, getTempDir());
+                        unzipped = Unzip.unZipInputStream(sd, bis, getTempDir());
                         bis.close();
                         Log.level4Debug("Extracted entry " + myCASPAC.getEntryName(entry) + "to " + getTempDir());
 
@@ -380,7 +382,7 @@ public class Script {
                         }
                     }
 
-                    getIndividualFiles().clear();;
+                    getIndividualFiles().clear();
                     getIndividualFiles().addAll(unzipped);
                     if (getIndividualFiles().size() > 0) {
                         for (String md5 : getMetaData().getMd5s()) {
@@ -424,7 +426,7 @@ public class Script {
                                 Log.level4Debug("Examining CASUAL mode script contents:" + scriptZipFile.toString());
                                 getActualMD5s().add(new MD5sum().getLinuxMD5Sum(getClass().getResourceAsStream("/" + scriptZipFile.toString()), scriptZipFile.toString()));
                                 Log.level4Debug("unzip of " + scriptZipFile.toString() + " is beginning.");
-                                Unzip.unZipResource("/" + scriptZipFile.toString(), getTempDir());
+                                Unzip.unZipResource(sd,"/" + scriptZipFile.toString(), getTempDir());
                             } catch (FileNotFoundException ex) {
                                 Log.errorHandler(ex);
                             } catch (IOException ex) {
@@ -510,7 +512,7 @@ public class Script {
 
         //get md5 and stream for zip
         //go to folder above and create stream
-        File masterTempDir = new File(tempDir).getParentFile();
+        File masterTempDir = new File(sd.getTempFolder()).getParentFile();
         File instanceZip = new File(masterTempDir + CASUALSessionData.slash + name + ".zip");
         try {
             instanceZip.delete();
@@ -522,7 +524,7 @@ public class Script {
         try {
             Zip zip;
 
-            zip = new Zip(instanceZip);
+            zip = new Zip(sd,instanceZip);
             zip.removeAllEntries();
             zip.addFilesToExistingZip(individualFiles.toArray(new File[individualFiles.size()]));
 
@@ -591,16 +593,10 @@ public class Script {
      * @return the tempDir
      */
     public String getTempDir() {
-        return tempDir;
+        return sd.getTempFolder()+this.name;
     }
 
-    /**
-     * @param tempDir the tempDir to set
-     */
-    public Script setTempDir(String tempDir) {
-        this.tempDir = tempDir;
-        return this;
-    }
+
 
     /**
      * @param scriptContents the scriptContents to set

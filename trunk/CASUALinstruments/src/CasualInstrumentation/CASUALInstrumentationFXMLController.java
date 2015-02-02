@@ -7,6 +7,7 @@
 package CasualInstrumentation;
 
 import CASUAL.CASUALConnectionStatusMonitor;
+import CASUAL.CASUALMain;
 import CASUAL.misc.MandatoryThread;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -69,13 +70,13 @@ public class CASUALInstrumentationFXMLController implements Initializable {
     }    
     
     @FXML public void startADB(){
-             new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+             new CASUALConnectionStatusMonitor().start(CASUALMain.getSession(),new CASUAL.communicationstools.adb.ADBTools());
     }
     @FXML public void startFastboot(){
-             new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.fastboot.FastbootTools());
+             new CASUALConnectionStatusMonitor().start(CASUALMain.getSession(),new CASUAL.communicationstools.fastboot.FastbootTools());
     }
     @FXML public void startHeimdall(){
-             new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.heimdall.HeimdallTools());
+             new CASUALConnectionStatusMonitor().start(CASUALMain.getSession(),new CASUAL.communicationstools.heimdall.HeimdallTools());
     }
     
     @FXML public void resetConnection(){

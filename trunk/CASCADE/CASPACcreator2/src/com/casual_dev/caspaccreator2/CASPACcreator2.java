@@ -5,9 +5,9 @@
  */
 package com.casual_dev.caspaccreator2;
 
+import CASUAL.CASUALMain;
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
-import CASUAL.CASUALSettings;
 import CASUAL.CASUALSettings.MonitorMode;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Build;
@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -58,7 +57,7 @@ public class CASPACcreator2 extends ParametersImpl {
     }
 
     private void loadCaspac() throws IOException {
-        caspac = new Caspac(new File(getNamed().get("caspac")), CASUALSessionData.getInstance().getTempFolder(), 0);
+        caspac = new Caspac(CASUALMain.getSession(),new File(getNamed().get("caspac")), CASUALMain.getSession().getTempFolder(), 0);
         caspac.loadFirstScriptFromCASPAC();
         caspac.waitForUnzip();
         loadedFromExisting = true;
@@ -120,12 +119,12 @@ public class CASPACcreator2 extends ParametersImpl {
             }
 
         }
-        script = new Script(
+        script = new Script(CASUALMain.getSession(),
                 getNamed().get("scriptname"),
                 getNamed().get("scriptcode"),
                 getNamed().get("scriptdescription"),
                 includeFiles,
-                CASUALSessionData.getInstance().getTempFolder() + getNamed().get("scriptname"));
+                CASUALMain.getSession().getTempFolder() + getNamed().get("scriptname"));
         return script;
     }
 
@@ -232,19 +231,19 @@ public class CASPACcreator2 extends ParametersImpl {
         File cplocation = new File(getNamed().get("output"));
         if (null == caspac) {
             
-            caspac = new Caspac(cplocation, CASUALSessionData.getInstance().getTempFolder(), 0);
+            caspac = new Caspac(CASUALMain.getSession(),cplocation, CASUALMain.getSession().getTempFolder(), 0);
         }
         caspac.setCASPACLocation(cplocation);
 
     }
 
     public Caspac createNewCaspac() throws IOException, MissingParameterException {
-        iCASUALUI oldGUI = CASUALSessionData.getInstance().GUI;
-        CASUALSessionData.getInstance().GUI = new GUI.testing.automatic();
+        iCASUALUI oldGUI = CASUALSessionData.getGUI();
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
 
         doPackaging();
 
-        CASUALSessionData.getInstance().GUI = oldGUI;
+        CASUALSessionData.setGUI(oldGUI);
         Log.Level1Interaction("new CASPAC located at " + caspac.getCASPACLocation().getAbsolutePath());
         return caspac;
     }

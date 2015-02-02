@@ -16,11 +16,10 @@
  */
 package CASUAL.communicationstools.adb.busybox;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
-import CASUAL.CASUALTools;
 import CASUAL.Log;
 import CASUAL.Shell;
-import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.instrumentation.ModeTrackerInterface;
 import CASUAL.instrumentation.Track;
@@ -264,7 +263,7 @@ public class CASUALDataBridge {
             }
             bos.flush();
 
-            CASUALSessionData.getInstance().setStatus("Sent:" + bytes + "bytes");
+            CASUALMain.getSession().setStatus("Sent:" + bytes + "bytes");
 
             long endTime = System.currentTimeMillis();
             double duration = (endTime - startTime) / 1000.000;
@@ -281,7 +280,7 @@ public class CASUALDataBridge {
 
     private long copyStreamFromDevice(final Socket socket, OutputStream output) {
         try {
-            CASUALSessionData.getInstance().setStatus("Data transfer initiated, please wait");
+            CASUALMain.getSession().setStatus("Data transfer initiated, please wait");
             BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
             long startTime = System.currentTimeMillis();
             byte[] buf;
@@ -298,7 +297,7 @@ public class CASUALDataBridge {
             }
             timeoutWatchdog.stop();
             output.flush();
-            CASUALSessionData.getInstance().setStatus("Sent:" + bytes + "bytes");
+            CASUALMain.getSession().setStatus("Sent:" + bytes + "bytes");
             long endTime = System.currentTimeMillis();
             double duration = (endTime - startTime) / 1000.000;
             double kb = bytes / duration / 1000;
@@ -410,7 +409,7 @@ public class CASUALDataBridge {
 
             } else {
                 lastbytes = bytes;
-                CASUALSessionData.getInstance().setStatus(status + " " + bytes);
+                CASUALMain.getSession().setStatus(status + " " + bytes);
             }
 
         }

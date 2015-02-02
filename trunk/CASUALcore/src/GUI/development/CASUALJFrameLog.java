@@ -16,6 +16,7 @@
  */
 package GUI.development;
 
+import CASUAL.CASUALMain;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
@@ -165,6 +166,6 @@ public class CASUALJFrameLog extends javax.swing.JFrame {
 
     private void refreshLog() {
         final FileOperations FileOperations = new FileOperations();
-        this.jTextArea1.setText(FileOperations.readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt"));
+        this.jTextArea1.setText(FileOperations.readFile(CASUALMain.getSession().getTempFolder() + "Log.txt"));
     }
 }

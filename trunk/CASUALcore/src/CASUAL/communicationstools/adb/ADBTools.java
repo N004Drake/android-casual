@@ -16,6 +16,7 @@
  */
 package CASUAL.communicationstools.adb;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.OSTools;
@@ -25,6 +26,7 @@ import CASUAL.CASUALSessionData;
 import CASUAL.misc.DiffTextFiles;
 import java.awt.HeadlessException;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Provides a set of tools for using ADB in CASUAL
@@ -39,7 +41,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     private static String binaryLocation = ""; //location of ADB after deployment
 
     /**
-     * ADBTools default constructor. 
+     * ADBTools default constructor.
      */
     public ADBTools() {
 
@@ -56,7 +58,6 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
         return System.getProperty("user.home") + CASUALSessionData.slash + ".android" + CASUALSessionData.slash + "adb_usb.ini";
     }
 
-
     /**
      * returns the Instance of Linux's ADB binary
      *
@@ -72,8 +73,6 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
         }
         return linux32Location;
     }
-
-    
 
     /**
      * {@inheritDoc}
@@ -93,7 +92,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     }
 
     /**
-
+     *
      * {@inheritDoc}
      */
     @Override
@@ -203,40 +202,40 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     public synchronized String deployBinary(String tempFolder) {
         Log.level4Debug("Deploying ADB");
 
-            String tempBinaryLocation = CASUALSessionData.getInstance().getTempFolder() + "adb";
-            String[] resourceLocation;
-            if (OSTools.isLinux()) {
-                Log.level4Debug("Found Linux Computer for ADB deployment");
-                resourceLocation = this.getLinuxADBResource();
-            } else if (OSTools.isMac()) {
-                Log.level4Debug("Found Mac Computer for ADB deployment");
-                resourceLocation = macLocation;
-            } else if (OSTools.isWindows()) {
-                Log.level4Debug("Found Windows Computer for ADB deployment");
-                resourceLocation = windowsLocation;
-            } else {
-                new CASUALMessageObject("@interactionsystemNotNativelySupported").showInformationMessage();
-                resourceLocation = new String[]{};
+        String tempBinaryLocation = tempFolder + "adb";
+        String[] resourceLocation;
+        if (OSTools.isLinux()) {
+            Log.level4Debug("Found Linux Computer for ADB deployment");
+            resourceLocation = this.getLinuxADBResource();
+        } else if (OSTools.isMac()) {
+            Log.level4Debug("Found Mac Computer for ADB deployment");
+            resourceLocation = macLocation;
+        } else if (OSTools.isWindows()) {
+            Log.level4Debug("Found Windows Computer for ADB deployment");
+            resourceLocation = windowsLocation;
+        } else {
+            new CASUALMessageObject("@interactionsystemNotNativelySupported").showInformationMessage();
+            resourceLocation = new String[]{};
+        }
+
+        ResourceDeployer rd = new ResourceDeployer();
+        File defaultLocation = new File(getDefaultBinaryName(tempFolder));
+        for (String res : resourceLocation) {
+            String deployedName = rd.deployResourceTo(res, tempFolder);
+            if (deployedName.contains("adb-") || deployedName.endsWith("adb.exe")) {
+
+                new File(deployedName).renameTo(defaultLocation);
+                defaultLocation.setExecutable(true);
+                tempBinaryLocation = defaultLocation.getAbsolutePath();
             }
-            
-            ResourceDeployer rd=new ResourceDeployer();
-            File defaultLocation=new File(getDefaultBinaryName());
-            for (String res : resourceLocation) {
-                String deployedName=rd.deployResourceTo(res, tempFolder);
-                if (deployedName.contains("adb-")||deployedName.endsWith("adb.exe")){
-                    
-                    new File(deployedName).renameTo(defaultLocation);
-                    defaultLocation.setExecutable(true);
-                    tempBinaryLocation=defaultLocation.getAbsolutePath();
-                }
-            }
-       
+        }
+
         updateADBini();
-        String[] devicesCommand=new String[]{tempBinaryLocation,"devices"};
-        String[] sendcmd=devicesCommand;
-        String deviceList = new Shell().silentTimeoutShellCommand(sendcmd,5000);
-        if (checkErrorMessage(devicesCommand, deviceList)|| deviceList.contains("\toffline\n")){
-            binaryLocation=tempBinaryLocation;
+        String[] devicesCommand = new String[]{tempBinaryLocation, "devices"};
+        String[] sendcmd = devicesCommand;
+        String deviceList = new Shell().silentTimeoutShellCommand(sendcmd, 5000);
+        if (checkErrorMessage(devicesCommand, deviceList) || deviceList.contains("\toffline\n")) {
+            binaryLocation = tempBinaryLocation;
         }
         return binaryLocation;
     }
@@ -251,10 +250,10 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     }
 
     private void updateADBini() {
-        ResourceDeployer rd=new ResourceDeployer();
-        String adbini=getAdbIniLocation();
-        File adbIni=new File(adbini);
-        if (!adbIni.isFile()&& !adbIni.exists() ) {
+        ResourceDeployer rd = new ResourceDeployer();
+        String adbini = getAdbIniLocation();
+        File adbIni = new File(adbini);
+        if (!adbIni.isFile() && !adbIni.exists()) {
             rd.copyFromResourceToFile(adbIniResource, adbini);
         } else {
             DiffTextFiles DTF = new DiffTextFiles();
@@ -262,15 +261,13 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
         }
     }
 
-
-
     /**
      * executes the getDevices command
      *
      * @return individual devices listed as strings
      */
     public String[] getIndividualDevices() {
-        String devReturn = run(new String[]{"devices"}, 5000,true);
+        String devReturn = run(new String[]{"devices"}, 5000, true);
         checkErrorMessage(getDevicesCmd(), devReturn);
         if (devReturn.equals("List of devices attached \n\n")) {
             return new String[]{};
@@ -285,12 +282,14 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
         }
 
     }
-    private String getDefaultBinaryName(){
-        if (OSTools.isWindows()){
-            return CASUALSessionData.getInstance().getTempFolder()+"adb.exe";
+
+    private String getDefaultBinaryName(String tempFolder) {
+        if (OSTools.isWindows()) {
+            return tempFolder + "adb.exe";
         }
-        return CASUALSessionData.getInstance().getTempFolder()+"adb";
+        return tempFolder + "adb";
     }
+
     /**
      * method to get the wait-for-device command for ADB use
      *
@@ -363,7 +362,7 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     @Override
     public synchronized String getBinaryLocation() {
         if (binaryLocation.isEmpty() || !new File(binaryLocation).exists()) {
-            deployBinary(CASUALSessionData.getInstance().getTempFolder());
+            deployBinary(CASUALMain.getSession().getTempFolder());
         }
         return binaryLocation;
     }

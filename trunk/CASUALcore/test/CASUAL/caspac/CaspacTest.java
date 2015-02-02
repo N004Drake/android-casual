@@ -23,12 +23,13 @@ import org.junit.Test;
  */
 public class CaspacTest {
     Caspac test;
+    CASUALSessionData sd=CASUALSessionData.newInstance();
     public CaspacTest() {
-        CASUALSessionData.getInstance().GUI=new GUI.testing.automatic();
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
         try {
-            test=new Caspac(new File("../../CASPAC/QualityControl/echoTest.zip"),CASUALSessionData.getInstance().getTempFolder(),0);
+            test=new Caspac(sd,new File("../../CASPAC/QualityControl/echoTest.zip"),sd.getTempFolder(),0);
             test.loadFirstScriptFromCASPAC();
-            this.instance = new Caspac(new File("../../CASPAC/testpak.zip"), CASUALSessionData.getInstance().getTempFolder(), 0);
+            this.instance = new Caspac(sd,new File("../../CASPAC/testpak.zip"), sd.getTempFolder(), 0);
             System.out.println(instance.getCASPACLocation().getCanonicalPath());
         } catch (IOException ex) {
             Logger.getLogger(CaspacTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -60,7 +61,7 @@ public class CaspacTest {
         try {
             System.out.println("removeScript");
             instance.load();
-            Script s = new Script(instance.getScripts().get(0));
+            Script s = new Script(sd,instance.getScripts().get(0));
             instance.getScriptByName("foobar");
             instance.removeScript(instance.getScriptByName("foobar"));
             assert (!instance.getScripts().contains("foobar"));
@@ -118,14 +119,14 @@ public class CaspacTest {
         assert test.getBuild().isAudioEnabled()==true;
         assert test.getBuild().isUsePictureForBanner()==false;
         assert test.getBuild().isAlwaysEnableControls()==false;
-        assert test.getTempFolder().equals(CASUALSessionData.getInstance().getTempFolder());
+        assert test.getTempFolder().equals(sd.getTempFolder());
         assert test.getBuild().getDeveloperDonateButtonText().equals("test");
         assert test.getBuild().getDeveloperDonateButtonText().equals("test");
         assert test.getCASPACLocation().getCanonicalFile().equals(new File("../../CASPAC/QualityControl/echoTest.zip").getCanonicalFile());
         assert test.getScripts().get(0).extractionMethod==0;
         assert test.getScripts().get(0).getName().equals("echoTest");
         String x=test.getScripts().get(0).getTempDir();
-        assert test.getScripts().get(0).getTempDir().contains(CASUALSessionData.getInstance().getTempFolder()+test.getScripts().get(0).getName());
+        assert test.getScripts().get(0).getTempDir().contains(sd.getTempFolder()+test.getScripts().get(0).getName());
         assert test.getScripts().get(0).getScriptContentsString().equals("$ECHO test");
         assert test.getScripts().get(0).getIndividualFiles().size() ==0;
         assert test.getScripts().get(0).getMetaData().getMinSVNversion().equals("0");

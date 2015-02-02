@@ -15,7 +15,7 @@ import org.junit.Test;
  * @author adam
  */
 public class CASPACjUnitTest {
-
+    CASUALSessionData sd=CASUALSessionData.newInstance();
     @BeforeClass
     public static void setUpClass() {
     }
@@ -38,7 +38,7 @@ public class CASPACjUnitTest {
         String[] casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         String[] badValues = new String[]{"ERROR"};
         String[] goodValues = new String[]{"echo [PASS]"};
-        CASUALTest ct = new CASUALTest(casualParams, goodValues, badValues);
+        CASUALTest ct = new CASUALTest(sd,casualParams, goodValues, badValues);
         assertEquals(true, ct.checkTestPoints());
         CASUAL.CASUALMain.shutdown(0);
 
@@ -49,7 +49,7 @@ public class CASPACjUnitTest {
         casualParams = new String[]{"--CASPAC", "../../CASPAC/testpak.zip"};
         badValues = new String[]{"ERROR"};
         goodValues = new String[]{"echo [PASS]", "[PASS] IFNOTCONTAINS"};
-        assertEquals(true, new CASUAL.CASUALTest(casualParams, goodValues, badValues).checkTestPoints());
+        assertEquals(true, new CASUAL.CASUALTest(sd,casualParams, goodValues, badValues).checkTestPoints());
     }
               
 }

@@ -37,7 +37,7 @@ public class ShellTest {
     final String exp = "List of devices attached";
 
     public ShellTest() {
-        CASUALSessionData.getInstance().GUI = new GUI.testing.automatic();
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
     }
 
     @BeforeClass

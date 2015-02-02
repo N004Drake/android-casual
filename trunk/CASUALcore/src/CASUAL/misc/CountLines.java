@@ -16,6 +16,7 @@
  */
 package CASUAL.misc;
 
+import CASUAL.CASUALMain;
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
 import java.io.BufferedInputStream;
@@ -61,7 +62,7 @@ public class CountLines {
      * @return number of lines in a file
      */
     public int countResourceLines(String ResourceName) {
-        InputStream IS = getClass().getResourceAsStream(CASUALSessionData.getInstance().CASPAC.getActiveScript().getTempDir()+ ResourceName + ".scr");
+        InputStream IS = getClass().getResourceAsStream(CASUALMain.getSession().CASPAC.getActiveScript().getTempDir()+ ResourceName + ".scr");
         int Lines = 0;
         try {
             Lines = countISLines(IS);

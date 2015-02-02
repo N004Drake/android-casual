@@ -27,7 +27,6 @@ public class CASUALJUnitTest {
     @AfterClass
     public static void tearDownClass() {
     }
-
     /*
      -do-compile-test:
      [javac] Compiling 13 source files to /var/lib/jenkins/workspace/ProjectCASUAL/trunk/CASUALcore/build/test/classes
@@ -56,10 +55,10 @@ public class CASUALJUnitTest {
         if (java.awt.GraphicsEnvironment.isHeadless()) {
             return;
         }
-        ca.main(new String[]{});
+        CASUALMain.main(new String[]{});
         Thread.sleep(7000);
-        Script s=CASUALSessionData.getInstance().CASPAC.getActiveScript();
+        Script s=CASUALMain.getSession().CASPAC.getActiveScript();
         assert s.getName().equals("TestScript");
-        System.out.println(CASUALSessionData.getInstance().getTempFolder());
+        System.out.println(CASUALMain.getSession().getTempFolder());
     }
 }

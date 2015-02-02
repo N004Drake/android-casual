@@ -17,6 +17,7 @@
 package cascade2;
 
 import CASPACkager.PackagerMain;
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.FileOperations;
 import CASUAL.Log;
@@ -160,7 +161,7 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         new Thread(() -> {
-            CASUALSessionData.getInstance().GUI = this;
+            CASUALSessionData.setGUI(this);
         }).start();
         Platform.runLater(() -> {
             uiController = CASCADEUIController.this;
@@ -239,9 +240,9 @@ public class CASCADEUIController extends AutomaticUI implements Initializable {
             newButtonClicked();
             try {
                 if (AES128Handler.getCASPACHeaderLength(file) > 20) {
-                    cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0, getPassword());
+                    cp = new Caspac(CASUALMain.getSession(),file,CASUALMain.getSession().getTempFolder(), 0, getPassword());
                 } else {
-                    cp = new Caspac(file, CASUALSessionData.getInstance().getTempFolder(), 0);
+                    cp = new Caspac(CASUALMain.getSession(),file, CASUALMain.getSession().getTempFolder(), 0);
                 }
                 setIDEInfoFromCASPAC(cp);
             } catch (IOException ex) {

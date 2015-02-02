@@ -51,6 +51,12 @@ import java.util.zip.ZipException;
  */
 public class CASUALUpdates {
 
+    final CASUALSessionData sd;
+    
+    public CASUALUpdates(CASUALSessionData sd){
+        this.sd=sd;
+    }
+    
     /**
      * location to CASUAL online repository
      */
@@ -69,7 +75,7 @@ public class CASUALUpdates {
      * @param friendlyName name displayed to user
      * @return true if downloaded
      */
-    public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
+    public boolean downloadFileFromInternet( String URL, String outputFile, String friendlyName) {
         try {
             downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
         } catch (MalformedURLException ex) {
@@ -260,11 +266,11 @@ public class CASUALUpdates {
         Log.level3Verbose("Found " + system + " " + arch + "computer");
         String basename = new File(propertiesFileInCASUALOnlineRepo).getName();
         //download location, md5, and version information
-        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, CASUALSessionData.getInstance().getTempFolder() + basename, "locating files");
+        downloadFileFromInternet(propertiesFileInCASUALOnlineRepo, sd.getTempFolder() + basename, "locating files");
         Log.level3Verbose("downloaded" + propertiesFileInCASUALOnlineRepo);
         //Set properties file
         Properties prop = new Properties();
-        prop.load(new FileInputStream(CASUALSessionData.getInstance().getTempFolder() + basename));
+        prop.load(new FileInputStream(sd.getTempFolder() + basename));
         // get information from properties file
         int counter = 1;
         String filenumber = "";
@@ -283,7 +289,7 @@ public class CASUALUpdates {
 
             String downloadBasename = downloadURL.substring(downloadURL.lastIndexOf('/') + 1, downloadURL.length());
             String availableVersion = prop.getProperty(system + arch + filenumber + "Version");
-            String downloadedFile = CASUALSessionData.getInstance().getTempFolder() + downloadBasename;
+            String downloadedFile = sd.getTempFolder() + downloadBasename;
             //download update based on information available.
 
             downloadFileFromInternet(downloadURL, downloadedFile, downloadBasename + " ver" + availableVersion);
@@ -302,12 +308,12 @@ public class CASUALUpdates {
         }
         String downloadURL = prop.getProperty(system + arch);
         String downloadBasename = new File(downloadURL).getName();
-        return CASUALSessionData.getInstance().getTempFolder() + downloadBasename;
+        return sd.getTempFolder() + downloadBasename;
 
     }
 
     /**
-     * Updates a script. Uses online repository specified in CASUALSessionData.getInstance().
+     * Updates a script. Uses online repository specified in sd.
      *
      * @param script CASUAL.caspac.Script object to be updated
      * @param tempFolder Temp Folder to use for updating.
@@ -359,12 +365,14 @@ public class CASUALUpdates {
                 @Override
                 public void run() {
                     Log.level0Error("@problemDownlaodingFile");
-                    new CASUALMessageObject("@interactionBadDownload");
+                    new CASUALMessageObject("@interactionBadDownload").showErrorDialog();
                 }
             });
             return -1;
         } finally {
-            conn.disconnect();
+            if (null!=conn){
+                conn.disconnect();
+            }
         }
     }
 }

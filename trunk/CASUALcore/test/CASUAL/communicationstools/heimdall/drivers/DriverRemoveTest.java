@@ -20,7 +20,7 @@ package CASUAL.communicationstools.heimdall.drivers;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.CASUALSessionData;
-import CASUAL.communicationstools.heimdall.drivers.DriverRemove;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assume.assumeTrue;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class DriverRemoveTest {
         assumeTrue(!System.getProperty("user.name").equals("jenkins"));
         assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
         assumeTrue(OSTools.isWindows());
-        CASUALSessionData.getInstance().GUI = new GUI.testing.automatic();
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
     }
 
     /**

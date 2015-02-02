@@ -17,6 +17,7 @@
 
 package CASUAL.communicationstools.fastboot;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.fastboot.FastbootTools;
 import org.junit.After;
@@ -33,7 +34,7 @@ import org.junit.Test;
 public class FastbootToolsTest {
     
     public FastbootToolsTest() {
-        CASUALSessionData.getInstance().GUI=new GUI.testing.automatic();
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
     }
     
     @BeforeClass
@@ -61,7 +62,7 @@ public class FastbootToolsTest {
         FastbootTools instance = new FastbootTools();
         String expResult = "fastboot";
         String result = instance.getBinaryLocation();
-        assert(result.contains(CASUALSessionData.getInstance().getTempFolder()));
+        assert(result.contains(CASUALMain.getSession().getTempFolder()));
         assert(result.contains(expResult));
     }
 
@@ -97,7 +98,7 @@ public class FastbootToolsTest {
     @Test
     public void testDeployBinary() {
         System.out.println("deployBinary");
-        String tempFolder = CASUALSessionData.getInstance().getTempFolder();
+        String tempFolder = CASUALMain.getSession().getTempFolder();
         FastbootTools instance = new FastbootTools();
         String expResult = "fastboot";
         String result = instance.deployBinary(tempFolder);

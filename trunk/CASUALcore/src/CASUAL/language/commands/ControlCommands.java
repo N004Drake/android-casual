@@ -61,10 +61,10 @@ public class ControlCommands {
         return false;
     }
 
-    public static void checkHalt(Command cmd) {
+    public static void checkHalt(CASUALSessionData sd, Command cmd) {
         if (cmd.get().startsWith("$HALT")) {
-            if (CASUALSessionData.getInstance().CASPAC != null) {
-                CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
+            if (sd.CASPAC != null) {
+                sd.CASPAC.getActiveScript().setScriptContinue(false);
             }
             cmd.set(cmd.get().replace("$HALT", "").trim());
             Log.level4Debug("HALT RECEIVED");
@@ -72,10 +72,10 @@ public class ControlCommands {
         }
     }
 
-    public static boolean checkClearOn(Command cmd) {
+    public static boolean checkClearOn(CASUALSessionData sd, Command cmd) {
         if (cmd.get().startsWith("$CLEARON")) {
-            CASUALSessionData.getInstance().ActionEvents = new ArrayList<String>();
-            CASUALSessionData.getInstance().ReactionEvents = new ArrayList<String>();
+            sd.ActionEvents = new ArrayList<String>();
+            sd.ReactionEvents = new ArrayList<String>();
             Log.level4Debug("***$CLEARON RECEIVED. CLEARING ALL LOGGING EVENTS.***");
             return true;
         }
@@ -107,15 +107,15 @@ public class ControlCommands {
         return false;
     }
 
-    public static boolean checkOn(Command cmd) {
+    public static boolean checkOn(CASUALSessionData sd, Command cmd) {
         if (cmd.get().startsWith("$ON")) {
             cmd.set(cmd.get().replace("$ON", "").trim());
             String[] Event = cmd.get().split(",");
             try {
-                CASUALSessionData.getInstance().ActionEvents.add(Event[0]);
+                sd.ActionEvents.add(Event[0]);
                 Log.level4Debug("***NEW EVENT ADDED***");
                 Log.level4Debug("ON EVENT: " + Event[0]);
-                CASUALSessionData.getInstance().ReactionEvents.add(Event[1]);
+                sd.ReactionEvents.add(Event[1]);
                 Log.level4Debug("PERFORM ACTION: " + Event[1]);
             } catch (Exception e) {
                 Log.errorHandler(e);
@@ -125,7 +125,7 @@ public class ControlCommands {
         return false;
     }
 
-    public static boolean checkSendLog(Command cmd) {
+    public static boolean checkSendLog(CASUALSessionData sd, Command cmd) {
         if (cmd.get().startsWith("$SENDLOG")) {
             cmd.set(cmd.get().replace("$SENDLOG", "").trim());
             if (StringOperations.removeLeadingAndTrailingSpaces(cmd.get()).equals("")) {

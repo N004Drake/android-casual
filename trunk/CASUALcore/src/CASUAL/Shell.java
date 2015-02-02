@@ -35,7 +35,7 @@ import javax.swing.Timer;
  * @author Adam Outimerler adamoutimerler@gmail.com
  */
 public class Shell {
-
+    
     /**
      * Shell provides a setimer of metimerhods timero access Shell commands in
      * predefined ways.
@@ -112,7 +112,7 @@ public class Shell {
                 }
             }
 
-            String ScriptFile = CASUALSessionData.getInstance().getTempFolder() + "ElevateScript.sh";
+            String ScriptFile =CASUALMain.getSession().getTempFolder() + "ElevateScript.sh";
             FileOperations.deleteFile(ScriptFile);
             try {
                 FileOperations.writeToFile("#!/bin/sh\n" + Command, ScriptFile);
@@ -143,7 +143,7 @@ public class Shell {
             }
 
         } else if (OSTools.isMac()) {
-            String ScriptFile = CASUALSessionData.getInstance().getTempFolder() + "ElevateScript.sh";
+            String ScriptFile = CASUALMain.getSession().getTempFolder() + "ElevateScript.sh";
             try {
                 FileOperations.writeToFile(""
                         + "#!/bin/sh \n"
@@ -280,6 +280,7 @@ public class Shell {
      */
     public String liveShellCommand(String[] params, boolean display) {
         String LogRead = "";
+        CASUALSessionData sd=CASUALMain.getSession();
         try {
             ProcessBuilder p = new ProcessBuilder(params);
             p.redirectErrorStream(true);
@@ -299,11 +300,11 @@ public class Shell {
                     Log.progress(CharRead);
                 }
 
-                if (!CASUALSessionData.getInstance().ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
-                    for (int i = 0; i <= CASUALSessionData.getInstance().ActionEvents.size() - 1; i++) {
-                        if (CASUALSessionData.getInstance().ActionEvents != null && LineRead.contains(CASUALSessionData.getInstance().ActionEvents.get(i))) {
+                if (!sd.ActionEvents.isEmpty() && LineRead.contains("\n") || LineRead.contains("\r")) {
+                    for (int i = 0; i <= sd.ActionEvents.size() - 1; i++) {
+                        if (sd.ActionEvents != null && LineRead.contains(sd.ActionEvents.get(i))) {
                             try {
-                                new CASUALScriptParser().executeOneShotCommand(CASUALSessionData.getInstance().ReactionEvents.get(i));
+                                new CASUALScriptParser().executeOneShotCommand(sd.ReactionEvents.get(i));
                             } catch (Exception ex) {
                                 Log.errorHandler(ex);
                             }

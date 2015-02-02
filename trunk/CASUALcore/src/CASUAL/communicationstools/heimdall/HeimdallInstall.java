@@ -173,7 +173,7 @@ public class HeimdallInstall {
         ResourceDeployer rd = new ResourceDeployer();
         String exec;
         if ((exec = getFile(rd.deployResourceTo(resourceLocation, tempFolder), "")).equals("")) {
-            exec = new CASUALUpdates().CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
+            exec = new CASUALUpdates(CASUALMain.getSession()).CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
         }
         new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);
         new CASUALMessageObject("@interactionUnplugItAndPlugItBackIn").showErrorDialog();

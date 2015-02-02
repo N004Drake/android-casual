@@ -47,7 +47,6 @@ public class CASUALTools {
      * md5sumTestScript Refreshes the MD5s on the scripts in the /SCRIPTS folder
      */
     private void md5sumTestScripts() {
-        CASUALSessionData.getInstance().setStatus("Setting MD5s");
         Log.level4Debug("\nIDE Mode: Scanning and updating MD5s.\nWe are in " + System.getProperty("user.dir"));
         incrementBuildNumber();
 
@@ -141,7 +140,7 @@ public class CASUALTools {
         public void run() {
             try {
                 setGUIAPI();
-                CASUALSessionData.getInstance().GUI.setVisible(true);
+                CASUALSessionData.getGUI().setVisible(true);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(CASUALTools.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InstantiationException ex) {
@@ -169,11 +168,11 @@ public class CASUALTools {
      *
      * @param CASPAC file to be checked and have MD5s rewritten.
      */
-    public static void rewriteMD5OnCASPAC(File CASPAC) {
+    public static void rewriteMD5OnCASPAC(CASUALSessionData sd,File CASPAC) {
 
         Caspac caspac;
         try {
-            caspac = new Caspac(CASPAC, CASUALSessionData.getInstance().getTempFolder(), 0);
+            caspac = new Caspac(sd,CASPAC, sd.getTempFolder(), 0);
             caspac.load();
             caspac.write();
             System.exit(0);
@@ -238,7 +237,7 @@ public class CASUALTools {
         iCASUALUI clsInstance;
         if (!java.awt.GraphicsEnvironment.isHeadless()) {
             clsInstance = (CASUAL.iCASUALUI) cls.newInstance();
-            CASUAL.CASUALSessionData.getInstance().GUI = clsInstance;
+            CASUALSessionData.setGUI(clsInstance);
         }
 
     }
@@ -272,7 +271,7 @@ public class CASUALTools {
     public static void setiCASUALGUI(Class<?> cls) throws InstantiationException, IllegalAccessException {
         iCASUALUI clsInstance;
         clsInstance = (CASUAL.iCASUALUI) cls.newInstance();
-        CASUAL.CASUALSessionData.getInstance().GUI = clsInstance;
+        CASUALSessionData.setGUI(clsInstance);
     }
 
     /**
