@@ -74,6 +74,9 @@ public class CASUALLanguage {
         this.CASPAC = caspac;
     }
     
+    public Caspac getCaspac(){
+        return CASPAC;
+    }
 
     public static String GOTO = "";
     int currentLine = 1;
@@ -197,6 +200,8 @@ public class CASUALLanguage {
      * @throws java.io.IOException When permissions problem exists
      */
     public String commandHandler(String line) throws Exception{
+        
+        
         return commandHandler(new Command(line));
     }
     
