@@ -38,7 +38,14 @@ import java.util.Arrays;
  */
 public class CFDownloader {
     
-    final static String localCFRoot=CASUALSessionData.getInstance().getTempFolder()+"cfautoroot.zip";
+    final CASUALSessionData sd;
+    public CFDownloader(CASUALSessionData sd){
+        this.localCFRoot = sd.getTempFolder()+"cfautoroot.zip";
+        this.sd=sd;
+    }
+            
+    
+    final String localCFRoot;
     final static File[] empty=new File[]{};
     /**
      * returns a list of files downloaded and unzipped from CFAutoroot
@@ -53,14 +60,14 @@ public class CFDownloader {
         }
         
         //clear out a space for the download
-        File zip=new File(CASUALSessionData.getInstance().getTempFolder()+localCFRoot);
+        File zip=new File(sd.getTempFolder()+localCFRoot);
         if (!deleteFile(zip)){
             new CASUALMessageObject("Insufficient permissions>>>We don't have permissions to remove or delete the file "+localCFRoot).showErrorDialog();
             return empty;
         }
         
         //download file from CFAutoRoot
-        if (!new CASUALUpdates().downloadFileFromInternet(url,localCFRoot, "Downloading CFAutoRoot")){
+        if (!new CASUALUpdates(sd).downloadFileFromInternet(url,localCFRoot, "Downloading CFAutoRoot")){
             return empty;
         }
         

@@ -16,10 +16,10 @@
  */
 package CASUAL.communicationstools.adb.busybox;
 
+import CASUAL.CASUALMain;
 import CASUAL.Log;
 import CASUAL.ResourceDeployer;
 import CASUAL.Shell;
-import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.adb.ADBTools;
 
 /**
@@ -45,9 +45,9 @@ public class BusyboxTools {
     Shell shell = new Shell();
 
     private String getDeviceArch() {
-        if (CASUALSessionData.getInstance().CASPAC != null) {
-            if (!CASUALSessionData.getInstance().CASPAC.getActiveScript().getDeviceArch().equals("")) {
-                return CASUALSessionData.getInstance().CASPAC.getActiveScript().getDeviceArch();
+        if (CASUALMain.getSession().CASPAC != null) {
+            if (!CASUALMain.getSession().CASPAC.getActiveScript().getDeviceArch().equals("")) {
+                return CASUALMain.getSession().CASPAC.getActiveScript().getDeviceArch();
             }
         }
         String cpuinfo = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "cat /proc/cpuinfo"});
@@ -92,7 +92,7 @@ public class BusyboxTools {
 
     private String deployBusybox() {
         ResourceDeployer rd = new ResourceDeployer();
-        String busyboxOnHost = CASUALSessionData.getInstance().getTempFolder() + "busybox";
+        String busyboxOnHost = CASUALMain.getSession().getTempFolder() + "busybox";
         String busyboxResource;
         if (getDeviceArch().equals("ARM")) {
             busyboxResource = busyboxARM;

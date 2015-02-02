@@ -39,8 +39,8 @@ public class CASUALScriptParser {
      * If true, script will continue. False to shutdown.
      */
     public int LinesInScript = 0;
-    String ScriptTempFolder = "";
-    String ScriptName = "";
+    String scriptTempFolder = "";
+    String scriptName = "";
     static String scriptReturnValue="";
     public final static String NEWLINE=";;;";
 
@@ -52,8 +52,8 @@ public class CASUALScriptParser {
      */
     public void loadFileAndExecute(Caspac caspac, boolean multiThreaded) {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
-        CASUALSessionData.getInstance().setStatus("Loading from file");
-        executeSelectedScript(caspac, multiThreaded ,CASUALSessionData.getInstance());
+        caspac.getSd().setStatus("Loading from file");
+        executeSelectedScript(caspac, multiThreaded ,caspac.getSd());
     }
 
     /**
@@ -67,8 +67,8 @@ public class CASUALScriptParser {
             Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
             Log.level4Debug("Selected file" + caspac.getActiveScript().getName());
 
-            ScriptName = caspac.getActiveScript().getName();
-            ScriptTempFolder = caspac.getActiveScript().getTempDir();
+            scriptName = caspac.getActiveScript().getName();
+            scriptTempFolder = caspac.getActiveScript().getTempDir();
             LinesInScript = new CountLines().countISLines(caspac.getActiveScript().getScriptContents());
             Log.level4Debug("Lines in Script " + LinesInScript);
             return new DataInputStream(caspac.getActiveScript().getScriptContents());
@@ -89,22 +89,24 @@ public class CASUALScriptParser {
      *
      * @param Line line to execute
      * @return from CASUAL language
+     * @throws java.lang.Exception
      */
     public String executeOneShotCommand(String Line) throws Exception {
+        CASUALSessionData sd=CASUALSessionData.newInstance();
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
-        CASUALSessionData.getInstance().setStatus("Executing");
+        sd.setStatus("Executing");
         String retvalue = "";
-        if (CASUALSessionData.getInstance().CASPAC == null) {
-            ScriptName = "oneShot";
-            ScriptTempFolder = CASUALSessionData.getInstance().getTempFolder();
+        if (sd.CASPAC == null) {
+            scriptName = "oneShot";
+            scriptTempFolder = sd.getTempFolder();
         }
             if (Line.contains(NEWLINE)) {
                 String[] lineArray = Line.split(NEWLINE);
                 for (String linesplit : lineArray) {
-                    retvalue = retvalue + new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(linesplit) + "\n";
+                    retvalue = retvalue + new CASUALLanguage(sd,scriptName, scriptTempFolder).commandHandler(linesplit) + "\n";
                 }
             } else {
-                retvalue = new CASUALLanguage(ScriptName, ScriptTempFolder).commandHandler(Line);
+                retvalue = new CASUALLanguage(sd,scriptName, scriptTempFolder).commandHandler(Line);
 
             }
 
@@ -121,6 +123,7 @@ public class CASUALScriptParser {
      *
      * @param caspac CASPAC to have script executed
      * @param startThreaded true if it is to be started on a new thread.
+     * @param data
      */
     public void executeSelectedScript(final Caspac caspac, boolean startThreaded , final CASUALSessionData data) {
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
@@ -136,7 +139,7 @@ public class CASUALScriptParser {
                 Log.level4Debug("CASUAL has initiated a multithreaded execution environment");
 
                 if (data.isGUIIsAvailable()) {
-                    data.GUI.setProgressBarMax(LinesInScript);
+                    CASUALSessionData.getGUI().setProgressBarMax(LinesInScript);
                 }
                 Log.level4Debug("Reading datastream" + scriptInput);
                 new CASUALLanguage(caspac, caspac.getActiveScript().getTempDir()).beginScriptingHandler(scriptInput);
@@ -156,13 +159,13 @@ public class CASUALScriptParser {
                 data.CASPAC.getActiveScript().setDeviceArch("");
                 data.setStatus("done");
                 Log.level2Information("@scriptComplete");
-                data.GUI.setReady(true);
+                CASUALSessionData.getGUI().setReady(true);
 
             }
         };
         if (startThreaded) {
             CASUALStartupTasks.scriptRunLock = new CASUAL.misc.MandatoryThread(r);
-            CASUALSessionData.getInstance().setStatus("Executing");
+            caspac.getSd().setStatus("Executing");
             CASUALStartupTasks.scriptRunLock.setName("CASUAL Script Executor");
             CASUALStartupTasks.scriptRunLock.start();
         } else {
@@ -171,30 +174,30 @@ public class CASUALScriptParser {
         }
     }
 
-    void executeActiveScript(Caspac CASPAC) {
+    void executeActiveScript(Caspac caspac) {
         Log.level3Verbose("Exection of active script in CASPAC Commensing");
-        Script s = CASPAC.getActiveScript();
-        CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
+        Script s = caspac.getActiveScript();
+        caspac.getSd().CASPAC.getActiveScript().setScriptContinue(true);
 
         Log.level2Information(s.getDiscription());
-        int CASUALSVN = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
+        int casualSVN = Integer.parseInt(java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision"));
         int scriptSVN = Integer.parseInt(s.getMetaData().getMinSVNversion());
-        if (CASUALSVN < scriptSVN) {
+        if (casualSVN < scriptSVN) {
             Log.level0Error("@improperCASUALversion");
             return;
         }
 
             DataInputStream dis = new DataInputStream(s.getScriptContents());
-            CASPAC.setActiveScript(s);
-            new CASUALLanguage(CASPAC, s.getTempDir()).beginScriptingHandler(dis);
+            caspac.setActiveScript(s);
+            new CASUALLanguage(caspac, s.getTempDir()).beginScriptingHandler(dis);
         
     }
 
-    void executeFirstScriptInCASPAC(Caspac CASPAC) {
-        String scriptName = CASPAC.getScriptNames()[0];
-        Script s = CASPAC.getScriptByName(scriptName);
-        CASPAC.setActiveScript(s);
-        executeActiveScript(CASPAC);
+    void executeFirstScriptInCASPAC(Caspac caspac) {
+        String name = caspac.getScriptNames()[0];
+        Script s = caspac.getScriptByName(name);
+        caspac.setActiveScript(s);
+        executeActiveScript(caspac);
 
     }
     public static void setReturnValue(String value){

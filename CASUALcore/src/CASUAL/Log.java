@@ -16,12 +16,15 @@
  */
 package CASUAL;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Logs stuff and things
@@ -31,20 +34,60 @@ import java.util.Arrays;
  */
 public class Log {
 
+    private static StringBuilder sb=new StringBuilder();
+    private static File logFile;
+
+    /**
+     * @return the logFile
+     */
+    public static File getLogFile() {
+        if (logFile==null){
+            try {
+                logFile=File.createTempFile("LOG","txt");
+            } catch (IOException ex) {
+                sb.append("could not create log file");
+                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return logFile;
+    }
+
+    /**
+     * @param aFile the logFile to set
+     */
+    public static void setLogFile(File aFile) {
+        logFile = aFile;
+    }
+    
+   
+    
     public static enum LogLevel {
 
         ERROR, INTERACTION, INFORMATION, VERBOSE, DEBUG
 
     }
+    
+    public static String getPreProgress(){
+        return sb.toString();
+    }
+    private static iCASUALUI gui;
+    
+
+    
+    
+    public static void setUI(iCASUALUI ui){
+        gui=ui;
+    }
+    
     /**
      * increase or decrease the logging level. 0 is error only, 4 is debug
      */
      public static LogLevel[] outputGUIVerbosity = {LogLevel.ERROR, LogLevel.INFORMATION}; //userdata is output to console
 
     /**
-     * increase or decrease the log file output. 0 is error only, 4 is debug
+     * increase or decrease the log logFile output. 0 is error only, 4 is debug
      */
-    public static LogLevel[] outputLogVerbosity = {LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG}; //all logs are output to file
+    public static LogLevel[] outputLogVerbosity = {LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG}; //all logs are output to logFile
 
     /**
      * output device
@@ -52,10 +95,10 @@ public class Log {
     public static PrintStream out = new PrintStream(System.out);
 
     private static void sendToGUI(String data) {
-        if (CASUALSessionData.getInstance().GUI == null) {
-            CASUALSessionData.getInstance().PreProgress = CASUALSessionData.getInstance().PreProgress + "\n" + data;
+        if (gui == null) {
+           sb.append("\n" + data);
         } else if (!data.equals("\n") || !data.isEmpty()) {
-            CASUALSessionData.getInstance().GUI.sendString(data + "\n");
+           gui.sendString(data + "\n");
         }
     }
 
@@ -133,7 +176,7 @@ public class Log {
 
     /**
      *
-     * @param data to be written to log file
+     * @param data to be written to log logFile
      */
     public static void writeToLogFile(String data) {
         writeOutToLog(data);
@@ -142,7 +185,7 @@ public class Log {
     private static synchronized void writeOutToLog(String data) {
         FileWriter WriteFile;
         try {
-            WriteFile = new FileWriter(CASUALSessionData.getInstance().getTempFolder() + "Log.txt", true);
+            WriteFile = new FileWriter(getLogFile(), true);
             PrintWriter output = new PrintWriter(WriteFile);
             output.write(data + "\n");
             WriteFile.close();
@@ -160,10 +203,10 @@ public class Log {
      * @param data data to be written to progress on screen
      */
     public static void progress(String data) {
-        if (CASUALSessionData.getInstance().GUI == null) {
+        if (gui == null) {
             System.out.print(data);
         } else {
-            CASUALSessionData.getInstance().GUI.sendProgress(data);
+           gui.sendProgress(data);
         }
 
     }
@@ -174,8 +217,8 @@ public class Log {
      */
     public static void LiveUpdate(String data) {
         out.print(data);
-        if (CASUALSessionData.getInstance().GUI != null) {
-            CASUALSessionData.getInstance().GUI.sendProgress(data);
+        if (gui!= null) {
+            gui.sendProgress(data);
         }
 
     }
@@ -185,7 +228,7 @@ public class Log {
      */
     public static void beginLine() {
         out.println();
-        if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
+        if (gui!=null) {
             progress("\n");
         }
     }

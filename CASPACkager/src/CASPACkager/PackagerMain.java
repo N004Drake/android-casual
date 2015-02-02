@@ -89,7 +89,7 @@ public class PackagerMain {
     }
 
     public static File doPackaging(String[] args){
-        CASUALSessionData.getInstance().GUI=new GUI.testing.automatic();
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
         PackagerMain pm=new PackagerMain();
         pm.processCommandline(args);
         Log.level2Information("[CASPACkager] Command line utility started");
@@ -440,10 +440,11 @@ public class PackagerMain {
     }
 
     private InputStream replaceFileIfNeeded(InputStream zin, ZipEntry entry) {
-        String working = CASUALSessionData.getInstance().getTempFolder() + "extractionof" + entry + CASUALSessionData.slash;
+        CASUALSessionData sd=CASUALSessionData.newInstance();
+        String working = sd.getTempFolder() + "extractionof" + entry + CASUALSessionData.slash;
         new File(working).mkdirs();
         try {
-            CASUAL.archiving.Unzip.unZipInputStream(zin, working);
+            CASUAL.archiving.Unzip.unZipInputStream(sd,zin, working);
             String[] extractList = new File(working).list();
             for (String[] fReplacement : replaceFile) {
                 for (String fileCheck : extractList) {
@@ -452,11 +453,11 @@ public class PackagerMain {
                     }
                 }
             }
-            return repackEntry(entry, working);
+            return repackEntry(sd,entry, working);
         } catch (ZipException ex) {
-            return repackEntry(entry, working);
+            return repackEntry(sd,entry, working);
         } catch (IOException ex) {
-            return repackEntry(entry, working);
+            return repackEntry(sd,entry, working);
         }
 
     }
@@ -468,12 +469,12 @@ public class PackagerMain {
      * @param working folder to compress
      * @return inputstream representing the zip entry
      */
-    private InputStream repackEntry(ZipEntry entry, String working) {
+    private InputStream repackEntry(CASUALSessionData sd,ZipEntry entry, String working) {
         //TODO examine this to see if this is the cleanest way to handle this
         try {
-            CASUAL.archiving.Zip zip = new CASUAL.archiving.Zip(new File(CASUALSessionData.getInstance().getTempFolder() + entry.getName()));
+            CASUAL.archiving.Zip zip = new CASUAL.archiving.Zip(sd,new File(sd.getTempFolder() + entry.getName()));
             zip.compressZipDir(working);
-            return new FileInputStream(CASUALSessionData.getInstance().getTempFolder() + entry.getName());
+            return new FileInputStream(sd.getTempFolder() + entry.getName());
         } catch (IOException ex) {
             return null;
         }

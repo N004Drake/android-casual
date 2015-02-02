@@ -16,6 +16,7 @@
  */
 package com.casual_dev.zodui;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALScriptParser;
 import CASUAL.Log;
@@ -376,10 +377,10 @@ public class CASUALZodMainUI
 
         startButton.setDisable(true);
         //execute
-        if (CASUALSessionData.getInstance().CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
+        if (CASUALMain.getSession().CASPAC.getActiveScript().extractionMethod != 2) { //not on filesystem
             Log.level4Debug("Loading internal resource: " + activeScript);
-            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
-            new CASUALScriptParser().executeSelectedScript(activeCASPAC, true);
+            CASUALMain.getSession().CASPAC.getActiveScript().setScriptContinue(true);
+            new CASUALScriptParser().executeSelectedScript(activeCASPAC, true,CASUALMain.getSession());
         }
 
     }

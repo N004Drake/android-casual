@@ -22,8 +22,7 @@ import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import CASUAL.communicationstools.fastboot.FastbootTools;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
-import CASUAL.instrumentation.ModeTrackerInterface;
-import CASUAL.instrumentation.Track;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -39,6 +38,20 @@ import java.util.Date;
  */
 public class CASUALSessionData {
 
+    /**
+     * @return the GUI
+     */
+    public static iCASUALUI getGUI() {
+        return GUI;
+    }
+
+    /**
+     * @param aGUI the GUI to set
+     */
+    public static void setGUI(iCASUALUI aGUI) {
+        GUI = aGUI;
+    }
+
     private CASUALSessionData(){
         statics=this;
     }
@@ -53,10 +66,13 @@ public class CASUALSessionData {
      * gets the instance of this class
      * @return instance of this casual-session data
      */
-    public static CASUALSessionData getInstance(){
+    private static CASUALSessionData getInstance(){
         return statics;
     }
     
+     public static CASUALSessionData newInstance(){
+        return new CASUALSessionData();
+    }
     /**
      * true if debugMode. Do not send logs in debug mode. We create too many
      * errors, thanks.
@@ -80,7 +96,7 @@ public class CASUALSessionData {
         return false;
     }
 
-         
+   
 
 
 
@@ -93,7 +109,7 @@ public class CASUALSessionData {
     /**
      *  reference for class implementing interface for CASUAL's GUI.
      */
-    public  iCASUALUI GUI; // reference to GUI input/output device
+    private static iCASUALUI GUI; // reference to GUI input/output device
 
 
 
@@ -213,8 +229,8 @@ public class CASUALSessionData {
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (GUI!=null) {
-                        GUI.setInformationScrollBorderText(status);
+                    if (getGUI()!=null) {
+                        getGUI().setInformationScrollBorderText(status);
                     }
                     
                     CASUAL.instrumentation.Instrumentation.updateStatus(status);

@@ -46,9 +46,10 @@ import java.util.zip.ZipOutputStream;
  */
 public class Zip {
 
-    private final File outputZip;
-    private Log log = new Log();
-    private String TempFolder = CASUALSessionData.getInstance().getTempFolder();
+    final CASUALSessionData sd;
+    final private File outputZip;
+    private final Log log = new Log();
+    private String TempFolder;
     byte[] BUFFER = new byte[4096];
 
     /**
@@ -59,11 +60,14 @@ public class Zip {
      * <p>
      * Example: ./test.zip
      *
+     * @param sd
      * @param zip output file to be worked with
      * @throws IOException  {@inheritDoc}
      */
-    public Zip(File zip) throws IOException {
-        this.outputZip = zip;
+    public Zip(CASUALSessionData sd,File zip) throws IOException {
+        this.TempFolder = sd.getTempFolder();
+    this.sd=sd;
+    this.outputZip = zip;
     }
 
     /**
@@ -170,10 +174,9 @@ public class Zip {
         ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
         out = prepareZipFileForMoreEntries(zin, files);
         // Compress the files into the zip
-        for (int i = 0; i < files.length; i++) {
-            InputStream in = new FileInputStream(files[i]);
-            writeEntryToZipFile(out, files[i].getName(), in);
-
+        for (File file : files) {
+            InputStream in = new FileInputStream(file);
+            writeEntryToZipFile(out, file.getName(), in);
         }
         // Complete the ZIP file
         out.close();
@@ -301,6 +304,7 @@ public class Zip {
      *
      * @param nameStream map that contains keys that are Strings, and values
      * that are InputStream
+     * @return zip file
      * @throws IOException {@inheritDoc}
      * @see Map
      * @see InputStream
@@ -531,8 +535,8 @@ public class Zip {
         byte[] readBuffer = new byte[2156];
         int bytesIn;
         // loop through dirList, and zip the files
-        for (int i = 0; i < dirList.length; i++) {
-            File f = new File(zipDir, dirList[i]);
+        for (String dirList1 : dirList) {
+            File f = new File(zipDir, dirList1);
             if (f.isDirectory()) {
                 String filePath = f.getPath();
                 zipDir(filePath, zos, path + f.getName() + "/");
@@ -546,7 +550,6 @@ public class Zip {
                 zos.write(readBuffer, 0, bytesIn);
                 bytesIn = fis.read(readBuffer);
             }
-
         }
     }
 

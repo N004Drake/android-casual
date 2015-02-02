@@ -16,11 +16,11 @@
  */
 package CASUAL.communicationstools.heimdall;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Shell;
-import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
 import CASUAL.communicationstools.heimdall.drivers.DriverInstall;
 import java.io.File;
@@ -162,11 +162,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
             default:
                 errored = true;
         }
-        if (errored) {
-            return false;
-        } else {
-            return true;
-        }
+        return !errored;
 
     }
 
@@ -181,7 +177,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
             return new DriverInstall(0).installKnownDrivers();
         }
         if (OSTools.isMac() || OSTools.isLinux()) {
-            return !deployBinary(CASUALSessionData.getInstance().getTempFolder()).equals("");
+            return !deployBinary(CASUALMain.getSession().getTempFolder()).equals("");
         }
 
         return false;
@@ -251,7 +247,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         }
 
         //install heimdall
-        binaryLocation = deployBinary(CASUALSessionData.getInstance().getTempFolder());
+        binaryLocation = deployBinary(CASUALMain.getSession().getTempFolder());
         return binaryLocation;
     }
 

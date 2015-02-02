@@ -146,10 +146,10 @@ public class Unzip {
      * @see java.lang.Class#getResource(String)
      *
      */
-    public static void unZipResource(String zipResource, String outputFolder) throws FileNotFoundException, IOException {
+    public static void unZipResource(CASUALSessionData sd,String zipResource, String outputFolder) throws FileNotFoundException, IOException {
         InputStream zStream;
         zStream = new CASUALMain().getClass().getResourceAsStream(zipResource);
-        unZipInputStream(zStream, outputFolder);
+        unZipInputStream(sd,zStream, outputFolder);
         zStream.close();
     }
 
@@ -170,7 +170,7 @@ public class Unzip {
      * @see ZipInputStream
      * @see ZipFile
      */
-    public static ArrayList<File> unZipInputStream(InputStream zStream, String outputFolder) throws FileNotFoundException, IOException {
+    public static ArrayList<File> unZipInputStream(CASUALSessionData sd,InputStream zStream, String outputFolder) throws FileNotFoundException, IOException {
 
         zStream.mark(0);
         ZipInputStream zipInputStream;
@@ -202,19 +202,19 @@ public class Unzip {
             if (numberOfCycles > 0) {
                 updatePercent = true;
             }
-            CASUALSessionData.getInstance().GUI.setProgressBar(-1);
+            CASUALSessionData.getGUI().setProgressBar(-1);
             BigInteger currentCycle = BigInteger.valueOf(0);
             while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
                 Destination.write(data, 0, currentByte);
 
-                CASUALSessionData.getInstance().GUI.setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
+                CASUALSessionData.getGUI().setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
             }
             Destination.flush();
             Destination.close();
             unzipped.add(destFile);
         }
-        CASUALSessionData.getInstance().setStatus("Important Information");
-        CASUALSessionData.getInstance().GUI.setProgressBar(0);
+        sd.setStatus("Important Information");
+        CASUALSessionData.getGUI().setProgressBar(0);
 
         Log.level3Verbose("Unzip Complete");
         return unzipped;

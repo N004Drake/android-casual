@@ -4,14 +4,11 @@
  */
 package CASUAL.communicationstools.adb;
 
-import CASUAL.CASUALMessageObject;
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.OSTools;
-import CASUAL.OSTools;
-import CASUAL.CASUALSessionData;
 import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
-import CASUAL.communicationstools.adb.ADBTools;
 import java.io.File;
 import java.io.IOException;
 import org.junit.After;
@@ -27,6 +24,7 @@ import org.junit.Test;
  */
 public class ADBToolsTest {
 
+    CASUALSessionData sd=CASUALMain.getSession();
     AbstractDeviceCommunicationsProtocol instance;
 
     public ADBToolsTest() throws IOException {
@@ -59,7 +57,7 @@ public class ADBToolsTest {
         String expResult = "adb";
         String result = new ADBTools().getBinaryLocation();
         assert (result.contains(expResult));
-        assert (result.contains(CASUALSessionData.getInstance().getTempFolder()));
+        assert (result.contains(sd.getTempFolder()));
         assert (new File(result).exists());
     }
 
@@ -172,7 +170,7 @@ public class ADBToolsTest {
         String expResult = "adb";
         String result = instance.getBinaryLocation();
         assert result.contains(expResult);
-        assert result.contains(CASUALSessionData.getInstance().getTempFolder());
+        assert result.contains(sd.getTempFolder());
     }
 
     /**
@@ -219,9 +217,9 @@ public class ADBToolsTest {
     @Test
     public void testDeployBinary() {
         System.out.println("deployBinary");
-        String TempFolder = CASUALSessionData.getInstance().getTempFolder();
+        String TempFolder = sd.getTempFolder();
         ADBTools instance = new ADBTools();
-        String expResult = CASUALSessionData.getInstance().getTempFolder()+ (OSTools.isWindows()?"adb.exe":"adb");
+        String expResult = sd.getTempFolder()+ (OSTools.isWindows()?"adb.exe":"adb");
         //use old binary if it exists
         String result = instance.deployBinary(TempFolder);
         assertEquals(expResult, result);

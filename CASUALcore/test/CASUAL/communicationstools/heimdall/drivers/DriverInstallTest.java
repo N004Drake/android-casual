@@ -33,7 +33,7 @@ public class DriverInstallTest {
         assumeTrue(!System.getProperty("user.name").equals("jenkins"));
         assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
         assumeTrue(OSTools.isWindows());
-        CASUALSessionData.getInstance().GUI = new GUI.testing.automatic();
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
     }
 
     /**

@@ -23,7 +23,7 @@ import org.junit.Test;
  * @author adam
  */
 public class FileOperationsTest {
-    
+    CASUALSessionData sd=CASUALSessionData.newInstance();
     public FileOperationsTest(){
     }
     @BeforeClass
@@ -43,8 +43,8 @@ public class FileOperationsTest {
     @Test
     public void testRecursiveDelete_String() {
         System.out.println("recursiveDelete");
-        String path = CASUALSessionData.getInstance().getTempFolder();
-        String testpath=CASUALSessionData.getInstance().getTempFolder()+"woot"+CASUALSessionData.slash+"woot"+CASUALSessionData.slash+"woot"+CASUALSessionData.slash+"woot";
+        String path =sd.getTempFolder();
+        String testpath=sd.getTempFolder()+"woot"+CASUALSessionData.slash+"woot"+CASUALSessionData.slash+"woot"+CASUALSessionData.slash+"woot";
         FileOperations instance = new FileOperations();
         new File(testpath).mkdirs();
         instance.recursiveDelete(path);
@@ -57,9 +57,9 @@ public class FileOperationsTest {
     @Test
     public void testRecursiveDelete_File() {
         System.out.println("recursiveDelete");
-        File testpath = new File(CASUALSessionData.getInstance().getTempFolder()+"woot"+CASUALSessionData.slash+"woot"+CASUALSessionData.slash+"woot"+CASUALSessionData.slash+"woot");
+        File testpath = new File(sd.getTempFolder()+"woot"+CASUALSessionData.slash+"woot"+CASUALSessionData.slash+"woot"+CASUALSessionData.slash+"woot");
         FileOperations instance = new FileOperations();
-        instance.recursiveDelete(new File(CASUALSessionData.getInstance().getTempFolder()+"woot"));
+        instance.recursiveDelete(new File(sd.getTempFolder()+"woot"));
         assert(!instance.verifyExists(testpath.getAbsolutePath()));
     }
 
@@ -70,10 +70,10 @@ public class FileOperationsTest {
     @Test
     public void testVerifyWritePermissionsRecursive() throws IOException {
         System.out.println("verifyWritePermissionsRecursive");
-        String path = CASUALSessionData.getInstance().getTempFolder()+"woot";
+        String path =sd.getTempFolder()+"woot";
         new File(path).createNewFile();
         FileOperations instance = new FileOperations();
-        boolean result = instance.verifyWritePermissionsRecursive(CASUALSessionData.getInstance().getTempFolder());
+        boolean result = instance.verifyWritePermissionsRecursive(sd.getTempFolder());
         assert(result);
     }
 
@@ -84,19 +84,19 @@ public class FileOperationsTest {
     @Test
     public void testFindRecursive() throws IOException {
         System.out.println("findRecursive");
-        File testpath = new File(CASUALSessionData.getInstance().getTempFolder()+"s"+CASUALSessionData.slash+"s"+CASUALSessionData.slash+"s"+CASUALSessionData.slash+"test");
+        File testpath = new File(sd.getTempFolder()+"s"+CASUALSessionData.slash+"s"+CASUALSessionData.slash+"s"+CASUALSessionData.slash+"test");
         File testFile=new File(testpath.getAbsolutePath()+CASUALSessionData.slash+"testFindRecursive");
         testpath.mkdirs();
-        new File(CASUALSessionData.getInstance().getTempFolder()+"s"+CASUALSessionData.slash+"test").createNewFile();
+        new File(sd.getTempFolder()+"s"+CASUALSessionData.slash+"test").createNewFile();
         testFile.createNewFile();
-        String PathToSearch = CASUALSessionData.getInstance().getTempFolder();
+        String PathToSearch =sd.getTempFolder();
         FileOperations instance =new FileOperations();
         System.out.println("performing recursive search");
         String result = instance.findRecursive(PathToSearch,"testFindRecursive");
      System.out.println("result: "+result);
         System.out.println("result: "+result);
         assertEquals(testpath.getCanonicalPath()+CASUALSessionData.slash+"testFindRecursive" ,result);
-        instance.recursiveDelete(CASUALSessionData.getInstance().getTempFolder());
+        instance.recursiveDelete(sd.getTempFolder());
 
     }
 
@@ -107,10 +107,10 @@ public class FileOperationsTest {
      */
     @Test
     public void testVerifyExists() throws IOException {
-        File f= new File(CASUALSessionData.getInstance().getTempFolder()+"new");
+        File f= new File(sd.getTempFolder()+"new");
         f.createNewFile();
-        assertEquals(true, new CASUAL.FileOperations().verifyExists(CASUAL.CASUALSessionData.getInstance().getTempFolder() + "new" + CASUAL.CASUALSessionData.slash));
-        assertEquals(false, new CASUAL.FileOperations().verifyExists(CASUAL.CASUALSessionData.getInstance().getTempFolder() + "asfdadfasfd" + CASUAL.CASUALSessionData.slash));
+        assertEquals(true, new CASUAL.FileOperations().verifyExists(sd.getTempFolder() + "new" + CASUAL.CASUALSessionData.slash));
+        assertEquals(false, new CASUAL.FileOperations().verifyExists(sd.getTempFolder() + "asfdadfasfd" + CASUAL.CASUALSessionData.slash));
         f.delete();
     }
 
@@ -119,7 +119,7 @@ public class FileOperationsTest {
      */
     @Test
     public void testMakeFolder() {
-         assertEquals(true, new CASUAL.FileOperations().makeFolder(CASUAL.CASUALSessionData.getInstance().getTempFolder() + "new" + CASUAL.CASUALSessionData.slash));
+         assertEquals(true, new CASUAL.FileOperations().makeFolder(sd.getTempFolder() + "new" + CASUAL.CASUALSessionData.slash));
          assertEquals(false, new CASUAL.FileOperations().makeFolder(null));
         
     }
@@ -134,7 +134,7 @@ public class FileOperationsTest {
         String expectedResult="woot";
         ByteArrayInputStream bas=new ByteArrayInputStream(expectedResult.getBytes());
         BufferedInputStream stream = new BufferedInputStream(bas);
-        String destination = CASUALSessionData.getInstance().getTempFolder()+"file";
+        String destination =sd.getTempFolder()+"file";
         FileOperations instance = new FileOperations();
         instance.writeStreamToFile(stream, destination);
         String result=instance.readFile(destination);
@@ -150,7 +150,7 @@ public class FileOperationsTest {
     public void testWriteToFile() throws Exception {
         System.out.println("writeToFile");
         String Text = "woot";
-        String f = CASUALSessionData.getInstance().getTempFolder()+CASUALSessionData.slash+"newFile";
+        String f =sd.getTempFolder()+CASUALSessionData.slash+"newFile";
         FileOperations instance = new FileOperations();
         instance.writeToFile(Text, f);
         assertEquals(Text,instance.readFile(f));
@@ -164,7 +164,7 @@ public class FileOperationsTest {
     @Test
     public void testDeleteStringArrayOfFiles() throws IOException {
         System.out.println("deleteStringArrayOfFiles");
-        String[] cleanUp = new String[]{CASUALSessionData.getInstance().getTempFolder()+"cool",CASUALSessionData.getInstance().getTempFolder()+"woot",CASUALSessionData.getInstance().getTempFolder()+"neat"};
+        String[] cleanUp = new String[]{sd.getTempFolder()+"cool",sd.getTempFolder()+"woot",sd.getTempFolder()+"neat"};
         for (String s:cleanUp){
             new File(s).createNewFile();
         }
@@ -183,9 +183,9 @@ public class FileOperationsTest {
     public void testCopyFile_File_File() throws Exception {
         System.out.println("copyFile");
         
-        File sourceFile = new File(CASUALSessionData.getInstance().getTempFolder()+"woot");
+        File sourceFile = new File(sd.getTempFolder()+"woot");
         sourceFile.createNewFile();
-        File destFile = new File(CASUALSessionData.getInstance().getTempFolder()+"woot2");
+        File destFile = new File(sd.getTempFolder()+"woot2");
         FileOperations instance = new FileOperations();
         instance.copyFile(sourceFile, destFile);
         assert(instance.verifyExists(sourceFile.getAbsolutePath()));
@@ -231,7 +231,7 @@ public class FileOperationsTest {
     @Test
     public void testSetExecutableBit() throws IOException {
         System.out.println("setExecutableBit");
-        String Executable = CASUALSessionData.getInstance().getTempFolder()+"new";
+        String Executable =sd.getTempFolder()+"new";
         File f=new File(Executable);
         f.createNewFile();
         FileOperations instance = new FileOperations();
@@ -271,7 +271,7 @@ public class FileOperationsTest {
         String expectedResult="woot";
         ByteArrayInputStream bas=new ByteArrayInputStream(expectedResult.getBytes());
         BufferedInputStream stream = new BufferedInputStream(bas);
-        String destination = CASUALSessionData.getInstance().getTempFolder()+"file";
+        String destination =sd.getTempFolder()+"file";
         FileOperations instance = new FileOperations();
         instance.writeStreamToFile(stream, destination);
         String result=instance.readFile(destination);
@@ -345,8 +345,8 @@ public class FileOperationsTest {
     @Test
     public void testMoveFile_File_File() throws Exception {
         System.out.println("moveFile");
-        File sourceFile = new File(CASUALSessionData.getInstance().getTempFolder()+"newfile");
-        File destFile = new File(CASUALSessionData.getInstance().getTempFolder()+"newfile2");
+        File sourceFile = new File(sd.getTempFolder()+"newfile");
+        File destFile = new File(sd.getTempFolder()+"newfile2");
         sourceFile.createNewFile();
         FileOperations instance = new FileOperations();
         destFile.delete();
@@ -366,8 +366,8 @@ public class FileOperationsTest {
     @Test
     public void testMoveFile_String_String() throws Exception {
         System.out.println("moveFile");
-        String sourceFile = CASUALSessionData.getInstance().getTempFolder()+"newFile";
-        String destFile = CASUALSessionData.getInstance().getTempFolder()+"newFile2";
+        String sourceFile =sd.getTempFolder()+"newFile";
+        String destFile =sd.getTempFolder()+"newFile2";
         new File(sourceFile).createNewFile();
         FileOperations instance = new FileOperations();
         

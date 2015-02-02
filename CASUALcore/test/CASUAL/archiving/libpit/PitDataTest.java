@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class PitDataTest {
     public void testPack() {
         try {
             System.out.println("pack");
-            String testFile = CASUAL.CASUALSessionData.getInstance().getTempFolder() + "test.pit";
+            String testFile = CASUAL.CASUALSessionData.newInstance().getTempFolder() + "test.pit";
             PitData instance = new PitData(pitFile);
             instance.pack(new DataOutputStream(new FileOutputStream(testFile)));
             System.out.println("packed " + testFile);
@@ -277,11 +278,12 @@ public class PitDataTest {
     public void testFindEntryByFilename() {
         System.out.println("findEntryByFilename");
         String filename = "tz.img";
-        PitData instance = null;
+        PitData instance ;
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail();
+            return;
         }
         int expResult = 81;
         PitEntry result = instance.findEntryByFilename(filename);
@@ -295,11 +297,13 @@ public class PitDataTest {
     @Test
     public void testRemoveEntry() {
         System.out.println("removeEntry");
-        PitData instance = null;
+        PitData instance;
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("could not find entry");
+            return;
         }
         PitEntry entry = instance.findEntry(81);
         instance.removeEntry(entry);
@@ -314,11 +318,12 @@ public class PitDataTest {
     @Test
     public void testGetPITFriendlyName() {
         System.out.println("getPITFriendlyName");
-        PitData instance = null;
+        PitData instance;
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("could not find entry");
+            return;
         }
         String expResult = "Mx";
         String result = instance.getPITFriendlyName();
@@ -332,11 +337,12 @@ public class PitDataTest {
     @Test
     public void testGetFileTypeFriendlyName() {
         System.out.println("getFileTypeFriendlyName");
-        PitData instance = null;
+        PitData instance;
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("could not find entry");
+            return;
         }
         String expResult = "COM_TAR2";
         String result = instance.getFileTypeFriendlyName();
@@ -350,11 +356,12 @@ public class PitDataTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        PitData instance = null;
+        PitData instance;
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("could not find entry");
+            return;
         }
         String result = instance.toString();
 
@@ -366,14 +373,14 @@ public class PitDataTest {
     @Test
     public void testSortEntriesByBlockLocation() {
         System.out.println("sortEntriesByBlockLocation");
-        PitData instance = null;
+        PitData instance;
         try {
             instance = new PitData(pitFile);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(PitDataTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("could not find entry");
+            return;
         }
 
-        PitEntry[] expResult = null;
         PitEntry[] result = instance.sortEntriesByBlockLocation();
         int[] partitionIDOrder = new int[]{80, 70, 71, 81, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
         for (int i = 0; i < instance.entryCount; i++) {

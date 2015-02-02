@@ -17,6 +17,7 @@
  */
 package CASUAL.network;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.FileOperations;
 import CASUAL.Log;
@@ -69,7 +70,7 @@ public class Pastebin {
      * @throws URISyntaxException if invalid URI 
      */
     public void doPosting() throws IOException, URISyntaxException {
-        if (CASUALSessionData.getInstance().debugMode) {
+        if (CASUALMain.getSession().debugMode) {
             return;
         }
         String xdaUsername = new CASUALMessageObject("@interactionPastebinError").inputDialog();
@@ -84,7 +85,7 @@ public class Pastebin {
                     paste.setToken(lResult);
                     Log.level4Debug("Pastebin Login Successful");
                 }
-                String pasteData = new FileOperations().readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt");
+                String pasteData = new FileOperations().readFile(CASUALMain.getSession().getTempFolder() + "Log.txt");
 
                 String output = paste.makePaste(pasteData, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-" + xdaUsername, format);
                 if (output.substring(0, 4).equals("http")) {
@@ -109,10 +110,10 @@ public class Pastebin {
     public void pasteAnonymousLog() throws MalformedURLException {
         Pattern svnRev = Pattern.compile("(?=[setViewedRevision]?.{2})[0-9]{3,4}");
         FileOperations fO = new FileOperations();
-        if (!fO.verifyExists(CASUALSessionData.getInstance().getTempFolder() + "Log.txt")) {
+        if (!fO.verifyExists(CASUALMain.getSession().getTempFolder() + "Log.txt")) {
             return;
         }
-        String casualLog = fO.readFile(CASUALSessionData.getInstance().getTempFolder() + "Log.txt");
+        String casualLog = fO.readFile(CASUALMain.getSession().getTempFolder() + "Log.txt");
         Matcher matcher;
         try {
             matcher = svnRev.matcher(new API().getPage("http://code.google.com/p/android-casual/source/browse/"));
@@ -132,7 +133,7 @@ public class Pastebin {
             if (username != null && casualLog.contains(username)) {
                 casualLog = casualLog.replace(username, "USER");
             }
-            if (CASUALSessionData.getInstance().debugMode || Arrays.asList(incompetentUsers).contains(username)) {
+            if (CASUALMain.getSession().debugMode || Arrays.asList(incompetentUsers).contains(username)) {
                 return; //only log results from non-devs :)
             }
 

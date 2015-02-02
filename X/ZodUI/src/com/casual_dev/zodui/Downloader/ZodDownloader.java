@@ -16,6 +16,7 @@
  */
 package com.casual_dev.zodui.Downloader;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Caspac;
 import CASUAL.misc.MandatoryThread;
@@ -40,7 +41,7 @@ public final class ZodDownloader {
     String downloadedFile;
    CASUALZodMainUI ui;
     URL url;
-    CASUALUpdates cu = new CASUALUpdates();
+    CASUALUpdates cu = new CASUALUpdates(CASUALMain.getSession());
 static MandatoryThread downloadThread;
     /**
      * instantiates a download session for ZodDownloader
@@ -76,13 +77,13 @@ static MandatoryThread downloadThread;
     public void processRemoteCASPAC() {
 
         downloadThread=new MandatoryThread(() -> {
-            boolean result = cu.downloadFileFromInternet(url, CASUALSessionData.getInstance().getTempFolder() + "caspac.caspac", title);
+            boolean result = cu.downloadFileFromInternet(url, CASUALMain.getSession().getTempFolder() + "caspac.caspac", title);
             if (!result) {
                 return;
                 
             } 
             CASUALZodMainUI.content.setSubtitle("CASPAC Download Complete " + expectedKB  + "kb");
-            downloadedFile=CASUALSessionData.getInstance().getTempFolder() + "caspac.caspac";
+            downloadedFile=CASUALMain.getSession().getTempFolder() + "caspac.caspac";
             try {
                 processDownloadedCASPAC();
             } catch (IOException ex) {
@@ -94,21 +95,21 @@ static MandatoryThread downloadThread;
 
     private void processDownloadedCASPAC() throws IOException {
         //TODO: Ugly, move out of downloader and into something else.
-        CASUALSessionData.getInstance().GUI.sendProgress("Downloaded, examining CASPAC");
+        CASUALSessionData.getGUI().sendProgress("Downloaded, examining CASPAC");
         CASUALZodMainUI.content.setMainTitle("Examining Contents");
-        CASUALSessionData.getInstance().CASPAC = new Caspac(new File(CASUALSessionData.getInstance().getTempFolder() + "caspac.caspac"), CASUALSessionData.getInstance().getTempFolder(), 0);
+        CASUALMain.getSession().CASPAC = new Caspac(CASUALMain.getSession(),new File(CASUALMain.getSession().getTempFolder() + "caspac.caspac"), CASUALMain.getSession().getTempFolder(), 0);
         ui.createNewZod(CASUALZodMainUI.content);
         CASUALZodMainUI.content.setMainTitle("Loading Script");
-        CASUALSessionData.getInstance().CASPAC.loadFirstScriptFromCASPAC();
+        CASUALMain.getSession().CASPAC.loadFirstScriptFromCASPAC();
         ui.createNewZod(CASUALZodMainUI.content);
-        CASUALSessionData.getInstance().CASPAC.setActiveScript(CASUALSessionData.getInstance().CASPAC.getScriptByName(CASUALSessionData.getInstance().CASPAC.getScriptNames()[0]));
-        CASUALSessionData.getInstance().GUI.setCASPAC(CASUALSessionData.getInstance().CASPAC);
+        CASUALMain.getSession().CASPAC.setActiveScript(CASUALMain.getSession().CASPAC.getScriptByName(CASUALMain.getSession().CASPAC.getScriptNames()[0]));
+        CASUALSessionData.getGUI().setCASPAC(CASUALMain.getSession().CASPAC);
         CASUALZodMainUI.content.setMainTitle("Ready");
         ui.createNewZod(CASUALZodMainUI.content);
-        CASUALSessionData.getInstance().GUI.sendProgress("ready");
+        CASUALSessionData.getGUI().sendProgress("ready");
         CASUALZodMainUI.CASUALready.set(true);
         ui.setReady(true);
-        ui.sendString(CASUALSessionData.getInstance().CASPAC.getActiveScript().getName());
+        ui.sendString(CASUALMain.getSession().CASPAC.getActiveScript().getName());
     }
 
     /**

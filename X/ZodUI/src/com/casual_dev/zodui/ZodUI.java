@@ -16,6 +16,7 @@
  */
 package com.casual_dev.zodui;
 
+import CASUAL.CASUALMain;
 import CASUAL.Diagnostics;
 import CASUAL.Log;
 import CASUAL.CASUALSessionData;
@@ -74,7 +75,7 @@ public class ZodUI extends Application {
 
         Scene scene = new Scene((Parent) fxmlLoader.load(fxmlLoader.getLocation().openStream()));
         this.zui = (CASUALZodMainUI) fxmlLoader.getController();
-        CASUALSessionData.getInstance().GUI = zui;
+        CASUALSessionData.setGUI(zui);
 
         //initialize the 3D Camera
         //Windows doesn't handle perspectives without 3D
@@ -93,7 +94,7 @@ public class ZodUI extends Application {
         displayInitialZod();
         
         new Thread( ()->{
-            new CASUAL.CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+            new CASUAL.CASUALConnectionStatusMonitor().start(CASUALMain.getSession(),new CASUAL.communicationstools.adb.ADBTools());
         }).start();
 
         new Thread(()->{
@@ -135,7 +136,7 @@ public class ZodUI extends Application {
                 + "\n"
                 + "You should have received a copy of the GNU General Public License\n"
                 + "along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.");
-        Log.level4Debug(Diagnostics.diagnosticReport());
+        Log.level4Debug(Diagnostics.diagnosticReport(CASUALMain.getSession()));
         Log.level3Verbose("Download Target:" + downloadCaspac);
     }
 

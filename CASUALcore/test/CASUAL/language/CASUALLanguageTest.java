@@ -43,7 +43,7 @@ public class CASUALLanguageTest {
     
     @Before
     public void setUp() {
-        CASUALSessionData.getInstance().GUI=new GUI.testing.automatic();
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
     }
     
     @After
@@ -104,21 +104,7 @@ public class CASUALLanguageTest {
         assertEquals(expResult, result);
         assertEquals(haltResult,result2);
     }
-    @Test
-    public void testOnClearOn() throws Exception {
-        System.out.println("$ON");
-        ArrayList<String> action=new ArrayList<String>();
-        ArrayList<String> reaction=new ArrayList<String>();
-        casualScriptParser.executeOneShotCommand("$ON action,$ECHO hi");
-        action.add("action");
-        reaction.add("$ECHO hi");
-        assertEquals(reaction.get(0),CASUALSessionData.getInstance().ReactionEvents.get(0));
-        assertEquals(action.get(0), CASUALSessionData.getInstance().ActionEvents.get(0));
-        System.out.println("$CLEARON");
-        casualScriptParser.executeOneShotCommand("$CLEARON");
-        assert(CASUALSessionData.getInstance().ReactionEvents.isEmpty());
-        assert(CASUALSessionData.getInstance().ActionEvents.isEmpty());
-    }
+ 
 
     @Test
     public void testcomment() throws Exception {
@@ -192,10 +178,9 @@ public class CASUALLanguageTest {
      @Test
     public void testZipfile() throws Exception {
         System.out.println("$ZIPFILE");
-        String expResult = CASUALSessionData.getInstance().getTempFolder();
         String result = casualScriptParser.executeOneShotCommand("$ECHO $ZIPFILE");
         System.out.println(result);
-        assert(result.contains(expResult));
+        assert(new File(result).exists() && new File(result).isDirectory());
     }   
     @Test
     public void testListDir() throws IOException, Exception {
@@ -242,20 +227,18 @@ public class CASUALLanguageTest {
     @Test
     public void testDownload() throws Exception {
         System.out.println("$Download");
-        String expResult = CASUALSessionData.getInstance().getTempFolder();
         String result = casualScriptParser.executeOneShotCommand("$DOWNLOAD https://android-casual.googlecode.com/svn/trunk/README , $ZIPFILEreadme, CASUAL SVN readme file");
 
         String sha256sum=CASUAL.crypto.SHA256sum.getLinuxSum(new File(result));
         assertEquals (sha256sum, "b2db2359cb7ea18bec6189b26e06775abf253f36ffb00402a9cf4faa1a2b6982  readme");
-
+        
         new File(result).delete();
-        assert(result.contains(expResult));
+     
     }   
     
     @Test
     public void testADB() throws Exception{
         System.out.println("adb test");
-        String expResult = CASUALSessionData.getInstance().getTempFolder();
         String result = casualScriptParser.executeOneShotCommand("$ADB devices");
         assert result.contains("List of devices attached");
         result = casualScriptParser.executeOneShotCommand("adb devices");
@@ -303,8 +286,7 @@ public class CASUALLanguageTest {
     @Test
     public void testHeimdall() throws Exception{
         System.out.println("heimdall test");
-        String expResult = CASUALSessionData.getInstance().getTempFolder();
-        
+       
         String result;
         if (new HeimdallTools().isConnected()){
                 result=casualScriptParser.executeOneShotCommand("$HEIMDALL detect");

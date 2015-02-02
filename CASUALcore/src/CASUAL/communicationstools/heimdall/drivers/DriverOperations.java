@@ -20,6 +20,7 @@
  */
 package CASUAL.communicationstools.heimdall.drivers;
 
+import CASUAL.CASUALMain;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
@@ -64,7 +65,7 @@ public class DriverOperations {
     private final static String cadiDrivers = "/CASUAL/communicationstools/heimdall/drivers/resources/CADI.zip";
 
     public DriverOperations() {
-        this.pathToCADI = CASUALSessionData.getInstance().getTempFolder() + "CADI" + CASUALSessionData.slash;
+        this.pathToCADI =CASUALMain.getSession().getTempFolder() + "CADI" + CASUALSessionData.slash;
         if (!driverExtracted) {
             try {
                 driverExtract(pathToCADI);
@@ -92,7 +93,7 @@ public class DriverOperations {
     private boolean driverExtract(String pathToExtract) throws FileNotFoundException, IOException {
         if(new FileOperations().makeFolder(pathToCADI)) {
             Log.level4Debug("driverExtract() Unzipping CADI");
-            Unzip.unZipResource(cadiDrivers, pathToExtract);
+            Unzip.unZipResource(CASUALMain.getSession(),cadiDrivers, pathToExtract);
             return true;
         }
         return false;
@@ -123,7 +124,6 @@ public class DriverOperations {
             Log.level0Error("getDeviceList() getRegExPattern() returned null!");
             return null;
         }
-        Matcher matcher = pattern.matcher(rawDeviceList);
         pattern = regexPattern(PatternChoice.ALLDEVICES);
 
         if (pattern == null) {
@@ -131,7 +131,7 @@ public class DriverOperations {
             return null;
         }
         pattern = regexPattern(PatternChoice.ALLDEVICES);
-        matcher = pattern.matcher(rawDeviceList);
+        Matcher matcher = pattern.matcher(rawDeviceList);
         ArrayList<String> al = new ArrayList<String>();
         while (matcher.find()) {
             String replacedQuote = StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", ""));

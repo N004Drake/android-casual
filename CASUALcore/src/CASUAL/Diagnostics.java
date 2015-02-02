@@ -23,15 +23,15 @@ package CASUAL;
  */
 public class Diagnostics {
     
-    public static String getDiagnosticReportOneLine(){
-        return diagnosticReport().replace("\n", " | ");
+    public static String getDiagnosticReportOneLine(CASUALSessionData sd){
+        return diagnosticReport(sd).replace("\n", " | ");
     }
     
-    public static String diagnosticReport(){
+    public static String diagnosticReport(CASUALSessionData sd){
         StringBuilder sb=new StringBuilder();
         sb.append("OS:").append(System.getProperty("os.name")).append(" Version:").append(System.getProperty("os.version")).append(" Architecture:").append(System.getProperty("os.arch")).append(" Separator:").append(System.getProperty("file.separator"));
         sb.append("\n").append("Java:").append(System.getProperty("java.vendor")).append(" Version:").append(System.getProperty("java.version")).append(" Website:").append(System.getProperty("java.vendor.url"));
-        sb.append("\n").append("WorkingDir: ").append(System.getProperty("user.dir")).append(" CASUALDir:").append(CASUAL.CASUALSessionData.getInstance().getTempFolder());
+        sb.append("\n").append("WorkingDir: ").append(System.getProperty("user.dir")).append(" CASUALDir:").append(sd.getTempFolder());
         sb.append("\n").append("CASUAL is handling this system as:");
         if (OSTools.isLinux()){
             if (OSTools.is64bitSystem()){

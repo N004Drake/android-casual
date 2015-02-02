@@ -57,6 +57,7 @@ import java.util.logging.Logger;
  */
 public class CASUALLanguage {
 
+    final private CASUALSessionData sd;
     final private String ScriptTempFolder;
     final String CASUALHOME = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
     final Caspac CASPAC;
@@ -69,7 +70,7 @@ public class CASUALLanguage {
      * @param ScriptTempFolder temp folder to use for script
      */
     public CASUALLanguage(Caspac caspac,  String ScriptTempFolder) {
-        
+        this.sd=caspac.getSd();
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = caspac;
     }
@@ -85,10 +86,12 @@ public class CASUALLanguage {
     /**
      * Constructor for CASUALLanguage
      *
+     * @param sd
      * @param ScriptName Name of script to be executed
      * @param ScriptTempFolder Folder in which script is executing.
      */
-    public CASUALLanguage(String ScriptName, String ScriptTempFolder) {
+    public CASUALLanguage(CASUALSessionData sd,String ScriptName, String ScriptTempFolder) {
+       this.sd=sd;
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = null;
     }
@@ -115,14 +118,14 @@ public class CASUALLanguage {
             while ((strLine = bReader.readLine()) != null)  {
 
                 //verify continue
-                if (CASUALSessionData.getInstance().CASPAC.getActiveScript().isScriptContinue() == false) {
+                if (sd.CASPAC.getActiveScript().isScriptContinue() == false) {
                     return;
                 }
                 
                //set progress
                 currentLine++;
-                if (CASUALSessionData.getInstance().isGUIIsAvailable()) {
-                    CASUALSessionData.getInstance().GUI.setProgressBar(currentLine);
+                if (sd.isGUIIsAvailable()) {
+                  CASUALSessionData.getGUI().setProgressBar(currentLine);
                 }
                 
                 //check GOTO commands
@@ -142,9 +145,9 @@ public class CASUALLanguage {
             dataIn.close();
             uninstallDriverMaybe();
             Log.level2Information("@done");
-            CASUALSessionData.getInstance().GUI.sendProgress("@done");
-            CASUALSessionData.getInstance().GUI.setUserMainMessage("@done");
-            CASUALSessionData.getInstance().GUI.setReady(true);
+            CASUALSessionData.getGUI().sendProgress("@done");
+           CASUALSessionData.getGUI().setUserMainMessage("@done");
+            CASUALSessionData.getGUI().setReady(true);
             //yeah yeah, overly broad chatch.  read below. 
         } catch (Exception e) {
             /*
@@ -236,7 +239,7 @@ public class CASUALLanguage {
         /*
          *DEBUG COMMANDS  $SENDLOG 
          */
-        if (ControlCommands.checkSendLog(cmd)) return cmd.getReturn();
+        if (ControlCommands.checkSendLog(sd,cmd)) return cmd.getReturn();
 
         /*
          * CONTROL COMMANDS
@@ -245,13 +248,13 @@ public class CASUALLanguage {
         if (ControlCommands.setReturn(cmd)) return cmd.getReturn();
 
         //$HALT "$CASUAL command" halts and executes the remainder of the line
-        ControlCommands.checkHalt(cmd);
+        ControlCommands.checkHalt(sd,cmd);
         //$GOTO "#comment" goes to a commented line
         if (ControlCommands.checkGoto(cmd)) return cmd.getReturn();
         //$ON  
-        if (ControlCommands.checkOn(cmd)) return cmd.getReturn();
+        if (ControlCommands.checkOn(sd,cmd)) return cmd.getReturn();
         //$CLEARON
-        if (ControlCommands.checkClearOn(cmd)) return cmd.getReturn();
+        if (ControlCommands.checkClearOn(sd,cmd)) return cmd.getReturn();
         //# comments
         if (ControlCommands.checkComments(cmd)) return cmd.getReturn();
         //
@@ -310,7 +313,7 @@ public class CASUALLanguage {
             Log.level4Debug("Received ECHO command" + cmd.get());
             cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
             Log.level2Information(cmd.get());
-            CASUALSessionData.getInstance().GUI.setUserSubMessage(cmd.getReturn());
+            CASUALSessionData.getGUI().setUserSubMessage(cmd.getReturn());
             return cmd.getReturn();
         
             //TODO: should this be updated automatically by monitoring or by this new command?
@@ -319,7 +322,7 @@ public class CASUALLanguage {
         } else if (cmd.get().startsWith("$TITLE")){
             Log.level4Debug("Received ECHO command" + cmd.get());
             cmd.setReturn(true,cmd.get().replace("$ECHO", "").trim());
-            CASUALSessionData.getInstance().GUI.setUserMainMessage(cmd.get());
+            CASUALSessionData.getGUI().setUserMainMessage(cmd.get());
             return cmd.getReturn();
         
 //$LISTDIR will a folder on the host machine  Useful with $ON COMMAND
@@ -386,7 +389,7 @@ public class CASUALLanguage {
             if (n == 1) {
                 Log.level0Error(this.CASPAC.getActiveScript().getName());
                 Log.level0Error("@canceledAtUserRequest");
-                CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
+                sd.CASPAC.getActiveScript().setScriptContinue(false);
                 return "";
             }
             return "";
@@ -398,7 +401,7 @@ public class CASUALLanguage {
             if (n == 1) {
                 Log.level0Error(this.CASPAC.getActiveScript().getName());
                 Log.level0Error("@haltedPerformActions");
-                CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
+                sd.CASPAC.getActiveScript().setScriptContinue(false);
                 return "";
             }
             return "";
@@ -438,10 +441,10 @@ public class CASUALLanguage {
             }
 
             if (downloadCommand.length == 3) {
-                new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
+                new CASUALUpdates(sd).downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 return downloadCommand[1];
             } else if (downloadCommand.length == 4) {
-                new CASUALUpdates().downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
+                new CASUALUpdates(sd).downloadFileFromInternet(downloadCommand[0], downloadCommand[1], downloadCommand[2]);
                 if (!new MD5sum().compareMD5StringsFromLinuxFormatToFilenames(new String[]{downloadCommand[3]}, new String[]{downloadCommand[1]})) {
                     new CASUALScriptParser().executeOneShotCommand("$HALT HALTING Downloaded md5sum did not check out");
                 }
@@ -540,7 +543,7 @@ public class CASUALLanguage {
                     
                 }
                 
-                /* if (CASUALSessionData.getInstance().isLinux()) {   //Is this needed?
+                /* if (sd.isLinux()) {   //Is this needed?
                  doElevatedHeimdallShellCommand(line);
                  }*/
                 Log.level2Information("@executingHeimdall");
@@ -694,7 +697,7 @@ public class CASUALLanguage {
         if (n == 1) {
             Log.level0Error(this.CASPAC.getActiveScript().getName());
             Log.level0Error("@canceledDueToMissingFiles");
-            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
+            sd.CASPAC.getActiveScript().setScriptContinue(false);
         }
     }
 

@@ -24,7 +24,7 @@ import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALConnectionStatusMonitor {
-
+    private static CASUALSessionData sd;
     private static int LastState = 0;  //last state detected
     private static CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol monitor;
     private static CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol monitorLastState;
@@ -56,7 +56,7 @@ public class CASUALConnectionStatusMonitor {
         if (monitorLastState == null) {
             Log.level3Verbose("A call to resume monitor occurred, but monitor was not reset first.  No action is occuring");
         } else {
-            new CASUALConnectionStatusMonitor().start(monitorLastState);
+            new CASUALConnectionStatusMonitor().start(sd,monitorLastState);
         }
     }
 
@@ -96,17 +96,19 @@ public class CASUALConnectionStatusMonitor {
      * Starts and stops the ADB timer reference with
  CASUALSessionData.casualConnectionStatusMonitor.DeviceCheck ONLY;
      *
+     * @param sd
      * @param mode sets the monitoring mode
      */
-    public void start(AbstractDeviceCommunicationsProtocol mode) {
+    public void start(CASUALSessionData sd, AbstractDeviceCommunicationsProtocol mode) {
+        CASUALConnectionStatusMonitor.sd=sd;
         stop();
         paused=false;
         stateSwitcher(0);
         monitor = mode;
         Log.level3Verbose("Starting: " + mode);
         //lock controls if not available yet.
-        if (CASUALSessionData.getInstance().isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
-            CASUALSessionData.getInstance().GUI.setControlStatus(false,0,getConnectionMethodName());
+        if (sd.isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
+            CASUALSessionData.getGUI().setControlStatus(false,0,getConnectionMethodName());
             LastState = 0;
         }
         doMonitoring();
@@ -166,23 +168,23 @@ public class CASUALConnectionStatusMonitor {
             switch (state) {
                 case 0:
                     Log.level4Debug("Device disconnected commanded");
-                    CASUALSessionData.getInstance().setStatus("Device Removed");
-                    switched = CASUALSessionData.getInstance().GUI.setControlStatus(false,0,getConnectionMethodName());
+                    sd.setStatus("Device Removed");
+                    switched =CASUALSessionData.getGUI().setControlStatus(false,0,getConnectionMethodName());
 
                     break;
                 case 1:
-                    CASUALSessionData.getInstance().setStatus("Device Connected");
+                    sd.setStatus("Device Connected");
                     Log.level4Debug("@stateConnected");
-                    switched = CASUALSessionData.getInstance().GUI.setControlStatus(true,1,getConnectionMethodName());
+                    switched =CASUALSessionData.getGUI().setControlStatus(true,1,getConnectionMethodName());
                     break;
                 default:
-                    CASUALSessionData.getInstance().setStatus("Multiple Devices Detected");
+                    sd.setStatus("Multiple Devices Detected");
                     if (state == 2) {
                         Log.level0Error("@stateMultipleDevices");
                         Log.level0Error("Remove " + (state - 1) + " device to continue.");
                     }
 
-                    switched =! CASUALSessionData.getInstance().GUI.setControlStatus(false,state,getConnectionMethodName());
+                    switched =! CASUALSessionData.getGUI().setControlStatus(false,state,getConnectionMethodName());
                     Log.level4Debug("State Multiple Devices Number of devices" + state);
 
                     break;

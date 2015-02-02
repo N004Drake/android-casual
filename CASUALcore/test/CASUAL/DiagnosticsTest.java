@@ -56,7 +56,8 @@ public class DiagnosticsTest {
     public void testGetDiagnosticReportOneLine() {
         System.out.println("getDiagnosticReportOneLine");
         String expResult = "CASUAL is handling this system as";
-        String result = Diagnostics.getDiagnosticReportOneLine();
+        String result = Diagnostics.getDiagnosticReportOneLine(CASUALSessionData.newInstance());
+        System.out.println(result);
         assert(result.contains(expResult));
         
     }
@@ -68,7 +69,8 @@ public class DiagnosticsTest {
     public void testDiagnosticReport() {
         System.out.println("diagnosticReport");
         String expResult = "\nCASUAL is handling this system as";
-        String result = Diagnostics.diagnosticReport();
+        String result = Diagnostics.diagnosticReport(CASUALSessionData.newInstance());
+        System.out.println(result);
         assert(result.contains(expResult));
         
     }

@@ -60,6 +60,10 @@ import javax.imageio.ImageIO;
  */
 public final class Caspac {
 
+    final private CASUALSessionData sd;
+    
+    
+    
     /**
      * @return the debug
      */
@@ -133,11 +137,13 @@ public final class Caspac {
     /**
      * Constructor for Caspac
      *
+     * @param sd
      * @param caspac file containing CASPAC information.
      * @param tempDir temp folder to use
      * @throws IOException when permission problem exists
      */
-    public Caspac(File caspac, String tempDir) throws IOException {
+    public Caspac(CASUALSessionData sd, File caspac, String tempDir) throws IOException {
+        this.sd=sd;
         this.CASPAC = caspac;
         this.CASPACsrc = null;
         this.TempFolder = tempDir;
@@ -152,12 +158,14 @@ public final class Caspac {
     /**
      * Constructor for Caspac
      *
+     * @param sd
      * @param caspac file containing CASPAC information.
      * @param tempDir temp folder to use
      * @param type Type of CASPAC CASPAC, Type 1 CASUAL, Type 2 Filesystem
      * @throws IOException when permission problem exists
      */
-    public Caspac(File caspac, String tempDir, int type) throws IOException {
+    public Caspac(CASUALSessionData sd, File caspac, String tempDir, int type) throws IOException {
+        this.sd=sd;
         this.CASPAC = caspac;
         this.CASPACsrc = null;
         this.TempFolder = tempDir;
@@ -173,6 +181,7 @@ public final class Caspac {
      * secure constructor for Caspac always call startAndWaitForUnzip in order
      * to delete file and maintain security
      *
+     * @param sd
      * @param caspac file containing CASPAC information.
      * @param tempDir temp folder to use
      * @param type Type of CASPAC CASPAC, Type 1 CASUAL, Type 2 Filesystem
@@ -180,7 +189,8 @@ public final class Caspac {
      * @throws IOException when permission problem exists
      * @throws Exception when crypto problem exists
      */
-    public Caspac(File caspac, String tempDir, int type, char[] securityKey) throws IOException, Exception {
+    public Caspac(CASUALSessionData sd,File caspac, String tempDir, int type, char[] securityKey) throws IOException, Exception {
+    this.sd=sd;
         AES128Handler ch = new AES128Handler(caspac);
         ch.decrypt(tempDir + caspac.getName(), securityKey);
         this.CASPAC = new File(tempDir + caspac.getName());
@@ -200,13 +210,15 @@ public final class Caspac {
     /**
      * Constructor for CASUAL
      *
+     * @param sd
      * @param src CodeSource reference, used to reference SCRIPTS folder.
      * @param tempDir Temporary folder to use
      * @param type Type of CASPAC CASPAC, Type 1 CASUAL, Type 2 Filesystem
      * (should be 1 generally)
      * @throws IOException when permission problem exists
      */
-    public Caspac(CodeSource src, String tempDir, int type) throws IOException {
+    public Caspac(CASUALSessionData sd,CodeSource src, String tempDir, int type) throws IOException {
+        this.sd=sd;
         this.CASPACsrc = src;
         URL jar = src.getLocation();
         this.CASPAC = new File(tempDir + jar.getFile());
@@ -239,9 +251,11 @@ public final class Caspac {
      * @throws IOException when permission problem exists
      */
     final public static Caspac makeGenericCaspac() throws IOException {
-        File f = new File(CASUALSessionData.getInstance().getTempFolder() + "newfile");
-        Caspac c = new Caspac(f, CASUALSessionData.getInstance().getTempFolder(), 2);
-        Script s = new Script("oneshot", CASUALSessionData.getInstance().getTempFolder());
+        
+        CASUALSessionData cd=CASUALSessionData.newInstance();
+        File f = new File(cd.getTempFolder() + "newfile");
+        Caspac c = new Caspac(cd, f, cd.getTempFolder(), 2);
+        Script s = new Script(cd,"oneshot", cd.getTempFolder());
 
         return c;
     }
@@ -328,7 +342,7 @@ public final class Caspac {
         if (!CASPAC.exists()) {
             CASPAC.createNewFile();
         }
-        Zip zip = new Zip(CASPAC);
+        Zip zip = new Zip(sd, CASPAC);
         //write Properties File
         nameStream.put("-build.properties", build.getBuildPropInputStream());
         nameStream.put("-Overview.txt", StringOperations.convertStringToStream(overview));
@@ -468,7 +482,7 @@ public final class Caspac {
             Script s = this.scripts.get(0);
             InputStream in = getClass().getClassLoader()
                     .getResourceAsStream(s.scriptZipFile.toString());
-            Unzip.unZipInputStream(in, s.getTempDir());
+            Unzip.unZipInputStream(sd, in, s.getTempDir());
             in.close();
             this.activeScript = s;
 
@@ -590,7 +604,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script script = new Script(fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + CASUALSessionData.slash, this.type);
+        Script script = new Script(sd,fileName.substring(0, fileName.lastIndexOf(".")), this.TempFolder + fileName + CASUALSessionData.slash, this.type);
         //Add script 
         scripts.add(script);
         return scripts.get(scripts.indexOf(script));
@@ -616,7 +630,7 @@ public final class Caspac {
         } catch (Exception ex) {
         }
         if (!scriptName.isEmpty()) {
-            Script s = new Script(scriptName, this.TempFolder + scriptName + CASUALSessionData.slash, this.type);
+            Script s = new Script(sd,scriptName, this.TempFolder + scriptName + CASUALSessionData.slash, this.type);
             this.scripts.add(s);
             return this.scripts.get(scripts.size() - 1);
         } else {
@@ -649,7 +663,7 @@ public final class Caspac {
                 return s;
             }
         }
-        Script s = new Script(name, this.TempFolder + CASUALSessionData.slash + name + CASUALSessionData.slash, this.type);
+        Script s = new Script(sd,name, this.TempFolder + CASUALSessionData.slash + name + CASUALSessionData.slash, this.type);
         this.scripts.add(s);
         return this.scripts.get(scripts.size() - 1);
     }
@@ -1181,4 +1195,12 @@ public final class Caspac {
         this.controlFiles = controlFiles;
         return this;
     }
+
+    /**
+     * @return the sd
+     */
+    public CASUALSessionData getSd() {
+        return sd;
+    }
+
 }

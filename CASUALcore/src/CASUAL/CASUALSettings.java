@@ -380,7 +380,7 @@ public class CASUALSettings {
     }
 
     void setTempFolder(String tempFolder) {
-        CASUALSessionData.getInstance().setTempFolder(tempFolder);
+//TODO: make this work again.  this is inop. 
     }
 
     private void showLicenseAndExit() {

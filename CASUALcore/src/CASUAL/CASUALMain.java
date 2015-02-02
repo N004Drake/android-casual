@@ -35,7 +35,16 @@ import java.util.zip.ZipException;
 public final class CASUALMain {
 
     boolean exitWhenDone = false;
-
+    private static CASUALSessionData sd;
+    
+    public static CASUALSessionData getSession(){
+        if (sd==null){
+            sd=CASUALSessionData.newInstance();
+        }
+        return sd;
+    }
+    
+    
     //TODO: convert android-casual to Maven so it works better cross-platform
     /**
      * the default package used for IDE mode or if no scripts are found
@@ -53,12 +62,15 @@ public final class CASUALMain {
      */
     public static void main(String[] args) {
         //reset initial variables for everything. 
-        CASUALSessionData.getInstance().initializeStatics();
+        CASUALSessionData sd= CASUALSessionData.newInstance();
+        sd.initializeStatics();
+       
+        
         //Override args for test modes
         if (useOverrideArgs) {
             args = overrideArguments;
         }
-        beginCASUAL(args);
+        beginCASUAL(args,sd);
     }
 
     /**
@@ -67,8 +79,9 @@ public final class CASUALMain {
      *
      * @param args command line args to send to casual
      */
-    public static void beginCASUAL(String[] args) {
+    public static void beginCASUAL(String[] args, CASUALSessionData sd) {
         CASUALMain main = new CASUALMain();
+        CASUALMain.sd=sd;
         String CASUALFileName = new File(main.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).toString();
         String CASUALSVNRevision = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision");
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
@@ -79,20 +92,20 @@ public final class CASUALMain {
                 + "    and you are welcome to redistribute it, under certain conditions; run\n"
                 + "    '" + CASUALFileName + " --license'\n"
                 + "    for details. http://android-casual.googlecode.com for source.\n");
-        Log.level4Debug(Diagnostics.getDiagnosticReportOneLine());
+        Log.level4Debug(Diagnostics.getDiagnosticReportOneLine(sd));
         main.arguments.checkArguments(args);
-        main.startup();
+        main.startup(sd);
         System.gc();
     }
 
     /**
      * startup is where CASUAL starts its normal routines for both
      */
-    public void startup() {
+    public void startup(CASUALSessionData sd) {
         //starts the scriptRunLock so that the lock will not be enabled when checked for the first time. 
         CASUALStartupTasks.scriptRunLock.start();
         //make the temp folder if not created
-        new FileOperations().makeFolder(CASUALSessionData.getInstance().getTempFolder());
+        new FileOperations().makeFolder(sd.getTempFolder());
 
         switch (arguments.getCASPACType()) {
             case CASUAL:
@@ -101,30 +114,30 @@ public final class CASUALMain {
                 startGUI();
                 commonCASUALCASPACStartupTasks();
                 waitForGUI();
-                CASUALSessionData.getInstance().CASPAC.setActiveScript(CASUALSessionData.getInstance().CASPAC.getScriptByName(CASUALSessionData.getInstance().CASPAC.getScriptNames()[0]));
-                CASUALSessionData.getInstance().GUI.setCASPAC(CASUALSessionData.getInstance().CASPAC);
+                sd.CASPAC.setActiveScript(sd.CASPAC.getScriptByName(sd.CASPAC.getScriptNames()[0]));
+                CASUALSessionData.getGUI().setCASPAC(sd.CASPAC);
                 CASUALStartupTasks.startADB.waitFor();
                 startConnectionStatusMonitor();
                 return;
             case CASPAC:
                 Log.level4Debug("Loading CASPAC Type package");
-                iCASUALUI gui=CASUALSessionData.getInstance().GUI;
+                iCASUALUI gui=CASUALSessionData.getGUI();
                         
-                if (CASUALSessionData.getInstance().GUI == null) {
-                    CASUALSessionData.getInstance().GUI = new GUI.CommandLine.CommandLineUI();
+                if (CASUALSessionData.getGUI() == null) {
+                    CASUALSessionData.setGUI(new GUI.CommandLine.CommandLineUI());
                 }
                 
                 commonCASUALCASPACStartupTasks();
-                CASUALSessionData.getInstance().CASPAC.setActiveScript(CASUALSessionData.getInstance().CASPAC.getScriptByName(CASUALSessionData.getInstance().CASPAC.getScriptNames()[0]));
+                sd.CASPAC.setActiveScript(sd.CASPAC.getScriptByName(sd.CASPAC.getScriptNames()[0]));
                 try {
-                    CASUALSessionData.getInstance().CASPAC.loadActiveScript();
+                    sd.CASPAC.loadActiveScript();
                 } catch (IOException ex) {
                     Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 CASUALStartupTasks.caspacPrepLock.waitFor();
-                CASUALSessionData.getInstance().CASPAC.waitForUnzip();
+                sd.CASPAC.waitForUnzip();
                 CASUALStartupTasks.startADB.waitFor();
-                new CASUALScriptParser().executeActiveScript(CASUALSessionData.getInstance().CASPAC);
+                new CASUALScriptParser().executeActiveScript(sd.CASPAC);
 
                 //caspacExecute();
                 break;
@@ -164,7 +177,7 @@ public final class CASUALMain {
         CASUALStartupTasks.startADB.start();
         prepareCaspac();
         setDefaultCASPACScript();
-        CASUALSessionData.getInstance().setStatus("waiting for CASPAC");
+        sd.setStatus("waiting for CASPAC");
         CASUALStartupTasks.caspacPrepLock.waitFor();
 
     }
@@ -175,18 +188,18 @@ public final class CASUALMain {
         //start the device monitor
         //wait for complete;
         CASUALConnectionStatusMonitor.stop();
-        CASUALSessionData.getInstance().CASPAC.startAndWaitForUnzip();
+        sd.CASPAC.startAndWaitForUnzip();
 
-        new CASUALScriptParser().executeActiveScript(CASUALSessionData.getInstance().CASPAC);
+        new CASUALScriptParser().executeActiveScript(sd.CASPAC);
 
     }
 
     private void setDefaultCASPACScript() {
-        if (CASUALSessionData.getInstance().CASPAC != null && CASUALSessionData.getInstance().CASPAC.getScripts() != null && CASUALSessionData.getInstance().CASPAC.getScripts().size() >= 1) {
+        if (sd.CASPAC != null && sd.CASPAC.getScripts() != null && sd.CASPAC.getScripts().size() >= 1) {
             Log.level4Debug("Finalizing active script up to be run");
 
-            CASUALSessionData.getInstance().CASPAC.setActiveScript(CASUALSessionData.getInstance().CASPAC.getScripts().get(0));
-            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(true);
+            sd.CASPAC.setActiveScript(sd.CASPAC.getScripts().get(0));
+            sd.CASPAC.getActiveScript().setScriptContinue(true);
         }
     }
 
@@ -205,14 +218,14 @@ public final class CASUALMain {
         Log.level4Debug("Shutting Down");
         AudioHandler.useSound = false;
         Log.out.flush();
-        if (CASUALSessionData.getInstance().CASPAC != null && CASUALSessionData.getInstance().CASPAC.getActiveScript() != null) {
-            CASUALSessionData.getInstance().CASPAC.getActiveScript().setScriptContinue(false);
+        if (sd.CASPAC != null && sd.CASPAC.getActiveScript() != null) {
+            sd.CASPAC.getActiveScript().setScriptContinue(false);
         }
         CASUALConnectionStatusMonitor.stop();
 
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
         if (!CASUALTools.IDEMode) {
-            if (!CASUALSessionData.getInstance().isGUIIsAvailable()) {
+            if (!sd.isGUIIsAvailable()) {
                 try {
                     new Pastebin().pasteAnonymousLog();
                 } catch (MalformedURLException ex) {
@@ -221,13 +234,13 @@ public final class CASUALMain {
             }
         }
 
-        if (CASUALSessionData.getInstance().GUI != null) {
-            CASUALSessionData.getInstance().GUI.dispose();
-            CASUALSessionData.getInstance().GUI = null;
+        if (CASUALSessionData.getGUI() != null) {
+            CASUALSessionData.getGUI().dispose();
+            CASUALSessionData.setGUI(null);
         }
         CASUALConnectionStatusMonitor.stop();
 
-        CASUALSessionData.getInstance().initializeStatics();
+        sd.initializeStatics();
 
     }
 
@@ -261,14 +274,14 @@ public final class CASUALMain {
                 try {
                     Caspac cp;
                     if (!arguments.getPassword().isEmpty()) {
-                        cp = new Caspac(arguments.getCaspacLocation(), CASUALSessionData.getInstance().getTempFolder(), 0, arguments.getPassword().toCharArray());
+                        cp = new Caspac(sd,arguments.getCaspacLocation(), sd.getTempFolder(), 0, arguments.getPassword().toCharArray());
                         arguments.setPassword("");
                     } else {
-                        cp = new Caspac(arguments.getCaspacLocation(), CASUALSessionData.getInstance().getTempFolder(), 0);
+                        cp = new Caspac(sd,arguments.getCaspacLocation(), sd.getTempFolder(), 0);
 
                     }
                     cp.loadFirstScriptFromCASPAC();
-                    CASUALSessionData.getInstance().CASPAC = cp;
+                    sd.CASPAC = cp;
                 } catch (IOException ex) {
                     Log.errorHandler(ex);
                 } catch (Exception ex) {
@@ -280,10 +293,10 @@ public final class CASUALMain {
                 CodeSource src = getClass().getProtectionDomain().getCodeSource();
                 Caspac cp;
                 try {
-                    cp = new Caspac(src, CASUALSessionData.getInstance().getTempFolder(), 1);
+                    cp = new Caspac(sd, src, sd.getTempFolder(), 1);
 
                     //cp.load();
-                    CASUALSessionData.getInstance().CASPAC = cp;
+                    sd.CASPAC = cp;
                 } catch (ZipException ex) {
 
                     Log.errorHandler(ex);
@@ -298,16 +311,16 @@ public final class CASUALMain {
 
         switch (arguments.getMonitorMode()) {
             case ADB:
-                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+                new CASUALConnectionStatusMonitor().start(sd,new CASUAL.communicationstools.adb.ADBTools());
                 break;
             case FASTBOOT:
-                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.fastboot.FastbootTools());
+                new CASUALConnectionStatusMonitor().start(sd, new CASUAL.communicationstools.fastboot.FastbootTools());
                 break;
             case HEIMDALL:
-                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.heimdall.HeimdallTools());
+                new CASUALConnectionStatusMonitor().start(sd, new CASUAL.communicationstools.heimdall.HeimdallTools());
                 break;
             default:
-                new CASUALConnectionStatusMonitor().start(new CASUAL.communicationstools.adb.ADBTools());
+                new CASUALConnectionStatusMonitor().start(sd, new CASUAL.communicationstools.adb.ADBTools());
         }
     }
 

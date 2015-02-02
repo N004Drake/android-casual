@@ -16,16 +16,15 @@
  */
 package CASUAL.communicationstools.adb.busybox;
 
+import CASUAL.CASUALMain;
 import CASUAL.CASUALTools;
 import CASUAL.Log;
 import CASUAL.Shell;
-import CASUAL.CASUALSessionData;
 import CASUAL.communicationstools.adb.ADBTools;
 import static CASUAL.communicationstools.adb.busybox.CASUALDataBridge.ip;
 import CASUAL.misc.MandatoryThread;
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -116,7 +115,7 @@ class DeviceSideDataBridge {
                     //todo remove this test
                     Log.level4Debug("port list" + new Shell().sendShellCommand(new String[]{"adb", "forward", "--list"}));
                     //device is ready for transfer
-                    CASUALSessionData.getInstance().setStatus("device ready");
+                    CASUALMain.getSession().setStatus("device ready");
                     CASUALDataBridge.deviceReadyForReceive = true;
                     synchronized (CASUALDataBridge.deviceSideReady) {
                         CASUALDataBridge.deviceSideReady.notifyAll();
@@ -124,7 +123,7 @@ class DeviceSideDataBridge {
                     deviceSideMessage = "";
 
                     //transfer is complete because host closed connection and device-side process exited
-                    CASUALSessionData.getInstance().setStatus("device-side server closed");
+                    CASUALMain.getSession().setStatus("device-side server closed");
                     deviceSideMessage = deviceSideMessage + convertStreamToString(is);
                     Log.level4Debug("FinalMessage" + deviceSideMessage);
 
@@ -161,7 +160,7 @@ class DeviceSideDataBridge {
                 cmd = new String[]{adb.getBinaryLocation(), "shell", "/data/local/tmp/busybox netstat -tul"};
                 boolean ready = false;
                 String received = "";
-                CASUALSessionData.getInstance().setStatus("monitoring ports on device");
+                CASUALMain.getSession().setStatus("monitoring ports on device");
                 Log.level3Verbose("Device Waiting for Server connection for DataBridge");
                 while (!ready && !CASUALDataBridge.getInstance().commandedShutdown) {
                     //monitor server status and detect errors
