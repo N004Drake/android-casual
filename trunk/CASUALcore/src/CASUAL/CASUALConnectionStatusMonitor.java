@@ -107,7 +107,7 @@ public class CASUALConnectionStatusMonitor {
         monitor = mode;
         Log.level3Verbose("Starting: " + mode);
         //lock controls if not available yet.
-        if (sd.isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
+        if (CASUALSessionData.isGUIIsAvailable() && (CASUALStartupTasks.lockGUIformPrep || CASUALStartupTasks.lockGUIunzip)) {
             CASUALSessionData.getGUI().setControlStatus(false,0,getConnectionMethodName());
             LastState = 0;
         }

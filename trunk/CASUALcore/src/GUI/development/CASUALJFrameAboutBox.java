@@ -28,6 +28,8 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class CASUALJFrameAboutBox extends javax.swing.JFrame {
 
+    static final long serialVersionUID = 31231231231412341L;
+
     /**
      * Creates new form CASUALAboutBox1
      */
@@ -151,9 +153,9 @@ public class CASUALJFrameAboutBox extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         if (jCheckBox1.isSelected()) {
-            Log.outputGUIVerbosity=new LogLevel[]{LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG};
+            Log.outputGUIVerbosity = new LogLevel[]{LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG};
         } else {
-            Log.outputGUIVerbosity= new LogLevel[]{LogLevel.ERROR,  LogLevel.INFORMATION};
+            Log.outputGUIVerbosity = new LogLevel[]{LogLevel.ERROR, LogLevel.INFORMATION};
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 

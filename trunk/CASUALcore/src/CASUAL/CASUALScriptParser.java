@@ -138,13 +138,13 @@ public class CASUALScriptParser {
                 //int updateStatus;
                 Log.level4Debug("CASUAL has initiated a multithreaded execution environment");
 
-                if (data.isGUIIsAvailable()) {
+                if (CASUALSessionData.isGUIIsAvailable()) {
                     CASUALSessionData.getGUI().setProgressBarMax(LinesInScript);
                 }
                 Log.level4Debug("Reading datastream" + scriptInput);
                 new CASUALLanguage(caspac, caspac.getActiveScript().getTempDir()).beginScriptingHandler(scriptInput);
 
-                if (data.isGUIIsAvailable()) {
+                if (CASUALSessionData.isGUIIsAvailable()) {
                     //return to normal.
                     CASUALConnectionStatusMonitor.resumeAfterStop();
                 } else {

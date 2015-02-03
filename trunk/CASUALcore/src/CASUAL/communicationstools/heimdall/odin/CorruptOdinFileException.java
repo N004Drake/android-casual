@@ -23,10 +23,12 @@ package CASUAL.communicationstools.heimdall.odin;
  */
 public class CorruptOdinFileException extends Exception {
 
+    static final long serialVersionUID = 23456873412341L;
+
     /**
      * Occurs when a corrupt odin file is processed
      *
-     * @param error text to add as description of failure. 
+     * @param error text to add as description of failure.
      */
     public CorruptOdinFileException(String error) {
         System.out.println("The odin File Is corrupt.");

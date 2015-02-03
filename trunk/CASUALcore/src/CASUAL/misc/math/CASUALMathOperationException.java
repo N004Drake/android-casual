@@ -15,15 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package CASUAL.misc.math;
 
 /**
- *Exception for math operations
+ * Exception for math operations
+ *
  * @author adamoutler
  */
 public class CASUALMathOperationException extends Exception {
-    CASUALMathOperationException(String problemDescription){
+
+    final static long serialVersionUID = 3423411232341L;
+
+    CASUALMathOperationException(String problemDescription) {
         super(problemDescription);
     }
 }

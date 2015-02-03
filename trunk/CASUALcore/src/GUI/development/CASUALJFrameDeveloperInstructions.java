@@ -26,6 +26,8 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class CASUALJFrameDeveloperInstructions extends javax.swing.JFrame {
 
+    static final long serialVersionUID = 12341234134L;
+
     /**
      * Creates new form CASUALDeveloperInstructions
      */
