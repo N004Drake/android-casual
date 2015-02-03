@@ -26,16 +26,18 @@ import java.util.Set;
  * LinkedProperties allows for a static order to be placed on a properties file
  * rather than random/last-modified order generally used in writing a properties
  * file.
- * @author Adam Outler adamoutler@gmail.com
- * inspiredBy
+ *
+ * @author Adam Outler adamoutler@gmail.com inspiredBy
  * http://stackoverflow.com/questions/1312383/pulling-values-from-a-java-properties-file-in-order
  */
 public class LinkedProperties extends Properties {
 
+    static final long serialVersionUID = 34112324234412341L;
     private final LinkedHashSet<Object> keys = new LinkedHashSet<Object>();
 
     /**
      * gets the keys in the properties list
+     *
      * @return all the keys in the properties list
      */
     @Override
@@ -45,9 +47,10 @@ public class LinkedProperties extends Properties {
 
     /**
      * puts a value into the properties list
+     *
      * @param key key to set in ordered list
      * @param value value to set ordered list
-     * @return the previous value or null if one did not exist. 
+     * @return the previous value or null if one did not exist.
      */
     @Override
     public Object put(Object key, Object value) {
@@ -57,6 +60,7 @@ public class LinkedProperties extends Properties {
 
     /**
      * gets names of the properties in the list
+     *
      * @return set of propertiy names
      */
     @Override

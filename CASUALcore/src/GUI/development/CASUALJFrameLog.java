@@ -34,6 +34,9 @@ import javax.swing.JOptionPane;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALJFrameLog extends javax.swing.JFrame {
+
+    static final long serialVersionUID = 345232345677456741L;
+
     /**
      * Creates new form CASUALLogJFrame
      */

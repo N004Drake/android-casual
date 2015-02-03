@@ -225,7 +225,7 @@ public final class CASUALMain {
 
         //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
         if (!CASUALTools.IDEMode) {
-            if (!sd.isGUIIsAvailable()) {
+            if (!CASUALSessionData.isGUIIsAvailable()) {
                 try {
                     new Pastebin().pasteAnonymousLog();
                 } catch (MalformedURLException ex) {

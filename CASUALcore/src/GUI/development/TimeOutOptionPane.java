@@ -22,11 +22,14 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
- *TimeOutOptionPane provides an option pane with timeout
- * @author modified heavily by Adam Outler adamoutler@gmail.com
- * based on uncopyrighted work http://www.jguru.com/faq/view.jsp?EID=266182
+ * TimeOutOptionPane provides an option pane with timeout
+ *
+ * @author modified heavily by Adam Outler adamoutler@gmail.com based on
+ * uncopyrighted work http://www.jguru.com/faq/view.jsp?EID=266182
  */
 public class TimeOutOptionPane extends JOptionPane {
+
+    static final long serialVersionUID = 9876543234567L;
 
     /**
      * instantiates a timeout option pane
@@ -48,6 +51,7 @@ public class TimeOutOptionPane extends JOptionPane {
 
     /**
      * timeout option pane
+     *
      * @param time time limit to wait
      * @param parentComponent display over
      * @param message message to be displayed
@@ -60,7 +64,7 @@ public class TimeOutOptionPane extends JOptionPane {
      */
     public int timeoutDialog(final int time, Component parentComponent, Object message, final String title, int optionType,
             int messageType, Object[] options, final Object initialValue) {
-        PRESET_TIME=time;
+        PRESET_TIME = time;
         JOptionPane pane = new JOptionPane(message, messageType, optionType, null, options, initialValue);
         pane.setInitialValue(initialValue);
         final JDialog dialog = pane.createDialog(parentComponent, title);
@@ -81,7 +85,7 @@ public class TimeOutOptionPane extends JOptionPane {
                 }
                 dialog.setVisible(false);
                 dialog.dispose();
-                
+
             }
 
             void doSleep() {
@@ -99,7 +103,7 @@ public class TimeOutOptionPane extends JOptionPane {
         dialog.setVisible(true);
         Object selectedValue = pane.getValue();
         isSelected = true;
-        
+
         if (options == null) {
             if (selectedValue instanceof Integer) {
                 return ((Integer) selectedValue).intValue();

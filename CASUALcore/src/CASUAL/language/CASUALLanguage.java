@@ -104,6 +104,9 @@ public class CASUALLanguage {
 
     }
     
+    public CASUALSessionData getSessionData(){
+        return sd;
+    }
     /**
      * starts the scripting handler spooler and handles flow control
      *
@@ -124,7 +127,7 @@ public class CASUALLanguage {
                 
                //set progress
                 currentLine++;
-                if (sd.isGUIIsAvailable()) {
+                if (CASUALSessionData.isGUIIsAvailable()) {
                   CASUALSessionData.getGUI().setProgressBar(currentLine);
                 }
                 

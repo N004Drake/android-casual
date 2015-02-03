@@ -22,6 +22,7 @@ package CASUAL.language;
  * @author adamoutler
  */
 public class CASUALLanguageException extends Exception{
+    static final long serialVersionUID=342341123412341L;
     public CASUALLanguageException(String problemDescription){
         super(problemDescription);
     }
