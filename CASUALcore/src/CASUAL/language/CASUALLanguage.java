@@ -115,9 +115,9 @@ public class CASUALLanguage {
     public void beginScriptingHandler(DataInputStream dataIn) {
         String strLine = "";
         try {
-            BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn));
+            BufferedReader bReader = new BufferedReader(new InputStreamReader(dataIn),200*1024);
 
-            bReader.mark(1);
+            bReader.mark(200*1024);
             while ((strLine = bReader.readLine()) != null)  {
 
                 //verify continue
@@ -182,13 +182,14 @@ public class CASUALLanguage {
     private String doGotoRoutine(BufferedReader bReader, String strLine) throws IOException {
         bReader.reset();
         //use Label method
-        while (strLine !=null&&  !strLine.replaceAll("\\s", "").startsWith("$LABEL" + GOTO) ){
+        while (bReader.ready() &&  !strLine.replaceAll("\\s", "").startsWith("$LABEL" + GOTO) ){
             strLine = bReader.readLine();
         }
+        
         //use old compatibility method
         if (strLine==null || !strLine.replaceAll("\\s", "").startsWith("$LABEL" + GOTO) ){
             bReader.reset();
-            while (strLine !=null && !strLine.startsWith(GOTO)) {  //burn blanks at the beginning
+            while (bReader.ready() && !strLine.startsWith(GOTO)) {  //burn blanks at the beginning
                 strLine = bReader.readLine();
             }
         }
@@ -248,6 +249,8 @@ public class CASUALLanguage {
          * CONTROL COMMANDS
          */
         //SETRETURN  "string"  sets return value
+        if (ControlCommands.launchCaspac(sd,cmd)) return cmd.getReturn();
+        
         if (ControlCommands.setReturn(cmd)) return cmd.getReturn();
 
         //$HALT "$CASUAL command" halts and executes the remainder of the line
@@ -256,6 +259,8 @@ public class CASUALLanguage {
         if (ControlCommands.checkGoto(cmd)) return cmd.getReturn();
         //$ON  
         if (ControlCommands.checkOn(sd,cmd)) return cmd.getReturn();
+        //$CASPAC
+         if (ControlCommands.launchCaspac(sd, cmd)) return cmd.getReturn();
         //$CLEARON
         if (ControlCommands.checkClearOn(sd,cmd)) return cmd.getReturn();
         //# comments

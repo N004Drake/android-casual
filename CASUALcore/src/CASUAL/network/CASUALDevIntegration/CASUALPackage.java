@@ -149,7 +149,7 @@ public class CASUALPackage {
         }
         revision = dotMeta.getProperties().getProperty("Script.Revision", "");
         supportURL = dotMeta.getProperties().getProperty("Script.SupportURL", "");
-
+         description=dotMeta.getProperties().getProperty("CASPAC.Overview", "");
         developer = dotMeta.getProperties().getProperty("Developer.Name", "");
         donateTo = dotMeta.getProperties().getProperty("Developer.DonateToButtonText", "");
         donateLink = dotMeta.getProperties().getProperty("Developer.DonateLink", "");
@@ -179,5 +179,12 @@ public class CASUALPackage {
                 + "\n support: " + supportURL
                 + "\n" + description;
 
+    }
+
+    /**
+     * @return the caspacSHA256sum
+     */
+    public String getCaspacSHA256sum() {
+        return caspacSHA256sum;
     }
 }
