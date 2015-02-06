@@ -154,6 +154,27 @@ public final class Caspac {
             Log.level4Debug("CASPAC Not Found, treating as a request to create new CASPAC");
         }
     }
+    
+       /**
+     * Constructor for Caspac
+     *
+     * @param sd
+     * @param caspac file containing CASPAC information.
+     * @param tempDir temp folder to use
+     * @throws IOException when permission problem exists
+     */
+    public Caspac(CASUALSessionData sd, File caspac) throws IOException {
+        this.sd=sd;
+        this.CASPAC = caspac;
+        this.CASPACsrc = null;
+        this.TempFolder = sd.getTempFolder();
+        this.type = 0;
+        if (caspac.exists()) {
+            loadCASPACcontrolFilesFromCASPAC();
+        } else {
+            Log.level4Debug("CASPAC Not Found, treating as a request to create new CASPAC");
+        }
+    }
 
     /**
      * Constructor for Caspac

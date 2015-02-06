@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package CASUAL.language.commands;
 
 import CASUAL.CASUALScriptParser;
@@ -24,6 +23,7 @@ import CASUAL.language.CASUALLanguage;
 import CASUAL.language.Command;
 import CASUAL.misc.StringOperations;
 import CASUAL.network.Pastebin;
+import CASUAL.network.RemoteCASPACHandler;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -42,9 +42,8 @@ public class ControlCommands {
         return false;
     }
 
-    
-    public static boolean setReturn(Command cmd){
-        if (cmd.get().startsWith("$RETURNVALUE")){
+    public static boolean setReturn(Command cmd) {
+        if (cmd.get().startsWith("$RETURNVALUE")) {
             cmd.set(cmd.get().replaceFirst("$RETURNVALUE", "").trim());
             CASUALScriptParser.setReturnValue(cmd.get());
             cmd.setReturn(true, cmd.get());
@@ -52,7 +51,7 @@ public class ControlCommands {
         }
         return false;
     }
-    
+
     public static boolean checkIfContains(Command cmd) {
         if (cmd.get().startsWith("$IFCONTAINS ")) {
             cmd.set(StringOperations.removeLeadingSpaces(cmd.get().replaceFirst("$IFCONTAINS ", "").trim()));
@@ -90,7 +89,7 @@ public class ControlCommands {
         return false;
     }
 
-    public static  boolean checkGoto(Command cmd) {
+    public static boolean checkGoto(Command cmd) {
         if (cmd.get().startsWith("$GOTO")) {
             cmd.set(cmd.get().replace("$GOTO", "").trim());
             CASUALLanguage.GOTO = cmd.get();
@@ -172,5 +171,14 @@ public class ControlCommands {
         }
         return retValue;
     }
-    
+
+    public static boolean launchCaspac(CASUALSessionData sd, Command cmd) throws IOException {
+        if (cmd.get().startsWith("$CASPAC")) {
+            cmd.set(cmd.get().replace("$CASPAC", "").trim());
+            new RemoteCASPACHandler().executeCaspac(CASUALSessionData.newInstance(), cmd.get());
+            return true;
+        }
+        return false;
+    }
+
 }
