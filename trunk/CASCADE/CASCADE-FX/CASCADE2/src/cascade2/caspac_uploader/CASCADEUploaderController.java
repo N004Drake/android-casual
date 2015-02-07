@@ -88,7 +88,7 @@ public class CASCADEUploaderController extends Application {
 
     @FXML
     private void problemButtonClicked() {
-        new LinkLauncher("http://jenkins.casual-dev.com").launch();
+        new LinkLauncher("https://jenkins.casual-dev.com").launch();
 
     }
 
