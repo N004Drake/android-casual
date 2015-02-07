@@ -31,8 +31,8 @@ import java.util.regex.Pattern;
  */
 public class CommitInformation {
 
-    final static String jenkinsXMLXpath = "http://jenkins.casual-dev.com/job/Project%20CASUAL//lastSuccessfulBuild/api/xml/?xpath=";
-    //final static String jenkinsXMLXpath="http://jenkins.casual-dev.com/job/Project%20CASUAL/549/api/xml/?xpath=";
+    final static String jenkinsXMLXpath = "https://jenkins.casual-dev.com/job/Project%20CASUAL//lastSuccessfulBuild/api/xml/?xpath=";
+    //final static String jenkinsXMLXpath="https://jenkins.casual-dev.com/job/Project%20CASUAL/549/api/xml/?xpath=";
 
     Pattern xmlClosingAngleBracket = Pattern.compile(">");
 

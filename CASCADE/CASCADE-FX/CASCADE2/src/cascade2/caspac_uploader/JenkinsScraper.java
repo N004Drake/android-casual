@@ -34,7 +34,7 @@ public class JenkinsScraper {
 		String password = "AUtomation##11";
 
 		// Jenkins url
-		String jenkinsUrl = "http://jenkins.casual-dev.com/";
+		String jenkinsUrl = "https://jenkins.casual-dev.com/";
 
 		// Build name
 		String jobName = "Submit%20CASPAC%20to%20server";
