@@ -64,7 +64,7 @@ public class CASUALDevQuerier2Test {
         System.out.println("getData");
         CASUALDevQuerier2 instance = new CASUALDevQuerier2(new File("build.prop"), new String[]{"CASUAL"});
         String expResult = "https://builds.casual-dev.com/files/CASPAC/all/testpak.zip";
-        String[] result=new String[]{};
+        String[] result;
         //for (int i=0; i<30; i++){
             result=instance.getPackagesString();
         //}
@@ -86,7 +86,7 @@ public class CASUALDevQuerier2Test {
             fail("file was not found");
             return;
         }
-        String expResult = "http://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
+        String expResult = "https://builds.casual-dev.com/files/all/EasyGlassInstaller.zip";
         CASUALPackage[] packs=instance.getPackages();
         for (CASUALPackage pack:packs){
             System.out.println(pack.isValid());
