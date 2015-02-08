@@ -1,5 +1,5 @@
 /*CASUALMain provides a place for the main thread to break out into different modes.
- *Copyright (C) 2013  Adam Outler
+ *Copyright (C) 2015  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *  along with this program.  If not, see https://www.gnu.org/licenses/ .
  */
 package CASUAL;
 
@@ -90,7 +90,7 @@ public final class CASUALMain {
         String CASUALBuildNumber = java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.buildnumber");
 
         System.out.println("CASUAL Cross-platform Android Scripting and Unified Auxiliary Loader\nRevision:" + CASUALSVNRevision + " build:" + CASUALBuildNumber + "\n"
-                + "    CASUAL  Copyright (C) 2013  Adam Outler\n"
+                + "    CASUAL  Copyright (C) 2015  Adam Outler\n"
                 + "    This program comes with ABSOLUTELY NO WARRANTY.  This is free software,\n"
                 + "    and you are welcome to redistribute it, under certain conditions; run\n"
                 + "    '" + CASUALFileName + " --license'\n"

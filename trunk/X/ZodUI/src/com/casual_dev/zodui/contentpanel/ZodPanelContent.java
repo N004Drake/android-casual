@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *  along with this program.  If not, see https://www.gnu.org/licenses/ .
  */
 package com.casual_dev.zodui.contentpanel;
 
@@ -114,7 +114,7 @@ public class ZodPanelContent{
     /**
      * gets the progress indicator
      *
-     * @return
+     * @return the current progress
      */
     public static double getProgress() {
         return progressIndicator;
@@ -122,7 +122,7 @@ public class ZodPanelContent{
 
     /**
      *
-     * @return
+     * @return  the max progress on the bar
      */
     public static double getProgressMax() {
         return progressIndicatorMax;
@@ -146,9 +146,10 @@ public class ZodPanelContent{
 
     /**
      *
-     * @return
+     * @return resource location
      */
     public String getImageString() {
+        
         return this.image;
     }
     
@@ -170,7 +171,7 @@ public class ZodPanelContent{
 
     /**
      *
-     * @return
+     * @return  titles of each button
      */
     public String[] getActionOptions() {
         return buttonActions;
@@ -186,7 +187,7 @@ public class ZodPanelContent{
 
     /**
      *
-     * @return
+     * @return current status
      */
     public String getStatus() {
         return status;

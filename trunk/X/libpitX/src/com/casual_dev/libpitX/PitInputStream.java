@@ -1,6 +1,6 @@
 package com.casual_dev.libpitX;
 /*PitInputStream provides tools used for writing a pit.
- *Copyright (C) 2013  Adam Outler
+ *Copyright (C) 2015  Adam Outler
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@ package com.casual_dev.libpitX;
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *  along with this program.  If not, see https://www.gnu.org/licenses/ .
  */
 
 import java.io.IOException;
