@@ -17,7 +17,6 @@
 package GUI.development;
 
 import CASUAL.Log;
-import CASUAL.CASUALSessionData;
 import CASUAL.Log.LogLevel;
 import javax.swing.UnsupportedLookAndFeelException;
 

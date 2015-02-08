@@ -17,13 +17,11 @@
 
 package CASUAL.misc.math;
 
-import CASUAL.misc.math.CASUALMathOperationException;
-import CASUAL.misc.math.StringMath;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

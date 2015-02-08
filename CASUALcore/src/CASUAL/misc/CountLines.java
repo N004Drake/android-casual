@@ -18,7 +18,6 @@ package CASUAL.misc;
 
 import CASUAL.CASUALMain;
 import CASUAL.Log;
-import CASUAL.CASUALSessionData;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

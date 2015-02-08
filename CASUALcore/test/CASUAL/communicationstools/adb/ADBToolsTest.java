@@ -6,8 +6,8 @@ package CASUAL.communicationstools.adb;
 
 import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
-import CASUAL.OSTools;
 import CASUAL.CASUALSessionData;
+import CASUAL.OSTools;
 import CASUAL.communicationstools.AbstractDeviceCommunicationsProtocol;
 import java.io.File;
 import java.io.IOException;

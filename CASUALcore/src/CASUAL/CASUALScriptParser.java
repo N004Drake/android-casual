@@ -16,10 +16,10 @@
  */
 package CASUAL;
 
-import CASUAL.language.CASUALLanguage;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.instrumentation.Track;
+import CASUAL.language.CASUALLanguage;
 import CASUAL.misc.CountLines;
 import java.io.DataInputStream;
 import java.io.FileNotFoundException;

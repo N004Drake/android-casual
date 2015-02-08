@@ -18,12 +18,12 @@ package CASUAL.language;
 
 import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALScriptParser;
+import CASUAL.CASUALSessionData;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Shell;
 import CASUAL.ShellTools;
-import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Caspac;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.BusyboxTools;
@@ -86,7 +86,7 @@ public class CASUALLanguage {
     /**
      * Constructor for CASUALLanguage
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param ScriptName Name of script to be executed
      * @param ScriptTempFolder Folder in which script is executing.
      */

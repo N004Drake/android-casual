@@ -404,6 +404,7 @@ public class ScriptMeta {
 
     /**
      * @param monitorMode the monitorMode to set
+     * @return 
      */
     public ScriptMeta setMonitorMode(CASUALSettings.MonitorMode monitorMode) {
         this.monitorMode = monitorMode;

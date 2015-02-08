@@ -21,11 +21,11 @@
 package CASUAL.communicationstools.heimdall.drivers;
 
 import CASUAL.CASUALMain;
+import CASUAL.CASUALSessionData;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.Shell;
-import CASUAL.CASUALSessionData;
 import CASUAL.archiving.Unzip;
 import CASUAL.misc.StringOperations;
 import java.io.FileNotFoundException;

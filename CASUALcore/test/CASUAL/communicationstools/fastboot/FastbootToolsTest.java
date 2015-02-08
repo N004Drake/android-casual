@@ -19,7 +19,6 @@ package CASUAL.communicationstools.fastboot;
 
 import CASUAL.CASUALMain;
 import CASUAL.CASUALSessionData;
-import CASUAL.communicationstools.fastboot.FastbootTools;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;

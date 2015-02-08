@@ -19,8 +19,8 @@ package GUI.CommandLine;
 
 import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
-import CASUAL.Log;
 import CASUAL.CASUALSessionData;
+import CASUAL.Log;
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.iCASUALUI;

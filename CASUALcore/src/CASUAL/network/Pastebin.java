@@ -19,10 +19,10 @@ package CASUAL.network;
 
 import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
+import CASUAL.CASUALSessionData;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.CASUALSessionData;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;

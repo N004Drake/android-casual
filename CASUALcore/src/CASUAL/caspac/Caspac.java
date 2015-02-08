@@ -16,11 +16,11 @@
  */
 package CASUAL.caspac;
 
+import CASUAL.CASUALSessionData;
 import CASUAL.CASUALStartupTasks;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.CASUALSessionData;
 import CASUAL.archiving.Unzip;
 import CASUAL.archiving.Zip;
 import CASUAL.crypto.AES128Handler;
@@ -137,7 +137,7 @@ public final class Caspac {
     /**
      * Constructor for Caspac
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param caspac file containing CASPAC information.
      * @param tempDir temp folder to use
      * @throws IOException when permission problem exists
@@ -158,9 +158,8 @@ public final class Caspac {
        /**
      * Constructor for Caspac
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param caspac file containing CASPAC information.
-     * @param tempDir temp folder to use
      * @throws IOException when permission problem exists
      */
     public Caspac(CASUALSessionData sd, File caspac) throws IOException {
@@ -179,7 +178,7 @@ public final class Caspac {
     /**
      * Constructor for Caspac
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param caspac file containing CASPAC information.
      * @param tempDir temp folder to use
      * @param type Type of CASPAC CASPAC, Type 1 CASUAL, Type 2 Filesystem
@@ -202,7 +201,7 @@ public final class Caspac {
      * secure constructor for Caspac always call startAndWaitForUnzip in order
      * to delete file and maintain security
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param caspac file containing CASPAC information.
      * @param tempDir temp folder to use
      * @param type Type of CASPAC CASPAC, Type 1 CASUAL, Type 2 Filesystem
@@ -231,7 +230,7 @@ public final class Caspac {
     /**
      * Constructor for CASUAL
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param src CodeSource reference, used to reference SCRIPTS folder.
      * @param tempDir Temporary folder to use
      * @param type Type of CASPAC CASPAC, Type 1 CASUAL, Type 2 Filesystem
@@ -285,7 +284,7 @@ public final class Caspac {
      * Sets the active script to an instace of a script.
      *
      * @param s script to make active.
-     * @return
+     * @return Active Script
      */
     public synchronized Script setActiveScript(Script s) {
         CasualDevCounter.doIncrementCounter(s.getName() + s.getMetaData().getUniqueIdentifier());
@@ -322,7 +321,7 @@ public final class Caspac {
      * removes a script
      *
      * @param script Script reference
-     * @return
+     * @return this CASPAC
      */
     public Caspac removeScript(Script script) {
         if (scripts.contains(script)) {
@@ -419,7 +418,7 @@ public final class Caspac {
      * parses CASPAC and loads the first script seen identified by non-caspac
      * controller files.
      *
-     * @return
+     * @return  this CASPAC
      * @throws ZipException when zip file is corrupt
      * @throws IOException when permission problem exists
      */
@@ -450,7 +449,7 @@ public final class Caspac {
     /**
      * Loads the active script after its been set.
      *
-     * @return
+     * @return active script
      * @throws IOException when permission problem exists
      */
     public synchronized Script loadActiveScript() throws IOException {
@@ -493,7 +492,7 @@ public final class Caspac {
     /**
      * loads a CASPAC.zip file
      *
-     * @return
+     * @return this CASPAC
      * @throws ZipException when zip file is corrupt
      * @throws IOException when permission problem exists
      */
@@ -577,7 +576,7 @@ public final class Caspac {
     /**
      * loops through active unzip threads and waits for all unzip to complete.
      *
-     * @return
+     * @return this CASPAC
      */
     public Caspac waitForUnzip() {
         for (CASUAL.misc.MandatoryThread t : unzipThreads) {
@@ -937,7 +936,7 @@ public final class Caspac {
      * sets the CASPAC location
      *
      * @param f File to use for new CASPAC location
-     * @return
+     * @return this CASPAC
      */
     public Caspac setCASPACLocation(File f) {
         this.CASPAC = f;
@@ -1049,7 +1048,7 @@ public final class Caspac {
 
     /**
      * @param logo the logo to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setLogo(BufferedImage logo) {
         this.logo = logo;
@@ -1065,7 +1064,7 @@ public final class Caspac {
 
     /**
      * @param CASPAC the CASPAC to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setCASPAC(File CASPAC) {
         this.CASPAC = CASPAC;
@@ -1081,7 +1080,7 @@ public final class Caspac {
 
     /**
      * @param CASPACsrc the CASPACsrc to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setCASPACsrc(CodeSource CASPACsrc) {
         this.CASPACsrc = CASPACsrc;
@@ -1097,7 +1096,7 @@ public final class Caspac {
 
     /**
      * @param overview the overview to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setOverview(String overview) {
         this.overview = overview;
@@ -1113,7 +1112,7 @@ public final class Caspac {
 
     /**
      * @param build the build to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setBuild(Build build) {
         this.build = build;
@@ -1129,7 +1128,7 @@ public final class Caspac {
 
     /**
      * @param scripts the scripts to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setScripts(ArrayList<Script> scripts) {
         this.scripts = scripts;
@@ -1145,7 +1144,7 @@ public final class Caspac {
 
     /**
      * @param TempFolder the TempFolder to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setTempFolder(String TempFolder) {
         this.TempFolder = TempFolder;
@@ -1161,7 +1160,7 @@ public final class Caspac {
 
     /**
      * @param unzipThreads the unzipThreads to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setUnzipThreads(ArrayList<CASUAL.misc.MandatoryThread> unzipThreads) {
         this.unzipThreads = unzipThreads;
@@ -1178,7 +1177,7 @@ public final class Caspac {
     /**
      * @param caspacShouldBeDeletedAfterExtraction the
      * caspacShouldBeDeletedAfterExtraction to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setCaspacShouldBeDeletedAfterExtraction(boolean caspacShouldBeDeletedAfterExtraction) {
         this.caspacShouldBeDeletedAfterExtraction = caspacShouldBeDeletedAfterExtraction;
@@ -1194,7 +1193,7 @@ public final class Caspac {
 
     /**
      * @param tempbannerpic the tempbannerpic to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setTempbannerpic(String tempbannerpic) {
         this.tempbannerpic = tempbannerpic;
@@ -1210,7 +1209,7 @@ public final class Caspac {
 
     /**
      * @param controlFiles the controlFiles to set
-     * @return
+     * @return this CASPAC
      */
     public Caspac setControlFiles(String[] controlFiles) {
         this.controlFiles = controlFiles;

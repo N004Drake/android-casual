@@ -7,7 +7,6 @@ package CASUAL.communicationstools.adb.busybox;
 import CASUAL.CASUALScriptParser;
 import CASUAL.Shell;
 import CASUAL.communicationstools.adb.ADBTools;
-import CASUAL.communicationstools.adb.busybox.BusyboxTools;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;

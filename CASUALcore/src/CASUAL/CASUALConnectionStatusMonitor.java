@@ -96,7 +96,7 @@ public class CASUALConnectionStatusMonitor {
      * Starts and stops the ADB timer reference with
  CASUALSessionData.casualConnectionStatusMonitor.DeviceCheck ONLY;
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param mode sets the monitoring mode
      */
     public void start(CASUALSessionData sd, AbstractDeviceCommunicationsProtocol mode) {

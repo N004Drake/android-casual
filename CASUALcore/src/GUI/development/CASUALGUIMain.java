@@ -21,11 +21,10 @@ import CASUAL.CASUALConnectionStatusMonitor;
 import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
 import CASUAL.CASUALScriptParser;
+import CASUAL.CASUALSessionData;
 import CASUAL.CASUALStartupTasks;
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.CASUALSessionData;
-
 import CASUAL.caspac.Caspac;
 import CASUAL.caspac.Script;
 import CASUAL.iCASUALUI;
@@ -33,11 +32,9 @@ import CASUAL.misc.CASUALScrFilter;
 import CASUAL.network.LinkLauncher;
 import java.awt.Component;
 import java.awt.HeadlessException;
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

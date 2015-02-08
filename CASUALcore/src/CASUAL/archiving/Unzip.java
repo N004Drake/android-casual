@@ -17,8 +17,8 @@
 package CASUAL.archiving;
 
 import CASUAL.CASUALMain;
-import CASUAL.Log;
 import CASUAL.CASUALSessionData;
+import CASUAL.Log;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;

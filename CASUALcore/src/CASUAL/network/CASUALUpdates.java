@@ -17,11 +17,11 @@
 package CASUAL.network;
 
 import CASUAL.CASUALMessageObject;
+import CASUAL.CASUALSessionData;
 import CASUAL.CASUALTools;
 import CASUAL.FileOperations;
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.CASUALSessionData;
 import CASUAL.caspac.Script;
 import CASUAL.crypto.MD5sum;
 import CASUAL.misc.StringOperations;

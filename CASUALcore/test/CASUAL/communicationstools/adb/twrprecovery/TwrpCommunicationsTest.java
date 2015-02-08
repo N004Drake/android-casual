@@ -19,11 +19,11 @@ package CASUAL.communicationstools.adb.twrprecovery;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeTrue;
 
 /**
  *

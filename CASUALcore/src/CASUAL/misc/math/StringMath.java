@@ -18,8 +18,6 @@
 package CASUAL.misc.math;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
