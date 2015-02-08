@@ -40,15 +40,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.StringReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -56,7 +49,6 @@ import java.util.logging.Logger;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 /**
  * queries the file-system at casual-dev.com for items pertaining to the

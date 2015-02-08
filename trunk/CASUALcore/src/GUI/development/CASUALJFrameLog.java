@@ -19,7 +19,6 @@ package GUI.development;
 import CASUAL.CASUALMain;
 import CASUAL.FileOperations;
 import CASUAL.Log;
-import CASUAL.CASUALSessionData;
 import CASUAL.network.Pastebin;
 import java.awt.Dimension;
 import java.awt.Toolkit;

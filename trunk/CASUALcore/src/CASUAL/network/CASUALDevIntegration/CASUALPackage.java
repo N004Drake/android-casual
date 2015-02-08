@@ -18,7 +18,6 @@ package CASUAL.network.CASUALDevIntegration;
 
 import CASUAL.network.NetworkProperties;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;

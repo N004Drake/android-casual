@@ -30,9 +30,6 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 /**
  *

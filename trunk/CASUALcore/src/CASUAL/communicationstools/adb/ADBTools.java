@@ -18,15 +18,14 @@ package CASUAL.communicationstools.adb;
 
 import CASUAL.CASUALMain;
 import CASUAL.CASUALMessageObject;
+import CASUAL.CASUALSessionData;
 import CASUAL.Log;
 import CASUAL.OSTools;
 import CASUAL.ResourceDeployer;
 import CASUAL.Shell;
-import CASUAL.CASUALSessionData;
 import CASUAL.misc.DiffTextFiles;
 import java.awt.HeadlessException;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Provides a set of tools for using ADB in CASUAL

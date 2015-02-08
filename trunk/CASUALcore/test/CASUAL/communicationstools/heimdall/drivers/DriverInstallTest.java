@@ -16,10 +16,9 @@
  */
 package CASUAL.communicationstools.heimdall.drivers;
 
+import CASUAL.CASUALSessionData;
 import CASUAL.Log;
 import CASUAL.OSTools;
-import CASUAL.CASUALSessionData;
-import CASUAL.communicationstools.heimdall.drivers.DriverInstall;
 import static org.junit.Assume.assumeTrue;
 import org.junit.Test;
 

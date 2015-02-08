@@ -164,7 +164,7 @@ public class PitData {
 
             dataOutputStream.writeInt(Integer.reverseBytes(entryCount));
             for (int i = 0; i < fileType.length; i++) {
-                dataOutputStream.write((int) fileType[i]);
+                dataOutputStream.write( fileType[i]);
             }
             for (int i = 0; i < pitName.length; i++) {
                 dataOutputStream.write((int) pitName[i]);

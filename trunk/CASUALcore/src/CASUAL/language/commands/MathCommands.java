@@ -19,8 +19,6 @@ package CASUAL.language.commands;
 import CASUAL.language.Command;
 import CASUAL.misc.math.CASUALMathOperationException;
 import CASUAL.misc.math.StringMath;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

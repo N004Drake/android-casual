@@ -22,7 +22,6 @@ import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.adb.busybox.CASUALDataBridge;
 import CASUAL.communicationstools.fastboot.FastbootTools;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;

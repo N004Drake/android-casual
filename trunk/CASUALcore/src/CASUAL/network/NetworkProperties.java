@@ -23,12 +23,8 @@ package CASUAL.network;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.URL;
-
 import java.util.Properties;
 
 /**

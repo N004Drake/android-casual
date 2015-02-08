@@ -17,8 +17,8 @@
 package CASUAL.language.commands;
 
 import CASUAL.CASUALScriptParser;
-import CASUAL.Log;
 import CASUAL.CASUALSessionData;
+import CASUAL.Log;
 import CASUAL.language.CASUALLanguage;
 import CASUAL.language.Command;
 import CASUAL.misc.StringOperations;

@@ -7,18 +7,15 @@
 package CASUAL.language;
 
 import CASUAL.CASUALScriptParser;
-import CASUAL.OSTools;
 import CASUAL.CASUALSessionData;
+import CASUAL.OSTools;
 import CASUAL.communicationstools.adb.ADBTools;
 import CASUAL.communicationstools.heimdall.HeimdallTools;
 import CASUAL.misc.math.CASUALMathOperationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;

@@ -17,15 +17,15 @@
 package CASUAL.caspac;
 
 import CASUAL.CASUALMessageObject;
-import CASUAL.CASUALTools;
-import CASUAL.CASUALStartupTasks;
-import CASUAL.Log;
 import CASUAL.CASUALSessionData;
+import CASUAL.CASUALStartupTasks;
+import CASUAL.CASUALTools;
+import CASUAL.Log;
 import CASUAL.archiving.Unzip;
 import CASUAL.archiving.Zip;
 import CASUAL.crypto.MD5sum;
-import java.io.BufferedInputStream;
 import CASUAL.misc.StringOperations;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -132,7 +132,7 @@ public class Script {
     /**
      * Creates a duplicate script from an old one.
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param s script to use as base.
      */
     public Script(CASUALSessionData sd,Script s) {
@@ -164,7 +164,7 @@ public class Script {
     /**
      * Creates a new script from a name, tempdir and type.
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param name name of script
      * @param tempDir temp folder to use.
      * @param type this.CASPAC, this.CASUAL, this.FILE. final int CASPAC = 0
@@ -180,7 +180,7 @@ public class Script {
     /**
      * creates a new script with several parameters
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param name name of script
      * @param script Script contents to use for script (scr file)
      * @param discription description of script (txt file)
@@ -200,7 +200,7 @@ public class Script {
     /**
      * creates a new script with several parameters
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param name name of script
      * @param script Script contents to use for script (scr file)
      * @param discription description of script (txt file)
@@ -224,7 +224,7 @@ public class Script {
     /**
      * creates a new script with several parameters
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param name name of script
      * @param script Script contents to use for script (scr file)
      * @param discription description of script (txt file)
@@ -247,7 +247,7 @@ public class Script {
     /**
      * creates a new script with several parameters
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param name name of script
      * @param script Script contents to use for script (scr file)
      * @param discription description of script (txt file)

@@ -19,8 +19,8 @@
  */
 package CASUAL.archiving;
 
-import CASUAL.Log;
 import CASUAL.CASUALSessionData;
+import CASUAL.Log;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,7 +60,7 @@ public class Zip {
      * <p>
      * Example: ./test.zip
      *
-     * @param sd
+     * @param sd The CASUALSessionData instace to use for this.
      * @param zip output file to be worked with
      * @throws IOException  {@inheritDoc}
      */

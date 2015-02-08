@@ -207,6 +207,7 @@ public final class Build {
 
     /**
      * @param developerName the developerName to set
+     * @return this instance of Build
      */
     public Build setDeveloperName(String developerName) {
         this.developerName = developerName;
@@ -222,6 +223,7 @@ public final class Build {
 
     /**
      * @param developerDonateButtonText the developerDonateButtonText to set
+     * @return 
      */
     public Build setDeveloperDonateButtonText(String developerDonateButtonText) {
         this.developerDonateButtonText = developerDonateButtonText;
@@ -237,6 +239,7 @@ public final class Build {
 
     /**
      * @param donateLink the donateLink to set
+     * @return 
      */
     public Build setDonateLink(String donateLink) {
         this.donateLink = donateLink;
@@ -252,6 +255,7 @@ public final class Build {
 
     /**
      * @param windowTitle the windowTitle to set
+     * @return 
      */
     public Build setWindowTitle(String windowTitle) {
         this.windowTitle = windowTitle;
@@ -267,6 +271,7 @@ public final class Build {
 
     /**
      * @param usePictureForBanner the usePictureForBanner to set
+     * @return 
      */
     public Build setUsePictureForBanner(boolean usePictureForBanner) {
         this.usePictureForBanner = usePictureForBanner;
@@ -282,6 +287,7 @@ public final class Build {
 
     /**
      * @param bannerPic the bannerPic to set
+     * @return 
      */
     public Build setBannerPic(String bannerPic) {
         this.bannerPic = bannerPic;
@@ -297,6 +303,7 @@ public final class Build {
 
     /**
      * @param bannerText the bannerText to set
+     * @return 
      */
     public Build setBannerText(String bannerText) {
         this.bannerText = bannerText;
@@ -312,6 +319,7 @@ public final class Build {
 
     /**
      * @param executeButtonText the executeButtonText to set
+     * @return 
      */
     public Build setExecuteButtonText(String executeButtonText) {
         this.executeButtonText = executeButtonText;
@@ -327,6 +335,7 @@ public final class Build {
 
     /**
      * @param audioEnabled the audioEnabled to set
+     * @return 
      */
     public Build setAudioEnabled(boolean audioEnabled) {
         this.audioEnabled = audioEnabled;
@@ -342,6 +351,7 @@ public final class Build {
 
     /**
      * @param alwaysEnableControls the alwaysEnableControls to set
+     * @return 
      */
     public Build setAlwaysEnableControls(boolean alwaysEnableControls) {
         this.alwaysEnableControls = alwaysEnableControls;
@@ -357,6 +367,7 @@ public final class Build {
 
     /**
      * @param buildProp the buildProp to set
+     * @return 
      */
     public Build setBuildProp(Properties buildProp) {
         this.buildProp = buildProp;
@@ -372,6 +383,7 @@ public final class Build {
 
     /**
      * @param build the build to set
+     * @return 
      */
     public Build setBuild(Caspac build) {
         this.caspac = build;
