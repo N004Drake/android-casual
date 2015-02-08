@@ -1,5 +1,5 @@
 /*Script provides a way to read and write Script information for a Caspac
- *Copyright (C) 2013  Adam Outler & Logan Ludington
+ *Copyright (C) 2015  Adam Outler & Logan Ludington
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *  along with this program.  If not, see https://www.gnu.org/licenses/ .
  */
 package CASUAL.caspac;
 

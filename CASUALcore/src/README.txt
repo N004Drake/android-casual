@@ -33,7 +33,7 @@ Copyright (C) 2012  Adam Outler.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+    along with this program.  If not, see https://www.gnu.org/licenses/ .
 
 
 
@@ -246,7 +246,7 @@ This project includes distributable forms of:
 CADI, ADB, Heimdall, Fastboot, and Busybox
 
 CASUAL  Cross-platform Android Scripting and Unified Auxiliary Loader
-Copyright (C) 2013  Adam Outler
+Copyright (C) 2015  Adam Outler
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -256,7 +256,7 @@ Copyright (C) 2013  Adam Outler
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ along with this program.  If not, see https://www.gnu.org/licenses/ .
 
 This project contains CADI CASUAL Automated Driver Installer
 Copyright (C) 2013  Jeremey Loper
@@ -269,7 +269,7 @@ Copyright (C) 2013  Jeremey Loper
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ along with this program.  If not, see https://www.gnu.org/licenses/ .
 
 
 This project contains Fastboot
