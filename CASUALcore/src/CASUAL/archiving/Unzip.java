@@ -42,6 +42,113 @@ import java.util.zip.ZipInputStream;
 public class Unzip {
 
     static int BUFFER = 4096;
+
+    /**
+     * Unzips a resource.
+     * <p>
+     * Within a java package there is a folder called resources, used to store
+     * things such as internalized strings, sounds, and other important static
+     * files. This function takes in the name of the resource and then outputs
+     * it into the output folder.
+     *
+     * @param sd SessionData for this run
+     * @param zipResource name of the java resource to be unzipped
+     * @param outputFolder folder to unzip to
+     * @throws FileNotFoundException output folder missing or permissions
+     * @throws IOException permissions
+     * @see java.lang.Class#getResource(String)
+     *
+     */
+    public static void unZipResource(CASUALSessionData sd, String zipResource, String outputFolder) throws FileNotFoundException, IOException {
+        InputStream zStream;
+        zStream = new CASUALMain().getClass().getResourceAsStream(zipResource);
+        unZipInputStream(sd,zStream, outputFolder);
+        zStream.close();
+    }
+
+    /**
+     * Unzips an InputStream.
+     * <p>
+     * Takes in an InputStream, converts it to a ZipInputStream, and then
+     * iterates through all of the ZipEntries, writing each one of them to a
+     * file with the name provided by the ZipEntry.
+     *
+     * @param sd SessionData for this run
+     * @param zStream input stream to unzip
+     * @param outputFolder output folder to unzip to
+     * @return array list of files extract
+     * @throws FileNotFoundException output missing or permissions
+     * @throws IOException permissions
+     * @see InputStream
+     * @see ZipEntry
+     * @see ZipInputStream
+     * @see ZipFile
+     */
+    public static ArrayList<File> unZipInputStream(CASUALSessionData sd, InputStream zStream, String outputFolder) throws FileNotFoundException, IOException {
+        zStream.mark(0);
+        ZipInputStream zipInputStream;
+        ArrayList<File> unzipped=new ArrayList<File>();
+        ZipEntry zipEntry;
+        zipInputStream = new ZipInputStream(zStream);
+        while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+            Log.level3Verbose("Unzipping " + zipEntry.getName());
+            File EntryFile = new File(outputFolder + System.getProperty("file.separator") + zipEntry.getName());
+            if (zipEntry.isDirectory()) {
+                EntryFile.mkdirs();
+                continue;
+            }
+            File EntryFolder = new File(EntryFile.getParent());
+            if (!EntryFolder.exists()) {
+                EntryFolder.mkdirs();
+            }
+            int currentByte;
+            // establish buffer for writing file
+            byte data[] = new byte[BUFFER];
+            String currentEntry = zipEntry.getName();
+            File destFile = new File(outputFolder + System.getProperty("file.separator"), currentEntry);
+            FileOutputStream FileOut = new FileOutputStream(destFile);
+            BufferedInputStream BufferedInputStream = new BufferedInputStream(zipInputStream);
+            BufferedOutputStream Destination;
+            Destination = new BufferedOutputStream(FileOut);
+            int numberOfCycles = (int) (zipEntry.getSize() / BUFFER);
+            boolean updatePercent = false;
+            if (numberOfCycles > 0) {
+                updatePercent = true;
+            }
+            CASUALSessionData.getGUI().setProgressBar(-1);
+            BigInteger currentCycle = BigInteger.valueOf(0);
+            while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
+                Destination.write(data, 0, currentByte);
+                
+                CASUALSessionData.getGUI().setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
+            }
+            Destination.flush();
+            Destination.close();
+            unzipped.add(destFile);
+        }
+        sd.setStatus("Important Information");
+        CASUALSessionData.getGUI().setProgressBar(0);
+        
+        Log.level3Verbose("Unzip Complete");
+        return unzipped;
+    }
+
+    /**
+     * Gets a stream of a specified file from a zip.
+     * <p>
+     * Static method used to stream a file form a zip that is not an Unzip
+     * object.
+     *
+     * @param zipFile file to stream from
+     * @param entry entry to stream
+     * @return stream of file
+     * @throws ZipException {@inheritDoc}
+     * @throws IOException {@inheritDoc}
+     */
+    public static BufferedInputStream streamFileFromZip(File zipFile, Object entry) throws ZipException, IOException {
+        ZipFile zip = new ZipFile(zipFile);
+        return new BufferedInputStream(zip.getInputStream((ZipEntry) entry));
+    }
     final ZipFile zip;
     /**
      * Unzip provides a set of methods which work to unzip files.
@@ -132,95 +239,6 @@ public class Unzip {
     }
 
     /**
-     * Unzips a resource.
-     * <p>
-     * Within a java package there is a folder called resources, used to store
-     * things such as internalized strings, sounds, and other important static
-     * files. This function takes in the name of the resource and then outputs
-     * it into the output folder.
-     *
-     * @param zipResource name of the java resource to be unzipped
-     * @param outputFolder folder to unzip to
-     * @throws FileNotFoundException output folder missing or permissions
-     * @throws IOException permissions
-     * @see java.lang.Class#getResource(String)
-     *
-     */
-    public static void unZipResource(CASUALSessionData sd,String zipResource, String outputFolder) throws FileNotFoundException, IOException {
-        InputStream zStream;
-        zStream = new CASUALMain().getClass().getResourceAsStream(zipResource);
-        unZipInputStream(sd,zStream, outputFolder);
-        zStream.close();
-    }
-
-    /**
-     * Unzips an InputStream.
-     * <p>
-     * Takes in an InputStream, converts it to a ZipInputStream, and then
-     * iterates through all of the ZipEntries, writing each one of them to a
-     * file with the name provided by the ZipEntry.
-     *
-     * @param zStream input stream to unzip
-     * @param outputFolder output folder to unzip to
-     * @return array list of files extract
-     * @throws FileNotFoundException output missing or permissions
-     * @throws IOException permissions
-     * @see InputStream
-     * @see ZipEntry
-     * @see ZipInputStream
-     * @see ZipFile
-     */
-    public static ArrayList<File> unZipInputStream(CASUALSessionData sd,InputStream zStream, String outputFolder) throws FileNotFoundException, IOException {
-
-        zStream.mark(0);
-        ZipInputStream zipInputStream;
-        ArrayList<File> unzipped=new ArrayList<File>();
-        ZipEntry zipEntry;
-        zipInputStream = new ZipInputStream(zStream);
-        while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-            Log.level3Verbose("Unzipping " + zipEntry.getName());
-            File EntryFile = new File(outputFolder + System.getProperty("file.separator") + zipEntry.getName());
-            if (zipEntry.isDirectory()) {
-                EntryFile.mkdirs();
-                continue;
-            }
-            File EntryFolder = new File(EntryFile.getParent());
-            if (!EntryFolder.exists()) {
-                EntryFolder.mkdirs();
-            }
-            int currentByte;
-            // establish buffer for writing file
-            byte data[] = new byte[BUFFER];
-            String currentEntry = zipEntry.getName();
-            File destFile = new File(outputFolder + System.getProperty("file.separator"), currentEntry);
-            FileOutputStream FileOut = new FileOutputStream(destFile);
-            BufferedInputStream BufferedInputStream = new BufferedInputStream(zipInputStream);
-            BufferedOutputStream Destination;
-            Destination = new BufferedOutputStream(FileOut);
-            int numberOfCycles = (int) (zipEntry.getSize() / BUFFER);
-            boolean updatePercent = false;
-            if (numberOfCycles > 0) {
-                updatePercent = true;
-            }
-            CASUALSessionData.getGUI().setProgressBar(-1);
-            BigInteger currentCycle = BigInteger.valueOf(0);
-            while ((currentByte = BufferedInputStream.read(data, 0, BUFFER)) != -1) {
-                Destination.write(data, 0, currentByte);
-
-                CASUALSessionData.getGUI().setBlocksUnzipped(currentCycle.add(BigInteger.valueOf(1)).toString());
-            }
-            Destination.flush();
-            Destination.close();
-            unzipped.add(destFile);
-        }
-        sd.setStatus("Important Information");
-        CASUALSessionData.getGUI().setProgressBar(0);
-
-        Log.level3Verbose("Unzip Complete");
-        return unzipped;
-    }
-
-    /**
      * Closes the zip file
      * <p>
      * Should be called after all file operations have been completed in Unzip
@@ -250,23 +268,6 @@ public class Unzip {
         writeFromZipToFile(zip, zipEntry, outputFolder);
         zip.close();
         return outputFolder + entry.toString();
-    }
-
-    /**
-     * Gets a stream of a specified file from a zip.
-     * <p>
-     * Static method used to stream a file form a zip that is not an Unzip
-     * object.
-     *
-     * @param zipFile file to stream from
-     * @param entry entry to stream
-     * @return stream of file
-     * @throws ZipException {@inheritDoc}
-     * @throws IOException {@inheritDoc}
-     */
-    public static BufferedInputStream streamFileFromZip(File zipFile, Object entry) throws ZipException, IOException {
-        ZipFile zip = new ZipFile(zipFile);
-        return new BufferedInputStream(zip.getInputStream((ZipEntry) entry));
     }
 
     private void writeFromZipToFile(ZipFile zip, ZipEntry entry, String filePathToWrite) throws IOException, FileNotFoundException {
@@ -331,7 +332,9 @@ public class Unzip {
         return (ZipEntry) entry;
     }
     
-    public String toString(){
+    @Override
+    public String toString() {
         return zip.getName();
     }
+
 }

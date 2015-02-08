@@ -82,7 +82,7 @@ public class ControlCommands {
     }
 
     public static boolean checkBlankLine(Command cmd) {
-        if (cmd.get().equals("")) {
+        if (cmd.get().isEmpty()) {
             return true;
         }
         Log.level4Debug("SCRIPT COMMAND:" + cmd);
@@ -127,7 +127,7 @@ public class ControlCommands {
     public static boolean checkSendLog(CASUALSessionData sd, Command cmd) {
         if (cmd.get().startsWith("$SENDLOG")) {
             cmd.set(cmd.get().replace("$SENDLOG", "").trim());
-            if (StringOperations.removeLeadingAndTrailingSpaces(cmd.get()).equals("")) {
+            if (StringOperations.removeLeadingAndTrailingSpaces(cmd.get()).isEmpty()) {
                 Log.level4Debug("Sendlog Command Issued!\nNo remaining commands");
             } else {
                 Log.level4Debug("Sendlog Command Issued!\nFinishing remaining commands:" + cmd.get());
@@ -163,10 +163,10 @@ public class ControlCommands {
             if (casualCommand.contains("&&&")) {
                 String[] lineSplit = casualCommand.split("&&&");
                 for (String cmd : lineSplit) {
-                    retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(cmd).trim());
+                    retValue += new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(cmd).trim());
                 }
             } else {
-                retValue = retValue + new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand).trim());
+                retValue += new CASUALScriptParser().executeOneShotCommand(StringOperations.removeLeadingAndTrailingSpaces(casualCommand).trim());
             }
         }
         return retValue;

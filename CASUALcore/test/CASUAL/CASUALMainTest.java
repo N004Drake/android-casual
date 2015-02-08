@@ -30,16 +30,16 @@ import org.junit.Test;
  */
 public class CASUALMainTest {
     
-    public CASUALMainTest() {
-        assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    
+    public CASUALMainTest() {
+        assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
     }
     
     @Before

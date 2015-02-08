@@ -45,23 +45,6 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
     private static final String fastbootLinux64 = "/CASUAL/communicationstools/fastboot/resources/fastboot-linux64";
 
     /**
-     * {@inheritDoc}
-     *
-     * @return {@inheritDoc}
-     */
-    @Override
-    public synchronized String getBinaryLocation() {
-
-        File loc = new File(binaryLocation);
-        if (!loc.isFile() || !loc.exists()) {
-            return deployBinary(CASUALMain.getSession().getTempFolder());
-        } else {
-            return binaryLocation;
-        }
-
-    }
-
-    /**
      * gets the resource for Fastboot
      *
      * @return path to resource
@@ -79,6 +62,23 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
         }
         Log.level3Verbose("found x86-32 bit arch");
         return fastbootLinux32;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
+    @Override
+    public synchronized String getBinaryLocation() {
+        
+        File loc = new File(binaryLocation);
+        if (!loc.isFile() || !loc.exists()) {
+            return deployBinary(CASUALMain.getSession().getTempFolder());
+        } else {
+            return binaryLocation;
+        }
+
     }
 
     /**
@@ -176,7 +176,7 @@ public class FastbootTools extends AbstractDeviceCommunicationsProtocol {
             String fastbootResource;
             binaryLocation = CASUALMain.getSession().getTempFolder() + "fastboot";
             if (OSTools.isWindows()) {
-                binaryLocation = binaryLocation + ".exe";
+                binaryLocation += ".exe";
                 new CASUALMessageObject("@interactionInstallFastbootDrivers").showInformationMessage();
                 fastbootResource = fastbootWindows;
             } else if (OSTools.isMac()) {

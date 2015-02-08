@@ -24,6 +24,11 @@ import java.util.HashMap;
  */
 public abstract class MultiClassLoader extends ClassLoader {
 
+//--- Std
+    protected static void print(String text) {
+        System.out.println(text);
+    }
+
 //---------- Fields --------------------------------------
     @SuppressWarnings({"unchecked","rawtypes"})
     private final HashMap<String, Class> classes;
@@ -129,9 +134,5 @@ public abstract class MultiClassLoader extends ClassLoader {
         if (monitorOn) {
             print(text);
         }
-    }
-//--- Std
-    protected static void print(String text) {
-        System.out.println(text);
     }
 } // End class

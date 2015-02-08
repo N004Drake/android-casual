@@ -68,13 +68,13 @@ public class ShellTools {
                 Word = "";
                 //Otherwise add it to the string
             } else {
-                Word = Word + String.valueOf(CharLine[I]);
+                Word += String.valueOf(CharLine[I]);
             }
             //Annotate last char for literal character checks "\".
             LastChar = CharLine[I];
         }
         //add the last word to the list if it's not blank.
-        if (!Word.equals("")) {
+        if (!Word.isEmpty()) {
             List.add(Word);
         }
         return List;

@@ -301,10 +301,10 @@ public class PitEntry {
             if (part_name[i] == 0) { //break on first \0 byte.
                 break;
             } else {
-                partitionName = partitionName + part_name[i];
+                partitionName += part_name[i];
             }
         }
-        return new String(partitionName);
+        return partitionName;
     }
 
     /**
@@ -318,7 +318,7 @@ public class PitEntry {
         for (int i = 0; i < part_name.length; i++) {
             //first part of file will be filename
             if (part_name[i] != 0) {
-                filename = filename + part_name[i];
+                filename += part_name[i];
             } else { //anything after first 0 byte will be a parameter
                 while (part_name[i] == 0 && i < part_name.length - 1) {
                     i++;
@@ -374,7 +374,7 @@ public class PitEntry {
         String filename = "";
         for (int i = 0; i < file_name.length; i++) {
             if (file_name[i] != 0) {
-                filename = filename + file_name[i];
+                filename += file_name[i];
             }
         }
         return (filename);
@@ -390,7 +390,7 @@ public class PitEntry {
         for (int i = 0; i < file_name.length; i++) {
             //first part of file will be filename
             if (file_name[i] != 0) {
-                filename = filename + file_name[i];
+                filename += file_name[i];
             } else { //anything after first 0 byte will be a parameter
                 while (file_name[i] == 0 && i < file_name.length - 1) {
                     i++;
@@ -446,7 +446,7 @@ public class PitEntry {
         String fotaname = "";
         for (int i = 0; i < fota_name.length; i++) {
             if (fota_name[i] != 0) {
-                fotaname = fotaname + fota_name[i];
+                fotaname += fota_name[i];
             }
         }
         return fotaname;
@@ -463,7 +463,7 @@ public class PitEntry {
         for (int i = 0; i < fota_name.length; i++) {
             //first part of file will be filename
             if (fota_name[i] != 0) {
-                fotaname = fotaname + fota_name[i];
+                fotaname += fota_name[i];
             } else { //anything after first 0 byte will be a parameter
                 while (fota_name[i] == 0 && i < fota_name.length - 1) {
                     i++;
@@ -625,7 +625,7 @@ public class PitEntry {
                 .append(this.getBinFriendlyType()).append(" ")
                 .append(this.getDeviceTypeFriendlyName()).append(".");
 
-        if (!this.getFriendlyFileName().equals("") && !this.getFriendlyFileName().startsWith("-")) {
+        if (!this.getFriendlyFileName().isEmpty() && !this.getFriendlyFileName().startsWith("-")) {
             sb.append(" It identifies itself to Odin as ").append(this.getFriendlyFileName()).append(".");
         }
         if (this.file_offset != 0 && this.file_size != 0) {

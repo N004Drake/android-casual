@@ -30,20 +30,19 @@ import org.junit.Test;
  * @author adamoutler
  */
 public class TwrpCommunicationsTest {
-    TwrpCommunications tc = new TwrpCommunications();
-        
-    public TwrpCommunicationsTest() {
-        assumeTrue(tc.isTwrpInstalled()||tc.isTwrpRunning());
-        tc.rebootTWRP();
-    }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    TwrpCommunications tc = new TwrpCommunications();
         
+    public TwrpCommunicationsTest() {
+        assumeTrue(tc.isTwrpInstalled()||tc.isTwrpRunning());
+        tc.rebootTWRP();
     }
     
     @Before
@@ -135,5 +134,6 @@ public class TwrpCommunicationsTest {
         instance.runTwrpScript(script);
         instance.rebootTWRP();
     }
+
     
 }

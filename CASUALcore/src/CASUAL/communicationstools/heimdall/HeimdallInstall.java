@@ -55,8 +55,11 @@ public class HeimdallInstall {
      */
     public String PID = "";
 
-    String installLinux(String tempFolder) {
+    FileOperations FileOperations = new FileOperations();
+    Shell shell = new Shell();
 
+    String installLinux(String tempFolder) {
+        
         FileOperations fo = new FileOperations();
         String arch = OSTools.checkLinuxArch();
         String resource[];
@@ -87,8 +90,6 @@ public class HeimdallInstall {
 //Windows
 
     }
-    FileOperations FileOperations = new FileOperations();
-    Shell shell = new Shell();
 
     /**
      * Installs windows drivers
@@ -107,7 +108,7 @@ public class HeimdallInstall {
      */
     public void displayWindowsPermissionsMessageAndExit() {
         if (OSTools.isWindows()) {
-            new CASUALMessageObject("@interactionwindowsRunAsMessage" + getClass().getProtectionDomain().getCodeSource().getLocation().getPath().toString()).showErrorDialog();
+            new CASUALMessageObject("@interactionwindowsRunAsMessage" + getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).showErrorDialog();
         }
         CASUALMain.shutdown(0);
     }
@@ -132,7 +133,7 @@ public class HeimdallInstall {
             }
             Version = Version.replaceAll("\\.", "");
             if (Version.length() == 2) {
-                Version = Version + 0;
+                Version += 0;
             }
         } else {
             return false;
@@ -172,7 +173,7 @@ public class HeimdallInstall {
     String installMac(String[] resourceLocation, String tempFolder) throws InterruptedException, IOException {
         ResourceDeployer rd = new ResourceDeployer();
         String exec;
-        if ((exec = getFile(rd.deployResourceTo(resourceLocation, tempFolder), "")).equals("")) {
+        if ((exec = getFile(rd.deployResourceTo(resourceLocation, tempFolder), "")).isEmpty()) {
             exec = new CASUALUpdates(CASUALMain.getSession()).CASUALRepoDownload("https://android-casual.googlecode.com/svn/trunk/repo/heimdall.properties");
         }
         new Shell().liveShellCommand(new String[]{"open", "-W", exec}, true);

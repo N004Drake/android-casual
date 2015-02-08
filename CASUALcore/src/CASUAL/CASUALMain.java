@@ -34,15 +34,8 @@ import java.util.zip.ZipException;
  */
 public final class CASUALMain {
 
-    boolean exitWhenDone = false;
     private static CASUALSessionData sd;
     
-    public static CASUALSessionData getSession(){
-        if (sd==null){
-            sd=CASUALSessionData.newInstance();
-        }
-        return sd;
-    }
     
     
     //TODO: convert android-casual to Maven so it works better cross-platform
@@ -53,7 +46,16 @@ public final class CASUALMain {
     final private static boolean useOverrideArgs = false; // this will use overrideArguments.
     final private static String[] overrideArguments = new String[]{""};
 
-    CASUALSettings arguments = new CASUALSettings();
+    /**
+     *
+     * @return this CASUALSessionData
+     */
+    public static CASUALSessionData getSession() {
+        if (sd==null){
+            sd=CASUALSessionData.newInstance();
+        }
+        return sd;
+    }
 
     /**
      * Main method launching the application.
@@ -64,7 +66,7 @@ public final class CASUALMain {
         //reset initial variables for everything. 
         CASUALSessionData sd= CASUALSessionData.newInstance();
         sd.initializeStatics();
-       
+        
         
         //Override args for test modes
         if (useOverrideArgs) {
@@ -78,6 +80,7 @@ public final class CASUALMain {
      * without losing state. This does not cause a stop.
      *
      * @param args command line args to send to casual
+     * @param sd CASUALSessionData to be used
      */
     public static void beginCASUAL(String[] args, CASUALSessionData sd) {
         CASUALMain main = new CASUALMain();
@@ -99,7 +102,96 @@ public final class CASUALMain {
     }
 
     /**
+     * shuts down CASUAL
+     *
+     * @param i code to throw
+     */
+    public static void shutdown(int i) {
+        Log.level4Debug("Shutting Down");
+        AudioHandler.useSound = false;
+        Log.out.flush();
+        if (sd.CASPAC != null && sd.CASPAC.getActiveScript() != null) {
+            sd.CASPAC.getActiveScript().setScriptContinue(false);
+        }
+        CASUALConnectionStatusMonitor.stop();
+        
+        //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
+        if (!CASUALTools.IDEMode) {
+            if (!CASUALSessionData.isGUIIsAvailable()) {
+                try {
+                    new Pastebin().pasteAnonymousLog();
+                } catch (MalformedURLException ex) {
+                    Log.errorHandler(ex);
+                }
+            }
+        }
+        
+        if (CASUALSessionData.getGUI() != null) {
+            CASUALSessionData.getGUI().dispose();
+            CASUALSessionData.setGUI(null);
+        }
+        CASUALConnectionStatusMonitor.stop();
+        
+        sd.initializeStatics();
+
+    }
+
+    private static void doSleep() {
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    boolean exitWhenDone = false;
+    CASUALSettings arguments = new CASUALSettings();
+    /**
+     * Scans /SCRIPTS/ Folder to locate scripts.
+     */
+    public Runnable setupCASUALCASPAC = new Runnable() {
+        @Override
+        public void run() {
+            
+            if (arguments.getCaspacLocation() != null && arguments.getCaspacLocation().exists()) {
+                try {
+                    Caspac cp;
+                    if (!arguments.getPassword().isEmpty()) {
+                        cp = new Caspac(sd,arguments.getCaspacLocation(), sd.getTempFolder(), 0, arguments.getPassword().toCharArray());
+                        arguments.setPassword("");
+                    } else {
+                        cp = new Caspac(sd,arguments.getCaspacLocation(), sd.getTempFolder(), 0);
+                        
+                    }
+                    cp.loadFirstScriptFromCASPAC();
+                    sd.CASPAC = cp;
+                } catch (IOException ex) {
+                    Log.errorHandler(ex);
+                } catch (Exception ex) {
+                    Log.errorHandler(ex);
+                }
+                
+            } else if (!arguments.isExecute()) {   //execute is for single commands
+                //Build a CASPAC from the SCRIPTS folder
+                CodeSource src = getClass().getProtectionDomain().getCodeSource();
+                Caspac cp;
+                try {
+                    cp = new Caspac(sd, src, sd.getTempFolder(), 1);
+                    
+                    //cp.load();
+                    sd.CASPAC = cp;
+                } catch (ZipException ex) {
+                    
+                    Log.errorHandler(ex);
+                } catch (IOException ex) {
+                    Log.errorHandler(ex);
+                }
+            }
+        }
+    };
+
+    /**
      * startup is where CASUAL starts its normal routines for both
+* @param sd CASUALSessionData to be used
      */
     public void startup(CASUALSessionData sd) {
         //starts the scriptRunLock so that the lock will not be enabled when checked for the first time. 
@@ -209,49 +301,6 @@ public final class CASUALMain {
         CASUALStartupTasks.startGUI.start();//starts the GUI if required
     }
 
-    /**
-     * shuts down CASUAL
-     *
-     * @param i code to throw
-     */
-    public static void shutdown(int i) {
-        Log.level4Debug("Shutting Down");
-        AudioHandler.useSound = false;
-        Log.out.flush();
-        if (sd.CASPAC != null && sd.CASPAC.getActiveScript() != null) {
-            sd.CASPAC.getActiveScript().setScriptContinue(false);
-        }
-        CASUALConnectionStatusMonitor.stop();
-
-        //No logs if Developing, No GUI, or CASPAC.  Only if CASUAL distribution.
-        if (!CASUALTools.IDEMode) {
-            if (!CASUALSessionData.isGUIIsAvailable()) {
-                try {
-                    new Pastebin().pasteAnonymousLog();
-                } catch (MalformedURLException ex) {
-                    Log.errorHandler(ex);
-                }
-            }
-        }
-
-        if (CASUALSessionData.getGUI() != null) {
-            CASUALSessionData.getGUI().dispose();
-            CASUALSessionData.setGUI(null);
-        }
-        CASUALConnectionStatusMonitor.stop();
-
-        sd.initializeStatics();
-
-    }
-
-    private static void doSleep() {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(CASUALMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     private void doConsoleStartup(String cmd) {
         CASUALConnectionStatusMonitor.stop();
         CASUALScriptParser csp = new CASUALScriptParser();
@@ -263,49 +312,6 @@ public final class CASUALMain {
         Log.level2Information("@scriptComplete");
 
     }
-    /**
-     * Scans /SCRIPTS/ Folder to locate scripts.
-     */
-    public Runnable setupCASUALCASPAC = new Runnable() {
-        @Override
-        public void run() {
-
-            if (arguments.getCaspacLocation() != null && arguments.getCaspacLocation().exists()) {
-                try {
-                    Caspac cp;
-                    if (!arguments.getPassword().isEmpty()) {
-                        cp = new Caspac(sd,arguments.getCaspacLocation(), sd.getTempFolder(), 0, arguments.getPassword().toCharArray());
-                        arguments.setPassword("");
-                    } else {
-                        cp = new Caspac(sd,arguments.getCaspacLocation(), sd.getTempFolder(), 0);
-
-                    }
-                    cp.loadFirstScriptFromCASPAC();
-                    sd.CASPAC = cp;
-                } catch (IOException ex) {
-                    Log.errorHandler(ex);
-                } catch (Exception ex) {
-                    Log.errorHandler(ex);
-                }
-
-            } else if (!arguments.isExecute()) {   //execute is for single commands
-                //Build a CASPAC from the SCRIPTS folder
-                CodeSource src = getClass().getProtectionDomain().getCodeSource();
-                Caspac cp;
-                try {
-                    cp = new Caspac(sd, src, sd.getTempFolder(), 1);
-
-                    //cp.load();
-                    sd.CASPAC = cp;
-                } catch (ZipException ex) {
-
-                    Log.errorHandler(ex);
-                } catch (IOException ex) {
-                    Log.errorHandler(ex);
-                }
-            }
-        }
-    };
 
     private void startConnectionStatusMonitor() {
 

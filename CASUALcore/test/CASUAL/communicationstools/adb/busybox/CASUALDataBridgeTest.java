@@ -29,6 +29,8 @@ import org.junit.Test;
  */
 public class CASUALDataBridgeTest {
 
+    Shell shell = new Shell();
+
     @Before
     public void setUp() {
         assumeTrue(new ADBTools().isConnected());
@@ -37,7 +39,6 @@ public class CASUALDataBridgeTest {
     @After
     public void tearDown() {
     }
-    Shell shell = new Shell();
 
     @Test
     public void testSendString() {
@@ -82,64 +83,64 @@ public class CASUALDataBridgeTest {
         //shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm /sdcard/testpak"});
         assert (testSHA256.equals(originalSHA256));
     }
-
-    @Test
-    public void testGetFile() throws Exception {
-        System.out.println("getFile");
-        File original = new File("../../CASPAC/testpak.zip");
-        String remoteFileName = "/sdcard/testpak.zip";
-        File test = new File("./test");
-        test.delete();
-        shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "push", original.getAbsolutePath(), remoteFileName});
-        CASUALDataBridge instance = new CASUALDataBridge();
-        instance.getFile(remoteFileName, test);
-        String originalSHA256 = new CASUAL.crypto.SHA256sum(original).toString();
-        String testSHA256 = new CASUAL.crypto.SHA256sum(test).toString();
-        System.out.println(test.getAbsolutePath());
-        System.out.println("Original sha256:"+originalSHA256);
-        System.out.println("verified sha256:"+testSHA256);
-        shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + remoteFileName});
-        test.delete();
-        assert (testSHA256.equals(originalSHA256));
-    }
-
-    @Test
-    public void testSendStream() throws Exception {
-        System.out.println("sendStream");
-        String expResult = "omfg \n cool! 123456789";
-        InputStream input = (InputStream) new ByteArrayInputStream(expResult.getBytes());
-        String remoteFileName = "/sdcard/sendstreamtest";
-        CASUALDataBridge instance = new CASUALDataBridge();
-
-        long test = instance.sendStream(input, remoteFileName);
-        String result = new ADBTools().run(new String[]{"shell","cat "+remoteFileName},5000, true);
-        shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + remoteFileName});
-        assert (test == expResult.length());
-        assertEquals(expResult+"\n", result);
-    }
     
     
     
         @Test
-    public void testPullBlock() throws Exception {
-        System.out.println("getBlock");
-        assertTrue(!new ADBTools().run(new String[]{"shell","ls /dev/block/platform/*/by-name/recovery"}, 5000, true).contains("file or"));
-        assertTrue(CASUALTools.rootAccessPossible());
-        String remoteFileName = new ADBTools().run(new String[]{"shell","ls /dev/block/platform/*/by-name/recovery"}, 5000, true).split("\n")[0];
-        File test = new File("./test");
-        test.delete();
-        String originalSHA256=SHA256sum.getSum(new ADBTools().run(new String[]{"shell" ,"su -C '"+BusyboxTools.getBusyboxLocation()+" sha256sum "+remoteFileName+"'"}, 30000, true));
-
-        CASUALDataBridge instance = new CASUALDataBridge();
-        instance.getFile(remoteFileName, test);
-        String testSHA256 = new CASUAL.crypto.SHA256sum(test).toString();
-        System.out.println(test.getAbsolutePath());
-        System.out.println("expected sha256:"+originalSHA256);
-        System.out.println("verified sha256:"+testSHA256);
+        public void testGetFile() throws Exception {
+            System.out.println("getFile");
+            File original = new File("../../CASPAC/testpak.zip");
+            String remoteFileName = "/sdcard/testpak.zip";
+            File test = new File("./test");
+            test.delete();
+            shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "push", original.getAbsolutePath(), remoteFileName});
+            CASUALDataBridge instance = new CASUALDataBridge();
+            instance.getFile(remoteFileName, test);
+            String originalSHA256 = new CASUAL.crypto.SHA256sum(original).toString();
+            String testSHA256 = new CASUAL.crypto.SHA256sum(test).toString();
+            System.out.println(test.getAbsolutePath());
+            System.out.println("Original sha256:"+originalSHA256);
+            System.out.println("verified sha256:"+testSHA256);
+            shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + remoteFileName});
+            test.delete();
+            assert (testSHA256.equals(originalSHA256));
+        }
         
-        shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + remoteFileName});
-        //test=test.getAbsoluteFile();
-        long length=test.length();
+        @Test
+        public void testSendStream() throws Exception {
+            System.out.println("sendStream");
+            String expResult = "omfg \n cool! 123456789";
+            InputStream input = new ByteArrayInputStream(expResult.getBytes());
+            String remoteFileName = "/sdcard/sendstreamtest";
+            CASUALDataBridge instance = new CASUALDataBridge();
+            
+            long test = instance.sendStream(input, remoteFileName);
+            String result = new ADBTools().run(new String[]{"shell","cat "+remoteFileName},5000, true);
+            shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + remoteFileName});
+            assert (test == expResult.length());
+            assertEquals(expResult+"\n", result);
+        }
+        
+        @Test
+        public void testPullBlock() throws Exception {
+            System.out.println("getBlock");
+            assertTrue(!new ADBTools().run(new String[]{"shell","ls /dev/block/platform/*/by-name/recovery"}, 5000, true).contains("file or"));
+            assertTrue(CASUALTools.rootAccessPossible());
+            String remoteFileName = new ADBTools().run(new String[]{"shell","ls /dev/block/platform/*/by-name/recovery"}, 5000, true).split("\n")[0];
+            File test = new File("./test");
+            test.delete();
+            String originalSHA256=SHA256sum.getSum(new ADBTools().run(new String[]{"shell" ,"su -C '"+BusyboxTools.getBusyboxLocation()+" sha256sum "+remoteFileName+"'"}, 30000, true));
+            
+            CASUALDataBridge instance = new CASUALDataBridge();
+            instance.getFile(remoteFileName, test);
+            String testSHA256 = new CASUAL.crypto.SHA256sum(test).toString();
+            System.out.println(test.getAbsolutePath());
+            System.out.println("expected sha256:"+originalSHA256);
+            System.out.println("verified sha256:"+testSHA256);
+            
+            shell.sendShellCommand(new String[]{new ADBTools().getBinaryLocation(), "shell", "rm " + remoteFileName});
+            //test=test.getAbsoluteFile();
+            long length=test.length();
         System.out.println(test.length());
         test.delete();
         assertEquals(testSHA256,originalSHA256);

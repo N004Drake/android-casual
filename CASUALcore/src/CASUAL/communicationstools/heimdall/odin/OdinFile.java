@@ -185,7 +185,7 @@ public class OdinFile {
             if (b == 0xff) {
                 break;
             }
-            expectedMd5 = expectedMd5 + (char) b;
+            expectedMd5 += (char) b;
         }
 
         //Create actual MD5sum from messageDigest

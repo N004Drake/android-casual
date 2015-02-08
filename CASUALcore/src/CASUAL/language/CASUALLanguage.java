@@ -56,6 +56,14 @@ import java.util.logging.Logger;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALLanguage {
+    public static String GOTO = "";
+
+    /**
+     * resets the script
+     */
+    public static void reset() {
+        GOTO="";
+    }
 
     final private CASUALSessionData sd;
     final private String ScriptTempFolder;
@@ -63,26 +71,21 @@ public class CASUALLanguage {
     final Caspac CASPAC;
     private String deviceBuildPropStorage;
     
+    int currentLine = 1;
+
+    
     /**
      * instantiates CASUALLanguage with script
      *
      * @param caspac the CASPAC used for the script
      * @param ScriptTempFolder temp folder to use for script
      */
-    public CASUALLanguage(Caspac caspac,  String ScriptTempFolder) {
+    public CASUALLanguage(Caspac caspac, String ScriptTempFolder) {
         this.sd=caspac.getSd();
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = caspac;
     }
-    
-    public Caspac getCaspac(){
-        return CASPAC;
-    }
 
-    public static String GOTO = "";
-    int currentLine = 1;
-
-    
     /**
      * Constructor for CASUALLanguage
      *
@@ -90,23 +93,20 @@ public class CASUALLanguage {
      * @param ScriptName Name of script to be executed
      * @param ScriptTempFolder Folder in which script is executing.
      */
-    public CASUALLanguage(CASUALSessionData sd,String ScriptName, String ScriptTempFolder) {
-       this.sd=sd;
+    public CASUALLanguage(CASUALSessionData sd, String ScriptName, String ScriptTempFolder){
+        this.sd=sd;
         this.ScriptTempFolder = ScriptTempFolder;
         this.CASPAC = null;
     }
-
-    /**
-     * resets the script
-     */
-    public static void reset(){
-        GOTO="";
-
-    }
     
-    public CASUALSessionData getSessionData(){
+    public Caspac getCaspac(){
+        return CASPAC;
+    }
+
+    public CASUALSessionData getSessionData() {
         return sd;
     }
+
     /**
      * starts the scripting handler spooler and handles flow control
      *
@@ -125,14 +125,14 @@ public class CASUALLanguage {
                     return;
                 }
                 
-               //set progress
+                //set progress
                 currentLine++;
                 if (CASUALSessionData.isGUIIsAvailable()) {
-                  CASUALSessionData.getGUI().setProgressBar(currentLine);
+                    CASUALSessionData.getGUI().setProgressBar(currentLine);
                 }
                 
                 //check GOTO commands
-                if (!GOTO.equals("")) {
+                if (!GOTO.isEmpty()) {
                     strLine = doGotoRoutine(bReader, strLine);
                 }
                 if (strLine.contains(";;;")) {
@@ -149,19 +149,19 @@ public class CASUALLanguage {
             uninstallDriverMaybe();
             Log.level2Information("@done");
             CASUALSessionData.getGUI().sendProgress("@done");
-           CASUALSessionData.getGUI().setUserMainMessage("@done");
+            CASUALSessionData.getGUI().setUserMainMessage("@done");
             CASUALSessionData.getGUI().setReady(true);
             //yeah yeah, overly broad chatch.  read below. 
         } catch (Exception e) {
             /*
-             *  Java reports this as an overly broad catch.  Thats fine.  this is 
-             *  supposed to be broad.  It is the handler for all errors during 
-             *  execution of CASUAL script.  Script commands are tested for quality
-             *  and errors found here will be syntax or oher scripting errors.
-             *
-             *  CASUAL will take the blame for the end user and the developer will
-             *  see that it was a problem with their script
-             */
+            *  Java reports this as an overly broad catch.  Thats fine.  this is
+            *  supposed to be broad.  It is the handler for all errors during
+            *  execution of CASUAL script.  Script commands are tested for quality
+            *  and errors found here will be syntax or oher scripting errors.
+            *
+            *  CASUAL will take the blame for the end user and the developer will
+            *  see that it was a problem with their script
+            */
             Log.level0Error("@problemParsingScript");
             Log.level0Error(strLine);
             Log.errorHandler(new RuntimeException("CASUAL scripting error\n   " + strLine, e));
@@ -179,7 +179,7 @@ public class CASUALLanguage {
         }
     }
 
-    private String doGotoRoutine(BufferedReader bReader, String strLine) throws IOException {
+    private String doGotoRoutine(BufferedReader bReader, String strLine) throws IOException{
         bReader.reset();
         //use Label method
         while (bReader.ready() &&  !strLine.replaceAll("\\s", "").startsWith("$LABEL" + GOTO) ){
@@ -199,6 +199,7 @@ public class CASUALLanguage {
         GOTO = "";
         return strLine;
     }
+    
     /**
      * Process a line of CASUAL script.
      *
@@ -206,7 +207,7 @@ public class CASUALLanguage {
      * @return value returned from CASUAL command
      * @throws java.io.IOException When permissions problem exists
      */
-    public String commandHandler(String line) throws Exception{
+    public String commandHandler(String line) throws Exception {
         
         
         return commandHandler(new Command(line));
@@ -223,8 +224,8 @@ public class CASUALLanguage {
         
         Log.level3Verbose("COMMAND HANDLER:"+cmd.toString().replace("\n",""));
         
-        if (cmd.get().trim().equals("")||cmd.get().trim().startsWith("#")||cmd.get().trim().equals("")||cmd.get().trim().startsWith("$LABEL")) {
-                        //Log.level4Debug("received comment");  
+        if (cmd.get().trim().isEmpty()||cmd.get().trim().startsWith("#")||cmd.get().trim().isEmpty()||cmd.get().trim().startsWith("$LABEL")) {
+            //Log.level4Debug("received comment");  
             return "";
         }
 
@@ -235,19 +236,19 @@ public class CASUALLanguage {
         }
         
         /*
-         * VARIABLES
+        * VARIABLES
         * check for = in the first part of the command...   VAR=Value
         */
         if (Variables.parseVariablesInCommandString(cmd)) return cmd.getReturn();
         
         /*
-         *DEBUG COMMANDS  $SENDLOG 
-         */
+        *DEBUG COMMANDS  $SENDLOG
+        */
         if (ControlCommands.checkSendLog(sd,cmd)) return cmd.getReturn();
 
         /*
-         * CONTROL COMMANDS
-         */
+        * CONTROL COMMANDS
+        */
         //SETRETURN  "string"  sets return value
         if (ControlCommands.launchCaspac(sd,cmd)) return cmd.getReturn();
         
@@ -260,7 +261,7 @@ public class CASUALLanguage {
         //$ON  
         if (ControlCommands.checkOn(sd,cmd)) return cmd.getReturn();
         //$CASPAC
-         if (ControlCommands.launchCaspac(sd, cmd)) return cmd.getReturn();
+        if (ControlCommands.launchCaspac(sd, cmd)) return cmd.getReturn();
         //$CLEARON
         if (ControlCommands.checkClearOn(sd,cmd)) return cmd.getReturn();
         //# comments
@@ -277,8 +278,8 @@ public class CASUALLanguage {
         
         if (MathCommands.doMath(cmd)) return cmd.getReturn();
         /*
-         * Environmental variables
-         */
+        * Environmental variables
+        */
 //$SLASH will replace with "\" for windows or "/" for linux and mac
         if (cmd.get().contains("$BUSYBOX")) {
             cmd.set( cmd.get().replace("$BUSYBOX", BusyboxTools.getBusyboxLocation()));
@@ -314,8 +315,8 @@ public class CASUALLanguage {
         }
 
         /*
-         * GENERAL PURPOSE COMMANDS
-         */
+        * GENERAL PURPOSE COMMANDS
+        */
 //$ECHO command will display text in the main window
         if (cmd.get().startsWith("$ECHO")) {
             Log.level4Debug("Received ECHO command" + cmd.get());
@@ -370,7 +371,7 @@ public class CASUALLanguage {
             Log.level4Debug("Creating Folder: " + cmd.get());
             new FileOperations().recursiveDelete(cmd.get());
             return cmd.get();
-
+            
 // Takes a value from a command and returns to text box        
         } else if (cmd.get().startsWith("$COMMANDNOTIFICATION")) {
             cmd.set( cmd.get().replace("$COMMANDNOTIFICATION", "").trim());
@@ -378,8 +379,8 @@ public class CASUALLanguage {
             String retval = commandHandler(cmd.get());
             new CASUALMessageObject(title + ">>>" + retval).showCommandNotification();
             return retval;
-
-//$USERNOTIFICATION will stop processing and force the user to 
+            
+//$USERNOTIFICATION will stop processing and force the user to
             // press OK to continueNotification 
         } else if (cmd.get().startsWith("$USERNOTIFICATION")) {
             cmd.set( cmd.get().replace("$USERNOTIFICATION", "").trim());
@@ -401,7 +402,7 @@ public class CASUALLanguage {
                 return "";
             }
             return "";
-
+            
 //$ACTIONREQUIRED Message            
         } else if (cmd.get().startsWith("$ACTIONREQUIRED")) {
             cmd.set( cmd.get().replace("$ACTIONREQUIRED", "").trim());
@@ -525,8 +526,8 @@ public class CASUALLanguage {
             return new CASUALDataBridge().integralGetFile(split[0].trim(), f);
 
             /*
-             * SUPPORTED SHELLS
-             */
+            * SUPPORTED SHELLS
+            */
             // if Heimdall, Send to Heimdall shell command
         } else if (cmd.get().startsWith("$HEIMDALL")||cmd.get().startsWith("heimdall")) {
             Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.Heimdall);
@@ -552,8 +553,8 @@ public class CASUALLanguage {
                 }
                 
                 /* if (sd.isLinux()) {   //Is this needed?
-                 doElevatedHeimdallShellCommand(line);
-                 }*/
+                doElevatedHeimdallShellCommand(line);
+                }*/
                 Log.level2Information("@executingHeimdall");
                 
                 
@@ -613,6 +614,8 @@ public class CASUALLanguage {
     }
 //END OF SCRIPT PARSER
 
+    
+    
     private boolean checkSleep(Command cmd) throws RuntimeException {
         if (cmd.get().startsWith("$SLEEP")) {
             Log.level3Verbose("detected sleep command: " + cmd.get());
@@ -638,7 +641,6 @@ public class CASUALLanguage {
     }
 
 
-
     private String returnSafeCharacters(String Str) {
         Str = Str.replace("\\", "\\\\");
         Str = Str.replace("\"", "\\\"");
@@ -647,17 +649,15 @@ public class CASUALLanguage {
         return Str;
     }
 
-
     private String doShellCommand(String Line, String ReplaceThis, String WithThis) {
         return executeADBCommand(Line, ReplaceThis, WithThis, true);
     }
 
-
     /*
-     * doShellCommand is the point where the shell is activated ReplaceThis
-     * WithThis allows for a last-minute insertion of commands by default
-     * ReplaceThis should be null.
-     */
+    * doShellCommand is the point where the shell is activated ReplaceThis
+    * WithThis allows for a last-minute insertion of commands by default
+    * ReplaceThis should be null.
+    */
     private String executeADBCommand(String Line, String ReplaceThis, String WithThis, boolean parseError) {
         Line = StringOperations.removeLeadingSpaces(Line);
 

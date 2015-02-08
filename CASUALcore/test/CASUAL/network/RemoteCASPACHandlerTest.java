@@ -33,15 +33,15 @@ import org.junit.Test;
  */
 public class RemoteCASPACHandlerTest {
     
-    public RemoteCASPACHandlerTest() {
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    
+    public RemoteCASPACHandlerTest() {
     }
     
     @Before
@@ -54,6 +54,7 @@ public class RemoteCASPACHandlerTest {
 
     /**
      * Test of downloadFromRemoteRepository method, of class RemoteCASPACHandler.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDownloadFromRemoteRepository() throws Exception {
@@ -68,6 +69,7 @@ public class RemoteCASPACHandlerTest {
 
     /**
      * Test of executeCaspac method, of class RemoteCASPACHandler.
+     * @throws java.lang.Exception
      */
     @Test
     public void testExecuteCaspac() throws Exception {

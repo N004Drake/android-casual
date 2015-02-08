@@ -29,15 +29,25 @@ import org.junit.Test;
  */
 public class AES128HandlerTest {
 
-    public AES128HandlerTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i + 1), 16));
+        }
+        return data;
+    }
+
+    public AES128HandlerTest() {
     }
 
     @Before
@@ -84,8 +94,8 @@ public class AES128HandlerTest {
     @Test
     public void testVectors() {
         System.out.println("Testing AES128 bit encryption mode with vectors from http://www.inconteam.com/software-development/41-encryption/55-aes-test-vectors#aes-cbc-128");
-
-
+        
+        
         try {
             byte[] key = hexStringToByteArray("2b7e151628aed2a6abf7158809cf4f3c");
             byte[] iv = hexStringToByteArray("000102030405060708090A0B0C0D0E0F");
@@ -102,9 +112,9 @@ public class AES128HandlerTest {
             BigInteger bigInt = new BigInteger(1, tresult);
             String result = bigInt.toString(16).substring(0, 32);//remove padding
             assertEquals(expectedResult, result);
-
-
-
+            
+            
+            
             iv = hexStringToByteArray("7649ABAC8119B246CEE98E9B12E9197D");
             testVector = "ae2d8a571e03ac9c9eb76fac45af8e51";
             expectedResult = "5086cb9b507219ee95db113a917678b2";
@@ -143,14 +153,14 @@ public class AES128HandlerTest {
             bigInt = new BigInteger(1, tresult);
             result = bigInt.toString(16).substring(0, 32);//remove padding
             assertEquals(expectedResult, result);
-
-
-
-
-
-
-
-
+            
+            
+            
+            
+            
+            
+            
+            
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(AES128HandlerTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalBlockSizeException ex) {
@@ -164,20 +174,10 @@ public class AES128HandlerTest {
         } catch (InvalidAlgorithmParameterException ex) {
             Logger.getLogger(AES128HandlerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
-
-
-    }
-
-    public static byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i + 1), 16));
-        }
-        return data;
+        
+        
+        
+        
     }
 
     /**

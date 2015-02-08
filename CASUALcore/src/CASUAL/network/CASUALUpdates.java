@@ -50,17 +50,24 @@ import java.util.zip.ZipException;
  * @author Adam Outler adamoutler@gmail.com
  */
 public class CASUALUpdates {
+    /*
+     * String Properties File
+     * Returns location of first downloaded file
+     */
+    static String arch = "";
+    static String system = "";
 
     final CASUALSessionData sd;
     
-    public CASUALUpdates(CASUALSessionData sd){
-        this.sd=sd;
-    }
     
     /**
      * location to CASUAL online repository
      */
     public final String CASUALRepo = "http://android-casual.googlecode.com/svn/trunk/CASUALcore/src";
+
+    public CASUALUpdates( CASUALSessionData sd) {
+        this.sd=sd;
+    }
 
     /*
      * checks for updates returns: 0=no updates found 1=random error 2=Script
@@ -75,7 +82,7 @@ public class CASUALUpdates {
      * @param friendlyName name displayed to user
      * @return true if downloaded
      */
-    public boolean downloadFileFromInternet( String URL, String outputFile, String friendlyName) {
+    public boolean downloadFileFromInternet(String URL, String outputFile, String friendlyName) {
         try {
             downloadFileFromInternet(stringToFormattedURL(URL), outputFile, friendlyName);
         } catch (MalformedURLException ex) {
@@ -117,7 +124,7 @@ public class CASUALUpdates {
                 int bytesRead;
                 while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
                     output.write(buffer, 0, bytesRead);
-                    bytes = bytes + bytesRead;
+                    bytes += bytesRead;
                     kilobytes = bytes / 1024;
                     int length = String.valueOf(kilobytes).length() + 2;
                     for (int i = 0; i < length; i++) {
@@ -189,7 +196,7 @@ public class CASUALUpdates {
             buf.rewind();
             for (int i = 0; i < numRead; i++) {
                 byte b = buf.get();
-                webData = webData + new String(new byte[]{b});
+                webData += new String(new byte[]{b});
             }
         }
 
@@ -240,12 +247,6 @@ public class CASUALUpdates {
         URL url = new URL(link);
         return url.openStream();
     }
-    /*
-     * String Properties File
-     * Returns location of first downloaded file
-     */
-    static String arch = "";
-    static String system = "";
 
     /**
      * downloads proper file if available in repository
@@ -254,7 +255,7 @@ public class CASUALUpdates {
      * ie -"heimdall" will be translated to web url:heimdallWin32.zip,
      * downloaded and the path to the downloaded file is returned.
      * @return file downloaded for system/arch
-     * @throws FileNotFoundException file not found 
+     * @throws FileNotFoundException file not found
      * @throws IOException permission problem 
      * @throws InterruptedException thread interrupted
      */
@@ -276,13 +277,13 @@ public class CASUALUpdates {
         String filenumber = "";
 
         /*
-         * This loop uses the filenumber as a blank the first time through
-         * after that filenumber turns to "2", so it will look for 
-         * eg. "win32" property then "win32-2" property
-         * 
-         * It will download the applicable files in the properties file. then
-         * MD5sum against the value in the properties file.
-         */
+        * This loop uses the filenumber as a blank the first time through
+        * after that filenumber turns to "2", so it will look for
+        * eg. "win32" property then "win32-2" property
+        *
+        * It will download the applicable files in the properties file. then
+        * MD5sum against the value in the properties file.
+        */
         while (prop.getProperty(system + arch + filenumber) != null) {
             String downloadURL = prop.getProperty(system + arch + filenumber);
             Log.level3Verbose("based on information, we need to download: " + downloadURL);

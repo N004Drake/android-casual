@@ -38,12 +38,23 @@ import java.util.logging.Logger;
  */
 class DeviceSideDataBridge {
 
-    final ADBTools adb;
-    String deviceSideMessage;
 
     final static String USBDISCONNECTED = "USB Disconnected";
     final static String DEVICEDISCONNECTED = "error: device not found";
     final static String PERMISSIONERROR = "/system/bin/sh: can't open";
+
+    /**
+     * reads a stream and returns a string
+     *
+     * @param is stream to read
+     * @return stream converted to string
+     */
+    public static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+    final ADBTools adb;
+    String deviceSideMessage;
 
     DeviceSideDataBridge(ADBTools adb) {
         this.adb = adb;
@@ -80,19 +91,19 @@ class DeviceSideDataBridge {
                     String sendcommand = busybox + " stty raw;" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + " |" + busybox + " dd of='" + remoteFileName + "';sync;echo " + donestring;
                     //this command is used if forWrite is false (pull)--  basically netcat<desired file with a sync at the end
                     String receiveCommand = busybox + " stty raw;" + busybox + " dd if='" + remoteFileName + "'|" + busybox + " nc -l " + ip + ":" + CASUALDataBridge.port + ";echo " + donestring;
-
+                    
                     //build the command to send or receive with root or without. 
                     //TODO test rootAccessCommand needed by using "busybox 'test -w remoteFileName && echo RootNotRequired||echo root Required';
                     if (forWrite) {
                         Log.level3Verbose("Device DataBridge Write-Mode active");
-                        if (!CASUALTools.rootAccessCommand().equals("")) {
+                        if (!CASUALTools.rootAccessCommand().isEmpty()) {
                             cmd = new String[]{adb.getBinaryLocation(), "shell", sendcommand};
                         } else {
                             cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \"" + sendcommand + ";\""};
                         }
                     } else {
                         Log.level3Verbose("Device DataBridge Read-Mode active");
-                        if (CASUALTools.rootAccessCommand().equals("")) {
+                        if (CASUALTools.rootAccessCommand().isEmpty()) {
                             cmd = new String[]{adb.getBinaryLocation(), "shell", receiveCommand};
                         } else {
                             cmd = new String[]{adb.getBinaryLocation(), "shell", CASUALTools.rootAccessCommand() + " \'" + receiveCommand + "\'"};
@@ -103,7 +114,7 @@ class DeviceSideDataBridge {
                     ProcessBuilder p = new ProcessBuilder(cmd);
                     p.redirectErrorStream(true);
                     Process proc = p.start();
-
+                    
                     //read a byte from the inputstream from the process so it does not halt. 
                     BufferedInputStream is = new BufferedInputStream(proc.getInputStream());
                     is.read(new byte[is.available()]);
@@ -124,7 +135,7 @@ class DeviceSideDataBridge {
 
                     //transfer is complete because host closed connection and device-side process exited
                     CASUALMain.getSession().setStatus("device-side server closed");
-                    deviceSideMessage = deviceSideMessage + convertStreamToString(is);
+                    deviceSideMessage += convertStreamToString(is);
                     Log.level4Debug("FinalMessage" + deviceSideMessage);
 
                     //check for errors.  if any errors were present they would have come before the donestring
@@ -134,7 +145,7 @@ class DeviceSideDataBridge {
 
                         Log.level0Error("Failed to send file. Message:" + deviceSideMessage);
                         Log.level0Error("Improper Exit of DataBridge");
-                        if (deviceSideMessage.equals("")) {
+                        if (deviceSideMessage.isEmpty()) {
                             deviceSideMessage = USBDISCONNECTED;
                         }
                         CASUALDataBridge.shutdownBecauseOfError = true;
@@ -165,7 +176,7 @@ class DeviceSideDataBridge {
                 while (!ready && !CASUALDataBridge.getInstance().commandedShutdown) {
                     //monitor server status and detect errors
                     while (is.available() > 0) {
-                        received = received + (char) is.read();
+                        received += (char) is.read();
                         Log.level4Debug(received);
                         if (received.contains("read-only file system")
                                 || received.contains("cannot open")
@@ -195,16 +206,5 @@ class DeviceSideDataBridge {
                 Log.level0Error(message);
             }
         };
-    }
-
-    /**
-     * reads a stream and returns a string
-     *
-     * @param is stream to read
-     * @return stream converted to string
-     */
-    public static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
     }
 }

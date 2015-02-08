@@ -32,16 +32,16 @@ import org.junit.Test;
  */
 public class FastbootToolsTest {
     
-    public FastbootToolsTest() {
-        CASUALSessionData.setGUI(new GUI.testing.automatic());
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    
+    public FastbootToolsTest() {
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
     }
     
     @Before

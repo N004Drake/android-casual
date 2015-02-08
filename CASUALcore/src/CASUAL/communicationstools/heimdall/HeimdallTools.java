@@ -42,52 +42,13 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
     static final String[] linux32Location = new String[]{"/CASUAL/communicationstools/heimdall/resources/heimdall_i386.deb"};
     static final String[] linux64Location = new String[]{"/CASUAL/communicationstools/heimdall/resources/heimdall_amd64.deb"};
     static final String[] linuxArmv6Location = new String[]{"/CASUAL/communicationstools/heimdall/resources/heimdall_armv6.deb"};
+    private static String binaryLocation = "";
 
     Shell shell = new Shell();
     int heimdallRetries = 0;
 
-    private static String binaryLocation = "";
 
-    /**
-     * Status for decision making based on return value from heimdall.
-     *
-     * SUCCESS: Heimdall executed sucessfully
-     *
-     * HALTED: Heimdall encountered a failure which cannot be recovered.
-     *
-     * CONTINUE: Heimdall did not execute sucessfully, but we can try again.
-     *
-     * MAXIMUMRETRIESEXCEEDED: We've tried to continue four times now.
-     *
-     */
-    public enum CommandDisposition {
-
-        /**
-         * Result was good.
-         */
-        NOACTIONREQUIRED,
-        /**
-         * Result requires retry.
-         */
-        RUNAGAIN,
-        /**
-         * Result indicates that permission problems were encountered.
-         */
-        ELEVATIONREQUIRED,
-        /**
-         * Result indicates drivers are required.
-         */
-        INSTALLDRIVERS,
-        /**
-         * Result indicates that an unrecoverable error was encountered.
-         */
-        HALTSCRIPT,
-        /**
-         * This command has been run too many times and a favorable result is
-         * not likely.
-         */
-        MAXIMUMRETRIES
-    }
+    int errorCycles = 0;
 
     /**
      * {@inheritDoc} Heimdall will only return one device or 0.
@@ -110,8 +71,6 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         }
         return 0;
     }
-
-    int errorCycles = 0;
 
     /**
      * {@inheritDoc}
@@ -177,7 +136,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
             return new DriverInstall(0).installKnownDrivers();
         }
         if (OSTools.isMac() || OSTools.isLinux()) {
-            return !deployBinary(CASUALMain.getSession().getTempFolder()).equals("");
+            return !deployBinary(CASUALMain.getSession().getTempFolder()).isEmpty();
         }
 
         return false;
@@ -260,13 +219,13 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
             String heimdall = "heimdall";
             String[] cmd = new String[]{heimdall};
             String retval = shell.silentShellCommand(cmd);
-            if (retval.contains(notFound) || retval.equals("")) {
+            if (retval.contains(notFound) || retval.isEmpty()) {
                 return "";
             } else {
                 return heimdall;
             }
         }
-
+        
         //for all unix/linux systems we try common paths for heimdall. 
         String cmd = "/usr/local/bin/heimdall";
         String check = shell.silentShellCommand(new String[]{cmd});
@@ -333,7 +292,7 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
         String returnValue = ""; //concatinated shellRead values from repeats
         shellRead = shell.liveShellCommand(command, true);
         this.checkErrorMessage(command, shellRead);
-        returnValue = returnValue + shellRead;
+        returnValue += shellRead;
         timesRun++;
         return returnValue;
 
@@ -353,6 +312,42 @@ public class HeimdallTools extends AbstractDeviceCommunicationsProtocol {
             return linuxArmv6Location;
         }
         return linux32Location;
+    }
+
+    /**
+     * Status for decision making based on return value from heimdall.
+     *
+     * SUCCESS: Heimdall executed sucessfully
+     *
+     * HALTED: Heimdall encountered a failure which cannot be recovered.
+     *
+     * CONTINUE: Heimdall did not execute sucessfully, but we can try again.
+     *
+     * MAXIMUMRETRIESEXCEEDED: We've tried to continue four times now.
+     *
+     */
+    public enum CommandDisposition {
+        
+        /**
+         * Result was good.
+         */
+        NOACTIONREQUIRED, /**
+         * Result requires retry.
+         */
+        RUNAGAIN, /**
+         * Result indicates that permission problems were encountered.
+         */
+        ELEVATIONREQUIRED, /**
+         * Result indicates drivers are required.
+         */
+        INSTALLDRIVERS, /**
+         * Result indicates that an unrecoverable error was encountered.
+         */
+        HALTSCRIPT, /**
+         * This command has been run too many times and a favorable result is
+         * not likely.
+         */
+        MAXIMUMRETRIES
     }
 
 }

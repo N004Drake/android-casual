@@ -10,7 +10,7 @@ package CASUAL.misc;
  */
 public class JarClassLoader extends MultiClassLoader
     {
-    private JarResources    jarResources;
+    private final JarResources    jarResources;
     public JarClassLoader (String jarName)
     {
     // Create the JarResource and suck in the jar file.

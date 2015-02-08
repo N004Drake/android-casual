@@ -29,16 +29,16 @@ import java.net.URL;
  */
 public class CasualDevCounter {
 
+    public static void doIncrementCounter(String name) {
+        new CasualDevCounter().incrementCounter(name);
+    }
+
     /**
      * provides an object which can be polled to determine if the
      * incrementalCounter has finished
      */
     public MandatoryThread t = new MandatoryThread();
     
-    public static void doIncrementCounter(String name) {
-        new CasualDevCounter().incrementCounter(name);
-    }
-
     /**
      * Increments a counter at CASUAL-Dev.com
      *
@@ -72,4 +72,5 @@ public class CasualDevCounter {
     public void waitFor() {
         t.waitFor();
     }
+
 }

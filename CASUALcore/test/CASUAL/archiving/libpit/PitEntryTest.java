@@ -24,6 +24,14 @@ import org.junit.Test;
  */
 public class PitEntryTest {
 
+    @BeforeClass
+    public static void setUpClass() {
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+    }
+
     PitData pitFile;
 
     public PitEntryTest() {
@@ -33,14 +41,6 @@ public class PitEntryTest {
             Logger.getLogger(PitEntryTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         pitFile.addEntry(pitFile.getEntry(0));
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
     }
 
     @Before
@@ -377,5 +377,6 @@ public class PitEntryTest {
     public void testConvertCharArrayToByteArray() {
         //this is tested several times
     }
+
 
 }

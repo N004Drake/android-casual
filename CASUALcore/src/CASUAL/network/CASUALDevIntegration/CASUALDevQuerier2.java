@@ -60,6 +60,11 @@ public class CASUALDevQuerier2 {
 
     final static String buildsURL = "https://builds.casual-dev.com/availableCaspacs/CASUALComms.php";
     final static String rootPath = "https://builds.casual-dev.com";
+
+    static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
     final String buildProp;
 
     /**
@@ -77,7 +82,7 @@ public class CASUALDevQuerier2 {
      *
      * @param bp BuildProp to be sent to server
      * @param additionalProps additional lines of properties to claim as valid
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException when the build prop is not found
      */
     public CASUALDevQuerier2(File bp, String[] additionalProps) throws FileNotFoundException {
         buildProp = addAdditionalPropsToBuildProp(convertStreamToString(new FileInputStream(bp)), additionalProps);
@@ -99,11 +104,6 @@ public class CASUALDevQuerier2 {
             bp = bp + "\n" + prop;
         }
         return bp;
-    }
-
-    static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
     }
 
     /**
@@ -204,5 +204,6 @@ public class CASUALDevQuerier2 {
         }
         return json;
     }
+
 
 }

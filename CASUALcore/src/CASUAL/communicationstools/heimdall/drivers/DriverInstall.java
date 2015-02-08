@@ -50,14 +50,6 @@ import java.util.ArrayList;
  */
 public class DriverInstall {
 
-    /**
-     * windowsDriverBlanket is a static Array of targeted USB VID (VendorID
-     * numbers) in hexadecimal form. IDs are stored as strings because Java
-     * doesn't have a native storage class for hexadecimal (base 16) without
-     * conversion to decimal (base 10) This Member is populated on Class Object
-     * creation.
-     */
-    private final String[] windowsDriverBlanket;
 
     /**
      * removeDriverOnCompletion is a primarily user set variable, relating to
@@ -67,6 +59,14 @@ public class DriverInstall {
      * populated on Class Object creation.
      */
     public static volatile int removeDriverOnCompletion;
+    /**
+     * windowsDriverBlanket is a static Array of targeted USB VID (VendorID
+     * numbers) in hexadecimal form. IDs are stored as strings because Java
+     * doesn't have a native storage class for hexadecimal (base 16) without
+     * conversion to decimal (base 10) This Member is populated on Class Object
+     * creation.
+     */
+    private final String[] windowsDriverBlanket;
 
     /**
      * WindowsDrivers instantiates the windows driver class.

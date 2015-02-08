@@ -52,7 +52,6 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AES128Handler {
 
-    final File targetFile;
 
 
     /*these variables are used for generating a header 
@@ -71,6 +70,30 @@ public class AES128Handler {
      * Header for the CASPAC
      */
     final static public String header = casualID + revision.length() + revision;
+
+    /**
+     * will return the length of the CASPAC Header
+     *
+     * @param f file to check
+     * @return 0 if failed, will be between &gt;18 if valid.
+     * @throws FileNotFoundException if file is not present or deleted
+     * @throws IOException if permission problem.
+     */
+    public static int getCASPACHeaderLength(File f) throws FileNotFoundException, IOException {
+        AES128Handler c = new AES128Handler(f);
+        FileInputStream fis = new FileInputStream(f);
+        byte[] chartest = new byte[casualID.length()];
+        byte[] headert = casualID.getBytes();
+        fis.read(chartest);
+        //read length of revision
+        if (Arrays.equals(chartest, headert)) {
+            char charRevisionLength = (char) fis.read();
+            int revisionLength = Integer.parseInt(String.valueOf(charRevisionLength));
+            return chartest.length + 1 + revisionLength;
+        }
+        return 0;
+    }
+    final File targetFile;
 
     /**
      * loads a file for use in AES128Handler.
@@ -185,7 +208,6 @@ public class AES128Handler {
         return bytes;
     }
 
-
     /**
      * gets a cypher for encryption
      *
@@ -206,28 +228,5 @@ public class AES128Handler {
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(mode, skey, ivspec);
         return c;
-    }
-
-    /**
-     * will return the length of the CASPAC Header
-     *
-     * @param f file to check
-     * @return 0 if failed, will be between &gt;18 if valid.
-     * @throws FileNotFoundException if file is not present or deleted
-     * @throws IOException if permission problem.
-     */
-    public static int getCASPACHeaderLength(File f) throws FileNotFoundException, IOException {
-        AES128Handler c = new AES128Handler(f);
-        FileInputStream fis = new FileInputStream(f);
-        byte[] chartest = new byte[casualID.length()];
-        byte[] headert = casualID.getBytes();
-        fis.read(chartest);
-        //read length of revision
-        if (Arrays.equals(chartest, headert)) {
-            char charRevisionLength = (char) fis.read();
-            int revisionLength = Integer.parseInt(String.valueOf(charRevisionLength));
-            return chartest.length + 1 + revisionLength;
-        }
-        return 0;
     }
 }

@@ -47,12 +47,91 @@ import java.util.logging.Logger;
  */
 public class SHA256sum {
 
-    final ByteArrayInputStream toBeSHA256;
 
     /**
      * spacer used to separate SHA256 and filename in standard sha256sum
      */
     final protected static String LINUXSPACER = "  ";
+
+    /**
+     * returns SHA256 sum in standard linux command line format
+     *
+     * @param file to use for filename
+     * @return linux sha256sum output
+     */
+    public static String getLinuxSum(File file) {
+        String name = file.getName();
+        String sum;
+        
+        try {
+            sum = new SHA256sum(file).getSha256();
+            String linuxSHA256;
+            linuxSHA256 = formatLinuxOutputSHA256Sum(sum, name);
+            return linuxSHA256;
+        } catch (FileNotFoundException ex) {
+            return "";
+        } catch (NoSuchAlgorithmException ex) {
+            return "";
+        } catch (IOException ex) {
+            return "";
+        }
+    }
+
+    /**
+     * gets the filename from a commandline sha256sum output
+     *
+     * @param sha256sum linux sha256sum to extract name from
+     * @return name of file mentioned in sha256sum
+     */
+    public static String getName(String sha256sum) {
+        if (sha256sum.contains(LINUXSPACER)) {
+            String[] split = sha256sum.split(LINUXSPACER);
+            return split[1];
+        }
+        return "";
+    }
+
+    /**
+     * gets the sha256sum portion of a commandline sha256 output
+     *
+     * @param sha256sum linux sha256sum to extract sum from
+     * @return sum portion of command line sha256 output
+     */
+    public static String getSum(String sha256sum) {
+        if (sha256sum.contains(LINUXSPACER)) {
+            String[] split = sha256sum.split(LINUXSPACER);
+            return split[0];
+        }
+        return "";
+    }
+
+    /**
+     * converts a byte array to hexadecimal output
+     *
+     * @param bytes to be turned into hex
+     * @return hex string from bytes
+     */
+    public static String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * formats a sha256sum from a sum and a filename
+     *
+     * @param sum the sha256 sum
+     * @param name the file name
+     * @return equal to command line output from linux sha256sum command
+     */
+    public static String formatLinuxOutputSHA256Sum(String sum, String name) {
+        String linuxSHA256;
+        linuxSHA256 = sum + LINUXSPACER + name;
+        return linuxSHA256;
+    }
+    final ByteArrayInputStream toBeSHA256;
 
     /**
      * constructor to make an SHA256 from a string
@@ -125,58 +204,6 @@ public class SHA256sum {
     }
 
     /**
-     * returns SHA256 sum in standard linux command line format
-     *
-     * @param file to use for filename
-     * @return linux sha256sum output
-     */
-    public static String getLinuxSum(File file) {
-        String name = file.getName();
-        String sum;
-
-        try {
-            sum = new SHA256sum(file).getSha256();
-            String linuxSHA256;
-            linuxSHA256 = formatLinuxOutputSHA256Sum(sum, name);
-            return linuxSHA256;
-        } catch (FileNotFoundException ex) {
-            return "";
-        } catch (NoSuchAlgorithmException ex) {
-            return "";
-        } catch (IOException ex) {
-            return "";
-        }
-    }
-
-    /**
-     * gets the filename from a commandline sha256sum output
-     *
-     * @param sha256sum linux sha256sum to extract name from
-     * @return name of file mentioned in sha256sum
-     */
-    public static String getName(String sha256sum) {
-        if (sha256sum.contains(LINUXSPACER)) {
-            String[] split = sha256sum.split(LINUXSPACER);
-            return split[1];
-        }
-        return "";
-    }
-
-    /**
-     * gets the sha256sum portion of a commandline sha256 output
-     *
-     * @param sha256sum linux sha256sum to extract sum from
-     * @return sum portion of command line sha256 output
-     */
-    public static String getSum(String sha256sum) {
-        if (sha256sum.contains(LINUXSPACER)) {
-            String[] split = sha256sum.split(LINUXSPACER);
-            return split[0];
-        }
-        return "";
-    }
-
-    /**
      * does the SHA256
      *
      * @return hex string representation of the input
@@ -201,33 +228,6 @@ public class SHA256sum {
         }
         return output;
 
-    }
-
-    /**
-     * converts a byte array to hexadecimal output
-     *
-     * @param bytes to be turned into hex
-     * @return hex string from bytes
-     */
-    public static String bytesToHex(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(String.format("%02x", b));
-        }
-        return sb.toString();
-    }
-
-    /**
-     * formats a sha256sum from a sum and a filename
-     *
-     * @param sum the sha256 sum
-     * @param name the file name
-     * @return equal to command line output from linux sha256sum command
-     */
-    public static String formatLinuxOutputSHA256Sum(String sum, String name) {
-        String linuxSHA256;
-        linuxSHA256 = sum + LINUXSPACER + name;
-        return linuxSHA256;
     }
 
     @Override

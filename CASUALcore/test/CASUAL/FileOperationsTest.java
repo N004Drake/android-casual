@@ -23,19 +23,18 @@ import org.junit.Test;
  * @author adam
  */
 public class FileOperationsTest {
-    CASUALSessionData sd=CASUALSessionData.newInstance();
-    public FileOperationsTest(){
-    }
+    private static final String adbIniResource="/CASUAL/communicationstools/adb/resources/adb_usb.ini";
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass(){
     }
-    
     @AfterClass
     public static void tearDownClass() {
     }
-    private static final String adbIniResource = "/CASUAL/communicationstools/adb/resources/adb_usb.ini";
 
+    CASUALSessionData sd = CASUALSessionData.newInstance();
 
+    public FileOperationsTest() {
+    }
 
     /**
      * Test of recursiveDelete method, of class FileOperations.
@@ -77,6 +76,7 @@ public class FileOperationsTest {
         assert(result);
     }
 
+
     /**
      * Test of findRecursive method, of class FileOperations.
      * @throws java.io.IOException
@@ -93,13 +93,12 @@ public class FileOperationsTest {
         FileOperations instance =new FileOperations();
         System.out.println("performing recursive search");
         String result = instance.findRecursive(PathToSearch,"testFindRecursive");
-     System.out.println("result: "+result);
+        System.out.println("result: "+result);
         System.out.println("result: "+result);
         assertEquals(testpath.getCanonicalPath()+CASUALSessionData.slash+"testFindRecursive" ,result);
         instance.recursiveDelete(sd.getTempFolder());
 
     }
-
 
     /**
      * Test of verifyExists method, of class FileOperations.
@@ -119,8 +118,8 @@ public class FileOperationsTest {
      */
     @Test
     public void testMakeFolder() {
-         assertEquals(true, new CASUAL.FileOperations().makeFolder(sd.getTempFolder() + "new" + CASUAL.CASUALSessionData.slash));
-         assertEquals(false, new CASUAL.FileOperations().makeFolder(null));
+        assertEquals(true, new CASUAL.FileOperations().makeFolder(sd.getTempFolder() + "new" + CASUAL.CASUALSessionData.slash));
+        assertEquals(false, new CASUAL.FileOperations().makeFolder(null));
         
     }
 
@@ -192,8 +191,8 @@ public class FileOperationsTest {
         assert(instance.verifyExists(destFile.getAbsolutePath()));
         sourceFile.delete();
         destFile.delete();
-
-
+        
+        
     }
 
     /**
@@ -204,9 +203,10 @@ public class FileOperationsTest {
         System.out.println("currentDir");
         FileOperations instance = new FileOperations();
         String result = instance.currentDir();
-        assert(!result.equals(""));
+        assert(!result.isEmpty());
 
     }
+
 
     /**
      * Test of copyFile method, of class FileOperations.
@@ -222,7 +222,6 @@ public class FileOperationsTest {
         assertEquals(expResult, result);
 
     }
-
 
     /**
      * Test of setExecutableBit method, of class FileOperations.

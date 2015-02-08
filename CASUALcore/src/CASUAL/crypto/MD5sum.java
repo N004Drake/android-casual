@@ -43,11 +43,7 @@ public class MD5sum {
      * @return true if matches
      */
     public boolean compareFileToMD5(File f, String MD5) {
-        if (md5sum(f).equals(MD5.toLowerCase())) {
-            return true;
-        } else {
-            return false;
-        }
+        return md5sum(f).equals(MD5.toLowerCase());
     }
 
     /**

@@ -77,7 +77,7 @@ public class Pastebin {
         if (xdaUsername != null && !xdaUsername.equals("1")) {//CANCEL_OPTION will rerturn a null String
             API paste = new API(devKey);
             
-            if (!(user.equals("")) && !(passwd.equals(""))) {
+            if (!(user.isEmpty()) && !(passwd.isEmpty())) {
                 String lResult = paste.login(user, passwd);
                 if (lResult.equals("false")) {
                     Log.level4Debug("Pastebin Login Failed");
@@ -127,7 +127,7 @@ public class Pastebin {
             String userhome = System.getProperty("user.home");
             casualLog = casualLog.replace(userhome, slashrep + "USERHOME" + (userhome.endsWith(CASUALSessionData.slash) ? slashrep : ""));
             String username = System.getProperty("user.name");
-            if (username == null || username.equals("")) {
+            if (username == null || username.isEmpty()) {
                 username = System.getenv("USERNAME");
             }
             if (username != null && casualLog.contains(username)) {
@@ -145,7 +145,7 @@ public class Pastebin {
                 } else {
                     paste.setToken(lResult);
                 }
-                if (casualLog.equals("")) {
+                if (casualLog.isEmpty()) {
                     return;
                 }
                 paste.makePaste(casualLog, "CASUAL r" + java.util.ResourceBundle.getBundle("CASUAL/resources/CASUALApp").getString("Application.revision") + "-Anonymous", format);

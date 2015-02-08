@@ -216,7 +216,7 @@ public class ScriptMeta {
         md5s = new ArrayList<String>();
         int i = 0;
         monitorMode = MonitorMode.valueOf(prop.getProperty("Script.MonitorMode", "ADB"));
-        while (!prop.getProperty("Script.MD5[" + i + "]", "").equals("")) {
+        while (!prop.getProperty("Script.MD5[" + i + "]", "").isEmpty()) {
             md5s.add(prop.getProperty("Script.MD5[" + i + "]"));
             i++;
         }
@@ -404,7 +404,7 @@ public class ScriptMeta {
 
     /**
      * @param monitorMode the monitorMode to set
-     * @return 
+     * @return  this ScriptMeta
      */
     public ScriptMeta setMonitorMode(CASUALSettings.MonitorMode monitorMode) {
         this.monitorMode = monitorMode;

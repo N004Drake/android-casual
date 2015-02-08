@@ -34,9 +34,6 @@ import org.junit.Test;
  */
 public class NetworkPropertiesTest {
     
-    public NetworkPropertiesTest() {
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
@@ -45,6 +42,15 @@ public class NetworkPropertiesTest {
     public static void tearDownClass() {
     }
     
+
+    
+    //this url should contain minSVN value
+    final String networkPropertiesURL="https://builds.casual-dev.com/files/CASPAC/all/testpak.properties";
+    final String minSVN="730";
+
+    public NetworkPropertiesTest() {
+    }
+
     @Before
     public void setUp() {
     }
@@ -53,13 +59,6 @@ public class NetworkPropertiesTest {
     public void tearDown() {
     }
 
-    
-    //this url should contain minSVN value
-    final String networkPropertiesURL="https://builds.casual-dev.com/files/CASPAC/all/testpak.properties";
-    final String minSVN="730";
-    
-    
-    
     /**
      * Test of getProperties method, of class NetworkProperties.
      */

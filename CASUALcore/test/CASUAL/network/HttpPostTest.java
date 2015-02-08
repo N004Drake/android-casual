@@ -37,6 +37,7 @@ public class HttpPostTest {
 
     /**
      * Test of post method, of class HttpPostFile.
+     * @throws java.io.IOException
      */
     @Test
     public void testPost() throws IOException {

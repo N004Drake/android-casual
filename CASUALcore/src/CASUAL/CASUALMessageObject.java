@@ -70,6 +70,16 @@ public class CASUALMessageObject implements Serializable {
      * iCASUALInteraction.INTERACTION_SHOW_ERROR=5;
      * iCASUALInteraction.INTERACTION_SHOW_YES_NO=6;
      * iCASUALInteraction.INTERACTION_INPUT_DIALOG=7;
+     * iCASUALInteraction.INTERACTION_COMMAND_NOTIFICATION=8;    /**
+     * Type of message commanded by this MessageObject
+     * iCASUALInteraction.INTERACTION_TIME_OUT=0;
+     * iCASUALInteraction.INTERACTION_USER_CANCEL_OPTION=1;
+     * iCASUALInteraction.INTERACTION_ACTION_REUIRED=2;
+     * iCASUALInteraction.INTERACTION_USER_NOTIFICATION=3;
+     * iCASUALInteraction.INTERACTION_SHOW_INFORMATION=4;
+     * iCASUALInteraction.INTERACTION_SHOW_ERROR=5;
+     * iCASUALInteraction.INTERACTION_SHOW_YES_NO=6;
+     * iCASUALInteraction.INTERACTION_INPUT_DIALOG=7;
      * iCASUALInteraction.INTERACTION_COMMAND_NOTIFICATION=8;
      */
 

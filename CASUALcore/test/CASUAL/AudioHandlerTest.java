@@ -18,22 +18,22 @@ import org.junit.Test;
  */
 public class AudioHandlerTest {
     
-    public AudioHandlerTest() {
-       System.out.println("Working Directory = " +System.getProperty("user.dir"));
-    
-        try {
-            System.out.println(new File(".").getCanonicalPath());
-        } catch (IOException ex) {
-            Logger.getLogger(AudioHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    
+    public AudioHandlerTest() {
+        System.out.println("Working Directory = " +System.getProperty("user.dir"));
+        
+        try {
+            System.out.println(new File(".").getCanonicalPath());
+        } catch (IOException ex) {
+            Logger.getLogger(AudioHandlerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

@@ -94,7 +94,7 @@ public final class Build {
      * Accepts a -Build.properties file via InputStream.
      *
      * @param prop Properties file.
-     * @param caspac
+     * @param caspac to be associated with the build
      * @throws IOException when permissions problem exists.
      */
     public Build(InputStream prop, final Caspac caspac) throws IOException {
@@ -109,7 +109,7 @@ public final class Build {
      * loads and sets properties file
      *
      * @param prop build.properties file
-     * @param caspac
+     * @param caspac to be assocaiated with the build
      */
     public Build(Properties prop, final Caspac caspac) {
         this.caspac = caspac;
@@ -223,7 +223,7 @@ public final class Build {
 
     /**
      * @param developerDonateButtonText the developerDonateButtonText to set
-     * @return 
+     * @return this Build
      */
     public Build setDeveloperDonateButtonText(String developerDonateButtonText) {
         this.developerDonateButtonText = developerDonateButtonText;
@@ -239,7 +239,7 @@ public final class Build {
 
     /**
      * @param donateLink the donateLink to set
-     * @return 
+     * @return  this Build
      */
     public Build setDonateLink(String donateLink) {
         this.donateLink = donateLink;
@@ -255,7 +255,7 @@ public final class Build {
 
     /**
      * @param windowTitle the windowTitle to set
-     * @return 
+     * @return  this Build
      */
     public Build setWindowTitle(String windowTitle) {
         this.windowTitle = windowTitle;
@@ -271,7 +271,7 @@ public final class Build {
 
     /**
      * @param usePictureForBanner the usePictureForBanner to set
-     * @return 
+     * @return  this Build
      */
     public Build setUsePictureForBanner(boolean usePictureForBanner) {
         this.usePictureForBanner = usePictureForBanner;
@@ -287,7 +287,7 @@ public final class Build {
 
     /**
      * @param bannerPic the bannerPic to set
-     * @return 
+     * @return  this Build
      */
     public Build setBannerPic(String bannerPic) {
         this.bannerPic = bannerPic;
@@ -335,7 +335,7 @@ public final class Build {
 
     /**
      * @param audioEnabled the audioEnabled to set
-     * @return 
+     * @return  this Build
      */
     public Build setAudioEnabled(boolean audioEnabled) {
         this.audioEnabled = audioEnabled;
@@ -351,7 +351,7 @@ public final class Build {
 
     /**
      * @param alwaysEnableControls the alwaysEnableControls to set
-     * @return 
+     * @return  this Build
      */
     public Build setAlwaysEnableControls(boolean alwaysEnableControls) {
         this.alwaysEnableControls = alwaysEnableControls;
@@ -367,7 +367,7 @@ public final class Build {
 
     /**
      * @param buildProp the buildProp to set
-     * @return 
+     * @return  this Build
      */
     public Build setBuildProp(Properties buildProp) {
         this.buildProp = buildProp;
@@ -383,7 +383,7 @@ public final class Build {
 
     /**
      * @param build the build to set
-     * @return 
+     * @return  this Build
      */
     public Build setBuild(Caspac build) {
         this.caspac = build;

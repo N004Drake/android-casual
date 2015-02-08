@@ -17,15 +17,15 @@ import org.junit.Test;
  */
 public class PrintPitTest {
 
-    public PrintPitTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    public PrintPitTest() {
     }
 
     @Before

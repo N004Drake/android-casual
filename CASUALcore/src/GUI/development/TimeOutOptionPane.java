@@ -31,12 +31,6 @@ public class TimeOutOptionPane extends JOptionPane {
 
     static final long serialVersionUID = 9876543234567L;
 
-    /**
-     * instantiates a timeout option pane
-     */
-    public TimeOutOptionPane() {
-        super();
-    }
     static int PRESET_TIME = 335;
     /*
      * int showTimeoutDialog = timeOutOptionPane.showTimeoutDialog( 5, //timeout
@@ -48,6 +42,13 @@ public class TimeOutOptionPane extends JOptionPane {
      *
      */
     private boolean isSelected = false;
+
+    /**
+     * instantiates a timeout option pane
+     */
+    public TimeOutOptionPane() {
+        super();
+    }
 
     /**
      * timeout option pane
@@ -62,8 +63,7 @@ public class TimeOutOptionPane extends JOptionPane {
      * @param initialValue default value to select if time runs out
      * @return integer representing user selection
      */
-    public int timeoutDialog(final int time, Component parentComponent, Object message, final String title, int optionType,
-            int messageType, Object[] options, final Object initialValue) {
+    public int timeoutDialog(final int time, Component parentComponent, Object message, final String title, int optionType, int messageType, Object[] options, final Object initialValue) {
         PRESET_TIME = time;
         JOptionPane pane = new JOptionPane(message, messageType, optionType, null, options, initialValue);
         pane.setInitialValue(initialValue);
@@ -106,7 +106,7 @@ public class TimeOutOptionPane extends JOptionPane {
 
         if (options == null) {
             if (selectedValue instanceof Integer) {
-                return ((Integer) selectedValue).intValue();
+                return ((Number) selectedValue).intValue();
             }
             return CLOSED_OPTION;
         }

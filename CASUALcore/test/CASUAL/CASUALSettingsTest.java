@@ -32,17 +32,17 @@ import org.junit.Test;
  */
 public class CASUALSettingsTest {
 
-    public CASUALSettingsTest() {
-                assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
-
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    public CASUALSettingsTest() {
+        assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
+        
     }
 
     @Before

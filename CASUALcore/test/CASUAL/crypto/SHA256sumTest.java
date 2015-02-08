@@ -26,15 +26,20 @@ import org.junit.Test;
  */
 public class SHA256sumTest {
 
-    public SHA256sumTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    String expResult = "ad5f9292c7bd44068b5465b48b38bf18c98b4d133e80307957e5f5c372a36f7d  logo.xcf";
+    String expname = "logo.xcf";
+    String expsum = "ad5f9292c7bd44068b5465b48b38bf18c98b4d133e80307957e5f5c372a36f7d";
+    File file = new File("../logo.xcf");
+
+    public SHA256sumTest() {
     }
 
     @Before
@@ -44,10 +49,6 @@ public class SHA256sumTest {
     @After
     public void tearDown() {
     }
-    String expResult = "ad5f9292c7bd44068b5465b48b38bf18c98b4d133e80307957e5f5c372a36f7d  logo.xcf";
-    String expname = "logo.xcf";
-    String expsum = "ad5f9292c7bd44068b5465b48b38bf18c98b4d133e80307957e5f5c372a36f7d";
-    File file = new File("../logo.xcf");
 
     /**
      * Test of getName method, of class SHA256sum.
@@ -66,8 +67,8 @@ public class SHA256sumTest {
 
         System.out.println("Testing vectors from http://www.nsrl.nist.gov/testdata/");
         String result = "";
-
-
+        
+        
         String vector = "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD".toLowerCase();
         String expectedresult = "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD".toLowerCase();
         try {
@@ -97,7 +98,7 @@ public class SHA256sumTest {
         vector = "";
         for (int i = 0; i < 1000; i++) {
             //takes 30seconds to generate one-at-a-time, 1 second to generate 1,000 at a time.
-            vector = vector + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            vector += "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         }
         expectedresult = "CDC76E5C9914FB9281A1C7E284D73E67F1809A48A497200E046D39CCC7112CD0".toLowerCase();
         try {
@@ -137,9 +138,9 @@ public class SHA256sumTest {
     @Test
     public void getLinuxTestSum() {
         /*Test vector: "abc" without a new line
-         * adam@adam-desktop:~$ echo -n abc|sha256sum
-         * ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  -
-         */
+        * adam@adam-desktop:~$ echo -n abc|sha256sum
+        * ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  -
+        */
         byte[] testVector = "abc".getBytes();
         String expectedResult = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  -";
         ByteArrayInputStream bas = new ByteArrayInputStream(testVector);
@@ -157,14 +158,14 @@ public class SHA256sumTest {
     @Test
     public void falseEqualsTrue() {
         if (false == true) { //\u000a\u007d\u007b
-
-
         
-            System.out.println("false is true!!");
-            if (!false && true) {
-                assert (true);
-            } else {
-                fail("It turns out false isn't true"); //won't happen.
+        
+        
+        System.out.println("false is true!!");
+        if (!false && true) {
+            assert (true);
+        } else {
+            fail("It turns out false isn't true"); //won't happen.
             }
 
         }
@@ -173,9 +174,9 @@ public class SHA256sumTest {
     @Test
     public void getLinuxTestSumFromString() {
         /*Test vector: "abc" without a new line
-         * adam@adam-desktop:~/code/android-casual/trunk/CASPAC$ echo -n "CASUAL"|sha256sum
-         * ff2fb9e38104483a510ea3333890fef15029b28e27c92fdafbc3edadc077df8c  -
-         */
+        * adam@adam-desktop:~/code/android-casual/trunk/CASPAC$ echo -n "CASUAL"|sha256sum
+        * ff2fb9e38104483a510ea3333890fef15029b28e27c92fdafbc3edadc077df8c  -
+        */
         String testVector = "CASUAL";
         String expectedResult = "ff2fb9e38104483a510ea3333890fef15029b28e27c92fdafbc3edadc077df8c  -";
         try {
@@ -194,10 +195,10 @@ public class SHA256sumTest {
     public void getLinuxTestSumFromFile() {
         try {
             /*Test vector: "abc" without a new line
-             * adam@adam-desktop:~$ echo -n abc>./test
-             * adam@adam-desktop:~$ sha256sum ./test
-             * ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  ./test
-             */
+            * adam@adam-desktop:~$ echo -n abc>./test
+            * adam@adam-desktop:~$ sha256sum ./test
+            * ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  ./test
+            */
             byte[] testVector = "abc".getBytes();
             String expectedResult = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  test";
             File f = new File("test");
@@ -215,7 +216,5 @@ public class SHA256sumTest {
         } catch (IOException ex) {
             fail("error while reading/writing files");
         }
-
-
     }
 }

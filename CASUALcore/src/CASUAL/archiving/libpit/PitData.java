@@ -167,7 +167,7 @@ public class PitData {
                 dataOutputStream.write( fileType[i]);
             }
             for (int i = 0; i < pitName.length; i++) {
-                dataOutputStream.write((int) pitName[i]);
+                dataOutputStream.write(pitName[i]);
             }
 
             for (int i = 0; i < entryCount; i++) {
@@ -256,7 +256,7 @@ public class PitData {
                 if (c == 0) {  //character signifying the end of the name and the beginning of modifier "md5"
                     break;
                 } else {
-                    nameCheck = nameCheck + c;
+                    nameCheck += c;
                 }
             }
 
@@ -340,7 +340,7 @@ public class PitData {
         for (int i = 0; i < pitName.length; i++) {
             //first part of file will be filename
             if (pitName[i] != 0) {
-                pitFriendlyName = pitFriendlyName + pitName[i];
+                pitFriendlyName += pitName[i];
             } else { //anything after first 0 byte will be a parameter
                 while (pitName[i] == 0 && i < pitName.length - 1) {
                     i++;
@@ -364,7 +364,7 @@ public class PitData {
         for (int i = 0; i < fileType.length; i++) {
             //first part of file will be filename
             if (fileType[i] != 0) {
-                filetypeFriendlyName = filetypeFriendlyName + fileType[i];
+                filetypeFriendlyName += fileType[i];
             } else { //anything after first 0 byte will be a parameter
                 while (fileType[i] == 0 && i < fileType.length - 1) {
                     i++;

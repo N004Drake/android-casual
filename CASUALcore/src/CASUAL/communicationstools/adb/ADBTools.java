@@ -38,13 +38,6 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
      * path to ADB after deployment.
      */
     private static String binaryLocation = ""; //location of ADB after deployment
-
-    /**
-     * ADBTools default constructor.
-     */
-    public ADBTools() {
-
-    }
     // The following variables represent locations of ADB files
     private static final String[] linux64Location = new String[]{"/CASUAL/communicationstools/adb/resources/adb-linux64"};
     private static final String[] linux32Location = new String[]{"/CASUAL/communicationstools/adb/resources/adb-linux32"};
@@ -52,6 +45,13 @@ public class ADBTools extends CASUAL.communicationstools.AbstractDeviceCommunica
     private static final String[] macLocation = new String[]{"/CASUAL/communicationstools/adb/resources/adb-mac"};
     private static final String[] linuxArmv6Location = new String[]{"/CASUAL/communicationstools/adb/resources/adb-linuxARMv6"};
     private static final String adbIniResource = "/CASUAL/communicationstools/adb/resources/adb_usb.ini";
+
+    /**
+     * ADBTools default constructor.
+     */
+    public ADBTools() {
+        
+    }
 
     private String getAdbIniLocation() {
         return System.getProperty("user.home") + CASUALSessionData.slash + ".android" + CASUALSessionData.slash + "adb_usb.ini";

@@ -131,7 +131,7 @@ public class Shell {
             } else {
                 int i = 0;
                 //give the user 3 retries for password
-                while (Result.equals("") || Result.contains("Error executing command as another user")) {
+                while (Result.isEmpty() || Result.contains("Error executing command as another user")) {
                     Result = liveShellCommand(new String[]{"pkexec", ScriptFile}, true);
                     i++;
                     if (Result.contains("Error executing command as another user:") && i >= 3) {
@@ -196,7 +196,7 @@ public class Shell {
                 y++;
             }
             y = 0;
-            while ((line = STDERR.readLine()) != null && !line.equals("")) {
+            while ((line = STDERR.readLine()) != null && !line.isEmpty()) {
                 if (y == 0) {
                     AllText = AllText + "\n" + line + "\n"; //Sloppy Fix, ensures first line of STDERR is written to a newline
                 } else {
@@ -294,8 +294,8 @@ public class Shell {
             while ((c = STDOUT.read()) > -1) {
 
                 CharRead = Character.toString((char) c);
-                LineRead = LineRead + CharRead;
-                LogRead = LogRead + CharRead;
+                LineRead += CharRead;
+                LogRead += CharRead;
                 if (display) {
                     Log.progress(CharRead);
                 }
@@ -480,10 +480,6 @@ public class Shell {
              monitoring of if the thread is alive or not. 
              */
             class TimeoutLogger {
-                TimeoutLogger(boolean realtime,Process p){
-                    this.realtime=realtime;
-                    this.processRunning=p;
-                }
                 boolean realtime;
                 private final StringBuilder log = new StringBuilder();
                 AtomicBoolean timedOut = new AtomicBoolean(false);
@@ -503,6 +499,10 @@ public class Shell {
                         }
                     }
                 });
+                TimeoutLogger(boolean realtime, Process p){
+                    this.realtime=realtime;
+                    this.processRunning=p;
+                }
                 synchronized void log(char c){                
                     log.append(c);
                     if (realtime){
@@ -517,7 +517,8 @@ public class Shell {
                         }
                     }
                 }
-                synchronized String get(){
+
+                synchronized String get() {
                     return log.toString();
                 }
                 

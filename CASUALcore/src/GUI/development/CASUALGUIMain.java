@@ -857,7 +857,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         } else {
             Log.Level1Interaction("[STANDARDMESSAGE]" + title + "\n" + messageText + "\n[RESPONSEEXPECTED]");
             String s = getCommandLineInput();
-            if (s == null || s.equals("")) {
+            if (s == null || s.isEmpty()) {
                 return "0";
             }
             return "1";
@@ -884,7 +884,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             while (n != 0 && n != 1) {
                 Log.Level1Interaction("[ACTIONREQUIRED][Q or RETURN]" + title + "\n" + messageText + "\npress Q to quit" + "\n[RESPONSEEXPECTED]");
                 retval = getCommandLineInput();
-                if (!retval.equals("q") && !retval.equals("Q") && !retval.equals("")) {
+                if (!retval.equals("q") && !retval.equals("Q") && !retval.isEmpty()) {
                     n = new CASUALMessageObject(messageText).showActionRequiredDialog();
                 } else if (retval.equals("Q") || retval.equals("q")) {
                     n = 1;
@@ -902,7 +902,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         Object[] Options = {"Continue", "Stop"};
         if (CASUALSessionData.isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
-                cancelReturn = JOptionPane.showOptionDialog((Component)  this,
+                cancelReturn = JOptionPane.showOptionDialog(this,
                         messageText,
                         "Do you wish to continue?",
                         JOptionPane.YES_NO_OPTION,
@@ -911,7 +911,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
                         Options,
                         Options[1]);
             } else {
-                cancelReturn = JOptionPane.showOptionDialog((Component)  this,
+                cancelReturn = JOptionPane.showOptionDialog(this,
                         messageText,
                         title,
                         JOptionPane.YES_NO_OPTION,
@@ -937,12 +937,12 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         Log.level4Debug("Showing User Notification Dialog -Title:" + title + " -message:" + messageText);
         if (CASUALSessionData.isGUIIsAvailable() && !isDummyGUI) {
             if (title != null) {
-                JOptionPane.showMessageDialog((Component) this,
+                JOptionPane.showMessageDialog(this,
                         messageText,
                         title,
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog((Component) this,
+                JOptionPane.showMessageDialog(this,
                         messageText,
                         "Information",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -955,7 +955,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     private void showInformationInteraction(String messageText, String title) throws HeadlessException {
         if (CASUALSessionData.isGUIIsAvailable() && !isDummyGUI) {
-            JOptionPane.showMessageDialog((Component) this,
+            JOptionPane.showMessageDialog(this,
                     messageText, title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -966,7 +966,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
 
     private void showErrorInteraction(String messageText, String title) throws HeadlessException {
         if (CASUALSessionData.isGUIIsAvailable() && !isDummyGUI) {
-            JOptionPane.showMessageDialog((Component)  this, messageText, title, ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, messageText, title, ERROR_MESSAGE);
         } else {
             Log.Level1Interaction("[ERRORMESSAGE][RETURN]" + title + "\n" + messageText + "  Press any key to continue." + "\n[RESPONSEEXPECTED]");
             waitForStandardInputBeforeContinuing();
@@ -988,7 +988,7 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
             if (title == null) {
                 title = "";
             } else {
-                title = title + "\n";
+                title += "\n";
             }
             //display the messageText
             Log.Level1Interaction("[YESNOOPTION][RETURN or n]" + title + "\n" + messageText + "\npress N for no" + "\n[RESPONSEEXPECTED]");
@@ -1006,9 +1006,9 @@ public final class CASUALGUIMain extends javax.swing.JFrame implements iCASUALUI
         messageText = "<html>" + messageText.replace("\\n", "\n");
         if (CASUALSessionData.isGUIIsAvailable() && !isDummyGUI) {
             if (title == null) {
-                return JOptionPane.showInputDialog((Component)  this, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
+                return JOptionPane.showInputDialog(this, messageText, "Input Required", JOptionPane.QUESTION_MESSAGE);
             } else {
-                return JOptionPane.showInputDialog((Component)  this, messageText, title, JOptionPane.QUESTION_MESSAGE);
+                return JOptionPane.showInputDialog(this, messageText, title, JOptionPane.QUESTION_MESSAGE);
             }
         } else {
             Log.Level1Interaction("[INPUT][ANY]" + title + messageText + "\n input:");

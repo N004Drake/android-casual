@@ -40,34 +40,6 @@ public class BusyboxTools {
     public static final String busyboxX86 = "/CASUAL/communicationstools/adb/busybox/resources/busybox-i686";
     //Windows permissions elevator
 
-    final String busyboxLocation = "/data/local/tmp/busybox";
-    ADBTools adb = new ADBTools();
-    Shell shell = new Shell();
-
-    private String getDeviceArch() {
-        if (CASUALMain.getSession().CASPAC != null) {
-            if (!CASUALMain.getSession().CASPAC.getActiveScript().getDeviceArch().equals("")) {
-                return CASUALMain.getSession().CASPAC.getActiveScript().getDeviceArch();
-            }
-        }
-        String cpuinfo = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "cat /proc/cpuinfo"});
-        String[] lines = cpuinfo.split("\n");
-        for (String line : lines) {
-            if (line.contains("Processor") && line.contains("ARM")) {
-                return "ARM";
-
-            }
-        }
-        return "X86";
-    }
-
-    private boolean busyboxIsInstalled() {
-
-        String temp = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 711 " + busyboxLocation + " 2&1>dev/null ;ls " + busyboxLocation});
-
-        return !temp.contains("No such") && !temp.contains("found");
-    }
-
     /**
      * Deploys busybox to device and returns the location of busybox on device.
      *
@@ -87,7 +59,34 @@ public class BusyboxTools {
      * reset method.  unused currently, it is here for the future.
      */
     public static void reset() {
+    }
 
+    final String busyboxLocation = "/data/local/tmp/busybox";
+    ADBTools adb = new ADBTools();
+    Shell shell = new Shell();
+
+    private String getDeviceArch() {
+        if (CASUALMain.getSession().CASPAC != null) {
+            if (!CASUALMain.getSession().CASPAC.getActiveScript().getDeviceArch().isEmpty()) {
+                return CASUALMain.getSession().CASPAC.getActiveScript().getDeviceArch();
+            }
+        }
+        String cpuinfo = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "cat /proc/cpuinfo"});
+        String[] lines = cpuinfo.split("\n");
+        for (String line : lines) {
+            if (line.contains("Processor") && line.contains("ARM")) {
+                return "ARM";
+
+            }
+        }
+        return "X86";
+    }
+
+    private boolean busyboxIsInstalled() {
+
+        String temp = shell.silentShellCommand(new String[]{adb.getBinaryLocation(), "shell", "chmod 711 " + busyboxLocation + " 2&1>dev/null ;ls " + busyboxLocation});
+
+        return !temp.contains("No such") && !temp.contains("found");
     }
 
     private String deployBusybox() {
@@ -119,4 +118,5 @@ public class BusyboxTools {
         sb.append("\nDeployed:").append(busyboxIsInstalled());
         return busyboxLocation;
     }
+
 }

@@ -33,15 +33,15 @@ import org.junit.Test;
  */
 public class VariablesTest {
     
-    public VariablesTest() {
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    
+    public VariablesTest() {
     }
     
     @Before
@@ -54,6 +54,7 @@ public class VariablesTest {
 
     /**
      * Test of parseVarialbesInString method, of class Variables.
+     * @throws java.lang.Exception
      */
     @Test
     public void testParseVariablesInString() throws Exception {
