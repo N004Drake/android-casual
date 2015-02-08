@@ -27,9 +27,7 @@ import org.junit.Test;
  * @author adamoutler
  */
 public class PitDataTest {
-
-    public PitDataTest() {
-    }
+    static File pitFile;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -40,6 +38,9 @@ public class PitDataTest {
     public static void tearDownClass() {
     }
 
+    public PitDataTest() {
+    }
+
     @Before
     public void setUp() {
 
@@ -48,7 +49,6 @@ public class PitDataTest {
     @After
     public void tearDown() {
     }
-    static File pitFile;
 
     /**
      * Test of pack method, of class PitData.

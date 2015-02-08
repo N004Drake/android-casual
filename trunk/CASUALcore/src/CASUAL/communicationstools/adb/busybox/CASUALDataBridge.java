@@ -59,9 +59,6 @@ import javax.swing.Timer;
  */
 public class CASUALDataBridge {
 
-    Shell shell = new Shell();
-
-    ADBTools adb = new ADBTools();
     final static String port = "27825";
     final static String ip = "127.0.0.1";
     final static Integer WATCHDOGINTERVAL = 2000;
@@ -72,32 +69,41 @@ public class CASUALDataBridge {
     static long lastbytes = -1;
     static String status = "";
 
-    MandatoryThread worker=new MandatoryThread();
-    Socket socket=new Socket();
     final static Object deviceSideReady = new Object();
     static Object casualSideReady;
     static Object transmissionInProgress;
 
-    /**
-     * used externally to command shutdown. If shutdown is commanded, all
-     * operations must halt as soon as possible and return.
-     */
-   boolean commandedShutdown = false;
 
    
    static CASUALDataBridge instance;
     /**
-     * default constructor
+     * timeoutWatchdog checks every WATCHDOGINTERVAL millis to verify bytes have
+     * increased. If bytes have not increased, it throws an error and shuts
+     * things down. This is used to detect a broken connection.
      */
-    public CASUALDataBridge() {
-        if (instance!=null){
-            instance.commandedShutdown=true;
-            instance.worker.interrupt();
+    public static Timer timeoutWatchdog = new Timer(WATCHDOGINTERVAL, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            if (lastbytes == bytes) {
+                try {
+                    Log.level0Error("Failed to send file.  Timeout. Bytes:" + bytes + " Message:" + deviceSideMessage);
+                    deviceReadyForReceive = false;
+                    shutdownBecauseOfError = true;
+                    timeoutWatchdog.stop();
+                    throw new TimeoutException();
+                } catch (TimeoutException ex) {
+                    Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            } else {
+                lastbytes = bytes;
+                CASUALMain.getSession().setStatus(status + " " + bytes);
+            }
+            
         }
-        instance=this;
-    }
+    });
 
-    public static CASUALDataBridge getInstance(){
+    public static CASUALDataBridge getInstance() {
         return instance;
     }
     
@@ -113,6 +119,26 @@ public class CASUALDataBridge {
             Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    Shell shell = new Shell();
+    ADBTools adb = new ADBTools();
+    MandatoryThread worker = new MandatoryThread();
+    Socket socket = new Socket();
+    /**
+     * used externally to command shutdown. If shutdown is commanded, all
+     * operations must halt as soon as possible and return.
+     */
+    boolean commandedShutdown = false;
+    
+    /**
+     * default constructor
+     */
+    public CASUALDataBridge(){
+        if (instance!=null){
+            instance.commandedShutdown=true;
+            instance.worker.interrupt();
+        }
+        instance=this;
     }
     
     /**
@@ -250,7 +276,7 @@ public class CASUALDataBridge {
                 timeoutWatchdog.start();
                 bis.read(buf);
                 bos.write(buf);
-                bytes = bytes + buf.length;
+                bytes += buf.length;
                 timeoutWatchdog.stop();
             }
 
@@ -258,7 +284,7 @@ public class CASUALDataBridge {
             if (bis.available() > 0) {
                 buf = new byte[input.available()];
                 bis.read(buf);
-                bytes = bytes + buf.length;
+                bytes += buf.length;
                 bos.write(buf);
             }
             bos.flush();
@@ -289,7 +315,7 @@ public class CASUALDataBridge {
             while (deviceReadyForReceive && !commandedShutdown) {
 
                 while ((buf = new byte[bis.available()]).length > 0) {
-                    bytes = bytes + buf.length;
+                    bytes += buf.length;
                     bis.read(buf);
                     output.write(buf);
 
@@ -388,32 +414,6 @@ public class CASUALDataBridge {
         }
     }
 
-    /**
-     * timeoutWatchdog checks every WATCHDOGINTERVAL millis to verify bytes have
-     * increased. If bytes have not increased, it throws an error and shuts
-     * things down. This is used to detect a broken connection.
-     */
-    public static Timer timeoutWatchdog = new Timer(WATCHDOGINTERVAL, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            if (lastbytes == bytes) {
-                try {
-                    Log.level0Error("Failed to send file.  Timeout. Bytes:" + bytes + " Message:" + deviceSideMessage);
-                    deviceReadyForReceive = false;
-                    shutdownBecauseOfError = true;
-                    timeoutWatchdog.stop();
-                    throw new TimeoutException();
-                } catch (TimeoutException ex) {
-                    Logger.getLogger(CASUALDataBridge.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            } else {
-                lastbytes = bytes;
-                CASUALMain.getSession().setStatus(status + " " + bytes);
-            }
-
-        }
-    });
 
     private boolean checkErrors() {
         Log.level3Verbose("checking DataBridge errors.");

@@ -60,7 +60,12 @@ import javax.imageio.ImageIO;
  */
 public final class Caspac {
 
-    final private CASUALSessionData sd;
+    /**
+     * If we are debugging a script, we dont want to delete the script contents
+     * to prevent further execution on error. This is used for debugging
+     * purposes.
+     */
+    private static boolean debug = false;
     
     
     
@@ -77,6 +82,22 @@ public final class Caspac {
     public static void setDebug(boolean aDebug) {
         debug = aDebug;
     }
+
+    /**
+     * returns an empty CASPAC.
+     *
+     * @return empty CASPAC &gt;
+     * @throws IOException when permission problem exists
+     */
+    public static final Caspac makeGenericCaspac() throws IOException {
+        CASUALSessionData cd=CASUALSessionData.newInstance();
+        File f = new File(cd.getTempFolder() + "newfile");
+        Caspac c = new Caspac(cd, f, cd.getTempFolder(), 2);
+        Script s = new Script(cd,"oneshot", cd.getTempFolder());
+        
+        return c;
+    }
+    private final CASUALSessionData sd;
 
     /**
      * Loads a CASPAC Type 0 CASPAC, Type 1 CASUAL, Type 2 Filesystem.
@@ -128,12 +149,8 @@ public final class Caspac {
      */
     private boolean caspacShouldBeDeletedAfterExtraction = false;
 
-    /**
-     * If we are debugging a script, we dont want to delete the script contents
-     * to prevent further execution on error. This is used for debugging
-     * purposes.
-     */
-    private static boolean debug = false;
+    private String tempbannerpic;
+    private String[] controlFiles = {"-Overview.txt", "-build.properties", "-logo.png"};
     /**
      * Constructor for Caspac
      *
@@ -262,22 +279,6 @@ public final class Caspac {
             }
 
         }
-    }
-
-    /**
-     * returns an empty CASPAC.
-     *
-     * @return empty CASPAC &gt;
-     * @throws IOException when permission problem exists
-     */
-    final public static Caspac makeGenericCaspac() throws IOException {
-        
-        CASUALSessionData cd=CASUALSessionData.newInstance();
-        File f = new File(cd.getTempFolder() + "newfile");
-        Caspac c = new Caspac(cd, f, cd.getTempFolder(), 2);
-        Script s = new Script(cd,"oneshot", cd.getTempFolder());
-
-        return c;
     }
 
     /**
@@ -719,7 +720,6 @@ public final class Caspac {
         }
 
     }
-    private String tempbannerpic;
 
     private boolean handleCASPACInformationFiles(String filename, Unzip pack, Object entry) throws IOException {
         boolean isAControlFile = false;
@@ -727,7 +727,7 @@ public final class Caspac {
             setBuildPropInformation(pack, entry);
             isAControlFile = true;
         } else if (filename.endsWith(".png")) {
-            if (filename.equals("")) {
+            if (filename.isEmpty()) {
                 filename = this.TempFolder + "-logo.png";
             }
             extractCASPACBanner(pack, entry, filename);
@@ -880,7 +880,6 @@ public final class Caspac {
         }
         getScriptByName(defaultPackage).scriptZipFile = (scriptPath + ".zip");
     }
-    private String controlFiles[] = {"-Overview.txt", "-build.properties", "-logo.png"};
 
     private void loadCASPACcontrolFilesFromCASPAC() throws IOException {
         FileOperations fo = new FileOperations();
@@ -953,45 +952,41 @@ public final class Caspac {
     }
 
     /*
-     
-     if (s.metaData.minSVNversion.isEmpty()) {
-     return s;
-     }
-     int mySVNVersion=Integer.parseInt(java.util.ResourceBundle
-     .getBundle("CASUAL/resources/CASUALApp")
-     .getString("Application.revision"));
-     int myScriptVersion=Integer.parseInt(s.metaData.scriptRevision);
-     String myScriptName=s.name;
-     CASUALUpdates ci=new CASUALUpdates();
-     Properties updatedprop=new Properties();
-     Log.level3Verbose("creating new script instance to compare against online version");
-     Script updatedScript=new Script(s);
-     new File(s.tempDir).mkdirs();
-     Log.level3Verbose("getting updated script version info");
-        
-     //TODO: downloadMetaFromRepoForScript hangs.  Script will not complte unzip because of this.  Updates are down
-     updatedprop.load(ci.downloadMetaFromRepoForScript(s));
-     Log.level3Verbose("updating meta");
-     updatedScript.metaData.load(updatedprop);
-        
-     int updatedSVNVersion=Integer.parseInt(updatedScript.metaData.minSVNversion);
-     int updatedScriptVersion=Integer.parseInt(updatedScript.metaData.scriptRevision);
-     Log.level3Verbose("comparing script information");
-     if (mySVNVersion<updatedSVNVersion){
-     updatedScript.scriptContents="";
-     Log.level2Information("\n"+updatedScript.metaData.killSwitchMessage);
-     return updatedScript;
-     } else if (myScriptVersion< updatedScriptVersion){
-     Log.level2Information("@scriptIsOutOfDate");
-     Log.level2Information("\n"+updatedScript.metaData.updateMessage);
-     updatedScript=ci.updateScript(updatedScript,this.TempFolder);
-     return updatedScript;
-     } else {
-     Log.level2Information("@noUpdateRequired");
-     return s;
-     }
-
-     } */
+    if (s.metaData.minSVNversion.isEmpty()) {
+    return s;
+    }
+    int mySVNVersion=Integer.parseInt(java.util.ResourceBundle
+    .getBundle("CASUAL/resources/CASUALApp")
+    .getString("Application.revision"));
+    int myScriptVersion=Integer.parseInt(s.metaData.scriptRevision);
+    String myScriptName=s.name;
+    CASUALUpdates ci=new CASUALUpdates();
+    Properties updatedprop=new Properties();
+    Log.level3Verbose("creating new script instance to compare against online version");
+    Script updatedScript=new Script(s);
+    new File(s.tempDir).mkdirs();
+    Log.level3Verbose("getting updated script version info");
+    //TODO: downloadMetaFromRepoForScript hangs.  Script will not complte unzip because of this.  Updates are down
+    updatedprop.load(ci.downloadMetaFromRepoForScript(s));
+    Log.level3Verbose("updating meta");
+    updatedScript.metaData.load(updatedprop);
+    int updatedSVNVersion=Integer.parseInt(updatedScript.metaData.minSVNversion);
+    int updatedScriptVersion=Integer.parseInt(updatedScript.metaData.scriptRevision);
+    Log.level3Verbose("comparing script information");
+    if (mySVNVersion<updatedSVNVersion){
+    updatedScript.scriptContents="";
+    Log.level2Information("\n"+updatedScript.metaData.killSwitchMessage);
+    return updatedScript;
+    } else if (myScriptVersion< updatedScriptVersion){
+    Log.level2Information("@scriptIsOutOfDate");
+    Log.level2Information("\n"+updatedScript.metaData.updateMessage);
+    updatedScript=ci.updateScript(updatedScript,this.TempFolder);
+    return updatedScript;
+    } else {
+    Log.level2Information("@noUpdateRequired");
+    return s;
+    }
+    } */
     /**
      * replaces a script in list array.
      *
@@ -1222,5 +1217,6 @@ public final class Caspac {
     public CASUALSessionData getSd() {
         return sd;
     }
+
 
 }

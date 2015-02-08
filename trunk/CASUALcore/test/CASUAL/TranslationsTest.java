@@ -18,13 +18,6 @@ import org.junit.Test;
  */
 public class TranslationsTest {
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
     //mixed valid and invalid translation strings early, middle, late values.
     final static String line = "@permissionsElevationRequired @interactionOfflineNotification @ppermissionsElevationRequiredermissionsElevationRequired @permissionsElevatisfdasf  test test test   @heimdallWasSucessful test test  ";
     //early in translation file
@@ -34,10 +27,18 @@ public class TranslationsTest {
     //middle of translation file
     final static String line4 = "@md5sVerified";
 
+    @BeforeClass
+    public static void setUpClass() {
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+    }
+
     @Test
     public void translation1() {
         Long time=System.currentTimeMillis();
-        for (int i = 0; i < 1000; i++) { 
+        for (int i = 0; i < 1000; i++) {
             PrintStream out= Log.out;  
             //run this 8000 translations quietly
             Log.out=new PrintStream(new ByteArrayOutputStream());

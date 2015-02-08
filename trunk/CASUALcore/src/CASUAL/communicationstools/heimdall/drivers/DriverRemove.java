@@ -107,7 +107,7 @@ public class DriverRemove {
         int resultSum = 0;
         String result;
         DriverOperations driver = new DriverOperations();
-        if (VID.equals("")) {
+        if (VID.isEmpty()) {
             Log.level0Error("removeOrphanedDevices() no VID specified");
             return false;
         }
@@ -131,7 +131,7 @@ public class DriverRemove {
         while (matcher.find()) {
             Log.level2Information("removeOrphanedDevices() Removing orphaned device " + "\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
             result = driver.remove("\"@" + StringOperations.removeLeadingAndTrailingSpaces(matcher.group(0).replace("\"", "")) + "\"");
-            if (result.equals("")) {
+            if (result.isEmpty()) {
             } else if (result.contains("device(s) are ready to be removed. To remove the devices, reboot the system.")) {
                 resultSum++;
             } else {

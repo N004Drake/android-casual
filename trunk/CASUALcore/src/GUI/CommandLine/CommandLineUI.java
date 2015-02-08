@@ -135,7 +135,7 @@ public class CommandLineUI implements iCASUALUI {
 
     private String showTimeOutInteraction(CASUALMessageObject messageObject, String messageText, String title) {
             String s = getCommandLineInput();
-            if (s == null || s.equals("")) {
+            if (s == null || s.isEmpty()) {
                 return "0";
             }
             return "1";
@@ -147,7 +147,7 @@ public class CommandLineUI implements iCASUALUI {
 
             while (n != 0 && n != 1) {
                 retval = getCommandLineInput();
-                if (!retval.equals("q") && !retval.equals("Q") && !retval.equals("")) {
+                if (!retval.equals("q") && !retval.equals("Q") && !retval.isEmpty()) {
                     n = new CASUALMessageObject(messageText).showActionRequiredDialog();
                 } else if (retval.equals("Q") || retval.equals("q")) {
                     n = 1;

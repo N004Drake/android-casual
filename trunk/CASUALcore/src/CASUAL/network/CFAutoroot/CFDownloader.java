@@ -37,22 +37,25 @@ import java.util.Arrays;
  * @author adamoutler
  */
 public class CFDownloader {
+    static final File[] empty = new File[]{};
     
     final CASUALSessionData sd;
+            
+    
+    final String localCFRoot;
+
     public CFDownloader(CASUALSessionData sd){
         this.localCFRoot = sd.getTempFolder()+"cfautoroot.zip";
         this.sd=sd;
     }
-            
-    
-    final String localCFRoot;
-    final static File[] empty=new File[]{};
+
     /**
      * returns a list of files downloaded and unzipped from CFAutoroot
      * @return a list of uncompressed files.
      * @throws NullPointerException if CASUALMessageObject does not have UI to work with.
      */
-    public File[] getTarFromCFAutoRoot(){
+
+    public File[] getTarFromCFAutoRoot() {
         //get CFAutoRoot file location from deviec
         String url = getUrlFromCfAutoRoot();
         if (url.isEmpty()){
@@ -96,7 +99,6 @@ public class CFDownloader {
      * @param zip file to be deleted
      * @return true if space is available. 
      */
-    
     private boolean deleteFile(File zip) {
         if (zip.exists()) {
             zip.delete();

@@ -25,6 +25,7 @@ import CASUAL.Log;
  */
 public class ModeTrackerDefaultImpl implements ModeTrackerInterface{
 
+    @Override
     public void setMode(Mode mode) {
         Log.level3Verbose(mode.name());
     }

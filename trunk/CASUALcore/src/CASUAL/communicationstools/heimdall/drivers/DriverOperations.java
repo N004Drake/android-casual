@@ -40,17 +40,6 @@ import java.util.regex.Pattern;
  */
 public class DriverOperations {
 
-    public enum PatternChoice {
-
-        ORPHANS, CASUALDRIVER, INF, INSTALL, MATCHINGDEVICES, ALLDEVICES
-    }
-
-    /**
-     * pathToCADI contains the full path to the root folder of where driver
-     * package(s) are (or will be). This Member is populated on Class Object
-     * creation.
-     */
-    private final String pathToCADI;
 
     /**
      * driverExtracted this static member is toggled true upon a successful
@@ -63,6 +52,12 @@ public class DriverOperations {
      * CADI Windows Driver for Windows Vista and higher.
      */
     private final static String cadiDrivers = "/CASUAL/communicationstools/heimdall/drivers/resources/CADI.zip";
+    /**
+     * pathToCADI contains the full path to the root folder of where driver
+     * package(s) are (or will be). This Member is populated on Class Object
+     * creation.
+     */
+    private final String pathToCADI;
 
     public DriverOperations() {
         this.pathToCADI =CASUALMain.getSession().getTempFolder() + "CADI" + CASUALSessionData.slash;
@@ -109,7 +104,7 @@ public class DriverOperations {
      * @return is a String Array of matching connected devices, null otherwise
      */
     public String[] getDeviceList(String VID) {
-        if (VID.equals("")) {
+        if (VID.isEmpty()) {
             Log.level0Error("getDeviceList() no VID specified");
             return null;
         }
@@ -295,5 +290,10 @@ public class DriverOperations {
         }
         Log.level2Information(retval);
         return retval;
+    }
+
+    public enum PatternChoice {
+
+        ORPHANS, CASUALDRIVER, INF, INSTALL, MATCHINGDEVICES, ALLDEVICES
     }
 }

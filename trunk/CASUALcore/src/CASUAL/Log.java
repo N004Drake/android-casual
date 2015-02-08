@@ -34,8 +34,31 @@ import java.util.logging.Logger;
  */
 public class Log {
 
-    private static StringBuilder sb=new StringBuilder();
+    private static final StringBuilder sb=new StringBuilder();
     private static File logFile;
+
+    private static iCASUALUI gui;
+    
+
+    
+    
+    
+    /**
+     * increase or decrease the logging level. 0 is error only, 4 is debug
+     */
+     public static LogLevel[] outputGUIVerbosity = {LogLevel.ERROR, LogLevel.INFORMATION}; //userdata is output to console
+
+    /**
+     * increase or decrease the log logFile output. 0 is error only, 4 is debug
+     */
+    public static LogLevel[] outputLogVerbosity = {LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG}; //all logs are output to logFile
+
+    /**
+     * output device
+     */
+    public static PrintStream out = new PrintStream(System.out);
+    private static final String progressBuffer = "";
+    static int lastNewLine = 100;
 
     /**
      * @return the logFile
@@ -58,47 +81,19 @@ public class Log {
     public static void setLogFile(File aFile) {
         logFile = aFile;
     }
-    
-   
-    
-    public static enum LogLevel {
-
-        ERROR, INTERACTION, INFORMATION, VERBOSE, DEBUG
-
-    }
-    
-    public static String getPreProgress(){
+    public static String getPreProgress() {
         return sb.toString();
     }
-    private static iCASUALUI gui;
-    
 
-    
-    
-    public static void setUI(iCASUALUI ui){
+    public static void setUI(iCASUALUI ui) {
         gui=ui;
     }
-    
-    /**
-     * increase or decrease the logging level. 0 is error only, 4 is debug
-     */
-     public static LogLevel[] outputGUIVerbosity = {LogLevel.ERROR, LogLevel.INFORMATION}; //userdata is output to console
-
-    /**
-     * increase or decrease the log logFile output. 0 is error only, 4 is debug
-     */
-    public static LogLevel[] outputLogVerbosity = {LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG}; //all logs are output to logFile
-
-    /**
-     * output device
-     */
-    public static PrintStream out = new PrintStream(System.out);
 
     private static void sendToGUI(String data) {
         if (gui == null) {
-           sb.append("\n" + data);
+            sb.append("\n").append(data);
         } else if (!data.equals("\n") || !data.isEmpty()) {
-           gui.sendString(data + "\n");
+            gui.sendString(data + "\n");
         }
     }
 
@@ -195,8 +190,6 @@ public class Log {
         }
 
     }
-    private static String progressBuffer = "";
-    static int lastNewLine = 100;
 
     /**
      *
@@ -206,7 +199,7 @@ public class Log {
         if (gui == null) {
             System.out.print(data);
         } else {
-           gui.sendProgress(data);
+            gui.sendProgress(data);
         }
 
     }
@@ -248,9 +241,13 @@ public class Log {
         out = new PrintStream(System.out);
     }
 
-    static private String getCaller() {
+    private static String getCaller() {
         StackTraceElement caller = Thread.currentThread().getStackTrace()[3];
         return caller.getFileName().replace("java", "") + caller.getMethodName() + "()";
+    }
 
+    public static enum LogLevel {
+        
+        ERROR, INTERACTION, INFORMATION, VERBOSE, DEBUG
     }
 }

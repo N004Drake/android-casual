@@ -18,18 +18,18 @@ import org.junit.Test;
  */
 public class CASUALMessageObjectTest {
 
-    public CASUALMessageObjectTest() {
-        if (! java.awt.GraphicsEnvironment.isHeadless() ){
-            CASUAL.CASUALSessionData.setGUI(new GUI.development.CASUALGUIMain());
-        }
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    public CASUALMessageObjectTest() {
+        if (! java.awt.GraphicsEnvironment.isHeadless() ){
+            CASUAL.CASUALSessionData.setGUI(new GUI.development.CASUALGUIMain());
+        }
     }
 
     @Test

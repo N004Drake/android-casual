@@ -18,6 +18,8 @@ import org.junit.Test;
  */
 public class BusyboxToolsTest {
 
+    String busybox = "/data/local/tmp/busybox";
+
     public BusyboxToolsTest() {
     }
 
@@ -28,7 +30,6 @@ public class BusyboxToolsTest {
     @After
     public void tearDown() {
     }
-    String busybox = "/data/local/tmp/busybox";
 
     @Test
     public void testGetBusyboxLocation() {

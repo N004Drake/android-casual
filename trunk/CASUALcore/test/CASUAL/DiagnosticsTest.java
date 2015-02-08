@@ -29,15 +29,15 @@ import org.junit.Test;
  */
 public class DiagnosticsTest {
     
-    public DiagnosticsTest() {
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    
+    public DiagnosticsTest() {
     }
     
     @Before

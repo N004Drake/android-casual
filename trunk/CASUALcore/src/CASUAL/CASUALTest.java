@@ -31,12 +31,12 @@ import java.util.Arrays;
  */
 public class CASUALTest {
 
-   final  CASUALSessionData sd;
     static String[] args;
     /**
      * true if shutdown is commanded
      */
     public static boolean shutdown = false;
+    final CASUALSessionData sd;
     int BUFFER = 4096;
     PipedOutputStream writeToCASUAL;
     PipedInputStream toAppPipedInputStream;
@@ -48,81 +48,8 @@ public class CASUALTest {
     final String[] valuesWeWantToSee;
     private boolean[] goodChecks;
 
-    /**
-     * sets up logging and parameters
-     */
-    public CASUALTest(CASUALSessionData sd) {
-        this.sd=sd;
-        valuesWeWantToSee = new String[]{""};
-        goodChecks = new boolean[valuesWeWantToSee.length];
-        Arrays.fill(goodChecks, Boolean.FALSE);
-        valuesWeDontWantToSee = new String[]{};
-        badChecks = new boolean[valuesWeDontWantToSee.length];
-        Arrays.fill(badChecks, Boolean.FALSE);
-        try {
-            fromAppPipedInputStream = new PipedInputStream(BUFFER);
-            fromAppPipedOutputStream = new PipedOutputStream(fromAppPipedInputStream);
-            readFromCASUAL = new BufferedReader(new InputStreamReader(fromAppPipedInputStream));
-            CASUAL.Log.out = new PrintStream(fromAppPipedOutputStream);
-
-            toAppPipedInputStream = new PipedInputStream(BUFFER);
-            writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
-            sd.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
-
-        } catch (IOException ex) {
-            Log.errorHandler(ex);
-        }
-
-    }
-
-    /**
-     * Launches CASUAL and monitors output
-     *
-     * @param CASUALLaunchCommand list of parameters to run
-     * @param valuesToCheckDuringRun desirable values from CASUAL
-     * @param valuesWeDontWantToSee undesirable values reported from CASUAL
-     */
-    public CASUALTest(CASUALSessionData sd, String[] CASUALLaunchCommand, String[] valuesToCheckDuringRun, String[] valuesWeDontWantToSee) {
-        this.sd=sd;
-        valuesWeWantToSee = valuesToCheckDuringRun;
-        goodChecks = new boolean[valuesWeWantToSee.length];
-        Arrays.fill(goodChecks, Boolean.FALSE);
-        this.valuesWeDontWantToSee = valuesWeDontWantToSee;
-        badChecks = new boolean[valuesWeDontWantToSee.length];
-        Arrays.fill(badChecks, Boolean.FALSE);
-        try {
-            fromAppPipedInputStream = new PipedInputStream(BUFFER);
-            fromAppPipedOutputStream = new PipedOutputStream(fromAppPipedInputStream);
-            readFromCASUAL = new BufferedReader(new InputStreamReader(fromAppPipedInputStream));
-            CASUAL.Log.out = new PrintStream(fromAppPipedOutputStream);
-
-            toAppPipedInputStream = new PipedInputStream(BUFFER);
-            writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
-            sd.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
-
-        } catch (IOException ex) {
-            Log.errorHandler(ex);
-        }
-
-        args = CASUALLaunchCommand;
-    }
     StringBuilder sb = new StringBuilder();
 
-    private void instantiateCASUAL() {
-        //Runnable launchCASUAL=new CASUALTest();
-        Thread launch = new Thread(launchCASUAL);
-        launch.setName("CASUALMain");
-        launch.start();
-        Thread read = new Thread(readReactToCASUAL);
-        read.setName("Reading and reacting to CASUAL");
-
-        read.start();
-        try {
-            launch.join();
-        } catch (InterruptedException ex) {
-            Log.errorHandler(ex);
-        }
-    }
     /**
      * runs CASUAL, hits enter whenever it sees expected values
      */
@@ -135,7 +62,7 @@ public class CASUALTest {
                 try {
                     String line;
                     while ((line = readFromCASUAL.readLine()) != null) {
-                        sb.append(line + "\n");
+                        sb.append(line).append("\n");
                         doCasualOuputHandling(line);
                         if (line.contains("[DEBUG]Shutting Down")) {
                             break;
@@ -221,6 +148,83 @@ public class CASUALTest {
         }
     };
 
+    /**
+     * sets up logging and parameters
+     * @param sd SessionData for this run
+     */
+    public CASUALTest(CASUALSessionData sd) {
+        this.sd=sd;
+        valuesWeWantToSee = new String[]{""};
+        goodChecks = new boolean[valuesWeWantToSee.length];
+        Arrays.fill(goodChecks, Boolean.FALSE);
+        valuesWeDontWantToSee = new String[]{};
+        badChecks = new boolean[valuesWeDontWantToSee.length];
+        Arrays.fill(badChecks, Boolean.FALSE);
+        try {
+            fromAppPipedInputStream = new PipedInputStream(BUFFER);
+            fromAppPipedOutputStream = new PipedOutputStream(fromAppPipedInputStream);
+            readFromCASUAL = new BufferedReader(new InputStreamReader(fromAppPipedInputStream));
+            CASUAL.Log.out = new PrintStream(fromAppPipedOutputStream);
+            
+            toAppPipedInputStream = new PipedInputStream(BUFFER);
+            writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
+            sd.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
+            
+        } catch (IOException ex) {
+            Log.errorHandler(ex);
+        }
+        
+    }
+
+    /**
+     * Launches CASUAL and monitors output
+     *
+     * @param sd SessionData for this run
+     * @param CASUALLaunchCommand list of parameters to run
+     * @param valuesToCheckDuringRun desirable values from CASUAL
+     * @param valuesWeDontWantToSee undesirable values reported from CASUAL
+     */
+    public CASUALTest(CASUALSessionData sd, String[] CASUALLaunchCommand, String[] valuesToCheckDuringRun, String[] valuesWeDontWantToSee) {
+        this.sd=sd;
+        valuesWeWantToSee = valuesToCheckDuringRun;
+        goodChecks = new boolean[valuesWeWantToSee.length];
+        Arrays.fill(goodChecks, Boolean.FALSE);
+        this.valuesWeDontWantToSee = valuesWeDontWantToSee;
+        badChecks = new boolean[valuesWeDontWantToSee.length];
+        Arrays.fill(badChecks, Boolean.FALSE);
+        try {
+            fromAppPipedInputStream = new PipedInputStream(BUFFER);
+            fromAppPipedOutputStream = new PipedOutputStream(fromAppPipedInputStream);
+            readFromCASUAL = new BufferedReader(new InputStreamReader(fromAppPipedInputStream));
+            CASUAL.Log.out = new PrintStream(fromAppPipedOutputStream);
+            
+            toAppPipedInputStream = new PipedInputStream(BUFFER);
+            writeToCASUAL = new PipedOutputStream(toAppPipedInputStream);
+            sd.in = new BufferedReader(new InputStreamReader(toAppPipedInputStream));
+            
+        } catch (IOException ex) {
+            Log.errorHandler(ex);
+        }
+        
+        args = CASUALLaunchCommand;
+    }
+    
+    private void instantiateCASUAL() {
+        //Runnable launchCASUAL=new CASUALTest();
+        Thread launch = new Thread(launchCASUAL);
+        launch.setName("CASUALMain");
+        launch.start();
+        Thread read = new Thread(readReactToCASUAL);
+        read.setName("Reading and reacting to CASUAL");
+        
+        read.start();
+        try {
+            launch.join();
+        } catch (InterruptedException ex) {
+            Log.errorHandler(ex);
+        }
+    }
+    
     private void validateLine(String line) {
         for (int i = 0; i < valuesWeWantToSee.length; i++) {
             if (line.contains(valuesWeWantToSee[i])) {

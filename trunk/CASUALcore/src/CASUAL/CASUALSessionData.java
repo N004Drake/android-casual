@@ -38,6 +38,35 @@ import java.util.Date;
 public class CASUALSessionData {
 
     /**
+     * CASUAL does not look to GUI to execute. Execution will start
+     * autonomously. Terminal is used for input and output. GUI is a display.
+     */
+    private static String currentStatus = "working";
+
+    private static CASUALSessionData statics = new CASUALSessionData();
+    /**
+     * reference for class implementing interface for CASUAL's GUI.
+     */
+    private static iCASUALUI GUI; // reference to GUI input/output device
+    /**
+     * slash provides a universal reference to the / on linux/mac and a \ on
+     * Windows.
+     */
+    public static final String slash = System.getProperty("file.separator"); //file separator for system \ or /
+    /**
+     * Default home folder for CASUAL. Use for permanent storage of data only.
+     * Located in the users home folder, in a folder called ".CASUAL".
+     */
+    public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
+    /**
+     * Windows Visual C++ redistributable downloadable file. This is not used as
+     * we include the proper dependencies in CASUAL. Windows Visual C++ redist
+     * not always required.
+     *
+     */
+    public static final String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
+
+    /**
      * @return the GUI
      */
     public static iCASUALUI getGUI() {
@@ -51,17 +80,6 @@ public class CASUALSessionData {
         GUI = aGUI;
     }
 
-    private CASUALSessionData() {
-        statics = this;
-    }
-    /**
-     * CASUAL does not look to GUI to execute. Execution will start
-     * autonomously. Terminal is used for input and output. GUI is a display.
-     */
-    private static String currentStatus = "working";
-
-    private static CASUALSessionData statics = new CASUALSessionData();
-
     /**
      * gets the instance of this class
      *
@@ -74,6 +92,16 @@ public class CASUALSessionData {
     public static CASUALSessionData newInstance() {
         return new CASUALSessionData();
     }
+
+    /**
+     * @return the GUIIsAvailable
+     */
+    public static boolean isGUIIsAvailable() {
+        if (GUI != null) {
+            return GUI.isReady() && !java.awt.GraphicsEnvironment.isHeadless();
+        }
+        return false;
+    }
     /**
      * true if debugMode. Do not send logs in debug mode. We create too many
      * errors, thanks.
@@ -85,15 +113,6 @@ public class CASUALSessionData {
      */
     public Caspac CASPAC;
 
-    /**
-     * @return the GUIIsAvailable
-     */
-    public static boolean isGUIIsAvailable() {
-        if (GUI != null) {
-            return GUI.isReady() && !java.awt.GraphicsEnvironment.isHeadless();
-        }
-        return false;
-    }
 
     /**
      * Input Device for CASUAL. Generally System.in (STDIN) but may be
@@ -102,26 +121,27 @@ public class CASUALSessionData {
     public BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     /**
-     * reference for class implementing interface for CASUAL's GUI.
-     */
-    private static iCASUALUI GUI; // reference to GUI input/output device
-
-    /**
-     * slash provides a universal reference to the / on linux/mac and a \ on
-     * Windows.
-     */
-    final public static String slash = System.getProperty("file.separator"); //file separator for system \ or /
-    /**
      * ProgressDoc provides a reference to the program output.
      */
     public String PreProgress = "";  //place to log data before GUI comes up
+    private File TempFolder;
+
+
+    //TODO: determine feasability of moving this to CASPAC.Script. 
+    /**
+     * ActionEvents for the $ON command are set up by script. Trigger Reaction
+     * events.
+     */
+    public ArrayList<String> ActionEvents = new ArrayList<String>(); //Action events for $ON command. set by script
 
     /**
-     * Default home folder for CASUAL. Use for permanent storage of data only.
-     * Located in the users home folder, in a folder called ".CASUAL".
+     * ReactionEvents are triggered by ActionEvents and created by $ON command.
      */
-    public static String CASUALHome = System.getProperty("user.home") + System.getProperty("file.separator") + ".CASUAL" + System.getProperty("file.separator");
-    private File TempFolder;
+    public ArrayList<String> ReactionEvents = new ArrayList<String>(); //Reactions for $ON command. . set by script
+
+    private CASUALSessionData() {
+        statics = this;
+    }
 
     /**
      * Creates and returns the temp folder if required.
@@ -160,26 +180,6 @@ public class CASUALSessionData {
         return TempFolder.toString() + slash;
     }
     //Cross-Platform data storage
-
-    /**
-     * Windows Visual C++ redistributable downloadable file. This is not used as
-     * we include the proper dependencies in CASUAL. Windows Visual C++ redist
-     * not always required.
-     *
-     */
-    final public static String WinVCRedis32tInRepo = "https://android-casual.googlecode.com/svn/trunk/repo/vcredist_x86.exe"; //Win vcredist in repo
-
-    //TODO: determine feasability of moving this to CASPAC.Script. 
-    /**
-     * ActionEvents for the $ON command are set up by script. Trigger Reaction
-     * events.
-     */
-    public ArrayList<String> ActionEvents = new ArrayList<String>(); //Action events for $ON command. set by script
-
-    /**
-     * ReactionEvents are triggered by ActionEvents and created by $ON command.
-     */
-    public ArrayList<String> ReactionEvents = new ArrayList<String>(); //Reactions for $ON command. . set by script
 
     /**
      * Resets all variables in CASUAL to provide, basically, a warm reboot.
@@ -225,7 +225,6 @@ public class CASUALSessionData {
         });
         t.setName("Updating GUI");
         t.start();
-
     }
 
     /**

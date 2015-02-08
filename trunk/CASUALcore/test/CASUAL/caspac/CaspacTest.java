@@ -22,8 +22,18 @@ import org.junit.Test;
  * @author adam
  */
 public class CaspacTest {
+
+    @BeforeClass
+    public static void setUpClass() {
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+    }
     Caspac test;
     CASUALSessionData sd=CASUALSessionData.newInstance();
+    Caspac instance;
+
     public CaspacTest() {
         CASUALSessionData.setGUI(new GUI.testing.automatic());
         try {
@@ -36,14 +46,6 @@ public class CaspacTest {
         }
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
     }
@@ -51,7 +53,7 @@ public class CaspacTest {
     @After
     public void tearDown() {
     }
-    Caspac instance;
+
 
     /**
      * Test of removeScript method, of class Caspac.
@@ -93,7 +95,6 @@ public class CaspacTest {
         assert (result.getName().equals(instance.getScripts().get(instance.getScripts().size() - 1).getName()));
     }
 
-
     @Test
     public void testSetBuild() {
         System.out.println("setBuild");
@@ -113,7 +114,7 @@ public class CaspacTest {
         assert test.getBuild().getDeveloperName().equals("test");
         assert test.getBuild().getDonateLink().equals("test");
         assert test.getBuild().getWindowTitle().equals("test");
-        assert test.getBuild().getBannerPic().equals("");
+        assert test.getBuild().getBannerPic().isEmpty();
         assert test.getBuild().getBannerText().equals("test");
         assert test.getBuild().getExecuteButtonText().equals("test");
         assert test.getBuild().isAudioEnabled()==true;
@@ -128,7 +129,7 @@ public class CaspacTest {
         String x=test.getScripts().get(0).getTempDir();
         assert test.getScripts().get(0).getTempDir().contains(sd.getTempFolder()+test.getScripts().get(0).getName());
         assert test.getScripts().get(0).getScriptContentsString().equals("$ECHO test");
-        assert test.getScripts().get(0).getIndividualFiles().size() ==0;
+        assert test.getScripts().get(0).getIndividualFiles().isEmpty();
         assert test.getScripts().get(0).getMetaData().getMinSVNversion().equals("0");
         assert test.getScripts().get(0).getMetaData().getScriptRevision().equals("0");
         assert test.getScripts().get(0).getMetaData().getUniqueIdentifier().equals("test");

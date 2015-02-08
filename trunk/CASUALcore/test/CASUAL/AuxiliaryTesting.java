@@ -17,7 +17,6 @@ import org.junit.Test;
  * @author adam
  */
 public class AuxiliaryTesting {
-CASUALSessionData sd=CASUALSessionData.newInstance();
 
     @BeforeClass
     public static void setUpClass() {
@@ -27,7 +26,9 @@ CASUALSessionData sd=CASUALSessionData.newInstance();
     @AfterClass
     public static void tearDownClass() {
     }
-    @Test
+CASUALSessionData sd=CASUALSessionData.newInstance();
+
+@Test
     public void testCasualAuxilliaryFunctions() throws Exception {
 
         //run CASUAL to set environmental values
@@ -37,7 +38,7 @@ CASUALSessionData sd=CASUALSessionData.newInstance();
         if (new CASUAL.CASUALMessageObject("Testing Heimdall", "Connect an ODIN capable device in ADB mode").showUserCancelOption() == 0) {
             CASUALSessionData.getGUI().setReady(false);
             String returnval = new CASUAL.CASUALScriptParser().executeOneShotCommand("$ADB reboot download");
-            assert returnval.equals("") || returnval.equals("\n ");
+            assert returnval.isEmpty() || returnval.equals("\n ");
             CASUAL.CASUALMain.shutdown(0);
         }
 
@@ -81,6 +82,7 @@ CASUALSessionData sd=CASUALSessionData.newInstance();
         }
 
     }
+    
     public void setContinue() {
         String string = "\n";
         InputStream stringStream = new java.io.ByteArrayInputStream(string.getBytes());

@@ -34,6 +34,16 @@ import java.util.ArrayList;
 public class CASUALScriptParser {
 
     static Caspac oneShotCaspac;
+    static String scriptReturnValue = "";
+    public static final String NEWLINE = ";;;";
+
+    public static void setReturnValue(String value) {
+        scriptReturnValue=value;
+    }
+
+    public static String getReturnValue() {
+        return scriptReturnValue;
+    }
 
     /**
      * If true, script will continue. False to shutdown.
@@ -41,8 +51,11 @@ public class CASUALScriptParser {
     public int LinesInScript = 0;
     String scriptTempFolder = "";
     String scriptName = "";
-    static String scriptReturnValue="";
-    public final static String NEWLINE=";;;";
+
+    /*
+     * Script Handler contains all script commands and will execute commands
+     */
+    public DataInputStream scriptInput;
 
     /**
      * executes a CASUAL script from a file
@@ -89,7 +102,7 @@ public class CASUALScriptParser {
      *
      * @param Line line to execute
      * @return from CASUAL language
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception on any problem
      */
     public String executeOneShotCommand(String Line) throws Exception {
         CASUALSessionData sd=CASUALSessionData.newInstance();
@@ -100,32 +113,26 @@ public class CASUALScriptParser {
             scriptName = "oneShot";
             scriptTempFolder = sd.getTempFolder();
         }
-            if (Line.contains(NEWLINE)) {
-                String[] lineArray = Line.split(NEWLINE);
-                for (String linesplit : lineArray) {
-                    retvalue = retvalue + new CASUALLanguage(sd,scriptName, scriptTempFolder).commandHandler(linesplit) + "\n";
-                }
-            } else {
-                retvalue = new CASUALLanguage(sd,scriptName, scriptTempFolder).commandHandler(Line);
+        if (Line.contains(NEWLINE)) {
+            String[] lineArray = Line.split(NEWLINE);
+            for (String linesplit : lineArray) {
+                retvalue = retvalue + new CASUALLanguage(sd,scriptName, scriptTempFolder).commandHandler(linesplit) + "\n";
+            }
+        } else {
+            retvalue = new CASUALLanguage(sd,scriptName, scriptTempFolder).commandHandler(Line);
 
             }
 
         return retvalue;
     }
-
-    /*
-     * Script Handler contains all script commands and will execute commands
-     */
-    public DataInputStream scriptInput;
-
     /**
      * executes the Active Script in the provided CASPAC
      *
      * @param caspac CASPAC to have script executed
      * @param startThreaded true if it is to be started on a new thread.
-     * @param data
+     * @param data CASUALSessionData to be used for this execution
      */
-    public void executeSelectedScript(final Caspac caspac, boolean startThreaded , final CASUALSessionData data) {
+    public void executeSelectedScript(final Caspac caspac, boolean startThreaded, final CASUALSessionData data){
         Track.setMode(CASUAL.instrumentation.ModeTrackerInterface.Mode.CASUALExecuting);
         data.ReactionEvents = new ArrayList<String>();
         data.ActionEvents = new ArrayList<String>();
@@ -173,8 +180,7 @@ public class CASUALScriptParser {
 
         }
     }
-
-    void executeActiveScript(Caspac caspac) {
+    void executeActiveScript(Caspac caspac){
         Log.level3Verbose("Exection of active script in CASPAC Commensing");
         Script s = caspac.getActiveScript();
         caspac.getSd().CASPAC.getActiveScript().setScriptContinue(true);
@@ -186,10 +192,10 @@ public class CASUALScriptParser {
             Log.level0Error("@improperCASUALversion");
             return;
         }
-
-            DataInputStream dis = new DataInputStream(s.getScriptContents());
-            caspac.setActiveScript(s);
-            new CASUALLanguage(caspac, s.getTempDir()).beginScriptingHandler(dis);
+        
+        DataInputStream dis = new DataInputStream(s.getScriptContents());
+        caspac.setActiveScript(s);
+        new CASUALLanguage(caspac, s.getTempDir()).beginScriptingHandler(dis);
         
     }
 
@@ -198,12 +204,5 @@ public class CASUALScriptParser {
         Script s = caspac.getScriptByName(name);
         caspac.setActiveScript(s);
         executeActiveScript(caspac);
-
-    }
-    public static void setReturnValue(String value){
-        scriptReturnValue=value;
-    }
-    public static String getReturnValue(){
-        return scriptReturnValue;
     }
 }

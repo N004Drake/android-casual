@@ -34,18 +34,18 @@ import org.junit.Test;
  */
 public class ShellTest {
 
-    final String exp = "List of devices attached";
-
-    public ShellTest() {
-        CASUALSessionData.setGUI(new GUI.testing.automatic());
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    final String exp = "List of devices attached";
+
+    public ShellTest() {
+        CASUALSessionData.setGUI(new GUI.testing.automatic());
     }
 
     @Before
@@ -77,16 +77,16 @@ public class ShellTest {
     /**
      * Test of elevateSimpleCommand method, of class Shell.
      */
-    @Test
-    public void testElevateSimpleCommand() {
-        if (java.awt.GraphicsEnvironment.isHeadless()) {
-            return;
-        }
-        System.out.println("elevateSimpleCommand");
-        String[] cmd = new String[]{new ADBTools().getBinaryLocation(), "devices"};
-        Shell instance = new Shell();
-        String result = instance.elevateSimpleCommand(cmd);
-        assert result.contains(exp);
+@Test
+public void testElevateSimpleCommand() {
+    if (java.awt.GraphicsEnvironment.isHeadless()) {
+        return;
+    }
+    System.out.println("elevateSimpleCommand");
+    String[] cmd = new String[]{new ADBTools().getBinaryLocation(), "devices"};
+    Shell instance = new Shell();
+    String result = instance.elevateSimpleCommand(cmd);
+    assert result.contains(exp);
 
     }
 
@@ -238,5 +238,6 @@ public class ShellTest {
         assertEquals(expectedResult, result);
 
     }
+
 
 }

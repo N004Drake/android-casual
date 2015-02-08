@@ -34,8 +34,22 @@ import java.util.Properties;
  */
 public class CFAutoRootDb {
 
+    /**
+     * reads a stream and returns a string
+     *
+     * @param is stream to read
+     * @return stream converted to string
+     */
+    public static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
     final Properties BUILDPROP = new Properties();
     final private ArrayList<Device> deviceList;
+
+
+    String defaultValue = "Value was not obtainable.  Cannot find value";
 
     /**
      * Constructor for CFAutoRootDB parses the buildprop and CFAutoroot site
@@ -88,8 +102,6 @@ public class CFAutoRootDb {
         return "";
     }
 
-    String defaultValue = "Value was not obtainable.  Cannot find value";
-
     /**
      * gets the property from the build.prop
      *
@@ -104,7 +116,6 @@ public class CFAutoRootDb {
      * grabs the table and parses from CFAutoRoot
      */
     private void grabTable() throws MalformedURLException, URISyntaxException, IOException, CFAutorootTableException {
-
         //get url
         URI uri = new URI("http", "autoroot.chainfire.eu", "/" + "", "", null);
         URL url = new URL(uri.toASCIIString());
@@ -117,16 +128,16 @@ public class CFAutoRootDb {
         BufferedReader br = new BufferedReader(new StringReader(page));
 
         /*
-         * This is not the proper way to parse HTML
-         * This method is much faster for parsing than org.w3c.Document
-         */
+        * This is not the proper way to parse HTML
+        * This method is much faster for parsing than org.w3c.Document
+        */
         //burn the first two TR entries as they are headers only.
         int trcount = 0;
         while (trcount < 2) {
             if (br.readLine().contains("<tr>")) {
                 //assertations to verify table has not changed
                 while (trcount == 1) {
-                    //assert that the table is usable or throw a CFAutorootTableException. 
+                    //assert that the table is usable or throw a CFAutorootTableException.
                     //If the table is not the way we expect it, then we will not proceed. 
                     if (!br.readLine().contains("OEM")) {
                         throw new CFAutorootTableException("OEM tables On autoroot.chainfire.eu changed");
@@ -164,7 +175,7 @@ public class CFAutoRootDb {
             String line = "";
             //ensure we are reading a full line
             while (!line.endsWith("\n")) {
-                line = line +(char) br.read();
+                line += (char) br.read();
                 if (line.endsWith("\uffff")||line.endsWith("-1")) {
                     return;  //return on end of stream
                 }
@@ -209,18 +220,6 @@ public class CFAutoRootDb {
                 deviceList.add(device);
             }
         }
-
-    }
-
-    /**
-     * reads a stream and returns a string
-     *
-     * @param is stream to read
-     * @return stream converted to string
-     */
-    public static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
     }
 
 }

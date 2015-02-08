@@ -36,78 +36,13 @@ import java.util.logging.Logger;
 public class DiffTextFiles {
 
     /**
-     * takes a resource and a string outputs difference as a string
-     *
-     * @param TestIStream input stream to test
-     * @param OriginalFile original file to be diffed
-     * @return lines in test that are not in original
-     */
-    public  String diffResourceVersusFile(String TestIStream, String OriginalFile) {
-
-        String difference = "";
-        InputStream resourceAsStream = this.getClass().getResourceAsStream(TestIStream);
-
-        BufferedReader testStream = new BufferedReader(new InputStreamReader(resourceAsStream));
-        File original = new File(OriginalFile);
-        String TestStreamLine = "";
-        String OriginalFileLine;
-        try {
-            while ((TestStreamLine = testStream.readLine()) != null) {
-                boolean LineExists;
-                BufferedReader OriginalReader = new BufferedReader(new FileReader(original));
-                OriginalReader.mark(0);
-                LineExists = false;
-                OriginalReader.reset();
-                while ((OriginalFileLine = OriginalReader.readLine()) != null) {
-                    if (OriginalFileLine.equals(TestStreamLine)) {
-                        LineExists = true;
-                        break;
-                    }
-                }
-
-                if (!LineExists) {
-                    difference = difference + "\n" + TestStreamLine;
-                }
-            }
-        } catch (IOException ex) {
-
-            difference = TestStreamLine + "\n";
-            try {
-                while ((TestStreamLine = testStream.readLine()) != null) {
-                    difference = difference + TestStreamLine + "\n";
-                }
-            } catch (IOException ex1) {
-                Log.errorHandler(ex);
-            }
-
-
-        } finally {
-            try {
-                resourceAsStream.close();
-                testStream.close();
-            } catch (IOException ex) {
-                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        if (difference.startsWith("\n")) {
-            difference = difference.replaceFirst("\n", "");
-        }
-        if (difference.endsWith("\n")) {
-            difference = CASUAL.misc.StringOperations.replaceLast(difference, "\n", "");
-        }
-
-        return difference;
-
-    }
-
-    /**
      * takes two files returns the difference between the two
      *
      * @param Original original file
      * @param TestForDiff new file
      * @return lines which are in new file that are not in original
      */
-    public static String diffTextFiles(String Original, String TestForDiff) {
+    public static  String diffTextFiles(String Original, String TestForDiff) {
         String DifferenceFromFile1 = "";
         BufferedReader BROriginal = null;
 
@@ -135,7 +70,7 @@ public class DiffTextFiles {
             Log.errorHandler(e);
         } finally {
             try {
-               if (BROriginal !=null) BROriginal.close();
+                if (BROriginal !=null) BROriginal.close();
             } catch (IOException ex) {
                 Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -154,7 +89,7 @@ public class DiffTextFiles {
      * @param Diff text to add
      */
     public static void appendDiffToFile(String file, String Diff) {
-        if (Diff.equals("")) {
+        if (Diff.isEmpty()) {
             return;
         }
         //create the file if it does not exist
@@ -175,9 +110,74 @@ public class DiffTextFiles {
             out.println(Diff);
  
         } catch (IOException ex) {
-         Log.errorHandler(ex);
+            Log.errorHandler(ex);
         } finally {
             if (out != null) out.close();
         }
+    }
+
+    /**
+     * takes a resource and a string outputs difference as a string
+     *
+     * @param TestIStream input stream to test
+     * @param OriginalFile original file to be diffed
+     * @return lines in test that are not in original
+     */
+    public String diffResourceVersusFile(String TestIStream, String OriginalFile) {
+        
+        String difference = "";
+        InputStream resourceAsStream = this.getClass().getResourceAsStream(TestIStream);
+        
+        BufferedReader testStream = new BufferedReader(new InputStreamReader(resourceAsStream));
+        File original = new File(OriginalFile);
+        String TestStreamLine = "";
+        String OriginalFileLine;
+        try {
+            while ((TestStreamLine = testStream.readLine()) != null) {
+                boolean LineExists;
+                BufferedReader OriginalReader = new BufferedReader(new FileReader(original));
+                OriginalReader.mark(0);
+                LineExists = false;
+                OriginalReader.reset();
+                while ((OriginalFileLine = OriginalReader.readLine()) != null) {
+                    if (OriginalFileLine.equals(TestStreamLine)) {
+                        LineExists = true;
+                        break;
+                    }
+                }
+                
+                if (!LineExists) {
+                    difference = difference + "\n" + TestStreamLine;
+                }
+            }
+        } catch (IOException ex) {
+            
+            difference = TestStreamLine + "\n";
+            try {
+                while ((TestStreamLine = testStream.readLine()) != null) {
+                    difference = difference + TestStreamLine + "\n";
+                }
+            } catch (IOException ex1) {
+                Log.errorHandler(ex);
+            }
+            
+            
+        } finally {
+            try {
+                resourceAsStream.close();
+                testStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(DiffTextFiles.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (difference.startsWith("\n")) {
+            difference = difference.replaceFirst("\n", "");
+        }
+        if (difference.endsWith("\n")) {
+            difference = CASUAL.misc.StringOperations.replaceLast(difference, "\n", "");
+        }
+
+        return difference;
+
     }
 }

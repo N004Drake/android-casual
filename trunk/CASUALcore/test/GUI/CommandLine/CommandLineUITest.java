@@ -32,16 +32,16 @@ import org.junit.Test;
  */
 public class CommandLineUITest {
     
-    public CommandLineUITest() {
-       assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    
+    public CommandLineUITest() {
+        assumeTrue(!java.awt.GraphicsEnvironment.isHeadless());
     }
     
     @Before

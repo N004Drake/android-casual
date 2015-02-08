@@ -50,14 +50,16 @@ import java.util.zip.ZipException;
  * @author loganludington
  */
 public class Script {
+    private static final String slash = System.getProperty("file.separator");
 
-    final CASUALSessionData sd;
     /**
      * @return the slash
      */
     public static String getSlash() {
         return slash;
     }
+
+    final CASUALSessionData sd;
 
     /**
      * extractionMethod = 0 for CASPAC (File, zipFile/zipFile) 1 for CASUAL
@@ -117,7 +119,6 @@ public class Script {
      * is false, the script will not execute further lines.
      */
     private boolean scriptContinue = false;
-    private final static String slash = System.getProperty("file.separator");
 
     /**
      * Device Arch. This is used by busybox to determine what dependency to use.
@@ -151,6 +152,7 @@ public class Script {
     /**
      * Creates a new script from a name and a temp folder.
      *
+     * @param sd session data to be used for this script
      * @param name name of script.
      * @param tempDir temp folder to use.
      */
@@ -472,7 +474,7 @@ public class Script {
                             }
                         }
                     }
-                    if (!scriptContents.equals("")) {
+                    if (!scriptContents.isEmpty()) {
                         Log.level4Debug("Update sucessful.  MD5s matched server.");
                     } else {
                         new CASUALMessageObject("@interactionPackageCorrupt").showErrorDialog();
@@ -583,6 +585,7 @@ public class Script {
 
     /**
      * @param name the name to set
+     * @return this Script
      */
     public Script setName(String name) {
         this.name = name;
@@ -600,6 +603,7 @@ public class Script {
 
     /**
      * @param scriptContents the scriptContents to set
+     * @return this Script
      */
     public Script setScriptContents(String scriptContents) {
         this.scriptContents = scriptContents;
@@ -615,6 +619,7 @@ public class Script {
 
     /**
      * @param individualFiles the individualFiles to set
+     * @return this Script
      */
     public Script setIndividualFiles(List<File> individualFiles) {
         this.individualFiles = individualFiles;
@@ -630,6 +635,7 @@ public class Script {
 
     /**
      * @param metaData the metaData to set
+     * @return this Script
      */
     public Script setMetaData(ScriptMeta metaData) {
         this.metaData = metaData;
@@ -645,6 +651,7 @@ public class Script {
 
     /**
      * @param discription the discription to set
+     * @return this Script
      */
     public Script setDiscription(String discription) {
         this.discription = discription;

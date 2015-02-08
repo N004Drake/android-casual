@@ -80,17 +80,17 @@ public class Variables {
         variables.clear();
     }
     
-    @Override
-    public String toString(){
-       return varDump();
-    }
     public static String varDump(){
         StringBuilder sb = new StringBuilder();
         sb.append("---Variable Dump ---");
-       for (String key: variables.keySet()){
-           sb.append("\nvar:").append(key).append(" == val:").append(variables.get(key)).append("\n");
-       }
-       return sb.toString();
+        for (String key: variables.keySet()){
+            sb.append("\nvar:").append(key).append(" == val:").append(variables.get(key)).append("\n");
+        }
+        return sb.toString();
+    }
+    @Override
+    public String toString(){
+        return varDump();
     }
     
     

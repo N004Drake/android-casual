@@ -31,7 +31,7 @@ public class StringMath {
         
     public String performRoundedMathOperation(String mathProblem) throws CASUALMathOperationException{
         try {
-            if ( mathProblem==null|| mathProblem.equals(""))throw new CASUALMathOperationException("Math Operations cannot be blank");
+            if ( mathProblem==null|| mathProblem.isEmpty())throw new CASUALMathOperationException("Math Operations cannot be blank");
             String s=engine.eval(mathProblem.replace(";",";\n")).toString();
             s = !s.contains(".") ? s : s.replaceAll("0*$", "").replaceAll("\\.$", "");
             return s;

@@ -15,17 +15,17 @@ import org.junit.Test;
  */
 public class CASUALLanguagejUnitTest {
 
-    @Before
-    public void setUp() {
-
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    @Before
+    public void setUp() {
+        
     }
 
     @Test

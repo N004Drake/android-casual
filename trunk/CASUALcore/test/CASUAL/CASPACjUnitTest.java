@@ -15,7 +15,7 @@ import org.junit.Test;
  * @author adam
  */
 public class CASPACjUnitTest {
-    CASUALSessionData sd=CASUALSessionData.newInstance();
+
     @BeforeClass
     public static void setUpClass() {
     }
@@ -23,11 +23,12 @@ public class CASPACjUnitTest {
     @AfterClass
     public static void tearDownClass() {
     }
-
+    CASUALSessionData sd=CASUALSessionData.newInstance();
     @Test
-    public void testTest(){
-            
-            }
+    public void testTest() {
+        
+    }
+
     //@Test
     public void testCASPACOperations() {
     
@@ -52,4 +53,5 @@ public class CASPACjUnitTest {
         assertEquals(true, new CASUAL.CASUALTest(sd,casualParams, goodValues, badValues).checkTestPoints());
     }
               
+    
 }

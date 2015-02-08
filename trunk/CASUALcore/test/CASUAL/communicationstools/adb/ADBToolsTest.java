@@ -24,20 +24,20 @@ import org.junit.Test;
  */
 public class ADBToolsTest {
 
-    CASUALSessionData sd=CASUALMain.getSession();
-    AbstractDeviceCommunicationsProtocol instance;
-
-    public ADBToolsTest() throws IOException {
-        instance = new ADBTools();
-        System.out.println(new File(".").getCanonicalPath());
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+    CASUALSessionData sd=CASUALMain.getSession();
+    AbstractDeviceCommunicationsProtocol instance;
+
+    public ADBToolsTest() throws IOException {
+        instance = new ADBTools();
+        System.out.println(new File(".").getCanonicalPath());
     }
 
     @Before
@@ -209,8 +209,6 @@ public class ADBToolsTest {
         instance.reset();
     }
 
-
-
     /**
      * Test of deployBinary method, of class ADBTools.
      */
@@ -230,7 +228,6 @@ public class ADBToolsTest {
         
     }
 
-
     /**
      * Test of getIndividualDevices method, of class ADBTools.
      */
@@ -240,5 +237,8 @@ public class ADBToolsTest {
         ADBTools instance = new ADBTools();
         instance.getIndividualDevices();
     }
+
+
+
 
 }

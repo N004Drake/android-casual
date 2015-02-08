@@ -24,108 +24,6 @@ import java.io.File;
  */
 public class CASUALSettings {
 
-    /**
-     * Options used for arguments.  HELP, LICENSE, TEMP, PASSWORD, CASPAC, GUI, NOSOUND, EXECUTE. INVALID is specified if a argument is not proper. 
-     */
-    public static enum ArgOptions {
-
-        /**
-         * command to display help message.
-         */
-        HELP,
-
-        /**
-         * command to display license.
-         */
-        LICENSE,
-
-        /**
-         * parameter to set temp folder.
-         */
-        TEMP,
-
-        /**
-         * parameter to set password for use on CASPAC.
-         */
-        PASSWORD,
-
-        /**
-         * parameter to set caspac.
-         */
-        CASPAC,
-
-        /**
-         * parameter to set GUI usage.
-         */
-        GUI,
-
-        /**
-         * parameter to kill sound usage in CASUAL.
-         */
-        NOSOUND,
-
-        /**
-         * Parameter to specify a CASUAL language command.
-         */
-        EXECUTE,
-
-        /**
-         * Default parameter which causes an error in parameters. 
-         */
-        INVALID
-    }
-
-    /**
-     * Options used to determine the major mode of CASUAL CASUAL, CASPAC, EXECUTE, EXIT.  If a problem is detected EXIT is specified.   CASUAL is default. Execute and CASPAC are specified by commandline args.
-     */
-    public static enum CASUALMode {
-
-        /**
-         *  CASUAL Mode.
-         */
-        CASUAL,
-
-        /**
-         * CASPAC Mode.
-         */
-        CASPAC,
-
-        /**
-         * Execute Command mode. 
-         */
-        EXECUTE,
-
-        /**
-         * No mode, just exit.
-         */
-        EXIT;
-    }
-    
-    /**
-     * Initial monitoring mode of CASUAL. 
-     */
-    public static enum MonitorMode{
-
-        /**
-         * ADB mode will use ADB tools for monitoring Device Status.
-         */
-        ADB,
-
-        /**
-         * Heimdall mode will use HeimdallTools for monitoring device status.
-         */
-        HEIMDALL,
-
-        /**
-         * Fastboot mode will use FastbootTools for monitoring device status. 
-         */
-        FASTBOOT,
-        
-        /**
-         * always enable controls.
-         */
-        NONE
-    }
     
     
     
@@ -409,5 +307,80 @@ public class CASUALSettings {
         sb.append("password:").append(password).append(n);
         sb.append("CASPACLocation:").append(caspacLocation).append(n);
         return sb.toString();
+    }
+
+    /**
+     * Options used for arguments.  HELP, LICENSE, TEMP, PASSWORD, CASPAC, GUI, NOSOUND, EXECUTE. INVALID is specified if a argument is not proper.
+     */
+    public static enum ArgOptions {
+
+        /**
+         * command to display help message.
+         */
+        HELP, /**
+         * command to display license.
+         */
+        LICENSE, /**
+         * parameter to set temp folder.
+         */
+        TEMP, /**
+         * parameter to set password for use on CASPAC.
+         */
+        PASSWORD, /**
+         * parameter to set caspac.
+         */
+        CASPAC, /**
+         * parameter to set GUI usage.
+         */
+        GUI, /**
+         * parameter to kill sound usage in CASUAL.
+         */
+        NOSOUND, /**
+         * Parameter to specify a CASUAL language command.
+         */
+        EXECUTE, /**
+         * Default parameter which causes an error in parameters.
+         */
+        INVALID
+    }
+
+    /**
+     * Options used to determine the major mode of CASUAL CASUAL, CASPAC, EXECUTE, EXIT.  If a problem is detected EXIT is specified.   CASUAL is default. Execute and CASPAC are specified by commandline args.
+     */
+    public static enum CASUALMode {
+
+        /**
+         *  CASUAL Mode.
+         */
+        CASUAL, /**
+         * CASPAC Mode.
+         */
+        CASPAC, /**
+         * Execute Command mode.
+         */
+        EXECUTE, /**
+         * No mode, just exit.
+         */
+        EXIT
+    }
+
+    /**
+     * Initial monitoring mode of CASUAL.
+     */
+    public static enum MonitorMode {
+
+        /**
+         * ADB mode will use ADB tools for monitoring Device Status.
+         */
+        ADB, /**
+         * Heimdall mode will use HeimdallTools for monitoring device status.
+         */
+        HEIMDALL, /**
+         * Fastboot mode will use FastbootTools for monitoring device status.
+         */
+        FASTBOOT, /**
+         * always enable controls.
+         */
+        NONE
     }
 }

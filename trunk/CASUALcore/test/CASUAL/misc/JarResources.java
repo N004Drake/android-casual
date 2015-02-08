@@ -20,16 +20,53 @@ import java.util.zip.ZipInputStream;
 @SuppressWarnings({"unchecked","rawtypes"})
 public final class JarResources {
 
+    /**
+     * Is a test driver. Given a jar file and a resource name, it trys to
+     * extract the resource and then tells us whether it could or not.
+     *
+     * <strong>Example</strong>
+     * Let's say you have a JAR file which jarred up a bunch of gif image files.
+     * Now, by using JarResources, you could extract, create, and display those
+     * images on-the-fly.
+     * <pre>
+     *     ...
+     *     JarResources JR=new JarResources("GifBundle.jar");
+     *     Image image=Toolkit.createImage(JR.getResource("logo.gif");
+     *     Image logo=Toolkit.getDefaultToolkit().createImage(
+     *                   JR.getResources("logo.gif")
+     *                   );
+     *     ...
+     * </pre>
+     * @param args args for main method.
+     * @throws java.io.IOException
+     */
+    public static void main(String[] args) throws IOException {
+        if (args.length != 2) {
+            System.err.println(
+                    "usage: java JarResources <jar file name> <resource name>");
+            System.exit(1);
+        }
+        
+        JarResources jr = new JarResources(args[0]);
+        byte[] buff = jr.getResource(args[1]);
+        if (buff == null) {
+            System.out.println("Could not find " + args[1] + ".");
+        } else {
+            System.out.println("Found " + args[1]
+                    + " (length=" + buff.length + ").");
+        }
+    }
+
 
     /**
      *external debug flag
      */
         public boolean debugOn = false;
     // jar resource mapping tables
-    private Hashtable htSizes = new Hashtable();
-    private Hashtable htJarContents = new Hashtable();
+    private final Hashtable htSizes = new Hashtable();
+    private final Hashtable htJarContents = new Hashtable();
     // a jar file
-    private String jarFileName;
+    private final String jarFileName;
 
     /**
      * creates a JarResources. It extracts all resources from a Jar into an
@@ -66,7 +103,7 @@ public final class JarResources {
                     System.out.println(dumpZipEntry(ze));
                 }
 
-                htSizes.put(ze.getName(), new Integer((int) ze.getSize()));
+                htSizes.put(ze.getName(), (int) ze.getSize());
             }
 
 
@@ -88,7 +125,7 @@ public final class JarResources {
                 int size = (int) ze.getSize();
                 // -1 means unknown size.
                 if (size == -1) {
-                    size = ((Integer) htSizes.get(ze.getName())).intValue();
+                    size = ((Number) htSizes.get(ze.getName())).intValue();
                 }
 
                 byte[] b = new byte[size];
@@ -147,40 +184,4 @@ public final class JarResources {
         return (sb.toString());
     }
 
-    /**
-     * Is a test driver. Given a jar file and a resource name, it trys to
-     * extract the resource and then tells us whether it could or not.
-     *
-     * <strong>Example</strong>
-     * Let's say you have a JAR file which jarred up a bunch of gif image files.
-     * Now, by using JarResources, you could extract, create, and display those
-     * images on-the-fly.
-     * <pre>
-     *     ...
-     *     JarResources JR=new JarResources("GifBundle.jar");
-     *     Image image=Toolkit.createImage(JR.getResource("logo.gif");
-     *     Image logo=Toolkit.getDefaultToolkit().createImage(
-     *                   JR.getResources("logo.gif")
-     *                   );
-     *     ...
-     * </pre>
-     * @param args args for main method. 
-     * @throws java.io.IOException 
-     */
-    public static void main(String[] args) throws IOException {
-        if (args.length != 2) {
-            System.err.println(
-                    "usage: java JarResources <jar file name> <resource name>");
-            System.exit(1);
-        }
-
-        JarResources jr = new JarResources(args[0]);
-        byte[] buff = jr.getResource(args[1]);
-        if (buff == null) {
-            System.out.println("Could not find " + args[1] + ".");
-        } else {
-            System.out.println("Found " + args[1]
-                    + " (length=" + buff.length + ").");
-        }
-    }
 }	// End of JarResources class.

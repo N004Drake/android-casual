@@ -27,9 +27,6 @@ import org.junit.Test;
  */
 public class CASUALLanguageTest {
     
-    public CASUALLanguageTest() {
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
@@ -38,18 +35,22 @@ public class CASUALLanguageTest {
     public static void tearDownClass() {
     }
     
+    CASUALScriptParser casualScriptParser = new CASUALScriptParser();
+
+    public CASUALLanguageTest() {
+    }
     @Before
     public void setUp() {
         CASUALSessionData.setGUI(new GUI.testing.automatic());
     }
-    
     @After
     public void tearDown() {
     }
-    CASUALScriptParser casualScriptParser = new CASUALScriptParser();
-    
+ 
+
     /**
      * Test of commandHandler method, of class CASUALLanguage.
+     * @throws java.lang.Exception
      */
     @Test
     public void testOS() throws Exception {
@@ -83,6 +84,7 @@ public class CASUALLanguageTest {
             assertEquals("",casualScriptParser.executeOneShotCommand("$MAC $ECHO testing"));        }
  
     }
+    
     @Test
     public void testEcho() throws Exception {
         System.out.println("$ECHO");
@@ -101,8 +103,6 @@ public class CASUALLanguageTest {
         assertEquals(expResult, result);
         assertEquals(haltResult,result2);
     }
- 
-
     @Test
     public void testcomment() throws Exception {
         System.out.println("Comment");
@@ -110,7 +110,6 @@ public class CASUALLanguageTest {
         String result = casualScriptParser.executeOneShotCommand("#$ECHO testing");
         assertEquals(expResult, result);
     }
-    
     @Test
     public void testBlankLines() throws Exception {
         System.out.println("Testing blank lines");
@@ -128,6 +127,7 @@ public class CASUALLanguageTest {
         result = casualScriptParser.executeOneShotCommand("$IFCONTAINS toow $INCOMMAND $ECHO woot $DO $ECHO testing");
         assertEquals("", result);
     }
+    
     @Test
     public void testIfNotContains() throws Exception {
         System.out.println("$IFNOTCONTAINS true");
@@ -145,14 +145,13 @@ public class CASUALLanguageTest {
         casualScriptParser.executeOneShotCommand("$SLEEP 1");
         assert(System.currentTimeMillis()>=time+1000);
     }    
-    @Test
-    public void testSleepMillis() throws Exception {
-        System.out.println("Testing blank lines");
-        long time=System.currentTimeMillis();
-        casualScriptParser.executeOneShotCommand("$SLEEPMILLIS 1000");
-        assert(System.currentTimeMillis()>=time+1000);
-    }    
-    
+     @Test
+     public void testSleepMillis() throws Exception {
+         System.out.println("Testing blank lines");
+         long time=System.currentTimeMillis();
+         casualScriptParser.executeOneShotCommand("$SLEEPMILLIS 1000");
+         assert(System.currentTimeMillis()>=time+1000);
+    }   
     @Test
     public void testBusybox() throws Exception {
         
@@ -168,19 +167,20 @@ public class CASUALLanguageTest {
     public void testSlash() throws Exception {
         System.out.println("$SLASH");
         String expResult = System.getProperty("file.separator"); 
-        expResult=expResult+expResult; //get two in there just to verify for literal purposes
+        expResult += expResult; //get two in there just to verify for literal purposes
         String result = casualScriptParser.executeOneShotCommand("$ECHO $SLASH$SLASH");
         assertEquals(expResult, result);
     }
-     @Test
+    @Test
     public void testZipfile() throws Exception {
         System.out.println("$ZIPFILE");
         String result = casualScriptParser.executeOneShotCommand("$ECHO $ZIPFILE");
         System.out.println(result);
         assert(new File(result).exists() && new File(result).isDirectory());
     }   
+    
     @Test
-    public void testListDir() throws IOException, Exception {
+    public void testListDir() throws IOException, Exception{
         System.out.println("$LISTDIR");
         String expResult = "test.txt"; 
         File f=new File(expResult);
@@ -197,95 +197,96 @@ public class CASUALLanguageTest {
         }
         assert(test);
     }
-    @Test
-    public void testMAKEREMOVEDIR() throws IOException, Exception {
-        System.out.println("$MAKEDIR/$REMOVEDIR");
-        String expResult = "testfolder"; 
-        File f=new File(expResult);
-        f.createNewFile();
-        String result = casualScriptParser.executeOneShotCommand("$MAKEDIR "+expResult);
-        assert(result.contains(expResult));
-
-        result = casualScriptParser.executeOneShotCommand("$LISTDIR .");
+        @Test
+        public void testMAKEREMOVEDIR() throws IOException, Exception{
+            System.out.println("$MAKEDIR/$REMOVEDIR");
+            String expResult = "testfolder";
+            File f=new File(expResult);
+            f.createNewFile();
+            String result = casualScriptParser.executeOneShotCommand("$MAKEDIR "+expResult);
+            assert(result.contains(expResult));
+            
+            result = casualScriptParser.executeOneShotCommand("$LISTDIR .");
+            
+            String[] retvalsplit=result.split("\n");
+            boolean test=false;
+            for (String res:retvalsplit){
+                if(res.endsWith(expResult)){
+                    test=true;
+                }
+            }
+            assert(test);
+            System.out.println("$REMOVEDIR");
+            assert(new File(expResult).exists());
+            assert(casualScriptParser.executeOneShotCommand("$REMOVEDIR "+expResult).contains(expResult));
+            assert(! new File(expResult).exists());
+        }
+        @Test
+        public void testDownload() throws Exception{
+            System.out.println("$Download");
+            String result = casualScriptParser.executeOneShotCommand("$DOWNLOAD https://android-casual.googlecode.com/svn/trunk/README , $ZIPFILEreadme, CASUAL SVN readme file");
+            
+            String sha256sum=CASUAL.crypto.SHA256sum.getLinuxSum(new File(result));
+            assertEquals (sha256sum, "b2db2359cb7ea18bec6189b26e06775abf253f36ffb00402a9cf4faa1a2b6982  readme");
+            
+            new File(result).delete();
+            
+        }
         
-        String[] retvalsplit=result.split("\n");
-        boolean test=false;
-        for (String res:retvalsplit){
-            if(res.endsWith(expResult)){
-                test=true;
+        @Test
+        public void testADB() throws Exception{
+            System.out.println("adb test");
+            String result = casualScriptParser.executeOneShotCommand("$ADB devices");
+            assert result.contains("List of devices attached");
+            result = casualScriptParser.executeOneShotCommand("adb devices");
+            assert result.contains("List of devices attached");
+            System.out.println("adb language test completed");
+        }
+        
+        @Test
+        public void testFastboot() throws Exception{
+            System.out.println("fastboot test");
+            String result = casualScriptParser.executeOneShotCommand("$FASTBOOT --help");
+            
+            System.out.println("fastboot language test completed");
+        }
+        
+        @Test
+        public void testMath() throws Exception {
+            System.out.println("$MATH test");
+            String result = casualScriptParser.executeOneShotCommand("$MATH 3*3");
+            assert result.equals("9");
+            result = casualScriptParser.executeOneShotCommand("$MATH 4+4/2");
+            assert result.equals("6");
+            result = casualScriptParser.executeOneShotCommand("$MATH -1+1");
+            assert result.equals("0");
+            result = casualScriptParser.executeOneShotCommand("$MATH x=2; x+1;");
+            assert result.equals("3");
+            result = casualScriptParser.executeOneShotCommand("$MATH function myFunction(p1, p2) {return p1 * p2;} myFunction(300,43.13412);" );
+            assert result.equals("12940.236");
+            try {
+                casualScriptParser.executeOneShotCommand("$MATH 323421+22asdf");
+            } catch (CASUALMathOperationException ex){
+                assert(ex.getMessage().endsWith("could not be evaluated"));
+                System.out.println("$MATH test completed");
             }
         }
-        assert(test);
-        System.out.println("$REMOVEDIR");
-        assert(new File(expResult).exists());
-        assert(casualScriptParser.executeOneShotCommand("$REMOVEDIR "+expResult).contains(expResult));
-        assert(! new File(expResult).exists());
-    }
-    @Test
-    public void testDownload() throws Exception {
-        System.out.println("$Download");
-        String result = casualScriptParser.executeOneShotCommand("$DOWNLOAD https://android-casual.googlecode.com/svn/trunk/README , $ZIPFILEreadme, CASUAL SVN readme file");
-
-        String sha256sum=CASUAL.crypto.SHA256sum.getLinuxSum(new File(result));
-        assertEquals (sha256sum, "b2db2359cb7ea18bec6189b26e06775abf253f36ffb00402a9cf4faa1a2b6982  readme");
         
-        new File(result).delete();
-     
-    }   
-    
-    @Test
-    public void testADB() throws Exception{
-        System.out.println("adb test");
-        String result = casualScriptParser.executeOneShotCommand("$ADB devices");
-        assert result.contains("List of devices attached");
-        result = casualScriptParser.executeOneShotCommand("adb devices");
-        assert result.contains("List of devices attached");
-        System.out.println("adb language test completed");  
-    }
         @Test
-    public void testFastboot() throws Exception{
-        System.out.println("fastboot test");
-        String result = casualScriptParser.executeOneShotCommand("$FASTBOOT --help");
-
-        System.out.println("fastboot language test completed");  
-    }
-    @Test
-    public void testMath() throws Exception{
-        System.out.println("$MATH test");
-        String result = casualScriptParser.executeOneShotCommand("$MATH 3*3");
-        assert result.equals("9");
-        result = casualScriptParser.executeOneShotCommand("$MATH 4+4/2");
-        assert result.equals("6");
-        result = casualScriptParser.executeOneShotCommand("$MATH -1+1");
-        assert result.equals("0");
-        result = casualScriptParser.executeOneShotCommand("$MATH x=2; x+1;");
-        assert result.equals("3");
-        result = casualScriptParser.executeOneShotCommand("$MATH function myFunction(p1, p2) {return p1 * p2;} myFunction(300,43.13412);" );
-        assert result.equals("12940.236");
-        try {
-            casualScriptParser.executeOneShotCommand("$MATH 323421+22asdf");
-        } catch (CASUALMathOperationException ex){
-            assert(ex.getMessage().endsWith("could not be evaluated"));
+        public void testVariablesWithMath() throws Exception {
+            System.out.println("Variable test");
+            String result = casualScriptParser.executeOneShotCommand("mvar=5;;;$MATH mvar+4").trim();
+            String expectedResult="9";
+            assertEquals( expectedResult,result);
             System.out.println("$MATH test completed");  
         }
-    
-    }
-    
-    @Test
-    public void testVariablesWithMath() throws Exception{
-        System.out.println("Variable test");
-        String result = casualScriptParser.executeOneShotCommand("mvar=5;;;$MATH mvar+4").trim();
-        String expectedResult="9";
-        assertEquals( expectedResult,result);
-         System.out.println("$MATH test completed");  
-    }
-    
-    @Test
-    public void testHeimdall() throws Exception{
-        System.out.println("heimdall test");
-       
-        String result;
-        if (new HeimdallTools().isConnected()){
+        
+        @Test
+        public void testHeimdall() throws Exception {
+            System.out.println("heimdall test");
+            
+            String result;
+            if (new HeimdallTools().isConnected()){
                 result=casualScriptParser.executeOneShotCommand("$HEIMDALL detect");
                 assert result.contains("download");
                 result = casualScriptParser.executeOneShotCommand("heimdall detect");

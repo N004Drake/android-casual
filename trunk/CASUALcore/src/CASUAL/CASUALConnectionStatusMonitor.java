@@ -36,6 +36,7 @@ public class CASUALConnectionStatusMonitor {
      */
     final static int TIMERINTERVAL = 2000;
     static boolean paused = false;
+    static int connectedDevices = 0;
 
     /**
      * stops monitoring and nulls the monitor out. Stores the monitor to be
@@ -139,7 +140,6 @@ public class CASUALConnectionStatusMonitor {
 
     }
 
-    static int connectedDevices=0;
     private void doDeviceCheck() {
         try {
             connectedDevices = monitor.numberOfDevicesConnected();

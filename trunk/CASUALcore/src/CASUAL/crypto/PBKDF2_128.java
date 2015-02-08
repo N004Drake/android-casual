@@ -36,10 +36,11 @@ public class PBKDF2_128 {
      * 
      *
      * @param input your password
+     * @param salt salt to be used
      * @return PBKDF2 with HMAC SHA1 password
      */
     public  byte[] oneWayHash(char[] input, String salt) {
-        if (null==salt|| salt.equals("")){
+        if (null==salt|| salt.isEmpty()){
             salt="--salt--";
         }
         try {

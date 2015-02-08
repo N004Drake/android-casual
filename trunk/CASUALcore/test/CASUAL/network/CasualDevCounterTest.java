@@ -26,15 +26,22 @@ import org.junit.Test;
  */
 public class CasualDevCounterTest {
 
-    public CasualDevCounterTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() {
     }
 
     @AfterClass
     public static void tearDownClass() {
+    }
+
+
+    /**
+     * Test of ping method, of class CasualDevCounter.
+     */
+    int x=0;
+
+    String testvalue="";
+    public CasualDevCounterTest() {
     }
 
     @Before
@@ -45,10 +52,6 @@ public class CasualDevCounterTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of ping method, of class CasualDevCounter.
-     */
-    int x=0;
     @Test
     public void testPing() {
         try {
@@ -56,7 +59,7 @@ public class CasualDevCounterTest {
             System.out.println("ping "+x);
             
             String testCounter="TimesISignERDBadge";
-                Thread.sleep(300);
+            Thread.sleep(300);
             getCounter(testCounter);
             int baseValue=Integer.parseInt(testvalue);
             testvalue="";
@@ -73,11 +76,8 @@ public class CasualDevCounterTest {
         } catch (InterruptedException ex) {
             Logger.getLogger(CasualDevCounterTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
     }
 
-    String testvalue="";
     private void getCounter(String testvar) {
         URL url;
         InputStream is = null;
@@ -90,7 +90,7 @@ public class CasualDevCounterTest {
             br = new BufferedReader(new InputStreamReader(is));
 
             while ((line = br.readLine()) != null) {
-                testvalue=testvalue+line;
+                testvalue += line;
             }
         } catch (MalformedURLException mue) {
         } catch (IOException ioe) {

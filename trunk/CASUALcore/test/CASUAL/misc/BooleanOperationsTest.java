@@ -14,15 +14,15 @@ import org.junit.Test;
  */
 public class BooleanOperationsTest {
     
-    public BooleanOperationsTest() {
-    }
-    
     @BeforeClass
     public static void setUpClass() {
     }
     
     @AfterClass
     public static void tearDownClass() {
+    }
+    
+    public BooleanOperationsTest() {
     }
 
     /**
