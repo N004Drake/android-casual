@@ -102,6 +102,14 @@ public class CASUALSessionData {
         }
         return false;
     }
+
+    /**
+     * sets the prefix, by default it is "CASUAL-USERNAME-".
+     * @param aTempFolderPrefix the tempFolderPrefix to set
+     */
+    public static void setTempFolderPrefix(String aTempFolderPrefix) {
+        tempFolderPrefix = aTempFolderPrefix;
+    }
     /**
      * true if debugMode. Do not send logs in debug mode. We create too many
      * errors, thanks.
@@ -143,6 +151,7 @@ public class CASUALSessionData {
         statics = this;
     }
 
+    private static String tempFolderPrefix="CASUAL-"+System.getProperty("user.name");
     /**
      * Creates and returns the temp folder if required.
      *
@@ -151,7 +160,6 @@ public class CASUALSessionData {
     public String getTempFolder() {
         FileOperations fo = new FileOperations();
         if (TempFolder == null) {
-            String user = System.getProperty("user.name");  //username
             String tf;
             if (System.getenv().containsKey("TMPDIR") && !System.getenv("TMPDIR").isEmpty() && new File(System.getenv("TMPDIR")).isDirectory()) {
                 tf = System.getenv("TMPDIR"); // user temp folder
@@ -160,7 +168,7 @@ public class CASUALSessionData {
             }
             tf = tf.endsWith(slash) ? tf : tf + slash;  //make sure temp folder has a slash
             SimpleDateFormat sdf = new SimpleDateFormat("-yyyy-MM-dd-HH.mm.ss");
-            TempFolder = new File(tf + "CASUAL" + user + sdf.format(new Date()) + slash); //set /temp/usernameRandom/
+            TempFolder = new File(tf  + tempFolderPrefix+ sdf.format(new Date()) + slash); //set /temp/usernameRandom/
             setTempFolder(TempFolder.toString());
             fo.makeFolder(TempFolder.toString());
         }
