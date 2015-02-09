@@ -16,6 +16,7 @@
  */
 package com.casual_dev.file_ops;
 
+import CASUAL.Log;
 import java.io.File;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -33,6 +34,7 @@ public class CASPACFileSelection {
          if (!new File(initial).isDirectory()){
              initial=new File(initial).getParent();
          }
+         
         chooser.setInitialDirectory(ifInitialEmptyUseHome(initial));
         FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("All Files (*.*)", "*.*");
         FileChooser.ExtensionFilter cpFilter = new FileChooser.ExtensionFilter("CASPAC files (*.CASPAC)", "*.CASPAC","*.caspac");
@@ -60,9 +62,10 @@ public class CASPACFileSelection {
     }
     
     private File ifInitialEmptyUseHome(String initial){
-        if (initial==null||initial.isEmpty()||new File(initial).exists()){
+        if (initial==null||initial.isEmpty()||!new File(initial).exists()){
              initial=System.getProperty("user.home");
          }
+        Log.level3Verbose("choosing "+initial+" as directory");
         return new File(initial);
     }
 }
