@@ -52,7 +52,10 @@ public class Log {
      * increase or decrease the log logFile output. 0 is error only, 4 is debug
      */
     public static LogLevel[] outputLogVerbosity = {LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG}; //all logs are output to logFile
-
+     /**
+     * increase or decrease the terminal output. 0 is error only, 4 is debug
+     */
+    public static LogLevel[] consoleLogVerbosity={LogLevel.ERROR, LogLevel.INTERACTION, LogLevel.INFORMATION, LogLevel.VERBOSE, LogLevel.DEBUG};
     /**
      * output device
      */
@@ -155,11 +158,13 @@ public class Log {
     }
 
     private static void routeLogsToGUIAndFile(LogLevel ll, String data) {
-        writeOutToLog("e/" + getCaller() + " - " + data);
+        if (Arrays.asList(outputLogVerbosity).contains(ll)) {
+            writeOutToLog("e/" + getCaller() + " - " + data);
+        }
         if (Arrays.asList(outputGUIVerbosity).contains(ll)) {
             sendToGUI(data);
         }
-        if (Arrays.asList(outputLogVerbosity).contains(ll)) {
+        if (Arrays.asList(consoleLogVerbosity).contains(ll)) {
             out.println("[" + ll.name() + "]" + data);
         }
     }
