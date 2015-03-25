@@ -84,10 +84,10 @@ public class FileOperationsTest {
     @Test
     public void testFindRecursive() throws IOException {
         System.out.println("findRecursive");
-        File testpath = new File(sd.getTempFolder()+"s"+CASUALSessionData.slash+"s"+CASUALSessionData.slash+"s"+CASUALSessionData.slash+"test");
-        File testFile=new File(testpath.getAbsolutePath()+CASUALSessionData.slash+"testFindRecursive");
+        File testpath = new File(sd.getTempFolder()+"ss"+CASUALSessionData.slash+"ss"+CASUALSessionData.slash+"ss"+CASUALSessionData.slash+"test");
         testpath.mkdirs();
-        new File(sd.getTempFolder()+"s"+CASUALSessionData.slash+"test").createNewFile();
+        File testFile=new File(testpath.getAbsolutePath()+CASUALSessionData.slash+"testFindRecursive");
+        new File(sd.getTempFolder()+"ss"+CASUALSessionData.slash+"test").createNewFile();
         testFile.createNewFile();
         String PathToSearch =sd.getTempFolder();
         FileOperations instance =new FileOperations();
