@@ -159,7 +159,7 @@ public void testElevateSimpleCommand() {
         timeout = 0;
         result = instance.timeoutShellCommand(cmd, timeout);
         String expResult = "Timeout!!! ";
-        assertEquals(expResult, result);
+        assert(result.contains(expResult));
 
     }
 
