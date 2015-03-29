@@ -75,7 +75,7 @@ public class CASUALAssistantUI extends Application {
             rootItem.setExpanded(true);
              tree=new TreeView<>(rootItem);
             tree.setEditable(false);
-            Document casualCommandsAndVariables = Jsoup.connect("http://casual-dev.com/casual-commands-and-variables/").get();
+            Document casualCommandsAndVariables = Jsoup.connect("https://casual-dev.com/casual-commands-and-variables/").get();
             sections = casualCommandsAndVariables.select("section");
 
         } catch (IOException ex) {
