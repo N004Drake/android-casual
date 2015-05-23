@@ -89,6 +89,14 @@ public class FileOperationsTest {
         File testFile=new File(testpath.getAbsolutePath()+CASUALSessionData.slash+"testFindRecursive");
         new File(sd.getTempFolder()+"ss"+CASUALSessionData.slash+"test").createNewFile();
         testFile.createNewFile();
+        if (!testFile.exists()){
+            try {
+                Thread.sleep(3000);
+                
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FileOperationsTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         String PathToSearch =sd.getTempFolder();
         FileOperations instance =new FileOperations();
         System.out.println("performing recursive search");
